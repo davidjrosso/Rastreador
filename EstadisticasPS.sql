@@ -1,0 +1,1 @@
+select SUM(LitrosCombustible) as Cantidad, Vehiculo from general group by Vehiculo order by SUM(LitrosCombustible) desc limit 3

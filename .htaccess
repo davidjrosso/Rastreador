@@ -1,0 +1,8 @@
+Options +FollowSymLinks
+
+
+RewriteEngine On
+
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://rastreador.riotercero.gob.ar/$1 [L,R=301]
+
