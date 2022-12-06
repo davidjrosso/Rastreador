@@ -302,6 +302,12 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" name = "Nro_Legajo" id="Nro_Legajo" autocomplete="off">
+              </div>
+            </div>
+            <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Localidad: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Localidad" id="inputPassword" autocomplete="off" value = "Río Tercero">
@@ -413,29 +419,9 @@ $Con->CloseConexion();
 <?php  
 if(isset($_REQUEST["Mensaje"])){
   echo "<script type='text/javascript'>
-  swal('".$_REQUEST["Mensaje"]."','','success');
+  swal('".$Mensaje."','','success');
 </script>";
 }
-?>
-<?php
-/*
- *
- * This file is part of Rastreador3.
- *
- * Rastreador3 is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Rastreador3 is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Rastreador3; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- */
 ?>
 </body>
 </html>

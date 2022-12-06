@@ -5,6 +5,7 @@ class Persona{
 	private $Apellido;
 	private $Nombre;
 	private $DNI;
+	private $Nro_Legajo;
 	private $Edad;
 	private $Meses;
 	private $Fecha_Nacimiento;	
@@ -43,6 +44,9 @@ public function setDNI($xDNI){
 	$this->DNI = $xDNI;
 }
 
+public function setNro_Legajo($xNro_Legajo){
+	$this->Nro_Legajo = $xNro_Legajo;
+}
 public function setEdad($xEdad){
 	$this->Edad = $xEdad;
 }
@@ -140,6 +144,9 @@ public function getDNI(){
 	return $this->DNI;
 }
 
+public function getNro_Legajo(){
+	return $this->Nro_Legajo;
+}
 public function getEdad(){
 	return $this->Edad;
 }
@@ -220,11 +227,12 @@ public function getTrabajo(){
 	return $this->Trabajo;
 }
 
-public function __construct($xID_Persona,$xApellido,$xNombre,$xDNI,$xEdad,$xMeses,$xFecha_Nacimiento,$xNro_Carpeta,$xObra_Social,$xDomicilio,$xBarrio,$xLocalidad,$xCircunscripcion,$xSeccion,$xManzana,$xLote,$xFamilia,$xObservaciones,$xCambio_Domicilio,$xTelefono,$xMail,$xID_Escuela,$xEstado,$xTrabajo){
+public function __construct($xID_Persona,$xApellido,$xNombre,$xDNI,$xNro_Legajo,$xEdad,$xMeses,$xFecha_Nacimiento,$xNro_Carpeta,$xObra_Social,$xDomicilio,$xBarrio,$xLocalidad,$xCircunscripcion,$xSeccion,$xManzana,$xLote,$xFamilia,$xObservaciones,$xCambio_Domicilio,$xTelefono,$xMail,$xID_Escuela,$xEstado,$xTrabajo){
 	$this->ID_Persona = $xID_Persona;
 	$this->Apellido = $xApellido;
 	$this->Nombre = $xNombre;
 	$this->DNI = $xDNI;
+	$this->Nro_Legajo = $xNro_Legajo;
 	$this->Edad = $xEdad;
 	$this->Meses = $xMeses;
 	$this->Fecha_Nacimiento = $xFecha_Nacimiento;

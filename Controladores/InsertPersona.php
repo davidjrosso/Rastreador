@@ -3,30 +3,18 @@ session_start();
 require_once 'Conexion.php';
 require_once '../Modelo/Persona.php';
 header("Content-Type: text/html;charset=utf-8");
-/*
- *
- * This file is part of Rastreador3.
- *
- * Rastreador3 is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Rastreador3 is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Rastreador3; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- */
 
 $ID_Usuario = $_SESSION["Usuario"];
 
 $Apellido = ucwords($_REQUEST["Apellido"]);
 $Nombre = ucwords($_REQUEST["Nombre"]);
 $DNI = $_REQUEST["DNI"];
+
+$Nro_Legajo = $_REQUEST["Nro_Legajo"];
+if(empty($Nro_Legajo)){
+	$Nro_Legajo = 'null';
+}
+
 $Edad = $_REQUEST["Edad"];
 $Meses = $_REQUEST["Meses"];
 if(empty($Edad)){
@@ -111,7 +99,7 @@ if(empty($ID_Escuela)){
 
 $Fecha = date("Y-m-d");
 $ID_TipoAccion = 1;
-$Detalles = "El usuario con ID: $ID_Usuario ha registrado una nueva Persona. Datos: Apellido: $Apellido - Nombre: $Nombre - Documento: $DNI - Edad: $Edad - Meses: $Meses - Fecha de Nacimiento: $Fecha_Nacimiento - Telefono: $Telefono - E-Mail: $Mail - Nro Carpeta: $Nro_Carpeta - Obra Social: $Obra_Social - Domicilio: $Domicilio - Barrio: $ID_Barrio - Escuela: $ID_Escuela - Localidad: $Localidad - Circunscripcion: $Circunscripcion - Seccion: $Seccion - Manzana: $Manzana - Lote: $Lote - Familia: $Familia - Observaciones: $Observaciones - Cambio Domicilio: $Cambio_Domicilio";
+$Detalles = "El usuario con ID: $ID_Usuario ha registrado una nueva Persona. Datos: Apellido: $Apellido - Nombre: $Nombre - Documento: $DNI - Nro Legajo: $Nro_Legajo - Edad: $Edad - Meses: $Meses - Fecha de Nacimiento: $Fecha_Nacimiento - Telefono: $Telefono - E-Mail: $Mail - Nro Carpeta: $Nro_Carpeta - Obra Social: $Obra_Social - Domicilio: $Domicilio - Barrio: $ID_Barrio - Escuela: $ID_Escuela - Localidad: $Localidad - Circunscripcion: $Circunscripcion - Seccion: $Seccion - Manzana: $Manzana - Lote: $Lote - Familia: $Familia - Observaciones: $Observaciones - Cambio Domicilio: $Cambio_Domicilio";
 
 
 
@@ -133,10 +121,11 @@ try {
 		$Con->CloseConexion();
 		header('Location: ../view_newpersonas.php?Mensaje='.$Mensaje);
 	}else{
-		$Persona = new Persona(0,$Apellido,$Nombre,$DNI,$Edad,$Meses,$Fecha_Nacimiento,$Nro_Carpeta,$Obra_Social,$Domicilio,$ID_Barrio,$Localidad,$Circunscripcion,$Seccion,$Manzana,$Lote,$Familia,$Observaciones,$Cambio_Domicilio,$Telefono,$Mail,$ID_Escuela,$Estado,$Trabajo);
+		$Persona = new Persona(0,$Apellido,$Nombre,$DNI,$Nro_Legajo, $Edad,$Meses,$Fecha_Nacimiento,$Nro_Carpeta,$Obra_Social,$Domicilio,$ID_Barrio,$Localidad,$Circunscripcion,$Seccion,$Manzana,$Lote,$Familia,$Observaciones,$Cambio_Domicilio,$Telefono,$Mail,$ID_Escuela,$Estado,$Trabajo);
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "insert into persona(apellido,nombre,documento,edad,fecha_nac,nro_carpeta,obra_social,domicilio,ID_Barrio,localidad,circunscripcion,seccion,manzana,lote,familia,observacion,cambio_domicilio,telefono,mail,ID_Escuela,meses,estado,Trabajo) values('".$Persona->getApellido()."','".$Persona->getNombre()."','".$Persona->getDNI()."',".$Persona->getEdad().",'".$Persona->getFecha_Nacimiento()."',".$Persona->getNro_Carpeta().",'".$Persona->getObra_Social()."','".$Persona->getDomicilio()."',".$Persona->getBarrio().",'".$Persona->getLocalidad()."',".$Persona->getCircunscripcion().",".$Persona->getSeccion().",'".$Persona->getManzana()."',".$Persona->getLote().",".$Persona->getFamilia().",'".$Persona->getObservaciones()."','".$Persona->getCambio_Domicilio()."','".$Persona->getTelefono()."','".$Persona->getMail()."',".$Persona->getID_Escuela().",".$Persona->getMeses().",".$Persona->getEstado().",'".$Persona->getTrabajo()."')";
+		$Consulta = "insert into persona(apellido,nombre,documento,nro_legajo,edad,fecha_nac,nro_carpeta,obra_social,domicilio,ID_Barrio,localidad,circunscripcion,seccion,manzana,lote,familia,observacion,cambio_domicilio,telefono,mail,ID_Escuela,meses,estado,Trabajo) 
+		values('".$Persona->getApellido()."','".$Persona->getNombre()."','".$Persona->getDNI()."','".$Persona->getNro_Legajo()."',".$Persona->getEdad().",'".$Persona->getFecha_Nacimiento()."',".$Persona->getNro_Carpeta().",'".$Persona->getObra_Social()."','".$Persona->getDomicilio()."',".$Persona->getBarrio().",'".$Persona->getLocalidad()."',".$Persona->getCircunscripcion().",".$Persona->getSeccion().",'".$Persona->getManzana()."',".$Persona->getLote().",".$Persona->getFamilia().",'".$Persona->getObservaciones()."','".$Persona->getCambio_Domicilio()."','".$Persona->getTelefono()."','".$Persona->getMail()."',".$Persona->getID_Escuela().",".$Persona->getMeses().",".$Persona->getEstado().",'".$Persona->getTrabajo()."')";
 
 
 
@@ -158,7 +147,8 @@ try {
 		///////////////////////////////////////////
 
 
-		$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
+		$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) 
+		values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
 		if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
 			throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 1);
 		}
