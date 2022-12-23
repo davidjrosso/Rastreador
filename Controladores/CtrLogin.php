@@ -13,7 +13,7 @@ while($RetDatosPersonas = mysqli_fetch_assoc($EjecutarConsultarDatosPersonas)){
 	$ID = $RetDatosPersonas['id_persona'];
 	$Edad = $RetDatosPersonas['edad'];
 	$Fecha_Nacimiento = $RetDatosPersonas['fecha_nac'];
-	if($Fecha_Nacimiento != 'null'){
+	if($Fecha_Nacimiento != 'null' && $Fecha_Nacimiento != ''){
 		list($ano,$mes,$dia) = explode("-",$Fecha_Nacimiento);
 		$ano_diferencia = date("Y") - $ano;
 		$mes_diferencia = date("m") - $mes;

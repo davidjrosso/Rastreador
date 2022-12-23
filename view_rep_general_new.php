@@ -614,7 +614,7 @@ $Con->CloseConexion();
       	?>
         <center><p class = "LblForm">ENTRE: <?php echo $Etiqueta_Fecha_Inicio." Y ".$Etiqueta_Fecha_Fin; ?></p></center>  
         <span><i class="fa fa-filter"></i> Filtros </span>
-        <!-- < ?php echo "DEBUG: ".$Consulta; ?>       -->
+        <?php echo "DEBUG: ".$Consulta; ?>      
         <?php
           foreach($filtros as $value){
             echo "<span class='etFiltros'>".$value."</span> ";

@@ -354,9 +354,6 @@ class Elements{
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
-                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Direcciones</a>
-                </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
                   <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
@@ -379,9 +376,6 @@ class Elements{
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
-                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Direcciones</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
                   <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
@@ -406,9 +400,6 @@ class Elements{
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
-                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Direcciones</a>
-                </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
                   <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
@@ -431,9 +422,6 @@ class Elements{
                 </li>
                 <li class="collapsed active" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
-                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Direcciones</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
                   <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
@@ -458,9 +446,6 @@ class Elements{
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed active" onClick = "location.href = \'view_unifdirecciones.php\'">
-                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Direcciones</a>
-                </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
                   <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
@@ -483,9 +468,6 @@ class Elements{
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
-                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Direcciones</a>
                 </li>
                 <li class="collapsed active" onClick = "location.href = \'view_unifbarrios.php\'">
                   <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
@@ -510,9 +492,6 @@ class Elements{
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
-                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Direcciones</a>
-                </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
                   <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
@@ -535,9 +514,6 @@ class Elements{
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
-                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Direcciones</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
                   <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
