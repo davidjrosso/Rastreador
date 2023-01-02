@@ -298,7 +298,7 @@ $Con->CloseConexion();
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "Nro_Carpeta" id="inputPassword" autocomplete="off">
+                <input type="text" class="form-control" name = "Nro_Carpeta" id="Nro_Carpeta" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">

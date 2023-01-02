@@ -58,6 +58,7 @@ if (isset($consultaBusqueda)) {
 			$Nombre = $resultados['apellido'].", ".$resultados['nombre'];
 			$DNI = $resultados['documento'];
 			$Nro_Carpeta = $resultados['nro_carpeta'];
+			// $Nro_Legajo= $resultados['nro_legajo'];
 			$Domicilio = $resultados['domicilio'];			
 
 			//Output
@@ -65,12 +66,12 @@ if (isset($consultaBusqueda)) {
 			    <tr>
 			      <th scope="row">'.$Nombre.'</th>
 			      <td>'.$DNI.'</td>
-			      <td>'.$Nro_Carpeta.'</td>
+			      <td>'.$Nro_Carpeta.'</td>				
 			      <td>'.$Domicilio.'</td>
 			      <td><button type = "button" class = "btn btn-outline-success" onClick="seleccionPersona(\''.$Nombre.'\','.$ID_Persona.')" data-dismiss="modal">seleccionar</button></td>
 			    </tr>';
 
-
+					//   <td>'.$Nro_Legajo.'</td>
 
 
 		};//Fin while $resultados
