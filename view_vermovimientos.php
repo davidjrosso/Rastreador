@@ -203,7 +203,9 @@ $Con->CloseConexion();
               $Con = new Conexion();
               $Con->OpenConexion();
 
-              $ConsultarDatos = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, M.observaciones, R.responsable, C.centro_salud, I.Nombre, M.motivo_1, M.motivo_2, M.motivo_3 from movimiento M, persona P, responsable R, centros_salud C, otras_instituciones I where M.id_persona = P.id_persona and M.id_resp = R.id_resp and M.id_centro = C.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and M.id_movimiento = $ID_Movimiento";
+              $ConsultarDatos = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, M.observaciones, R.responsable, C.centro_salud, I.Nombre, M.motivo_1, M.motivo_2, M.motivo_3 
+              from movimiento M, persona P, responsable R, centros_salud C, otras_instituciones I 
+              where M.id_persona = P.id_persona and M.id_resp = R.id_resp and M.id_centro = C.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and M.id_movimiento = $ID_Movimiento";
               $MensajeErrorDatos = "No se pudo consultar los Datos del Movimiento";
 
               $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);

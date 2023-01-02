@@ -1,4 +1,5 @@
 <?php 
+
 session_start(); 
 require_once "Controladores/Elements.php";
 require_once "Controladores/CtrGeneral.php";
@@ -109,23 +110,7 @@ $Con->CloseConexion();
                   weekStart: 1,
               });
           });
-    /*
-  	$(document).ready(function() {
-		    $("#ResultadosPersonas").html('<p>No se ha ingresado ningun dato</p>');		    
-		});
-
-      function buscarPersonas(xNombre) {
-		    var textoBusqueda = xNombre;
-		 
-		     if (textoBusqueda != "") {
-		        $.post("buscarPersonas.php", {valorBusqueda: textoBusqueda}, function(mensaje) {
-		            $("#ResultadosPersonas").html(mensaje);
-		         }); 
-		     } else { 
-	        	$("#ResultadosPersonas").html('<p>No se ha seleccionado ninguna Exploracion Clinica</p>');
-	        };
-		};
-    */
+   
     function buscarPersonas(){
       var xNombre = document.getElementById('SearchPersonas').value;
       var textoBusqueda = xNombre;
@@ -184,6 +169,7 @@ $Con->CloseConexion();
 
     function buscarCategorias(){
       var xCategoria = document.getElementById('SearchCategorias').value;
+      console.log(xCategoria);
       var textoBusqueda = xCategoria;
       xmlhttp=new XMLHttpRequest();
       xmlhttp.onreadystatechange = function() {
@@ -448,6 +434,18 @@ $Con->CloseConexion();
               </div>
             </div>
             <div id="contenedorBarrios">              
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" name = "Nro_Carpeta" id="Nro_Carpeta" autocomplete="off">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" name = "Nro_Legajo" id="Nro_Legajo" autocomplete="off">
+              </div>
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Escuela: </label>
