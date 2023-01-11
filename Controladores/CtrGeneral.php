@@ -91,6 +91,23 @@ class CtrGeneral{
 		return $Table;
 	}
 
+	public function getMovimientosxDocumento($Documento){
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, R.responsable from movimiento M, persona P, responsable R where M.id_persona = P.id_persona and M.id_resp = R.id_resp and P.documento like '%$Documento%' and M.estado = 1 and P.estado = 1 order by M.id_movimiento desc";
+		$MessageError = "Problemas al intentar mostrar Movimientos";
+		$Table = "<table class='table'><thead><tr><th>Id</th><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th></tr></thead>";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
+			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
+			$Table .= "<tr><td>".$Ret["id_movimiento"]."</td><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+		}
+		$Con->CloseConexion();
+		$Table .= "</table>";
+
+		return $Table;
+	}
+
 	public function getMovimientosxResponsable($Responsable){
 		$Con = new Conexion();
 		$Con->OpenConexion();
@@ -113,7 +130,7 @@ class CtrGeneral{
 	public function getPersonas(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, apellido, nombre, documento,nro_legajo, nro_legajo from persona where estado = 1 order by apellido";
+		$Consulta = "select id_persona, apellido, nombre, documento, nro_legajo from persona where estado = 1 order by apellido";
 		$MessageError = "Problemas al intentar mostrar Personas";
 		$Table = "<table class='table'><thead><tr><th>Id</th><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -123,13 +140,15 @@ class CtrGeneral{
 		$Con->CloseConexion();
 		$Table .= "</table>";
 
-		return $Table;
+		// $Table .= $Consulta;
+
+		return $Ret;
 	}
 
 	public function getPersonasxID($ID){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, apellido, nombre, documento,nro_legajo from persona where id_persona = $ID and estado = 1 order by apellido";
+		$Consulta = "select id_persona, apellido, nombre, documento, nro_legajo from persona where id_persona = $ID and estado = 1 order by apellido";
 		$MessageError = "Problemas al intentar mostrar Personas por ID";
 		$Table = "<table class='table'><thead><tr><th>Id</th><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -161,7 +180,7 @@ class CtrGeneral{
 	public function getPersonasxNombre($Nombre){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, apellido, nombre, documento,nro_legajo from persona where nombre like '%$Nombre%' and estado = 1 order by apellido";
+		$Consulta = "select id_persona, apellido, nombre, documento, nro_legajo from persona where nombre like '%$Nombre%' and estado = 1 order by apellido";
 		$MessageError = "Problemas al intentar mostrar Personas por Nombre";
 		$Table = "<table class='table'><thead><tr><th>Id</th><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);

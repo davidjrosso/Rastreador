@@ -656,25 +656,36 @@ $Con->CloseConexion();
 
               $tomarRetTodos = array();
 
-              $Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MensajeError." Consulta: ".$Consulta);           
+              $Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MensajeError." Consulta: ".$Consulta);    
+              
+              echo var_dump($Consulta);
               
               /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               // TOMANDO LOS ID DE LOS MOVIMIENTOS PARA LUEGO HACER LA COMPARACION PARA EL PINTADO DE LOS MOTIVOS.
-              $ResultadosPrincipal = $Con->ResultSet->fetch_assoc();
+              $ResultadosPrincipal = $Con->ResultSet->fetch_array();
               // echo "DEBUG DATOS IDS: ".var_dump($ResultadosPrincipal);
 
               $arrIDMovimientos = array();
 
-              foreach($ResultadosPrincipal as $value){
-                  $arrIDMovimientos[] = $value['id_movimiento'];
-              }
+              // var_dump($ResultadosPrincipal["id_movimiento"]);
 
-              // while($Ret = $ResultadosPrincipal->fetch_assoc()){
-              //   // echo "DEBUG :".$Ret['id_movimiento'];
-              //     $arrIDMovimientos[] = $Ret['id_movimiento'];
+              // if($ResultadosPrincipal->num_rows > 1){
+
               // }
+
+              // foreach($ResultadosPrincipal as $valor){   
+              //     // echo var_dump($valor);               
+              //     $arrIDMovimientos[] = $value["id_movimiento"];
+              //     //TODO: revisar bien esto
+              //     // $arrIDMovimientos[] = $value;
+              // }
+
+              while($Ret = $Con->ResultSet->fetch_assoc()){
+                // echo "DEBUG :".$Ret['id_movimiento'];
+                  $arrIDMovimientos[] = $Ret['id_movimiento'];
+              }
 
               // echo "DEBUG IDS:".var_dump($arrIDMovimientos);
               
