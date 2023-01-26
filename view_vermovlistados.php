@@ -65,6 +65,13 @@ $Con->CloseConexion();
         //Terminar esta parte cuando termine lo demas.
        }
 
+
+       function enviarImprimir() {     
+
+        alert("hacer imprimir!");
+      
+        }
+
   </script>
 
 </head>
@@ -207,6 +214,11 @@ $Con->CloseConexion();
               $Lote = $_REQUEST["Lote"];
               $Familia = $_REQUEST["Familia"];
               $Barrio = $_REQUEST["ID_Barrio"];
+
+              $Nro_Carpeta = $_REQUEST["Nro_Carpeta"];
+              $Nro_Legajo = $_REQUEST["Nro_Legajo"];
+              
+
               $ID_Motivo = $_REQUEST["ID_Motivo"];
               $ID_Motivo2 = $_REQUEST["ID_Motivo2"];
               $ID_Motivo3 = $_REQUEST["ID_Motivo3"];
@@ -219,7 +231,7 @@ $Con->CloseConexion();
 
               $ConsultarMovimientosPersona = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, M.motivo_1, M.motivo_2, M.motivo_3, M.observaciones, R.responsable from movimiento M, persona P, barrios B, motivo MT, categoria C, centros_salud CS, otras_instituciones I, responsable R where M.id_persona = P.id_persona and B.ID_Barrio = P.ID_Barrio and M.id_centro = CS.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and R.id_resp = M.id_resp and M.estado = 1 and P.estado = 1 and MT.estado = 1 and C.estado = 1 and M.fecha between '$Fecha_Inicio' and '$Fecha_Fin'";
           	  $Consulta = "select M.id_movimiento, M.fecha, M.id_persona, MONTH(M.fecha) as 'Mes', YEAR(M.fecha) as 'Anio', B.Barrio, P.manzana, P.lote, P.familia, P.apellido, P.nombre, P.fecha_nac, P.domicilio, M.motivo_1, M.motivo_2, M.motivo_3, R.responsable, M.observaciones from movimiento M, persona P, barrios B, motivo MT, categoria C, centros_salud CS, otras_instituciones I, responsable R where M.id_persona = P.id_persona and B.ID_Barrio = P.ID_Barrio and M.id_centro = CS.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and R.id_resp = M.id_resp and M.estado = 1 and P.estado = 1 and MT.estado = 1 and C.estado = 1 and M.fecha between '$Fecha_Inicio' and '$Fecha_Fin'"; 
-
+     var_dump($Consulta);     
               $filtros = [];
               $Con = new Conexion();
               $Con->OpenConexion();             
@@ -263,6 +275,18 @@ $Con->CloseConexion();
                 $filtros[] = "Sublote: ".$Familia;
               }
 
+              if($Nro_Carpeta != null && $Nro_Carpeta != ""){
+                $ConsultarMovimientosPersona .= " and P.nro_carpeta = '$Nro_Carpeta'";
+                $Consulta.= " and P.nro_carpeta = '$Nro_Carpeta'";
+                $filtros[] = "Nro_carpeta: ".$Nro_Carpeta;
+              }
+
+              if($Nro_Legajo != null && $Nro_Legajo != ""){
+                $ConsultarMovimientosPersona .= " and P.nro_legajo = '$Nro_Legajo'";
+                $Consulta.= " and P.nro_legajo = '$Nro_Legajo'";
+                $filtros[] =  " Nro_legajo : ".$Nro_Legajo;
+              }
+              
               if(count($Barrio) > 1){
                 $filtroBarrios = 'Barrios:';
                 foreach($Barrio as $key => $valueBarrio){
@@ -405,15 +429,20 @@ $Con->CloseConexion();
 
       	?>
         <center><p class = "LblForm">ENTRE: <?php echo $Etiqueta_Fecha_Inicio." Y ".$Etiqueta_Fecha_Fin; ?></p></center>  
-        <span><i class="fa fa-filter"></i> Filtros </span>
+        <span> Filtros seleccionados </span>
+        <!-- <i class="fa fa-filter"></i> -->
         <!-- < ?php echo "DEBUG: ".$Consulta; ?>       -->
         <?php
+        // echo "DEBUG: ".$Consulta."<br><br>";
           foreach($filtros as $value){
             echo "<span class='etFiltros'>".$value."</span> ";
           }
         }
         ?>
         </div>
+        <div class="col">
+          <button type="button" class="btn btn-secondary" onClick="enviarImprimir()">Imprimir</button>
+      </div>
      </div>
      <div class = "row">
       <div class = "col-10">
@@ -454,6 +483,10 @@ $Con->CloseConexion();
                 $Fecha_Nacimiento = implode("/", array_reverse(explode("-",$Ret["fecha_nac"])));    
               }
               $Nro_Carpeta = $Ret["nro_carpeta"];
+              $Nro_Legajo = $Ret["nro_legajo"];
+
+              
+             
               $Obra_Social = $Ret["obra_social"];
               $Domicilio = $Ret["domicilio"];
               $Barrio = $RetBarrio["Barrio"];
@@ -470,9 +503,9 @@ $Con->CloseConexion();
               $ID_Escuela = $Ret["ID_Escuela"];
               $Estado = $Ret["estado"];
 
-
-              $Persona = new Persona($ID_Persona,$Apellido,$Nombre,$DNI,$Edad,$Meses,$Fecha_Nacimiento,$Nro_Carpeta,$Obra_Social,$Domicilio,$Barrio,$Localidad,$Circunscripcion,$Seccion,$Manzana,$Lote,$Familia,$Observacion,$Cambio_Domicilio,$Telefono,$Mail,$ID_Escuela,$Estado);
-
+              $Persona = new Persona($ID_Persona,$Apellido,$Nombre,$DNI,$Nro_Legajo, $Edad,$Meses,$Fecha_Nacimiento,$Nro_Carpeta,$Obra_Social,$Domicilio,$Barrio,$Localidad,$Circunscripcion,$Seccion,$Manzana,$Lote,$Familia,$Observaciones,$Cambio_Domicilio,$Telefono,$Mail,$ID_Escuela,$Estado,$Trabajo);              
+              //$Persona = new Persona($ID_Persona,$Apellido,$Nombre,$DNI,$Nro_Legajo,$Edad,$Meses,$Fecha_Nacimiento,$Nro_Carpeta,$Obra_Social,$Domicilio,$Barrio,$Localidad,$Circunscripcion,$Seccion,$Manzana,$Lote,$Familia,$Observacion,$Cambio_Domicilio,$Telefono,$Mail,$ID_Escuela,$Estado);
+              // var_dump($Persona);
               $ConsultarEscuela = "select Escuela from escuelas where ID_Escuela = $ID_Escuela";
               $MensajeErrorConsultarEscuela = "No se pudo consultar la Escuela";
 
@@ -493,7 +526,7 @@ $Con->CloseConexion();
                 $Table .= "<tr><td>Edad</td><td>".$Persona->getEdad()."</td></tr>";
               }                            
               $Table .= "<tr><td>Meses</td><td>".$Persona->getMeses()."</td></tr>";              
-              $Table .= "<tr><td>Nro. Carpeta</td><td>".$Persona->getNro_Carpeta()."</td></tr>";              
+                           
               $Table .= "<tr><td>Localidad</td><td>".$Persona->getLocalidad()."</td></tr>";
               $Table .= "<tr><td>Barrio</td><td>".$Persona->getBarrio()."</td></tr>";      
               $Table .= "<tr><td>Domicilio</td><td>".$Persona->getDomicilio()."</td></tr>";
@@ -503,7 +536,9 @@ $Con->CloseConexion();
               $Table .= "<tr><td>Telefono</td><td>".$Persona->getTelefono()."</td></tr>";
               $Table .= "<tr><td>E-Mail</td><td>".$Persona->getMail()."</td></tr>";                          
               $Table .= "<tr><td>Obra Social</td><td>".$Persona->getObra_Social()."</td></tr>";
-              $Table .= "<tr><td>Escuela</td><td>".$Escuela."</td></tr>";                                        
+              $Table .= "<tr><td>Escuela</td><td>".$Escuela."</td></tr>";  
+              $Table .= "<tr><td>Nro. Legajo</td><td>".$Persona->getNro_Carpeta()."</td></tr>"; 
+              $Table .= "<tr><td>Nro. Carpeta</td><td>".$Persona->getNro_Legajo()."</td></tr>";                                       
               $Table .= "<tr><td>Observación</td><td>".$Persona->getObservaciones()."</td></tr>";
               $Table .= "<tr><td>Cambio de Domicilio</td><td>".$Persona->getCambio_Domicilio()."</td></tr>";
 
@@ -560,8 +595,13 @@ $Con->CloseConexion();
 
                 $Observaciones = $RetMovimientos["observaciones"];
                 $Responsable = $RetMovimientos["responsable"];
+//solucionar el error!
+//  variables inventadas solo para que arme la tabla
 
-                $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Observaciones,$Responsable);
+                $CentroSalud=$RetMovimientos["nombre"]; //centro_salud
+                $OtraInstitucion=$RetMovimientos["nombre"]; //otraInstitucion
+                $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);                
+
                 $TableMov = "<table class='table table-dark'>";                
                 $TableMov .= "<tr><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>".$DtoMovimiento->getFecha()."</td></tr>";
                 $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
@@ -569,6 +609,8 @@ $Con->CloseConexion();
                 $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
                 $TableMov .= "<tr><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getObservaciones()."</td></tr>";
                 $TableMov .= "<tr><td style = 'width: 30%;'>Responsable</td><td style = 'width: 70%;'>".$DtoMovimiento->getResponsable()."</td></tr>";
+                $TableMov .= "<tr><td style = 'width: 30%;'>Centro de salud</td><td style = 'width: 70%;'>".$DtoMovimiento->getCentroSalud()."</td></tr>";
+                $TableMov .= "<tr><td style = 'width: 30%;'>Otras instituciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
                 $TableMov .= "</table>";
                 echo $TableMov;
 
@@ -585,7 +627,7 @@ $Con->CloseConexion();
               //////////////////////////////////////////////////////TABLAS MOVIMIENTOS DE LA PERSONA /////////////////////////////            
               $MensajeErrorMovimientos = "No se pudo consultar los movimientos de la persona";
 
-              // echo "DEBUG: ".var_dump($Consulta);
+              // echo "* DEBUG: ".var_dump($Consulta),"<br><br>" ;
 
               $TomarMovimientos = mysqli_query($Con->Conexion,$Consulta) or die($MensajeErrorMovimientos);
 
@@ -630,8 +672,13 @@ $Con->CloseConexion();
 
                 $Observaciones = $RetMovimientos["observaciones"];
                 $Responsable = $RetMovimientos["responsable"];
+//solucionar el error!
+//  variables inventadas solo para que arme la tabla
+                
+                $CentroSalud=$RetMovimientos["nombre"]; //centro_salud
+                $OtraInstitucion=$RetMovimientos["nombre"];
+                $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);
 
-                $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Observaciones,$Responsable);
                 $TableMov = "<table class='table table-dark'>";
                 $TableMov .= "<tr><td style = 'width: 30%;'>Persona</td><td style = 'width: 70%;'>".$DtoMovimiento->getApellido().", ".$DtoMovimiento->getNombre()."</td></tr>";
                 $TableMov .= "<tr><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>".$DtoMovimiento->getFecha()."</td></tr>";
@@ -640,6 +687,8 @@ $Con->CloseConexion();
                 $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
                 $TableMov .= "<tr><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getObservaciones()."</td></tr>";
                 $TableMov .= "<tr><td style = 'width: 30%;'>Responsable</td><td style = 'width: 70%;'>".$DtoMovimiento->getResponsable()."</td></tr>";
+                $TableMov .= "<tr><td style = 'width: 30%;'>Centro de salud</td><td style = 'width: 70%;'>".$DtoMovimiento->getCentroSalud()."</td></tr>";
+                $TableMov .= "<tr><td style = 'width: 30%;'>Otras instituciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
                 $TableMov .= "</table>";
                 echo $TableMov;
 

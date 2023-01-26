@@ -463,7 +463,7 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo: </label>
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 1: </label>
               <div class="col-md-10" id = "Motivo">
                 <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo">Seleccione un Motivo</button>   
               </div>
@@ -520,6 +520,7 @@ $Con->CloseConexion();
                 <input type="hidden" name="ID_Motivo3" id = "ID_Motivo3" value = "0">
                 <input type="hidden" name="ID_Categoria" id = "ID_Categoria" value = "0">
                 <button type="submit" class="btn btn-outline-success">Aceptar</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
               </div>
             </div>
           </form>
