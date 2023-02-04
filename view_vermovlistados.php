@@ -231,10 +231,12 @@ $Con->CloseConexion();
 
               $ConsultarMovimientosPersona = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, M.motivo_1, M.motivo_2, M.motivo_3, M.observaciones, R.responsable from movimiento M, persona P, barrios B, motivo MT, categoria C, centros_salud CS, otras_instituciones I, responsable R where M.id_persona = P.id_persona and B.ID_Barrio = P.ID_Barrio and M.id_centro = CS.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and R.id_resp = M.id_resp and M.estado = 1 and P.estado = 1 and MT.estado = 1 and C.estado = 1 and M.fecha between '$Fecha_Inicio' and '$Fecha_Fin'";
           	  $Consulta = "select M.id_movimiento, M.fecha, M.id_persona, MONTH(M.fecha) as 'Mes', YEAR(M.fecha) as 'Anio', B.Barrio, P.manzana, P.lote, P.familia, P.apellido, P.nombre, P.fecha_nac, P.domicilio, M.motivo_1, M.motivo_2, M.motivo_3, R.responsable, M.observaciones from movimiento M, persona P, barrios B, motivo MT, categoria C, centros_salud CS, otras_instituciones I, responsable R where M.id_persona = P.id_persona and B.ID_Barrio = P.ID_Barrio and M.id_centro = CS.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and R.id_resp = M.id_resp and M.estado = 1 and P.estado = 1 and MT.estado = 1 and C.estado = 1 and M.fecha between '$Fecha_Inicio' and '$Fecha_Fin'"; 
-     var_dump($Consulta);     
+              // var_dump($Consulta);     
               $filtros = [];
               $Con = new Conexion();
-              $Con->OpenConexion();             
+              $Con->OpenConexion();    
+              
+              $tomarRetTodos = array();
 
               if($ID_Persona > 0){
                 $Consulta .= " and P.id_persona = $ID_Persona";
@@ -414,6 +416,136 @@ $Con->CloseConexion();
               }else{
                 $Consulta .= " group by M.id_persona order by Anio, Mes, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";
               }
+
+
+
+              //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+              //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+              //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+              //	CREANDO FILTRO MOSTRAR              
+              if($Mostrar > 0){ 
+                //, P.nro_legajo, P.nro_carpeta
+              	$ConsultarTodos = "select P.id_persona, B.Barrio, P.manzana, P.lote, P.familia, P.apellido, P.nombre, P.fecha_nac, P.domicilio
+                 from persona P, barrios B, movimiento M
+                 where not exists(select * from movimiento M2 where M2.id_persona = P.id_persona) and B.ID_Barrio = P.ID_Barrio and P.estado = 1";
+
+                if($ID_Persona > 0){
+                  $ConsultarTodos .= " and P.id_persona = $ID_Persona";
+                }
+
+                if($Edad_Desde != null && $Edad_Desde != "" && $Edad_Hasta != null && $Edad_Hasta != ""){                  
+                  $ConsultarTodos .= " and P.edad > $Edad_Desde and P.edad < $Edad_Hasta";
+                }
+
+                if($Domicilio != null && $Domicilio != ""){
+                  $ConsultarTodos .= " and P.domicilio like '%$Domicilio%'";
+                }
+
+                if($Manzana != null && $Manzana != ""){
+                  $ConsultarTodos .= " and P.manzana = '$Manzana'";
+                }
+
+                if($Lote != null && $Lote != ""){
+                  $ConsultarTodos .= " and P.lote = $Lote";
+                }
+
+                if($Familia != null && $Familia != ""){
+                  $ConsultarTodos .= " and P.familia = $Familia";
+                }
+
+                if($Nro_Carpeta != null && $Nro_Carpeta != ""){
+                  $ConsultarTodos .= " and P.nro_carpeta = $Nro_Carpeta";
+                }
+
+                if($Nro_Legajo != null && $Nro_Legajo != ""){
+                  $ConsultarTodos .= " and P.nro_legajo = $Nro_Legajo";
+                }
+                if(count($Barrio) > 1){
+                  $filtroBarrios = 'Barrios:';
+                  foreach($Barrio as $key => $valueBarrio){
+                    if($key == $Barrio->array_key_first){
+                      $ConsultarTodos .= " and (";
+                    }
+                    if($valueBarrio > 0){
+                      if($key === count($Barrio) - 1){
+                        $ConsultarTodos .= " P.ID_Barrio = $valueBarrio )";
+                      }else{
+                        $ConsultarTodos .= " P.ID_Barrio = $valueBarrio or";
+                      }
+                      $ConsultarBarrio = "select Barrio from barrios where ID_Barrio = ".$valueBarrio." limit 1";
+                      $EjecutarConsultarBarrio = mysqli_query($Con->Conexion,$ConsultarBarrio) or die("Problemas al consultar filtro Barrios");
+                      $RetConsultarBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);   
+                      if($key == $Barrio->array_key_first){
+                        $filtroBarrios .= " ".$RetConsultarBarrio['Barrio'];   
+                      }else{
+                        $filtroBarrios .= " - ".$RetConsultarBarrio['Barrio'];   
+                      }                                   
+                    }
+                  }
+                  $filtros[] = $filtroBarrios;
+                }else{
+                  if($Barrio[0] > 0){
+                    $ConsultarTodos .= " and P.ID_Barrio = $Barrio[0]";
+                    $ConsultarBarrio = "select Barrio from barrios where ID_Barrio = ".$Barrio[0]." limit 1";
+                    $EjecutarConsultarBarrio = mysqli_query($Con->Conexion,$ConsultarBarrio) or die("Problemas al consultar filtro Barrios");
+                    $RetConsultarBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);
+                    $filtros[] = "Barrio: ".$RetConsultarBarrio['Barrio'];
+                  }                
+                }
+
+                if($ID_Escuela > 0){
+                  $ConsultarTodos .= " and P.ID_Escuela = $ID_Escuela";
+                }
+
+                if($Trabajo != null && $Trabajo != ""){
+                  $ConsultarTodos .= " and P.Trabajo like '%$Trabajo%'";
+                }
+
+                if($ID_Persona > 0){
+                  $ConsultarTodos .= " group by P.id_movimiento order by P.domicilio, P.apellido, P.nombre";
+                }else{
+                  $ConsultarTodos .= " group by P.id_persona order by P.domicilio, P.apellido, P.nombre";
+                }
+
+                // $ConsultarTodos .= " group by P.id_persona order by P.apellido, P.nombre";
+
+                // echo "DEBUG: ".$ConsultarTodos;
+                // var_dump($ConsultarTodos);
+
+
+
+              	$MensajeErrorTodos = "No se pudieron consultar los datos de todas las personas";
+
+              	$EjecutarConsultarTodos = mysqli_query($Con->Conexion,$ConsultarTodos) or die($MensajeErrorTodos);                
+                
+                // CAMBIOS CON TODOS                
+                // $tomarRetTodos = mysqli_fetch_array($EjecutarConsultarTodos);
+                
+                                
+              	while($RetTodos = mysqli_fetch_assoc($EjecutarConsultarTodos)){
+                  // PASAR A TODOS
+              		// if($RetTodos["fecha_nac"] == 'null'){
+	                //   $Fecha_Nacimiento = "Sin Datos";
+	                // }else{
+	                //   $Fecha_Nacimiento = implode("-", array_reverse(explode("-",$RetTodos["fecha_nac"])));
+	                // }
+
+	                // $Table .= "<tr class='SinMovimientos Datos'>";
+                  // $Table .= "<td id='Contenido-1'>".$RetTodos["Barrio"]."</td><td id='Contenido-2'>".$RetTodos["domicilio"]."</td><td id='Contenido-3' name='datosflia' style='max-width: 50px;'>".$RetTodos["manzana"]."</td><td id='Contenido-4' name='datosflia' style='max-width: 50px;'>".$RetTodos["lote"]."</td><td id='Contenido-5' name='datosflia' style='max-width: 50px;'>".$RetTodos["familia"]."</td><td id='Contenido-6'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$RetTodos["apellido"].", ".$RetTodos["nombre"]."</a></td><td id='Contenido-7' style='max-width: 100px;'>".$Fecha_Nacimiento."</td>";
+
+                  // $ColSpans = $MesesDiferencia * 270;
+                  // $Table .= "<td style='width:".$ColSpans."px'></td>";
+
+                  $RetTodos['tipo'] = "SM";
+                  $tomarRetTodos[] = $RetTodos;
+
+              	}
+              }
+
+              //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+              //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+              //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               
 
               $Con->CloseConexion();
@@ -565,13 +697,32 @@ $Con->CloseConexion();
                 echo "<div class = 'col'></div>";
               }
 
-              while ($RetMovimientos = mysqli_fetch_assoc($TomarMovimientosPersona)) {
-                $ID_Movimiento = $RetMovimientos["id_movimiento"];
-                $Fecha = implode("-", array_reverse(explode("-",$RetMovimientos["fecha"])));
-                $Apellido = $RetMovimientos["apellido"];
-                $Nombre = $RetMovimientos["nombre"];
+              while($RetMovimientos = mysqli_fetch_assoc($TomarMovimientosPersona)){
+                $RetMovimientos['tipo'] = "CM";
+                $tomarRetTodos[] = $RetMovimientos; 
+              }
 
-                $ID_Motivo_1 = $RetMovimientos["motivo_1"];
+              foreach ($tomarRetTodos as $clave => $reg) {
+                $regdomicilio[$clave] = $reg['domicilio'];                
+              }
+
+              array_multisort($regdomicilio, SORT_DESC, $tomarRetTodos);
+
+              foreach($tomarRetTodos as $clave => $RetTodos){                
+                // echo var_dump($RetTodos);
+                // echo "<br>";
+                if($RetTodos["fecha_nac"] == 'null'){
+                  $Fecha_Nacimiento = "Sin Datos";
+                }else{
+                  $Fecha_Nacimiento = implode("-", array_reverse(explode("-",$RetTodos["fecha_nac"])));
+                }
+                
+                $ID_Movimiento = $RetTodos["id_movimiento"];
+                $Fecha = implode("-", array_reverse(explode("-",$RetTodos["fecha"])));
+                $Apellido = $RetTodos["apellido"];
+                $Nombre = $RetTodos["nombre"];
+
+                $ID_Motivo_1 = $RetTodos["motivo_1"];
                 $ConsultarMotivo_1 = "select motivo from motivo where id_motivo = $ID_Motivo_1";
 
                 // echo "DEBUG: ".var_dump($ConsultarMotivo_1);
@@ -581,25 +732,25 @@ $Con->CloseConexion();
                 $RetMotivo_1 = mysqli_fetch_assoc($RetMotivo_1);
                 $Motivo_1 = $RetMotivo_1["motivo"];
 
-                $ID_Motivo_2 = $RetMovimientos["motivo_2"];
+                $ID_Motivo_2 = $RetTodos["motivo_2"];
                 $ConsultarMotivo_2 = "select motivo from motivo where id_motivo = $ID_Motivo_2";
                 $RetMotivo_2 = mysqli_query($Con->Conexion,$ConsultarMotivo_2) or die($MensajeErrorMotivo_2);
                 $RetMotivo_2 = mysqli_fetch_assoc($RetMotivo_2);
                 $Motivo_2 = $RetMotivo_2["motivo"];
 
-                $ID_Motivo_3 = $RetMovimientos["motivo_3"];
+                $ID_Motivo_3 = $RetTodos["motivo_3"];
                 $ConsultarMotivo_3 = "select motivo from motivo where id_motivo = $ID_Motivo_3";
                 $RetMotivo_3 = mysqli_query($Con->Conexion,$ConsultarMotivo_3) or die($MensajeErrorMotivo_3);
                 $RetMotivo_3 = mysqli_fetch_assoc($RetMotivo_3);
                 $Motivo_3 = $RetMotivo_3["motivo"];
 
-                $Observaciones = $RetMovimientos["observaciones"];
-                $Responsable = $RetMovimientos["responsable"];
-//solucionar el error!
-//  variables inventadas solo para que arme la tabla
+                $Observaciones = $RetTodos["observaciones"];
+                $Responsable = $RetTodos["responsable"];
+                  //solucionar el error!
+                  //  variables inventadas solo para que arme la tabla
 
-                $CentroSalud=$RetMovimientos["nombre"]; //centro_salud
-                $OtraInstitucion=$RetMovimientos["nombre"]; //otraInstitucion
+                $CentroSalud=$RetTodos["nombre"]; //centro_salud
+                $OtraInstitucion=$RetTodos["nombre"]; //otraInstitucion
                 $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);                
 
                 $TableMov = "<table class='table table-dark'>";                
@@ -613,8 +764,71 @@ $Con->CloseConexion();
                 $TableMov .= "<tr><td style = 'width: 30%;'>Otras instituciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
                 $TableMov .= "</table>";
                 echo $TableMov;
+            
+                
+                
+
+
+
+
+
+
+
+
 
               }
+
+
+//               while ($RetMovimientos = mysqli_fetch_assoc($TomarMovimientosPersona)) {
+//                 $ID_Movimiento = $RetMovimientos["id_movimiento"];
+//                 $Fecha = implode("-", array_reverse(explode("-",$RetMovimientos["fecha"])));
+//                 $Apellido = $RetMovimientos["apellido"];
+//                 $Nombre = $RetMovimientos["nombre"];
+
+//                 $ID_Motivo_1 = $RetMovimientos["motivo_1"];
+//                 $ConsultarMotivo_1 = "select motivo from motivo where id_motivo = $ID_Motivo_1";
+
+//                 // echo "DEBUG: ".var_dump($ConsultarMotivo_1);
+
+//                 $MensajeErrorMotivo_1 = "No se pudo consultar el motivo 1";
+//                 $RetMotivo_1 = mysqli_query($Con->Conexion,$ConsultarMotivo_1) or die($MensajeErrorMotivo_1);
+//                 $RetMotivo_1 = mysqli_fetch_assoc($RetMotivo_1);
+//                 $Motivo_1 = $RetMotivo_1["motivo"];
+
+//                 $ID_Motivo_2 = $RetMovimientos["motivo_2"];
+//                 $ConsultarMotivo_2 = "select motivo from motivo where id_motivo = $ID_Motivo_2";
+//                 $RetMotivo_2 = mysqli_query($Con->Conexion,$ConsultarMotivo_2) or die($MensajeErrorMotivo_2);
+//                 $RetMotivo_2 = mysqli_fetch_assoc($RetMotivo_2);
+//                 $Motivo_2 = $RetMotivo_2["motivo"];
+
+//                 $ID_Motivo_3 = $RetMovimientos["motivo_3"];
+//                 $ConsultarMotivo_3 = "select motivo from motivo where id_motivo = $ID_Motivo_3";
+//                 $RetMotivo_3 = mysqli_query($Con->Conexion,$ConsultarMotivo_3) or die($MensajeErrorMotivo_3);
+//                 $RetMotivo_3 = mysqli_fetch_assoc($RetMotivo_3);
+//                 $Motivo_3 = $RetMotivo_3["motivo"];
+
+//                 $Observaciones = $RetMovimientos["observaciones"];
+//                 $Responsable = $RetMovimientos["responsable"];
+// //solucionar el error!
+// //  variables inventadas solo para que arme la tabla
+
+//                 $CentroSalud=$RetMovimientos["nombre"]; //centro_salud
+//                 $OtraInstitucion=$RetMovimientos["nombre"]; //otraInstitucion
+//                 $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);                
+
+//                 $TableMov = "<table class='table table-dark'>";                
+//                 $TableMov .= "<tr><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>".$DtoMovimiento->getFecha()."</td></tr>";
+//                 $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
+//                 $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
+//                 $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
+//                 $TableMov .= "<tr><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getObservaciones()."</td></tr>";
+//                 $TableMov .= "<tr><td style = 'width: 30%;'>Responsable</td><td style = 'width: 70%;'>".$DtoMovimiento->getResponsable()."</td></tr>";
+//                 $TableMov .= "<tr><td style = 'width: 30%;'>Centro de salud</td><td style = 'width: 70%;'>".$DtoMovimiento->getCentroSalud()."</td></tr>";
+//                 $TableMov .= "<tr><td style = 'width: 30%;'>Otras instituciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
+//                 $TableMov .= "</table>";
+//                 echo $TableMov;
+
+//               }
 
               $Con->CloseConexion();
               
@@ -639,6 +853,88 @@ $Con->CloseConexion();
                 echo "<p class = 'TextoSinResultados'>No se encontraron Resultados</p><center><button class = 'btn btn-danger' onClick = 'location.href= \"view_movpersonas.php\"'>Atras</button></center>";
                 echo "</div>";
                 echo "<div class = 'col'></div>";
+              }
+
+              while($RetMovimientos = mysqli_fetch_assoc($TomarMovimientos)){
+                $RetMovimientos['tipo'] = "CM";
+                $tomarRetTodos[] = $RetMovimientos; 
+              }
+
+              foreach ($tomarRetTodos as $clave => $reg) {
+                $regdomicilio[$clave] = $reg['domicilio'];                
+              }
+
+              array_multisort($regdomicilio, SORT_DESC, $tomarRetTodos);
+
+              foreach($tomarRetTodos as $clave => $RetTodos){                
+                // echo var_dump($RetTodos);
+                // echo "<br>";
+                if($RetTodos["fecha_nac"] == 'null'){
+                  $Fecha_Nacimiento = "Sin Datos";
+                }else{
+                  $Fecha_Nacimiento = implode("-", array_reverse(explode("-",$RetTodos["fecha_nac"])));
+                }
+
+                if($RetTodos["tipo"] == "SM"){                
+                      $Apellido = $RetTodos["apellido"];
+                      $Nombre = $RetTodos["nombre"];
+                        //solucionar el error!
+                        //  variables inventadas solo para que arme la tabla              
+
+                      $TableMov = "<table class='table text-white' style='background-color: #AEB6BF;'>";                
+                      $TableMov .= "<tr><td style = 'width: 30%;'>Nombre</td><td style = 'width: 70%;'>".$Apellido.", ".$Nombre."</td></tr>";                                  
+                      $TableMov .= "<tr><td style = 'width: 30%;'>Estado</td><td style = 'width: 70%;'>SIN MOVIMIENTOS</td></tr>";                                 
+                      $TableMov .= "</table>";
+                      echo $TableMov;
+                }else{
+                  $ID_Movimiento = $RetTodos["id_movimiento"];
+                  $Fecha = implode("-", array_reverse(explode("-",$RetTodos["fecha"])));
+                  $Apellido = $RetTodos["apellido"];
+                  $Nombre = $RetTodos["nombre"];
+
+                  $ID_Motivo_1 = $RetTodos["motivo_1"];
+                  $ConsultarMotivo_1 = "select motivo from motivo where id_motivo = $ID_Motivo_1";
+
+                  // echo "DEBUG: ".var_dump($ConsultarMotivo_1);
+
+                  $MensajeErrorMotivo_1 = "No se pudo consultar el motivo 1";
+                  $RetMotivo_1 = mysqli_query($Con->Conexion,$ConsultarMotivo_1) or die($MensajeErrorMotivo_1);
+                  $RetMotivo_1 = mysqli_fetch_assoc($RetMotivo_1);
+                  $Motivo_1 = $RetMotivo_1["motivo"];
+
+                  $ID_Motivo_2 = $RetTodos["motivo_2"];
+                  $ConsultarMotivo_2 = "select motivo from motivo where id_motivo = $ID_Motivo_2";
+                  $RetMotivo_2 = mysqli_query($Con->Conexion,$ConsultarMotivo_2) or die($MensajeErrorMotivo_2);
+                  $RetMotivo_2 = mysqli_fetch_assoc($RetMotivo_2);
+                  $Motivo_2 = $RetMotivo_2["motivo"];
+
+                  $ID_Motivo_3 = $RetTodos["motivo_3"];
+                  $ConsultarMotivo_3 = "select motivo from motivo where id_motivo = $ID_Motivo_3";
+                  $RetMotivo_3 = mysqli_query($Con->Conexion,$ConsultarMotivo_3) or die($MensajeErrorMotivo_3);
+                  $RetMotivo_3 = mysqli_fetch_assoc($RetMotivo_3);
+                  $Motivo_3 = $RetMotivo_3["motivo"];
+
+                  $Observaciones = $RetTodos["observaciones"];
+                  $Responsable = $RetTodos["responsable"];
+                    //solucionar el error!
+                    //  variables inventadas solo para que arme la tabla
+
+                  $CentroSalud=$RetTodos["nombre"]; //centro_salud
+                  $OtraInstitucion=$RetTodos["nombre"]; //otraInstitucion
+                  $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);                
+
+                  $TableMov = "<table class='table table-dark'>";                
+                  $TableMov .= "<tr><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>".$DtoMovimiento->getFecha()."</td></tr>";
+                  $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
+                  $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
+                  $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
+                  $TableMov .= "<tr><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getObservaciones()."</td></tr>";
+                  $TableMov .= "<tr><td style = 'width: 30%;'>Responsable</td><td style = 'width: 70%;'>".$DtoMovimiento->getResponsable()."</td></tr>";
+                  $TableMov .= "<tr><td style = 'width: 30%;'>Centro de salud</td><td style = 'width: 70%;'>".$DtoMovimiento->getCentroSalud()."</td></tr>";
+                  $TableMov .= "<tr><td style = 'width: 30%;'>Otras instituciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
+                  $TableMov .= "</table>";
+                  echo $TableMov;
+                }            
               }
               
 

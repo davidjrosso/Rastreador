@@ -1022,7 +1022,7 @@ public function getMenuSeguridad($ID){
   public function CBRepEscuelas(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Escuela'>";
+    $Select = "<select class='form-control' id='ID_Escuela' name = 'ID_Escuela'>";
     $Select .= "<option value = '0'>-Todos-</option>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from escuelas order by Escuela")or die("Problemas al mostrar Escuelas");
     while ($Ret = mysqli_fetch_array($Consulta)) {
@@ -1087,7 +1087,7 @@ public function getMenuSeguridad($ID){
   public function CBRepCentros(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_CentroSalud'>";
+    $Select = "<select class='form-control' id='ID_Centro' name = 'ID_CentroSalud'>";
     $Select .= "<option value = '0'>-Todos-</option>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from centros_salud where estado = 1 order by centro_salud")or die("Problemas al mostrar Centros de Salud");
     while ($Ret = mysqli_fetch_array($Consulta)) {
@@ -1101,7 +1101,7 @@ public function getMenuSeguridad($ID){
   public function CBRepOtrasInstituciones(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_OtraInstitucion'>";
+    $Select = "<select class='form-control' id='ID_OtraInstitucion' name = 'ID_OtraInstitucion'>";
     $Select .= "<option value = '0'>-Todos-</option>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from otras_instituciones where estado = 1 order by Nombre")or die("Problemas al mostrar Otras Instituciones");
     while ($Ret = mysqli_fetch_array($Consulta)) {

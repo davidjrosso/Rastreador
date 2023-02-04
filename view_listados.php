@@ -204,6 +204,8 @@ $Con->CloseConexion();
       ID_Persona.setAttribute('value',xID);
       var BtnBarrios = document.getElementById("agregarBarrio");
       BtnBarrios.setAttribute('disabled', true);      
+      var SelMostrar = document.getElementById("inpMostrar");
+      SelMostrar.setAttribute('disabled', true);
     }
 
     function seleccionMotivo(xMotivo,xID,xNumber){
@@ -524,7 +526,7 @@ $Con->CloseConexion();
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Mostrar Personas: </label>
               <div class="col-md-10">
-                <select class="form-control" name="Mostrar">
+                <select class="form-control" name="Mostrar" id="inpMostrar">
                 	<option value="0">Con Movimientos</option>
                 	<option value="1">Todos</option>
                 </select>
