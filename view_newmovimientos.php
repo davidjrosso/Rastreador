@@ -45,6 +45,7 @@ $Con->CloseConexion();
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
   <script>
+      var cantResponsables = 1;
        $(document).ready(function(){
               var date_input=$('input[name="Fecha"]'); //our date input has the name "date"
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
@@ -155,6 +156,26 @@ $Con->CloseConexion();
         ID_Motivo.setAttribute('value',xID);
       }
 
+      function agregarResponsable(){        
+        cantResponsables++;
+        if(cantResponsables < 5){
+          var divContenedor = document.getElementById('contenedorResponsables');
+          var divResponsables= document.createElement("div");
+          divResponsables.setAttribute('class','form-group row');
+          var labelResponsables= document.createElement("label");
+          labelResponsables.setAttribute('class','col-md-2 col-form-label LblForm');
+          labelResponsables.innerText = 'Responsable '+cantResponsables+':';
+          var divSelectResponsables= document.createElement("div");
+          divSelectResponsables.setAttribute('class','col-md-10');
+          var select = `<?php $Element = new Elements(); echo $Element->CBResponsables(); ?>`;
+          divSelectResponsables.innerHTML = select;      
+          divResponsables.appendChild(labelResponsables);
+          divResponsables.appendChild(divSelectResponsables);
+          divContenedor.appendChild(divResponsables);
+        }
+
+      }
+
       function resetearForm(){
             swal({
               title: "¿Está seguro?",
@@ -256,6 +277,10 @@ $Con->CloseConexion();
         resetearValorSelect("ID_Responsable");
         //RESETEANDO CENTRO DE SALUD
         resetearValorSelect("ID_Centro");
+        //RESETEANDO RESPONSABLES CREADOS
+        var div_btnPersona = tomarElemento("contenedorResponsables");
+        resetearValorDiv(div_btnPersona);   
+        cantResponsables = 1; 
       }
 
   </script>
@@ -440,7 +465,7 @@ $Con->CloseConexion();
             </div>
             <div class="form-group row">
               <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable: </label>
-              <div class = "col-md-10">
+              <div class = "col-md-9">
                 <?php  
                 $Element = new Elements();
                 if(isset($_SESSION["UltResponsable"])){
@@ -451,6 +476,11 @@ $Con->CloseConexion();
                 }                
                 ?>
               </div>
+              <div class="col-md-1">
+                  <button type="button" class="btn btn-primary" onClick="agregarResponsable()" id="agregarResponsableID">+</button>
+              </div>
+            </div>
+            <div id="contenedorResponsables">              
             </div>
             <div class="form-group row">
               <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Centro de Salud: </label>
@@ -473,7 +503,7 @@ $Con->CloseConexion();
                 $Element = new Elements();
                 if(isset($_SESSION["UltOtraInstitucion"])){
                   $xID_OtraInstitucion = $_SESSION["UltOtraInstitucion"];
-                  echo $Element->CBOModtrasInstituciones($xID_OtraInstitucion);                  
+                  echo $Element->CBModOtrasInstituciones($xID_OtraInstitucion);                  
                 }else{
                   echo $Element->CBOtrasInstituciones();
                 }                

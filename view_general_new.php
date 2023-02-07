@@ -561,7 +561,7 @@ $Con->CloseConexion();
                 ?>
               </div>
               <div class="col-md-1">
-                  <button type="button" class="btn btn-primary" onClick="agregarBarrio()" id="agregarBarrio">+</button>
+                  <button type="button" class="btn btn-primary" onClick="agregarBarrio()" id="agregarBarrioID">+</button>
               </div>
             </div>
             <div id="contenedorBarrios">              

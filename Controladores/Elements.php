@@ -712,7 +712,7 @@ public function getMenuSeguridad($ID){
   public function CBResponsables(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' id='ID_Responsable' name = 'ID_Responsable'>";
+    $Select = "<select class='form-control' id='ID_Responsable' name = 'ID_Responsable[]'>";
     $Select .= "<option selected = 'true' disabled = 'disabled'>-Seleccione un Responsable-</option>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from responsable where estado = 1 order by responsable")or die("Problemas al mostrar Responsables");
     while ($Ret = mysqli_fetch_array($Consulta)) {
@@ -726,7 +726,7 @@ public function getMenuSeguridad($ID){
   public function CBModResponsables($xID_Responsable){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Responsable'>";    
+    $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Responsable[]'>";    
     $Consulta = mysqli_query($Con3->Conexion,"select * from responsable where estado = 1 order by responsable")or die("Problemas al mostrar Responsables");
     while ($Ret = mysqli_fetch_array($Consulta)) {      
       if($Ret['id_resp'] == $xID_Responsable){
