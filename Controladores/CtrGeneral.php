@@ -142,7 +142,7 @@ class CtrGeneral{
 
 		// $Table .= $Consulta;
 
-		return $Ret;
+		return $Table;
 	}
 
 	public function getPersonasxID($ID){

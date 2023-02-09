@@ -399,13 +399,13 @@ $Con->CloseConexion();
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Observación: </label>
                   <div class="col-md-10">
-                    <textarea class = "form-control" row = "3" name = "Observaciones" value = "<?php echo $Persona->getObservaciones(); ?>"></textarea>
+                    <textarea class = "form-control" row = "3" name = "Observaciones" value = "<?php echo $Persona->getObservaciones(); ?>"><?php echo $Persona->getObservaciones(); ?></textarea>
                   </div>
                 </div>
                 <div class="form-group row">
                   <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Cambio de Domicilio: </label>
                   <div class = "col-md-10">
-                    <textarea class = "form-control" row = "3" name = "Cambio_Domicilio" value = "<?php echo $Persona->getCambio_Domicilio(); ?>"></textarea>
+                    <textarea class = "form-control" row = "3" name = "Cambio_Domicilio" value = "<?php echo $Persona->getCambio_Domicilio(); ?>"><?php echo $Persona->getCambio_Domicilio(); ?></textarea>
                   </div>
                 </div>
                 <div class="form-group row">
@@ -432,15 +432,15 @@ $Con->CloseConexion();
 </div>
 </div>
 <?php 
-if(isset($Mensaje)){
+if(isset($_REQUEST["Mensaje"])){
   echo "<script type='text/javascript'>
-    swal('$Mensaje','','success');
+    swal('".$_REQUEST['Mensaje']."','','success');
 </script>";
 }
 
-if(isset($MensajeError)){
+if(isset($_REQUEST['MensajeError'])){
   echo "<script type='text/javascript'>
-    swal('".$MensajeError."','','warning');
+    swal('".$_REQUEST['MensajeError']."','','warning');
 </script>";
 }
 ?>
