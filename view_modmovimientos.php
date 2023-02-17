@@ -315,40 +315,7 @@ $Con->CloseConexion();
               $ID_Centro = $Ret["id_centro"];
               $Centro_Salud = $Ret["Centro_Salud"];
               $ID_OtraInstitucion = $Ret["ID_OtraInstitucion"];
-              $OtraInstitucion = $Ret["Nombre"];
-
-              if($ID_Responsable_2 != null){
-                $ConsultarDatosResp2 = "select responsable from responsable where id_resp = $ID_Responsable_2 and estado = 1 limit 1";
-                $MensajeErrorDatosResp2 = "No se pudo consultar los Datos del Responsable 2";
-
-                $EjecutarConsultarDatosResp2 = mysqli_query($Con->Conexion,$ConsultarDatosResp2) or die($MensajeErrorDatosResp2);
-
-                $RetResp2 = mysqli_fetch_assoc($EjecutarConsultarDatosResp2);
-
-                $ID_Responsable_2 = $RetResp2['responsable'];
-              }
-
-              if($ID_Responsable_3 != null){
-                $ConsultarDatosResp3 = "select responsable from responsable where id_resp = $ID_Responsable_3 and estado = 1 limit 1";
-                $MensajeErrorDatosResp3 = "No se pudo consultar los Datos del Responsable 3";
-
-                $EjecutarConsultarDatosResp3 = mysqli_query($Con->Conexion,$ConsultarDatosResp3) or die($MensajeErrorDatosResp3);
-
-                $RetResp3 = mysqli_fetch_assoc($EjecutarConsultarDatosResp3);
-
-                $ID_Responsable_3 = $RetResp3['responsable'];
-              }
-
-              if($ID_Responsable_4 != null){
-                $ConsultarDatosResp4 = "select responsable from responsable where id_resp = $ID_Responsable_4 and estado = 1 limit 1";
-                $MensajeErrorDatosResp4 = "No se pudo consultar los Datos del Responsable 4";
-
-                $EjecutarConsultarDatosResp4 = mysqli_query($Con->Conexion,$ConsultarDatosResp4) or die($MensajeErrorDatosResp4);
-
-                $RetResp4 = mysqli_fetch_assoc($EjecutarConsultarDatosResp4);
-
-                $ID_Responsable_4 = $RetResp4['responsable'];
-              }
+              $OtraInstitucion = $Ret["Nombre"];              
 
               $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$ID_Motivo_1,$ID_Motivo_2,$ID_Motivo_3,$Observaciones,$Responsable,$Centro_Salud,$OtraInstitucion);
               $Con->CloseConexion();

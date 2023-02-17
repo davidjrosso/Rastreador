@@ -203,7 +203,7 @@ $Con->CloseConexion();
               $Con = new Conexion();
               $Con->OpenConexion();
 
-              $ConsultarDatos = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, M.observaciones, R.responsable, C.centro_salud, I.Nombre, M.motivo_1, M.motivo_2, M.motivo_3 
+              $ConsultarDatos = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, M.observaciones, R.responsable, M.id_resp_2, M.id_resp_3, M.id_resp_4, C.centro_salud, I.Nombre, M.motivo_1, M.motivo_2, M.motivo_3 
               from movimiento M, persona P, responsable R, centros_salud C, otras_instituciones I 
               where M.id_persona = P.id_persona and M.id_resp = R.id_resp and M.id_centro = C.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and M.id_movimiento = $ID_Movimiento";
               $MensajeErrorDatos = "No se pudo consultar los Datos del Movimiento";
@@ -241,10 +241,38 @@ $Con->CloseConexion();
               $Nombre = $Ret["nombre"];
               $Observaciones = $Ret["observaciones"];
               $Responsable = $Ret["responsable"];
+              $ID_Resp_2 = $Ret["id_resp_2"];
+              $ID_Resp_3 = $Ret["id_resp_3"];
+              $ID_Resp_4 = $Ret["id_resp_4"];
               $Centro_Salud = $Ret["centro_salud"];
               $OtraInstitucion = $Ret["Nombre"];
 
               $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Observaciones,$Responsable,$Centro_Salud,$OtraInstitucion);
+
+
+              if($ID_Resp_2 != null){
+                $Consultar_Resp2 = "select responsable from responsable where id_resp = $ID_Resp_2 limit 1";
+                $MensajeErrorResp2= "No se pudo consultar los datos del responsable 2";
+                $Ejecutar_Resp2 = mysqli_query($Con->Conexion, $Consultar_Resp2) or die($MensajeErrorResp2);
+                $RetResp2 = mysqli_fetch_assoc($Ejecutar_Resp2);
+                $Responsable_2 = $RetResp2["responsable"];
+              }
+
+              if($ID_Resp_3 != null){
+                $Consultar_Resp3 = "select responsable from responsable where id_resp = $ID_Resp_3 limit 1";
+                $MensajeErrorResp3= "No se pudo consultar los datos del responsable 3";
+                $Ejecutar_Resp3 = mysqli_query($Con->Conexion, $Consultar_Resp3) or die($MensajeErrorResp3);
+                $RetResp3 = mysqli_fetch_assoc($Ejecutar_Resp3);
+                $Responsable_3 = $RetResp3["responsable"];
+              }
+
+              if($ID_Resp_4 != null){
+                $Consultar_Resp4 = "select responsable from responsable where id_resp = $ID_Resp_4 limit 1";
+                $MensajeErrorResp4= "No se pudo consultar los datos del responsable 4";
+                $Ejecutar_Resp4 = mysqli_query($Con->Conexion, $Consultar_Resp4) or die($MensajeErrorResp4);
+                $RetResp4 = mysqli_fetch_assoc($Ejecutar_Resp4);
+                $Responsable_4 = $RetResp4["responsable"];
+              }
 
               $Table = "<table class='table'><thead><tr><th></th><th>Detalles del Movimiento</th></tr></thead>";
 
@@ -256,6 +284,15 @@ $Con->CloseConexion();
               $Table .= "<tr><td>Motivo 3</td><td>".$DtoMovimiento->getMotivo_3()."</td></tr>";
               $Table .= "<tr><td>Observaciones</td><td>".$DtoMovimiento->getObservaciones()."</td></tr>";
               $Table .= "<tr><td>Responsable</td><td>".$DtoMovimiento->getResponsable()."</td></tr>";
+              if($ID_Resp_2 != null){
+                $Table .= "<tr><td>Responsable 2</td><td>".$Responsable_2."</td></tr>";
+              }
+              if($ID_Resp_3 != null){
+                $Table .= "<tr><td>Responsable 3</td><td>".$Responsable_3."</td></tr>";
+              }
+              if($ID_Resp_4 != null){
+                $Table .= "<tr><td>Responsable 4</td><td>".$Responsable_4."</td></tr>";
+              }
               $Table .= "<tr><td>Centro de Salud</td><td>".$DtoMovimiento->getCentroSalud()."</td></tr>";
               $Table .= "<tr><td>Institucion</td><td>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
 

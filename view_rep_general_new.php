@@ -1225,7 +1225,7 @@ $Con->CloseConexion();
                         $Separar = explode("/",$value);
                         $Mes = $Separar[0];
                         $Anio = $Separar[1];                                          
-                        $Consultar_Movimientos_Persona = "select * from movimiento where id_persona = ".$RetTodos["id_persona"]." and MONTH(fecha) = ".$Mes." and YEAR(fecha) like '%".$Anio."'";
+                        $Consultar_Movimientos_Persona = "select * from movimiento where id_persona = ".$RetTodos["id_persona"]." and MONTH(fecha) = ".$Mes." and YEAR(fecha) like '%".$Anio."' order by fecha";
 
                         // echo "DEBUG CONSULTAR MOVIMIENTO: ".var_dump($Consultar_Movimientos_Persona);
                         

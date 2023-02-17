@@ -31,9 +31,9 @@ if(empty($_REQUEST["Fecha"])){
 
 $Arr_ID_Responsable = $_REQUEST["ID_Responsable"];
 
-$ID_Responsable_2 = (isset($Arr_ID_Responsable[1])) ? $Arr_ID_Responsable[1] : 'null';
-$ID_Responsable_3 = (isset($Arr_ID_Responsable[2])) ? $Arr_ID_Responsable[2] : 'null';
-$ID_Responsable_4 = (isset($Arr_ID_Responsable[3])) ? $Arr_ID_Responsable[3] : 'null';
+$ID_Responsable_2 = (isset($Arr_ID_Responsable[1])) ? $Arr_ID_Responsable[1] : 64;
+$ID_Responsable_3 = (isset($Arr_ID_Responsable[2])) ? $Arr_ID_Responsable[2] : 64;
+$ID_Responsable_4 = (isset($Arr_ID_Responsable[3])) ? $Arr_ID_Responsable[3] : 64;
 
 $ID_Persona = $_REQUEST["ID_Persona"];
 $ID_Motivo_1 = $_REQUEST["ID_Motivo_1"];
