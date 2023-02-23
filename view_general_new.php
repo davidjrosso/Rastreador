@@ -652,14 +652,15 @@ $Con->CloseConexion();
                 <input type="hidden" name="ID_Categoria" id = "ID_Categoria" value = "0">
                 <button type="submit" class="btn btn-outline-success">Aceptar</button>
                 <button type="button" class="btn btn-outline-secondary" onClick="resetearForm()">Cancel</button>
+                <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = 'view_inicio.php'">Volver</button>
               </div>
             </div>
           </form>
           <div class="row">
               <div class="col-10"></div>
-              <div class="col-2">
+              <!-- <div class="col-2">
                 <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = 'view_inicio.php'">Volver</button>
-              </div>
+              </div> -->
           </div>
           <br><br><br>
           <!-- Fin Carga -->
