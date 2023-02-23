@@ -1,13 +1,16 @@
-# Rastreador3
-Rastreador
+# \_Rastreador 3\_
 
-Autores :
+##### es un sistema informático desarrollado por la Municipalidad de Rio Tercero y coordinado por el Lic. Ronald Cittadini, que sirve para el seguimiento longitudinal de las atenciones registradas y como interfase para la georreferenciación, brindando información oportuna para la acción oportuna a equipos locales.
 
-Ronald Jesús Cittadini
+## Autores
 
-Colaboradores :
+#### Ronald Jesús Cittadini
 
-Maico Beas - Programador
+## Colaboradores
 
-David Rosso - Jefe de Departamento de Cómputos Municipalidad Rio Tercero - Infraestructura 
+#### > Maico Beas - Programador
+
+#### > Jesica 
+
+#### > David Rosso - Jefe de Departamento de Cómputos Municipalidad Rio Tercero - Infraestructura 
 
