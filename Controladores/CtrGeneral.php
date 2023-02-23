@@ -111,7 +111,7 @@ class CtrGeneral{
 	public function getMovimientosxResponsable($Responsable){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, R.responsable from movimiento M, persona P, responsable R where M.id_persona = P.id_persona and M.id_resp = R.id_resp and R.responsable like '%$Responsable%' and M.estado = 1 and P.estado = 1 order by M.id_movimiento desc";
+		$Consulta = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, R.responsable from movimiento M, persona P, responsable R where M.id_persona = P.id_persona and (M.id_resp = R.id_resp or M.id_resp_2 = R.id_resp or M.id_resp_3 = R.id_resp or M.id_resp_4 = R.id_resp) and R.responsable like '%$Responsable%' and M.estado = 1 and P.estado = 1 order by M.id_movimiento desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Table = "<table class='table'><thead><tr><th>Id</th><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
