@@ -639,6 +639,7 @@ $Con->CloseConexion();
             echo "<span class='etFiltros'>".$value."</span> ";
           }
         ?>
+        <!-- <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_general_new.php'">Atras</button> -->
       </div>
       <div class="col">
         <button type="button" class="btn btn-secondary" onClick="enviarImprimir()">Imprimir</button>

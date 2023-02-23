@@ -411,6 +411,7 @@ $Con->CloseConexion();
                 <div class="form-group row">
                   <div class="offset-md-2 col-md-10">
                     <button type="submit" class="btn btn-outline-success">Guardar</button>
+                    <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_personas.php'">Atras</button>
                   </div>
                 </div>
             </form>
@@ -425,7 +426,7 @@ $Con->CloseConexion();
         <div class="row">
             <div class="col-10"></div>
             <div class="col-2">
-              <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = 'view_personas.php'">Volver</button>
+              <!-- <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = 'view_personas.php'">Volver</button> -->
             </div>
         </div>
   </div>

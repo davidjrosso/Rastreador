@@ -450,6 +450,7 @@ $Con->CloseConexion();
                     <input type="hidden" name="ID_Motivo_2" id = "ID_Motivo_2" value = "<?php echo $ID_Motivo_2; ?>">
                     <input type="hidden" name="ID_Motivo_3" id = "ID_Motivo_3" value = "<?php echo $ID_Motivo_3; ?>">
                     <button type="submit" class="btn btn-outline-success">Guardar</button>
+                    <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_movimientos.php'">Atras</button>
                   </div>
                 </div>
             </form>
@@ -464,7 +465,8 @@ $Con->CloseConexion();
         <div class="row">
             <div class="col-10"></div>
             <div class="col-2">
-              <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = 'view_movimientos.php'">Volver</button>
+              
+              <!-- <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_movimientos.php'">Atras</button> -->
             </div>
         </div>
          <!-- SECCION DE MODALES -->

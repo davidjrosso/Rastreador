@@ -571,10 +571,11 @@ $Con->CloseConexion();
           }
         }
         ?>
+        <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_listados.php'">Atras</button>
         </div>
         <div class="col">
           <button type="button" class="btn btn-secondary" onClick="enviarImprimir()">Imprimir</button>
-      </div>
+        </div>
      </div>
      <div class = "row">
       <div class = "col-10">

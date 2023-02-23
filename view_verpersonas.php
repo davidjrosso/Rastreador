@@ -336,7 +336,8 @@ $Con->CloseConexion();
         <div class="row">
             <div class="col-10"></div>
             <div class="col-2">
-              <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = 'view_personas.php'">Volver</button>
+            <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_personas.php'">Atras</button>
+              
             </div>
         </div>
   </div>
