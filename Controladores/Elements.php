@@ -814,7 +814,7 @@ public function getMenuSeguridad($ID){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_OtraInstitucion'>";    
-    $Select .= "<option>-Seleccione una Institucion-</option>";
+    $Select .= "<option disabled = 'disabled'>-Seleccione una Institucion-</option>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from otras_instituciones where estado = 1 order by Nombre")or die("Problemas al mostrar Otras Instituciones");
     while ($Ret = mysqli_fetch_array($Consulta)) {      
       if($Ret['ID_OtraInstitucion'] == $xID_OtraInstitucion){
