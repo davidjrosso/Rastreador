@@ -36,8 +36,8 @@ if($ID_Categoria > 0){
 	$Con = new Conexion();
 	$Con->OpenConexion();
 
-	$Solicitud = new Solicitud_ModificarCategoria(0,$Fecha,$Codigo,$Categoria,$ID_Forma,$NuevoColor,$Estado,$ID_Usuario);
-	$Insert_Solicitud = "insert into solicitudes_modificarcategorias(Fecha,Codigo,Categoria,ID_Forma,NuevoColor,Estado,ID_Usuario) values('{$Solicitud->getFecha()}','{$Solicitud->getCodigo()}','{$Solicitud->getCategoria()}',{$Solicitud->getID_Forma()},'{$Solicitud->getNuevoColor()}',{$Solicitud->getEstado()},{$Solicitud->getID_Usuario()})";
+	$Solicitud = new Solicitud_ModificarCategoria(0,$Fecha,$Codigo,$Categoria,$ID_Forma,$NuevoColor,$Estado,$ID_Usuario,$ID_Categoria);
+	$Insert_Solicitud = "insert into solicitudes_modificarcategorias(Fecha,Codigo,Categoria,ID_Forma,NuevoColor,Estado,ID_Usuario,ID_Categoria) values('{$Solicitud->getFecha()}','{$Solicitud->getCodigo()}','{$Solicitud->getCategoria()}',{$Solicitud->getID_Forma()},'{$Solicitud->getNuevoColor()}',{$Solicitud->getEstado()},{$Solicitud->getID_Usuario()},{$Solicitud->getID_Categoria()})";
 	$MensajeError = "No se pudo enviar la solicitud";
 
 	mysqli_query($Con->Conexion,$Insert_Solicitud) or die($MensajeError);

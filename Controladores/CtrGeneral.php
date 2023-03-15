@@ -815,7 +815,7 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getCantSolicitudes_Modificacion(){
+	public function getCantSolicitudes_Modificacion_Motivo(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select ID from solicitudes_modificarmotivos where Estado = 1";
@@ -826,7 +826,7 @@ class CtrGeneral{
 		return $Regis;
 	}
 
-	public function getSolicitudes_Modificacion(){
+	public function getSolicitudes_Modificacion_Motivo(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select S.ID, S.Fecha, S.Motivo, S.Cod_Categoria, S.Num_Motivo, U.username, S.ID_Motivo from solicitudes_modificarmotivos S, accounts U where S.ID_Usuario = U.accountid and S.Estado = 1 order by S.Fecha";
@@ -843,7 +843,46 @@ class CtrGeneral{
 				$Num_Motivo = $Ret["Num_Motivo"];
 				$Usuario = $Ret["username"];	
 				$ID_Motivo = $Ret["ID_Motivo"];			
-				$Table .= "<tr><td>".$ID."</td><td>".$Fecha."</td><td>".$Motivo."</td><td>".$Cod_Categoria."</td><td>".$Usuario."</td><td><button class='btn btn-success' onClick='VerificarModificarMotivo(".$ID.",\"".$Fecha."\",\"".$Motivo."\",\"".$Cod_Categoria."\",".$Num_Motivo.",".$ID_Motivo.")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarModificacion(".$Ret["ID"].")'><i class='fa fa-times'></i></button></td></tr>";
+				$Table .= "<tr><td>".$ID."</td><td>".$Fecha."</td><td>".$Motivo."</td><td>".$Cod_Categoria."</td><td>".$Usuario."</td><td><button class='btn btn-success' onClick='VerificarModificarMotivo(".$ID.",\"".$Fecha."\",\"".$Motivo."\",\"".$Cod_Categoria."\",".$Num_Motivo.",".$ID_Motivo.")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarModificacionMotivo(".$Ret["ID"].")'><i class='fa fa-times'></i></button></td></tr>";
+			}			
+			$Table .= "</table>";
+		}else{
+			$Table = "No existen solicitudes de unificación pendientes de aprobación.";
+		}
+		$Con->CloseConexion();
+		
+		return $Table;
+	}
+
+	public function getCantSolicitudes_Modificacion_Categoria(){
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "select ID from solicitudes_modificarcategorias where Estado = 1";
+		$MessageError = "Problemas al intentar consultar cantidad de Solicitudes Categorias";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$Regis = mysqli_num_rows($Con->ResultSet);
+		$Con->CloseConexion();		
+		return $Regis;
+	}
+
+	public function getSolicitudes_Modificacion_Categoria(){
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "select S.ID, S.Fecha, S.Codigo, S.Categoria, S.ID_Forma, S.NuevoColor, U.username from solicitudes_modificarcategorias S, accounts U where S.ID_Usuario = U.accountid and S.Estado = 1 order by S.Fecha";
+		$MessageError = "Problemas al intentar mostrar Solicitudes Categorias";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$Regis = mysqli_num_rows($Con->ResultSet);
+		if($Regis > 0){
+			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Codigo</th><th style='min-width:100px;'>Categoria</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Accion</th></tr></thead>";
+			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
+				$ID = $Ret["ID"];
+				$Fecha = implode("/", array_reverse(explode("-",$Ret["Fecha"])));
+				$Codigo = $Ret["Codigo"];
+				$Categoria = $Ret["Categoria"];		
+				$ID_Forma = $Ret["ID_Forma"];
+				$NuevoColor = $Ret["NuevoColor"];		
+				$Usuario = $Ret["username"];							
+				$Table .= "<tr><td>".$ID."</td><td>".$Fecha."</td><td>".$Codigo."</td><td>".$Categoria."</td><td>".$Usuario."</td><td><button class='btn btn-success' onClick='VerificarModificarCategoria(".$ID.",\"".$Fecha."\",\"".$Codigo."\",\"".$Categoria."\",\"".$ID_Forma."\",\"".$NuevoColor."\")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarModificacionCategoria(".$Ret["ID"].")'><i class='fa fa-times'></i></button></td></tr>";
 			}			
 			$Table .= "</table>";
 		}else{

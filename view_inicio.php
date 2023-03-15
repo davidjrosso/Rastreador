@@ -159,7 +159,7 @@ $Con->CloseConexion();
               });
         }
 
-        function CancelarModificacion(xID){
+        function CancelarModificacionMotivo(xID){
               swal({
                 title: "¿Está seguro?",
                 text: "¿Seguro de querer borrar esta petición de modificación?",
@@ -169,7 +169,7 @@ $Con->CloseConexion();
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/DeletePeticionModificacion.php?ID='+xID;
+                  window.location.href = 'Controladores/DeletePeticionModificacionMotivo.php?ID='+xID;
                   //alert('SI');
                 } else {        
                 }
@@ -357,10 +357,11 @@ $Con->CloseConexion();
     <?php if($TipoUsuario == 1){ 
       $CtrGeneral = new CtrGeneral();
       $CantUnif = $CtrGeneral->getCantSolicitudes_Unificacion();
-      $CantMod = $CtrGeneral->getCantSolicitudes_Modificacion();
+      $CantModMot = $CtrGeneral->getCantSolicitudes_Modificacion_Motivo();
+      $CantModCat = $CtrGeneral->getCantSolicitudes_Modificacion_Categoria();
       $CantDel = $CtrGeneral->getCantSolicitudes_Eliminacion();
       
-        if($CantUnif > 0 || $CantMod > 0 || $CantDel > 0){
+        if($CantUnif > 0 || $CantModMot > 0 || $CantModCat > 0 || $CantDel > 0){
         ?>
       <div class = "row">
         <div class="col-1"></div>
@@ -377,11 +378,17 @@ $Con->CloseConexion();
               <?php
               echo $CtrGeneral->getSolicitudes_Unificacion();
             }
-            if($CantMod > 0){
+            if($CantModMot > 0){
               ?>
-              <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Modificar Motivos y Categorías</h3>
+              <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Modificar Motivos</h3>
               <?php              
-              echo $CtrGeneral->getSolicitudes_Modificacion();
+              echo $CtrGeneral->getSolicitudes_Modificacion_Motivo();
+            }
+            if($CantModCat > 0){
+              ?>
+              <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Modificar Categorías</h3>
+              <?php              
+              echo $CtrGeneral->getSolicitudes_Modificacion_Categoria();
             }
             if($CantDel > 0){
               ?>
