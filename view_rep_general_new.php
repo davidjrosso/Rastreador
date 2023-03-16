@@ -10,6 +10,7 @@ if(!isset($_SESSION["Usuario"])){
     header("Location: Error_Session.php");
 }
 
+
 $Con = new Conexion();
 $Con->OpenConexion();
 $ID_Usuario = $_SESSION["Usuario"];
@@ -19,6 +20,8 @@ $EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuari
 $Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
 $TipoUsuario = $Ret["ID_TipoUsuario"];
 $Con->CloseConexion();
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -638,12 +641,17 @@ $Con->CloseConexion();
           foreach($filtros as $value){
             echo "<span class='etFiltros'>".$value."</span> ";
           }
+        
+     
         ?>
-        <!-- <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_general_new.php'">Atras</button> -->
       </div>
       <div class="col">
-        <button type="button" class="btn btn-secondary" onClick="enviarImprimir()">Imprimir</button>
+      
+        <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_general_new.php'">Atras</button>
+        
+        <button type="button" class="btn btn-secondary" onClick="enviarImprimir()" disabled>Imprimir</button>
       </div>
+    
     </div>
     <br>   
      <div class = "row">
@@ -695,10 +703,11 @@ $Con->CloseConexion();
               /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-              if($Con->ResultSet->num_rows == 0){                
+              if($Con->ResultSet->num_rows == 0){  
+                   
               	echo "<div class = 'col'></div>";
               	echo "<div class = 'col-6'>";
-              	echo "<p class = 'TextoSinResultados'>No se encontraron Resultados</p><center><button class = 'btn btn-danger' onClick = 'location.href= \"view_general_new.php\"'>Atras</button></center>";
+              	echo "<p class = 'TextoSinResultados'>No se encontraron Resultados</p>";
               	echo "</div>";
               	echo "<div class = 'col'></div>";
               }else{                               
