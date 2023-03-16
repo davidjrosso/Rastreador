@@ -36,7 +36,7 @@ try {
 	$Con->OpenConexion();
 
 
-	$ConsultarRegistrosIguales = "select * from categoria where cod_categoria = '$Codigo' and id_categoria != $ID_Categoria and estado = 1";
+	$ConsultarRegistrosIguales = "select * from categoria where cod_categoria = '$Codigo' and estado = 1";
 	if(!$RetIguales = mysqli_query($Con->Conexion,$ConsultarRegistrosIguales)){
 		throw new Exception("Problemas al consultar registros iguales. Consulta: ".$ConsultarRegistrosIguales, 0);		
 	}
