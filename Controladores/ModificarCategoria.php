@@ -36,50 +36,83 @@ try {
 	$Con->OpenConexion();
 
 
-	$ConsultarRegistrosIguales = "select * from categoria where cod_categoria = '$Codigo' and estado = 1";
-	if(!$RetIguales = mysqli_query($Con->Conexion,$ConsultarRegistrosIguales)){
-		throw new Exception("Problemas al consultar registros iguales. Consulta: ".$ConsultarRegistrosIguales, 0);		
-	}
-	$Resultado = mysqli_num_rows($RetIguales);	
-	if($Resultado > 0){
-		mysqli_free_result($RetIguales);
-		$Con->CloseConexion();
-		$Mensaje = "Ya existe una categoria con ese codigo por favor ingrese otro".$ConsultarRegistrosIguales;
-		header('Location: ../view_modcategorias.php?ID='.$ID_Categoria.'&Mensaje='.$Mensaje);
-	}else{
-		$ConsultarDatosViejos = "select * from categoria where id_categoria = $ID_Categoria and estado = 1";
-		$ErrorDatosViejos = "No se pudieron consultar los datos";
-		if(!$RetDatosViejos = mysqli_query($Con->Conexion,$ConsultarDatosViejos)){
-			throw new Exception("Error al intentar registrar. Consulta: ".$ConsultarDatosViejos, 1);
-		}		
-		$TomarDatosViejos = mysqli_fetch_assoc($RetDatosViejos);
-		$Cod_CategoriaViejo = $TomarDatosViejos["cod_categoria"];
-		$CategoriaViejo = $TomarDatosViejos["categoria"];
-		$ID_FormaViejo = $TomarDatosViejos["ID_Forma"];
-		$ColorViejo = $TomarDatosViejos["color"];
+	// $ConsultarRegistrosIguales = "select * from categoria where cod_categoria = '$Codigo' and id_Categoria = '$ID_Categoria' and estado = 1";
+	// if(!$RetIguales = mysqli_query($Con->Conexion,$ConsultarRegistrosIguales)){
+	// 	throw new Exception("Problemas al consultar registros iguales. Consulta: ".$ConsultarRegistrosIguales, 0);		
+	// }
+	// $Resultado = mysqli_num_rows($RetIguales);	
+	// if($Resultado > 0){
+	// 	mysqli_free_result($RetIguales);
+	// 	$Con->CloseConexion();
+	// 	$Mensaje = "Ya existe una categoria con ese codigo por favor ingrese otro".$ConsultarRegistrosIguales;
+	// 	header('Location: ../view_modcategorias.php?ID='.$ID_Categoria.'&Mensaje='.$Mensaje);
+	// }else{
+	// 	$ConsultarDatosViejos = "select * from categoria where id_categoria = $ID_Categoria and estado = 1";
+	// 	$ErrorDatosViejos = "No se pudieron consultar los datos";
+	// 	if(!$RetDatosViejos = mysqli_query($Con->Conexion,$ConsultarDatosViejos)){
+	// 		throw new Exception("Error al intentar registrar. Consulta: ".$ConsultarDatosViejos, 1);
+	// 	}		
+	// 	$TomarDatosViejos = mysqli_fetch_assoc($RetDatosViejos);
+	// 	$Cod_CategoriaViejo = $TomarDatosViejos["cod_categoria"];
+	// 	$CategoriaViejo = $TomarDatosViejos["categoria"];
+	// 	$ID_FormaViejo = $TomarDatosViejos["ID_Forma"];
+	// 	$ColorViejo = $TomarDatosViejos["color"];
 
-		$CodigoColorEsc = mysqli_real_escape_string($Con->Conexion, $NuevoColor);
-		$Consulta = "update categoria set cod_categoria = '$Codigo', categoria = '$Categoria', ID_Forma = $ID_Forma, color = '$CodigoColorEsc' where id_categoria = $ID_Categoria and estado = 1";
+	// 	$CodigoColorEsc = mysqli_real_escape_string($Con->Conexion, $NuevoColor);
+	// 	$Consulta = "update categoria set cod_categoria = '$Codigo', categoria = '$Categoria', ID_Forma = $ID_Forma, color = '$CodigoColorEsc' where id_categoria = $ID_Categoria and estado = 1";
 		
-		if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
-			throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 2);		
-		}
+	// 	if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
+	// 		throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 2);		
+	// 	}
 
-		$Detalles = "El usuario con ID: $ID_Usuario ha modificado una Categoria. Datos: Dato Anterior: $Cod_CategoriaViejo , Dato Nuevo: $Codigo - Dato Anterior: $CategoriaViejo , Dato Nuevo: $Categoria - Dato Anterior: $ID_FormaViejo , Dato Nuevo: $ID_Forma - Dato Anterior: $ColorViejo , Dato Nuevo: $NuevoColor";
-		$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
-		if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
-			throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 3);
-		}
+	// 	$Detalles = "El usuario con ID: $ID_Usuario ha modificado una Categoria. Datos: Dato Anterior: $Cod_CategoriaViejo , Dato Nuevo: $Codigo - Dato Anterior: $CategoriaViejo , Dato Nuevo: $Categoria - Dato Anterior: $ID_FormaViejo , Dato Nuevo: $ID_Forma - Dato Anterior: $ColorViejo , Dato Nuevo: $NuevoColor";
+	// 	$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
+	// 	if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
+	// 		throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 3);
+	// 	}
 
-		$ConsultaSolicitud = "update solicitudes_modificarcategorias set estado = 0 where Codigo = '$Codigo'";
-		if(!$Ret = mysqli_query($Con->Conexion,$ConsultaSolicitud)){
-			throw new Exception("Problemas en la consulta. Consulta: ".$ConsultaSolicitud, 3);			
-		}
+	// 	$ConsultaSolicitud = "update solicitudes_modificarcategorias set estado = 0 where Codigo = '$Codigo'";
+	// 	if(!$Ret = mysqli_query($Con->Conexion,$ConsultaSolicitud)){
+	// 		throw new Exception("Problemas en la consulta. Consulta: ".$ConsultaSolicitud, 3);			
+	// 	}
 
-		$Con->CloseConexion();
-		$Mensaje = "La categoria se modifico Correctamente";
-		header('Location: ../view_inicio.php?ID='.$ID_Categoria.'&Mensaje='.$Mensaje);
+	// 	$Con->CloseConexion();
+	// 	$Mensaje = "La categoria se modifico Correctamente";
+	// 	header('Location: ../view_inicio.php?ID='.$ID_Categoria.'&Mensaje='.$Mensaje);
+	// }
+
+	$ConsultarDatosViejos = "select * from categoria where id_categoria = $ID_Categoria and estado = 1";
+	$ErrorDatosViejos = "No se pudieron consultar los datos";
+	if(!$RetDatosViejos = mysqli_query($Con->Conexion,$ConsultarDatosViejos)){
+		throw new Exception("Error al intentar registrar. Consulta: ".$ConsultarDatosViejos, 1);
+	}		
+	$TomarDatosViejos = mysqli_fetch_assoc($RetDatosViejos);
+	$Cod_CategoriaViejo = $TomarDatosViejos["cod_categoria"];
+	$CategoriaViejo = $TomarDatosViejos["categoria"];
+	$ID_FormaViejo = $TomarDatosViejos["ID_Forma"];
+	$ColorViejo = $TomarDatosViejos["color"];
+
+	$CodigoColorEsc = mysqli_real_escape_string($Con->Conexion, $NuevoColor);
+	$Consulta = "update categoria set cod_categoria = '$Codigo', categoria = '$Categoria', ID_Forma = $ID_Forma, color = '$CodigoColorEsc' where id_categoria = $ID_Categoria and estado = 1";
+	
+	if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
+		throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 2);		
 	}
+
+	$Detalles = "El usuario con ID: $ID_Usuario ha modificado una Categoria. Datos: Dato Anterior: $Cod_CategoriaViejo , Dato Nuevo: $Codigo - Dato Anterior: $CategoriaViejo , Dato Nuevo: $Categoria - Dato Anterior: $ID_FormaViejo , Dato Nuevo: $ID_Forma - Dato Anterior: $ColorViejo , Dato Nuevo: $NuevoColor";
+	$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
+	if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
+		throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 3);
+	}
+
+	$ConsultaSolicitud = "update solicitudes_modificarcategorias set estado = 0 where Codigo = '$Codigo'";
+	if(!$Ret = mysqli_query($Con->Conexion,$ConsultaSolicitud)){
+		throw new Exception("Problemas en la consulta. Consulta: ".$ConsultaSolicitud, 3);			
+	}
+
+	$Con->CloseConexion();
+	$Mensaje = "La categoria se modifico Correctamente";
+	header('Location: ../view_inicio.php?ID='.$ID_Categoria.'&Mensaje='.$Mensaje);
 } catch (Exception $e) {
 	echo "Error: ".$e->getMessage();
 }
