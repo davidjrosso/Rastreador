@@ -200,6 +200,10 @@ $Con->CloseConexion();
       <div class = "col-4">
           <center><button class = "btn btn-secondary" onClick = "location.href='view_newotrasinstituciones.php'">Agregar Nueva Institucion</button></center>
       </div>
+      <div class="col-2">
+                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
+      </div>
+
       <div class = "col"></div>
     </div>
     <br>

@@ -200,6 +200,9 @@ $Con->CloseConexion();
       <div class = "col-4">
           <center><button class = "btn btn-secondary" onClick = "location.href='view_newpersonas.php'">Agregar Nueva Persona</button></center>
       </div>
+      <div class="col-2">
+                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
+      </div>
       <div class = "col"></div>
     </div>
     <br>
@@ -219,6 +222,7 @@ $Con->CloseConexion();
                     <option value = "Nombre">Nombre</option>
                     <option value = "DNI">Documento</option>
                     <option value = "ID">Id</option>
+                    <option value = "Legajo">Nro. Legajo</option>
                 </select>
               </div>
               <div class = "col-md-1">
@@ -241,6 +245,7 @@ $Con->CloseConexion();
                 case 'Apellido': echo $DTGeneral->getPersonasxApellido($Filtro);break;
                 case 'Nombre': echo $DTGeneral->getPersonasxNombre($Filtro);break;
                 case 'DNI': echo $DTGeneral->getPersonasxDNI($Filtro);break;
+                case 'Legajo': echo $DTGeneral->getPersonasxLegajo($Filtro);break;
                 default: echo $DTGeneral->getPersonasxID($Filtro);break;
               }
             }else{
@@ -253,31 +258,11 @@ $Con->CloseConexion();
 </div>
 </div>
 <?php  
-if(isset($_REQUEST['Mensaje'])){
+if(isset($Mensaje)){
   echo "<script type='text/javascript'>
-    swal('".$_REQUEST['Mensaje']."','','success');
+    swal('$Mensaje','','success');
 </script>";
 }
-?>
-<?php
-/*
- *
- * This file is part of Rastreador3.
- *
- * Rastreador3 is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Rastreador3 is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Rastreador3; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- */
 ?>
 </body>
 </html>

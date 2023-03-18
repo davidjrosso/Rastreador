@@ -235,6 +235,7 @@ $Con->CloseConexion();
                 <input type="hidden" name="ID_Barrio_1" id = "ID_Barrio_1" value = "0">
                 <input type="hidden" name="ID_Barrio_2" id = "ID_Barrio_2" value = "0">
                 <button type="submit" class="btn btn-outline-success">Aceptar</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
               </div>
             </div>
           </form>

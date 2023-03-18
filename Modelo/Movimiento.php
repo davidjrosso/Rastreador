@@ -9,6 +9,9 @@ class Movimiento{
 	private $ID_Motivo_3;
 	private $Observaciones;
 	private $ID_Responsable;
+	private $ID_Responsable_2;
+	private $ID_Responsable_3;
+	private $ID_Responsable_4;
 	private $ID_Centro;
 	private $ID_OtraInstitucion;
 	private $Estado;
@@ -45,6 +48,18 @@ public function setObservaciones($xObservaciones){
 
 public function setID_Responsable($xID_Responsable){
 	$this->ID_Responsable = $xID_Responsable;
+}
+
+public function setID_Responsable_2($xID_Responsable_2){
+	$this->ID_Responsable_2 = $xID_Responsable_2;
+}
+
+public function setID_Responsable_3($xID_Responsable_3){
+	$this->ID_Responsable_3 = $xID_Responsable_3;
+}
+
+public function setID_Responsable_4($xID_Responsable_4){
+	$this->ID_Responsable_4 = $xID_Responsable_4;
 }
 
 public function setID_Centro($xID_Centro){
@@ -92,6 +107,18 @@ public function getID_Responsable(){
 	return $this->ID_Responsable;
 }
 
+public function getID_Responsable_2(){
+	return $this->ID_Responsable_2;
+}
+
+public function getID_Responsable_3(){
+	return $this->ID_Responsable_3;
+}
+
+public function getID_Responsable_4(){
+	return $this->ID_Responsable_4;
+}
+
 public function getID_Centro(){
 	return $this->ID_Centro;
 }
@@ -104,7 +131,7 @@ public function getEstado(){
 	return $this->Estado;
 }
 
-public function __construct($xID_Movimiento,$xFecha,$xID_Persona,$xID_Motivo_1,$xID_Motivo_2,$xID_Motivo_3,$xObservaciones,$xID_Respoonsable,$xID_Centro,$xID_OtraInstitucion,$xEstado){
+public function __construct($xID_Movimiento,$xFecha,$xID_Persona,$xID_Motivo_1,$xID_Motivo_2,$xID_Motivo_3,$xObservaciones,$xID_Responsable,$xID_Responsable_2,$xID_Responsable_3,$xID_Responsable_4,$xID_Centro,$xID_OtraInstitucion,$xEstado){
 	$this->ID_Movimiento = $xID_Movimiento;
 	$this->Fecha = $xFecha;
 	$this->ID_Persona = $xID_Persona;
@@ -112,7 +139,10 @@ public function __construct($xID_Movimiento,$xFecha,$xID_Persona,$xID_Motivo_1,$
 	$this->ID_Motivo_2 = $xID_Motivo_2;
 	$this->ID_Motivo_3 = $xID_Motivo_3;
 	$this->Observaciones = $xObservaciones;
-	$this->ID_Responsable = $xID_Respoonsable;
+	$this->ID_Responsable = $xID_Responsable;
+	$this->ID_Responsable_2 = $xID_Responsable_2;
+	$this->ID_Responsable_3 = $xID_Responsable_3;
+	$this->ID_Responsable_4 = $xID_Responsable_4;
 	$this->ID_Centro = $xID_Centro;
 	$this->ID_OtraInstitucion = $xID_OtraInstitucion;
 	$this->Estado = $xEstado;

@@ -9,6 +9,7 @@ private $ID_Forma;
 private $NuevoColor;
 private $Estado;
 private $ID_Usuario;
+private $ID_Categoria;
 
 //METODOS SET
 public function setID($xID){
@@ -41,6 +42,10 @@ public function setEstado($xEstado){
 
 public function setID_Usuario($xID_Usuario){
     $this->ID_Usuario = $xID_Usuario;
+}
+
+public function setID_Categoria($xID_Categoria){
+    $this->ID_Categoria = $xID_Categoria;
 }
 
 //METODOS GET
@@ -76,8 +81,12 @@ public function getID_Usuario(){
     return $this->ID_Usuario;
 }
 
+public function getID_Categoria(){
+    return $this->ID_Categoria;
+}
+
 //METODO CONSTRUCTOR
-public function __construct($xID,$xFecha,$xCodigo,$xCategoria,$xID_Forma,$xNuevoColor,$xEstado,$xID_Usuario){
+public function __construct($xID,$xFecha,$xCodigo,$xCategoria,$xID_Forma,$xNuevoColor,$xEstado,$xID_Usuario,$xID_Categoria){
     $this->ID = $xID;
     $this->Fecha = $xFecha;
     $this->Codigo = $xCodigo;
@@ -86,6 +95,7 @@ public function __construct($xID,$xFecha,$xCodigo,$xCategoria,$xID_Forma,$xNuevo
     $this->NuevoColor = $xNuevoColor;
     $this->Estado = $xEstado;
     $this->ID_Usuario = $xID_Usuario;
+    $this->ID_Categoria = $xID_Categoria;
 }
 
 

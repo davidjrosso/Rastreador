@@ -291,7 +291,7 @@ $Con->CloseConexion();
               $Con = new Conexion();
               $Con->OpenConexion();
 
-              $ConsultarDatos = "select M.id_movimiento, M.fecha, M.id_centro, P.id_persona, P.apellido, P.nombre, M.observaciones, R.id_resp, R.responsable, C.centro_salud, I.ID_OtraInstitucion,I.Nombre, M.motivo_1, M.motivo_2, M.motivo_3 from movimiento M, persona P, responsable R, centros_salud C, otras_instituciones I where M.id_persona = P.id_persona and M.id_resp = R.id_resp and M.id_centro = C.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and M.id_movimiento = $ID_Movimiento";
+              $ConsultarDatos = "select M.id_movimiento, M.fecha, M.id_centro, P.id_persona, P.apellido, P.nombre, M.observaciones, R.id_resp, M.id_resp_2, M.id_resp_3, M.id_resp_4, R.responsable, C.centro_salud, I.ID_OtraInstitucion,I.Nombre, M.motivo_1, M.motivo_2, M.motivo_3 from movimiento M, persona P, responsable R, centros_salud C, otras_instituciones I where M.id_persona = P.id_persona and M.id_resp = R.id_resp and M.id_centro = C.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and M.id_movimiento = $ID_Movimiento";
               $MensajeErrorDatos = "No se pudo consultar los Datos del Movimiento";
 
               $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
@@ -309,10 +309,13 @@ $Con->CloseConexion();
               $Responsable = $Ret["responsable"];
               $ID_Persona = $Ret["id_persona"];
               $ID_Responsable = $Ret["id_resp"];
+              $ID_Responsable_2 = $Ret["id_resp_2"];
+              $ID_Responsable_3 = $Ret["id_resp_3"];
+              $ID_Responsable_4 = $Ret["id_resp_4"];
               $ID_Centro = $Ret["id_centro"];
               $Centro_Salud = $Ret["Centro_Salud"];
               $ID_OtraInstitucion = $Ret["ID_OtraInstitucion"];
-              $OtraInstitucion = $Ret["Nombre"];
+              $OtraInstitucion = $Ret["Nombre"];              
 
               $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$ID_Motivo_1,$ID_Motivo_2,$ID_Motivo_3,$Observaciones,$Responsable,$Centro_Salud,$OtraInstitucion);
               $Con->CloseConexion();
@@ -383,6 +386,45 @@ $Con->CloseConexion();
                     ?>
                   </div>
                 </div>
+                <?php if($ID_Responsable_2 != null){ ?>
+                  <div class="form-group row">
+                    <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable 2: </label>
+                    <div class = "col-md-10">
+                      <?php  
+                      $Element = new Elements();
+                      echo $Element->CBModResponsables($ID_Responsable_2);
+                      ?>
+                    </div>
+                  </div>
+                <?php  
+                }
+                ?>
+                <?php if($ID_Responsable_3 != null){ ?>
+                  <div class="form-group row">
+                    <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable 3: </label>
+                    <div class = "col-md-10">
+                      <?php  
+                      $Element = new Elements();
+                      echo $Element->CBModResponsables($ID_Responsable_3);
+                      ?>
+                    </div>
+                  </div>
+                <?php  
+                }
+                ?>
+                <?php if($ID_Responsable_4 != null){ ?>
+                  <div class="form-group row">
+                    <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable 4: </label>
+                    <div class = "col-md-10">
+                      <?php  
+                      $Element = new Elements();
+                      echo $Element->CBModResponsables($ID_Responsable_4);
+                      ?>
+                    </div>
+                  </div>
+                <?php  
+                }
+                ?>
                 <div class="form-group row">
                   <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Centro de Salud: </label>
                   <div class = "col-md-10">
@@ -408,6 +450,7 @@ $Con->CloseConexion();
                     <input type="hidden" name="ID_Motivo_2" id = "ID_Motivo_2" value = "<?php echo $ID_Motivo_2; ?>">
                     <input type="hidden" name="ID_Motivo_3" id = "ID_Motivo_3" value = "<?php echo $ID_Motivo_3; ?>">
                     <button type="submit" class="btn btn-outline-success">Guardar</button>
+                    <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_movimientos.php'">Atras</button>
                   </div>
                 </div>
             </form>
@@ -422,7 +465,8 @@ $Con->CloseConexion();
         <div class="row">
             <div class="col-10"></div>
             <div class="col-2">
-              <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = 'view_movimientos.php'">Volver</button>
+              
+              <!-- <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_movimientos.php'">Atras</button> -->
             </div>
         </div>
          <!-- SECCION DE MODALES -->

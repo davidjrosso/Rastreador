@@ -354,9 +354,6 @@ class Elements{
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
-                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Direcciones</a>
-                </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
                   <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
@@ -379,9 +376,6 @@ class Elements{
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
-                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Direcciones</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
                   <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
@@ -406,9 +400,6 @@ class Elements{
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
-                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Direcciones</a>
-                </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
                   <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
@@ -431,9 +422,6 @@ class Elements{
                 </li>
                 <li class="collapsed active" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
-                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Direcciones</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
                   <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
@@ -458,9 +446,6 @@ class Elements{
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed active" onClick = "location.href = \'view_unifdirecciones.php\'">
-                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Direcciones</a>
-                </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
                   <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
@@ -483,9 +468,6 @@ class Elements{
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
-                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Direcciones</a>
                 </li>
                 <li class="collapsed active" onClick = "location.href = \'view_unifbarrios.php\'">
                   <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
@@ -510,9 +492,6 @@ class Elements{
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
-                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Direcciones</a>
-                </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
                   <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
@@ -535,9 +514,6 @@ class Elements{
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
-                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Direcciones</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
                   <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
@@ -591,6 +567,9 @@ public function getMenuSeguridad($ID){
                 <li class="collapsed" onClick = "location.href = \'como_funciona.pdf\'">
                   <a href="como_funciona.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Cómo funciona?</a>
                 </li>
+                <li class="collapsed" onClick = "location.href = \'licencia.pdf\'">
+                  <a href="licencia.pdf"><i class="fa fa-file-text fa-lg"></i> Licencia</a>
+                </li>
                 <li class="bg-danger collapsed" onClick = "location.href = \'view_reportarbug.php\'">
                 <a href="view_reportarbug.php"><i class="fa fa-file-text fa-lg"></i> Reportar/Sugerir</a>
               </li>
@@ -604,6 +583,25 @@ public function getMenuSeguridad($ID){
 	            <li class="collapsed active" onClick = "location.href = \'como_funciona.pdf\'">
                   <a href="como_funciona.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Cómo funciona?</a>
               </li>
+              <li class="collapsed" onClick = "location.href = \'licencia.pdf\'">
+                  <a href="licencia.pdf"><i class="fa fa-file-text fa-lg"></i> Licencia</a>
+              </li>
+              <li class="bg-danger collapsed" onClick = "location.href = \'view_reportarbug.php\'">
+                <a href="view_reportarbug.php"><i class="fa fa-file-text fa-lg"></i> Reportar/Sugerir</a>
+              </li>
+	        </ul>
+	    </div>';break;
+      case 3:echo '<div class="menu-list">
+	        <ul id="menu-content" class="menu-content collapse out">
+	            <li class="collapsed" onClick = "location.href = \'para_que_sirve.pdf\'">
+	              <a href="para_que_sirve.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Para qué sirve?</a>
+	            </li>
+	            <li class="collapsed" onClick = "location.href = \'como_funciona.pdf\'">
+                  <a href="como_funciona.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Cómo funciona?</a>
+              </li>
+              <li class="collapsed active" onClick = "location.href = \'licencia.pdf\'">
+                  <a href="licencia.pdf"><i class="fa fa-file-text fa-lg"></i> Licencia</a>
+              </li>
               <li class="bg-danger collapsed" onClick = "location.href = \'view_reportarbug.php\'">
                 <a href="view_reportarbug.php"><i class="fa fa-file-text fa-lg"></i> Reportar/Sugerir</a>
               </li>
@@ -616,6 +614,9 @@ public function getMenuSeguridad($ID){
                 </li>
                 <li class="collapsed" onClick = "location.href = \'como_funciona.pdf\'">
                   <a href="como_funciona.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Cómo funciona?</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'licencia.pdf\'">
+                  <a href="licencia.pdf"><i class="fa fa-file-text fa-lg"></i> Licencia</a>
                 </li>
                 <li class="bg-danger collapsed" onClick = "location.href = \'view_reportarbug.php\'">
                   <a href="view_reportarbug.php"><i class="fa fa-file-text fa-lg"></i> Reportar/Sugerir</a>
@@ -736,7 +737,7 @@ public function getMenuSeguridad($ID){
   public function CBResponsables(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' id='ID_Responsable' name = 'ID_Responsable'>";
+    $Select = "<select class='form-control' id='ID_Responsable' name = 'ID_Responsable[]'>";
     $Select .= "<option selected = 'true' disabled = 'disabled'>-Seleccione un Responsable-</option>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from responsable where estado = 1 order by responsable")or die("Problemas al mostrar Responsables");
     while ($Ret = mysqli_fetch_array($Consulta)) {
@@ -750,7 +751,7 @@ public function getMenuSeguridad($ID){
   public function CBModResponsables($xID_Responsable){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Responsable'>";    
+    $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Responsable[]'>";    
     $Consulta = mysqli_query($Con3->Conexion,"select * from responsable where estado = 1 order by responsable")or die("Problemas al mostrar Responsables");
     while ($Ret = mysqli_fetch_array($Consulta)) {      
       if($Ret['id_resp'] == $xID_Responsable){
@@ -813,6 +814,7 @@ public function getMenuSeguridad($ID){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_OtraInstitucion'>";    
+    $Select .= "<option disabled = 'disabled'>-Seleccione una Institucion-</option>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from otras_instituciones where estado = 1 order by Nombre")or die("Problemas al mostrar Otras Instituciones");
     while ($Ret = mysqli_fetch_array($Consulta)) {      
       if($Ret['ID_OtraInstitucion'] == $xID_OtraInstitucion){
@@ -1046,7 +1048,7 @@ public function getMenuSeguridad($ID){
   public function CBRepEscuelas(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Escuela'>";
+    $Select = "<select class='form-control' id='ID_Escuela' name = 'ID_Escuela'>";
     $Select .= "<option value = '0'>-Todos-</option>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from escuelas order by Escuela")or die("Problemas al mostrar Escuelas");
     while ($Ret = mysqli_fetch_array($Consulta)) {
@@ -1111,7 +1113,7 @@ public function getMenuSeguridad($ID){
   public function CBRepCentros(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_CentroSalud'>";
+    $Select = "<select class='form-control' id='ID_Centro' name = 'ID_CentroSalud'>";
     $Select .= "<option value = '0'>-Todos-</option>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from centros_salud where estado = 1 order by centro_salud")or die("Problemas al mostrar Centros de Salud");
     while ($Ret = mysqli_fetch_array($Consulta)) {
@@ -1125,7 +1127,7 @@ public function getMenuSeguridad($ID){
   public function CBRepOtrasInstituciones(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_OtraInstitucion'>";
+    $Select = "<select class='form-control' id='ID_OtraInstitucion' name = 'ID_OtraInstitucion'>";
     $Select .= "<option value = '0'>-Todos-</option>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from otras_instituciones where estado = 1 order by Nombre")or die("Problemas al mostrar Otras Instituciones");
     while ($Ret = mysqli_fetch_array($Consulta)) {

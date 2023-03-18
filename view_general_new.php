@@ -1,4 +1,5 @@
 <?php 
+
 session_start(); 
 require_once "Controladores/Elements.php";
 require_once "Controladores/CtrGeneral.php";
@@ -109,23 +110,7 @@ $Con->CloseConexion();
                   weekStart: 1,
               });
           });
-    /*
-  	$(document).ready(function() {
-		    $("#ResultadosPersonas").html('<p>No se ha ingresado ningun dato</p>');		    
-		});
-
-      function buscarPersonas(xNombre) {
-		    var textoBusqueda = xNombre;
-		 
-		     if (textoBusqueda != "") {
-		        $.post("buscarPersonas.php", {valorBusqueda: textoBusqueda}, function(mensaje) {
-		            $("#ResultadosPersonas").html(mensaje);
-		         }); 
-		     } else { 
-	        	$("#ResultadosPersonas").html('<p>No se ha seleccionado ninguna Exploracion Clinica</p>');
-	        };
-		};
-    */
+   
     function buscarPersonas(){
       var xNombre = document.getElementById('SearchPersonas').value;
       var textoBusqueda = xNombre;
@@ -184,6 +169,7 @@ $Con->CloseConexion();
 
     function buscarCategorias(){
       var xCategoria = document.getElementById('SearchCategorias').value;
+      console.log(xCategoria);
       var textoBusqueda = xCategoria;
       xmlhttp=new XMLHttpRequest();
       xmlhttp.onreadystatechange = function() {
@@ -200,10 +186,12 @@ $Con->CloseConexion();
       var Persona = document.getElementById("Persona");
       var ID_Persona = document.getElementById("ID_Persona");
       Persona.innerHTML = "";
-      Persona.innerHTML = "<p>"+xNombre+"</p>";
+      Persona.innerHTML = "<p>"+xNombre+" <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalPersona'><i class='fa fa-cog text-secondary'></i></button></p>";
       ID_Persona.setAttribute('value',xID);
       var BtnBarrios = document.getElementById("agregarBarrio");
       BtnBarrios.setAttribute('disabled', true);  
+      var SelMostrar = document.getElementById("inpMostrar");
+      SelMostrar.setAttribute('disabled', true);
     }
 
     function seleccionMotivo(xMotivo,xID,xNumber){
@@ -211,13 +199,13 @@ $Con->CloseConexion();
         var Motivo = document.getElementById("Motivo"+xNumber);
         var ID_Motivo = document.getElementById("ID_Motivo"+xNumber);
         Motivo.innerHTML = "";
-        Motivo.innerHTML = "<p>"+xMotivo+"</p>";
+        Motivo.innerHTML = "<p>"+xMotivo+" <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo"+xNumber+"'><i class='fa fa-cog text-secondary'></i></button></p>";
         ID_Motivo.setAttribute('value',xID);
       } else{
         var Motivo = document.getElementById("Motivo");
         var ID_Motivo = document.getElementById("ID_Motivo");
         Motivo.innerHTML = "";
-        Motivo.innerHTML = "<p>"+xMotivo+"</p>";
+        Motivo.innerHTML = "<p>"+xMotivo+" <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo'><i class='fa fa-cog text-secondary'></i></button></p>";
         ID_Motivo.setAttribute('value',xID);
       }
     }
@@ -226,7 +214,7 @@ $Con->CloseConexion();
       var Categoria = document.getElementById("Categoria");
       var ID_Categoria = document.getElementById("ID_Categoria");
       Categoria.innerHTML = "";
-      Categoria.innerHTML = "<p>"+xCategoria+"</p>";
+      Categoria.innerHTML = "<p>"+xCategoria+" <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalCategoria'><i class='fa fa-cog text-secondary'></i></button></p>";
       ID_Categoria.setAttribute('value',xID);
     }
 
@@ -247,6 +235,135 @@ $Con->CloseConexion();
       divContenedor.appendChild(divBarrio);
 
     }
+
+    function resetearForm(){
+      swal({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer resetear el formulario?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((willDelete) => {
+        if (willDelete) {
+          reiniciarFormulario();
+          // window.location.href = 'Controladores/DeletePersona.php?ID='+xID;
+          //alert('SI');
+        } else {        
+        }
+      });
+    }
+
+    function tomarElemento(xID){
+        return document.getElementById(xID);
+      }
+
+      function crearElemento(xTipo){
+        return document.createElement(xTipo);
+      }
+
+      function agregarAtributoxElemento(xElemento,xAtributo,xValue){
+          xElemento.setAttribute(xAtributo,xValue);
+      }
+
+      function agregarEtiqueta(xElemento,xEtiqueta){
+        xElemento.innerHTML = xEtiqueta;
+      }
+
+      function resetearValorElemento(xID){
+        document.getElementById(xID).value = "";
+      }
+
+      function resetearValorSelect(xID){
+        document.getElementById(xID).selectedIndex = 0;
+      }
+
+      function resetearValorDiv(xDiv){
+        xDiv.innerHTML = "";
+      }
+
+      function agregarElementoxDiv(xDiv,xElemento){
+        xDiv.appendChild(xElemento);
+      }
+
+
+
+      function reiniciarFormulario(){
+        //RESETEANDO CAMPO FECHA
+        resetearValorElemento("Fecha_Desde");        
+        resetearValorElemento("Fecha_Hasta");  
+        var fechaDesde = tomarElemento("Fecha_Desde");      
+        var fechaHasta = tomarElemento("Fecha_Hasta");
+        fechaDesde.value = "<?php echo implode("/", array_reverse(explode("-",date('Y-m-d',strtotime(date('Y-m-d')."- 1 year"))))); ?>";
+        fechaHasta.value = "<?php echo implode("/", array_reverse(explode("-",date('Y-m-d')))); ?>";
+        //RESETEANDO BOTON PERSONA
+        var btnPersona = crearElemento("button");
+        agregarAtributoxElemento(btnPersona,"type","button");
+        agregarAtributoxElemento(btnPersona,"class","btn btn-lg btn-primary btn-block");
+        agregarAtributoxElemento(btnPersona,"data-toggle","modal");
+        agregarAtributoxElemento(btnPersona,"data-target","#ModalPersona");        
+        agregarEtiqueta(btnPersona,"Seleccione una Persona");        
+        var div_btnPersona = tomarElemento("Persona");
+        resetearValorDiv(div_btnPersona);        
+        agregarElementoxDiv(div_btnPersona,btnPersona);  
+        //RESETANDO CAMPOS
+        resetearValorElemento("Edad_Desde"); 
+        resetearValorElemento("Edad_Hasta"); 
+        resetearValorElemento("Domicilio"); 
+        resetearValorElemento("Manzana"); 
+        resetearValorElemento("Lote"); 
+        resetearValorElemento("Familia");       
+        resetearValorElemento("Nro_Carpeta"); 
+        resetearValorElemento("Nro_Legajo"); 
+        resetearValorSelect("ID_Escuela");
+        resetearValorElemento("Trabajo"); 
+        //RESETEANDO BOTON SELECCIONE UN MOTIVO 1
+        var btnMotivo_1 = crearElemento("button");
+        agregarAtributoxElemento(btnMotivo_1,"type","button");
+        agregarAtributoxElemento(btnMotivo_1,"class","btn btn-lg btn-primary btn-block");
+        agregarAtributoxElemento(btnMotivo_1,"data-toggle","modal");
+        agregarAtributoxElemento(btnMotivo_1,"data-target","#ModalMotivo");        
+        agregarEtiqueta(btnMotivo_1,"Seleccione un Motivo");        
+        var div_btnMotivo_1 = tomarElemento("Motivo");
+        resetearValorDiv(div_btnMotivo_1);        
+        agregarElementoxDiv(div_btnMotivo_1,btnMotivo_1); 
+        //RESETEANDO BOTON SELECCIONE UN MOTIVO 2
+        var btnMotivo_2 = crearElemento("button");
+        agregarAtributoxElemento(btnMotivo_2,"type","button");
+        agregarAtributoxElemento(btnMotivo_2,"class","btn btn-lg btn-primary btn-block");
+        agregarAtributoxElemento(btnMotivo_2,"data-toggle","modal");
+        agregarAtributoxElemento(btnMotivo_2,"data-target","#ModalMotivo2");        
+        agregarEtiqueta(btnMotivo_2,"Seleccione un Motivo");        
+        var div_btnMotivo_2 = tomarElemento("Motivo2");
+        resetearValorDiv(div_btnMotivo_2);        
+        agregarElementoxDiv(div_btnMotivo_2,btnMotivo_2);  
+        //RESETEANDO BOTON SELECCIONE UN MOTIVO 3
+        var btnMotivo_3 = crearElemento("button");
+        agregarAtributoxElemento(btnMotivo_3,"type","button");
+        agregarAtributoxElemento(btnMotivo_3,"class","btn btn-lg btn-primary btn-block");
+        agregarAtributoxElemento(btnMotivo_3,"data-toggle","modal");
+        agregarAtributoxElemento(btnMotivo_3,"data-target","#ModalMotivo3");        
+        agregarEtiqueta(btnMotivo_3,"Seleccione un Motivo");        
+        var div_btnMotivo_3 = tomarElemento("Motivo3");
+        resetearValorDiv(div_btnMotivo_3);        
+        agregarElementoxDiv(div_btnMotivo_3,btnMotivo_3);      
+        //RESETEANDO BOTON SELECCIONE UNA MOTIVO 3
+        var btnCategoria = crearElemento("button");
+        agregarAtributoxElemento(btnCategoria,"type","button");
+        agregarAtributoxElemento(btnCategoria,"class","btn btn-lg btn-primary btn-block");
+        agregarAtributoxElemento(btnCategoria,"data-toggle","modal");
+        agregarAtributoxElemento(btnCategoria,"data-target","#ModalCategoria");        
+      agregarEtiqueta(btnCategoria,"Seleccione una Categoria");       
+        var div_btnCategoria = tomarElemento("Categoria");
+        resetearValorDiv(div_btnCategoria);        
+        agregarElementoxDiv(div_btnCategoria,btnCategoria);              
+        //RESETEANDO CENTRO DE SALUD
+        resetearValorSelect("ID_Centro");
+        //RESETEANDO OTRAS INSTITUCIONES
+        resetearValorSelect("ID_OtraInstitucion");
+        //RESETEANDO MOSTRAR PERSONAS
+        resetearValorSelect("inpMostrar");
+      }
 
   </script>
 </head>
@@ -401,38 +518,38 @@ $Con->CloseConexion();
             <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Desde (Edad): </label>
                   <div class="col-md-10">
-                      <input type="number" name="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números">
+                      <input type="number" name="Edad_Desde" id="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números">
                       <input type="hidden" name="ID_Persona" id = "ID_Persona" value = "0">
                   </div>
             </div> 
             <div class="form-group row">
                 <label for="inputPassword" class="col-md-2 col-form-label LblForm">Hasta (Edad): </label>
                 <div class="col-md-10">
-                    <input type="number" name="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números">
+                    <input type="number" name="Edad_Hasta" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números">
                 </div>
             </div> 
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Domicilio/Familia: </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "Domicilio" id="inputPassword" autocomplete="off">
+                <input type="text" class="form-control" name = "Domicilio" id="Domicilio" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Manzana: </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "Manzana" id="inputPassword" autocomplete="off">
+                <input type="text" class="form-control" name = "Manzana" id="Manzana" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Lote: </label>
               <div class="col-md-10">
-                <input type="number" class="form-control" name = "Lote" id="inputPassword" autocomplete="off">
+                <input type="number" class="form-control" name = "Lote" id="Lote" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Sub-lote: </label>
               <div class="col-md-10">
-                <input type="number" class="form-control" name = "Familia" id="inputPassword" autocomplete="off">
+                <input type="number" class="form-control" name = "Familia" id="Familia" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
@@ -444,10 +561,22 @@ $Con->CloseConexion();
                 ?>
               </div>
               <div class="col-md-1">
-                  <button type="button" class="btn btn-primary" onClick="agregarBarrio()" id="agregarBarrio">+</button>
+                  <button type="button" class="btn btn-primary" onClick="agregarBarrio()" id="agregarBarrioID">+</button>
               </div>
             </div>
             <div id="contenedorBarrios">              
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" name = "Nro_Carpeta" id="Nro_Carpeta" autocomplete="off">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" name = "Nro_Legajo" id="Nro_Legajo" autocomplete="off">
+              </div>
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Escuela: </label>
@@ -461,11 +590,11 @@ $Con->CloseConexion();
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Trabajo: </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "Trabajo" id="inputPassword" autocomplete="off">
+                <input type="text" class="form-control" name = "Trabajo" id="Trabajo" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo: </label>
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 1: </label>
               <div class="col-md-10" id = "Motivo">
                 <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo">Seleccione un Motivo</button>   
               </div>
@@ -509,7 +638,7 @@ $Con->CloseConexion();
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Mostrar Personas: </label>
               <div class="col-md-10">
-                <select class="form-control" name="Mostrar">
+                <select class="form-control" name="Mostrar" id="inpMostrar">
                 	<option value="0">Con Movimientos</option>
                 	<option value="1">Todos</option>
                 </select>
@@ -522,9 +651,17 @@ $Con->CloseConexion();
                 <input type="hidden" name="ID_Motivo3" id = "ID_Motivo3" value = "0">
                 <input type="hidden" name="ID_Categoria" id = "ID_Categoria" value = "0">
                 <button type="submit" class="btn btn-outline-success">Aceptar</button>
+                <button type="button" class="btn btn-outline-secondary" onClick="resetearForm()">Cancel</button>
+                <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = 'view_inicio.php'">Volver</button>
               </div>
             </div>
           </form>
+          <div class="row">
+              <div class="col-10"></div>
+              <!-- <div class="col-2">
+                <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = 'view_inicio.php'">Volver</button>
+              </div> -->
+          </div>
           <br><br><br>
           <!-- Fin Carga -->
           <!-- SECCION DE MODALES -->

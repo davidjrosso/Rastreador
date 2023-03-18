@@ -204,6 +204,8 @@ $Con->CloseConexion();
       ID_Persona.setAttribute('value',xID);
       var BtnBarrios = document.getElementById("agregarBarrio");
       BtnBarrios.setAttribute('disabled', true);      
+      var SelMostrar = document.getElementById("inpMostrar");
+      SelMostrar.setAttribute('disabled', true);
     }
 
     function seleccionMotivo(xMotivo,xID,xNumber){
@@ -449,6 +451,20 @@ $Con->CloseConexion();
             </div>
             <div id="contenedorBarrios">              
             </div>
+
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" name = "Nro_Carpeta" id="Nro_Carpeta" autocomplete="off">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" name = "Nro_Legajo" id="Nro_Legajo" autocomplete="off">
+              </div>
+            </div>
+            
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Escuela: </label>
               <div class="col-md-10">
@@ -458,6 +474,7 @@ $Con->CloseConexion();
                 ?>
               </div>
             </div>
+          
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Trabajo: </label>
               <div class="col-md-10">
@@ -465,7 +482,7 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo: </label>
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 1: </label>
               <div class="col-md-10" id = "Motivo">
                 <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo">Seleccione un Motivo</button>   
               </div>
@@ -506,15 +523,15 @@ $Con->CloseConexion();
                 ?>
               </div>
             </div>
-            <!-- <div class="form-group row">
+            <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Mostrar Personas: </label>
               <div class="col-md-10">
-                <select class="form-control" name="Mostrar">
+                <select class="form-control" name="Mostrar" id="inpMostrar">
                 	<option value="0">Con Movimientos</option>
                 	<option value="1">Todos</option>
                 </select>
               </div>
-            </div> -->
+            </div>
             <div class="form-group row">
               <div class="offset-md-2 col-md-10">
                 <input type="hidden" name="ID_Motivo" id = "ID_Motivo" value = "0">
@@ -522,6 +539,7 @@ $Con->CloseConexion();
                 <input type="hidden" name="ID_Motivo3" id = "ID_Motivo3" value = "0">
                 <input type="hidden" name="ID_Categoria" id = "ID_Categoria" value = "0">
                 <button type="submit" class="btn btn-outline-success">Aceptar</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
               </div>
             </div>
           </form>

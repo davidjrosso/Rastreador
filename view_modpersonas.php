@@ -239,6 +239,7 @@ $Con->CloseConexion();
               $Apellido = $Ret["apellido"];
               $Nombre = $Ret["nombre"];
               $DNI = $Ret["documento"];
+              $Nro_Legajo= $Ret["nro_legajo"];
               $Edad = $Ret["edad"];
               $Meses = $Ret["meses"];
               $Fecha_Nacimiento = implode("/", array_reverse(explode("-",$Ret["fecha_nac"])));              
@@ -261,7 +262,7 @@ $Con->CloseConexion();
               $Trabajo = $Ret["Trabajo"];
 
 
-              $Persona = new Persona($ID_Persona,$Apellido,$Nombre,$DNI,$Edad,$Meses,$Fecha_Nacimiento,$Nro_Carpeta,$Obra_Social,$Domicilio,$Barrio,$Localidad,$Circunscripcion,$Seccion,$Manzana,$Lote,$Familia,$Observaciones,$Cambio_Domicilio,$Telefono,$Mail,$ID_Escuela,$Estado,$Trabajo);              
+              $Persona = new Persona($ID_Persona,$Apellido,$Nombre,$DNI,$Nro_Legajo, $Edad,$Meses,$Fecha_Nacimiento,$Nro_Carpeta,$Obra_Social,$Domicilio,$Barrio,$Localidad,$Circunscripcion,$Seccion,$Manzana,$Lote,$Familia,$Observaciones,$Cambio_Domicilio,$Telefono,$Mail,$ID_Escuela,$Estado,$Trabajo);              
 
               $Con->CloseConexion();
               
@@ -318,6 +319,12 @@ $Con->CloseConexion();
                   </div>
                 </div>
                 <div class="form-group row">
+                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
+                  <div class="col-md-10">
+                    <input type="text" class="form-control" name = "Nro_Legajo" id="Nro_Legajo" autocomplete="off" value = "<?php echo $Persona->getNro_Legajo(); ?>">
+                  </div>
+                </div>
+                <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Localidad: </label>
                   <div class="col-md-10">
                     <input type="text" class="form-control" name = "Localidad" id="inputPassword" autocomplete="off" value = "<?php echo $Persona->getLocalidad(); ?>">
@@ -351,9 +358,9 @@ $Con->CloseConexion();
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Sublote: </label>
+                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Familia: </label>
                   <div class="col-md-10">
-                    <input type="number" class="form-control" name = "Familia" id="inputPassword" autocomplete="off" value = "<?php echo $Persona->getFamilia(); ?>">
+                    <input type="text" class="form-control" name = "Familia" id="inputPassword" autocomplete="off" value = "<?php echo $Persona->getFamilia(); ?>">
                   </div>
                 </div>
                 <div class="form-group row">
@@ -392,18 +399,19 @@ $Con->CloseConexion();
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Observación: </label>
                   <div class="col-md-10">
-                    <textarea class = "form-control" row = "3" name = "Observaciones" value = "<?php echo $Persona->getObservaciones(); ?>"></textarea>
+                    <textarea class = "form-control" row = "3" name = "Observaciones" value = "<?php echo $Persona->getObservaciones(); ?>"><?php echo $Persona->getObservaciones(); ?></textarea>
                   </div>
                 </div>
                 <div class="form-group row">
                   <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Cambio de Domicilio: </label>
                   <div class = "col-md-10">
-                    <textarea class = "form-control" row = "3" name = "Cambio_Domicilio" value = "<?php echo $Persona->getCambio_Domicilio(); ?>"></textarea>
+                    <textarea class = "form-control" row = "3" name = "Cambio_Domicilio" value = "<?php echo $Persona->getCambio_Domicilio(); ?>"><?php echo $Persona->getCambio_Domicilio(); ?></textarea>
                   </div>
                 </div>
                 <div class="form-group row">
                   <div class="offset-md-2 col-md-10">
                     <button type="submit" class="btn btn-outline-success">Guardar</button>
+                    <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_personas.php'">Atras</button>
                   </div>
                 </div>
             </form>
@@ -418,46 +426,24 @@ $Con->CloseConexion();
         <div class="row">
             <div class="col-10"></div>
             <div class="col-2">
-              <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = 'view_personas.php'">Volver</button>
+              <!-- <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = 'view_personas.php'">Volver</button> -->
             </div>
         </div>
   </div>
 </div>
 </div>
 <?php 
-if(isset($_REQUEST['Mensaje'])){
-  $Mensaje = $_REQUEST['Mensaje'];
+if(isset($_REQUEST["Mensaje"])){
   echo "<script type='text/javascript'>
-    swal('$Mensaje','','success');
+    swal('".$_REQUEST['Mensaje']."','','success');
 </script>";
 }
 
 if(isset($_REQUEST['MensajeError'])){
-  $MensajeError = $_REQUEST['MensajeError'];
   echo "<script type='text/javascript'>
-    swal('".$MensajeError."','','warning');
+    swal('".$_REQUEST['MensajeError']."','','warning');
 </script>";
 }
-?>
-<?php
-/*
- *
- * This file is part of Rastreador3.
- *
- * Rastreador3 is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Rastreador3 is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Rastreador3; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- */
 ?>
 </body>
 </html>

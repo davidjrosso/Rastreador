@@ -253,6 +253,7 @@ $Con->CloseConexion();
               $Apellido = $Ret["apellido"];
               $Nombre = $Ret["nombre"];
               $DNI = $Ret["documento"];
+              
               $Edad = $Ret["edad"];
               if(is_null($Ret["fecha_nac"]) || $Ret["fecha_nac"] == "null"){
               	$Fecha_Nacimiento = "No se cargo fecha de nacimiento";
@@ -261,6 +262,7 @@ $Con->CloseConexion();
               }
                       
               $Nro_Carpeta = $Ret["nro_carpeta"];
+              $Nro_Legajo = $Ret["nro_legajo"];
               $Obra_Social = $Ret["obra_social"];
               $Domicilio = $Ret["domicilio"];
               $Barrio = $RetBarrio["Barrio"];
@@ -279,7 +281,7 @@ $Con->CloseConexion();
               $Meses = $Ret["meses"];
               $Trabajo = $Ret["Trabajo"];
 
-              $Persona = new Persona($ID_Persona,$Apellido,$Nombre,$DNI,$Edad,$Meses,$Fecha_Nacimiento,$Nro_Carpeta,$Obra_Social,$Domicilio,$Barrio,$Localidad,$Circunscripcion,$Seccion,$Manzana,$Lote,$Familia,$Observacion,$Cambio_Domicilio,$Telefono,$Mail,$ID_Escuela,$Estado,$Trabajo);
+              $Persona = new Persona($ID_Persona,$Apellido,$Nombre,$DNI,$Nro_Legajo,$Edad,$Meses,$Fecha_Nacimiento,$Nro_Carpeta,$Obra_Social,$Domicilio,$Barrio,$Localidad,$Circunscripcion,$Seccion,$Manzana,$Lote,$Familia,$Observacion,$Cambio_Domicilio,$Telefono,$Mail,$ID_Escuela,$Estado,$Trabajo);
 
               $ConsultarEscuela = "select Escuela from escuelas where ID_Escuela = $ID_Escuela";
               $MensajeErrorConsultarEscuela = "No se pudo consultar la Escuela";
@@ -301,13 +303,14 @@ $Con->CloseConexion();
               	$Table .= "<tr><td>Edad</td><td>".$Persona->getEdad()."</td></tr>";
               }              
               $Table .= "<tr><td>Meses</td><td>".$Persona->getMeses()."</td></tr>";            
-              $Table .= "<tr><td>Nro. Carpeta</td><td>".$Persona->getNro_Carpeta()."</td></tr>";
+              $Table .= "<tr><td>Nro. Carpeta</td><td>".$Persona->getNro_Carpeta()."</td></tr>";               
+              $Table .= "<tr><td>Nro. Legajo</td><td>".$Persona->getNro_Legajo()."</td></tr>";             
               $Table .= "<tr><td>Localidad</td><td>".$Persona->getLocalidad()."</td></tr>";
               $Table .= "<tr><td>Barrio</td><td>".$Persona->getBarrio()."</td></tr>";  
               $Table .= "<tr><td>Domicilio</td><td>".$Persona->getDomicilio()."</td></tr>";              
               $Table .= "<tr><td>Manzana</td><td>".$Persona->getManzana()."</td></tr>";
               $Table .= "<tr><td>Lote</td><td>".$Persona->getLote()."</td></tr>";
-              $Table .= "<tr><td>Sublote</td><td>".$Persona->getFamilia()."</td></tr>";
+              $Table .= "<tr><td>Familia</td><td>".$Persona->getFamilia()."</td></tr>";
               $Table .= "<tr><td>Telefono</td><td>".$Persona->getTelefono()."</td></tr>";
               $Table .= "<tr><td>Mail</td><td>".$Persona->getMail()."</td></tr>";                            
               $Table .= "<tr><td>Obra Social</td><td>".$Persona->getObra_Social()."</td></tr>";              
@@ -333,31 +336,12 @@ $Con->CloseConexion();
         <div class="row">
             <div class="col-10"></div>
             <div class="col-2">
-              <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = 'view_personas.php'">Volver</button>
+            <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_personas.php'">Atras</button>
+              
             </div>
         </div>
   </div>
 </div>
 </div>
-<?php
-/*
- *
- * This file is part of Rastreador3.
- *
- * Rastreador3 is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Rastreador3 is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Rastreador3; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- */
-?>
 </body>
 </html>
