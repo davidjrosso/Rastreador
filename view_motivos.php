@@ -219,9 +219,9 @@ $Con->CloseConexion();
               <div class="col-md-3">
                 <select name = "ID_Filtro" class = "form-control">                    
                     <option value = "Motivo">Motivo</option>
-                    <option value = "Codigo">Codigo</option>
-                    <option value = "Numero">Numero</option>
-                    <option value = "Categoria">Categoria</option>
+                    <option value = "Codigo">Código</option>
+                    <option value = "Numero">Número</option>
+                    <option value = "Categoria">Categoría</option>
                     <option value = "ID">Id</option>
                 </select>
               </div>
@@ -243,9 +243,9 @@ $Con->CloseConexion();
               switch ($ID_Filtro) {
                 case 'ID': echo $DTGeneral->getMotivosxID($Filtro);break;
                 case 'Motivo': echo $DTGeneral->getMotivosxMotivo($Filtro);break;
-                case 'Codigo': echo $DTGeneral->getMotivosxCodigo($Filtro);break;
-                case 'Numero': echo $DTGeneral->getMotivosxNumero($Filtro);break;
-                case 'Categoria': echo $DTGeneral->getMotivosxCategoria($Filtro);break;
+                case 'Código': echo $DTGeneral->getMotivosxCodigo($Filtro);break;
+                case 'Número': echo $DTGeneral->getMotivosxNumero($Filtro);break;
+                case 'Categoría': echo $DTGeneral->getMotivosxCategoria($Filtro);break;
                 default: echo $DTGeneral->getMotivosxID($Filtro);break;
               }
             }else{

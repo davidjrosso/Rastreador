@@ -570,9 +570,7 @@ public function getMenuSeguridad($ID){
                 <li class="collapsed" onClick = "location.href = \'licencia.pdf\'">
                   <a href="licencia.pdf"><i class="fa fa-file-text fa-lg"></i> Licencia</a>
                 </li>
-                <li class="bg-danger collapsed" onClick = "location.href = \'view_reportarbug.php\'">
-                <a href="view_reportarbug.php"><i class="fa fa-file-text fa-lg"></i> Reportar/Sugerir</a>
-              </li>
+               
             </ul>
         </div>';break;
 	   case 2:echo '<div class="menu-list">
@@ -586,9 +584,7 @@ public function getMenuSeguridad($ID){
               <li class="collapsed" onClick = "location.href = \'licencia.pdf\'">
                   <a href="licencia.pdf"><i class="fa fa-file-text fa-lg"></i> Licencia</a>
               </li>
-              <li class="bg-danger collapsed" onClick = "location.href = \'view_reportarbug.php\'">
-                <a href="view_reportarbug.php"><i class="fa fa-file-text fa-lg"></i> Reportar/Sugerir</a>
-              </li>
+             
 	        </ul>
 	    </div>';break;
       case 3:echo '<div class="menu-list">
@@ -602,9 +598,7 @@ public function getMenuSeguridad($ID){
               <li class="collapsed active" onClick = "location.href = \'licencia.pdf\'">
                   <a href="licencia.pdf"><i class="fa fa-file-text fa-lg"></i> Licencia</a>
               </li>
-              <li class="bg-danger collapsed" onClick = "location.href = \'view_reportarbug.php\'">
-                <a href="view_reportarbug.php"><i class="fa fa-file-text fa-lg"></i> Reportar/Sugerir</a>
-              </li>
+             
 	        </ul>
 	    </div>';break;
       default:echo '<div class="menu-list">
@@ -618,9 +612,7 @@ public function getMenuSeguridad($ID){
                 <li class="collapsed" onClick = "location.href = \'licencia.pdf\'">
                   <a href="licencia.pdf"><i class="fa fa-file-text fa-lg"></i> Licencia</a>
                 </li>
-                <li class="bg-danger collapsed" onClick = "location.href = \'view_reportarbug.php\'">
-                  <a href="view_reportarbug.php"><i class="fa fa-file-text fa-lg"></i> Reportar/Sugerir</a>
-              </li>
+                
             </ul>
         </div>';break;
     }

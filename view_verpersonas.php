@@ -310,7 +310,7 @@ $Con->CloseConexion();
               $Table .= "<tr><td>Domicilio</td><td>".$Persona->getDomicilio()."</td></tr>";              
               $Table .= "<tr><td>Manzana</td><td>".$Persona->getManzana()."</td></tr>";
               $Table .= "<tr><td>Lote</td><td>".$Persona->getLote()."</td></tr>";
-              $Table .= "<tr><td>Familia</td><td>".$Persona->getFamilia()."</td></tr>";
+              $Table .= "<tr><td>Sub-lote</td><td>".$Persona->getFamilia()."</td></tr>";
               $Table .= "<tr><td>Telefono</td><td>".$Persona->getTelefono()."</td></tr>";
               $Table .= "<tr><td>Mail</td><td>".$Persona->getMail()."</td></tr>";                            
               $Table .= "<tr><td>Obra Social</td><td>".$Persona->getObra_Social()."</td></tr>";              
