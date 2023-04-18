@@ -223,6 +223,7 @@ $Con->CloseConexion();
                     <option value = "DNI">Documento</option>
                     <option value = "ID">Id</option>
                     <option value = "Legajo">Nro. Legajo</option>
+                    <option value = "Carpeta">Nro. Carpeta</option>
                 </select>
               </div>
               <div class = "col-md-1">
@@ -246,6 +247,7 @@ $Con->CloseConexion();
                 case 'Nombre': echo $DTGeneral->getPersonasxNombre($Filtro);break;
                 case 'DNI': echo $DTGeneral->getPersonasxDNI($Filtro);break;
                 case 'Legajo': echo $DTGeneral->getPersonasxLegajo($Filtro);break;
+                case 'Carpeta': echo $DTGeneral->getPersonasxCarpeta($Filtro);break;
                 default: echo $DTGeneral->getPersonasxID($Filtro);break;
               }
             }else{
