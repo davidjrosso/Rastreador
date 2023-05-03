@@ -372,7 +372,7 @@ $Con->CloseConexion();
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
-        <p>General</p>
+        <p>Reporte por listados</p>
       </div>
       <div class="col"></div>
     </div><br>

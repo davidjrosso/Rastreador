@@ -251,7 +251,6 @@ $Con->CloseConexion();
                 case 'Documento': echo $DTGeneral->getMovimientosxDocumento($Filtro);break;
                 case 'Nombre': echo $DTGeneral->getMovimientosxNombre($Filtro);break;
                 case 'Responsable': echo $DTGeneral->getMovimientosxResponsable($Filtro);break;
-
                 case 'Legajo': echo $DTGeneral->getMovimientosxLegajo($Filtro);break;
                 case 'Carpeta': echo $DTGeneral->getMovimientosxCarpeta($Filtro);break;
                 

@@ -611,8 +611,7 @@ public function getMenuSeguridad($ID){
                 </li>
                 <li class="collapsed" onClick = "location.href = \'licencia.pdf\'">
                   <a href="licencia.pdf"><i class="fa fa-file-text fa-lg"></i> Licencia</a>
-                </li>
-                
+                </li>                
             </ul>
         </div>';break;
     }

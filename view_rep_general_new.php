@@ -411,7 +411,7 @@ $Con->CloseConexion();
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
-        <p>Movimientos</p>
+        <p>Rastreador. Gráfico de co-evolución para la evaluación  comunitaria de cobertura.<br>Sistema orientado a la  georreferenciación.</p>
       </div>
       <div class="col"></div>
     </div><br>
