@@ -201,7 +201,10 @@ $Con->CloseConexion();
     </div><br>
     <br>
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-2">
+          <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_listados.php'">Atras</button>
+        </div>
+        <div class="col-md-8">
         <?php  
       	if(!isset($_REQUEST["Anio"])){
               $Fecha_Inicio = implode("-", array_reverse(explode("/",$_REQUEST["Fecha_Desde"])));
@@ -571,10 +574,12 @@ $Con->CloseConexion();
           }
         }
         ?>
-        <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_listados.php'">Atras</button>
         </div>
-        <div class="col">
-          <button type="button" class="btn btn-secondary" onClick="enviarImprimir()">Imprimir</button>
+        <div class="col-md-2">
+          <div class="row">
+            <button type = "button" class = "btn btn-secondary" data-toggle="modal" data-target="#configModal">Config</button>
+            <button type="button" class="btn btn-secondary" onClick="enviarImprimir()">Imprimir</button>
+          </div>
         </div>
      </div>
      <div class = "row">
@@ -925,14 +930,14 @@ $Con->CloseConexion();
                   $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);                
 
                   $TableMov = "<table class='table table-dark'>";                
-                  $TableMov .= "<tr><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>".$DtoMovimiento->getFecha()."</td></tr>";
-                  $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
-                  $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
-                  $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
-                  $TableMov .= "<tr><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getObservaciones()."</td></tr>";
-                  $TableMov .= "<tr><td style = 'width: 30%;'>Responsable</td><td style = 'width: 70%;'>".$DtoMovimiento->getResponsable()."</td></tr>";
-                  $TableMov .= "<tr><td style = 'width: 30%;'>Centro de salud</td><td style = 'width: 70%;'>".$DtoMovimiento->getCentroSalud()."</td></tr>";
-                  $TableMov .= "<tr><td style = 'width: 30%;'>Otras instituciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
+                  $TableMov .= "<tr class='trFecha'><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>".$DtoMovimiento->getFecha()."</td></tr>";
+                  $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
+                  $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
+                  $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
+                  $TableMov .= "<tr class='trObservaciones'><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getObservaciones()."</td></tr>";
+                  $TableMov .= "<tr class='trResponsable'><td style = 'width: 30%;'>Responsable</td><td style = 'width: 70%;'>".$DtoMovimiento->getResponsable()."</td></tr>";
+                  $TableMov .= "<tr class='trCentrosSalud'><td style = 'width: 30%;'>Centro de salud</td><td style = 'width: 70%;'>".$DtoMovimiento->getCentroSalud()."</td></tr>";
+                  $TableMov .= "<tr class='trOtrasInstituciones'><td style = 'width: 30%;'>Otras instituciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
                   $TableMov .= "</table>";
                   echo $TableMov;
                 }            
@@ -978,14 +983,14 @@ $Con->CloseConexion();
 
                 $TableMov = "<table class='table table-dark'>";
                 $TableMov .= "<tr><td style = 'width: 30%;'>Persona</td><td style = 'width: 70%;'>".$DtoMovimiento->getApellido().", ".$DtoMovimiento->getNombre()."</td></tr>";
-                $TableMov .= "<tr><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>".$DtoMovimiento->getFecha()."</td></tr>";
-                $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
-                $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
-                $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
-                $TableMov .= "<tr><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getObservaciones()."</td></tr>";
-                $TableMov .= "<tr><td style = 'width: 30%;'>Responsable</td><td style = 'width: 70%;'>".$DtoMovimiento->getResponsable()."</td></tr>";
-                $TableMov .= "<tr><td style = 'width: 30%;'>Centro de salud</td><td style = 'width: 70%;'>".$DtoMovimiento->getCentroSalud()."</td></tr>";
-                $TableMov .= "<tr><td style = 'width: 30%;'>Otras instituciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
+                $TableMov .= "<tr class='trFecha'><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>".$DtoMovimiento->getFecha()."</td></tr>";
+                $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
+                $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
+                $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
+                $TableMov .= "<tr class='trObservaciones'><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getObservaciones()."</td></tr>";
+                $TableMov .= "<tr class='trResponsable'><td style = 'width: 30%;'>Responsable</td><td style = 'width: 70%;'>".$DtoMovimiento->getResponsable()."</td></tr>";
+                $TableMov .= "<tr class='trCentrosSalud'><td style = 'width: 30%;'>Centro de salud</td><td style = 'width: 70%;'>".$DtoMovimiento->getCentroSalud()."</td></tr>";
+                $TableMov .= "<tr class='trOtrasInstituciones'><td style = 'width: 30%;'>Otras instituciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
                 $TableMov .= "</table>";
                 echo $TableMov;
 
@@ -1000,6 +1005,108 @@ $Con->CloseConexion();
   </div>
 </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="configModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Configurar resultados</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="checkbox" id="chkFecha"> Fecha
+        <input type="checkbox" id="chkMotivos"> Motivos
+        <input type="checkbox" id="chkObservaciones"> Observaciones
+        <input type="checkbox" id="chkResponsable"> Responsable
+        <input type="checkbox" id="chkCentrosSalud"> Centro de salud 
+        <input type="checkbox" id="chkOtrasInstituciones"> Otras instituciones
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" onClick="configResultados()" data-dismiss="modal">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function configResultados() {
+    var chkFecha = document.getElementById('chkFecha').checked;
+    var chkMotivos = document.getElementById('chkMotivos').checked;
+    var chkObservaciones= document.getElementById('chkObservaciones').checked;
+    var chkResponsable= document.getElementById('chkResponsable').checked;
+    var chkCentrosSalud= document.getElementById('chkCentrosSalud').checked;
+    var chkOtrasInstituciones = document.getElementById('chkOtrasInstituciones').checked;
+
+    var trFecha = document.getElementsByClassName('trFecha');
+    var trMotivos= document.getElementsByClassName('trMotivos');
+    var trObservaciones= document.getElementsByClassName('trObservaciones');
+    var trResponsable= document.getElementsByClassName('trResponsable');
+    var trCentrosSalud= document.getElementsByClassName('trCentrosSalud');
+    var trOtrasInstituciones = document.getElementsByClassName('trOtrasInstituciones');
+
+    if(!chkFecha){
+      for (let i = 0; i < trFecha.length; i++) {        
+        trFecha[i].setAttribute('hidden', true);        
+      }
+    }else{
+      for (let i = 0; i < trFecha.length; i++) {        
+        trFecha[i].removeAttribute('hidden');        
+      }
+    }
+
+    if(!chkMotivos){
+      for (let i = 0; i < trMotivos.length; i++) {        
+        trMotivos[i].setAttribute('hidden', true);        
+      }
+    }else{
+      for (let i = 0; i < trMotivos.length; i++) {        
+        trMotivos[i].removeAttribute('hidden');        
+      }
+    }
+
+    if(!chkObservaciones){
+      for (let i = 0; i < trObservaciones.length; i++) {        
+        trObservaciones[i].setAttribute('hidden', true);        
+      }
+    }else{  
+      for (let i = 0; i < trObservaciones.length; i++) {        
+        trObservaciones[i].removeAttribute('hidden');        
+      }
+    }
+
+    if(!chkResponsable){
+      for (let i = 0; i < trResponsable.length; i++) {        
+        trResponsable[i].setAttribute('hidden', true);        
+      }
+    }else{
+      for (let i = 0; i < trResponsable.length; i++) {        
+        trResponsable[i].removeAttribute('hidden');        
+      }
+    }
+
+    if(!chkCentrosSalud){
+      for (let i = 0; i < trCentrosSalud.length; i++) {        
+        trCentrosSalud[i].setAttribute('hidden', true);        
+      }
+    }else{
+      for (let i = 0; i < trCentrosSalud.length; i++) {        
+        trCentrosSalud[i].removeAttribute('hidden');        
+      }
+    }
+
+    if(!chkOtrasInstituciones){
+      for (let i = 0; i < trOtrasInstituciones.length; i++) {        
+        trOtrasInstituciones[i].setAttribute('hidden', true);        
+      }
+    }else{
+      for (let i = 0; i < trOtrasInstituciones.length; i++) {        
+        trOtrasInstituciones[i].removeAttribute('hidden');        
+      }
+    }
+  }
+</script>
 <?php
 /*
  *

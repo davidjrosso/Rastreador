@@ -985,6 +985,19 @@ class CtrGeneral{
 		return $Table;
 	}
 
+	// NOTIFICACIONES DE USUARIOS
+	public function getNotificaciones(){
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "select ID_Notificacion, Detalle, Fecha, Expira, Estado from notificaciones where Expira > CURDATE() and Estado = 1";
+		$MessageError = "Problemas al intentar mostrar Notificaciones";
+		$Con->ResultSet = mysqli_query($Con->Conexion, $Consulta) or die($MessageError);
+		$retNot = mysqli_fetch_assoc($Con->ResultSet);
+		$Con->CloseConexion();
+		$ret = ["cant" => mysqli_num_rows($Con->ResultSet), "value" => $retNot];
+		return $ret;
+	}
+
 
 
 }
