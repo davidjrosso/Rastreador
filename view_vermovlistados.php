@@ -232,7 +232,7 @@ $Con->CloseConexion();
               $ID_CentroSalud = $_REQUEST["ID_CentroSalud"];
               $ID_OtraInstitucion = $_REQUEST["ID_OtraInstitucion"];
 
-              $ConsultarMovimientosPersona = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, P.domicilio, P.fecha_nac, M.motivo_1, M.motivo_2, M.motivo_3, M.observaciones, R.responsable, CS.centro_salud, I.Nombre as 'NombreInst' from movimiento M, persona P, barrios B, motivo MT, categoria C, centros_salud CS, otras_instituciones I, responsable R where M.id_persona = P.id_persona and B.ID_Barrio = P.ID_Barrio and M.id_centro = CS.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and R.id_resp = M.id_resp and M.estado = 1 and P.estado = 1 and MT.estado = 1 and C.estado = 1 and M.fecha between '$Fecha_Inicio' and '$Fecha_Fin'";
+              $ConsultarMovimientosPersona = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, P.domicilio, P.fecha_nac, M.motivo_1, M.motivo_2, M.motivo_3, M.observaciones, R.responsable, CS.centro_salud, I.Nombre as 'NombreInst' from movimiento M, persona P, barrios B, motivo MT, categoria C, centros_salud CS, otras_instituciones I, responsable R where M.id_persona = P.id_persona and B.ID_Barrio = P.ID_Barrio and M.id_centro = CS.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and R.id_resp = M.id_resp and M.estado = 1 and P.estado = 1 and MT.estado = 1 and C.estado = 1 and M.fecha between '$Fecha_Inicio' and '$Fecha_Fin' and P.ID_Persona = $ID_Persona";
           	  $Consulta = "select M.id_movimiento, M.fecha, M.id_persona, MONTH(M.fecha) as 'Mes', YEAR(M.fecha) as 'Anio', B.Barrio, P.manzana, P.lote, P.familia, P.apellido, P.nombre, P.fecha_nac, P.domicilio, M.motivo_1, M.motivo_2, M.motivo_3, R.responsable, M.observaciones, CS.centro_salud, I.Nombre as 'NombreInst' from movimiento M, persona P, barrios B, motivo MT, categoria C, centros_salud CS, otras_instituciones I, responsable R where M.id_persona = P.id_persona and B.ID_Barrio = P.ID_Barrio and M.id_centro = CS.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and R.id_resp = M.id_resp and M.estado = 1 and P.estado = 1 and MT.estado = 1 and C.estado = 1 and M.fecha between '$Fecha_Inicio' and '$Fecha_Fin'"; 
               // var_dump($Consulta);     
               $filtros = [];
@@ -571,6 +571,7 @@ $Con->CloseConexion();
         // echo "DEBUG: ".$Consulta."<br><br>";
           foreach($filtros as $value){
             echo "<span class='etFiltros'>".$value."</span> ";
+            // echo "DEBUG: ".$ConsultarMovimientosPersona;
           }
         }
         ?>
@@ -689,7 +690,7 @@ $Con->CloseConexion();
             //   $ConsultarMovimientos = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, M.motivo_1, M.motivo_2, M.motivo_3, M.observaciones, R.responsable from movimiento M, responsable R, persona P where M.id_resp = R.id_resp and M.id_persona = P.id_persona and M.id_persona = $ID_Persona";
               $MensajeErrorMovimientos = "No se pudo consultar los movimientos de la persona";
 
-            //   echo "DEBUG: ".var_dump($ConsultarMovimientosPersona);
+              echo "DEBUG: ".var_dump($ConsultarMovimientosPersona);
 
               $TomarMovimientosPersona = mysqli_query($Con->Conexion,$ConsultarMovimientosPersona) or die($MensajeErrorMovimientos);
 
@@ -931,6 +932,7 @@ $Con->CloseConexion();
 
                   $TableMov = "<table class='table table-dark'>";                
                   $TableMov .= "<tr class='trFecha'><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>".$DtoMovimiento->getFecha()."</td></tr>";
+                  $TableMov .= "<tr><td style = 'width: 30%;'>Persona</td><td style = 'width: 70%;'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$DtoMovimiento->getApellido().", ".$DtoMovimiento->getNombre()."</a></td></tr>";
                   $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
                   $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
                   $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
