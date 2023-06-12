@@ -46,24 +46,37 @@ $Con->CloseConexion();
   <script src="js/FileSaver.js"></script> 
   <script src="js/jquery.wordexport.js"></script> 
   <script>
+
 		function mostrar() {
-			var ContenidoMenu = document.getElementById("ContenidoMenu");
+      // alert("mostrar!")
+
+        document.getElementById("expandir").hidden=true;
+        document.getElementById("ContenidoMenu").hidden=false;
+      
+			  var ContenidoMenu = document.getElementById("ContenidoMenu");
 		    ContenidoMenu.setAttribute("class","col-md-2");
 		    document.getElementById("sidebar").style.width = "200px";
-		    //document.getElementById("ContenidoTabla").style.marginLeft = "300px";
+		    
 		    var ContenidoTabla = document.getElementById("ContenidoTabla");
 		    ContenidoTabla.setAttribute("class","col-md-10");
 		    document.getElementById("abrir").style.display = "none";
 		    document.getElementById("cerrar").style.display = "inline";
 		}
 
-		function ocultar() {		    
-		    var ContenidoMenu = document.getElementById("ContenidoMenu");
-		    ContenidoMenu.setAttribute("class","col-md-1");
-		    document.getElementById("sidebar").style.width = "5%";
+		function ocultar() {		 
+        // alert("mostrar el boton expandir")
+        document.getElementById("expandir").hidden=false;
+        document.getElementById("ContenidoMenu").hidden=true;
+		    
+        // var ContenidoMenu = document.getElementById("ContenidoMenu");
+		    // ContenidoMenu.setAttribute("class","col-md-1");
+		    // document.getElementById("sidebar").style.width = "3%"; //5
+
+
 		    //document.getElementById("ContenidoTabla").style.marginLeft = "0";
 		    var ContenidoTabla = document.getElementById("ContenidoTabla");
-		    ContenidoTabla.setAttribute("class","col-md-11");
+		    ContenidoTabla.setAttribute("class","col-md-12");
+
 		    document.getElementById("abrir").style.display = "inline";
 		    document.getElementById("cerrar").style.display = "none";
 		}
@@ -290,16 +303,21 @@ $Con->CloseConexion();
    <?php  
   if($TipoUsuario == 1){  
   ?>
-  <div class = "col-md-2" id="ContenidoMenu">
-    <div class="nav-side-menu" id="sidebar">
-    	<a id="abrir" class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="mostrar()">
+    <div class = "col-md-2" id="expandir" hidden>
+       <a id="abrir" class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="mostrar()">
 	        <i class="fa fa-arrows-alt fa-lg" color="tomato"></i>
 	    </a>
+    </div> 
+
+  <div class = "col-md-2" id="ContenidoMenu">
+   
+    <div class="nav-side-menu" id="sidebar" >   
 	    <a id="cerrar" class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="ocultar()">
 	        <i class="fa fa-arrow-left fa-lg"></i>
 	    </a>
-    <div class="brand">General</div>
-    <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
+
+      <div class="brand">General</div>
+      <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
   
         <div class="menu-list">
   
@@ -335,7 +353,7 @@ $Con->CloseConexion();
             <?php $Element = new Elements();
             $Element->getMenuHistorial(0);?>
         </div>
-        <div class="brand btn-Salir" onClick = "location.href = 'Controladores/CtrLogout.php'">Salir</div>
+        <div class="brand btn-Salir" onClick = "location.href = 'Controladores/CtrLogout.php'">Salir**</div>
     </div>
   </div>
   <?php 
@@ -343,7 +361,7 @@ $Con->CloseConexion();
     if($TipoUsuario == 2){
   ?>
   <div class = "col-md-2" id="ContenidoMenu">
-    <div class="nav-side-menu" id="sidebar">
+    <div class="nav-side-menu" id="sidebar" style="padding-left: 5px;">
     <div class="brand">General</div>
     <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
   
@@ -371,7 +389,7 @@ $Con->CloseConexion();
   if($TipoUsuario == 3){    
   ?>
   <div class = "col-md-2" id="ContenidoMenu">
-    <div class="nav-side-menu" id="sidebar">
+    <div class="nav-side-menu" id="sidebar" style="padding-left: 5px;">
     <div class="brand">General</div>
     <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
   
@@ -407,7 +425,11 @@ $Con->CloseConexion();
     </div>
   </div>
 <?php } ?>
+
+    
   <div class = "col-md-10" id="ContenidoTabla">
+     
+    
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
@@ -767,10 +789,10 @@ $Con->CloseConexion();
               // }             
               // $arr_reverse = array_reverse($arr);
 
-// var_dump($Table);
-// array(13) { [0]=> string(5) "12/21" [1]=> string(4) "1/22" [2]=> string(4) "2/22" [3]=> string(4) "3/22"
-//    [4]=> string(4) "4/22" [5]=> string(4) "5/22" [6]=> string(4) "6/22" [7]=> string(4) "7/22"
-//     [8]=> string(4) "8/22" [9]=> string(4) "9/22" [10]=> string(5) "10/22" [11]=> string(5) "11/22" [12]=> string(5) "12/22" }
+              // var_dump($Table);
+              // array(13) { [0]=> string(5) "12/21" [1]=> string(4) "1/22" [2]=> string(4) "2/22" [3]=> string(4) "3/22"
+              //    [4]=> string(4) "4/22" [5]=> string(4) "5/22" [6]=> string(4) "6/22" [7]=> string(4) "7/22"
+              //     [8]=> string(4) "8/22" [9]=> string(4) "9/22" [10]=> string(5) "10/22" [11]=> string(5) "11/22" [12]=> string(5) "12/22" }
               foreach ($arr as $key => $value) {                
 
                   if($value != ""){
@@ -1542,7 +1564,7 @@ $Con->CloseConexion();
       var DatosResultados = document.getElementsByName("DatosResultados");
       for (var i = 0; i < DatosResultados.length; i++){
          // DatosResultados[i].removeAttribute("min-width");         
-         DatosResultados[i].setAttribute("style","min-width: 270px; font-size: 24px;");   
+         DatosResultados[i].setAttribute("style","min-width: 250px; font-size: 28px;");   
       }
 
       var DatosSinResultados = document.getElementsByName("DatosSinResultados");
@@ -1567,7 +1589,7 @@ $Con->CloseConexion();
        var elements = document.getElementsByClassName("Datos");
        for (var i = 0; i < elements.length; i++) {
         var element = elements[i];
-        element.style.fontSize = "12px";
+        element.style.fontSize = "18px";
       }
 
       var TTH = document.getElementsByTagName("th");
@@ -1591,7 +1613,7 @@ $Con->CloseConexion();
       var DatosResultados = document.getElementsByName("DatosResultados");
       for (var i = 0; i < DatosResultados.length; i++){
          // DatosResultados[i].removeAttribute("min-width");         
-         DatosResultados[i].setAttribute("style","min-width: 270px;");   
+         DatosResultados[i].setAttribute("style","min-width: 250px;");   
       }
 
       var DatosSinResultados = document.getElementsByName("DatosSinResultados");

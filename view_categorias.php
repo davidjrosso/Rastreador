@@ -219,7 +219,7 @@ $Con->CloseConexion();
               <label for="inputPassword" class="col-md-1 col-form-label LblForm">En: </label>
               <div class="col-md-3">
                 <select name = "ID_Filtro" class = "form-control">                  
-                    <option value = "Codigo">Codigo</option>
+                    <!--  <option value = "Codigo">Codigo</option>-->
                     <option value = "Categoria">Categoria</option>
                     <option value = "ID">Id</option>
                 </select>
@@ -241,7 +241,7 @@ $Con->CloseConexion();
 
               switch ($ID_Filtro) {
                 case 'ID': echo $DTGeneral->getCategoriasxID($Filtro);break;
-                case 'Codigo': echo $DTGeneral->getCategoriasxCodigo($Filtro);break;
+                //case 'Codigo': echo $DTGeneral->getCategoriasxCodigo($Filtro);break;
                 case 'Categoria': echo $DTGeneral->getCategoriasxCategoria($Filtro);break;
                 default: echo $DTGeneral->getCategoriasxID($Filtro);break;
               }
