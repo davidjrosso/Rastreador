@@ -8,7 +8,7 @@ $ID_Usuario = $_SESSION["Usuario"];
 
 $Apellido = ucwords($_REQUEST["Apellido"]);
 $Nombre = ucwords($_REQUEST["Nombre"]);
-$DNI = $_REQUEST["DNI"];
+$DNI = trim(str_replace(array('.'),'',$_REQUEST["DNI"]));
 
 $Nro_Legajo = $_REQUEST["Nro_Legajo"];
 if(empty($Nro_Legajo)){

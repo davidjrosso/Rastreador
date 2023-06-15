@@ -354,8 +354,28 @@ $Con->CloseConexion();
       <div class="col"></div>
     </div><br>
     <br>
+    <?php 
+    $CtrGeneral = new CtrGeneral();
+
+    // NOTIFICACIONES
+    $Notificaciones = $CtrGeneral->getNotificaciones();
+
+    if($Notificaciones["cant"] > 0){
+      ?>
+      <div class="alert alert-warning alert-dismissible fade show" role="alert" style="position: absolute; top: 5px; right: 5px;">
+        <h5 class="alert-heading">¡Notificacion!</h5>
+        <p><i class="fa fa-info-circle"></i> <?= $Notificaciones["value"]["Detalle"];  ?></p>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <?php        
+    }
+    ?>
     <?php if($TipoUsuario == 1){ 
-      $CtrGeneral = new CtrGeneral();
+      // $CtrGeneral = new CtrGeneral();
+
+      // SOLICITUDES
       $CantUnif = $CtrGeneral->getCantSolicitudes_Unificacion();
       $CantModMot = $CtrGeneral->getCantSolicitudes_Modificacion_Motivo();
       $CantModCat = $CtrGeneral->getCantSolicitudes_Modificacion_Categoria();

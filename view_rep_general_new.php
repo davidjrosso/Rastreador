@@ -3,6 +3,7 @@ session_start();
 require_once "Controladores/Elements.php";
 require_once "Controladores/CtrGeneral.php";
 require_once "Controladores/Conexion.php";
+require_once "sys_config.php";
 header("Content-Type: text/html;charset=utf-8");
 
 /*     CONTROL DE USUARIOS                    */
@@ -433,7 +434,7 @@ $Con->CloseConexion();
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
-        <p>Movimientos</p>
+        <p>Rastreador. Gráfico de co-evolución para la evaluación  comunitaria de cobertura.<br>Sistema orientado a la  georreferenciación.</p>
       </div>
       <div class="col"></div>
     </div><br>
@@ -675,7 +676,12 @@ $Con->CloseConexion();
       </div>
     
     </div>
-    <br>   
+      <br>   
+      <div class="row">
+        <div class="offset-md-3 col-md-6">
+          <?php echo NOMBRE_ENTIDAD ?> 
+        </div>
+      </div>
      <div class = "row">
       <div class = "col-md-12">
         <!-- < ?php echo "DEBUG: ".$Consulta; ?> -->
@@ -796,7 +802,8 @@ $Con->CloseConexion();
               foreach ($arr as $key => $value) {                
 
                   if($value != ""){
-                    $Table .= "<th name='DatosResultados' style='min-width: 270px;'>".$value."</th>";  
+                    // TODO: Cambiando de tamaño las columnas
+                    $Table .= "<th name='DatosResultados' style='min-width: 250px;'>".$value."</th>";  
                   }              		
                   
               }
@@ -1264,7 +1271,8 @@ $Con->CloseConexion();
   
                         $Tomar_Movimientos_Persona = mysqli_query($Con->Conexion,$Consultar_Movimientos_Persona) or die($MensajeErrorConsultar_Mov_Persona." - ".$Consultar_Movimientos_Persona);
 
-                        $Table .= "<td name='DatosResultados' style='min-width:270px'><div class = 'row'>";                    
+                        // TODO: CAMBIANDO TOAMAÑO DE COLUMNAS
+                        $Table .= "<td name='DatosResultados' style='min-width:250px'><div class = 'row'>";                    
 
                         $Num_Movimientos_Persona = mysqli_num_rows($Tomar_Movimientos_Persona);                        
 
