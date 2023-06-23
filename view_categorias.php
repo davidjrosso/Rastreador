@@ -220,7 +220,7 @@ $Con->CloseConexion();
               <div class="col-md-3">
                 <select name = "ID_Filtro" class = "form-control">                  
                     <!--  <option value = "Codigo">Codigo</option>-->
-                    <option value = "Categoria">Categoria</option>
+                    <option value = "Categoria">Categoría</option>
                     <option value = "ID">Id</option>
                 </select>
               </div>

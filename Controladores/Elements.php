@@ -43,7 +43,7 @@ class Elements{
                   <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_categorias.php\'">
-                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoria</a>
+                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
                 </li>  
                 <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
                   <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
@@ -72,7 +72,7 @@ class Elements{
                   <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_categorias.php\'">
-                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoria</a>
+                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
                 </li>  
                 <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
                   <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
@@ -101,7 +101,7 @@ class Elements{
                   <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
                 </li>
                 <li class="collapsed active" onClick = "location.href = \'view_categorias.php\'">
-                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoria</a>
+                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
                 </li>  
                 <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
                   <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
@@ -130,7 +130,7 @@ class Elements{
                   <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_categorias.php\'">
-                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoria</a>
+                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
                 </li>  
                 <li class="collapsed active" onClick = "location.href = \'view_responsables.php\'">
                   <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
@@ -159,7 +159,7 @@ class Elements{
                   <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_categorias.php\'">
-                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoria</a>
+                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
                 </li>  
                 <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
                   <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
@@ -188,7 +188,7 @@ class Elements{
                   <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_categorias.php\'">
-                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoria</a>
+                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
                 </li>  
                 <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
                   <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
@@ -217,7 +217,7 @@ class Elements{
                   <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_categorias.php\'">
-                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoria</a>
+                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
                 </li>  
                 <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
                   <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
@@ -246,7 +246,7 @@ class Elements{
                   <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_categorias.php\'">
-                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoria</a>
+                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
                 </li>  
                 <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
                   <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
@@ -275,7 +275,7 @@ class Elements{
                   <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_categorias.php\'">
-                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoria</a>
+                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
                 </li>  
                 <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
                   <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
@@ -981,8 +981,8 @@ public function getMenuSeguridad($ID){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='ID_Categoria' name = 'ID_Categoria'>";
-    $Select .= "<option selected = 'true' disabled = 'disabled' value = '0'>-Seleccione una Categoria-</option>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from categoria where estado = 1 order by categoria")or die("Problemas al mostrar Categoria");
+    $Select .= "<option selected = 'true' disabled = 'disabled' value = '0'>-Seleccione una Categoría-</option>";
+    $Consulta = mysqli_query($Con3->Conexion,"select * from categoria where estado = 1 order by categoria")or die("Problemas al mostrar Categoría");
     while ($Ret = mysqli_fetch_array($Consulta)) {
       $Select .= "<option value = '".$Ret['id_categoria']."'>".$Ret['categoria']."</option>";
     }
@@ -995,7 +995,7 @@ public function getMenuSeguridad($ID){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Categoria'>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from categoria where estado = 1 order by categoria")or die("Problemas al mostrar Categoria");
+    $Consulta = mysqli_query($Con3->Conexion,"select * from categoria where estado = 1 order by categoria")or die("Problemas al mostrar Categoría");
     while ($Ret = mysqli_fetch_array($Consulta)) {
       if($Ret['id_categoria'] == $xID){
         $Select .= "<option value = '".$Ret['id_categoria']."' selected>".$Ret['categoria']."</option>";
@@ -1078,7 +1078,7 @@ public function getMenuSeguridad($ID){
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Categoria'>";
     $Select .= "<option value = '0'>-Todos-</option>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from categoria where estado = 1 order by categoria")or die("Problemas al mostrar Categoria");
+    $Consulta = mysqli_query($Con3->Conexion,"select * from categoria where estado = 1 order by categoria")or die("Problemas al mostrar Categoría");
     while ($Ret = mysqli_fetch_array($Consulta)) {
       $Select .= "<option value = '".$Ret['id_categoria']."'>".$Ret['categoria']."</option>";
     }
@@ -1092,7 +1092,7 @@ public function getMenuSeguridad($ID){
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Responsable'>";
     $Select .= "<option value = '0'>-Todos-</option>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from responsable where estado = 1 order by responsable")or die("Problemas al mostrar Categoria");
+    $Consulta = mysqli_query($Con3->Conexion,"select * from responsable where estado = 1 order by responsable")or die("Problemas al mostrar Categoría");
     while ($Ret = mysqli_fetch_array($Consulta)) {
       $Select .= "<option value = '".$Ret['id_resp']."'>".$Ret['responsable']."</option>";
     }
