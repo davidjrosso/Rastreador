@@ -224,7 +224,7 @@ $Con->CloseConexion();
        	#Contenido-5{            
             position: sticky;
             left: 400px;
-            width: 50px;
+            width: 60px;
             z-index: 200;
             background-color: #FFF;
         }
@@ -276,7 +276,7 @@ $Con->CloseConexion();
         #Contenido-Titulo-5{            
             position: sticky;
             left: 400px;
-            width: 50px;
+            width: 70px;
             z-index: 200;
         }
 
@@ -1233,7 +1233,7 @@ $Con->CloseConexion();
                   <td id='Contenido-2'>".$RetTodos["domicilio"]."</td>
                   <td id='Contenido-3' name='datosflia' style='max-width: 50px;'>".$RetTodos["manzana"]."</td>
                   <td id='Contenido-4' name='datosflia' style='max-width: 50px;'>".$RetTodos["lote"]."</td>
-                  <td id='Contenido-5' name='datosflia' style='max-width: 50px;'>".$RetTodos["familia"]."</td>
+                  <td id='Contenido-5' name='datosflia' style='max-width: 60px;'>".$RetTodos["familia"]."</td>
                   <td id='Contenido-6'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$RetTodos["apellido"].", ".$RetTodos["nombre"]."</a></td>
                   <td id='Contenido-7' style='max-width: 100px;'>".$Fecha_Nacimiento."</td>";
   
@@ -1258,7 +1258,7 @@ $Con->CloseConexion();
                   <td id='Contenido-2'>".$RetTodos["domicilio"]."</td>
                   <td id='Contenido-3' name='datosflia' style='max-width: 50px;'>".$RetTodos["manzana"]."</td>
                   <td id='Contenido-4' name='datosflia' style='max-width: 50px;'>".$RetTodos["lote"]."</td>
-                  <td id='Contenido-5' name='datosflia' style='max-width: 50px;'>".$RetTodos["familia"]."</td>
+                  <td id='Contenido-5' name='datosflia' style='max-width: 60px;'>".$RetTodos["familia"]."</td>
                   <td id='Contenido-6'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$RetTodos["apellido"].", ".$RetTodos["nombre"]."</a></td>
                   <td id='Contenido-7' style='max-width: 100px;'>".$Fecha_Nacimiento."</td>";
 
@@ -1540,7 +1540,7 @@ $Con->CloseConexion();
     })();
 
    function toggleZoomScreen() {
-       document.body.style.zoom = "40%";
+       document.body.style.zoom = "55%"; //
        var Tabla = document.getElementById("cuerpo-tabla");
        Tabla.style.height = "1800px";
 
@@ -1569,7 +1569,7 @@ $Con->CloseConexion();
       var DatosFlia = document.getElementsByName("datosflia");
       for (var i = 0; i < DatosFlia.length; i++){
          DatosFlia[i].removeAttribute("min-width");         
-         DatosFlia[i].setAttribute("style","max-width: 50px; font-size: 24px;");   
+         DatosFlia[i].setAttribute("style","max-width: 50px; font-size: 24px;");    //50
       }
 
       var DatosResultados = document.getElementsByName("DatosResultados");
