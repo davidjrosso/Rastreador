@@ -365,7 +365,7 @@ $Con->CloseConexion();
       <div class="col"></div>
       <div class="col-11 Titulo">
         <br>
-        <p style="font-family: times; font-weight: bold;">RASTREADOR III <br><i>GRÁFICO DE CO-EVOLUCIÓN PARA LA EVALUACIÓN COMUNITARIA DE COBERTURA</i><br> Sistema Orientado a la Georeferenciación</p>
+        <p style="font-family: times; font-weight: bold;">RASTREADOR <br><i>GRÁFICO DE CO-EVOLUCIÓN PARA LA EVALUACIÓN COMUNITARIA DE COBERTURA</i><br> Sistema Orientado a la Georeferenciación</p>
       </div>
       <div class="col"></div>
     </div><br>

@@ -156,13 +156,13 @@ $Con->CloseConexion();
 
       .table-fixeder tbody tr td .Datos,
       .table-fixeder thead tr th .Datos{
-        min-width: 200px;
+        min-width: 150px;
         height: 70px;
       }
 
       .Datos{
-        font-size: 12px;
-        font-weight: bold;        
+        font-size: 18px; 
+        font-weight: bold;                
       }
 
       .SinMovimientos td{
@@ -224,7 +224,7 @@ $Con->CloseConexion();
        	#Contenido-5{            
             position: sticky;
             left: 400px;
-            width: 50px;
+            width: 60px;
             z-index: 200;
             background-color: #FFF;
         }
@@ -276,7 +276,7 @@ $Con->CloseConexion();
         #Contenido-Titulo-5{            
             position: sticky;
             left: 400px;
-            width: 50px;
+            width: 70px;
             z-index: 200;
         }
 
@@ -442,7 +442,7 @@ $Con->CloseConexion();
       <div class="col">
         <button class = "btn btn-info btn-sm" onClick="toggleZoomScreen()">Zoom +</button> <button class = "btn btn-info btn-sm" onClick="toggleZoomScreenNormal()">Zoom -</button>
       </div>
-      <div class="col-6">
+      <div class="col">
       	<?php  
       	if(!isset($_REQUEST["Anio"])){
               $Fecha_Inicio = implode("-", array_reverse(explode("/",$_REQUEST["Fecha_Desde"])));
@@ -733,21 +733,22 @@ $Con->CloseConexion();
 
               if($Con->ResultSet->num_rows == 0){  
                    
-              	echo "<div class = 'col'></div>";
+              	// echo "<div class = 'col'></div>";
               	echo "<div class = 'col-6'>";
               	echo "<p class = 'TextoSinResultados'>No se encontraron Resultados</p>";
               	echo "</div>";
-              	echo "<div class = 'col'></div>";
+              	// echo "<div class = 'col'></div>";
               }else{                               
               	$Table = "<table class='table table-fixeder table-bordered table-sm' cellspacing='0' id='tablaMovimientos'>
-                            <thead class='thead-dark'><tr align='center' valign='middle'>
-                            <th id='Contenido-Titulo-1'>Barrio</th>
-                            <th id='Contenido-Titulo-2'>Direc.</th>
-                            <th id='Contenido-Titulo-3' name='datosflia' style='max-width: 50px;'>Mz.</th>
-                            <th id='Contenido-Titulo-4' name='datosflia' style='max-width: 50px;'>Lote</th>
-                            <th id='Contenido-Titulo-5' name='datosflia' style='max-width: 50px;'>Sublote.</th>
-                            <th id='Contenido-Titulo-6'>Persona</th>
-                            <th id='Contenido-Titulo-7' style='max-width: 100px;'>Fecha Nac.</th>";                
+                             <thead class='thead-dark'>
+                              <tr align='center' valign='middle'>
+                              <th id='Contenido-Titulo-1'>Barrio</th>
+                              <th id='Contenido-Titulo-2'>Direc.</th>
+                              <th id='Contenido-Titulo-3' name='datosflia' style='max-width: 50px;'>Mz.</th>
+                              <th id='Contenido-Titulo-4' name='datosflia' style='max-width: 50px;'>Lote</th>
+                              <th id='Contenido-Titulo-5' name='datosflia' style='max-width: 50px;'>Sublote.</th>
+                              <th id='Contenido-Titulo-6'>Persona</th>
+                              <th id='Contenido-Titulo-7' style='max-width: 100px;'>Fecha Nac.</th>";                
               } 
 
               $Tomar_Meses = mysqli_query($Con->Conexion,$Consulta) or die($MensajeError." Consulta: ".$Consulta);
@@ -803,7 +804,7 @@ $Con->CloseConexion();
 
                   if($value != ""){
                     // TODO: Cambiando de tamaño las columnas
-                    $Table .= "<th name='DatosResultados' style='min-width: 250px;'>".$value."</th>";  
+                    $Table .= "<th name='DatosResultados' style='min-width: 225px;'>".$value."</th>";  
                   }              		
                   
               }
@@ -812,7 +813,9 @@ $Con->CloseConexion();
               // echo "DEBUG:".var_dump($arr);
 
 
-              $Table .= "</tr></thead><tbody id='cuerpo-tabla'>";
+              $Table .= "</tr>
+                    </thead>
+                <tbody id='cuerpo-tabla'>";
 
               
               ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1230,7 +1233,7 @@ $Con->CloseConexion();
                   <td id='Contenido-2'>".$RetTodos["domicilio"]."</td>
                   <td id='Contenido-3' name='datosflia' style='max-width: 50px;'>".$RetTodos["manzana"]."</td>
                   <td id='Contenido-4' name='datosflia' style='max-width: 50px;'>".$RetTodos["lote"]."</td>
-                  <td id='Contenido-5' name='datosflia' style='max-width: 50px;'>".$RetTodos["familia"]."</td>
+                  <td id='Contenido-5' name='datosflia' style='max-width: 60px;'>".$RetTodos["familia"]."</td>
                   <td id='Contenido-6'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$RetTodos["apellido"].", ".$RetTodos["nombre"]."</a></td>
                   <td id='Contenido-7' style='max-width: 100px;'>".$Fecha_Nacimiento."</td>";
   
@@ -1255,7 +1258,7 @@ $Con->CloseConexion();
                   <td id='Contenido-2'>".$RetTodos["domicilio"]."</td>
                   <td id='Contenido-3' name='datosflia' style='max-width: 50px;'>".$RetTodos["manzana"]."</td>
                   <td id='Contenido-4' name='datosflia' style='max-width: 50px;'>".$RetTodos["lote"]."</td>
-                  <td id='Contenido-5' name='datosflia' style='max-width: 50px;'>".$RetTodos["familia"]."</td>
+                  <td id='Contenido-5' name='datosflia' style='max-width: 60px;'>".$RetTodos["familia"]."</td>
                   <td id='Contenido-6'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$RetTodos["apellido"].", ".$RetTodos["nombre"]."</a></td>
                   <td id='Contenido-7' style='max-width: 100px;'>".$Fecha_Nacimiento."</td>";
 
@@ -1272,7 +1275,7 @@ $Con->CloseConexion();
                         $Tomar_Movimientos_Persona = mysqli_query($Con->Conexion,$Consultar_Movimientos_Persona) or die($MensajeErrorConsultar_Mov_Persona." - ".$Consultar_Movimientos_Persona);
 
                         // TODO: CAMBIANDO TOAMAÑO DE COLUMNAS
-                        $Table .= "<td name='DatosResultados' style='min-width:250px'><div class = 'row'>";                    
+                        $Table .= "<td name='DatosResultados' style='min-width:225px'><div class = 'row'>";                  //250   
 
                         $Num_Movimientos_Persona = mysqli_num_rows($Tomar_Movimientos_Persona);                        
 
@@ -1537,7 +1540,7 @@ $Con->CloseConexion();
     })();
 
    function toggleZoomScreen() {
-       document.body.style.zoom = "40%";
+       document.body.style.zoom = "55%"; //
        var Tabla = document.getElementById("cuerpo-tabla");
        Tabla.style.height = "1800px";
 
@@ -1566,7 +1569,7 @@ $Con->CloseConexion();
       var DatosFlia = document.getElementsByName("datosflia");
       for (var i = 0; i < DatosFlia.length; i++){
          DatosFlia[i].removeAttribute("min-width");         
-         DatosFlia[i].setAttribute("style","max-width: 50px; font-size: 24px;");   
+         DatosFlia[i].setAttribute("style","max-width: 50px; font-size: 24px;");    //50
       }
 
       var DatosResultados = document.getElementsByName("DatosResultados");
