@@ -772,8 +772,8 @@ $Con->CloseConexion();
                 </div>
                 <div class="col-4">
                   <select class="input-group mb-3" name="formatConfig" id="formatConfig" onchange="cambiarConfig()">
-                    <option value="grid">Grid</option>
-                    <option value="table">Table</option>
+                    <option value="grid">Grilla</option>
+                    <option value="table">Tabla</option>
                   </select>
                 </div>
               </div>              

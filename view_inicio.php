@@ -142,6 +142,22 @@ $Con->CloseConexion();
               });
         }
 
+        function VerificarEliminarNotificacion(xID_Notificacion){
+              swal({
+                title: "¿Está seguro?",
+                text: "¿Seguro de querer eliminar esta notificacion?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+              })
+              .then((willDelete) => {
+                if (willDelete) {
+                  window.location.href = 'Controladores/DeleteNotificacion.php?ID='+xID_Notificacion;                                  
+                } else {        
+                }
+              });
+        }
+
         function CancelarUnificacion(xID_Peticion){
               swal({
                 title: "¿Está seguro?",
@@ -380,8 +396,9 @@ $Con->CloseConexion();
       $CantModMot = $CtrGeneral->getCantSolicitudes_Modificacion_Motivo();
       $CantModCat = $CtrGeneral->getCantSolicitudes_Modificacion_Categoria();
       $CantDel = $CtrGeneral->getCantSolicitudes_Eliminacion();
+      $CantNot = $Notificaciones["cant"];
       
-        if($CantUnif > 0 || $CantModMot > 0 || $CantModCat > 0 || $CantDel > 0){
+        if($CantUnif > 0 || $CantModMot > 0 || $CantModCat > 0 || $CantDel > 0 || $CantNot > 0){
         ?>
       <div class = "row">
         <div class="col-1"></div>
@@ -415,6 +432,12 @@ $Con->CloseConexion();
               <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Eliminar Motivos</h3>
               <?php
               echo $CtrGeneral->getSolicitudes_Eliminacion();
+            }
+            if($CantNot > 0){
+              ?>
+              <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Eliminar Notificaciones</h3>
+              <?php
+              echo $CtrGeneral->getSolicitudes_Notificaciones();
             }            
           ?>
         </div>  

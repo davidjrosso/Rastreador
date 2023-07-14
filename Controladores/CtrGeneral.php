@@ -985,6 +985,31 @@ class CtrGeneral{
 		return $Table;
 	}
 
+	public function getSolicitudes_Notificaciones(){
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "select N.ID_Notificacion, N.Detalle, N.Fecha, N.Expira, N.Estado from notificaciones N where N.Estado = 1 order by N.Fecha";
+		$MessageError = "Problemas al intentar mostrar Notificaciones";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$Regis = mysqli_num_rows($Con->ResultSet);
+		if($Regis > 0){
+			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Detalle</th><th style='min-width:100px;'>Expira</th><th style='min-width:100px;'>Accion</th></tr></thead>";
+			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
+				$ID_Notificacion = $Ret["ID_Notificacion"];
+				$Fecha = implode("/", array_reverse(explode("-",$Ret["Fecha"])));
+				$Detalle = $Ret["Detalle"];												
+				$Expira = implode("/", array_reverse(explode("-",$Ret["Expira"])));
+				$Table .= "<tr><td>".$ID_Notificacion."</td><td>".$Fecha."</td><td>".$Detalle."</td><td>".$Expira."</td><td><button class='btn btn-success' onClick='VerificarEliminarNotificacion(".$ID_Notificacion.")'><i class='fa fa-check'></i></button></td></tr>";
+			}			
+			$Table .= "</table>";
+		}else{
+			$Table = "No existen solicitudes de unificación pendientes de aprobación.";
+		}
+		$Con->CloseConexion();
+		
+		return $Table;
+	}
+
 	// NOTIFICACIONES DE USUARIOS
 	public function getNotificaciones(){
 		$Con = new Conexion();

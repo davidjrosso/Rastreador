@@ -414,15 +414,15 @@ $Con->CloseConexion();
               }
 
 
-              $ConsultarMovimientosPersona .= " group by M.id_movimiento order by M.fecha, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";
+              $ConsultarMovimientosPersona .= " group by M.id_movimiento order by M.fecha, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";              
 
               if($ID_Persona > 0){
                 $Consulta .= " group by M.id_movimiento order by Anio, Mes, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";
               }else{
-                $Consulta .= " group by M.id_persona order by Anio, Mes, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";
+                $Consulta .= " group by M.id_persona order by Anio, Mes, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";                
               }
 
-
+              
 
               //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -752,7 +752,17 @@ $Con->CloseConexion();
               array_multisort($regdomicilio, SORT_DESC, $tomarRetTodos);
 
               if($ID_Config == 'table'){
-                $TableMov = "<table class='table'><tr class='thead-dark'><th style='min-width: 150px;'>Fecha</th><th>Motivo 1</th><th>Motivo 2</th><th>Motivo 3</th><th>Observaciones</th><th>Responsable</th><th>Centro de salud</th><th>Otras Instituciones</th></tr>";  
+                $TableMov = "<table class='table'>
+                              <tr class='thead-dark'>
+                                <th class='trFecha' style='min-width: 150px;'>Fecha</th>
+                                <th class='trMotivos'>Motivo 1</th>
+                                <th class='trMotivos'>Motivo 2</th>
+                                <th class='trMotivos'>Motivo 3</th>
+                                <th class='trObservaciones'>Observaciones</th>
+                                <th class='trResponsable'>Responsable</th>
+                                <th class='trCentrosSalud'>Centro de salud</th>
+                                <th class='trOtrasInstituciones'>Otras Instituciones</th>
+                              </tr>";  
               }
 
               foreach($tomarRetTodos as $clave => $RetTodos){                
@@ -814,14 +824,14 @@ $Con->CloseConexion();
                   echo $TableMov;
                 }else{
                   $TableMov .= "<tr>";              
-                  $TableMov .= "<td style = 'width: auto;'>".$DtoMovimiento->getFecha()."</td>";
-                  $TableMov .= "<td style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>";
-                  $TableMov .= "<td style = 'width: auto;'>".$DtoMovimiento->getMotivo_2()."</td>";
-                  $TableMov .= "<td style = 'width: auto;'>".$DtoMovimiento->getMotivo_3()."</td>";
-                  $TableMov .= "<td style = 'width: auto;'>".$DtoMovimiento->getObservaciones()."</td>";
-                  $TableMov .= "<td style = 'width: auto;'>".$DtoMovimiento->getResponsable()."</td>";
-                  $TableMov .= "<td style = 'width: auto;'>".$DtoMovimiento->getCentroSalud()."</td>";
-                  $TableMov .= "<td style = 'width: auto;'>".$DtoMovimiento->getOtraInstitucion()."</td>";                 
+                  $TableMov .= "<td class='trFecha' style = 'width: auto;'>".$DtoMovimiento->getFecha()."</td>";
+                  $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>";
+                  $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_2()."</td>";
+                  $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_3()."</td>";
+                  $TableMov .= "<td class='trObservaciones' style = 'width: auto;'>".$DtoMovimiento->getObservaciones()."</td>";
+                  $TableMov .= "<td class='trResponsable' style = 'width: auto;'>".$DtoMovimiento->getResponsable()."</td>";
+                  $TableMov .= "<td class='trCentrosSalud' style = 'width: auto;'>".$DtoMovimiento->getCentroSalud()."</td>";
+                  $TableMov .= "<td class='trOtrasInstituciones' style = 'width: auto;'>".$DtoMovimiento->getOtraInstitucion()."</td>";                 
                   $TableMov .= "</tr>"; 
                 }
             
@@ -932,7 +942,18 @@ $Con->CloseConexion();
               array_multisort($regdomicilio, SORT_DESC, $tomarRetTodos);
 
               if($ID_Config == 'table'){
-                $TableMov = "<table class='table'><tr class='thead-dark'><th style='min-width: 150px;'>Fecha</th><th>Persona</th><th>Motivo 1</th><th>Motivo 2</th><th>Motivo 3</th><th>Observaciones</th><th>Responsable</th><th>Centro de salud</th><th>Otras Instituciones</th></tr>";  
+                $TableMov = "<table class='table'>
+                              <tr class='thead-dark'>
+                                <th class='trFecha' style='min-width: 150px;'>Fecha</th>
+                                <th>Persona</th>
+                                <th class='trMotivos'>Motivo 1</th>
+                                <th class='trMotivos'>Motivo 2</th>
+                                <th class='trMotivos'>Motivo 3</th>
+                                <th class='trObservaciones'>Observaciones</th>
+                                <th class='trResponsable'>Responsable</th>
+                                <th class='trCentrosSalud'>Centro de salud</th>
+                                <th class='trOtrasInstituciones'>Otras Instituciones</th>
+                              </tr>";  
               }
 
               foreach($tomarRetTodos as $clave => $RetTodos){                
@@ -1007,15 +1028,15 @@ $Con->CloseConexion();
                     echo $TableMov;
                   }else{        
                     $TableMov .= "<tr>";                           
-                    $TableMov .= "<td style = 'width: auto;'>".$DtoMovimiento->getFecha()."</td>";
+                    $TableMov .= "<td class='trFecha' style = 'width: auto;'>".$DtoMovimiento->getFecha()."</td>";
                     $TableMov .= "<td style = 'width: auto;'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$DtoMovimiento->getApellido().", ".$DtoMovimiento->getNombre()."</a></td>";
-                    $TableMov .= "<td style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>";
-                    $TableMov .= "<td style = 'width: auto;'>".$DtoMovimiento->getMotivo_2()."</td>";
-                    $TableMov .= "<td style = 'width: auto;'>".$DtoMovimiento->getMotivo_3()."</td>";
-                    $TableMov .= "<td style = 'width: auto;'>".$DtoMovimiento->getObservaciones()."</td>";
-                    $TableMov .= "<td style = 'width: auto;'>".$DtoMovimiento->getResponsable()."</td>";
-                    $TableMov .= "<td style = 'width: auto;'>".$DtoMovimiento->getCentroSalud()."</td>";
-                    $TableMov .= "<td style = 'width: auto;'>".$DtoMovimiento->getOtraInstitucion()."</td>";
+                    $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>";
+                    $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_2()."</td>";
+                    $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_3()."</td>";
+                    $TableMov .= "<td class='trObservaciones' style = 'width: auto;'>".$DtoMovimiento->getObservaciones()."</td>";
+                    $TableMov .= "<td class='trResponsable' style = 'width: auto;'>".$DtoMovimiento->getResponsable()."</td>";
+                    $TableMov .= "<td class='trCentrosSalud' style = 'width: auto;'>".$DtoMovimiento->getCentroSalud()."</td>";
+                    $TableMov .= "<td class='trOtrasInstituciones' style = 'width: auto;'>".$DtoMovimiento->getOtraInstitucion()."</td>";
                     $TableMov .= "</tr>";
                   }
 
@@ -1075,15 +1096,15 @@ $Con->CloseConexion();
                   $TableMov .= "</table>";
                   echo $TableMov;
                 }else{                                   
-                  $TableMov .= "<td style = 'width: auto;'>".$DtoMovimiento->getFecha()."</td></tr>";
+                  $TableMov .= "<td class='trFecha' style = 'width: auto;'>".$DtoMovimiento->getFecha()."</td></tr>";
                   $TableMov .= "<td style = 'width: auto;'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$DtoMovimiento->getApellido().", ".$DtoMovimiento->getNombre()."</a></td></tr>";
-                  $TableMov .= "<td style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
-                  $TableMov .= "<td style = 'width: auto;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
-                  $TableMov .= "<td style = 'width: auto;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
-                  $TableMov .= "<td style = 'width: auto;'>".$DtoMovimiento->getObservaciones()."</td></tr>";
-                  $TableMov .= "<td style = 'width: auto;'>".$DtoMovimiento->getResponsable()."</td></tr>";
-                  $TableMov .= "<td style = 'width: auto;'>".$DtoMovimiento->getCentroSalud()."</td></tr>";
-                  $TableMov .= "<td style = 'width: auto;'>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
+                  $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
+                  $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
+                  $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
+                  $TableMov .= "<td class='trObservaciones' style = 'width: auto;'>".$DtoMovimiento->getObservaciones()."</td></tr>";
+                  $TableMov .= "<td class='trResponsable' style = 'width: auto;'>".$DtoMovimiento->getResponsable()."</td></tr>";
+                  $TableMov .= "<td class='trCentrosSalud' style = 'width: auto;'>".$DtoMovimiento->getCentroSalud()."</td></tr>";
+                  $TableMov .= "<td class='trOtrasInstituciones' style = 'width: auto;'>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
                 }
 
               }
