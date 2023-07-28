@@ -4,12 +4,19 @@ require_once "Controladores/Elements.php";
 require_once "Controladores/CtrGeneral.php";
 require_once "Controladores/Conexion.php";
 require_once "sys_config.php";
+
+require_once 'dompdf/autoload.inc.php';
+
+
 header("Content-Type: text/html;charset=utf-8");
+
 
 /*     CONTROL DE USUARIOS                    */
 if(!isset($_SESSION["Usuario"])){
     header("Location: Error_Session.php");
 }
+
+
 
 
 $Con = new Conexion();
@@ -21,6 +28,7 @@ $EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuari
 $Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
 $TipoUsuario = $Ret["ID_TipoUsuario"];
 $Con->CloseConexion();
+
 
 
 ?>
@@ -81,6 +89,62 @@ $Con->CloseConexion();
 		    document.getElementById("abrir").style.display = "inline";
 		    document.getElementById("cerrar").style.display = "none";
 		}
+
+
+    function enviarImprimirPdf(){   
+
+        console.log("imprimir tabla")
+        // var tablaMovimientos = document.getElementById("tabla-responsive");
+        var tablaMovimientos = document.getElementById("tablaMovimientos");
+        
+        // console.log(tablaMovimientos);
+       
+        //let data={"tabla": tablaMovimientos };
+        // console.log(data);
+
+      //  location.href='pruebas_PDF.php?tabla='+tablaMovimientos;
+      
+      
+      $.ajax({
+            type: "POST",
+            dataType: "html",
+            contentType: "application/x-www-form-urlencoded",             
+            cache: false,
+            // data: data,
+            data:"tabla=" + tablaMovimientos,
+            url: "pruebas_PDF.php",
+            async: false,
+            cache: false,                    
+            success: function(res){    
+             
+             
+               console.log(res);
+
+                                  
+            },
+            error:function(){                
+                alert("error ");
+            }   
+        });  
+        
+        
+
+       // var tablaEnc = btoa(unescape(encodeURIComponent(tablaMovimientos.innerHTML)));   
+        //console.log(tablaEnc);
+            
+            // var consulta = Consulta
+            // var fechaInicio = $Fecha_Inicio
+            // var fechaFin = $Fecha_Fin 
+
+            // alert(consulta);
+
+            //   var arrTabla = [];
+            // arrTabla = tablaEnc;   
+
+            // console.log(arrTabla);     
+
+          // location.href='Controladores/export_excel.php?consulta='+consulta+'&fechaInicio='+fechaInicio+'&fechaFin='+fechaFin;
+        }
 
 		
   </script>
@@ -299,6 +363,7 @@ $Con->CloseConexion();
       /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/                                                                                  
     </style>  
 </head>
+
 <body>
 <div class = "row">
    <?php  
@@ -667,12 +732,16 @@ $Con->CloseConexion();
         
      
         ?>
+
       </div>
       <div class="col">
       
-        <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_general_new.php'">Atras</button>
+        <button type = "button" class = "btn btn-danger" onclick = "location.href = 'view_general_new.php'">Atras</button>
         
-        <button type="button" class="btn btn-secondary" onClick="enviarImprimir()" disabled>Imprimir</button>
+        <!-- <button type="button" class="btn btn-secondary" onClick="enviarImprimir()" disabled>Imprimir</button> -->
+
+        <button type="button" class="btn btn-secondary" onclick="enviarImprimirPdf();" > Imprimir</button>
+        
       </div>
     
     </div>
@@ -811,7 +880,7 @@ $Con->CloseConexion();
               
 
               // echo "DEBUG:".var_dump($arr);
-
+          // ob_start();   
 
               $Table .= "</tr>
                     </thead>
@@ -1532,7 +1601,11 @@ $Con->CloseConexion();
        
   </div>
 </div>
-</div>    
+</div>  
+
+
+
+
 <script>
     (function() {
       var tabla = document.getElementById("tabla-responsive");
@@ -1649,7 +1722,7 @@ $Con->CloseConexion();
     //  alert(arrTabla);     
      location.href='Controladores/export_excel.php?consulta='+consulta+'&fechaInicio='+fechaInicio+'&fechaFin='+fechaFin;
    }
-
+  
    var tituloBarrio = document.getElementById("Contenido-Titulo-1");
    var tituloDirec = document.getElementById("Contenido-Titulo-2");
    var tituloMz = document.getElementById("Contenido-Titulo-3");
@@ -1660,6 +1733,7 @@ $Con->CloseConexion();
 
 </script>
 <?php
+
 /*
  *
  * This file is part of Rastreador3.
