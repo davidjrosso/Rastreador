@@ -379,7 +379,7 @@ $Con->CloseConexion();
     if($Notificaciones["cant"] > 0){
       ?>
       <div class="alert alert-warning alert-dismissible fade show" role="alert" style="position: absolute; top: 5px; right: 5px;">
-        <h5 class="alert-heading">¡Notificacion!</h5>
+        <h5 class="alert-heading">¡Notificación!</h5>
         <p><i class="fa fa-info-circle"></i> <?= $Notificaciones["value"]["Detalle"];  ?></p>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true">&times;</span>
