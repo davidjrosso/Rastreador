@@ -60,6 +60,16 @@ try {
 		}
 		$TomarID_Categoria = mysqli_fetch_assoc($RetID);
 		$RetID_Categoria = $TomarID_Categoria["id_categoria"];
+
+		// CREANDO NOTIFICACION PARA EL USUARIO
+		$DetalleNot = 'Se ha creado una nueva categoría: '.$Categoria.' , codigo: '.$Codigo;
+		$Expira = date("Y-m-d", strtotime($Fecha." + 30 days"));
+		
+		$ConsultaNot = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$DetalleNot','$Fecha', '$Expira',1)";
+		if(!$RetNot = mysqli_query($Con->Conexion,$ConsultaNot)){
+			throw new Exception("Error al intentar registrar Notificacion. Consulta: ".$ConsultaNot, 3);
+		}
+
 		$Con->CloseConexion();
 		header('Location: ../view_colorcategoria.php?ID='.$RetID_Categoria.'&ID_Forma='.$ID_Forma);
 	}

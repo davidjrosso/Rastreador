@@ -3,6 +3,7 @@ session_start();
 require_once "Controladores/Elements.php";
 require_once "Controladores/CtrGeneral.php";
 require_once "Controladores/Conexion.php";
+require_once "sys_config.php";
 header("Content-Type: text/html;charset=utf-8");
 
 /*     CONTROL DE USUARIOS                    */
@@ -46,24 +47,37 @@ $Con->CloseConexion();
   <script src="js/FileSaver.js"></script> 
   <script src="js/jquery.wordexport.js"></script> 
   <script>
+
 		function mostrar() {
-			var ContenidoMenu = document.getElementById("ContenidoMenu");
+      // alert("mostrar!")
+
+        document.getElementById("expandir").hidden=true;
+        document.getElementById("ContenidoMenu").hidden=false;
+      
+			  var ContenidoMenu = document.getElementById("ContenidoMenu");
 		    ContenidoMenu.setAttribute("class","col-md-2");
 		    document.getElementById("sidebar").style.width = "200px";
-		    //document.getElementById("ContenidoTabla").style.marginLeft = "300px";
+		    
 		    var ContenidoTabla = document.getElementById("ContenidoTabla");
 		    ContenidoTabla.setAttribute("class","col-md-10");
 		    document.getElementById("abrir").style.display = "none";
 		    document.getElementById("cerrar").style.display = "inline";
 		}
 
-		function ocultar() {		    
-		    var ContenidoMenu = document.getElementById("ContenidoMenu");
-		    ContenidoMenu.setAttribute("class","col-md-1");
-		    document.getElementById("sidebar").style.width = "5%";
+		function ocultar() {		 
+        // alert("mostrar el boton expandir")
+        document.getElementById("expandir").hidden=false;
+        document.getElementById("ContenidoMenu").hidden=true;
+		    
+        // var ContenidoMenu = document.getElementById("ContenidoMenu");
+		    // ContenidoMenu.setAttribute("class","col-md-1");
+		    // document.getElementById("sidebar").style.width = "3%"; //5
+
+
 		    //document.getElementById("ContenidoTabla").style.marginLeft = "0";
 		    var ContenidoTabla = document.getElementById("ContenidoTabla");
-		    ContenidoTabla.setAttribute("class","col-md-11");
+		    ContenidoTabla.setAttribute("class","col-md-12");
+
 		    document.getElementById("abrir").style.display = "inline";
 		    document.getElementById("cerrar").style.display = "none";
 		}
@@ -142,13 +156,13 @@ $Con->CloseConexion();
 
       .table-fixeder tbody tr td .Datos,
       .table-fixeder thead tr th .Datos{
-        min-width: 200px;
+        min-width: 150px;
         height: 70px;
       }
 
       .Datos{
-        font-size: 12px;
-        font-weight: bold;        
+        font-size: 18px; 
+        font-weight: bold;                
       }
 
       .SinMovimientos td{
@@ -210,7 +224,7 @@ $Con->CloseConexion();
        	#Contenido-5{            
             position: sticky;
             left: 400px;
-            width: 50px;
+            width: 60px;
             z-index: 200;
             background-color: #FFF;
         }
@@ -262,7 +276,7 @@ $Con->CloseConexion();
         #Contenido-Titulo-5{            
             position: sticky;
             left: 400px;
-            width: 50px;
+            width: 70px;
             z-index: 200;
         }
 
@@ -290,16 +304,21 @@ $Con->CloseConexion();
    <?php  
   if($TipoUsuario == 1){  
   ?>
-  <div class = "col-md-2" id="ContenidoMenu">
-    <div class="nav-side-menu" id="sidebar">
-    	<a id="abrir" class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="mostrar()">
+    <div class = "col-md-2" id="expandir" hidden>
+       <a id="abrir" class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="mostrar()">
 	        <i class="fa fa-arrows-alt fa-lg" color="tomato"></i>
 	    </a>
+    </div> 
+
+  <div class = "col-md-2" id="ContenidoMenu">
+   
+    <div class="nav-side-menu" id="sidebar" >   
 	    <a id="cerrar" class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="ocultar()">
 	        <i class="fa fa-arrow-left fa-lg"></i>
 	    </a>
-    <div class="brand">General</div>
-    <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
+
+      <div class="brand">General</div>
+      <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
   
         <div class="menu-list">
   
@@ -335,7 +354,7 @@ $Con->CloseConexion();
             <?php $Element = new Elements();
             $Element->getMenuHistorial(0);?>
         </div>
-        <div class="brand btn-Salir" onClick = "location.href = 'Controladores/CtrLogout.php'">Salir</div>
+        <div class="brand btn-Salir" onClick = "location.href = 'Controladores/CtrLogout.php'">Salir**</div>
     </div>
   </div>
   <?php 
@@ -343,7 +362,7 @@ $Con->CloseConexion();
     if($TipoUsuario == 2){
   ?>
   <div class = "col-md-2" id="ContenidoMenu">
-    <div class="nav-side-menu" id="sidebar">
+    <div class="nav-side-menu" id="sidebar" style="padding-left: 5px;">
     <div class="brand">General</div>
     <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
   
@@ -371,7 +390,7 @@ $Con->CloseConexion();
   if($TipoUsuario == 3){    
   ?>
   <div class = "col-md-2" id="ContenidoMenu">
-    <div class="nav-side-menu" id="sidebar">
+    <div class="nav-side-menu" id="sidebar" style="padding-left: 5px;">
     <div class="brand">General</div>
     <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
   
@@ -407,11 +426,15 @@ $Con->CloseConexion();
     </div>
   </div>
 <?php } ?>
+
+    
   <div class = "col-md-10" id="ContenidoTabla">
+     
+    
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
-        <p>Movimientos</p>
+        <p>Rastreador. Gráfico de co-evolución para la evaluación  comunitaria de cobertura.<br>Sistema orientado a la  georreferenciación.</p>
       </div>
       <div class="col"></div>
     </div><br>
@@ -419,7 +442,7 @@ $Con->CloseConexion();
       <div class="col">
         <button class = "btn btn-info btn-sm" onClick="toggleZoomScreen()">Zoom +</button> <button class = "btn btn-info btn-sm" onClick="toggleZoomScreenNormal()">Zoom -</button>
       </div>
-      <div class="col-6">
+      <div class="col">
       	<?php  
       	if(!isset($_REQUEST["Anio"])){
               $Fecha_Inicio = implode("-", array_reverse(explode("/",$_REQUEST["Fecha_Desde"])));
@@ -653,7 +676,12 @@ $Con->CloseConexion();
       </div>
     
     </div>
-    <br>   
+      <br>   
+      <div class="row">
+        <div class="offset-md-3 col-md-6">
+          <?php echo NOMBRE_ENTIDAD ?> 
+        </div>
+      </div>
      <div class = "row">
       <div class = "col-md-12">
         <!-- < ?php echo "DEBUG: ".$Consulta; ?> -->
@@ -705,21 +733,22 @@ $Con->CloseConexion();
 
               if($Con->ResultSet->num_rows == 0){  
                    
-              	echo "<div class = 'col'></div>";
+              	// echo "<div class = 'col'></div>";
               	echo "<div class = 'col-6'>";
               	echo "<p class = 'TextoSinResultados'>No se encontraron Resultados</p>";
               	echo "</div>";
-              	echo "<div class = 'col'></div>";
+              	// echo "<div class = 'col'></div>";
               }else{                               
               	$Table = "<table class='table table-fixeder table-bordered table-sm' cellspacing='0' id='tablaMovimientos'>
-                            <thead class='thead-dark'><tr align='center' valign='middle'>
-                            <th id='Contenido-Titulo-1'>Barrio</th>
-                            <th id='Contenido-Titulo-2'>Direc.</th>
-                            <th id='Contenido-Titulo-3' name='datosflia' style='max-width: 50px;'>Mz.</th>
-                            <th id='Contenido-Titulo-4' name='datosflia' style='max-width: 50px;'>Lote</th>
-                            <th id='Contenido-Titulo-5' name='datosflia' style='max-width: 50px;'>Sublote.</th>
-                            <th id='Contenido-Titulo-6'>Persona</th>
-                            <th id='Contenido-Titulo-7' style='max-width: 100px;'>Fecha Nac.</th>";                
+                             <thead class='thead-dark'>
+                              <tr align='center' valign='middle'>
+                              <th id='Contenido-Titulo-1'>Barrio</th>
+                              <th id='Contenido-Titulo-2'>Direc.</th>
+                              <th id='Contenido-Titulo-3' name='datosflia' style='max-width: 50px;'>Mz.</th>
+                              <th id='Contenido-Titulo-4' name='datosflia' style='max-width: 50px;'>Lote</th>
+                              <th id='Contenido-Titulo-5' name='datosflia' style='max-width: 50px;'>Sublote.</th>
+                              <th id='Contenido-Titulo-6'>Persona</th>
+                              <th id='Contenido-Titulo-7' style='max-width: 100px;'>Fecha Nac.</th>";                
               } 
 
               $Tomar_Meses = mysqli_query($Con->Conexion,$Consulta) or die($MensajeError." Consulta: ".$Consulta);
@@ -767,14 +796,15 @@ $Con->CloseConexion();
               // }             
               // $arr_reverse = array_reverse($arr);
 
-// var_dump($Table);
-// array(13) { [0]=> string(5) "12/21" [1]=> string(4) "1/22" [2]=> string(4) "2/22" [3]=> string(4) "3/22"
-//    [4]=> string(4) "4/22" [5]=> string(4) "5/22" [6]=> string(4) "6/22" [7]=> string(4) "7/22"
-//     [8]=> string(4) "8/22" [9]=> string(4) "9/22" [10]=> string(5) "10/22" [11]=> string(5) "11/22" [12]=> string(5) "12/22" }
+              // var_dump($Table);
+              // array(13) { [0]=> string(5) "12/21" [1]=> string(4) "1/22" [2]=> string(4) "2/22" [3]=> string(4) "3/22"
+              //    [4]=> string(4) "4/22" [5]=> string(4) "5/22" [6]=> string(4) "6/22" [7]=> string(4) "7/22"
+              //     [8]=> string(4) "8/22" [9]=> string(4) "9/22" [10]=> string(5) "10/22" [11]=> string(5) "11/22" [12]=> string(5) "12/22" }
               foreach ($arr as $key => $value) {                
 
                   if($value != ""){
-                    $Table .= "<th name='DatosResultados' style='min-width: 270px;'>".$value."</th>";  
+                    // TODO: Cambiando de tamaño las columnas
+                    $Table .= "<th name='DatosResultados' style='min-width: 225px;'>".$value."</th>";  
                   }              		
                   
               }
@@ -783,7 +813,9 @@ $Con->CloseConexion();
               // echo "DEBUG:".var_dump($arr);
 
 
-              $Table .= "</tr></thead><tbody id='cuerpo-tabla'>";
+              $Table .= "</tr>
+                    </thead>
+                <tbody id='cuerpo-tabla'>";
 
               
               ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1201,7 +1233,7 @@ $Con->CloseConexion();
                   <td id='Contenido-2'>".$RetTodos["domicilio"]."</td>
                   <td id='Contenido-3' name='datosflia' style='max-width: 50px;'>".$RetTodos["manzana"]."</td>
                   <td id='Contenido-4' name='datosflia' style='max-width: 50px;'>".$RetTodos["lote"]."</td>
-                  <td id='Contenido-5' name='datosflia' style='max-width: 50px;'>".$RetTodos["familia"]."</td>
+                  <td id='Contenido-5' name='datosflia' style='max-width: 60px;'>".$RetTodos["familia"]."</td>
                   <td id='Contenido-6'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$RetTodos["apellido"].", ".$RetTodos["nombre"]."</a></td>
                   <td id='Contenido-7' style='max-width: 100px;'>".$Fecha_Nacimiento."</td>";
   
@@ -1226,7 +1258,7 @@ $Con->CloseConexion();
                   <td id='Contenido-2'>".$RetTodos["domicilio"]."</td>
                   <td id='Contenido-3' name='datosflia' style='max-width: 50px;'>".$RetTodos["manzana"]."</td>
                   <td id='Contenido-4' name='datosflia' style='max-width: 50px;'>".$RetTodos["lote"]."</td>
-                  <td id='Contenido-5' name='datosflia' style='max-width: 50px;'>".$RetTodos["familia"]."</td>
+                  <td id='Contenido-5' name='datosflia' style='max-width: 60px;'>".$RetTodos["familia"]."</td>
                   <td id='Contenido-6'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$RetTodos["apellido"].", ".$RetTodos["nombre"]."</a></td>
                   <td id='Contenido-7' style='max-width: 100px;'>".$Fecha_Nacimiento."</td>";
 
@@ -1242,7 +1274,8 @@ $Con->CloseConexion();
   
                         $Tomar_Movimientos_Persona = mysqli_query($Con->Conexion,$Consultar_Movimientos_Persona) or die($MensajeErrorConsultar_Mov_Persona." - ".$Consultar_Movimientos_Persona);
 
-                        $Table .= "<td name='DatosResultados' style='min-width:270px'><div class = 'row'>";                    
+                        // TODO: CAMBIANDO TOAMAÑO DE COLUMNAS
+                        $Table .= "<td name='DatosResultados' style='min-width:225px'><div class = 'row'>";                  //250   
 
                         $Num_Movimientos_Persona = mysqli_num_rows($Tomar_Movimientos_Persona);                        
 
@@ -1507,7 +1540,7 @@ $Con->CloseConexion();
     })();
 
    function toggleZoomScreen() {
-       document.body.style.zoom = "40%";
+       document.body.style.zoom = "55%"; //
        var Tabla = document.getElementById("cuerpo-tabla");
        Tabla.style.height = "1800px";
 
@@ -1536,13 +1569,13 @@ $Con->CloseConexion();
       var DatosFlia = document.getElementsByName("datosflia");
       for (var i = 0; i < DatosFlia.length; i++){
          DatosFlia[i].removeAttribute("min-width");         
-         DatosFlia[i].setAttribute("style","max-width: 50px; font-size: 24px;");   
+         DatosFlia[i].setAttribute("style","max-width: 50px; font-size: 24px;");    //50
       }
 
       var DatosResultados = document.getElementsByName("DatosResultados");
       for (var i = 0; i < DatosResultados.length; i++){
          // DatosResultados[i].removeAttribute("min-width");         
-         DatosResultados[i].setAttribute("style","min-width: 270px; font-size: 24px;");   
+         DatosResultados[i].setAttribute("style","min-width: 250px; font-size: 28px;");   
       }
 
       var DatosSinResultados = document.getElementsByName("DatosSinResultados");
@@ -1567,7 +1600,7 @@ $Con->CloseConexion();
        var elements = document.getElementsByClassName("Datos");
        for (var i = 0; i < elements.length; i++) {
         var element = elements[i];
-        element.style.fontSize = "12px";
+        element.style.fontSize = "18px";
       }
 
       var TTH = document.getElementsByTagName("th");
@@ -1591,7 +1624,7 @@ $Con->CloseConexion();
       var DatosResultados = document.getElementsByName("DatosResultados");
       for (var i = 0; i < DatosResultados.length; i++){
          // DatosResultados[i].removeAttribute("min-width");         
-         DatosResultados[i].setAttribute("style","min-width: 270px;");   
+         DatosResultados[i].setAttribute("style","min-width: 250px;");   
       }
 
       var DatosSinResultados = document.getElementsByName("DatosSinResultados");

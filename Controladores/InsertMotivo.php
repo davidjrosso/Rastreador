@@ -64,6 +64,17 @@ try {
 			throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 3);
 		}
 		$Mensaje = "El Motivo se registro Correctamente";
+
+		// CREANDO NOTIFICACION PARA EL USUARIO
+		$DetalleNot = 'Se ha creado un nuevo motivo: '.$Motivo.' , codigo: '.$Codigo;
+		$Expira = date("Y-m-d", strtotime($Fecha." + 3 days"));
+		
+		$ConsultaNot = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$DetalleNot','$Fecha', '$Expira',1)";
+		if(!$RetNot = mysqli_query($Con->Conexion,$ConsultaNot)){
+			throw new Exception("Error al intentar registrar Notificacion. Consulta: ".$ConsultaNot, 3);
+		}
+
+		$Con->CloseConexion();
 		header('Location: ../view_newmotivos.php?Mensaje='.$Mensaje);
 	}
 

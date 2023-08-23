@@ -250,6 +250,12 @@ $Con->CloseConexion();
 
     }
 
+    function cambiarConfig(){
+      var ID_Config = document.getElementById('ID_Config');
+      var formatConfig = document.getElementById('formatConfig');
+      ID_Config.value = formatConfig.value;      
+    }
+
   </script>
 </head>
 <body>
@@ -259,7 +265,7 @@ $Con->CloseConexion();
   ?>
   <div class = "col-md-3">
     <div class="nav-side-menu">
-    <div class="brand">General</div>
+    <div class="brand">Reporte por listados</div>
     <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
   
         <div class="menu-list">
@@ -372,11 +378,16 @@ $Con->CloseConexion();
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
-        <p>General</p>
+        <p>Reporte por listado</p>
       </div>
       <div class="col"></div>
     </div><br>
     <br>
+    <div class="row">
+      <div class="offset-md-10 col-md-2">
+        <button class="btn btn-md btn-secondary" data-toggle="modal" data-target="#ModalConfig">Config</button>
+      </div>
+    </div>
      <div class = "row">
       <div class = "col-10">
           <!-- Carga -->
@@ -538,6 +549,7 @@ $Con->CloseConexion();
                 <input type="hidden" name="ID_Motivo2" id = "ID_Motivo2" value = "0">
                 <input type="hidden" name="ID_Motivo3" id = "ID_Motivo3" value = "0">
                 <input type="hidden" name="ID_Categoria" id = "ID_Categoria" value = "0">
+                <input type="hidden" name="ID_Config" id="ID_Config" value="grid">
                 <button type="submit" class="btn btn-outline-success">Aceptar</button>
                 <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
               </div>
@@ -738,6 +750,33 @@ $Con->CloseConexion();
                   <div class="col"></div>
                 </div>                
               </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- FIN MODAL SELECCION CATEGORIA -->
+      <!-- Modal CONFIGURACION-->
+      <div class="modal fade bd-example-modal-lg" id="ModalConfig" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1>Configuración</h1>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="offset-4 col-2">
+                  <label for="formatConfig">Formato: </label>
+                </div>
+                <div class="col-4">
+                  <select class="input-group mb-3" name="formatConfig" id="formatConfig" onchange="cambiarConfig()">
+                    <option value="grid">Grilla</option>
+                    <option value="table">Tabla</option>
+                  </select>
+                </div>
+              </div>              
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             

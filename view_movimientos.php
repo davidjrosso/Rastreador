@@ -224,6 +224,9 @@ $Con->CloseConexion();
                     <option value = "Responsable">Resp.</option>
                     <option value = "Fecha">Fecha</option>
                     <option value = "ID">Id</option>
+                    <option value = "Legajo">Nro. Legajo</option>
+                    <option value = "Carpeta">Nro. Carpeta</option>
+
                 </select>
               </div>
               <div class = "col-md-1">
@@ -248,6 +251,9 @@ $Con->CloseConexion();
                 case 'Documento': echo $DTGeneral->getMovimientosxDocumento($Filtro);break;
                 case 'Nombre': echo $DTGeneral->getMovimientosxNombre($Filtro);break;
                 case 'Responsable': echo $DTGeneral->getMovimientosxResponsable($Filtro);break;
+                case 'Legajo': echo $DTGeneral->getMovimientosxLegajo($Filtro);break;
+                case 'Carpeta': echo $DTGeneral->getMovimientosxCarpeta($Filtro);break;
+                
                 default: echo $DTGeneral->getMovimientosxID($Filtro);break;
               }
             }else{

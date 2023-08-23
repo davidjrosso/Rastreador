@@ -19,6 +19,8 @@ $MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
 $EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
 $Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
 $TipoUsuario = $Ret["ID_TipoUsuario"];
+
+$ID_Config = $_REQUEST["ID_Config"];
 $Con->CloseConexion();
 ?>
 <!DOCTYPE html>
@@ -201,7 +203,10 @@ $Con->CloseConexion();
     </div><br>
     <br>
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-2">
+          <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_listados.php'">Atras</button>
+        </div>
+        <div class="col-md-8">
         <?php  
       	if(!isset($_REQUEST["Anio"])){
               $Fecha_Inicio = implode("-", array_reverse(explode("/",$_REQUEST["Fecha_Desde"])));
@@ -229,8 +234,8 @@ $Con->CloseConexion();
               $ID_CentroSalud = $_REQUEST["ID_CentroSalud"];
               $ID_OtraInstitucion = $_REQUEST["ID_OtraInstitucion"];
 
-              $ConsultarMovimientosPersona = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, P.domicilio, P.fecha_nac, M.motivo_1, M.motivo_2, M.motivo_3, M.observaciones, R.responsable, CS.centro_salud, I.Nombre as 'NombreInst' from movimiento M, persona P, barrios B, motivo MT, categoria C, centros_salud CS, otras_instituciones I, responsable R where M.id_persona = P.id_persona and B.ID_Barrio = P.ID_Barrio and M.id_centro = CS.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and R.id_resp = M.id_resp and M.estado = 1 and P.estado = 1 and MT.estado = 1 and C.estado = 1 and M.fecha between '$Fecha_Inicio' and '$Fecha_Fin'";
-          	  $Consulta = "select M.id_movimiento, M.fecha, M.id_persona, MONTH(M.fecha) as 'Mes', YEAR(M.fecha) as 'Anio', B.Barrio, P.manzana, P.lote, P.familia, P.apellido, P.nombre, P.fecha_nac, P.domicilio, M.motivo_1, M.motivo_2, M.motivo_3, R.responsable, M.observaciones, CS.centro_salud, I.Nombre as 'NombreInst' from movimiento M, persona P, barrios B, motivo MT, categoria C, centros_salud CS, otras_instituciones I, responsable R where M.id_persona = P.id_persona and B.ID_Barrio = P.ID_Barrio and M.id_centro = CS.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and R.id_resp = M.id_resp and M.estado = 1 and P.estado = 1 and MT.estado = 1 and C.estado = 1 and M.fecha between '$Fecha_Inicio' and '$Fecha_Fin'"; 
+              $ConsultarMovimientosPersona = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, P.domicilio, P.fecha_nac, P.documento, P.obra_social, P.localidad, P.edad, P.meses, B.Barrio, M.motivo_1, M.motivo_2, M.motivo_3, M.observaciones, R.responsable, CS.centro_salud, I.Nombre as 'NombreInst' from movimiento M, persona P, barrios B, motivo MT, categoria C, centros_salud CS, otras_instituciones I, responsable R where M.id_persona = P.id_persona and B.ID_Barrio = P.ID_Barrio and M.id_centro = CS.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and R.id_resp = M.id_resp and M.estado = 1 and P.estado = 1 and MT.estado = 1 and C.estado = 1 and M.fecha between '$Fecha_Inicio' and '$Fecha_Fin' and P.ID_Persona = $ID_Persona";
+          	  $Consulta = "select M.id_movimiento, M.fecha, M.id_persona, MONTH(M.fecha) as 'Mes', YEAR(M.fecha) as 'Anio', B.Barrio, P.manzana, P.documento, P.obra_social, P.localidad, P.edad, P.meses, P.lote, P.familia, P.apellido, P.nombre, P.fecha_nac, P.domicilio, M.motivo_1, M.motivo_2, M.motivo_3, R.responsable, M.observaciones, CS.centro_salud, I.Nombre as 'NombreInst' from movimiento M, persona P, barrios B, motivo MT, categoria C, centros_salud CS, otras_instituciones I, responsable R where M.id_persona = P.id_persona and B.ID_Barrio = P.ID_Barrio and M.id_centro = CS.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and R.id_resp = M.id_resp and M.estado = 1 and P.estado = 1 and MT.estado = 1 and C.estado = 1 and M.fecha between '$Fecha_Inicio' and '$Fecha_Fin'"; 
               // var_dump($Consulta);     
               $filtros = [];
               $Con = new Conexion();
@@ -409,15 +414,15 @@ $Con->CloseConexion();
               }
 
 
-              $ConsultarMovimientosPersona .= " group by M.id_movimiento order by M.fecha, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";
+              $ConsultarMovimientosPersona .= " group by M.id_movimiento order by M.fecha, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";              
 
               if($ID_Persona > 0){
                 $Consulta .= " group by M.id_movimiento order by Anio, Mes, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";
               }else{
-                $Consulta .= " group by M.id_persona order by Anio, Mes, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";
+                $Consulta .= " group by M.id_persona order by Anio, Mes, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";                
               }
 
-
+              
 
               //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -568,13 +573,16 @@ $Con->CloseConexion();
         // echo "DEBUG: ".$Consulta."<br><br>";
           foreach($filtros as $value){
             echo "<span class='etFiltros'>".$value."</span> ";
+            // echo "DEBUG: ".$ConsultarMovimientosPersona;
           }
         }
         ?>
-        <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_listados.php'">Atras</button>
         </div>
-        <div class="col">
-          <button type="button" class="btn btn-secondary" onClick="enviarImprimir()">Imprimir</button>
+        <div class="col-md-2">
+          <div class="row">
+            <button type = "button" class = "btn btn-secondary" data-toggle="modal" data-target="#configModal">Config</button>
+            <button type="button" class="btn btn-secondary" onClick="enviarImprimir()">Imprimir</button>
+          </div>
         </div>
      </div>
      <div class = "row">
@@ -646,36 +654,70 @@ $Con->CloseConexion();
               $RetEscuela = mysqli_fetch_assoc($EjecutarConsultarEscuela);
               $Escuela = $RetEscuela["Escuela"];
 
-              $Table = "<table class='table'><thead><tr><th></th><th>Detalles de la Persona</th></tr></thead>";
-
-              $Table .= "<tr><td>Id</td><td>".$Persona->getID_Persona()."</td></tr>";
-              $Table .= "<tr><td>Apellido</td><td>".$Persona->getApellido()."</td></tr>";
-              $Table .= "<tr><td>Nombre</td><td>".$Persona->getNombre()."</td></tr>";
-              $Table .= "<tr><td>Documento</td><td>".$Persona->getDNI()."</td></tr>";
-              $Table .= "<tr><td>Fecha de Nacimiento</td><td>".$Persona->getFecha_Nacimiento()."</td></tr>";
-              if($Persona->getEdad() == 2020){
-                $Table .= "<tr><td>Edad</td><td>No se cargo fecha de nacimiento</td></tr>";
+              if($ID_Config == 'grid'){
+                $Table = "<table class='table'><thead><tr><th></th><th>Detalles de la Persona</th></tr></thead>";
+  
+                $Table .= "<tr><td>Id</td><td>".$Persona->getID_Persona()."</td></tr>";
+                $Table .= "<tr><td>Apellido</td><td>".$Persona->getApellido()."</td></tr>";
+                $Table .= "<tr><td>Nombre</td><td>".$Persona->getNombre()."</td></tr>";
+                $Table .= "<tr><td>Documento</td><td>".$Persona->getDNI()."</td></tr>";
+                $Table .= "<tr><td>Fecha de Nacimiento</td><td>".$Persona->getFecha_Nacimiento()."</td></tr>";
+                if($Persona->getEdad() == 2020){
+                  $Table .= "<tr><td>Edad</td><td>No se cargo fecha de nacimiento</td></tr>";
+                }else{
+                  $Table .= "<tr><td>Edad</td><td>".$Persona->getEdad()."</td></tr>";
+                }                            
+                $Table .= "<tr><td>Meses</td><td>".$Persona->getMeses()."</td></tr>";              
+                             
+                $Table .= "<tr><td>Localidad</td><td>".$Persona->getLocalidad()."</td></tr>";
+                $Table .= "<tr><td>Barrio</td><td>".$Persona->getBarrio()."</td></tr>";      
+                $Table .= "<tr><td>Domicilio</td><td>".$Persona->getDomicilio()."</td></tr>";
+                $Table .= "<tr><td>Manzana</td><td>".$Persona->getManzana()."</td></tr>";
+                $Table .= "<tr><td>Lote</td><td>".$Persona->getLote()."</td></tr>";
+                $Table .= "<tr><td>Sub-lote</td><td>".$Persona->getFamilia()."</td></tr>";
+                $Table .= "<tr><td>Telefono</td><td>".$Persona->getTelefono()."</td></tr>";
+                $Table .= "<tr><td>E-Mail</td><td>".$Persona->getMail()."</td></tr>";                          
+                $Table .= "<tr><td>Obra Social</td><td>".$Persona->getObra_Social()."</td></tr>";
+                $Table .= "<tr><td>Escuela</td><td>".$Escuela."</td></tr>";  
+                $Table .= "<tr><td>Nro. Legajo</td><td>".$Persona->getNro_Carpeta()."</td></tr>"; 
+                $Table .= "<tr><td>Nro. Carpeta</td><td>".$Persona->getNro_Legajo()."</td></tr>";                                       
+                $Table .= "<tr><td>Observación</td><td>".$Persona->getObservaciones()."</td></tr>";
+                $Table .= "<tr><td>Cambio de Domicilio</td><td>".$Persona->getCambio_Domicilio()."</td></tr>";
+  
+                $Table .= "</table>";
               }else{
-                $Table .= "<tr><td>Edad</td><td>".$Persona->getEdad()."</td></tr>";
-              }                            
-              $Table .= "<tr><td>Meses</td><td>".$Persona->getMeses()."</td></tr>";              
-                           
-              $Table .= "<tr><td>Localidad</td><td>".$Persona->getLocalidad()."</td></tr>";
-              $Table .= "<tr><td>Barrio</td><td>".$Persona->getBarrio()."</td></tr>";      
-              $Table .= "<tr><td>Domicilio</td><td>".$Persona->getDomicilio()."</td></tr>";
-              $Table .= "<tr><td>Manzana</td><td>".$Persona->getManzana()."</td></tr>";
-              $Table .= "<tr><td>Lote</td><td>".$Persona->getLote()."</td></tr>";
-              $Table .= "<tr><td>Familia</td><td>".$Persona->getFamilia()."</td></tr>";
-              $Table .= "<tr><td>Telefono</td><td>".$Persona->getTelefono()."</td></tr>";
-              $Table .= "<tr><td>E-Mail</td><td>".$Persona->getMail()."</td></tr>";                          
-              $Table .= "<tr><td>Obra Social</td><td>".$Persona->getObra_Social()."</td></tr>";
-              $Table .= "<tr><td>Escuela</td><td>".$Escuela."</td></tr>";  
-              $Table .= "<tr><td>Nro. Legajo</td><td>".$Persona->getNro_Carpeta()."</td></tr>"; 
-              $Table .= "<tr><td>Nro. Carpeta</td><td>".$Persona->getNro_Legajo()."</td></tr>";                                       
-              $Table .= "<tr><td>Observación</td><td>".$Persona->getObservaciones()."</td></tr>";
-              $Table .= "<tr><td>Cambio de Domicilio</td><td>".$Persona->getCambio_Domicilio()."</td></tr>";
+                $Table = "<table class='table'><thead><tr><th></th><th>Detalles de la Persona</th></tr></thead>";
+  
+                $Table .= "<tr><td>Id</td><td>".$Persona->getID_Persona()."</td></tr>";
+                $Table .= "<tr><td>Apellido</td><td>".$Persona->getApellido()."</td></tr>";
+                $Table .= "<tr><td>Nombre</td><td>".$Persona->getNombre()."</td></tr>";
+                $Table .= "<tr><td>Documento</td><td>".$Persona->getDNI()."</td></tr>";
+                $Table .= "<tr><td>Fecha de Nacimiento</td><td>".$Persona->getFecha_Nacimiento()."</td></tr>";
+                if($Persona->getEdad() == 2020){
+                  $Table .= "<tr><td>Edad</td><td>No se cargo fecha de nacimiento</td></tr>";
+                }else{
+                  $Table .= "<tr><td>Edad</td><td>".$Persona->getEdad()."</td></tr>";
+                }                            
+                $Table .= "<tr><td>Meses</td><td>".$Persona->getMeses()."</td></tr>";              
+                             
+                $Table .= "<tr><td>Localidad</td><td>".$Persona->getLocalidad()."</td></tr>";
+                $Table .= "<tr><td>Barrio</td><td>".$Persona->getBarrio()."</td></tr>";      
+                $Table .= "<tr><td>Domicilio</td><td>".$Persona->getDomicilio()."</td></tr>";
+                $Table .= "<tr><td>Manzana</td><td>".$Persona->getManzana()."</td></tr>";
+                $Table .= "<tr><td>Lote</td><td>".$Persona->getLote()."</td></tr>";
+                $Table .= "<tr><td>Sub-lote</td><td>".$Persona->getFamilia()."</td></tr>";
+                $Table .= "<tr><td>Telefono</td><td>".$Persona->getTelefono()."</td></tr>";
+                $Table .= "<tr><td>E-Mail</td><td>".$Persona->getMail()."</td></tr>";                          
+                $Table .= "<tr><td>Obra Social</td><td>".$Persona->getObra_Social()."</td></tr>";
+                $Table .= "<tr><td>Escuela</td><td>".$Escuela."</td></tr>";  
+                $Table .= "<tr><td>Nro. Legajo</td><td>".$Persona->getNro_Carpeta()."</td></tr>"; 
+                $Table .= "<tr><td>Nro. Carpeta</td><td>".$Persona->getNro_Legajo()."</td></tr>";                                       
+                $Table .= "<tr><td>Observación</td><td>".$Persona->getObservaciones()."</td></tr>";
+                $Table .= "<tr><td>Cambio de Domicilio</td><td>".$Persona->getCambio_Domicilio()."</td></tr>";
+  
+                $Table .= "</table>";
+              }
 
-              $Table .= "</table>";
 
               echo $Table;
 
@@ -684,7 +726,7 @@ $Con->CloseConexion();
             //   $ConsultarMovimientos = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, M.motivo_1, M.motivo_2, M.motivo_3, M.observaciones, R.responsable from movimiento M, responsable R, persona P where M.id_resp = R.id_resp and M.id_persona = P.id_persona and M.id_persona = $ID_Persona";
               $MensajeErrorMovimientos = "No se pudo consultar los movimientos de la persona";
 
-            //   echo "DEBUG: ".var_dump($ConsultarMovimientosPersona);
+              // echo "DEBUG: ".var_dump($ConsultarMovimientosPersona);
 
               $TomarMovimientosPersona = mysqli_query($Con->Conexion,$ConsultarMovimientosPersona) or die($MensajeErrorMovimientos);
 
@@ -709,6 +751,29 @@ $Con->CloseConexion();
 
               array_multisort($regdomicilio, SORT_DESC, $tomarRetTodos);
 
+              if($ID_Config == 'table'){
+                $TableMov = "<table class='table'>
+                              <tr class='thead-dark'>
+                                <th class='trFecha' style='min-width: 150px;'>Fecha</th>
+                                <th class='trMotivos'>Motivo 1</th>
+                                <th class='trMotivos'>Motivo 2</th>
+                                <th class='trMotivos'>Motivo 3</th>
+                                <th class='trPersona'>Persona</th>
+                                <th class='trDNI'>DNI</th>
+                                <th class='trFechaNac'>Fecha Nac.</th>
+                                <th class='trEdad'>Edad</th>
+                                <th class='trMeses'>Meses</th>
+                                <th class='trObraSocial'>Obra Social</th>
+                                <th class='trDomicilio'>Domicilio</th>
+                                <th class='trBarrio'>Barrio</th>
+                                <th class='trLocalidad'>Localidad</th>
+                                <th class='trObservaciones'>Observaciones</th>
+                                <th class='trResponsable'>Responsable</th>
+                                <th class='trCentrosSalud'>Centro de salud</th>
+                                <th class='trOtrasInstituciones'>Otras Instituciones</th>
+                              </tr>";  
+              }
+
               foreach($tomarRetTodos as $clave => $RetTodos){                
                 // echo var_dump($RetTodos);
                 // echo "<br>";
@@ -722,6 +787,17 @@ $Con->CloseConexion();
                 $Fecha = implode("-", array_reverse(explode("-",$RetTodos["fecha"])));
                 $Apellido = $RetTodos["apellido"];
                 $Nombre = $RetTodos["nombre"];
+
+                ///////////////////////////////////////////////////////////
+                $DNI = $RetTodos["documento"];
+                $Edad = $RetTodos["edad"];
+                $Meses = $RetTodos["meses"];
+                $Obra_Social = $RetTodos["obra_social"];
+                $Domicilio = $RetTodos["domicilio"];
+                $Barrio = $RetTodos["Barrio"];
+                $Localidad = $RetTodos["localidad"];
+
+                //////////////////////////////////////////////////////////
 
                 $ID_Motivo_1 = $RetTodos["motivo_1"];
                 $ConsultarMotivo_1 = "select motivo from motivo where id_motivo = $ID_Motivo_1";
@@ -754,17 +830,39 @@ $Con->CloseConexion();
                 $OtraInstitucion = $RetTodos["NombreInst"]; //otraInstitucion
                 $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);                
 
-                $TableMov = "<table class='table table-dark'>";                
-                $TableMov .= "<tr><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>".$DtoMovimiento->getFecha()."</td></tr>";
-                $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
-                $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
-                $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
-                $TableMov .= "<tr><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getObservaciones()."</td></tr>";
-                $TableMov .= "<tr><td style = 'width: 30%;'>Responsable</td><td style = 'width: 70%;'>".$DtoMovimiento->getResponsable()."</td></tr>";
-                $TableMov .= "<tr><td style = 'width: 30%;'>Centro de salud</td><td style = 'width: 70%;'>".$DtoMovimiento->getCentroSalud()."</td></tr>";
-                $TableMov .= "<tr><td style = 'width: 30%;'>Otras instituciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
-                $TableMov .= "</table>";
-                echo $TableMov;
+                if($ID_Config == 'grid'){
+                  $TableMov = "<table class='table table-dark'>";                
+                  $TableMov .= "<tr class='trFecha'><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>".$DtoMovimiento->getFecha()."</td></tr>";
+                  $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
+                  $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
+                  $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
+                  $TableMov .= "<tr class='trObservaciones'><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getObservaciones()."</td></tr>";
+                  $TableMov .= "<tr class='trResponsable'><td style = 'width: 30%;'>Responsable</td><td style = 'width: 70%;'>".$DtoMovimiento->getResponsable()."</td></tr>";
+                  $TableMov .= "<tr class='trCentrosSalud'><td style = 'width: 30%;'>Centro de salud</td><td style = 'width: 70%;'>".$DtoMovimiento->getCentroSalud()."</td></tr>";
+                  $TableMov .= "<tr class='trOtrasInstituciones'><td style = 'width: 30%;'>Otras instituciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
+                  $TableMov .= "</table>";
+                  echo $TableMov;
+                }else{
+                  $TableMov .= "<tr>";              
+                  $TableMov .= "<td class='trFecha' style = 'width: auto;'>".$DtoMovimiento->getFecha()."</td>";
+                  $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>";
+                  $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_2()."</td>";
+                  $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_3()."</td>";
+                  $TableMov .= "<td class='trPersona' style = 'width: auto;'>".$Apellido.", ".$Nombre."</td>";
+                  $TableMov .= "<td class='trDNI' style = 'width: auto;'>".$DNI."</td>";
+                  $TableMov .= "<td class='trFechaNac' style = 'width: auto;'>".$Fecha_Nacimiento."</td>";
+                  $TableMov .= "<td class='trEdad' style = 'width: auto;'>".$Edad."</td>";
+                  $TableMov .= "<td class='trMeses' style = 'width: auto;'>".$Meses."</td>";
+                  $TableMov .= "<td class='trObraSocial' style = 'width: auto;'>".$Obra_Social."</td>";
+                  $TableMov .= "<td class='trDomicilio' style = 'width: auto;'>".$Domicilio."</td>";
+                  $TableMov .= "<td class='trBarrio' style = 'width: auto;'>".$Barrio."</td>";
+                  $TableMov .= "<td class='trLocalidad' style = 'width: auto;'>".$Localidad."</td>";
+                  $TableMov .= "<td class='trObservaciones' style = 'width: auto;'>".$DtoMovimiento->getObservaciones()."</td>";
+                  $TableMov .= "<td class='trResponsable' style = 'width: auto;'>".$DtoMovimiento->getResponsable()."</td>";
+                  $TableMov .= "<td class='trCentrosSalud' style = 'width: auto;'>".$DtoMovimiento->getCentroSalud()."</td>";
+                  $TableMov .= "<td class='trOtrasInstituciones' style = 'width: auto;'>".$DtoMovimiento->getOtraInstitucion()."</td>";                 
+                  $TableMov .= "</tr>"; 
+                }
             
                 
                 
@@ -777,6 +875,11 @@ $Con->CloseConexion();
 
 
 
+              }
+
+              if($ID_Config == 'table'){
+                $TableMov .= "</table>";
+                echo $TableMov;
               }
 
 
@@ -867,6 +970,29 @@ $Con->CloseConexion();
 
               array_multisort($regdomicilio, SORT_DESC, $tomarRetTodos);
 
+              if($ID_Config == 'table'){
+                $TableMov = "<table class='table'>
+                              <tr class='thead-dark'>
+                                <th class='trFecha' style='min-width: 150px;'>Fecha</th>
+                                <th class='trPersona'>Persona</th>
+                                <th class='trMotivos'>Motivo 1</th>
+                                <th class='trMotivos'>Motivo 2</th>
+                                <th class='trMotivos'>Motivo 3</th>                                
+                                <th class='trDNI'>DNI</th>
+                                <th class='trFechaNac'>Fecha Nac.</th>
+                                <th class='trEdad'>Edad</th>
+                                <th class='trMeses'>Meses</th>
+                                <th class='trObraSocial'>Obra Social</th>
+                                <th class='trDomicilio'>Domicilio</th>
+                                <th class='trBarrio'>Barrio</th>
+                                <th class='trLocalidad'>Localidad</th>
+                                <th class='trObservaciones'>Observaciones</th>
+                                <th class='trResponsable'>Responsable</th>
+                                <th class='trCentrosSalud'>Centro de salud</th>
+                                <th class='trOtrasInstituciones'>Otras Instituciones</th>
+                              </tr>";  
+              }
+
               foreach($tomarRetTodos as $clave => $RetTodos){                
                 // echo var_dump($RetTodos);
                 // echo "<br>";
@@ -922,21 +1048,56 @@ $Con->CloseConexion();
 
                   $CentroSalud = $RetTodos["centro_salud"]; //centro_salud
                   $OtraInstitucion = $RetTodos["NombreInst"]; //otraInstitucion
-                  $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);                
+                  $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);   
 
-                  $TableMov = "<table class='table table-dark'>";                
-                  $TableMov .= "<tr><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>".$DtoMovimiento->getFecha()."</td></tr>";
-                  $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
-                  $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
-                  $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
-                  $TableMov .= "<tr><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getObservaciones()."</td></tr>";
-                  $TableMov .= "<tr><td style = 'width: 30%;'>Responsable</td><td style = 'width: 70%;'>".$DtoMovimiento->getResponsable()."</td></tr>";
-                  $TableMov .= "<tr><td style = 'width: 30%;'>Centro de salud</td><td style = 'width: 70%;'>".$DtoMovimiento->getCentroSalud()."</td></tr>";
-                  $TableMov .= "<tr><td style = 'width: 30%;'>Otras instituciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
-                  $TableMov .= "</table>";
-                  echo $TableMov;
+                  /////////////////////////////////////////////////////////////
+                  $DNI = $RetTodos["documento"];
+                  $Edad = $RetTodos["edad"];
+                  $Meses = $RetTodos["meses"];
+                  $Obra_Social = $RetTodos["obra_social"];
+                  $Domicilio = $RetTodos["domicilio"];
+                  $Barrio = $RetTodos["Barrio"];
+                  $Localidad = $RetTodos["localidad"];
+                  /////////////////////////////////////////////////////////////
+
+                  if($ID_Config == 'grid'){
+                    $TableMov = "<table class='table table-dark'>";                
+                    $TableMov .= "<tr class='trFecha'><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>".$DtoMovimiento->getFecha()."</td></tr>";
+                    $TableMov .= "<tr><td style = 'width: 30%;'>Persona</td><td style = 'width: 70%;'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$DtoMovimiento->getApellido().", ".$DtoMovimiento->getNombre()."</a></td></tr>";
+                    $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
+                    $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
+                    $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
+                    $TableMov .= "<tr class='trObservaciones'><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getObservaciones()."</td></tr>";
+                    $TableMov .= "<tr class='trResponsable'><td style = 'width: 30%;'>Responsable</td><td style = 'width: 70%;'>".$DtoMovimiento->getResponsable()."</td></tr>";
+                    $TableMov .= "<tr class='trCentrosSalud'><td style = 'width: 30%;'>Centro de salud</td><td style = 'width: 70%;'>".$DtoMovimiento->getCentroSalud()."</td></tr>";
+                    $TableMov .= "<tr class='trOtrasInstituciones'><td style = 'width: 30%;'>Otras instituciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
+                    $TableMov .= "</table>";
+                    echo $TableMov;
+                  }else{        
+                    $TableMov .= "<tr>";                           
+                    $TableMov .= "<td class='trFecha' style = 'width: auto;'>".$DtoMovimiento->getFecha()."</td>";
+                    $TableMov .= "<td class='trPersona' style = 'width: auto;'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$DtoMovimiento->getApellido().", ".$DtoMovimiento->getNombre()."</a></td>";
+                    $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>";
+                    $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_2()."</td>";
+                    $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_3()."</td>";                    
+                    $TableMov .= "<td class='trDNI' style = 'width: auto;'>".$DNI."</td>";
+                    $TableMov .= "<td class='trFechaNac' style = 'width: auto;'>".$Fecha_Nacimiento."</td>";
+                    $TableMov .= "<td class='trEdad' style = 'width: auto;'>".$Edad."</td>";
+                    $TableMov .= "<td class='trMeses' style = 'width: auto;'>".$Meses."</td>";
+                    $TableMov .= "<td class='trObraSocial' style = 'width: auto;'>".$Obra_Social."</td>";
+                    $TableMov .= "<td class='trDomicilio' style = 'width: auto;'>".$Domicilio."</td>";
+                    $TableMov .= "<td class='trBarrio' style = 'width: auto;'>".$Barrio."</td>";
+                    $TableMov .= "<td class='trLocalidad' style = 'width: auto;'>".$Localidad."</td>";
+                    $TableMov .= "<td class='trObservaciones' style = 'width: auto;'>".$DtoMovimiento->getObservaciones()."</td>";
+                    $TableMov .= "<td class='trResponsable' style = 'width: auto;'>".$DtoMovimiento->getResponsable()."</td>";
+                    $TableMov .= "<td class='trCentrosSalud' style = 'width: auto;'>".$DtoMovimiento->getCentroSalud()."</td>";
+                    $TableMov .= "<td class='trOtrasInstituciones' style = 'width: auto;'>".$DtoMovimiento->getOtraInstitucion()."</td>";
+                    $TableMov .= "</tr>";
+                  }
+
+
                 }            
-              }
+              }              
               
 
               while ($RetMovimientos = mysqli_fetch_assoc($TomarMovimientos)) {
@@ -976,19 +1137,54 @@ $Con->CloseConexion();
                 $OtraInstitucion=$RetMovimientos["nombre"];
                 $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);
 
-                $TableMov = "<table class='table table-dark'>";
-                $TableMov .= "<tr><td style = 'width: 30%;'>Persona</td><td style = 'width: 70%;'>".$DtoMovimiento->getApellido().", ".$DtoMovimiento->getNombre()."</td></tr>";
-                $TableMov .= "<tr><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>".$DtoMovimiento->getFecha()."</td></tr>";
-                $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
-                $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
-                $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
-                $TableMov .= "<tr><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getObservaciones()."</td></tr>";
-                $TableMov .= "<tr><td style = 'width: 30%;'>Responsable</td><td style = 'width: 70%;'>".$DtoMovimiento->getResponsable()."</td></tr>";
-                $TableMov .= "<tr><td style = 'width: 30%;'>Centro de salud</td><td style = 'width: 70%;'>".$DtoMovimiento->getCentroSalud()."</td></tr>";
-                $TableMov .= "<tr><td style = 'width: 30%;'>Otras instituciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
+                /////////////////////////////////////////////////////////////
+                $DNI = $RetMovimientos["documento"];
+                $Edad = $RetMovimientos["edad"];
+                $Meses = $RetMovimientos["meses"];
+                $Obra_Social = $RetMovimientos["obra_social"];
+                $Domicilio = $RetMovimientos["domicilio"];
+                $Barrio = $RetMovimientos["Barrio"];
+                $Localidad = $RetMovimientos["localidad"];
+                /////////////////////////////////////////////////////////////
+
+                if($ID_Config == 'grid'){
+                  $TableMov = "<table class='table table-dark'>";
+                  $TableMov .= "<tr class='trFecha'><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>".$DtoMovimiento->getFecha()."</td></tr>";
+                  $TableMov .= "<tr><td style = 'width: 30%;'>Persona</td><td style = 'width: 70%;'>".$DtoMovimiento->getApellido().", ".$DtoMovimiento->getNombre()."</td></tr>";
+                  $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
+                  $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
+                  $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
+                  $TableMov .= "<tr class='trObservaciones'><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getObservaciones()."</td></tr>";
+                  $TableMov .= "<tr class='trResponsable'><td style = 'width: 30%;'>Responsable</td><td style = 'width: 70%;'>".$DtoMovimiento->getResponsable()."</td></tr>";
+                  $TableMov .= "<tr class='trCentrosSalud'><td style = 'width: 30%;'>Centro de salud</td><td style = 'width: 70%;'>".$DtoMovimiento->getCentroSalud()."</td></tr>";
+                  $TableMov .= "<tr class='trOtrasInstituciones'><td style = 'width: 30%;'>Otras instituciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
+                  $TableMov .= "</table>";
+                  echo $TableMov;
+                }else{                                   
+                  $TableMov .= "<td class='trFecha' style = 'width: auto;'>".$DtoMovimiento->getFecha()."</td></tr>";
+                  $TableMov .= "<td class='trPersona' style = 'width: auto;'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$DtoMovimiento->getApellido().", ".$DtoMovimiento->getNombre()."</a></td></tr>";
+                  $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
+                  $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
+                  $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
+                  $TableMov .= "<td class='trDNI' style = 'width: auto;'>".$DNI."</td>";
+                  $TableMov .= "<td class='trFechaNac' style = 'width: auto;'>".$Fecha_Nacimiento."</td>";
+                  $TableMov .= "<td class='trEdad' style = 'width: auto;'>".$Edad."</td>";
+                  $TableMov .= "<td class='trMeses' style = 'width: auto;'>".$Meses."</td>";
+                  $TableMov .= "<td class='trObraSocial' style = 'width: auto;'>".$Obra_Social."</td>";
+                  $TableMov .= "<td class='trDomicilio' style = 'width: auto;'>".$Domicilio."</td>";
+                  $TableMov .= "<td class='trBarrio' style = 'width: auto;'>".$Barrio."</td>";
+                  $TableMov .= "<td class='trLocalidad' style = 'width: auto;'>".$Localidad."</td>";
+                  $TableMov .= "<td class='trObservaciones' style = 'width: auto;'>".$DtoMovimiento->getObservaciones()."</td></tr>";
+                  $TableMov .= "<td class='trResponsable' style = 'width: auto;'>".$DtoMovimiento->getResponsable()."</td></tr>";
+                  $TableMov .= "<td class='trCentrosSalud' style = 'width: auto;'>".$DtoMovimiento->getCentroSalud()."</td></tr>";
+                  $TableMov .= "<td class='trOtrasInstituciones' style = 'width: auto;'>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
+                }
+
+              }
+
+              if($ID_Config == 'table'){
                 $TableMov .= "</table>";
                 echo $TableMov;
-
               }
 
               $Con->CloseConexion();
@@ -1000,6 +1196,239 @@ $Con->CloseConexion();
   </div>
 </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="configModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Configurar resultados</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="checkbox" id="chkFecha"> Fecha
+        <input type="checkbox" id="chkMotivos"> Motivos
+        <input type="checkbox" id="chkPersona"> Persona 
+        <input type="checkbox" id="chkDNI"> DNI 
+        <input type="checkbox" id="chkFechaNac"> Fecha Nac. 
+        <input type="checkbox" id="chkEdad"> Edad 
+        <input type="checkbox" id="chkMeses"> Meses 
+        <input type="checkbox" id="chkObraSocial"> Obra Social 
+        <input type="checkbox" id="chkDomicilio"> Domicilio 
+        <input type="checkbox" id="chkBarrio"> Barrio 
+        <input type="checkbox" id="chkLocalidad"> Localidad 
+        <input type="checkbox" id="chkObservaciones"> Observaciones
+        <input type="checkbox" id="chkResponsable"> Responsable
+        <input type="checkbox" id="chkCentrosSalud"> Centro de salud 
+        <input type="checkbox" id="chkOtrasInstituciones"> Otras instituciones
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" onClick="configResultados()" data-dismiss="modal">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+        // <input type="checkbox" id="chkPersona"> Persona 
+        // <input type="checkbox" id="chkDNI"> DNI 
+        // <input type="checkbox" id="chkFechaNac"> Fecha Nac. 
+        // <input type="checkbox" id="chkEdad"> Edad 
+        // <input type="checkbox" id="chkMeses"> Meses 
+        // <input type="checkbox" id="chkObraSocial"> Obra Social 
+        // <input type="checkbox" id="chkDomicilio"> Domicilio 
+        // <input type="checkbox" id="chkBarrio"> Barrio 
+        // <input type="checkbox" id="chkLocalidad"> Localidad 
+  function configResultados() {
+    var chkFecha = document.getElementById('chkFecha').checked;
+    var chkMotivos = document.getElementById('chkMotivos').checked;
+    var chkPersona = document.getElementById('chkPersona').checked;
+    var chkDNI = document.getElementById('chkDNI').checked;
+    var chkFechaNac = document.getElementById('chkFechaNac').checked;
+    var chkEdad = document.getElementById('chkEdad').checked;
+    var chkMeses = document.getElementById('chkMeses').checked;
+    var chkObraSocial = document.getElementById('chkObraSocial').checked;
+    var chkDomicilio = document.getElementById('chkDomicilio').checked;
+    var chkBarrio = document.getElementById('chkBarrio').checked;
+    var chkLocalidad= document.getElementById('chkLocalidad').checked;
+
+
+    var chkObservaciones= document.getElementById('chkObservaciones').checked;
+    var chkResponsable= document.getElementById('chkResponsable').checked;
+    var chkCentrosSalud= document.getElementById('chkCentrosSalud').checked;
+    var chkOtrasInstituciones = document.getElementById('chkOtrasInstituciones').checked;
+
+    var trFecha = document.getElementsByClassName('trFecha');
+    var trMotivos= document.getElementsByClassName('trMotivos');
+    var trPersona = document.getElementsByClassName('trPersona');
+    var trDNI= document.getElementsByClassName('trDNI');
+    var trFechaNac= document.getElementsByClassName('trFechaNac');
+    var trEdad = document.getElementsByClassName('trEdad');
+    var trMeses = document.getElementsByClassName('trMeses');
+    var trObraSocial = document.getElementsByClassName('trObraSocial');
+    var trDomicilio = document.getElementsByClassName('trDomicilio');
+    var trBarrio = document.getElementsByClassName('trBarrio');
+    var trLocalidad = document.getElementsByClassName('trLocalidad');
+
+    var trObservaciones= document.getElementsByClassName('trObservaciones');
+    var trResponsable= document.getElementsByClassName('trResponsable');
+    var trCentrosSalud= document.getElementsByClassName('trCentrosSalud');
+    var trOtrasInstituciones = document.getElementsByClassName('trOtrasInstituciones');
+
+    if(!chkFecha){
+      for (let i = 0; i < trFecha.length; i++) {        
+        trFecha[i].setAttribute('hidden', true);        
+      }
+    }else{
+      for (let i = 0; i < trFecha.length; i++) {        
+        trFecha[i].removeAttribute('hidden');        
+      }
+    }
+
+    if(!chkMotivos){
+      for (let i = 0; i < trMotivos.length; i++) {        
+        trMotivos[i].setAttribute('hidden', true);        
+      }
+    }else{
+      for (let i = 0; i < trMotivos.length; i++) {        
+        trMotivos[i].removeAttribute('hidden');        
+      }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    if(!chkPersona){
+      for (let i = 0; i < trPersona.length; i++) {        
+        trPersona[i].setAttribute('hidden', true);        
+      }
+    }else{
+      for (let i = 0; i < trPersona.length; i++) {        
+        trPersona[i].removeAttribute('hidden');        
+      }
+    }
+
+    if(!chkDNI){
+      for (let i = 0; i < trDNI.length; i++) {        
+        trDNI[i].setAttribute('hidden', true);        
+      }
+    }else{
+      for (let i = 0; i < trDNI.length; i++) {        
+        trDNI[i].removeAttribute('hidden');        
+      }
+    }
+
+    if(!chkFechaNac){
+      for (let i = 0; i < trFechaNac.length; i++) {        
+        trFechaNac[i].setAttribute('hidden', true);        
+      }
+    }else{
+      for (let i = 0; i < trFechaNac.length; i++) {        
+        trFechaNac[i].removeAttribute('hidden');        
+      }
+    }
+
+    if(!chkEdad){
+      for (let i = 0; i < trEdad.length; i++) {        
+        trEdad[i].setAttribute('hidden', true);        
+      }
+    }else{
+      for (let i = 0; i < trEdad.length; i++) {        
+        trEdad[i].removeAttribute('hidden');        
+      }
+    }
+
+    if(!chkMeses){
+      for (let i = 0; i < trMeses.length; i++) {        
+        trMeses[i].setAttribute('hidden', true);        
+      }
+    }else{
+      for (let i = 0; i < trMeses.length; i++) {        
+        trMeses[i].removeAttribute('hidden');        
+      }
+    }
+
+    if(!chkObraSocial){
+      for (let i = 0; i < trObraSocial.length; i++) {        
+        trObraSocial[i].setAttribute('hidden', true);        
+      }
+    }else{
+      for (let i = 0; i < trObraSocial.length; i++) {        
+        trObraSocial[i].removeAttribute('hidden');        
+      }
+    }
+
+    if(!chkDomicilio){
+      for (let i = 0; i < trDomicilio.length; i++) {        
+        trDomicilio[i].setAttribute('hidden', true);        
+      }
+    }else{
+      for (let i = 0; i < trDomicilio.length; i++) {        
+        trDomicilio[i].removeAttribute('hidden');        
+      }
+    }
+
+    if(!chkBarrio){
+      for (let i = 0; i < trBarrio.length; i++) {        
+        trBarrio[i].setAttribute('hidden', true);        
+      }
+    }else{
+      for (let i = 0; i < trBarrio.length; i++) {        
+        trBarrio[i].removeAttribute('hidden');        
+      }
+    }
+
+    if(!chkLocalidad){
+      for (let i = 0; i < trLocalidad.length; i++) {        
+        trLocalidad[i].setAttribute('hidden', true);        
+      }
+    }else{
+      for (let i = 0; i < trLocalidad.length; i++) {        
+        trLocalidad[i].removeAttribute('hidden');        
+      }
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    if(!chkObservaciones){
+      for (let i = 0; i < trObservaciones.length; i++) {        
+        trObservaciones[i].setAttribute('hidden', true);        
+      }
+    }else{  
+      for (let i = 0; i < trObservaciones.length; i++) {        
+        trObservaciones[i].removeAttribute('hidden');        
+      }
+    }
+
+    if(!chkResponsable){
+      for (let i = 0; i < trResponsable.length; i++) {        
+        trResponsable[i].setAttribute('hidden', true);        
+      }
+    }else{
+      for (let i = 0; i < trResponsable.length; i++) {        
+        trResponsable[i].removeAttribute('hidden');        
+      }
+    }
+
+    if(!chkCentrosSalud){
+      for (let i = 0; i < trCentrosSalud.length; i++) {        
+        trCentrosSalud[i].setAttribute('hidden', true);        
+      }
+    }else{
+      for (let i = 0; i < trCentrosSalud.length; i++) {        
+        trCentrosSalud[i].removeAttribute('hidden');        
+      }
+    }
+
+    if(!chkOtrasInstituciones){
+      for (let i = 0; i < trOtrasInstituciones.length; i++) {        
+        trOtrasInstituciones[i].setAttribute('hidden', true);        
+      }
+    }else{
+      for (let i = 0; i < trOtrasInstituciones.length; i++) {        
+        trOtrasInstituciones[i].removeAttribute('hidden');        
+      }
+    }
+  }
+</script>
 <?php
 /*
  *

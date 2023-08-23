@@ -89,7 +89,7 @@ $Con->CloseConexion();
               });
         }
 
-       function VerificarModificarMotivo(xID,xFecha,xMotivo,xCodigo,xCod_Categoria,xNum_Motivo,xID_Motivo){
+       function VerificarModificarMotivo(xID,xFecha,xMotivo,xCod_Categoria,xNum_Motivo,xID_Motivo){
               swal({
                 title: "¿Está seguro?",
                 text: "¿Seguro de querer modificar este motivo?",
@@ -99,7 +99,7 @@ $Con->CloseConexion();
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/ModificarMotivo.php?ID='+xID+'&Fecha='+xFecha+'&Motivo='+xMotivo+'&Codigo='+xCodigo+'&Cod_Categoria='+xCod_Categoria+'&Num_Motivo='+xNum_Motivo+'&ID_Motivo='+xID_Motivo;                
+                  window.location.href = 'Controladores/ModificarMotivo.php?ID='+xID+'&Fecha='+xFecha+'&Motivo='+xMotivo+'&Cod_Categoria='+xCod_Categoria+'&Num_Motivo='+xNum_Motivo+'&ID_Motivo='+xID_Motivo;                
                   //alert('SI');
                 } else {        
                 }
@@ -137,6 +137,22 @@ $Con->CloseConexion();
                 if (willDelete) {
                   window.location.href = 'Controladores/DeleteMotivo.php?ID='+xID_Motivo;                
                   //alert('SI');
+                } else {        
+                }
+              });
+        }
+
+        function VerificarEliminarNotificacion(xID_Notificacion){
+              swal({
+                title: "¿Está seguro?",
+                text: "¿Seguro de querer eliminar esta notificacion?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+              })
+              .then((willDelete) => {
+                if (willDelete) {
+                  window.location.href = 'Controladores/DeleteNotificacion.php?ID='+xID_Notificacion;                                  
                 } else {        
                 }
               });
@@ -349,19 +365,40 @@ $Con->CloseConexion();
       <div class="col"></div>
       <div class="col-11 Titulo">
         <br>
-        <p style="font-family: times; font-weight: bold;">RASTREADOR III <br><i>GRÁFICO DE CO-EVOLUCIÓN PARA LA EVALUACIÓN COMUNITARIA DE COBERTURA</i><br> Sistema Orientado a la Georeferenciación</p>
+        <p style="font-family: times; font-weight: bold;">RASTREADOR <br><i>GRÁFICO DE CO-EVOLUCIÓN PARA LA EVALUACIÓN COMUNITARIA DE COBERTURA</i><br> Sistema Orientado a la Georeferenciación</p>
       </div>
       <div class="col"></div>
     </div><br>
     <br>
+    <?php 
+    $CtrGeneral = new CtrGeneral();
+
+    // NOTIFICACIONES
+    $Notificaciones = $CtrGeneral->getNotificaciones();
+
+    if($Notificaciones["cant"] > 0){
+      ?>
+      <div class="alert alert-warning alert-dismissible fade show" role="alert" style="position: absolute; top: 5px; right: 5px;">
+        <h5 class="alert-heading">¡Notificación!</h5>
+        <p><i class="fa fa-info-circle"></i> <?= $Notificaciones["value"]["Detalle"];  ?></p>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <?php        
+    }
+    ?>
     <?php if($TipoUsuario == 1){ 
-      $CtrGeneral = new CtrGeneral();
+      // $CtrGeneral = new CtrGeneral();
+
+      // SOLICITUDES
       $CantUnif = $CtrGeneral->getCantSolicitudes_Unificacion();
       $CantModMot = $CtrGeneral->getCantSolicitudes_Modificacion_Motivo();
       $CantModCat = $CtrGeneral->getCantSolicitudes_Modificacion_Categoria();
       $CantDel = $CtrGeneral->getCantSolicitudes_Eliminacion();
+      $CantNot = $Notificaciones["cant"];
       
-        if($CantUnif > 0 || $CantModMot > 0 || $CantModCat > 0 || $CantDel > 0){
+        if($CantUnif > 0 || $CantModMot > 0 || $CantModCat > 0 || $CantDel > 0 || $CantNot > 0){
         ?>
       <div class = "row">
         <div class="col-1"></div>
@@ -395,6 +432,12 @@ $Con->CloseConexion();
               <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Eliminar Motivos</h3>
               <?php
               echo $CtrGeneral->getSolicitudes_Eliminacion();
+            }
+            if($CantNot > 0){
+              ?>
+              <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Eliminar Notificaciones</h3>
+              <?php
+              echo $CtrGeneral->getSolicitudes_Notificaciones();
             }            
           ?>
         </div>  
