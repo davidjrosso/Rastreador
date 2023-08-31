@@ -61,7 +61,7 @@ $Con->CloseConexion();
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/DeleteCategoria.php?ID='+xID;
+                  window.location.href = 'Controladores/pedireliminarcategoria.php?ID='+xID;
                   //alert('SI');
                 } else {        
                 }

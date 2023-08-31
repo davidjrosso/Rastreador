@@ -142,6 +142,23 @@ $Con->CloseConexion();
               });
         }
 
+        function VerificarEliminarCategoria(xID_Categoria){
+              swal({
+                title: "¿Está seguro?",
+                text: "¿Seguro de querer eliminar este categoria?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+              })
+              .then((willDelete) => {
+                if (willDelete) {
+                  window.location.href = 'Controladores/DeleteCategoria.php?ID='+xID_Categoria;                
+                  //alert('SI');
+                } else {        
+                }
+              });
+        }
+
         function VerificarEliminarNotificacion(xID_Notificacion){
               swal({
                 title: "¿Está seguro?",
@@ -209,7 +226,7 @@ $Con->CloseConexion();
               });
         }
 
-        function CancelarEliminacion(xID){
+        function CancelarEliminacionMotivo(xID){
               swal({
                 title: "¿Está seguro?",
                 text: "¿Seguro de querer borrar esta petición de eliminación?",
@@ -220,6 +237,23 @@ $Con->CloseConexion();
               .then((willDelete) => {
                 if (willDelete) {
                   window.location.href = 'Controladores/DeletePeticionEliminacion.php?ID='+xID;
+                  //alert('SI');
+                } else {        
+                }
+              });
+        }
+
+        function CancelarEliminacionCategoria(xID){
+              swal({
+                title: "¿Está seguro?",
+                text: "¿Seguro de querer borrar esta petición de eliminación?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+              })
+              .then((willDelete) => {
+                if (willDelete) {
+                  window.location.href = 'Controladores/DeletePeticionEliminacionCategoria.php?ID='+xID;
                   //alert('SI');
                 } else {        
                 }
@@ -395,10 +429,11 @@ $Con->CloseConexion();
       $CantUnif = $CtrGeneral->getCantSolicitudes_Unificacion();
       $CantModMot = $CtrGeneral->getCantSolicitudes_Modificacion_Motivo();
       $CantModCat = $CtrGeneral->getCantSolicitudes_Modificacion_Categoria();
-      $CantDel = $CtrGeneral->getCantSolicitudes_Eliminacion();
+      $CantDel = $CtrGeneral->getCantSolicitudes_EliminacionMotivo();
+      $CantDelCat = $CtrGeneral->getCantSolicitudes_EliminacionCategoria();
       $CantNot = $Notificaciones["cant"];
       
-        if($CantUnif > 0 || $CantModMot > 0 || $CantModCat > 0 || $CantDel > 0 || $CantNot > 0){
+        if($CantUnif > 0 || $CantModMot > 0 || $CantModCat > 0 || $CantDel > 0 || $CantDelCat > 0 || $CantNot > 0){
         ?>
       <div class = "row">
         <div class="col-1"></div>
@@ -431,7 +466,13 @@ $Con->CloseConexion();
               ?>
               <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Eliminar Motivos</h3>
               <?php
-              echo $CtrGeneral->getSolicitudes_Eliminacion();
+              echo $CtrGeneral->getSolicitudes_EliminacionMotivo();
+            }
+            if($CantDelCat > 0){
+              ?>
+              <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Eliminar Categorias</h3>
+              <?php
+              echo $CtrGeneral->getSolicitudes_EliminacionCategoria();
             }
             if($CantNot > 0){
               ?>
