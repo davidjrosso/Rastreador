@@ -450,6 +450,8 @@ $Con->CloseConexion();
               $ID_Persona = $_REQUEST["ID_Persona"];
               $Edad_Desde = $_REQUEST["Edad_Desde"];
               $Edad_Hasta = $_REQUEST["Edad_Hasta"];
+              $Meses_Desde = $_REQUEST["Meses_Desde"];
+              $Meses_Hasta = $_REQUEST["Meses_Hasta"];
               $Domicilio = $_REQUEST["Domicilio"];
               $Manzana = $_REQUEST["Manzana"];
               $Lote = $_REQUEST["Lote"];
@@ -491,6 +493,12 @@ $Con->CloseConexion();
                 $filtros[] = "Edad: Desde ".$Edad_Desde." hasta ".$Edad_Hasta;
               }
 
+              if($Meses_Desde != null && $Meses_Desde != "" && $Meses_Hasta != null && $Meses_Hasta != ""){
+                // $Consulta .= " and P.edad between $Edad_Desde and $Edad_Hasta";
+                $Consulta .= " and P.edad = 0 and P.meses > $Meses_Desde and P.meses < $Meses_Hasta";
+                $filtros[] = "Meses: Desde ".$Meses_Desde." hasta ".$Meses_Hasta;
+              }
+              
               if($Domicilio != null && $Domicilio != ""){
                 $Consulta .= " and P.domicilio like '%$Domicilio%'";
                 $filtros[] = "Domicilio: ".$Domicilio;
@@ -840,6 +848,10 @@ $Con->CloseConexion();
 
                 if($Edad_Desde != null && $Edad_Desde != "" && $Edad_Hasta != null && $Edad_Hasta != ""){                  
                   $ConsultarTodos .= " and P.edad > $Edad_Desde and P.edad < $Edad_Hasta";
+                }
+
+                if($Meses_Desde != null && $Meses_Desde != "" && $Meses_Hasta != null && $Meses_Hasta != ""){                  
+                  $ConsultarTodos .= " and P.edad = 0 and P.meses > $Meses_Desde and P.meses < $Meses_Hasta";
                 }
 
                 if($Domicilio != null && $Domicilio != ""){
