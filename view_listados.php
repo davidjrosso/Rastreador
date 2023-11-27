@@ -497,7 +497,7 @@ $Con->CloseConexion();
                 ?>
               </div>
               <div class="col-md-1">
-                  <button type="button" class="btn btn-primary" onClick="agregarBarrio()" id="agregarBarrio">+</button>
+                  <button type="button" class="btn btn-primary" onClick="agregarBarrio()" id="agregarBarrioID">+</button>
               </div>
             </div>
             <div id="contenedorBarrios">              
@@ -571,6 +571,15 @@ $Con->CloseConexion();
                 <?php  
                 $Element = new Elements();
                 echo $Element->CBRepOtrasInstituciones();
+                ?>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Responsable: </label>
+              <div class="col-md-10">
+                <?php  
+                $Element = new Elements();
+                echo $Element->CBRepResponsable();
                 ?>
               </div>
             </div>

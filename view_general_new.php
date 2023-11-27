@@ -676,6 +676,15 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Responsable: </label>
+              <div class="col-md-10">
+                <?php  
+                $Element = new Elements();
+                echo $Element->CBRepResponsable();
+                ?>
+              </div>
+            </div>
+            <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Mostrar Personas: </label>
               <div class="col-md-10">
                 <select class="form-control" name="Mostrar" id="inpMostrar">

@@ -235,6 +235,7 @@ $Con->CloseConexion();
               $Mostrar = $_REQUEST["Mostrar"];
               $ID_CentroSalud = $_REQUEST["ID_CentroSalud"];
               $ID_OtraInstitucion = $_REQUEST["ID_OtraInstitucion"];
+              $ID_Responsable = $_REQUEST["ID_Responsable"];
 
               $ConsultarMovimientosPersona = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, P.domicilio, P.fecha_nac, P.documento, P.obra_social, P.localidad, P.edad, P.meses, B.Barrio, M.motivo_1, M.motivo_2, M.motivo_3, M.observaciones, R.responsable, CS.centro_salud, I.Nombre as 'NombreInst' from movimiento M, persona P, barrios B, motivo MT, categoria C, centros_salud CS, otras_instituciones I, responsable R where M.id_persona = P.id_persona and B.ID_Barrio = P.ID_Barrio and M.id_centro = CS.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and R.id_resp = M.id_resp and M.estado = 1 and P.estado = 1 and MT.estado = 1 and C.estado = 1 and M.fecha between '$Fecha_Inicio' and '$Fecha_Fin' and P.ID_Persona = $ID_Persona";
           	  $Consulta = "select M.id_movimiento, M.fecha, M.id_persona, MONTH(M.fecha) as 'Mes', YEAR(M.fecha) as 'Anio', B.Barrio, P.manzana, P.documento, P.obra_social, P.localidad, P.edad, P.meses, P.lote, P.familia, P.apellido, P.nombre, P.fecha_nac, P.domicilio, M.motivo_1, M.motivo_2, M.motivo_3, R.responsable, M.observaciones, CS.centro_salud, I.Nombre as 'NombreInst' from movimiento M, persona P, barrios B, motivo MT, categoria C, centros_salud CS, otras_instituciones I, responsable R where M.id_persona = P.id_persona and B.ID_Barrio = P.ID_Barrio and M.id_centro = CS.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and R.id_resp = M.id_resp and M.estado = 1 and P.estado = 1 and MT.estado = 1 and C.estado = 1 and M.fecha between '$Fecha_Inicio' and '$Fecha_Fin'"; 
@@ -422,6 +423,14 @@ $Con->CloseConexion();
                 $filtros[] = "Otra Institucion: ".$RetConsultarOtraInstitucion['Nombre'];
               }
 
+              if($ID_Responsable > 0){
+                $ConsultarMovimientosPersona .= " and R.ID_Responsable = $ID_Responsable";
+                $Consulta .= " and R.id_resp = $ID_Responsable";
+                $ConsultarResponsable = "select responsable from responsable where id_resp = ".$ID_Responsable." limit 1";
+                $EjecutarConsultarResponsable = mysqli_query($Con->Conexion,$ConsultarResponsable) or die("Problemas al consultar filtro Responsable");
+                $RetConsultarResponsable = mysqli_fetch_assoc($EjecutarConsultarResponsable);   
+                $filtros[] = "Responsable: ".$RetConsultarResponsable['responsable'];
+              }
 
               $ConsultarMovimientosPersona .= " group by M.id_movimiento order by M.fecha, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";              
 
@@ -840,7 +849,7 @@ $Con->CloseConexion();
                   //  variables inventadas solo para que arme la tabla
 
                 $CentroSalud = $RetTodos["centro_salud"]; //centro_salud
-                $OtraInstitucion = $RetTodos["NombreInst"]; //otraInstitucion
+                $OtraInstitucion = $RetTodos["NombreInst"]; //otraInstitucion                
                 $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);                
 
                 if($ID_Config == 'grid'){
