@@ -10,11 +10,11 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, R.responsable from movimiento M, persona P, responsable R where M.id_persona = P.id_persona and M.id_resp = R.id_resp and M.estado = 1 and P.estado = 1 order by M.id_movimiento desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
-			$Table .= "<tr><td>".$Ret["id_movimiento"]."</td><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -27,11 +27,11 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, R.responsable from movimiento M, persona P, responsable R where M.id_persona = P.id_persona and M.id_resp = R.id_resp and M.id_movimiento = $ID and M.estado = 1 and P.estado = 1 order by M.id_movimiento desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
-			$Table .= "<tr><td>".$Ret["id_movimiento"]."</td><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -45,11 +45,11 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, R.responsable from movimiento M, persona P, responsable R where M.id_persona = P.id_persona and M.id_resp = R.id_resp and M.fecha = '$Fecha' and M.estado = 1 and P.estado = 1 order by M.id_movimiento desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
-			$Table .= "<tr><td>".$Ret["id_movimiento"]."</td><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -62,11 +62,11 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, R.responsable from movimiento M, persona P, responsable R where M.id_persona = P.id_persona and M.id_resp = R.id_resp and P.apellido like '%$Apellido%' and M.estado = 1 and P.estado = 1 order by M.id_movimiento desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
-			$Table .= "<tr><td>".$Ret["id_movimiento"]."</td><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -79,11 +79,11 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, R.responsable from movimiento M, persona P, responsable R where M.id_persona = P.id_persona and M.id_resp = R.id_resp and P.nombre like '%$Nombre%' and M.estado = 1 and P.estado = 1 order by M.id_movimiento desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
-			$Table .= "<tr><td>".$Ret["id_movimiento"]."</td><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -96,11 +96,11 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, R.responsable from movimiento M, persona P, responsable R where M.id_persona = P.id_persona and M.id_resp = R.id_resp and P.documento like '%$Documento%' and M.estado = 1 and P.estado = 1 order by M.id_movimiento desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
-			$Table .= "<tr><td>".$Ret["id_movimiento"]."</td><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -113,11 +113,11 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, R.responsable from movimiento M, persona P, responsable R where M.id_persona = P.id_persona and (M.id_resp = R.id_resp or M.id_resp_2 = R.id_resp or M.id_resp_3 = R.id_resp or M.id_resp_4 = R.id_resp) and R.responsable like '%$Responsable%' and M.estado = 1 and P.estado = 1 order by M.id_movimiento desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
-			$Table .= "<tr><td>".$Ret["id_movimiento"]."</td><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -130,11 +130,11 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, R.responsable from movimiento M, persona P, responsable R where M.id_persona = P.id_persona and (M.id_resp = R.id_resp or M.id_resp_2 = R.id_resp or M.id_resp_3 = R.id_resp or M.id_resp_4 = R.id_resp) and P.nro_legajo = '$Legajo' and M.estado = 1 and P.estado = 1 order by M.id_movimiento desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
-			$Table .= "<tr><td>".$Ret["id_movimiento"]."</td><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -147,11 +147,11 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, R.responsable from movimiento M, persona P, responsable R where M.id_persona = P.id_persona and (M.id_resp = R.id_resp or M.id_resp_2 = R.id_resp or M.id_resp_3 = R.id_resp or M.id_resp_4 = R.id_resp) and P.nro_carpeta = '$Carpeta' and M.estado = 1 and P.estado = 1 order by M.id_movimiento desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
-			$Table .= "<tr><td>".$Ret["id_movimiento"]."</td><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -166,10 +166,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select id_persona, apellido, nombre, documento, nro_legajo from persona where estado = 1 order by apellido";
 		$MessageError = "Problemas al intentar mostrar Personas";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["id_persona"]."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["documento"]."</td><td>".$Ret["nro_legajo"]."</td><td><a href = 'view_verpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_persona"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["documento"]."</td><td>".$Ret["nro_legajo"]."</td><td><a href = 'view_verpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_persona"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -184,10 +184,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select id_persona, apellido, nombre, documento, nro_legajo from persona where id_persona = $ID and estado = 1 order by apellido";
 		$MessageError = "Problemas al intentar mostrar Personas por ID";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["id_persona"]."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["documento"]."</td><td>".$Ret["nro_legajo"]."</td><td><a href = 'view_verpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_persona"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["documento"]."</td><td>".$Ret["nro_legajo"]."</td><td><a href = 'view_verpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_persona"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -200,10 +200,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select id_persona, apellido, nombre, documento,nro_legajo from persona where apellido like '%$Apellido%' and estado = 1 order by apellido";
 		$MessageError = "Problemas al intentar mostrar Personas por Apellido";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["id_persona"]."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["documento"]."</td><td>".$Ret["nro_legajo"]."</td><td><a href = 'view_verpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_persona"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["documento"]."</td><td>".$Ret["nro_legajo"]."</td><td><a href = 'view_verpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_persona"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -216,10 +216,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select id_persona, apellido, nombre, documento, nro_legajo from persona where nombre like '%$Nombre%' and estado = 1 order by apellido";
 		$MessageError = "Problemas al intentar mostrar Personas por Nombre";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["id_persona"]."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["documento"]."</td><td>".$Ret["nro_legajo"]."</td><td><a href = 'view_verpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_persona"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["documento"]."</td><td>".$Ret["nro_legajo"]."</td><td><a href = 'view_verpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_persona"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -233,10 +233,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select id_persona, apellido, nombre, documento,nro_legajo from persona where documento like '%$buscDNI%' and estado = 1 order by apellido";
 		$MessageError = "Problemas al intentar mostrar Personas por Documento";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["id_persona"]."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["documento"]."</td><td>".$Ret["nro_legajo"]."</td><td><a href = 'view_verpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_persona"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["documento"]."</td><td>".$Ret["nro_legajo"]."</td><td><a href = 'view_verpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_persona"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -249,10 +249,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select id_persona, apellido, nombre, documento,nro_legajo from persona where nro_legajo like '%$Legajo%' and estado = 1 order by apellido";
 		$MessageError = "Problemas al intentar mostrar Personas por Legajo";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Apellido</th><th>Nombre</th><th>Documento</th></th><th>Nro. Legajo</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th></th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["id_persona"]."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["documento"]."</td><td>".$Ret["nro_legajo"]."</td><td><a href = 'view_verpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_persona"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["documento"]."</td><td>".$Ret["nro_legajo"]."</td><td><a href = 'view_verpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_persona"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -265,10 +265,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select id_persona, apellido, nombre, documento,nro_legajo from persona where nro_carpeta = '$Carpeta' and estado = 1 order by apellido";
 		$MessageError = "Problemas al intentar mostrar Personas por Carpeta";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Apellido</th><th>Nombre</th><th>Documento</th></th><th>Nro. Legajo</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th></th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["id_persona"]."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["documento"]."</td><td>".$Ret["nro_legajo"]."</td><td><a href = 'view_verpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_persona"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["documento"]."</td><td>".$Ret["nro_legajo"]."</td><td><a href = 'view_verpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_persona"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -283,10 +283,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select M.id_motivo, M.motivo, M.codigo, C.categoria from motivo M, categoria C where M.cod_categoria = C.cod_categoria and M.estado = 1 and C.estado = 1 and M.id_motivo > 1 order by M.id_motivo";
 		$MessageError = "Problemas al intentar mostrar Motivos";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Motivo</th><th>Código</th><th>Categoría</th></tr></thead>";//<th>Número</th>  <td>".$Ret["num_motivo"]."</td>
+		$Table = "<table class='table'><thead><tr><th>Motivo</th><th>Código</th><th>Categoría</th><th colspan='2'></th></tr></thead>";//<th>Número</th>  <td>".$Ret["num_motivo"]."</td>
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["id_motivo"]."</td><td>".$Ret["motivo"]."</td><td>".$Ret["codigo"]."</td><td>".$Ret["categoria"]."</td><td><a href = 'view_modmotivos.php?ID=".$Ret["id_motivo"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_motivo"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["motivo"]."</td><td>".$Ret["codigo"]."</td><td>".$Ret["categoria"]."</td><td><a href = 'view_modmotivos.php?ID=".$Ret["id_motivo"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_motivo"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -299,10 +299,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select M.id_motivo, M.motivo, M.codigo, C.categoria from motivo M, categoria C where M.cod_categoria = C.cod_categoria and M.id_motivo = $ID and M.estado = 1 and C.estado = 1 and M.id_motivo > 1 order by M.id_motivo";
 		$MessageError = "Problemas al intentar mostrar Motivos por ID";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Motivo</th><th>Codigo</th><th>Categoría</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Motivo</th><th>Codigo</th><th>Categoría</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["id_motivo"]."</td><td>".$Ret["motivo"]."</td><td>".$Ret["codigo"]."</td><td>".$Ret["categoria"]."</td><td><a href = 'view_modmotivos.php?ID=".$Ret["id_motivo"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_motivo"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["motivo"]."</td><td>".$Ret["codigo"]."</td><td>".$Ret["categoria"]."</td><td><a href = 'view_modmotivos.php?ID=".$Ret["id_motivo"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_motivo"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -315,10 +315,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select M.id_motivo, M.motivo, M.codigo, C.categoria from motivo M, categoria C where M.cod_categoria = C.cod_categoria and M.motivo like '%$Motivo%' and M.estado = 1 and C.estado = 1 and M.id_motivo > 1 order by M.id_motivo";
 		$MessageError = "Problemas al intentar mostrar Motivos por Motivo";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Motivo</th><th>Codigo</th><th>Categoría</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Motivo</th><th>Codigo</th><th>Categoría</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["id_motivo"]."</td><td>".$Ret["motivo"]."</td><td>".$Ret["codigo"]."</td><td>".$Ret["categoria"]."</td><td><a href = 'view_modmotivos.php?ID=".$Ret["id_motivo"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_motivo"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["motivo"]."</td><td>".$Ret["codigo"]."</td><td>".$Ret["categoria"]."</td><td><a href = 'view_modmotivos.php?ID=".$Ret["id_motivo"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_motivo"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -331,10 +331,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select M.id_motivo, M.motivo, M.codigo, C.categoria from motivo M, categoria C where M.cod_categoria = C.cod_categoria and M.cod_categoria like '%$Codigo%' and M.estado = 1 and C.estado = 1 and M.id_motivo > 1 order by M.id_motivo";
 		$MessageError = "Problemas al intentar mostrar Motivos por Codigo";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Motivo</th><th>Codigo</th><th>Categoría</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Motivo</th><th>Codigo</th><th>Categoría</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["id_motivo"]."</td><td>".$Ret["motivo"]."</td><td>".$Ret["codigo"]."</td><td>".$Ret["categoria"]."</td><td><a href = 'view_modmotivos.php?ID=".$Ret["id_motivo"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_motivo"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["motivo"]."</td><td>".$Ret["codigo"]."</td><td>".$Ret["categoria"]."</td><td><a href = 'view_modmotivos.php?ID=".$Ret["id_motivo"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_motivo"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -347,10 +347,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select M.id_motivo, M.motivo,  M.codigo, C.categoria  from motivo M, categoria C where M.cod_categoria = C.cod_categoria and M.num_motivo like '%$Numero%' and M.estado = 1 and C.estado = 1 and M.id_motivo > 1 order by M.id_motivo";
 		$MessageError = "Problemas al intentar mostrar Motivos por Numero";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Motivo</th><th>Codigo</th><th>Categoría</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Motivo</th><th>Codigo</th><th>Categoría</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["id_motivo"]."</td><td>".$Ret["motivo"]."</td><td>".$Ret["codigo"]."</td><td>".$Ret["categoria"]."</td><td><a href = 'view_modmotivos.php?ID=".$Ret["id_motivo"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_motivo"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["motivo"]."</td><td>".$Ret["codigo"]."</td><td>".$Ret["categoria"]."</td><td><a href = 'view_modmotivos.php?ID=".$Ret["id_motivo"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_motivo"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -363,10 +363,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select M.id_motivo, M.motivo,  M.codigo, C.categoria  from motivo M, categoria C where M.cod_categoria = C.cod_categoria and C.categoria like '%$Categoria%' and M.estado = 1 and C.estado = 1 and M.id_motivo > 1 order by M.id_motivo";
 		$MessageError = "Problemas al intentar mostrar Motivos por Categoría";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Motivo</th><th>Codigo</th><th>Categoría</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Motivo</th><th>Codigo</th><th>Categoría</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["id_motivo"]."</td><td>".$Ret["motivo"]."</td><td>".$Ret["codigo"]."</td><td>".$Ret["categoria"]."</td><td><a href = 'view_modmotivos.php?ID=".$Ret["id_motivo"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_motivo"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["motivo"]."</td><td>".$Ret["codigo"]."</td><td>".$Ret["categoria"]."</td><td><a href = 'view_modmotivos.php?ID=".$Ret["id_motivo"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_motivo"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -381,10 +381,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select C.id_categoria, C.cod_categoria, C.categoria, F.Forma_Categoria, C.color from categoria C, formas_categorias F where C.ID_Forma = F.ID_Forma and C.estado = 1 order by C.id_categoria";
 		$MessageError = "Problemas al intentar mostrar Categorias";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Categoría</th><th>Forma</th><th>Color</th></tr></thead>";//<th>Codigo</th> <td>".$Ret["cod_categoria"]."</td>
+		$Table = "<table class='table'><thead><tr><th>Categoría</th><th>Forma</th><th>Color</th><th colspan='3'></th></tr></thead>";//<th>Codigo</th> <td>".$Ret["cod_categoria"]."</td>
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["id_categoria"]."</td><td>".$Ret["categoria"]."</td><td style='font-size: 40px; text-align: center; padding: 0; color: ".$Ret["color"]."'>".$Ret["Forma_Categoria"]."</td><td style= 'background-color: ".$Ret["color"]."; color: #fff;'></td><td><a href = 'view_vercategorias.php?ID=".$Ret["id_categoria"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modcategorias.php?ID=".$Ret["id_categoria"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_categoria"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["categoria"]."</td><td style='font-size: 40px; text-align: center; padding: 0; color: ".$Ret["color"]."'>".$Ret["Forma_Categoria"]."</td><td style= 'background-color: ".$Ret["color"]."; color: #fff;'></td><td><a href = 'view_vercategorias.php?ID=".$Ret["id_categoria"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modcategorias.php?ID=".$Ret["id_categoria"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_categoria"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -397,10 +397,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select C.id_categoria, C.cod_categoria, C.categoria, F.Forma_Categoria, C.color from categoria C, formas_categorias F where C.ID_Forma = F.ID_Forma and C.id_categoria = $ID and C.estado = 1 order by C.id_categoria";
 		$MessageError = "Problemas al intentar mostrar Categorias por ID";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Categoría</th><th>Forma</th><th>Color</th></tr></thead>";//<th>Codigo</th>  <td>".$Ret["cod_categoria"]."</td>
+		$Table = "<table class='table'><thead><tr><th>Categoría</th><th>Forma</th><th>Color</th><th colspan='3'></th></tr></thead>";//<th>Codigo</th>  <td>".$Ret["cod_categoria"]."</td>
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["id_categoria"]."</td><td>".$Ret["categoria"]."</td><td style='font-size: 40px; text-align: center; padding: 0; color: ".$Ret["color"]."'>".$Ret["Forma_Categoria"]."</td><td style= 'background-color: ".$Ret["color"]."; color: #fff;'></td><td><a href = 'view_vercategorias.php?ID=".$Ret["id_categoria"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modcategorias.php?ID=".$Ret["id_categoria"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_categoria"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["categoria"]."</td><td style='font-size: 40px; text-align: center; padding: 0; color: ".$Ret["color"]."'>".$Ret["Forma_Categoria"]."</td><td style= 'background-color: ".$Ret["color"]."; color: #fff;'></td><td><a href = 'view_vercategorias.php?ID=".$Ret["id_categoria"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modcategorias.php?ID=".$Ret["id_categoria"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_categoria"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -413,10 +413,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select C.id_categoria, C.cod_categoria, C.categoria, F.Forma_Categoria, C.color from categoria C, formas_categorias F where C.ID_Forma = F.ID_Forma and C.cod_categoria like '%$Codigo%' and C.estado = 1 order by C.id_categoria";
 		$MessageError = "Problemas al intentar mostrar Categorias por Codigo";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Categoría</th><th>Forma</th><th>Color</th></tr></thead>";//<th>Codigo</th>  <td>".$Ret["cod_categoria"]."</td>
+		$Table = "<table class='table'><thead><tr><th>Categoría</th><th>Forma</th><th>Color</th><th colspan='3'></th></tr></thead>";//<th>Codigo</th>  <td>".$Ret["cod_categoria"]."</td>
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["id_categoria"]."</td><td>".$Ret["categoria"]."</td><td style='font-size: 40px; text-align: center; padding: 0; color: ".$Ret["color"]."'>".$Ret["Forma_Categoria"]."</td><td style= 'background-color: ".$Ret["color"]."; color: #fff;'></td><td><a href = 'view_vercategorias.php?ID=".$Ret["id_categoria"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modcategorias.php?ID=".$Ret["id_categoria"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_categoria"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["categoria"]."</td><td style='font-size: 40px; text-align: center; padding: 0; color: ".$Ret["color"]."'>".$Ret["Forma_Categoria"]."</td><td style= 'background-color: ".$Ret["color"]."; color: #fff;'></td><td><a href = 'view_vercategorias.php?ID=".$Ret["id_categoria"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modcategorias.php?ID=".$Ret["id_categoria"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_categoria"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -429,10 +429,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select C.id_categoria, C.cod_categoria, C.categoria, F.Forma_Categoria, C.color from categoria C, formas_categorias F where C.ID_Forma = F.ID_Forma and C.categoria like '%$Categoria%' and C.estado = 1 order by C.id_categoria";
 		$MessageError = "Problemas al intentar mostrar Categorias por Categoría";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Categoría</th><th>Forma</th><th>Color</th></tr></thead>";//<th>Codigo</th>  <td>".$Ret["cod_categoria"]."</td>
+		$Table = "<table class='table'><thead><tr><th>Categoría</th><th>Forma</th><th>Color</th><th colspan='3'></th></tr></thead>";//<th>Codigo</th>  <td>".$Ret["cod_categoria"]."</td>
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["id_categoria"]."</td><td>".$Ret["categoria"]."</td><td style='font-size: 40px; text-align: center; padding: 0; color: ".$Ret["color"]."'>".$Ret["Forma_Categoria"]."</td><td style= 'background-color: ".$Ret["color"]."; color: #fff;'></td><td><a href = 'view_vercategorias.php?ID=".$Ret["id_categoria"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modcategorias.php?ID=".$Ret["id_categoria"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_categoria"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["categoria"]."</td><td style='font-size: 40px; text-align: center; padding: 0; color: ".$Ret["color"]."'>".$Ret["Forma_Categoria"]."</td><td style= 'background-color: ".$Ret["color"]."; color: #fff;'></td><td><a href = 'view_vercategorias.php?ID=".$Ret["id_categoria"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modcategorias.php?ID=".$Ret["id_categoria"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_categoria"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -447,10 +447,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select id_resp, responsable from responsable where estado = 1 order by id_resp";
 		$MessageError = "Problemas al intentar mostrar Responsables";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Responsable</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Responsable</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["id_resp"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_modresponsables.php?ID=".$Ret["id_resp"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_resp"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["responsable"]."</td><td><a href = 'view_modresponsables.php?ID=".$Ret["id_resp"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_resp"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -463,10 +463,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select id_resp, responsable from responsable where id_resp = $ID and estado = 1 order by id_resp";
 		$MessageError = "Problemas al intentar mostrar Responsables por ID";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Responsable</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Responsable</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["id_resp"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_modresponsables.php?ID=".$Ret["id_resp"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_resp"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["responsable"]."</td><td><a href = 'view_modresponsables.php?ID=".$Ret["id_resp"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_resp"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -479,10 +479,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select id_resp, responsable from responsable where responsable like '%$Responsable%' and estado = 1 order by id_resp";
 		$MessageError = "Problemas al intentar mostrar Responsables por Responsable";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Responsable</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Responsable</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["id_resp"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_modresponsables.php?ID=".$Ret["id_resp"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_resp"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["responsable"]."</td><td><a href = 'view_modresponsables.php?ID=".$Ret["id_resp"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_resp"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -497,10 +497,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select id_centro, centro_salud from centros_salud where estado = 1 order by id_centro";
 		$MessageError = "Problemas al intentar mostrar Centros de Salud";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Centro de Salud</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Centro de Salud</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["id_centro"]."</td><td>".$Ret["centro_salud"]."</td><td><a href = 'view_modcentros.php?ID=".$Ret["id_centro"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_centro"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["centro_salud"]."</td><td><a href = 'view_modcentros.php?ID=".$Ret["id_centro"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_centro"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -513,10 +513,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select id_centro, centro_salud from centros_salud where id_centro = $ID and estado = 1 order by id_centro";
 		$MessageError = "Problemas al intentar mostrar Centros de Salud por ID";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Centro de Salud</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Centro de Salud</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["id_centro"]."</td><td>".$Ret["centro_salud"]."</td><td><a href = 'view_modcentros.php?ID=".$Ret["id_centro"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_centro"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["centro_salud"]."</td><td><a href = 'view_modcentros.php?ID=".$Ret["id_centro"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_centro"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -529,10 +529,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select id_centro, centro_salud from centros_salud where centro_salud like '%$Centro%' and estado = 1 order by id_centro";
 		$MessageError = "Problemas al intentar mostrar Centros de Salud por Nombre de Centro";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Centro de Salud</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Centro de Salud</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["id_centro"]."</td><td>".$Ret["centro_salud"]."</td><td><a href = 'view_modcentros.php?ID=".$Ret["id_centros"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_centro"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["centro_salud"]."</td><td><a href = 'view_modcentros.php?ID=".$Ret["id_centros"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_centro"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -547,10 +547,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select E.ID_Escuela, E.Escuela, E.Localidad, N.Nivel from escuelas E, nivel_escuelas N where E.ID_Nivel = N.ID_Nivel and E.Estado = 1 order by E.ID_Escuela";
 		$MessageError = "Problemas al intentar mostrar Escuelas";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Escuela</th><th>Localidad</th><th>Nivel</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Escuela</th><th>Localidad</th><th>Nivel</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["ID_Escuela"]."</td><td>".$Ret["Escuela"]."</td><td>".$Ret["Localidad"]."</td><td>".$Ret["Nivel"]."</td><td><a href = 'view_modescuelas.php?ID=".$Ret["ID_Escuela"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["ID_Escuela"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["Escuela"]."</td><td>".$Ret["Localidad"]."</td><td>".$Ret["Nivel"]."</td><td><a href = 'view_modescuelas.php?ID=".$Ret["ID_Escuela"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["ID_Escuela"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -563,10 +563,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select E.ID_Escuela, E.Escuela, E.Localidad, N.Nivel from escuelas E, nivel_escuelas N where E.ID_Nivel = N.ID_Nivel and E.ID_Escuela = $ID and E.Estado = 1 order by E.ID_Escuela";
 		$MessageError = "Problemas al intentar mostrar Escuelas por ID";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Escuela</th><th>Localidad</th><th>Nivel</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Escuela</th><th>Localidad</th><th>Nivel</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["ID_Escuela"]."</td><td>".$Ret["Escuela"]."</td><td>".$Ret["Localidad"]."</td><td>".$Ret["Nivel"]."</td><td><a href = 'view_modescuelas.php?ID=".$Ret["ID_Escuela"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["ID_Escuela"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["Escuela"]."</td><td>".$Ret["Localidad"]."</td><td>".$Ret["Nivel"]."</td><td><a href = 'view_modescuelas.php?ID=".$Ret["ID_Escuela"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["ID_Escuela"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -579,10 +579,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select E.ID_Escuela, E.Escuela, E.Localidad, N.Nivel from escuelas E, nivel_escuelas N where E.ID_Nivel = N.ID_Nivel and E.Escuela like '%$Escuela%' and E.Estado = 1 order by E.ID_Escuela";
 		$MessageError = "Problemas al intentar mostrar Escuelas por Nombre de Escuela";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Escuela</th><th>Localidad</th><th>Nivel</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Escuela</th><th>Localidad</th><th>Nivel</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["ID_Escuela"]."</td><td>".$Ret["Escuela"]."</td><td>".$Ret["Localidad"]."</td><td>".$Ret["Nivel"]."</td><td><a href = 'view_modescuelas.php?ID=".$Ret["ID_Escuela"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["ID_Escuela"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["Escuela"]."</td><td>".$Ret["Localidad"]."</td><td>".$Ret["Nivel"]."</td><td><a href = 'view_modescuelas.php?ID=".$Ret["ID_Escuela"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["ID_Escuela"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -647,10 +647,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select ID_Barrio, Barrio from barrios where estado = 1 order by Barrio";
 		$MessageError = "Problemas al intentar mostrar Barrios";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Barrio</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Barrio</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["ID_Barrio"]."</td><td>".$Ret["Barrio"]."</td><td><a href = 'view_modbarrios.php?ID=".$Ret["ID_Barrio"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='Verificar(".$Ret["ID_Barrio"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["Barrio"]."</td><td><a href = 'view_modbarrios.php?ID=".$Ret["ID_Barrio"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='Verificar(".$Ret["ID_Barrio"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -663,10 +663,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select ID_Barrio, Barrio from barrios where ID_Barrio = $ID and estado = 1 order by Barrio";
 		$MessageError = "Problemas al intentar mostrar Barrios por ID";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Barrio</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Barrio</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["ID_Barrio"]."</td><td>".$Ret["Barrio"]."</td><td><a href = 'view_modbarrios.php?ID=".$Ret["ID_Barrio"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='Verificar(".$Ret["ID_Barrio"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["Barrio"]."</td><td><a href = 'view_modbarrios.php?ID=".$Ret["ID_Barrio"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='Verificar(".$Ret["ID_Barrio"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -679,10 +679,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select ID_Barrio, Barrio from barrios where Barrio like '%$xBarrio%' and estado = 1 order by Barrio";
 		$MessageError = "Problemas al intentar mostrar Barrios por Nombre";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Barrio</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Barrio</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["ID_Barrio"]."</td><td>".$Ret["Barrio"]."</td><td><a href = 'view_modbarrios.php?ID=".$Ret["ID_Barrio"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='Verificar(".$Ret["ID_Barrio"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["Barrio"]."</td><td><a href = 'view_modbarrios.php?ID=".$Ret["ID_Barrio"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='Verificar(".$Ret["ID_Barrio"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -695,10 +695,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select ID_OtraInstitucion, Nombre, Telefono, Mail from otras_instituciones where estado = 1 order by Nombre";
 		$MessageError = "Problemas al intentar mostrar Instituciones";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Nombre</th><th>Telefono</th><th>E-Mail</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Nombre</th><th>Telefono</th><th>E-Mail</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["ID_OtraInstitucion"]."</td><td>".$Ret["Nombre"]."</td><td>".$Ret["Telefono"]."</td><td>".$Ret["Mail"]."</td><td><a href = 'view_modotrasinstituciones.php?ID=".$Ret["ID_OtraInstitucion"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='Verificar(".$Ret["ID_OtraInstitucion"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["Nombre"]."</td><td>".$Ret["Telefono"]."</td><td>".$Ret["Mail"]."</td><td><a href = 'view_modotrasinstituciones.php?ID=".$Ret["ID_OtraInstitucion"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='Verificar(".$Ret["ID_OtraInstitucion"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -711,10 +711,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select ID_OtraInstitucion, Nombre, Telefono, Mail from otras_instituciones where ID_OtraInstitucion = $ID and estado = 1 order by Nombre";
 		$MessageError = "Problemas al intentar mostrar Instituciones";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Nombre</th><th>Telefono</th><th>E-Mail</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Nombre</th><th>Telefono</th><th>E-Mail</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["ID_OtraInstitucion"]."</td><td>".$Ret["Nombre"]."</td><td>".$Ret["Telefono"]."</td><td>".$Ret["Mail"]."</td><td><a href = 'view_modotrasinstituciones.php?ID=".$Ret["ID_OtraInstitucion"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='Verificar(".$Ret["ID_OtraInstitucion"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["Nombre"]."</td><td>".$Ret["Telefono"]."</td><td>".$Ret["Mail"]."</td><td><a href = 'view_modotrasinstituciones.php?ID=".$Ret["ID_OtraInstitucion"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='Verificar(".$Ret["ID_OtraInstitucion"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -727,10 +727,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select ID_OtraInstitucion, Nombre, Telefono, Mail from otras_instituciones where Nombre like '%$Nombre%' and estado = 1 order by Nombre";
 		$MessageError = "Problemas al intentar mostrar Instituciones";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Nombre</th><th>Telefono</th><th>E-Mail</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Nombre</th><th>Telefono</th><th>E-Mail</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["ID_OtraInstitucion"]."</td><td>".$Ret["Nombre"]."</td><td>".$Ret["Telefono"]."</td><td>".$Ret["Mail"]."</td><td><a href = 'view_modotrasinstituciones.php?ID=".$Ret["ID_OtraInstitucion"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='Verificar(".$Ret["ID_OtraInstitucion"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["Nombre"]."</td><td>".$Ret["Telefono"]."</td><td>".$Ret["Mail"]."</td><td><a href = 'view_modotrasinstituciones.php?ID=".$Ret["ID_OtraInstitucion"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='Verificar(".$Ret["ID_OtraInstitucion"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -743,10 +743,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select ID_OtraInstitucion, Nombre, Telefono, Mail from otras_instituciones where Telefono like '%$Telefono%' and estado = 1 order by Nombre";
 		$MessageError = "Problemas al intentar mostrar Instituciones";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Nombre</th><th>Telefono</th><th>E-Mail</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Nombre</th><th>Telefono</th><th>E-Mail</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["ID_OtraInstitucion"]."</td><td>".$Ret["Nombre"]."</td><td>".$Ret["Telefono"]."</td><td>".$Ret["Mail"]."</td><td><a href = 'view_modotrasinstituciones.php?ID=".$Ret["ID_OtraInstitucion"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='Verificar(".$Ret["ID_OtraInstitucion"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["Nombre"]."</td><td>".$Ret["Telefono"]."</td><td>".$Ret["Mail"]."</td><td><a href = 'view_modotrasinstituciones.php?ID=".$Ret["ID_OtraInstitucion"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='Verificar(".$Ret["ID_OtraInstitucion"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -759,10 +759,10 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select ID_OtraInstitucion, Nombre, Telefono, Mail from otras_instituciones where Mail like '%$Mail%' and estado = 1 order by Nombre";
 		$MessageError = "Problemas al intentar mostrar Instituciones";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Nombre</th><th>Telefono</th><th>E-Mail</th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th>Nombre</th><th>Telefono</th><th>E-Mail</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["ID_OtraInstitucion"]."</td><td>".$Ret["Nombre"]."</td><td>".$Ret["Telefono"]."</td><td>".$Ret["Mail"]."</td><td><a href = 'view_modotrasinstituciones.php?ID=".$Ret["ID_OtraInstitucion"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='Verificar(".$Ret["ID_OtraInstitucion"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["Nombre"]."</td><td>".$Ret["Telefono"]."</td><td>".$Ret["Mail"]."</td><td><a href = 'view_modotrasinstituciones.php?ID=".$Ret["ID_OtraInstitucion"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='Verificar(".$Ret["ID_OtraInstitucion"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";

@@ -222,7 +222,7 @@ $Con->CloseConexion();
                     <option value = "Nombre">Nombre</option>
                     <option value = "Telefono">Telefono</option>
                     <option value = "Mail">E-Mail</option>
-                    <option value = "ID">Id</option>
+                    <!-- <option value = "ID">Id</option> -->
                 </select>
               </div>
               <div class = "col-md-1">
