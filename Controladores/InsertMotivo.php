@@ -29,7 +29,7 @@ $Estado = 1;
 
 $Fecha = date("Y-m-d");
 $ID_TipoAccion = 1;
-$Detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Motivo. Datos: Motivo: $Motivo - Categoria : $ID_Categoria";
+$Detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Motivo. Datos: Motivo: $Motivo - Categoría : $ID_Categoria";
 
 try {
 	$Con = new Conexion();
@@ -49,7 +49,7 @@ try {
 	}else{
 		$ConsultarCod_Categoria = "select cod_categoria from categoria where id_categoria = $ID_Categoria";
 		if(!$RetCod = mysqli_query($Con->Conexion, $ConsultarCod_Categoria)){
-			throw new Exception("No se pudo consultar el codigo de la categoria seleccionada. Consulta: ".$ConsultarCod_Categoria, 1);			
+			throw new Exception("No se pudo consultar el código de la categoría seleccionada. Consulta: ".$ConsultarCod_Categoria, 1);			
 		}
 		$TomarCod_Categoria = mysqli_fetch_assoc($RetCod);
 		$Cod_Categoria = $TomarCod_Categoria["cod_categoria"];
@@ -66,7 +66,7 @@ try {
 		$Mensaje = "El Motivo se registro Correctamente";
 
 		// CREANDO NOTIFICACION PARA EL USUARIO
-		$DetalleNot = 'Se ha creado un nuevo motivo: '.$Motivo.' , codigo: '.$Codigo;
+		$DetalleNot = 'Se ha creado un nuevo motivo: '.$Motivo.' , código: '.$Codigo;
 		$Expira = date("Y-m-d", strtotime($Fecha." + 3 days"));
 		
 		$ConsultaNot = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$DetalleNot','$Fecha', '$Expira',1)";

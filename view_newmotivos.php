@@ -231,7 +231,7 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Categoria *: </label>
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Categoría *: </label>
               <div class="col-md-10">
                 <?php  
                 $Element = new Elements();
