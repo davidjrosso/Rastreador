@@ -61,7 +61,7 @@ $Con->CloseConexion();
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/DeleteCategoria.php?ID='+xID;
+                  window.location.href = 'Controladores/pedireliminarcategoria.php?ID='+xID;
                   //alert('SI');
                 } else {        
                 }
@@ -221,7 +221,7 @@ $Con->CloseConexion();
                 <select name = "ID_Filtro" class = "form-control">                  
                     <!--  <option value = "Codigo">Codigo</option>-->
                     <option value = "Categoria">Categoría</option>
-                    <option value = "ID">Id</option>
+                    <!-- <option value = "ID">Id</option> -->
                 </select>
               </div>
               <div class = "col-md-1">

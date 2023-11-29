@@ -463,6 +463,8 @@ $Con->CloseConexion();
               $ID_Persona = $_REQUEST["ID_Persona"];
               $Edad_Desde = $_REQUEST["Edad_Desde"];
               $Edad_Hasta = $_REQUEST["Edad_Hasta"];
+              $Meses_Desde = $_REQUEST["Meses_Desde"];
+              $Meses_Hasta = $_REQUEST["Meses_Hasta"];
               $Domicilio = $_REQUEST["Domicilio"];
               $Manzana =@$_REQUEST["Manzana"];
               $Lote = @$_REQUEST["Lote"];
@@ -481,6 +483,7 @@ $Con->CloseConexion();
               $Mostrar = $_REQUEST["Mostrar"];
               $ID_CentroSalud = $_REQUEST["ID_CentroSalud"];
               $ID_OtraInstitucion = $_REQUEST["ID_OtraInstitucion"];
+              $ID_Responsable = $_REQUEST["ID_Responsable"];
 
 
               $cmb_seleccion = $_REQUEST["cmb_seleccion"];
@@ -488,21 +491,27 @@ $Con->CloseConexion();
 
               // echo "<h3>$cmb_seleccion<h3>";
           	  $Consulta = "SELECT M.id_movimiento, M.id_persona, MONTH(M.fecha) as 'Mes', YEAR(M.fecha) as 'Anio', B.Barrio, P.manzana, P.lote, P.familia, P.apellido, P.nombre, P.fecha_nac, P.domicilio
-               from movimiento M, persona P, barrios B, motivo MT, categoria C, centros_salud CS, otras_instituciones I
-               WHERE M.id_persona = P.id_persona and B.ID_Barrio = P.ID_Barrio and M.id_centro = CS.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and M.estado = 1 and P.estado = 1 and MT.estado = 1 and C.estado = 1 
-               and M.fecha between '$Fecha_Inicio' and '$Fecha_Fin'"; 
-
+               from movimiento M, persona P, barrios B, motivo MT, categoria C, centros_salud CS, otras_instituciones I, responsable R
+               WHERE M.id_persona = P.id_persona and B.ID_Barrio = P.ID_Barrio and M.id_centro = CS.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and M.id_resp = R.id_resp and M.estado = 1 and P.estado = 1 and MT.estado = 1 and C.estado = 1 and M.fecha between '$Fecha_Inicio' and '$Fecha_Fin'"; 
 
               $filtros = [];
               $Con = new Conexion();
               $Con->OpenConexion();             
 
               if($ID_Persona > 0){ //P.nro_legajo,P.nro_carpeta
+                $ConsultaFlia = $Consulta;
                 $Consulta .= " and P.id_persona = $ID_Persona";
-                $ConsultarPersona = "select apellido, nombre from persona where ID_Persona = ".$ID_Persona." limit 1";
+                $ConsultarPersona = "select apellido, nombre, domicilio from persona where ID_Persona = ".$ID_Persona." limit 1";
                 $EjecutarConsultarPersona = mysqli_query($Con->Conexion,$ConsultarPersona) or die("Problemas al consultar filtro Persona");
-                $RetConsultarPersona = mysqli_fetch_assoc($EjecutarConsultarPersona);
+                $RetConsultarPersona = mysqli_fetch_assoc($EjecutarConsultarPersona);                                
                 $filtros[] = "Persona: ".$RetConsultarPersona["apellido"].", ".$RetConsultarPersona["nombre"];
+
+                $ConsultaFlia .= " and P.domicilio like '%".$RetConsultarPersona["domicilio"]."%'";
+                echo $ConsultaFlia;
+                $EjecutarConsultaFlia = mysqli_query($Con->Conexion,$ConsultaFlia) or die("Problemas al consultar filtro Flia Persona");
+                // $RetConsultaFlia = mysqli_fetch_assoc($EjecutarConsultaFlia);                                                                
+
+
               }
 
               if($Edad_Desde != null && $Edad_Desde != "" && $Edad_Hasta != null && $Edad_Hasta != ""){
@@ -511,6 +520,12 @@ $Con->CloseConexion();
                 $filtros[] = "Edad: Desde ".$Edad_Desde." hasta ".$Edad_Hasta;
               }
 
+              if($Meses_Desde != null && $Meses_Desde != "" && $Meses_Hasta != null && $Meses_Hasta != ""){
+                // $Consulta .= " and P.edad between $Edad_Desde and $Edad_Hasta";
+                $Consulta .= " and P.edad = 0 and P.meses > $Meses_Desde and P.meses < $Meses_Hasta";
+                $filtros[] = "Meses: Desde ".$Meses_Desde." hasta ".$Meses_Hasta;
+              }
+              
               if($Domicilio != null && $Domicilio != ""){
                 $Consulta .= " and P.domicilio like '%$Domicilio%'";
                 $filtros[] = "Domicilio: ".$Domicilio;
@@ -658,6 +673,13 @@ $Con->CloseConexion();
                 $filtros[] = "Otra Institucion: ".$RetConsultarOtraInstitucion['Nombre'];
               }
 
+              if($ID_Responsable > 0){
+                $Consulta .= " and R.id_resp = $ID_Responsable";
+                $ConsultarResponsable = "select responsable from responsable where id_resp = ".$ID_Responsable." limit 1";
+                $EjecutarConsultarResponsable = mysqli_query($Con->Conexion,$ConsultarResponsable) or die("Problemas al consultar filtro Responsable");
+                $RetConsultarResponsable = mysqli_fetch_assoc($EjecutarConsultarResponsable);   
+                $filtros[] = "Responsable: ".$RetConsultarResponsable['responsable'];
+              }
 
               if($ID_Persona > 0){
                 // SE PUEDE ROMPER
@@ -898,6 +920,10 @@ $Con->CloseConexion();
 
                 if($Edad_Desde != null && $Edad_Desde != "" && $Edad_Hasta != null && $Edad_Hasta != ""){                  
                   $ConsultarTodos .= " and P.edad > $Edad_Desde and P.edad < $Edad_Hasta";
+                }
+
+                if($Meses_Desde != null && $Meses_Desde != "" && $Meses_Hasta != null && $Meses_Hasta != ""){                  
+                  $ConsultarTodos .= " and P.edad = 0 and P.meses > $Meses_Desde and P.meses < $Meses_Hasta";
                 }
 
                 if($Domicilio != null && $Domicilio != ""){
@@ -1628,6 +1654,13 @@ $Con->CloseConexion();
               //////////////////////////////////////////////////////////////////////////////////
               //////////////////////////////////////////////////////////////////////////////////
 
+              }
+
+              // BUSCARLE LA VUELTA TODO:
+              if($ID_Persona > 0){
+                  while($RetConsultaFlia = mysqli_fetch_assoc($EjecutarConsultaFlia)){
+                     echo $RetConsultaFlia;
+                  }
               }
             
               $Table .= "</tbody>";

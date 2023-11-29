@@ -234,13 +234,13 @@ $Con->CloseConexion();
               ?>
             <div class = "col-10">
             <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/ModificarOtraInstitucion.php">
-                <div class="form-group row">
+                <!-- <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Id: </label>
                   <div class="col-md-10">
-                    <label for="inputPassword" class="col-md-2 col-form-label LblForm"><?php echo $InstInstitucion->getID_OtraInstitucion(); ?></label>
-                    <input type="hidden" name="ID" value = "<?php echo $InstInstitucion->getID_OtraInstitucion(); ?>">
+                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">< ?php echo $InstInstitucion->getID_OtraInstitucion(); ?></label>
                   </div>
-                </div>
+                </div> -->
+                <input type="hidden" name="ID" value = "<?php echo $InstInstitucion->getID_OtraInstitucion(); ?>">
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nombre: </label>
                   <div class="col-md-10">

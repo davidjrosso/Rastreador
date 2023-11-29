@@ -62,8 +62,8 @@ try {
 		$RetID_Categoria = $TomarID_Categoria["id_categoria"];
 
 		// CREANDO NOTIFICACION PARA EL USUARIO
-		$DetalleNot = 'Se ha creado una nueva categoria: '.$Categoria.' , codigo: '.$Codigo;
-		$Expira = date("Y-m-d", strtotime($Fecha." + 3 days"));
+		$DetalleNot = 'Se ha creado una nueva categoría: '.$Categoria.' , codigo: '.$Codigo;
+		$Expira = date("Y-m-d", strtotime($Fecha." + 30 days"));
 		
 		$ConsultaNot = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$DetalleNot','$Fecha', '$Expira',1)";
 		if(!$RetNot = mysqli_query($Con->Conexion,$ConsultaNot)){

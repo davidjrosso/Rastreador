@@ -1,4 +1,4 @@
 <?php
 // VARIABLES DE SISTEMA
-define('NOMBRE_ENTIDAD', 'Municipalidad de Tancacha');
+define('NOMBRE_ENTIDAD', 'Municipalidad de Río Tercero');
 ?>

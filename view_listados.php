@@ -256,6 +256,34 @@ $Con->CloseConexion();
       ID_Config.value = formatConfig.value;      
     }
 
+    function habilitarMeses(xElemento){
+        meses_desde = document.getElementById('Meses_Desde');
+        meses_hasta = document.getElementById('Meses_Hasta');
+        elem = xElemento.value;
+
+        if(elem !== ""){
+          meses_desde.setAttribute('disabled', true);
+          meses_hasta.setAttribute('disabled', true);
+        }else{
+          meses_desde.removeAttribute('disabled');
+          meses_hasta.removeAttribute('disabled');
+        }
+      }
+      
+      function habilitarEdad(xElemento){
+        edad_desde = document.getElementById('Edad_Desde');
+        edad_hasta = document.getElementById('Edad_Hasta');
+        elem = xElemento.value;
+
+        if(elem !== ""){
+          edad_desde.setAttribute('disabled', true);
+          edad_hasta.setAttribute('disabled', true);
+        }else{
+          edad_desde.removeAttribute('disabled');
+          edad_hasta.removeAttribute('disabled');
+        }
+      }
+
   </script>
 </head>
 <body>
@@ -414,14 +442,26 @@ $Con->CloseConexion();
             <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Desde (Edad): </label>
                   <div class="col-md-10">
-                      <input type="number" name="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números">
+                      <input type="number" name="Edad_Desde" id="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarMeses(this)">
                       <input type="hidden" name="ID_Persona" id = "ID_Persona" value = "0">
                   </div>
             </div> 
             <div class="form-group row">
                 <label for="inputPassword" class="col-md-2 col-form-label LblForm">Hasta (Edad): </label>
                 <div class="col-md-10">
-                    <input type="number" name="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números">
+                    <input type="number" name="Edad_Hasta" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarMeses(this)">
+                </div>
+            </div> 
+            <div class="form-group row">
+                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Desde (Meses): </label>
+                  <div class="col-md-10">
+                      <input type="number" name="Meses_Desde" id="Meses_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarEdad(this)">
+                  </div>
+            </div> 
+            <div class="form-group row">
+                <label for="inputPassword" class="col-md-2 col-form-label LblForm">Hasta (Meses): </label>
+                <div class="col-md-10">
+                    <input type="number" name="Meses_Hasta" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarEdad(this)">
                 </div>
             </div> 
             <div class="form-group row">
@@ -457,7 +497,7 @@ $Con->CloseConexion();
                 ?>
               </div>
               <div class="col-md-1">
-                  <button type="button" class="btn btn-primary" onClick="agregarBarrio()" id="agregarBarrio">+</button>
+                  <button type="button" class="btn btn-primary" onClick="agregarBarrio()" id="agregarBarrioID">+</button>
               </div>
             </div>
             <div id="contenedorBarrios">              
@@ -531,6 +571,15 @@ $Con->CloseConexion();
                 <?php  
                 $Element = new Elements();
                 echo $Element->CBRepOtrasInstituciones();
+                ?>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Responsable: </label>
+              <div class="col-md-10">
+                <?php  
+                $Element = new Elements();
+                echo $Element->CBRepResponsable();
                 ?>
               </div>
             </div>
@@ -772,8 +821,8 @@ $Con->CloseConexion();
                 </div>
                 <div class="col-4">
                   <select class="input-group mb-3" name="formatConfig" id="formatConfig" onchange="cambiarConfig()">
-                    <option value="grid">Grid</option>
-                    <option value="table">Table</option>
+                    <option value="grid">Grilla</option>
+                    <option value="table">Tabla</option>
                   </select>
                 </div>
               </div>              

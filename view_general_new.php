@@ -398,6 +398,34 @@ $Con->CloseConexion();
 
     }
 
+      function habilitarMeses(xElemento){
+        meses_desde = document.getElementById('Meses_Desde');
+        meses_hasta = document.getElementById('Meses_Hasta');
+        elem = xElemento.value;
+
+        if(elem !== ""){
+          meses_desde.setAttribute('disabled', true);
+          meses_hasta.setAttribute('disabled', true);
+        }else{
+          meses_desde.removeAttribute('disabled');
+          meses_hasta.removeAttribute('disabled');
+        }
+      }
+      
+      function habilitarEdad(xElemento){
+        edad_desde = document.getElementById('Edad_Desde');
+        edad_hasta = document.getElementById('Edad_Hasta');
+        elem = xElemento.value;
+
+        if(elem !== ""){
+          edad_desde.setAttribute('disabled', true);
+          edad_hasta.setAttribute('disabled', true);
+        }else{
+          edad_desde.removeAttribute('disabled');
+          edad_hasta.removeAttribute('disabled');
+        }
+      }
+
   </script>
 </head>
 <body>
@@ -551,14 +579,26 @@ $Con->CloseConexion();
             <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Desde (Edad): </label>
                   <div class="col-md-10">
-                      <input type="number" name="Edad_Desde" id="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números">
+                      <input type="number" name="Edad_Desde" id="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarMeses(this)">
                       <input type="hidden" name="ID_Persona" id = "ID_Persona" value = "0">
                   </div>
             </div> 
             <div class="form-group row">
                 <label for="inputPassword" class="col-md-2 col-form-label LblForm">Hasta (Edad): </label>
                 <div class="col-md-10">
-                    <input type="number" name="Edad_Hasta" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números">
+                    <input type="number" name="Edad_Hasta" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarMeses(this)">
+                </div>
+            </div> 
+            <div class="form-group row">
+                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Desde (Meses): </label>
+                  <div class="col-md-10">
+                      <input type="number" name="Meses_Desde" id="Meses_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarEdad(this)">
+                  </div>
+            </div> 
+            <div class="form-group row">
+                <label for="inputPassword" class="col-md-2 col-form-label LblForm">Hasta (Meses): </label>
+                <div class="col-md-10">
+                    <input type="number" name="Meses_Hasta" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarEdad(this)">
                 </div>
             </div> 
             <div class="form-group row">
@@ -682,6 +722,15 @@ $Con->CloseConexion();
                 <?php  
                 $Element = new Elements();
                 echo $Element->CBRepOtrasInstituciones();
+                ?>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Responsable: </label>
+              <div class="col-md-10">
+                <?php  
+                $Element = new Elements();
+                echo $Element->CBRepResponsable();
                 ?>
               </div>
             </div>

@@ -216,13 +216,13 @@ $Con->CloseConexion();
               ?>
             <div class = "col-10">
             <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/ModificarResponsable.php">
-                <div class="form-group row">
+                <!-- <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Id: </label>
                   <div class="col-md-10">
-                    <label for="inputPassword" class="col-md-2 col-form-label LblForm"><?php echo $ID_Responsable; ?></label>
-                    <input type="hidden" name="ID" value = "<?php echo $ID_Responsable; ?>">
+                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">< ?php echo $ID_Responsable; ?></label>
                   </div>
-                </div>
+                </div> -->
+                <input type="hidden" name="ID" value = "<?php echo $ID_Responsable; ?>">
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Responsable: </label>
                   <div class="col-md-10">
