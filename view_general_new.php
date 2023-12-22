@@ -365,6 +365,39 @@ $Con->CloseConexion();
         resetearValorSelect("inpMostrar");
       }
 
+
+
+    //################################################################
+    
+    function habilitar_seleccion(val) {
+      // alert (val)
+      if(val!=0){      
+      
+        if(val=="todos"){
+          document.getElementById("div_manzana").hidden=false;  
+          document.getElementById("div_lote").hidden=false;  
+          document.getElementById("div_familia").hidden=false;            
+        }
+        else if(val=="manzana"){
+          document.getElementById("div_manzana").hidden=false;  
+          document.getElementById("div_lote").hidden=true;  
+          document.getElementById("div_familia").hidden=true;   
+        }
+        else if(val=="lote"){
+          document.getElementById("div_manzana").hidden=true;  
+            document.getElementById("div_lote").hidden=false;  
+           document.getElementById("div_familia").hidden=true;   
+        
+        }    
+        else{
+          document.getElementById("div_manzana").hidden=true;  
+          document.getElementById("div_lote").hidden=true;  
+         document.getElementById("div_familia").hidden=false;   
+        }                             
+      }
+
+    }
+
       function habilitarMeses(xElemento){
         meses_desde = document.getElementById('Meses_Desde');
         meses_hasta = document.getElementById('Meses_Hasta');
@@ -528,7 +561,7 @@ $Con->CloseConexion();
             <div class="form-group row">
                 <label for="inputPassword" class="col-md-2 col-form-label LblForm">Fecha desde *: </label>
                 <div class="col-md-10">
-                    <input type="text" name="Fecha_Desde" id = "Fecha_Desde" class="form-control" autocomplete="off" value = "<?php echo implode("/", array_reverse(explode("-",date('Y-m-d',strtotime(date('Y-m-d')."- 1 year"))))); ?>">
+                    <input type="text" name="Fecha_Desde" id = "Fecha_Desde" class="form-control" autocomplete="off" value = "<?php echo implode("/", array_reverse(explode("-",date('Y-m-d',strtotime(date('Y-m-d')."- 2 year"))))); ?>">
                 </div>
             </div> 
             <div class="form-group row">
@@ -574,24 +607,41 @@ $Con->CloseConexion();
                 <input type="text" class="form-control" name = "Domicilio" id="Domicilio" autocomplete="off">
               </div>
             </div>
-            <div class="form-group row">
+ <!-- ################################################################################ -->
+
+ <div class="form-group row">
+  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Maz./lote/sub-lote: </label>
+  <div class="col-md-10">
+    <select class="form-control" name="cmb_seleccion" id="cmb_seleccion"  onchange="habilitar_seleccion(this.value)">
+    	<option value="0">seleccionar</option>
+    	<option value="manzana">Manzana</option>
+      <option value="lote">Lote</option>
+      <option value="familia">Sub-lote</option>
+      <option value="todos">Todos</option>
+    </select>
+  </div>
+</div>
+            
+            <div class="form-group row" hidden id="div_manzana">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Manzana: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Manzana" id="Manzana" autocomplete="off">
               </div>
             </div>
-            <div class="form-group row">
+            <div class="form-group row" hidden id="div_lote">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Lote: </label>
               <div class="col-md-10">
                 <input type="number" class="form-control" name = "Lote" id="Lote" autocomplete="off">
               </div>
             </div>
-            <div class="form-group row">
+            <div class="form-group row" hidden id="div_familia">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Sub-lote: </label>
               <div class="col-md-10">
                 <input type="number" class="form-control" name = "Familia" id="Familia" autocomplete="off">
               </div>
             </div>
+
+<!-- ################################################################################ -->
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Barrio: </label>
               <div class="col-md-9">

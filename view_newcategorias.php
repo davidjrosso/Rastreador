@@ -199,7 +199,7 @@ $Con->CloseConexion();
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
-        <p>Nueva Categoria</p>
+        <p>Nueva Categoría</p>
       </div>
       <div class="col"></div>
     </div><br>
@@ -207,7 +207,7 @@ $Con->CloseConexion();
       <div class="col"></div>
       <div class="col-10">
           <div class="row">
-              <center><button class = "btn btn-secondary btn-sm" onClick="location.href ='view_newcategorias.php'">Agregar Nueva Categoria</button></center>
+              <center><button class = "btn btn-secondary btn-sm" onClick="location.href ='view_newcategorias.php'">Agregar Nueva Categoría</button></center>
           </div>
       </div>
       <div class="col"></div>
@@ -216,7 +216,7 @@ $Con->CloseConexion();
      <div class = "row">
       <div class = "col-10">
           <!-- Carga -->
-          <p class = "Titulos">Cargar Nueva Categoria</p>
+          <p class = "Titulos">Cargar Nueva Categoría</p>
           <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/InsertCategoria.php" onSubmit = "return ValidarCategoria();">
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Código *: </label>
@@ -232,7 +232,7 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Categoria *: </label>
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Categoría *: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Categoria" id="Categoria" autocomplete="off">
               </div>

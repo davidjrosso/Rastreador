@@ -276,6 +276,22 @@ class CtrGeneral{
 		return $Table;
 	}
 	
+
+	public function getPersonasxDomicilio($Domicilio){
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "SELECT id_persona, apellido, nombre, documento, nro_legajo,domicilio FROM persona WHERE domicilio LIKE '%$Domicilio%' AND estado = 1 ORDER BY apellido";
+		$MessageError = "Problemas al intentar mostrar Personas por Domicilio";
+		$Table = "<table class='table'><thead><tr><th>Id</th><th>Apellido</th><th>Nombre</th><th>Documento</th></th><th>Nro. Legajo</th></tr></thead>";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
+			$Table .= "<tr><td>".$Ret["id_persona"]."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["documento"]."</td><td>".$Ret["nro_legajo"]."</td><td><a href = 'view_verpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_persona"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+		}
+		$Con->CloseConexion();
+		$Table .= "</table>";
+		return $Table;
+	}
+		
 	////////////////////////////////////////////////-MOTIVOS-///////////////////////////////////////////////////
 
 	public function getMotivos(){

@@ -4,12 +4,19 @@ require_once "Controladores/Elements.php";
 require_once "Controladores/CtrGeneral.php";
 require_once "Controladores/Conexion.php";
 require_once "sys_config.php";
+
+require_once 'dompdf/autoload.inc.php';
+
+
 header("Content-Type: text/html;charset=utf-8");
+
 
 /*     CONTROL DE USUARIOS                    */
 if(!isset($_SESSION["Usuario"])){
     header("Location: Error_Session.php");
 }
+
+
 
 
 $Con = new Conexion();
@@ -46,6 +53,10 @@ $Con->CloseConexion();
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>   
   <script src="js/FileSaver.js"></script> 
   <script src="js/jquery.wordexport.js"></script> 
+  
+  <script src="html2pdf.bundle.min.js"></script>
+  
+
   <script>
 
 		function mostrar() {
@@ -84,6 +95,7 @@ $Con->CloseConexion();
 
 		
   </script>
+
   <style>
      table thead tr th{
         background-color: #ccc; 
@@ -299,6 +311,7 @@ $Con->CloseConexion();
       /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/                                                                                  
     </style>  
 </head>
+
 <body>
 <div class = "row">
    <?php  
@@ -453,9 +466,9 @@ $Con->CloseConexion();
               $Meses_Desde = $_REQUEST["Meses_Desde"];
               $Meses_Hasta = $_REQUEST["Meses_Hasta"];
               $Domicilio = $_REQUEST["Domicilio"];
-              $Manzana = $_REQUEST["Manzana"];
-              $Lote = $_REQUEST["Lote"];
-              $Familia = $_REQUEST["Familia"];
+              $Manzana =@$_REQUEST["Manzana"];
+              $Lote = @$_REQUEST["Lote"];
+              $Familia = @$_REQUEST["Familia"];
               $Barrio = $_REQUEST["ID_Barrio"];
 
               $Nro_Carpeta = $_REQUEST["Nro_Carpeta"];
@@ -472,6 +485,11 @@ $Con->CloseConexion();
               $ID_OtraInstitucion = $_REQUEST["ID_OtraInstitucion"];
               $ID_Responsable = $_REQUEST["ID_Responsable"];
 
+
+              $cmb_seleccion = $_REQUEST["cmb_seleccion"];
+
+
+              // echo "<h3>$cmb_seleccion<h3>";
           	  $Consulta = "SELECT M.id_movimiento, M.id_persona, MONTH(M.fecha) as 'Mes', YEAR(M.fecha) as 'Anio', B.Barrio, P.manzana, P.lote, P.familia, P.apellido, P.nombre, P.fecha_nac, P.domicilio
                from movimiento M, persona P, barrios B, motivo MT, categoria C, centros_salud CS, otras_instituciones I, responsable R
                WHERE M.id_persona = P.id_persona and B.ID_Barrio = P.ID_Barrio and M.id_centro = CS.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and M.id_resp = R.id_resp and M.estado = 1 and P.estado = 1 and MT.estado = 1 and C.estado = 1 and M.fecha between '$Fecha_Inicio' and '$Fecha_Fin'"; 
@@ -513,6 +531,11 @@ $Con->CloseConexion();
                 $Consulta .= " and P.domicilio like '%$Domicilio%'";
                 $filtros[] = "Domicilio: ".$Domicilio;
               }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+              // if($cmb_seleccion!= null && $cmb_seleccion != ""){
+                 
+                                                                                                             
+              // }
 
               if($Manzana != null && $Manzana != ""){
                 $Consulta .= " and P.manzana = '$Manzana'";
@@ -528,7 +551,7 @@ $Con->CloseConexion();
                 $Consulta .= " and P.familia = $Familia";
                 $filtros[] = "Sublote: ".$Familia;
               }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               if($Nro_Carpeta != null && $Nro_Carpeta != ""){
                 $Consulta.= " and P.nro_carpeta = '$Nro_Carpeta'";
                 $filtros[] = "Nro_carpeta: ".$Nro_Carpeta;
@@ -539,6 +562,7 @@ $Con->CloseConexion();
                 $filtros[] =  " Nro_legajo : ".$Nro_Legajo;
               }
 
+// ECHO "ACA ".$Consulta."<BR><BR>";
 
               if(count($Barrio) > 1){
                 $filtroBarrios = 'Barrios:';
@@ -591,7 +615,7 @@ $Con->CloseConexion();
                 $Consulta .= " and P.Trabajo like '%$Trabajo%'";
                 $filtros[] = "Trabajo: ".$Trabajo;
               }
-
+//////////////////////////////////////////////////////////////////////////// MOTIVOS ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               if($ID_Motivo > 0){
                 if($ID_Motivo2 > 0 || $ID_Motivo3 > 0){
                   $Consulta .= " and (";
@@ -625,7 +649,7 @@ $Con->CloseConexion();
                 $RetConsultarMotivo = mysqli_fetch_assoc($EjecutarConsultarMotivo);  
                 $filtros[] = "Motivo 3: ".$RetConsultarMotivo['motivo'];
               }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               if($ID_Categoria > 0){
                 $Consulta .= " and  ((M.motivo_1 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria) or (M.motivo_2 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria) or (M.motivo_3 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria))";
                 $ConsultarCategoria = "select categoria from categoria where id_categoria = ".$ID_Categoria." limit 1";
@@ -686,18 +710,24 @@ $Con->CloseConexion();
         <!-- < ?php echo "DEBUG: ".$Consulta; ?>       -->
         <?php
         // echo "DEBUG: ".$Consulta;
+        
           foreach($filtros as $value){
             echo "<span class='etFiltros'>".$value."</span> ";
+            
           }
         
      
         ?>
+
       </div>
       <div class="col">
       
-        <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_general_new.php'">Atras</button>
+        <button type = "button" class = "btn btn-danger" onclick = "location.href = 'view_general_new.php'">Atras</button>
         
-        <button type="button" class="btn btn-secondary" onClick="enviarImprimir()" disabled>Imprimir</button>
+        <button type="button" class="btn btn-secondary" onclick="enviarImprimir()" >**Imprimir</button>
+
+        <button type="button" class="btn btn-secondary" onclick="enviarImprimirPdf();" > Imprimir</button>
+        
       </div>
     
     </div>
@@ -709,8 +739,10 @@ $Con->CloseConexion();
       </div>
      <div class = "row">
       <div class = "col-md-12">
-        <!-- < ?php echo "DEBUG: ".$Consulta; ?> -->
+        <!-- <
+        ?php echo "DEBUG: ".$Consulta; ?> -->
           <!-- Search -->
+          
         <div class = "table-responsive" id="tabla-responsive">
           <?php                
               $Con = new Conexion();
@@ -727,11 +759,11 @@ $Con->CloseConexion();
               /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               // TOMANDO LOS ID DE LOS MOVIMIENTOS PARA LUEGO HACER LA COMPARACION PARA EL PINTADO DE LOS MOTIVOS.
               $ResultadosPrincipal = $Con->ResultSet->fetch_array();
-              // echo "DEBUG DATOS IDS: ".var_dump($ResultadosPrincipal);
+              // echo "DEBUG DATOS IDS: ".var_dump($ResultadosPrincipal[5]);
 
               $arrIDMovimientos = array();
-
-              // var_dump($ResultadosPrincipal["id_movimiento"]);
+              
+              // var_dump($ResultadosPrincipal["Manzana"]);
 
               // if($ResultadosPrincipal->num_rows > 1){
 
@@ -753,7 +785,7 @@ $Con->CloseConexion();
               
                 
               /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-              /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+              ////////////////////////////////////////////   TABLA HEAD    ////////////////////////////////////////////////////////
               /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
               if($Con->ResultSet->num_rows == 0){  
@@ -763,16 +795,40 @@ $Con->CloseConexion();
               	echo "<p class = 'TextoSinResultados'>No se encontraron Resultados</p>";
               	echo "</div>";
               	// echo "<div class = 'col'></div>";
-              }else{                               
+              }else{            
+               
+
+                  // $Manzana_sel=true;
+                  // $Lote_sel=true;
+                  // $Familia_sel=true;
+                
+             
+             
+             
+                
               	$Table = "<table class='table table-fixeder table-bordered table-sm' cellspacing='0' id='tablaMovimientos'>
                              <thead class='thead-dark'>
                               <tr align='center' valign='middle'>
                               <th id='Contenido-Titulo-1'>Barrio</th>
-                              <th id='Contenido-Titulo-2'>Direc.</th>
-                              <th id='Contenido-Titulo-3' name='datosflia' style='max-width: 50px;'>Mz.</th>
-                              <th id='Contenido-Titulo-4' name='datosflia' style='max-width: 50px;'>Lote</th>
-                              <th id='Contenido-Titulo-5' name='datosflia' style='max-width: 50px;'>Sublote.</th>
-                              <th id='Contenido-Titulo-6'>Persona</th>
+                              <th id='Contenido-Titulo-2'>Direc.</th>";
+                            if($cmb_seleccion!= null && $cmb_seleccion != ""){
+                              if($cmb_seleccion=="manzana"){
+                                $Table.="<th id='Contenido-Titulo-3' name='datosflia' style='max-width: 50px;'>Mz.</th>";
+                              }
+                              if($cmb_seleccion=="lote"){
+                                $Table.="<th id='Contenido-Titulo-4' name='datosflia' style='max-width: 50px;'>Lote</th>";
+                              }
+                              if($cmb_seleccion=="familia"){
+                                $Table.="<th id='Contenido-Titulo-5' name='datosflia' style='max-width: 50px;'>Sublote</th>";
+                              }
+                              if ($cmb_seleccion=="todos"){
+                                $Table.="<th id='Contenido-Titulo-3' name='datosflia' style='max-width: 50px;'>Mz.</th>
+                                <th id='Contenido-Titulo-4' name='datosflia' style='max-width: 50px;'>Lote</th>
+                                <th id='Contenido-Titulo-5' name='datosflia' style='max-width: 50px;'>Sublote</th>";
+
+                              }
+                            }    
+                              $Table.="<th id='Contenido-Titulo-6'>Persona</th>
                               <th id='Contenido-Titulo-7' style='max-width: 100px;'>Fecha Nac.</th>";                
               } 
 
@@ -836,7 +892,7 @@ $Con->CloseConexion();
               
 
               // echo "DEBUG:".var_dump($arr);
-
+          // ob_start();   
 
               $Table .= "</tr>
                     </thead>
@@ -874,7 +930,7 @@ $Con->CloseConexion();
                 if($Domicilio != null && $Domicilio != ""){
                   $ConsultarTodos .= " and P.domicilio like '%$Domicilio%'";
                 }
-
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 if($Manzana != null && $Manzana != ""){
                   $ConsultarTodos .= " and P.manzana = '$Manzana'";
                 }
@@ -886,6 +942,7 @@ $Con->CloseConexion();
                 if($Familia != null && $Familia != ""){
                   $ConsultarTodos .= " and P.familia = $Familia";
                 }
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 if($Nro_Carpeta != null && $Nro_Carpeta != ""){
                   $ConsultarTodos .= " and P.nro_carpeta = $Nro_Carpeta";
@@ -1259,11 +1316,36 @@ $Con->CloseConexion();
                   // echo "Entra aca SM";
                   $Table .= "<tr class='SinMovimientos Datos'>";
                   $Table .= "<td id='Contenido-1'>".$RetTodos["Barrio"]."</td>
-                  <td id='Contenido-2'>".$RetTodos["domicilio"]."</td>
-                  <td id='Contenido-3' name='datosflia' style='max-width: 50px;'>".$RetTodos["manzana"]."</td>
-                  <td id='Contenido-4' name='datosflia' style='max-width: 50px;'>".$RetTodos["lote"]."</td>
-                  <td id='Contenido-5' name='datosflia' style='max-width: 60px;'>".$RetTodos["familia"]."</td>
-                  <td id='Contenido-6'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$RetTodos["apellido"].", ".$RetTodos["nombre"]."</a></td>
+                  <td id='Contenido-2'>".$RetTodos["domicilio"]."</td>";
+
+                  if($cmb_seleccion!= null && $cmb_seleccion != ""){
+
+                    if($cmb_seleccion=="manzana"){
+                      $Table .= "<td id='Contenido-3' name='datosflia' style='max-width: 50px;'>".$RetTodos["manzana"]."</td>";                    
+                     
+                    }
+
+                    if($cmb_seleccion=="lote"){
+                      $Table .= "<td id='Contenido-4' name='datosflia' style='max-width: 50px;'>".$RetTodos["lote"]."</td>";
+                    }
+
+                    if($cmb_seleccion=="familia"){
+                      $Table .= "<td id='Contenido-5' name='datosflia' style='max-width: 60px;'>".$RetTodos["familia"]."</td>";
+                    }
+
+                    if($cmb_seleccion=="todos"){
+                      $Table .= "<td id='Contenido-3' name='datosflia' style='max-width: 50px;'>".$RetTodos["manzana"]."</td>
+                      <td id='Contenido-4' name='datosflia' style='max-width: 50px;'>".$RetTodos["lote"]."</td>
+                      <td id='Contenido-5' name='datosflia' style='max-width: 60px;'>".$RetTodos["familia"]."</td>";
+
+                    }
+                  }
+                  
+                  
+                  
+                  
+                
+                  $Table .=" <td id='Contenido-6'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$RetTodos["apellido"].", ".$RetTodos["nombre"]."</a></td>
                   <td id='Contenido-7' style='max-width: 100px;'>".$Fecha_Nacimiento."</td>";
   
                   $ColSpans = $MesesDiferencia * 270;
@@ -1283,11 +1365,43 @@ $Con->CloseConexion();
                   // }
 
                   $Table .= "<tr class='Datos'>";
-                  $Table .= "<td id='Contenido-1'>".$RetTodos["Barrio"]."</td>
-                  <td id='Contenido-2'>".$RetTodos["domicilio"]."</td>
-                  <td id='Contenido-3' name='datosflia' style='max-width: 50px;'>".$RetTodos["manzana"]."</td>
-                  <td id='Contenido-4' name='datosflia' style='max-width: 50px;'>".$RetTodos["lote"]."</td>
-                  <td id='Contenido-5' name='datosflia' style='max-width: 60px;'>".$RetTodos["familia"]."</td>
+                  $Table .= "<td id='Contenido-1'>".$RetTodos["Barrio"]."</td><td id='Contenido-2'>".$RetTodos["domicilio"]."</td>";
+                  
+                  
+                  if($cmb_seleccion!= null && $cmb_seleccion != ""){
+
+                    if($cmb_seleccion=="manzana"){
+                      $Table .= "<td id='Contenido-3' name='datosflia' style='max-width: 50px;'>".$RetTodos["manzana"]."</td>";                    
+                     
+                    }
+
+                    if($cmb_seleccion=="lote"){
+                      $Table .= "<td id='Contenido-4' name='datosflia' style='max-width: 50px;'>".$RetTodos["lote"]."</td>";
+                    }
+
+                    if($cmb_seleccion=="familia"){
+                      $Table .= "<td id='Contenido-5' name='datosflia' style='max-width: 60px;'>".$RetTodos["familia"]."</td>";
+                    }
+
+                    if($cmb_seleccion=="todos"){
+                      $Table .= "<td id='Contenido-3' name='datosflia' style='max-width: 50px;'>".$RetTodos["manzana"]."</td>
+                      <td id='Contenido-4' name='datosflia' style='max-width: 50px;'>".$RetTodos["lote"]."</td>
+                      <td id='Contenido-5' name='datosflia' style='max-width: 60px;'>".$RetTodos["familia"]."</td>";
+
+                    }
+                  }
+
+                  // if($Manzana != null && $Manzana != ""){ 
+                    // $Table.="<td id='Contenido-3' name='datosflia' style='max-width: 50px;'>".$RetTodos["manzana"]."</td>";
+                  // }
+                  // if($Lote != null && $Lote != ""){
+                  // 
+                    // $Table.="<td id='Contenido-4' name='datosflia' style='max-width: 50px;'>".$RetTodos["lote"]."</td>";
+                  // }
+                  // if($Familia != null && $Familia != ""){
+                    // $Table.="<td id='Contenido-5' name='datosflia' style='max-width: 60px;'>".$RetTodos["familia"]."</td>";
+                  // }
+                  $Table.=" 
                   <td id='Contenido-6'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$RetTodos["apellido"].", ".$RetTodos["nombre"]."</a></td>
                   <td id='Contenido-7' style='max-width: 100px;'>".$Fecha_Nacimiento."</td>";
 
@@ -1298,7 +1412,7 @@ $Con->CloseConexion();
                         $Anio = $Separar[1];                                          
                         $Consultar_Movimientos_Persona = "select * from movimiento where id_persona = ".$RetTodos["id_persona"]." and MONTH(fecha) = ".$Mes." and YEAR(fecha) like '%".$Anio."' order by fecha";
 
-                        // echo "DEBUG CONSULTAR MOVIMIENTO: ".var_dump($Consultar_Movimientos_Persona);
+                       // echo "<br> DEBUG CONSULTAR MOVIMIENTO: ".var_dump($Consultar_Movimientos_Persona);
                         
   
                         $Tomar_Movimientos_Persona = mysqli_query($Con->Conexion,$Consultar_Movimientos_Persona) or die($MensajeErrorConsultar_Mov_Persona." - ".$Consultar_Movimientos_Persona);
@@ -1312,7 +1426,7 @@ $Con->CloseConexion();
 
                           $Consultar_Datos_Movimientos = "select M.id_movimiento, MONTH(M.fecha) as 'Mes', YEAR(M.fecha) as 'Anio', M.motivo_1, M.motivo_2, M.motivo_3 from movimiento M, motivo MT, categoria C where (M.motivo_1 = MT.id_motivo or M.motivo_2 = MT.id_motivo or M.motivo_3 = MT.id_motivo) and MT.cod_categoria = C.cod_categoria and M.id_movimiento = ".$Ret_Movimientos_Persona['id_movimiento']." and M.id_persona = ".$Ret_Movimientos_Persona['id_persona']." group by M.id_movimiento order by M.fecha";	                      
 
-                          // echo "DEBUG CONSULTAR MOVIMIENTO: ".var_dump($Consultar_Datos_Movimientos);
+                          //echo " <br> DEBUG CONSULTAR MOVIMIENTO: ".var_dump($Consultar_Datos_Movimientos);
 
                           $MensajeErrorConsultar_Datos_Movimientos = "No se pudieron consultar los datos del movimiento";
                           $Tomar_Datos_Movimientos = mysqli_query($Con->Conexion,$Consultar_Datos_Movimientos) or die($MensajeErrorConsultar_Datos_Movimientos." - ".$Consultar_Datos_Movimientos);
@@ -1563,12 +1677,18 @@ $Con->CloseConexion();
             }else{
               echo "No se pudo obtener el año";
             }
+
+            
           ?>
         </div>           
-       
+
   </div>
 </div>
-</div>    
+</div>  
+
+
+
+
 <script>
     (function() {
       var tabla = document.getElementById("tabla-responsive");
@@ -1670,7 +1790,53 @@ $Con->CloseConexion();
       }
    } 
 
-   function enviarImprimir() {     
+
+
+   
+   function enviarImprimir() {
+     alert("llega");
+     
+
+    var ficha =document.getElementById("ContenidoTabla");
+    // document.getElementById("tabla-responsive");
+   
+	  var ventimp = window.open(' ', 'popimpr');  
+	  ventimp.document.write(ficha.innerHTML);
+	  ventimp.document.close();
+	  ventimp.print( );
+	  ventimp.close();
+    
+      
+    /*
+       const $elementoParaConvertir = document.body;        
+        alert($elementoParaConvertir);   
+              html2pdf()
+                  .set({
+                      margin: 1,
+                      filename: 'documento.pdf',
+                      image: {
+                          type: 'jpeg',
+                          quality: 0.98
+                      },
+                      html2canvas: {
+                          scale: 3, // A mayor escala, mejores gráficos, pero más peso
+                          letterRendering: true,
+                      },
+                      jsPDF: {
+                          unit: "in",
+                          format: "a3",
+                          orientation: 'portrait' // landscape o portrait
+                      }
+                  })
+                  .from($elementoParaConvertir)
+                  .save()
+                  .catch(err => console.log(err));      
+      */
+            
+    }
+
+
+   function enviarImprimir_222() {     
      var tablaMovimientos = document.getElementById("tabla-responsive");
      var tablaEnc = btoa(unescape(encodeURIComponent(tablaMovimientos.innerHTML)));   
 
@@ -1678,14 +1844,50 @@ $Con->CloseConexion();
      var fechaInicio = '<?php echo base64_encode($Fecha_Inicio) ?>';
      var fechaFin = '<?php echo base64_encode($Fecha_Fin) ?>';
 
-    // alert(datos);
+    console.log(consulta);
 
      var arrTabla = [];
      arrTabla = tablaEnc;       
-    //  alert(arrTabla);     
-     location.href='Controladores/export_excel.php?consulta='+consulta+'&fechaInicio='+fechaInicio+'&fechaFin='+fechaFin;
+     console.log(arrTabla);   
+      
+     location.href='pruebas_PDF.php?consulta='+consulta+'&fechaInicio='+fechaInicio+'&fechaFin='+fechaFin;
+
+     //location.href='Controladores/export_excel.php?consulta='+consulta+'&fechaInicio='+fechaInicio+'&fechaFin='+fechaFin;
+
    }
 
+   function enviarImprimirPdf(){   
+
+    console.log("imprimir tabla")
+    var tablaMovimientos = document.getElementById("tabla-responsive");
+
+    // var tablaMovimientos = document.getElementById("tablaMovimientos");          
+    // let data={"tabla": tablaMovimientos };
+    console.log(data);
+
+   // location.href='pruebas_PDF.php?tabla='+tablaMovimientos;
+
+
+    $.ajax({
+        type: "POST",
+        dataType: "html",
+        contentType: "application/x-www-form-urlencoded",             
+        cache: false,
+        // data: data,
+        data:"tabla=" + tablaMovimientos,
+        url: "pruebas_PDF.php",
+        async: false,
+        cache: false,                    
+        success: function(res){   
+          console.log(res);
+          location.href='pruebas_PDF.php';
+        },
+        error:function(){                
+            alert("error ");
+        }   
+    });         
+  }
+  
    var tituloBarrio = document.getElementById("Contenido-Titulo-1");
    var tituloDirec = document.getElementById("Contenido-Titulo-2");
    var tituloMz = document.getElementById("Contenido-Titulo-3");
@@ -1696,6 +1898,7 @@ $Con->CloseConexion();
 
 </script>
 <?php
+
 /*
  *
  * This file is part of Rastreador3.

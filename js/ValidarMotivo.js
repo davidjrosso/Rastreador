@@ -16,7 +16,7 @@ function ValidarMotivo(){
 	}
 
 	if(ID_Categoria == 0 || ID_Categoria == "-Seleccione una Categoria-"){
-		Mensaje += " Debe seleccionar una Categoria.";
+		Mensaje += " Debe seleccionar una Categoría.";
 		Bandera = false;
 	}
 

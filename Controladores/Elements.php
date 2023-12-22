@@ -1269,7 +1269,7 @@ public function getMenuSeguridad($ID){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' name = 'ID_Forma' id = 'ID_Forma'>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from formas_categorias order by Figura")or die("Problemas al mostrar las Formas de las Categorias");
+    $Consulta = mysqli_query($Con3->Conexion,"select * from formas_categorias order by Figura")or die("Problemas al mostrar las Formas de las Categorías");
     while ($Ret = mysqli_fetch_array($Consulta)) {      
         $Select .= "<option value = '".$Ret['ID_Forma']."'>".$Ret['Forma_Categoria']."</option>";
     }          
@@ -1282,7 +1282,7 @@ public function getMenuSeguridad($ID){
   	$Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' name = 'ID_Forma' id = 'ID_Forma'>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from formas_categorias order by Figura")or die("Problemas al mostrar Formas de Categorias");
+    $Consulta = mysqli_query($Con3->Conexion,"select * from formas_categorias order by Figura")or die("Problemas al mostrar Formas de Categorías");
     while ($Ret = mysqli_fetch_array($Consulta)) {
       if($Ret['ID_Forma'] == $xID_Forma){
         $Select .= "<option value = '".$Ret['ID_Forma']."' selected>".$Ret['Forma_Categoria']."</option>";
