@@ -488,9 +488,10 @@ $Con->CloseConexion();
                 $RetConsultarPersona = mysqli_fetch_assoc($EjecutarConsultarPersona);                                
                 $filtros[] = "Persona: ".$RetConsultarPersona["apellido"].", ".$RetConsultarPersona["nombre"];
 
-                $ConsultaFlia .= " and P.domicilio like '%".$RetConsultarPersona["domicilio"]."%'";
-                echo $ConsultaFlia;
-                $EjecutarConsultaFlia = mysqli_query($Con->Conexion,$ConsultaFlia) or die("Problemas al consultar filtro Flia Persona");
+                // TODO:
+                // $ConsultaFlia .= " and P.domicilio like '%".$RetConsultarPersona["domicilio"]."%'";
+                // echo $ConsultaFlia;
+                // $EjecutarConsultaFlia = mysqli_query($Con->Conexion,$ConsultaFlia) or die("Problemas al consultar filtro Flia Persona");
                 // $RetConsultaFlia = mysqli_fetch_assoc($EjecutarConsultaFlia);                                                                
 
 
