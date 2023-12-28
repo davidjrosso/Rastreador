@@ -1419,21 +1419,21 @@ $Con->CloseConexion();
         </button>
       </div>
       <div class="modal-body">
-        <input type="checkbox" id="chkFecha"> Fecha
-        <input type="checkbox" id="chkMotivos"> Motivos
-        <input type="checkbox" id="chkPersona"> Persona 
-        <input type="checkbox" id="chkDNI"> DNI 
-        <input type="checkbox" id="chkFechaNac"> Fecha Nac. 
-        <input type="checkbox" id="chkEdad"> Edad 
-        <input type="checkbox" id="chkMeses"> Meses 
-        <input type="checkbox" id="chkObraSocial"> Obra Social 
-        <input type="checkbox" id="chkDomicilio"> Domicilio 
-        <input type="checkbox" id="chkBarrio"> Barrio 
-        <input type="checkbox" id="chkLocalidad"> Localidad 
-        <input type="checkbox" id="chkObservaciones"> Observaciones
-        <input type="checkbox" id="chkResponsable"> Responsable
-        <input type="checkbox" id="chkCentrosSalud"> Centro de salud 
-        <input type="checkbox" id="chkOtrasInstituciones"> Otras instituciones
+        <input type="checkbox" id="chkFecha"> - Fecha
+        <input type="checkbox" id="chkMotivos"> - Motivos
+        <input type="checkbox" id="chkPersona"> - Persona 
+        <input type="checkbox" id="chkDNI"> - DNI 
+        <input type="checkbox" id="chkFechaNac"> - Fecha Nac. 
+        <input type="checkbox" id="chkEdad"> - Edad 
+        <input type="checkbox" id="chkMeses"> - Meses 
+        <input type="checkbox" id="chkObraSocial"> - Obra Social 
+        <input type="checkbox" id="chkDomicilio"> - Domicilio 
+        <input type="checkbox" id="chkBarrio"> - Barrio 
+        <input type="checkbox" id="chkLocalidad"> - Localidad 
+        <input type="checkbox" id="chkObservaciones"> - Observaciones
+        <input type="checkbox" id="chkResponsable"> - Responsable
+        <input type="checkbox" id="chkCentrosSalud"> - Centro de salud 
+        <input type="checkbox" id="chkOtrasInstituciones"> - Otras instituciones
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
