@@ -292,7 +292,7 @@ $Con->CloseConexion();
 
               $Table = "<table class='table'><thead><tr><th></th><th>Detalles de la Persona</th></tr></thead>";
 
-              $Table .= "<tr><td>Id</td><td>".$Persona->getID_Persona()."</td></tr>";
+              // $Table .= "<tr><td>Id</td><td>".$Persona->getID_Persona()."</td></tr>";
               $Table .= "<tr><td>Apellido</td><td>".$Persona->getApellido()."</td></tr>";
               $Table .= "<tr><td>Nombre</td><td>".$Persona->getNombre()."</td></tr>";
               $Table .= "<tr><td>Documento</td><td>".$Persona->getDNI()."</td></tr>";

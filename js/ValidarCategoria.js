@@ -5,12 +5,12 @@ function ValidarCategoria(){
 	var Mensaje = "";
 
 	if(Codigo == "" || Codigo == null){
-		Mensaje += "Debe ingresar un Codigo.";
+		Mensaje += "Debe ingresar un Código.";
 		Bandera = false;
 	}
 
 	if(Categoria == "" || Categoria == null){
-		Mensaje += " Debe ingresar una Categoria.";
+		Mensaje += " Debe ingresar una Categoría.";
 		Bandera = false;
 	}
 

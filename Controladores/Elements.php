@@ -787,6 +787,23 @@ public function getMenuSeguridad($ID){
     return $Select;
   }
 
+  public function CBRepModCentros($xID_Centro){
+    $Con3 = new Conexion();
+    $Con3->OpenConexion();
+    $Select = "<select class='form-control' id='exampleFormControlSelect1' name ='ID_CentroSalud' id ='ID_CentroSalud'>";    
+    $Consulta = mysqli_query($Con3->Conexion,"select * from centros_salud where estado = 1 order by centro_salud")or die("Problemas al mostrar Centros de Salud");
+    while ($Ret = mysqli_fetch_array($Consulta)) {      
+      if($Ret['id_centro'] == $xID_Centro){
+        $Select .= "<option value = '".$Ret['id_centro']."' selected>".$Ret['centro_salud']."</option>";
+      }else{
+        $Select .= "<option value = '".$Ret['id_centro']."'>".$Ret['centro_salud']."</option>";
+      }   
+    }
+    $Select .= "</select>";
+    $Con3->CloseConexion();
+    return $Select;
+  }
+
   public function CBOtrasInstituciones(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
@@ -1129,6 +1146,39 @@ public function getMenuSeguridad($ID){
     return $Select;
   }
 
+  public function CBRepModOtrasInstituciones($xID_OtraInstitucion){
+    $Con3 = new Conexion();
+    $Con3->OpenConexion();
+    $Select = "<select class='form-control' id='exampleFormControlSelect1' name ='ID_OtraInstitucion' id ='ID_OtraInstitucion'>";    
+    $Consulta = mysqli_query($Con3->Conexion,"select * from otras_instituciones where estado = 1 order by Nombre")or die("Problemas al mostrar Otras Instituciones");
+    while ($Ret = mysqli_fetch_array($Consulta)) {      
+      if($Ret['ID_OtraInstitucion'] == $xID_OtraInstitucion){
+        $Select .= "<option value = '".$Ret['ID_OtraInstitucion']."' selected>".$Ret['Nombre']."</option>";
+      }else{
+        $Select .= "<option value = '".$Ret['ID_OtraInstitucion']."'>".$Ret['Nombre']."</option>";
+      }   
+    }
+    $Select .= "</select>";
+    $Con3->CloseConexion();
+    return $Select;
+  }
+
+  public function CBRepModResponsables($xID_Responsable){
+    $Con3 = new Conexion();
+    $Con3->OpenConexion();
+    $Select = "<select class='form-control' id='exampleFormControlSelect1' name ='ID_Responsable' id ='ID_Responsable'>";    
+    $Consulta = mysqli_query($Con3->Conexion,"select * from responsable where estado = 1 order by responsable")or die("Problemas al mostrar Responsables");
+    while ($Ret = mysqli_fetch_array($Consulta)) {      
+      if($Ret['id_resp'] == $xID_Responsable){
+        $Select .= "<option value = '".$Ret['id_resp']."' selected>".$Ret['responsable']."</option>";
+      }else{
+        $Select .= "<option value = '".$Ret['id_resp']."'>".$Ret['responsable']."</option>";
+      }   
+    }
+    $Select .= "</select>";
+    $Con3->CloseConexion();
+    return $Select;
+  }
   //////////////////////////////////////////////// TIPO DE USUARIOS ////////////////////////////////////////////////////
 
   public function CBTipoUsuarios(){
@@ -1219,7 +1269,7 @@ public function getMenuSeguridad($ID){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' name = 'ID_Forma' id = 'ID_Forma'>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from formas_categorias order by Figura")or die("Problemas al mostrar las Formas de las Categorias");
+    $Consulta = mysqli_query($Con3->Conexion,"select * from formas_categorias order by Figura")or die("Problemas al mostrar las Formas de las Categorías");
     while ($Ret = mysqli_fetch_array($Consulta)) {      
         $Select .= "<option value = '".$Ret['ID_Forma']."'>".$Ret['Forma_Categoria']."</option>";
     }          
@@ -1232,7 +1282,7 @@ public function getMenuSeguridad($ID){
   	$Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' name = 'ID_Forma' id = 'ID_Forma'>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from formas_categorias order by Figura")or die("Problemas al mostrar Formas de Categorias");
+    $Consulta = mysqli_query($Con3->Conexion,"select * from formas_categorias order by Figura")or die("Problemas al mostrar Formas de Categorías");
     while ($Ret = mysqli_fetch_array($Consulta)) {
       if($Ret['ID_Forma'] == $xID_Forma){
         $Select .= "<option value = '".$Ret['ID_Forma']."' selected>".$Ret['Forma_Categoria']."</option>";

@@ -223,7 +223,7 @@ $Con->CloseConexion();
                     <option value = "Documento">Documento</option>
                     <option value = "Responsable">Resp.</option>
                     <option value = "Fecha">Fecha</option>
-                    <option value = "ID">Id</option>
+                    <!-- <option value = "ID">Id</option> -->
                     <option value = "Legajo">Nro. Legajo</option>
                     <option value = "Carpeta">Nro. Carpeta</option>
 
@@ -245,7 +245,7 @@ $Con->CloseConexion();
               $DTGeneral = new CtrGeneral();
 
               switch ($ID_Filtro) {
-                case 'ID': echo $DTGeneral->getMovimientosxID($Filtro);break;
+                // case 'ID': echo $DTGeneral->getMovimientosxID($Filtro);break;
                 case 'Fecha': echo $DTGeneral->getMovimientosxFecha($Filtro);break;
                 case 'Apellido': echo $DTGeneral->getMovimientosxApellido($Filtro);break;
                 case 'Documento': echo $DTGeneral->getMovimientosxDocumento($Filtro);break;

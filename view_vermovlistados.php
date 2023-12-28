@@ -74,8 +74,7 @@ $Con->CloseConexion();
       
         }
 
-  </script>
-
+  </script>  
 </head>
 <body>
 <div class = "row">
@@ -235,11 +234,16 @@ $Con->CloseConexion();
               $Mostrar = $_REQUEST["Mostrar"];
               $ID_CentroSalud = $_REQUEST["ID_CentroSalud"];
               $ID_OtraInstitucion = $_REQUEST["ID_OtraInstitucion"];
+              $ID_Responsable = $_REQUEST["ID_Responsable"];
 
               $ConsultarMovimientosPersona = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, P.domicilio, P.fecha_nac, P.documento, P.obra_social, P.localidad, P.edad, P.meses, B.Barrio, M.motivo_1, M.motivo_2, M.motivo_3, M.observaciones, R.responsable, CS.centro_salud, I.Nombre as 'NombreInst' from movimiento M, persona P, barrios B, motivo MT, categoria C, centros_salud CS, otras_instituciones I, responsable R where M.id_persona = P.id_persona and B.ID_Barrio = P.ID_Barrio and M.id_centro = CS.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and R.id_resp = M.id_resp and M.estado = 1 and P.estado = 1 and MT.estado = 1 and C.estado = 1 and M.fecha between '$Fecha_Inicio' and '$Fecha_Fin' and P.ID_Persona = $ID_Persona";
           	  $Consulta = "select M.id_movimiento, M.fecha, M.id_persona, MONTH(M.fecha) as 'Mes', YEAR(M.fecha) as 'Anio', B.Barrio, P.manzana, P.documento, P.obra_social, P.localidad, P.edad, P.meses, P.lote, P.familia, P.apellido, P.nombre, P.fecha_nac, P.domicilio, M.motivo_1, M.motivo_2, M.motivo_3, R.responsable, M.observaciones, CS.centro_salud, I.Nombre as 'NombreInst' from movimiento M, persona P, barrios B, motivo MT, categoria C, centros_salud CS, otras_instituciones I, responsable R where M.id_persona = P.id_persona and B.ID_Barrio = P.ID_Barrio and M.id_centro = CS.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and R.id_resp = M.id_resp and M.estado = 1 and P.estado = 1 and MT.estado = 1 and C.estado = 1 and M.fecha between '$Fecha_Inicio' and '$Fecha_Fin'"; 
               // var_dump($Consulta);     
               $filtros = [];
+              $filtrosSeleccionados = [];
+
+              $filtrosSeleccionados["Fecha_Desde"] = $_REQUEST["Fecha_Desde"];
+              $filtrosSeleccionados["Fecha_Hasta"] = $_REQUEST["Fecha_Hasta"];
               $Con = new Conexion();
               $Con->OpenConexion();    
               
@@ -251,6 +255,7 @@ $Con->CloseConexion();
                 $EjecutarConsultarPersona = mysqli_query($Con->Conexion,$ConsultarPersona) or die("Problemas al consultar filtro Persona");
                 $RetConsultarPersona = mysqli_fetch_assoc($EjecutarConsultarPersona);
                 $filtros[] = "Persona: ".$RetConsultarPersona["apellido"].", ".$RetConsultarPersona["nombre"];
+                $filtrosSeleccionados["ID_Persona"] = $ID_Persona;
               }
 
               if($Edad_Desde != null && $Edad_Desde != "" && $Edad_Hasta != null && $Edad_Hasta != ""){
@@ -258,6 +263,8 @@ $Con->CloseConexion();
                 $ConsultarMovimientosPersona .= " and P.edad > $Edad_Desde and P.edad < $Edad_Hasta";
                 $Consulta .= " and P.edad > $Edad_Desde and P.edad < $Edad_Hasta";
                 $filtros[] = "Edad: Desde ".$Edad_Desde." hasta ".$Edad_Hasta;
+                $filtrosSeleccionados["Edad_Desde"] = $Edad_Desde;
+                $filtrosSeleccionados["Edad_Hasta"] = $Edad_Hasta;
               }
 
               if($Meses_Desde != null && $Meses_Desde != "" && $Meses_Hasta != null && $Meses_Hasta != ""){
@@ -265,45 +272,55 @@ $Con->CloseConexion();
                 $ConsultarMovimientosPersona .= " and P.edad = 0 and P.meses > $Meses_Desde and P.meses < $Meses_Hasta";
                 $Consulta .= " and P.edad = 0 and P.meses > $Meses_Desde and P.meses < $Meses_Hasta";
                 $filtros[] = "Meses: Desde ".$Meses_Desde." hasta ".$Meses_Hasta;
+                $filtrosSeleccionados["Meses_Desde"] = $Meses_Desde;
+                $filtrosSeleccionados["Meses_Hasta"] = $Meses_Hasta;
               }
 
               if($Domicilio != null && $Domicilio != ""){
                 $ConsultarMovimientosPersona .= " and P.domicilio like '%$Domicilio%'";
                 $Consulta .= " and P.domicilio like '%$Domicilio%'";
                 $filtros[] = "Domicilio: ".$Domicilio;
+                $filtrosSeleccionados["Domicilio"] = $Domicilio;
               }
 
               if($Manzana != null && $Manzana != ""){
                 $ConsultarMovimientosPersona .= " and P.manzana = '$Manzana'";
                 $Consulta .= " and P.manzana = '$Manzana'";
                 $filtros[] = "Manzana: ".$Manzana;
+                $filtrosSeleccionados["Manzana"] = $Manzana;
               }
 
               if($Lote != null && $Lote != ""){
                 $ConsultarMovimientosPersona .= " and P.lote = $Lote";
                 $Consulta .= " and P.lote = $Lote";
                 $filtros[] = "Lote: ".$Lote;
+                $filtrosSeleccionados["Lote"] = $Lote;
               }
 
               if($Familia != null && $Familia != ""){
                 $ConsultarMovimientosPersona .= " and P.familia = $Familia";
                 $Consulta .= " and P.familia = $Familia";
                 $filtros[] = "Sublote: ".$Familia;
+                $filtrosSeleccionados["Familia"] = $Familia;
               }
 
               if($Nro_Carpeta != null && $Nro_Carpeta != ""){
                 $ConsultarMovimientosPersona .= " and P.nro_carpeta = '$Nro_Carpeta'";
                 $Consulta.= " and P.nro_carpeta = '$Nro_Carpeta'";
                 $filtros[] = "Nro_carpeta: ".$Nro_Carpeta;
+                // $filtrosSeleccionados["Nro_Carpeta"] = $Nro_Carpeta;
               }
+              $filtrosSeleccionados["Nro_Carpeta"] = $Nro_Carpeta;
 
               if($Nro_Legajo != null && $Nro_Legajo != ""){
                 $ConsultarMovimientosPersona .= " and P.nro_legajo = '$Nro_Legajo'";
                 $Consulta.= " and P.nro_legajo = '$Nro_Legajo'";
                 $filtros[] =  " Nro_legajo : ".$Nro_Legajo;
+                $filtrosSeleccionados["Nro_Legajo"] = $Nro_Legajo;
               }
               
-              if(count($Barrio) > 1){
+              // if(count($Barrio) > 1){
+              if(count((Array)$Barrio) > 1){                
                 $filtroBarrios = 'Barrios:';
                 foreach($Barrio as $key => $valueBarrio){
                   if($key == $Barrio->array_key_first){
@@ -333,6 +350,7 @@ $Con->CloseConexion();
                   $EjecutarConsultarBarrio = mysqli_query($Con->Conexion,$ConsultarBarrio) or die("Problemas al consultar filtro Barrios");
                   $RetConsultarBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);
                   $filtros[] = "Barrio: ".$RetConsultarBarrio['Barrio'];
+                  $filtrosSeleccionados["ID_Barrio"] = $Barrio[0];
                 }                
               }
               
@@ -349,12 +367,14 @@ $Con->CloseConexion();
                 $EjecutarConsultarEscuela = mysqli_query($Con->Conexion,$ConsultarEscuela) or die("Problemas al consultar filtro Escuela");
                 $RetConsultarEscuela = mysqli_fetch_assoc($EjecutarConsultarEscuela);  
                 $filtros[] = "Escuela: ".$RetConsultarEscuela['Escuela'];
+                $filtrosSeleccionados["ID_Escuela"] = $ID_Escuela;
               }
 
               if($Trabajo != null && $Trabajo != ""){
                 $ConsultarMovimientosPersona .= " and P.Trabajo like '%$Trabajo%'";
                 $Consulta .= " and P.Trabajo like '%$Trabajo%'";
                 $filtros[] = "Trabajo: ".$Trabajo;
+                $filtrosSeleccionados["Trabajo"] = $Trabajo;                
               }
 
               if($ID_Motivo > 0){
@@ -371,6 +391,7 @@ $Con->CloseConexion();
                 $EjecutarConsultarMotivo = mysqli_query($Con->Conexion,$ConsultarMotivo) or die("Problemas al consultar filtro Motivo");
                 $RetConsultarMotivo = mysqli_fetch_assoc($EjecutarConsultarMotivo);  
                 $filtros[] = "Motivo 1: ".$RetConsultarMotivo['motivo'];                
+                //$filtrosSeleccionados["ID_Motivo1"] = $ID_Motivo;
               }
 
               if($ID_Motivo2 > 0){
@@ -384,6 +405,7 @@ $Con->CloseConexion();
                   $Consulta .= ")";
                 }
                 $filtros[] = "Motivo 2: ".$RetConsultarMotivo['motivo'];
+                //$filtrosSeleccionados["ID_Motivo2"] = $ID_Motivo2;
               }
 
               if($ID_Motivo3 > 0){
@@ -393,6 +415,7 @@ $Con->CloseConexion();
                 $EjecutarConsultarMotivo = mysqli_query($Con->Conexion,$ConsultarMotivo) or die("Problemas al consultar filtro Motivo");
                 $RetConsultarMotivo = mysqli_fetch_assoc($EjecutarConsultarMotivo);  
                 $filtros[] = "Motivo 3: ".$RetConsultarMotivo['motivo'];
+                //$filtrosSeleccionados["ID_Motivo3"] = $ID_Motivo3;
               }
 
               if($ID_Categoria > 0){
@@ -402,6 +425,7 @@ $Con->CloseConexion();
                 $EjecutarConsultarCategoria = mysqli_query($Con->Conexion,$ConsultarCategoria) or die("Problemas al consultar filtro Categoria");
                 $RetConsultarCategoria = mysqli_fetch_assoc($EjecutarConsultarCategoria);  
                 $filtros[] = "Categoria: ".$RetConsultarCategoria['categoria'];
+                $filtrosSeleccionados["ID_Categoria"] = $ID_Categoria;
               }
 
               if($ID_CentroSalud > 0){
@@ -411,6 +435,7 @@ $Con->CloseConexion();
                 $EjecutarConsultarCentroSalud = mysqli_query($Con->Conexion,$ConsultarCentroSalud) or die("Problemas al consultar filtro Categoria");
                 $RetConsultarCentroSalud = mysqli_fetch_assoc($EjecutarConsultarCentroSalud);                  
                 $filtros[] = "Centro Salud: ".$RetConsultarCentroSalud['centro_salud'];
+                $filtrosSeleccionados["ID_CentroSalud"] = $ID_CentroSalud;
               }
 
               if($ID_OtraInstitucion > 0){
@@ -420,8 +445,18 @@ $Con->CloseConexion();
                 $EjecutarConsultarOtraInstitucion = mysqli_query($Con->Conexion,$ConsultarOtraInstitucion) or die("Problemas al consultar filtro Categoria");
                 $RetConsultarOtraInstitucion = mysqli_fetch_assoc($EjecutarConsultarOtraInstitucion);   
                 $filtros[] = "Otra Institucion: ".$RetConsultarOtraInstitucion['Nombre'];
+                $filtrosSeleccionados["ID_OtraInstitucion"] = $ID_OtraInstitucion;
               }
 
+              if($ID_Responsable > 0){
+                $ConsultarMovimientosPersona .= " and R.ID_Responsable = $ID_Responsable";
+                $Consulta .= " and R.id_resp = $ID_Responsable";
+                $ConsultarResponsable = "select responsable from responsable where id_resp = ".$ID_Responsable." limit 1";
+                $EjecutarConsultarResponsable = mysqli_query($Con->Conexion,$ConsultarResponsable) or die("Problemas al consultar filtro Responsable");
+                $RetConsultarResponsable = mysqli_fetch_assoc($EjecutarConsultarResponsable);   
+                $filtros[] = "Responsable: ".$RetConsultarResponsable['responsable'];
+                $filtrosSeleccionados["ID_Responsable"] = $ID_Responsable;
+              }
 
               $ConsultarMovimientosPersona .= " group by M.id_movimiento order by M.fecha, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";              
 
@@ -430,8 +465,7 @@ $Con->CloseConexion();
               }else{
                 $Consulta .= " group by M.id_persona order by Anio, Mes, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";                
               }
-
-              
+                            
 
               //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -570,12 +604,12 @@ $Con->CloseConexion();
 
               // $Consulta .= " group by M.id_persona order by Anio, Mes, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";
             
-              
+              // $_SESSION["datosNav"] = $filtrosSeleccionados;
 
               $MensajeError = "No se pudieron consultar los Datos";
 
               $Etiqueta_Fecha_Inicio = implode("-", array_reverse(explode("-",$Fecha_Inicio)));
-              $Etiqueta_Fecha_Fin = implode("-", array_reverse(explode("-",$Fecha_Fin)));             
+              $Etiqueta_Fecha_Fin = implode("-", array_reverse(explode("-",$Fecha_Fin)));                                
 
       	?>
         <center><p class = "LblForm">ENTRE: <?php echo $Etiqueta_Fecha_Inicio." Y ".$Etiqueta_Fecha_Fin; ?></p></center>  
@@ -615,6 +649,10 @@ $Con->CloseConexion();
               $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
 
               $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
+
+              $filtrosSeleccionados["NombrePersona"] = $Ret["apellido"].", ".$Ret["nombre"];     
+              
+              $_SESSION["datosNav"]["NombrePersona"] = $filtrosSeleccionados["NombrePersona"];
             
               
               $ConsultarBarrio = "select * from barrios where ID_Barrio = {$Ret['ID_Barrio']}";
@@ -840,13 +878,13 @@ $Con->CloseConexion();
                   //  variables inventadas solo para que arme la tabla
 
                 $CentroSalud = $RetTodos["centro_salud"]; //centro_salud
-                $OtraInstitucion = $RetTodos["NombreInst"]; //otraInstitucion
-                $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);                
+                $OtraInstitucion = $RetTodos["NombreInst"]; //otraInstitucion                
+                $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);                                 
 
                 if($ID_Config == 'grid'){
                   $TableMov = "<table class='table table-dark'>";                
                   $TableMov .= "<tr class='trFecha'><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>".$DtoMovimiento->getFecha()."</td></tr>";
-                  if($ID_Motivo > 0 || $ID_Motivo2 > 0 || $ID_Motivo3 > 0){                    
+                  if($ID_Motivo > 0 || $ID_Motivo2 > 0 || $ID_Motivo3 > 0){                                          
                     if($ID_Motivo == $ID_Motivo_1){
 
                       $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";                      
@@ -907,6 +945,39 @@ $Con->CloseConexion();
               if($ID_Config == 'table'){
                 $TableMov .= "</table>";
                 echo $TableMov;
+              }
+
+              if($ID_Motivo > 0){
+                $ConsultarFiltroMotivo = "select id_motivo, motivo from motivo where id_motivo = $ID_Motivo";
+                $ErrorConsultarFiltroMotivo = "No se pudo consultar el motivo del filtro ID_Motivo";
+                $RetConsFiltroMotivo = mysqli_query($Con->Conexion,$ConsultarFiltroMotivo) or die($ErrorConsultarFiltroMotivo);
+                $RetConsMotivo = mysqli_fetch_assoc($RetConsFiltroMotivo);
+                $filtrosSeleccionados["ID_Motivo"] = $RetConsMotivo["id_motivo"];  
+                $filtrosSeleccionados["Motivo"] = $RetConsMotivo["motivo"];  
+                $_SESSION["datosNav"]["ID_Motivo"] = $filtrosSeleccionados["ID_Motivo"];
+                $_SESSION["datosNav"]["Motivo"] = $filtrosSeleccionados["Motivo"];
+              }
+
+              if($ID_Motivo2 > 0){                
+                $ConsultarFiltroMotivo2 = "select id_motivo, motivo from motivo where id_motivo = $ID_Motivo2";
+                $ErrorConsultarFiltroMotivo2 = "No se pudo consultar el motivo del filtro ID_Motivo2";
+                $RetConsFiltroMotivo2 = mysqli_query($Con->Conexion,$ConsultarFiltroMotivo2) or die($ErrorConsultarFiltroMotivo2);
+                $RetConsMotivo2 = mysqli_fetch_assoc($RetConsFiltroMotivo2);
+                $filtrosSeleccionados["ID_Motivo2"] = $RetConsMotivo2["id_motivo"];  
+                $filtrosSeleccionados["Motivo2"] = $RetConsMotivo2["motivo"];  
+                $_SESSION["datosNav"]["ID_Motivo2"] = $filtrosSeleccionados["ID_Motivo2"];
+                $_SESSION["datosNav"]["Motivo2"] = $filtrosSeleccionados["Motivo2"];
+              }
+
+              if($ID_Motivo3 > 0){                
+                $ConsultarFiltroMotivo3 = "select id_motivo, motivo from motivo where id_motivo = $ID_Motivo3";
+                $ErrorConsultarFiltroMotivo3 = "No se pudo consultar el motivo del filtro ID_Motivo3";
+                $RetConsFiltroMotivo3 = mysqli_query($Con->Conexion,$ConsultarFiltroMotivo3) or die($ErrorConsultarFiltroMotivo3);
+                $RetConsMotivo3 = mysqli_fetch_assoc($RetConsFiltroMotivo3);
+                $filtrosSeleccionados["ID_Motivo3"] = $RetConsMotivo3["id_motivo"];  
+                $filtrosSeleccionados["Motivo3"] = $RetConsMotivo3["motivo"];  
+                $_SESSION["datosNav"]["ID_Motivo3"] = $filtrosSeleccionados["ID_Motivo3"];
+                $_SESSION["datosNav"]["Motivo3"] = $filtrosSeleccionados["Motivo3"];
               }
 
 
@@ -1287,10 +1358,51 @@ $Con->CloseConexion();
                 echo $TableMov;
               }
 
+              if($ID_Motivo > 0){
+                $ConsultarFiltroMotivo = "select id_motivo, motivo from motivo where id_motivo = $ID_Motivo";
+                $ErrorConsultarFiltroMotivo = "No se pudo consultar el motivo del filtro ID_Motivo";
+                $RetConsFiltroMotivo = mysqli_query($Con->Conexion,$ConsultarFiltroMotivo) or die($ErrorConsultarFiltroMotivo);
+                $RetConsMotivo = mysqli_fetch_assoc($RetConsFiltroMotivo);
+                $filtrosSeleccionados["ID_Motivo"] = $RetConsMotivo["id_motivo"];  
+                $filtrosSeleccionados["Motivo"] = $RetConsMotivo["motivo"];  
+                $_SESSION["datosNav"]["ID_Motivo"] = $filtrosSeleccionados["ID_Motivo"];
+                $_SESSION["datosNav"]["Motivo"] = $filtrosSeleccionados["Motivo"];
+              }
+
+              if($ID_Motivo2 > 0){                
+                $ConsultarFiltroMotivo2 = "select id_motivo, motivo from motivo where id_motivo = $ID_Motivo2";
+                $ErrorConsultarFiltroMotivo2 = "No se pudo consultar el motivo del filtro ID_Motivo2";
+                $RetConsFiltroMotivo2 = mysqli_query($Con->Conexion,$ConsultarFiltroMotivo2) or die($ErrorConsultarFiltroMotivo2);
+                $RetConsMotivo2 = mysqli_fetch_assoc($RetConsFiltroMotivo2);
+                $filtrosSeleccionados["ID_Motivo2"] = $RetConsMotivo2["id_motivo"];  
+                $filtrosSeleccionados["Motivo2"] = $RetConsMotivo2["motivo"];  
+                $_SESSION["datosNav"]["ID_Motivo2"] = $filtrosSeleccionados["ID_Motivo2"];
+                $_SESSION["datosNav"]["Motivo2"] = $filtrosSeleccionados["Motivo2"];
+              }
+
+              if($ID_Motivo3 > 0){                
+                $ConsultarFiltroMotivo3 = "select id_motivo, motivo from motivo where id_motivo = $ID_Motivo3";
+                $ErrorConsultarFiltroMotivo3 = "No se pudo consultar el motivo del filtro ID_Motivo3";
+                $RetConsFiltroMotivo3 = mysqli_query($Con->Conexion,$ConsultarFiltroMotivo3) or die($ErrorConsultarFiltroMotivo3);
+                $RetConsMotivo3 = mysqli_fetch_assoc($RetConsFiltroMotivo3);
+                $filtrosSeleccionados["ID_Motivo3"] = $RetConsMotivo3["id_motivo"];  
+                $filtrosSeleccionados["Motivo3"] = $RetConsMotivo3["motivo"];  
+                $_SESSION["datosNav"]["ID_Motivo3"] = $filtrosSeleccionados["ID_Motivo3"];
+                $_SESSION["datosNav"]["Motivo3"] = $filtrosSeleccionados["Motivo3"];
+              }
+
               $Con->CloseConexion();
               // $Mensaje = "No se pudo consultar los Datos porque no se pudo obtener el ID de la Persona";
               // echo $Mensaje;
             }
+
+
+
+            // ACA PONER
+            
+            //$_SESSION["datosNav"] = $filtrosSeleccionados;
+
+            //unset($_SESSION["datosNav"]);
           ?>
         </div>
   </div>
@@ -1307,21 +1419,21 @@ $Con->CloseConexion();
         </button>
       </div>
       <div class="modal-body">
-        <input type="checkbox" id="chkFecha"> Fecha
-        <input type="checkbox" id="chkMotivos"> Motivos
-        <input type="checkbox" id="chkPersona"> Persona 
-        <input type="checkbox" id="chkDNI"> DNI 
-        <input type="checkbox" id="chkFechaNac"> Fecha Nac. 
-        <input type="checkbox" id="chkEdad"> Edad 
-        <input type="checkbox" id="chkMeses"> Meses 
-        <input type="checkbox" id="chkObraSocial"> Obra Social 
-        <input type="checkbox" id="chkDomicilio"> Domicilio 
-        <input type="checkbox" id="chkBarrio"> Barrio 
-        <input type="checkbox" id="chkLocalidad"> Localidad 
-        <input type="checkbox" id="chkObservaciones"> Observaciones
-        <input type="checkbox" id="chkResponsable"> Responsable
-        <input type="checkbox" id="chkCentrosSalud"> Centro de salud 
-        <input type="checkbox" id="chkOtrasInstituciones"> Otras instituciones
+        <input type="checkbox" id="chkFecha"> - Fecha
+        <input type="checkbox" id="chkMotivos"> - Motivos
+        <input type="checkbox" id="chkPersona"> - Persona 
+        <input type="checkbox" id="chkDNI"> - DNI 
+        <input type="checkbox" id="chkFechaNac"> - Fecha Nac. 
+        <input type="checkbox" id="chkEdad"> - Edad 
+        <input type="checkbox" id="chkMeses"> - Meses 
+        <input type="checkbox" id="chkObraSocial"> - Obra Social 
+        <input type="checkbox" id="chkDomicilio"> - Domicilio 
+        <input type="checkbox" id="chkBarrio"> - Barrio 
+        <input type="checkbox" id="chkLocalidad"> - Localidad 
+        <input type="checkbox" id="chkObservaciones"> - Observaciones
+        <input type="checkbox" id="chkResponsable"> - Responsable
+        <input type="checkbox" id="chkCentrosSalud"> - Centro de salud 
+        <input type="checkbox" id="chkOtrasInstituciones"> - Otras instituciones
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -1549,5 +1661,13 @@ $Con->CloseConexion();
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 ?>
+<!-- <script>
+    function guardarFiltrosSeleccionados() {
+      window.localStorage.clear();      
+      window.localStorage.setItem("filtrosSeleccionados", < ?php echo implode($filtrosSeleccionados); ?>);
+
+      location.href = 'view_listados.php';
+    }
+</script> -->
 </body>
 </html>

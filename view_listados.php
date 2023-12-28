@@ -9,6 +9,8 @@ if(!isset($_SESSION["Usuario"])){
     header("Location: Error_Session.php");
 }
 
+// unset($_SESSION["datosNav"]);
+
 $Con = new Conexion();
 $Con->OpenConexion();
 $ID_Usuario = $_SESSION["Usuario"];
@@ -18,6 +20,11 @@ $EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuari
 $Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
 $TipoUsuario = $Ret["ID_TipoUsuario"];
 $Con->CloseConexion();
+
+$datosNav = $_SESSION["datosNav"];
+
+// DEBUG
+// echo var_dump($datosNav);
 ?>
 <!DOCTYPE html>
 <html>
@@ -256,6 +263,20 @@ $Con->CloseConexion();
       ID_Config.value = formatConfig.value;      
     }
 
+    function disabledMeses(xBool){
+      meses_desde = document.getElementById('Meses_Desde');
+      meses_hasta = document.getElementById('Meses_Hasta');
+
+      if(xBool){
+        meses_desde.setAttribute('disabled', true);
+        meses_hasta.setAttribute('disabled', true);
+        alert('Hola');
+      }else{
+        meses_desde.removeAttribute('disabled');
+        meses_hasta.removeAttribute('disabled');
+      }
+    }
+
     function habilitarMeses(xElemento){
         meses_desde = document.getElementById('Meses_Desde');
         meses_hasta = document.getElementById('Meses_Hasta');
@@ -283,6 +304,8 @@ $Con->CloseConexion();
           edad_hasta.removeAttribute('disabled');
         }
       }
+
+      // alert(< ?php echo $_SESSION["datosNav"]; ?>);
 
   </script>
 </head>
@@ -424,13 +447,13 @@ $Con->CloseConexion();
             <div class="form-group row">
                 <label for="inputPassword" class="col-md-2 col-form-label LblForm">Fecha desde *: </label>
                 <div class="col-md-10">
-                    <input type="text" name="Fecha_Desde" id = "Fecha_Desde" class="form-control" autocomplete="off" value = "<?php echo implode("/", array_reverse(explode("-",date('Y-m-d',strtotime(date('Y-m-d')."- 1 year"))))); ?>">
+                    <input type="text" name="Fecha_Desde" id = "Fecha_Desde" class="form-control" autocomplete="off" value = "<?= (isset($datosNav["Fecha_Desde"])) ? $datosNav["Fecha_Desde"] : implode("/", array_reverse(explode("-",date('Y-m-d',strtotime(date('Y-m-d')."- 1 year"))))) ?>">
                 </div>
             </div> 
             <div class="form-group row">
                 <label for="inputPassword" class="col-md-2 col-form-label LblForm">Fecha hasta *: </label>
                 <div class="col-md-10">
-                    <input type="text" name="Fecha_Hasta" id = "Fecha_Hasta" class="form-control" autocomplete="off" value = "<?php echo implode("/", array_reverse(explode("-",date('Y-m-d')))); ?>">
+                    <input type="text" name="Fecha_Hasta" id = "Fecha_Hasta" class="form-control" autocomplete="off" value = "<?= (isset($datosNav["Fecha_Hasta"])) ? $datosNav["Fecha_Hasta"] : implode("/", array_reverse(explode("-",date('Y-m-d')))) ?>">
                 </div>
             </div>
             <div class="form-group row">
@@ -442,50 +465,59 @@ $Con->CloseConexion();
             <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Desde (Edad): </label>
                   <div class="col-md-10">
-                      <input type="number" name="Edad_Desde" id="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarMeses(this)">
+                      <input type="number" name="Edad_Desde" id="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarMeses(this)" value="<?= (isset($datosNav["Edad_Desde"])) ? $datosNav["Edad_Desde"] : '' ?>">                      
                       <input type="hidden" name="ID_Persona" id = "ID_Persona" value = "0">
+                      <script>
+                        <?php
+                          if(isset($datosNav["ID_Persona"])){
+                        ?>
+                            seleccionPersona(<?= "'".$datosNav["NombrePersona"]."'" ?>, <?= $datosNav["ID_Persona"] ?>);                            
+                        <?php   
+                          }
+                        ?>                        
+                      </script>
                   </div>
             </div> 
             <div class="form-group row">
                 <label for="inputPassword" class="col-md-2 col-form-label LblForm">Hasta (Edad): </label>
                 <div class="col-md-10">
-                    <input type="number" name="Edad_Hasta" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarMeses(this)">
+                    <input type="number" name="Edad_Hasta" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarMeses(this)" value="<?= (isset($datosNav["Edad_Hasta"])) ? $datosNav["Edad_Hasta"] : '' ?>">
                 </div>
             </div> 
             <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Desde (Meses): </label>
                   <div class="col-md-10">
-                      <input type="number" name="Meses_Desde" id="Meses_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarEdad(this)">
+                      <input type="number" name="Meses_Desde" id="Meses_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarEdad(this)" value="<?= (isset($datosNav["Meses_Desde"])) ? $datosNav["Meses_Desde"] : '' ?>">
                   </div>
             </div> 
             <div class="form-group row">
                 <label for="inputPassword" class="col-md-2 col-form-label LblForm">Hasta (Meses): </label>
                 <div class="col-md-10">
-                    <input type="number" name="Meses_Hasta" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarEdad(this)">
+                    <input type="number" name="Meses_Hasta" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarEdad(this)" value="<?= (isset($datosNav["Meses_Hasta"])) ? $datosNav["Meses_Hasta"] : '' ?>">
                 </div>
             </div> 
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Domicilio/Familia: </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "Domicilio" id="inputPassword" autocomplete="off">
+                <input type="text" class="form-control" name = "Domicilio" id="inputPassword" autocomplete="off" value="<?= (isset($datosNav["Domicilio"])) ? $datosNav["Domicilio"] : '' ?>">
               </div>
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Manzana: </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "Manzana" id="inputPassword" autocomplete="off">
+                <input type="text" class="form-control" name = "Manzana" id="inputPassword" autocomplete="off" value="<?= (isset($datosNav["Manzana"])) ? $datosNav["Manzana"] : '' ?>">
               </div>
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Lote: </label>
               <div class="col-md-10">
-                <input type="number" class="form-control" name = "Lote" id="inputPassword" autocomplete="off">
+                <input type="number" class="form-control" name = "Lote" id="inputPassword" autocomplete="off" value="<?= (isset($datosNav["Lote"])) ? $datosNav["Lote"] : '' ?>">
               </div>
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Sub-lote: </label>
               <div class="col-md-10">
-                <input type="number" class="form-control" name = "Familia" id="inputPassword" autocomplete="off">
+                <input type="number" class="form-control" name = "Familia" id="inputPassword" autocomplete="off" value="<?= (isset($datosNav["Familia"])) ? $datosNav["Familia"] : '' ?>">
               </div>
             </div>
             <div class="form-group row">
@@ -493,11 +525,17 @@ $Con->CloseConexion();
               <div class="col-md-9">
                 <?php  
                 $Element = new Elements();
-                echo $Element->CBRepBarrios();
+
+                if(isset($datosNav["ID_Barrio"])){
+                  echo $Element->CBModBarrios($datosNav["ID_Barrio"]);
+                }else{
+                  echo $Element->CBRepBarrios();
+                }            
+
                 ?>
               </div>
               <div class="col-md-1">
-                  <button type="button" class="btn btn-primary" onClick="agregarBarrio()" id="agregarBarrio">+</button>
+                  <button type="button" class="btn btn-primary" onClick="agregarBarrio()" id="agregarBarrioID">+</button>
               </div>
             </div>
             <div id="contenedorBarrios">              
@@ -506,13 +544,13 @@ $Con->CloseConexion();
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "Nro_Carpeta" id="Nro_Carpeta" autocomplete="off">
+                <input type="text" class="form-control" name = "Nro_Carpeta" id="Nro_Carpeta" autocomplete="off" value="<?= (isset($datosNav["Nro_Carpeta"])) ? $datosNav["Nro_Carpeta"] : '' ?>">
               </div>
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "Nro_Legajo" id="Nro_Legajo" autocomplete="off">
+                <input type="text" class="form-control" name = "Nro_Legajo" id="Nro_Legajo" autocomplete="off" value="<?= (isset($datosNav["Nro_Legajo"])) ? $datosNav["Nro_Legajo"] : '' ?>">
               </div>
             </div>
             
@@ -521,7 +559,12 @@ $Con->CloseConexion();
               <div class="col-md-10">
                 <?php  
                 $Element = new Elements();
-                echo $Element->CBRepEscuelas();
+
+                if(isset($datosNav["ID_Escuela"])){
+                  echo $Element->CBModEscuelas($datosNav["ID_Escuela"]);
+                }else{
+                  echo $Element->CBRepEscuelas();
+                }
                 ?>
               </div>
             </div>
@@ -529,7 +572,7 @@ $Con->CloseConexion();
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Trabajo: </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "Trabajo" id="inputPassword" autocomplete="off">
+                <input type="text" class="form-control" name = "Trabajo" id="inputPassword" autocomplete="off" value="<?= (isset($datosNav["Trabajo"])) ? $datosNav["Trabajo"] : '' ?>">
               </div>
             </div>
             <div class="form-group row">
@@ -537,18 +580,45 @@ $Con->CloseConexion();
               <div class="col-md-10" id = "Motivo">
                 <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo">Seleccione un Motivo</button>   
               </div>
+              <script>
+                <?php
+                  if(isset($datosNav["ID_Motivo"])){
+                ?>
+                    seleccionMotivo(<?= "'".$datosNav["Motivo"]."'" ?>, <?= $datosNav["ID_Motivo"] ?>,1);                                         
+                <?php   
+                  }
+                ?>
+              </script>
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 2: </label>
               <div class="col-md-10" id = "Motivo2">
                 <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo2">Seleccione un Motivo</button>   
               </div>
+              <script>
+                <?php
+                  if(isset($datosNav["ID_Motivo2"])){
+                ?>
+                    seleccionMotivo(<?= "'".$datosNav["Motivo2"]."'" ?>, <?= $datosNav["ID_Motivo2"] ?>,2);                                         
+                <?php   
+                  }
+                ?>
+              </script>
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 3: </label>
               <div class="col-md-10" id = "Motivo3">
                 <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo3">Seleccione un Motivo</button>   
               </div>
+              <script>
+                <?php
+                  if(isset($datosNav["ID_Motivo3"])){
+                ?>
+                    seleccionMotivo(<?= "'".$datosNav["Motivo3"]."'" ?>, <?= $datosNav["ID_Motivo3"] ?>,3);                                         
+                <?php   
+                  }
+                ?>
+              </script>
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Categoría: </label>
@@ -561,7 +631,12 @@ $Con->CloseConexion();
               <div class="col-md-10">
                 <?php  
                 $Element = new Elements();
-                echo $Element->CBRepCentros();
+
+                if(isset($datosNav["ID_CentroSalud"])){
+                  echo $Element->CBRepModCentros($datosNav["ID_CentroSalud"]);
+                }else{
+                  echo $Element->CBRepCentros();
+                }
                 ?>
               </div>
             </div>
@@ -570,7 +645,26 @@ $Con->CloseConexion();
               <div class="col-md-10">
                 <?php  
                 $Element = new Elements();
-                echo $Element->CBRepOtrasInstituciones();
+                
+                if(isset($datosNav["ID_OtraInstitucion"])){
+                  echo $Element->CBRepModOtrasInstituciones($datosNav["ID_OtraInstitucion"]);
+                }else{
+                  echo $Element->CBRepOtrasInstituciones();
+                }
+                ?>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Responsable: </label>
+              <div class="col-md-10">
+                <?php  
+                $Element = new Elements();
+
+                if(isset($datosNav["ID_Responsable"])){
+                  echo $Element->CBRepModResponsables($datosNav["ID_Responsable"]);
+                }else{
+                  echo $Element->CBRepResponsable();
+                }
                 ?>
               </div>
             </div>

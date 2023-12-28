@@ -230,13 +230,13 @@ $Con->CloseConexion();
               ?>
             <div class = "col-10">
             <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/pedirmodificarmotivo.php">
-                <div class="form-group row">
+                <!-- <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Id: </label>
                   <div class="col-md-10">
-                    <label for="inputPassword" class="col-md-2 col-form-label LblForm"><?php echo $ID_Motivo; ?></label>
-                    <input type="hidden" name="ID" value = "<?php echo $ID_Motivo; ?>">
+                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">< ?php echo $ID_Motivo; ?></label>
                   </div>
-                </div>
+                </div> -->
+                <input type="hidden" name="ID" value = "<?php echo $ID_Motivo; ?>">
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo: </label>
                   <div class="col-md-10">
