@@ -604,7 +604,7 @@ $Con->CloseConexion();
 
               // $Consulta .= " group by M.id_persona order by Anio, Mes, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";
             
-              $_SESSION["datosNav"] = $filtrosSeleccionados;
+              // $_SESSION["datosNav"] = $filtrosSeleccionados;
 
               $MensajeError = "No se pudieron consultar los Datos";
 
