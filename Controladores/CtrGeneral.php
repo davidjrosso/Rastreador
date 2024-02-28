@@ -897,21 +897,21 @@ class CtrGeneral{
 	public function getSolicitudes_Modificacion_Motivo(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select S.ID, S.Fecha, S.Motivo, S.Cod_Categoria, S.Num_Motivo, U.username, S.ID_Motivo from solicitudes_modificarmotivos S, accounts U where S.ID_Usuario = U.accountid and S.Estado = 1 order by S.Fecha";
+		$Consulta = "select S.ID, S.Fecha, S.Motivo, S.Codigo, S.Cod_Categoria, S.Num_Motivo, U.username, S.ID_Motivo from solicitudes_modificarmotivos S, accounts U where S.ID_Usuario = U.accountid and S.Estado = 1 order by S.Fecha";
 		$MessageError = "Problemas al intentar mostrar Solicitudes";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
 		if($Regis > 0){
-			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Motivo</th><th style='min-width:100px;'>Cod. Categoría</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Accion</th></tr></thead>";
+			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Motivo</th><th style='min-width:100px;'>Codigo</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Accion</th></tr></thead>";
 			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 				$ID = $Ret["ID"];
 				$Fecha = implode("/", array_reverse(explode("-",$Ret["Fecha"])));
 				$Motivo = $Ret["Motivo"];
-				$Cod_Categoria = $Ret["Cod_Categoria"];
+				$Codigo = $Ret["Codigo"];				
 				$Num_Motivo = $Ret["Num_Motivo"];
 				$Usuario = $Ret["username"];	
 				$ID_Motivo = $Ret["ID_Motivo"];			
-				$Table .= "<tr><td>".$ID."</td><td>".$Fecha."</td><td>".$Motivo."</td><td>".$Cod_Categoria."</td><td>".$Usuario."</td><td><button class='btn btn-success' onClick='VerificarModificarMotivo(".$ID.",\"".$Fecha."\",\"".$Motivo."\",\"".$Cod_Categoria."\",".$Num_Motivo.",".$ID_Motivo.")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarModificacionMotivo(".$Ret["ID"].")'><i class='fa fa-times'></i></button></td></tr>";
+				$Table .= "<tr><td>".$ID."</td><td>".$Fecha."</td><td>".$Motivo."</td><td>".$Codigo."</td><td>".$Usuario."</td><td><button class='btn btn-success' onClick='VerificarModificarMotivo(".$ID.",\"".$Fecha."\",\"".$Motivo."\",\"".$Codigo."\",".$Num_Motivo.",".$ID_Motivo.")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarModificacionMotivo(".$Ret["ID"].")'><i class='fa fa-times'></i></button></td></tr>";
 			}			
 			$Table .= "</table>";
 		}else{

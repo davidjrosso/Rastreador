@@ -26,7 +26,6 @@ $ID_Solicitud = $_REQUEST["ID"];
 $ID_Motivo = $_REQUEST["ID_Motivo"];
 $Motivo = $_REQUEST["Motivo"];
 $Codigo = $_REQUEST["Codigo"];
-$Cod_Categoria = $_REQUEST["Cod_Categoria"];
 
 $Fecha = date("Y-m-d");
 $ID_TipoAccion = 2;
@@ -52,8 +51,8 @@ try {
 			throw new Exception("Error al intentar registrar. Consulta: ".$ConsultarDatosViejos, 1);
 		}		
 		$TomarDatosViejos = mysqli_fetch_assoc($RetDatosViejos);
-		$MotivoViejo = $TomarDatosViejos["motivo"];
-		$Cod_CategoriaViejo = $TomarDatosViejos["cod_categoria"];		
+		$MotivoViejo = $TomarDatosViejos["Motivo"];
+		$Cod_Viejo = $TomarDatosViejos["Codigo"];		
 
 		// $ConsultarCod_Categoria = "select cod_categoria from categoria where id_categoria = $ID_Categoria";
 		// if(!$RetCod = mysqli_query($Con->Conexion,$ConsultarCod_Categoria)){
@@ -62,7 +61,7 @@ try {
 		// $TomarCod = mysqli_fetch_assoc($RetCod);
 		// $Cod_Categoria = $TomarCod["cod_categoria"];
 
-		$Consulta = "update motivo set motivo = '$Motivo', codigo = '$Codigo', cod_categoria = '$Cod_Categoria' where id_motivo = $ID_Motivo and estado = 1";
+		$Consulta = "update motivo set motivo = '$Motivo', codigo = '$Codigo' where id_motivo = $ID_Motivo and estado = 1";
 		if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
 			throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 2);			
 		}
@@ -72,7 +71,7 @@ try {
 			throw new Exception("Problemas en la consulta. Consulta: ".$ConsultaSolicitud, 3);			
 		}
 
-		$Detalles = "El usuario con ID: $ID_Usuario ha modificado un Motivo. Datos: Dato Anterior: $MotivoViejo , Dato Nuevo: $Motivo - Dato Anterior: $Cod_CategoriaViejo , Dato Nuevo: $Cod_Categoria";
+		$Detalles = "El usuario con ID: $ID_Usuario ha modificado un Motivo. Datos: Dato Anterior: $MotivoViejo , Dato Nuevo: $Motivo - Dato Anterior: $Cod_Viejo , Dato Nuevo: $Codigo";
 		$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
 		if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
 			throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 4);
