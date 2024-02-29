@@ -25,7 +25,7 @@ $ID_Usuario = $_SESSION["Usuario"];
 
 $ID_Motivo = $_REQUEST["ID"];
 $Motivo = $_REQUEST["Motivo"];
-$Codigo = $_REQUEST["Codigo"];
+$Codigo = strtoupper($_REQUEST["Codigo"]);
 $ID_Categoria = $_REQUEST["ID_Categoria"];
 $Num_Motivo = 0;
 

@@ -220,15 +220,15 @@ $Con->CloseConexion();
         #Contenido-3{            
             position: sticky;
             left: 300px;
-            width: 50px;
+            width: 150px; /* 50px  ACAAA */
             z-index: 200;
             background-color: #FFF;
         }
 
         #Contenido-4{            
             position: sticky;
-            left: 350px;
-            width: 50px;
+            left: 450px; /* 350px  ACAAA */
+            width: 150px; /* 50px  ACAAA */
             z-index: 200;
             background-color: #FFF;
        	}
@@ -274,14 +274,14 @@ $Con->CloseConexion();
         #Contenido-Titulo-3{            
             position: sticky;
             left: 300px;
-            width: 50px;
+            width: 150px; /* 50px  ACAAA */
             z-index: 200;
         }
 
         #Contenido-Titulo-4{            
             position: sticky;
-            left: 350px;
-            width: 50px;
+            left: 450px; /* 350px  ACAAA */
+            width: 150px; /* 50px  ACAAA */
             z-index: 200;
         }
 
@@ -821,15 +821,17 @@ $Con->CloseConexion();
                               if($cmb_seleccion=="familia"){
                                 $Table.="<th id='Contenido-Titulo-5' name='datosflia' style='max-width: 50px;'>Sublote</th>";
                               }
-                              if ($cmb_seleccion=="todos"){
-                                $Table.="<th id='Contenido-Titulo-3' name='datosflia' style='max-width: 50px;'>Mz.</th>
-                                <th id='Contenido-Titulo-4' name='datosflia' style='max-width: 50px;'>Lote</th>
-                                <th id='Contenido-Titulo-5' name='datosflia' style='max-width: 50px;'>Sublote</th>";
+                              // if ($cmb_seleccion=="todos"){
+                              //   $Table.="<th id='Contenido-Titulo-3' name='datosflia' style='max-width: 50px;'>Mz.</th>
+                              //   <th id='Contenido-Titulo-4' name='datosflia' style='max-width: 50px;'>Lote</th>
+                              //   <th id='Contenido-Titulo-5' name='datosflia' style='max-width: 50px;'>Sublote</th>";
 
-                              }
+                              // }
                             }    
-                              $Table.="<th id='Contenido-Titulo-6'>Persona</th>
-                              <th id='Contenido-Titulo-7' style='max-width: 100px;'>Fecha Nac.</th>";                
+
+
+                              $Table.="<th id='Contenido-Titulo-3'>Persona</th>
+                              <th id='Contenido-Titulo-4' style='min-width: 150px;'>Fecha Nac.</th>";                
               } 
 
               $Tomar_Meses = mysqli_query($Con->Conexion,$Consulta) or die($MensajeError." Consulta: ".$Consulta);
@@ -1345,8 +1347,8 @@ $Con->CloseConexion();
                   
                   
                 
-                  $Table .=" <td id='Contenido-6'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$RetTodos["apellido"].", ".$RetTodos["nombre"]."</a></td>
-                  <td id='Contenido-7' style='max-width: 100px;'>".$Fecha_Nacimiento."</td>";
+                  $Table .=" <td id='Contenido-3'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$RetTodos["apellido"].", ".$RetTodos["nombre"]."</a></td>
+                  <td id='Contenido-4' style='min-width: 150px;'>".$Fecha_Nacimiento."</td>";
   
                   $ColSpans = $MesesDiferencia * 270;
                   $Table .= "<td name='DatosSinResultados' style='width:".$ColSpans."px'></td>";                
@@ -1402,8 +1404,8 @@ $Con->CloseConexion();
                     // $Table.="<td id='Contenido-5' name='datosflia' style='max-width: 60px;'>".$RetTodos["familia"]."</td>";
                   // }
                   $Table.=" 
-                  <td id='Contenido-6'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$RetTodos["apellido"].", ".$RetTodos["nombre"]."</a></td>
-                  <td id='Contenido-7' style='max-width: 100px;'>".$Fecha_Nacimiento."</td>";
+                  <td id='Contenido-3'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$RetTodos["apellido"].", ".$RetTodos["nombre"]."</a></td>
+                  <td id='Contenido-4' style='min-width: 150px;'>".$Fecha_Nacimiento."</td>";
 
                   // if($ID_Persona_Nuevo !== $ID_Persona_Bandera){
                     foreach ($arr as $key => $value) {

@@ -266,9 +266,9 @@ $Con->CloseConexion();
 </div>
 </div>
 <?php  
-if(isset($Mensaje)){
+if(isset($_REQUEST['Mensaje'])){
   echo "<script type='text/javascript'>
-    swal('$Mensaje','','success');
+    swal('".$_REQUEST['Mensaje']."','','success');
 </script>";
 }
 ?>

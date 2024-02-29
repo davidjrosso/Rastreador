@@ -561,7 +561,7 @@ $Con->CloseConexion();
             <div class="form-group row">
                 <label for="inputPassword" class="col-md-2 col-form-label LblForm">Fecha desde *: </label>
                 <div class="col-md-10">
-                    <input type="text" name="Fecha_Desde" id = "Fecha_Desde" class="form-control" autocomplete="off" value = "<?php echo implode("/", array_reverse(explode("-",date('Y-m-d',strtotime(date('Y-m-d')."- 2 year"))))); ?>">
+                    <input type="text" name="Fecha_Desde" id = "Fecha_Desde" class="form-control" autocomplete="off" value = "<?php echo implode("/", array_reverse(explode("-",date('Y-m-d',strtotime(date('Y-m-d')."- 1 year"))))); ?>">
                 </div>
             </div> 
             <div class="form-group row">
