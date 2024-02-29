@@ -329,7 +329,7 @@ $Con->CloseConexion();
                     <input type="hidden" name="ID" value = "< ?php echo $DtoMovimiento->getID_Movimiento(); ?>">
                   </div>
                 </div> -->
-                <input type="hidden" name="ID" value = "< ?php echo $DtoMovimiento->getID_Movimiento(); ?>">
+                <input type="hidden" name="ID" value = "<?php echo $DtoMovimiento->getID_Movimiento(); ?>">
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Fecha: </label>
                   <div class="col-md-10">
