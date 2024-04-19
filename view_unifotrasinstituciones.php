@@ -214,20 +214,20 @@ $Con->CloseConexion();
     <br>
      <div class = "row">
       <div class = "col-10">
-          <p class = "TextoAdvertenciaUnificar">¡ADVERTENCIA! La segunda Institucion seleccionada se unirá a la primer Institucion seleccionada. La segunda Institucion se eliminará.</p>
+          <p class = "TextoAdvertenciaUnificar">¡ADVERTENCIA! La segunda Institución seleccionada se unirá a la primer Institución seleccionada. La segunda Institución se eliminará.</p>
           <br>
            <!-- Carga -->
           <form method = "post" action = "Controladores/unificarotrasinstituciones.php">
               <div class="form-group row">
-                  <label for="inputPassword" class="col-md-3 col-form-label LblForm">Primer Institucion: </label>
+                  <label for="inputPassword" class="col-md-3 col-form-label LblForm">Primer Institución: </label>
                   <div class="col-md-9" id = "Institucion_1">
-                    <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalInstitucion_1">Seleccione una Institucion</button>  
+                    <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalInstitucion_1">Seleccione una Institución</button>  
                   </div>
               </div> 
               <div class="form-group row">
-                  <label for="inputPassword" class="col-md-3 col-form-label LblForm">Segunda Institucion: </label>
+                  <label for="inputPassword" class="col-md-3 col-form-label LblForm">Segunda Institución: </label>
                   <div class="col-md-9" id = "Institucion_2">
-                    <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalInstitucion_2">Seleccione una Institucion</button>  
+                    <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalInstitucion_2">Seleccione una Institución</button>  
                   </div>
               </div>  
               <div class="form-group row">
@@ -246,7 +246,7 @@ $Con->CloseConexion();
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Selección de Institucion</h5>
+              <h5 class="modal-title" id="exampleModalLongTitle">Selección de Institución</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -286,7 +286,7 @@ $Con->CloseConexion();
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Selección de Institucion</h5>
+              <h5 class="modal-title" id="exampleModalLongTitle">Selección de Institución</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>

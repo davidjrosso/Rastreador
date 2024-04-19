@@ -78,6 +78,7 @@ $datosNav = $_SESSION["datosNav"];
 -->
   <script>
     var cantBarrios = 1;
+    var cantMotivos = 3;
     $(document).ready(function(){
               var date_input=$('input[name="Fecha_Desde"]'); //our date input has the name "date"
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
@@ -189,6 +190,20 @@ $datosNav = $_SESSION["datosNav"];
       xmlhttp.send();
     }
 
+    function buscarMotivosGeneral(id_Motivo){
+      var xMotivo = document.getElementById("SearchMotivos" + id_Motivo).value;
+      var textoBusqueda = xMotivo;
+      xmlhttp=new XMLHttpRequest();
+      xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+          contenidosRecibidos = xmlhttp.responseText;
+          document.getElementById("ResultadosMotivos" + id_Motivo).innerHTML=contenidosRecibidos;
+        }
+      }
+      xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda='+textoBusqueda + '&number=' + id_Motivo, true); // Método post y url invocada
+      xmlhttp.send();
+    }
+
     function buscarCategorias(){
       var xCategoria = document.getElementById('SearchCategorias').value;
       var textoBusqueda = xCategoria;
@@ -256,7 +271,31 @@ $datosNav = $_SESSION["datosNav"];
       divContenedor.appendChild(divBarrio);
 
     }
-
+    function agregarMotivo(){
+      if (cantMotivos <= 4) {
+        cantMotivos++;
+        var divContenedor = document.getElementById('contenedorMotivos');
+        var divMotivo = document.createElement("div");
+        divMotivo.setAttribute('class','form-group row');
+        var labelMotivo = document.createElement("label");
+        labelMotivo.setAttribute('class','col-md-2 col-form-label LblForm');
+        labelMotivo.innerText = 'Motivo '+ cantMotivos +':';
+        var divBotonMotivo = document.createElement("div");
+        divBotonMotivo.setAttribute("id", "Motivo" + cantMotivos);
+        divBotonMotivo.setAttribute('class','col-md-10');
+        var boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo" + cantMotivos + "'>Seleccione un Motivo</button>";
+        divBotonMotivo.innerHTML = boton;      
+        divMotivo.appendChild(labelMotivo);
+        divMotivo.appendChild(divBotonMotivo);
+        divContenedor.appendChild(divMotivo);
+        var divInputsGenerales = document.getElementById('InputsGenerales');
+        var divInput = document.createElement("input");
+        divInput.setAttribute("id", "ID_Motivo" + cantMotivos);
+        divInput.setAttribute("name", "ID_Motivo" + cantMotivos);
+        divInput.setAttribute("type", "hidden");
+        divInputsGenerales.appendChild(divInput);
+      }
+    }
     function cambiarConfig(){
       var ID_Config = document.getElementById('ID_Config');
       var formatConfig = document.getElementById('formatConfig');
@@ -577,7 +616,7 @@ $datosNav = $_SESSION["datosNav"];
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 1: </label>
-              <div class="col-md-10" id = "Motivo">
+              <div class="col-md-9" id = "Motivo">
                 <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo">Seleccione un Motivo</button>   
               </div>
               <script>
@@ -589,6 +628,9 @@ $datosNav = $_SESSION["datosNav"];
                   }
                 ?>
               </script>
+                <div class="col-md-1">
+                  <button type="button" class="btn btn-primary" onClick="agregarMotivo()" id="agregarMotivoID">+</button>
+              </div>
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 2: </label>
@@ -619,6 +661,8 @@ $datosNav = $_SESSION["datosNav"];
                   }
                 ?>
               </script>
+            </div>
+            <div id="contenedorMotivos">              
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Categoría: </label>
@@ -678,7 +722,7 @@ $datosNav = $_SESSION["datosNav"];
               </div>
             </div>
             <div class="form-group row">
-              <div class="offset-md-2 col-md-10">
+              <div class="offset-md-2 col-md-10" id = "InputsGenerales">
                 <input type="hidden" name="ID_Motivo" id = "ID_Motivo" value = "0">
                 <input type="hidden" name="ID_Motivo2" id = "ID_Motivo2" value = "0">
                 <input type="hidden" name="ID_Motivo3" id = "ID_Motivo3" value = "0">
@@ -708,7 +752,7 @@ $datosNav = $_SESSION["datosNav"];
 			        		<div class="col"></div>
 			        		<div class="col-8">
 			        			<div class="input-group mb-3">
-				        			<input class = "form-control" type="text" name="BuscarPersona" id = "SearchPersonas" onKeyUp="buscarPersonas()" autocomplete="off" placeholder="Ingrese el nombre, apellido o documento de la persona">
+				        			<input class = "form-control" type="text" name="BuscarPersona" id = "SearchPersonas" onKeyUp="buscarPersonas()" autocomplete="off" placeholder="Ingrese el nombre, apellido, documento o legajo">
 				        			<div class="input-group-append">
 				        				<span class="input-group-text" id="basic-addon2">Buscar</span>
 								      </div>	
@@ -839,6 +883,86 @@ $datosNav = $_SESSION["datosNav"];
                 <div class="row">
                   <div class="col"></div>
                   <div class="col-10" id = "ResultadosMotivos3">
+                    
+                  </div>
+                  <div class="col"></div>
+                </div>                
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- FIN MODAL SELECCION MOTIVO -->
+      <!-- Modal SELECCION MOTIVO 4 -->
+      <div class="modal fade bd-example-modal-lg" id="ModalMotivo4" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Selección de Motivo</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="row">
+                  <div class="col"></div>
+                  <div class="col-8">
+                    <div class="input-group mb-3">
+                      <input class = "form-control" type="text" name="BuscarMotivos4" id = "SearchMotivos4" onKeyUp="buscarMotivosGeneral(4)" autocomplete="off">
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">Buscar</span>
+                      </div>  
+                    </div>                    
+                  </div>
+                  <div class="col"></div>
+                </div>
+                <div class="row">
+                  <div class="col"></div>
+                  <div class="col-10" id = "ResultadosMotivos4">
+                    
+                  </div>
+                  <div class="col"></div>
+                </div>                
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- FIN MODAL SELECCION MOTIVO -->
+      <!-- Modal SELECCION MOTIVO 5 -->
+      <div class="modal fade bd-example-modal-lg" id="ModalMotivo5" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Selección de Motivo</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="row">
+                  <div class="col"></div>
+                  <div class="col-8">
+                    <div class="input-group mb-3">
+                      <input class = "form-control" type="text" name="BuscarMotivos5" id = "SearchMotivos5" onKeyUp="buscarMotivosGeneral(5)" autocomplete="off">
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">Buscar</span>
+                      </div>  
+                    </div>                    
+                  </div>
+                  <div class="col"></div>
+                </div>
+                <div class="row">
+                  <div class="col"></div>
+                  <div class="col-10" id = "ResultadosMotivos5">
                     
                   </div>
                   <div class="col"></div>

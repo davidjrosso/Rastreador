@@ -205,7 +205,7 @@ $Con->CloseConexion();
               $Con->OpenConexion();
 
               $ConsultarDatos = "select * from otras_instituciones where ID_OtraInstitucion = $ID_OtraInstitucion";
-              $MensajeErrorDatos = "No se pudo consultar los Datos de la Institucion";
+              $MensajeErrorDatos = "No se pudo consultar los Datos de la Institución";
 
               $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
 
@@ -275,7 +275,7 @@ $Con->CloseConexion();
             </div>
               <?php  
             }else{
-              $Mensaje = "No se pudo consultar los Datos porque no se pudo obtener el ID de la Institucion";
+              $Mensaje = "No se pudo consultar los Datos porque no se pudo obtener el ID de la Institución";
               echo $Mensaje;
             }
           ?>

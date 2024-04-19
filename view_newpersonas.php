@@ -64,6 +64,42 @@ $Con->CloseConexion();
               });
           });
 
+        function ValidarDocumento(){
+          var NroDocumento = document.getElementById("idDocumento").value;
+
+          if (NroDocumento.toString().length < 8){
+            NotShowModalError();
+            return true;
+          }
+          const DniNoRepetido = "<p>No hay ningún registro con ese nombre o documento</p>";
+          xmlhttp=new XMLHttpRequest();
+
+          xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+              contenidosRecibidos = xmlhttp.responseText;
+              if(DniNoRepetido != contenidosRecibidos){
+                ShowModalError();
+              } else {
+                NotShowModalError();
+              }
+            }
+          }
+          xmlhttp.open('POST', 'buscarPersonas.php?valorBusqueda='+NroDocumento, true); // Método post y url invocada
+          xmlhttp.send();
+
+        }
+
+        function ShowModalError(){
+          var modal = document.getElementById("ErrorDocumento");
+          modal.style.display = "block";
+          modal.innerText="El Documento ingresado ya Existe";
+        }
+
+        function NotShowModalError(){
+          var modal = document.getElementById("ErrorDocumento");
+          modal.style.display = "none";
+        }
+
        function CargarEscuelas(xValor){
        		ID_Nivel = xValor;
        		var xMLHTTP = new XMLHttpRequest();
@@ -272,10 +308,12 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Documento: </label>
+              <label for="idDocumento" class="col-md-2 col-form-label LblForm">Documento: </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "DNI" id="inputPassword" autocomplete="off">
+                <input type="text" class="form-control" name = "DNI" oninput="ValidarDocumento()" id="idDocumento" required minlength="7" maxlength="8" autocomplete="off">
               </div>
+            </div>
+            <div class="div-modal-Error" id="ErrorDocumento">
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Fecha de Nacimiento: </label>

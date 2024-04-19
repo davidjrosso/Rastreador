@@ -35,14 +35,13 @@ $Con->CloseConexion();
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   <!--<script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
   <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script> -->
-  <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
-
+  <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-  <script>
+<script>
        $(document).ready(function(){
               var date_input=$('input[name="date"]'); //our date input has the name "date"
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
@@ -228,6 +227,16 @@ $Con->CloseConexion();
               $ID_Motivo = $_REQUEST["ID_Motivo"];
               $ID_Motivo2 = $_REQUEST["ID_Motivo2"];
               $ID_Motivo3 = $_REQUEST["ID_Motivo3"];
+              if (isset($_REQUEST["ID_Motivo4"])) {
+                $ID_Motivo4 = $_REQUEST["ID_Motivo4"];
+              } else {
+                $ID_Motivo4 = 0;
+              }
+              if (isset($_REQUEST["ID_Motivo5"])) {
+                $ID_Motivo5 = $_REQUEST["ID_Motivo5"];
+              } else {
+                $ID_Motivo5 = 0;
+              } 
               $ID_Categoria = $_REQUEST["ID_Categoria"]; 
               $ID_Escuela = $_REQUEST["ID_Escuela"];
               $Trabajo = $_REQUEST["Trabajo"];
@@ -418,6 +427,25 @@ $Con->CloseConexion();
                 //$filtrosSeleccionados["ID_Motivo3"] = $ID_Motivo3;
               }
 
+              if($ID_Motivo4 > 0){
+                $ConsultarMovimientosPersona .= " or (M.motivo_1 = $ID_Motivo4 or M.motivo_2 = $ID_Motivo4 or M.motivo_3 = $ID_Motivo4))";
+                $Consulta .= " or (M.motivo_1 = $ID_Motivo4 or M.motivo_2 = $ID_Motivo4 or M.motivo_3 = $ID_Motivo4))";
+                $ConsultarMotivo = "select motivo from motivo where id_motivo = ".$ID_Motivo4." limit 1";
+                $EjecutarConsultarMotivo = mysqli_query($Con->Conexion,$ConsultarMotivo) or die("Problemas al consultar filtro Motivo");
+                $RetConsultarMotivo = mysqli_fetch_assoc($EjecutarConsultarMotivo);  
+                $filtros[] = "Motivo 4: ".$RetConsultarMotivo['motivo'];
+              }
+
+              if($ID_Motivo5 > 0){
+                $ConsultarMovimientosPersona .= " or (M.motivo_1 = $ID_Motivo5 or M.motivo_2 = $ID_Motivo5 or M.motivo_3 = $ID_Motivo5))";
+                $Consulta .= " or (M.motivo_1 = $ID_Motivo5 or M.motivo_2 = $ID_Motivo5 or M.motivo_3 = $ID_Motivo5))";
+                $ConsultarMotivo = "select motivo from motivo where id_motivo = ".$ID_Motivo5." limit 1";
+                $EjecutarConsultarMotivo = mysqli_query($Con->Conexion,$ConsultarMotivo) or die("Problemas al consultar filtro Motivo");
+                $RetConsultarMotivo = mysqli_fetch_assoc($EjecutarConsultarMotivo);  
+                $filtros[] = "Motivo 5: ".$RetConsultarMotivo['motivo'];
+              }
+
+
               if($ID_Categoria > 0){
                 $ConsultarMovimientosPersona .= " and  ((M.motivo_1 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria) or (M.motivo_2 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria) or (M.motivo_3 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria))";
                 $Consulta .= " and  ((M.motivo_1 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria) or (M.motivo_2 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria) or (M.motivo_3 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria))";
@@ -458,13 +486,13 @@ $Con->CloseConexion();
                 $filtrosSeleccionados["ID_Responsable"] = $ID_Responsable;
               }
 
-              $ConsultarMovimientosPersona .= " group by M.id_movimiento order by M.fecha, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";              
+              $ConsultarMovimientosPersona .= " group by M.id_movimiento,  M.fecha order by M.fecha DESC";
 
-              if($ID_Persona > 0){
+              /*if($ID_Persona > 0){
                 $Consulta .= " group by M.id_movimiento order by Anio, Mes, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";
               }else{
                 $Consulta .= " group by M.id_persona order by Anio, Mes, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";                
-              }
+              }*/
                             
 
               //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -555,9 +583,9 @@ $Con->CloseConexion();
                 }
 
                 if($ID_Persona > 0){
-                  $ConsultarTodos .= " group by P.id_movimiento order by P.domicilio, P.apellido, P.nombre";
+                  $ConsultarTodos .= " group by P.id_movimiento, M.fecha order by M.fecha, P.domicilio, P.apellido, P.nombre DESC";
                 }else{
-                  $ConsultarTodos .= " group by P.id_persona order by P.domicilio, P.apellido, P.nombre";
+                  $ConsultarTodos .= " group by P.id_persona,P.id_movimiento, M.fecha order by M.fecha, P.domicilio, P.apellido, P.nombre DESC";
                 }
 
                 // $ConsultarTodos .= " group by P.id_persona order by P.apellido, P.nombre";
@@ -777,8 +805,6 @@ $Con->CloseConexion();
             //   $ConsultarMovimientos = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, M.motivo_1, M.motivo_2, M.motivo_3, M.observaciones, R.responsable from movimiento M, responsable R, persona P where M.id_resp = R.id_resp and M.id_persona = P.id_persona and M.id_persona = $ID_Persona";
               $MensajeErrorMovimientos = "No se pudo consultar los movimientos de la persona";
 
-              // echo "DEBUG: ".var_dump($ConsultarMovimientosPersona);
-
               $TomarMovimientosPersona = mysqli_query($Con->Conexion,$ConsultarMovimientosPersona) or die($MensajeErrorMovimientos);
 
               $Rows = mysqli_num_rows($TomarMovimientosPersona);
@@ -800,7 +826,7 @@ $Con->CloseConexion();
                 $regdomicilio[$clave] = $reg['domicilio'];                
               }
 
-              array_multisort($regdomicilio, SORT_DESC, $tomarRetTodos);
+              //array_multisort($regdomicilio, SORT_ASC, $tomarRetTodos);
 
               if($ID_Config == 'table'){
                 $TableMov = "<table class='table'>
@@ -880,7 +906,6 @@ $Con->CloseConexion();
                 $CentroSalud = $RetTodos["centro_salud"]; //centro_salud
                 $OtraInstitucion = $RetTodos["NombreInst"]; //otraInstitucion                
                 $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);                                 
-
                 if($ID_Config == 'grid'){
                   $TableMov = "<table class='table table-dark'>";                
                   $TableMov .= "<tr class='trFecha'><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>".$DtoMovimiento->getFecha()."</td></tr>";
@@ -1044,7 +1069,6 @@ $Con->CloseConexion();
               $MensajeErrorMovimientos = "No se pudo consultar los movimientos de la persona";
 
               // echo "* DEBUG: ".var_dump($Consulta),"<br><br>" ;
-
               $TomarMovimientos = mysqli_query($Con->Conexion,$Consulta) or die($MensajeErrorMovimientos);
 
               $Rows = mysqli_num_rows($TomarMovimientos);
@@ -1066,7 +1090,7 @@ $Con->CloseConexion();
                 $regdomicilio[$clave] = $reg['domicilio'];                
               }
 
-              array_multisort($regdomicilio, SORT_DESC, $tomarRetTodos);
+              //array_multisort($regdomicilio, SORT_DESC, $tomarRetTodos);
 
               if($ID_Config == 'table'){
                 $MotivosTh = "";
@@ -1410,32 +1434,34 @@ $Con->CloseConexion();
 </div>
 <!-- Modal -->
 <div class="modal fade" id="configModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="class_modal-dialog modal-dialog" role="document"  id="id_modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Configurar resultados</h5>
+        <h5 class="modal-title" id="exampleModalLabel" style="margin-left: auto;">Configurar resultados</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <input type="checkbox" id="chkFecha"> - Fecha
-        <input type="checkbox" id="chkMotivos"> - Motivos
-        <input type="checkbox" id="chkPersona"> - Persona 
-        <input type="checkbox" id="chkDNI"> - DNI 
-        <input type="checkbox" id="chkFechaNac"> - Fecha Nac. 
-        <input type="checkbox" id="chkEdad"> - Edad 
-        <input type="checkbox" id="chkMeses"> - Meses 
-        <input type="checkbox" id="chkObraSocial"> - Obra Social 
-        <input type="checkbox" id="chkDomicilio"> - Domicilio 
-        <input type="checkbox" id="chkBarrio"> - Barrio 
-        <input type="checkbox" id="chkLocalidad"> - Localidad 
-        <input type="checkbox" id="chkObservaciones"> - Observaciones
-        <input type="checkbox" id="chkResponsable"> - Responsable
-        <input type="checkbox" id="chkCentrosSalud"> - Centro de salud 
-        <input type="checkbox" id="chkOtrasInstituciones"> - Otras instituciones
+        <ul type=none>
+          <li><input type="checkbox" id="chkFecha"> Fecha </li>
+          <li><input type="checkbox" id="chkMotivos"> Motivos</li>
+          <li><input type="checkbox" id="chkPersona"> Persona</li> 
+          <li><input type="checkbox" id="chkDNI"> DNI </li>
+          <li><input type="checkbox" id="chkFechaNac"> Fecha Nac. </li>
+          <li><input type="checkbox" id="chkEdad"> Edad </li>
+          <li><input type="checkbox" id="chkMeses"> Meses </li>
+          <li><input type="checkbox" id="chkObraSocial"> Obra Social </li>
+          <li><input type="checkbox" id="chkDomicilio"> Domicilio </li>
+          <li><input type="checkbox" id="chkBarrio"> Barrio </li>
+          <li><input type="checkbox" id="chkLocalidad"> Localidad </li>
+          <li><input type="checkbox" id="chkObservaciones"> Observaciones</li>
+          <li><input type="checkbox" id="chkResponsable"> Responsable</li>
+          <li><input type="checkbox" id="chkCentrosSalud"> Centro de salud </li>
+          <li><input type="checkbox" id="chkOtrasInstituciones"> Otras instituciones</li>
+        </ul>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer modal-footer-flex-center">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
         <button type="button" class="btn btn-primary" onClick="configResultados()" data-dismiss="modal">Aceptar</button>
       </div>

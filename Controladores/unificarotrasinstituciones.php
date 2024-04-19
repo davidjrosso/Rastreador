@@ -27,7 +27,7 @@ if($ID_Institucion_1 > 0 && $ID_Institucion_2 > 0){
 	$Con->OpenConexion();
 
 	$ConsultarInstituciones = "select * from movimiento where id_otrainstitucion = $ID_Institucion_2 and estado = 1";
-	$MensajeErrorConsultarInstituciones = "No se pudieron consultar los casos de igualdad en la Institucion 1";
+	$MensajeErrorConsultarInstituciones = "No se pudieron consultar los casos de igualdad en la Institución 1";
 
 	$EjecutarConsultarInstituciones = mysqli_query($Con->Conexion, $ConsultarInstituciones) or die($MensajeErrorConsultarInstituciones);
 	while($RetInstituciones = mysqli_fetch_assoc($EjecutarConsultarInstituciones)){
@@ -38,7 +38,7 @@ if($ID_Institucion_1 > 0 && $ID_Institucion_2 > 0){
 	}
 
 	$ConsultaBajaInstitucion = "update otras_instituciones set Estado = 0 where ID_OtraInstitucion = $ID_Institucion_2";
-	$MensajeErrorBajaInstitucion = "No se pudo dar de baja la Institucion";
+	$MensajeErrorBajaInstitucion = "No se pudo dar de baja la Institución";
 
 	mysqli_query($Con->Conexion,$ConsultaBajaInstitucion) or die($MensajeErrorBajaInstitucion);
 

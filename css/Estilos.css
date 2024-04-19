@@ -214,8 +214,8 @@ body {
   position: relative;
 }
 
-.btn-Salir{
-}
+/*.btn-Salir{
+}*/
 
 .btn-Salir:hover{
   cursor: pointer;
@@ -295,3 +295,55 @@ body {
 }
 
 /* FIN DE ARREGLO DEL HEADER DE LA TABLA   */
+
+.class_modal-dialog {
+  max-width: max-content;
+}
+
+.modal-footer-flex-center {
+  justify-content: center;
+}
+
+.div-buttom-padding{
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.div-modal-Error {
+  display: none; 
+  position: relative;
+  z-index: 1; 
+  left: 25%;
+  top: -10px;
+  width: 30%;
+  height: 100%;
+  box-shadow: 0px 3px 6px rgb(110, 109, 109);
+  border: 2px solid red;
+  border-radius: .4em;
+  font-size: 0.8rem;
+  color: red;
+  text-align: center;
+  background-color: #FBEBE8;
+}
+
+
+/*.div-modal-Error::before {
+  content:"";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-bottom: 10px solid red;
+  border-right: 10px solid transparent;
+  border-left: 10px solid transparent;
+  margin:0px 0px 0px  0px;
+  }*/
+/*
+.div-modal-Error {
+padding: 10px;
+width: 220px;
+border-radius: 10px;
+background-color: #8f0;
+font-family: "trebuchet ms", tahoma, verdana, sans-serif;
+font-size: 1.4em;
+}
+*/

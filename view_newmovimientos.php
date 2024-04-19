@@ -468,12 +468,13 @@ $Con->CloseConexion();
               <div class = "col-md-9">
                 <?php  
                 $Element = new Elements();
-                if(isset($_SESSION["UltResponsable"])){
+                /*if(isset($_SESSION["UltResponsable"])){
                   $xID_Responsable = $_SESSION["UltResponsable"];
-                  echo $Element->CBModResponsables($xID_Responsable);                  
+                  echo $Element->CBModResponsables($xID_Responsable);
                 }else{
                   echo $Element->CBResponsables();
-                }                
+                }*/
+                echo $Element->CBResponsables();
                 ?>
               </div>
               <div class="col-md-1">
@@ -487,12 +488,13 @@ $Con->CloseConexion();
               <div class = "col-md-10">
                 <?php  
                 $Element = new Elements();
-                if(isset($_SESSION["UltCentro"])){
+                /*if(isset($_SESSION["UltCentro"])){
                   $xID_Centro = $_SESSION["UltCentro"];
                   echo $Element->CBModCentros($xID_Centro);                  
                 }else{
                   echo $Element->CBCentros();
-                }                 
+                }*/
+                echo $Element->CBCentros();
                 ?>
               </div>
             </div>
@@ -501,12 +503,13 @@ $Con->CloseConexion();
               <div class = "col-md-10">
                 <?php  
                 $Element = new Elements();
-                if(isset($_SESSION["UltOtraInstitucion"])){
+                /*if(isset($_SESSION["UltOtraInstitucion"])){
                   $xID_OtraInstitucion = $_SESSION["UltOtraInstitucion"];
                   echo $Element->CBModOtrasInstituciones($xID_OtraInstitucion);                  
                 }else{
                   echo $Element->CBOtrasInstituciones();
-                }                
+                }*/
+                echo $Element->CBOtrasInstituciones();
                 ?>
               </div>
             </div>
