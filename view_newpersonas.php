@@ -64,8 +64,6 @@ $Con->CloseConexion();
               });
           });
 
-ValidarDocumento
-
 
         function ValidarDocumento(){
           var NroDocumento = document.getElementById("idDocumento").value;
@@ -85,6 +83,7 @@ ValidarDocumento
                 console.log(DniNoRepetido);
                 swal({
                   title: "El Documento ingresado ya esta registrado",
+                  icon: "info",
                   text: "Por favor ingrese un Documento diferente",
                   confirmButtonText: 'OK'
                 })
@@ -317,7 +316,7 @@ ValidarDocumento
             <div class="form-group row">
               <label for="idDocumento" class="col-md-2 col-form-label LblForm">Documento: </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "DNI" oninput="ValidarDocumento()" id="idDocumento" required minlength="7" maxlength="8" autocomplete="off">
+                <input type="number" class="form-control number-to-text" name = "DNI" oninput="ValidarDocumento()" id="idDocumento" required minlength="7" maxlength="8" autocomplete="off">
               </div>
             </div>
             <div class="div-modal-Error" id="ErrorDocumento">
