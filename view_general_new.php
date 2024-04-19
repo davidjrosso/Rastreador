@@ -780,7 +780,7 @@ $Con->CloseConexion();
 			        		<div class="col"></div>
 			        		<div class="col-8">
 			        			<div class="input-group mb-3">
-				        			<input class = "form-control" type="text" name="BuscarPersona" id = "SearchPersonas" onKeyUp="buscarPersonas()" autocomplete="off" placeholder="Ingrese el nombre, apellido o documento de la persona">
+				        			<input class = "form-control" type="text" name="BuscarPersona" id = "SearchPersonas" onKeyUp="buscarPersonas()" autocomplete="off" placeholder="Ingrese el nombre, apellido, documento o legajo">
 				        			<div class="input-group-append">
 				        				<span class="input-group-text" id="basic-addon2">Buscar</span>
 								      </div>	
