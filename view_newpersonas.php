@@ -64,6 +64,9 @@ $Con->CloseConexion();
               });
           });
 
+ValidarDocumento
+
+
         function ValidarDocumento(){
           var NroDocumento = document.getElementById("idDocumento").value;
 
@@ -71,16 +74,20 @@ $Con->CloseConexion();
             NotShowModalError();
             return true;
           }
-          const DniNoRepetido = "<p>No hay ningún registro con ese nombre o documento</p>";
+          const DniNoRepetido = "<p>No hay ningún registro con ese nombre, documento o legajo</p>";
           xmlhttp=new XMLHttpRequest();
 
           xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-              contenidosRecibidos = xmlhttp.responseText;
-              if(DniNoRepetido != contenidosRecibidos){
-                ShowModalError();
-              } else {
-                NotShowModalError();
+              var contenidosRecibidos = xmlhttp.responseText;
+              if(DniNoRepetido != contenidosRecibidos){ 
+                console.log(contenidosRecibidos);
+                console.log(DniNoRepetido);
+                swal({
+                  title: "El Documento ingresado ya esta registrado",
+                  text: "Por favor ingrese un Documento diferente",
+                  confirmButtonText: 'OK'
+                })
               }
             }
           }
