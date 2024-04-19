@@ -616,7 +616,7 @@ $datosNav = $_SESSION["datosNav"];
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 1: </label>
-              <div class="col-md-9" id = "Motivo">
+              <div class="col-md-10" id = "Motivo">
                 <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo">Seleccione un Motivo</button>   
               </div>
               <script>
@@ -628,9 +628,6 @@ $datosNav = $_SESSION["datosNav"];
                   }
                 ?>
               </script>
-                <div class="col-md-1">
-                  <button type="button" class="btn btn-primary" onClick="agregarMotivo()" id="agregarMotivoID">+</button>
-              </div>
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 2: </label>
