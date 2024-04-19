@@ -25,9 +25,13 @@ if (isset($consultaBusqueda)) {
 	//o el apellido sea igual a $consultaBusqueda, 
 	//o $consultaBusqueda sea igual a nombre + (espacio) + apellido
 	if(is_numeric($consultaBusqueda)){
-		$consulta = mysqli_query($Con->Conexion, "SELECT * FROM persona WHERE documento LIKE '%$consultaBusqueda%' and estado = 1");
+		if(strlen((string)$consultaBusqueda) >= 8){
+			$consulta = mysqli_query($Con->Conexion, "SELECT * FROM persona WHERE documento LIKE '%$consultaBusqueda%' and estado = 1");
+	    } else {
+			$consulta = mysqli_query($Con->Conexion, "SELECT * FROM persona WHERE nro_legajo LIKE '%$consultaBusqueda%' and estado = 1");
+		}
 	}else{
-		$consulta = mysqli_query($Con->Conexion, "SELECT * FROM persona WHERE apellido LIKE '%$consultaBusqueda%' or nombre LIKE '%$consultaBusqueda%' and estado = 1");
+		$consulta = mysqli_query($Con->Conexion, "SELECT * FROM persona WHERE (apellido LIKE '%$consultaBusqueda%' or nombre LIKE '%$consultaBusqueda%') and estado = 1");
 	}
 
 	//Obtiene la cantidad de filas que hay en la consulta
