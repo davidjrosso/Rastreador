@@ -39,7 +39,7 @@ if (isset($consultaBusqueda)) {
 
 	//Si no existe ninguna fila que sea igual a $consultaBusqueda, entonces mostramos el siguiente mensaje
 	if ($filas === 0) {
-		$mensaje = "<p>No hay ningún registro con ese nombre o documento</p>";
+		$mensaje = "<p>No hay ningún registro con ese nombre, documento o legajo</p>";
 	} else {
 		//Si existe alguna fila que sea igual a $consultaBusqueda, entonces mostramos el siguiente mensaje
 		//echo 'Resultados para <strong>'.$consultaBusqueda.'</strong>';
