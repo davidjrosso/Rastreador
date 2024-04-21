@@ -291,7 +291,21 @@ $Con->CloseConexion();
               $Con = new Conexion();
               $Con->OpenConexion();
 
-              $ConsultarDatos = "select M.id_movimiento, M.fecha, M.id_centro, P.id_persona, P.apellido, P.nombre, M.observaciones, R.id_resp, M.id_resp_2, M.id_resp_3, M.id_resp_4, R.responsable, C.centro_salud, I.ID_OtraInstitucion,I.Nombre, M.motivo_1, M.motivo_2, M.motivo_3 from movimiento M, persona P, responsable R, centros_salud C, otras_instituciones I where M.id_persona = P.id_persona and M.id_resp = R.id_resp and M.id_centro = C.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and M.id_movimiento = $ID_Movimiento";
+              $ConsultarDatos = "select M.id_movimiento, M.fecha, M.id_centro, P.id_persona, P.apellido, 
+                                        P.nombre, M.observaciones, R.id_resp, M.id_resp_2, M.id_resp_3, M.id_resp_4,
+                                        R.responsable, C.centro_salud, I.ID_OtraInstitucion,I.Nombre, M.motivo_1,
+                                        M.motivo_2, M.motivo_3, M.motivo_4, M.motivo_5 
+                                 from movimiento M, 
+                                      persona P, 
+                                      responsable R, 
+                                      centros_salud C, 
+                                      otras_instituciones I 
+                                 where M.id_persona = P.id_persona
+                                   and M.id_resp = R.id_resp
+                                   and M.id_centro = C.id_centro
+                                   and M.id_otrainstitucion = I.ID_OtraInstitucion
+                                   and M.id_movimiento = $ID_Movimiento";
+
               $MensajeErrorDatos = "No se pudo consultar los Datos del Movimiento";
 
               $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
@@ -302,6 +316,8 @@ $Con->CloseConexion();
               $ID_Motivo_1 = $Ret["motivo_1"];
               $ID_Motivo_2 = $Ret["motivo_2"];
               $ID_Motivo_3 = $Ret["motivo_3"];
+              $ID_Motivo_4 = $Ret["motivo_4"];
+              $ID_Motivo_5 = $Ret["motivo_5"];
               $Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
               $Apellido = $Ret["apellido"];
               $Nombre = $Ret["nombre"];
@@ -313,7 +329,7 @@ $Con->CloseConexion();
               $ID_Responsable_3 = $Ret["id_resp_3"];
               $ID_Responsable_4 = $Ret["id_resp_4"];
               $ID_Centro = $Ret["id_centro"];
-              $Centro_Salud = $Ret["Centro_Salud"];
+              $Centro_Salud = $Ret["centro_salud"];
               $ID_OtraInstitucion = $Ret["ID_OtraInstitucion"];
               $OtraInstitucion = $Ret["Nombre"];              
 
