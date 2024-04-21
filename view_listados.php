@@ -296,6 +296,7 @@ $datosNav = $_SESSION["datosNav"];
         divInputsGenerales.appendChild(divInput);
       }
     }
+
     function cambiarConfig(){
       var ID_Config = document.getElementById('ID_Config');
       var formatConfig = document.getElementById('formatConfig');
@@ -616,51 +617,24 @@ $datosNav = $_SESSION["datosNav"];
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 1: </label>
-              <div class="col-md-10" id = "Motivo">
+              <div class="col-md-9" id = "Motivo">
                 <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo">Seleccione un Motivo</button>   
               </div>
-              <script>
-                <?php
-                  if(isset($datosNav["ID_Motivo"])){
-                ?>
-                    seleccionMotivo(<?= "'".$datosNav["Motivo"]."'" ?>, <?= $datosNav["ID_Motivo"] ?>,1);                                         
-                <?php   
-                  }
-                ?>
-              </script>
-                <!--<div class="col-md-1">
+                <div class="col-md-1">
                   <button type="button" class="btn btn-primary" onClick="agregarMotivo()" id="agregarMotivoID">+</button>
-              </div> -->
+              </div>
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 2: </label>
               <div class="col-md-10" id = "Motivo2">
                 <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo2">Seleccione un Motivo</button>   
               </div>
-              <script>
-                <?php
-                  if(isset($datosNav["ID_Motivo2"])){
-                ?>
-                    seleccionMotivo(<?= "'".$datosNav["Motivo2"]."'" ?>, <?= $datosNav["ID_Motivo2"] ?>,2);                                         
-                <?php   
-                  }
-                ?>
-              </script>
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 3: </label>
               <div class="col-md-10" id = "Motivo3">
                 <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo3">Seleccione un Motivo</button>   
               </div>
-              <script>
-                <?php
-                  if(isset($datosNav["ID_Motivo3"])){
-                ?>
-                    seleccionMotivo(<?= "'".$datosNav["Motivo3"]."'" ?>, <?= $datosNav["ID_Motivo3"] ?>,3);                                         
-                <?php   
-                  }
-                ?>
-              </script>
             </div>
             <div id="contenedorMotivos">              
             </div>
