@@ -499,8 +499,8 @@ $Con->CloseConexion();
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 1: </label>
-              <div class="col-md-9" id = "Motivo">
-                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo">Seleccione un Motivo</button>   
+              <div class="col-md-9" id = "Motivo_1">
+                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo_1">Seleccione un Motivo</button>   
               </div>
                 <div class="col-md-1">
                   <button type="button" class="btn btn-primary" onClick="agregarMotivo()" id="agregarMotivoID">+</button>

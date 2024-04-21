@@ -66,12 +66,13 @@ $Con->CloseConexion();
 
 
         function ValidarDocumento(){
-          var NroDocumento = document.getElementById("idDocumento").value;
-
+          var Documento = document.getElementById("idDocumento");
+          var NroDocumento = Documento.value;
           if (NroDocumento.toString().length < 8){
             NotShowModalError();
             return true;
           }
+
           const DniNoRepetido = "<p>No hay ningún registro con ese nombre, documento o legajo</p>";
           xmlhttp=new XMLHttpRequest();
 
@@ -79,10 +80,9 @@ $Con->CloseConexion();
             if (xmlhttp.readyState==4 && xmlhttp.status==200) {
               var contenidosRecibidos = xmlhttp.responseText;
               if(DniNoRepetido != contenidosRecibidos){ 
-                console.log(contenidosRecibidos);
-                console.log(DniNoRepetido);
+                Documento.value = "";
                 swal({
-                  title: "El Documento ingresado ya esta registrado",
+                  title: "El Documento ingresado "+ NroDocumento +" ya esta registrado",
                   icon: "info",
                   text: "Por favor ingrese un Documento diferente",
                   confirmButtonText: 'OK'
