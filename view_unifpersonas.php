@@ -85,6 +85,33 @@ $Con->CloseConexion();
         ID_Persona.setAttribute('value',xID);
       }
 
+      function VerificarUnificacion(){
+              var ID_Persona_1 = document.getElementById("ID_Persona_1");
+              var ID_Persona_2 = document.getElementById("ID_Persona_2");
+              var Form_1= document.getElementById("form_1");
+              var Bandera = ValidarUnifPersonas();
+              if (Bandera == false){
+                return Bandera;
+              }
+
+              swal({
+                title: "¿Está seguro?",
+                text: "¿Seguro de querer unificar estos motivos?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+              })
+              .then((result) => {
+                if (result) {
+                  Form_1.submit();
+                  return true;
+                } else {
+                  return false;
+                }
+              });
+            }
+
+
   </script>
 
 </head>
@@ -218,7 +245,8 @@ $Con->CloseConexion();
           <p class = "TextoAdvertenciaUnificar">¡ADVERTENCIA! Todos los datos y movimientos de la segunda persona seleccionada se unirán a la primera persona seleccionada. La segunda persona se eliminará.</p>
           <br>
            <!-- Carga -->
-          <form method = "post" action = "Controladores/unificarpersonas.php" onSubmit = "return ValidarUnifPersonas();">
+          <!--<form method = "post" action = "Controladores/unificarpersonas.php" onSubmit = "return VerificarUnificacion();"> -->
+          <form id="form_1" method = "post" action = "Controladores/unificarpersonas.php">
               <div class="form-group row">
                   <label for="inputPassword" class="col-md-3 col-form-label LblForm">Primera Persona: </label>
                   <div class="col-md-9" id = "Persona_1">
@@ -235,7 +263,7 @@ $Con->CloseConexion();
               <div class="offset-md-3 col-md-9">
                 <input type="hidden" name="ID_Persona_1" id = "ID_Persona_1" value = "0">
                 <input type="hidden" name="ID_Persona_2" id = "ID_Persona_2" value = "0">
-                <button type="submit" class="btn btn-outline-success">Aceptar</button>
+                <button type="button" class="btn btn-outline-success" onclick="return VerificarUnificacion();">Aceptar</button>
                 <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
 
               </div>
