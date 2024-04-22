@@ -221,7 +221,7 @@ $Con->CloseConexion();
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Código *: </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "Codigo" id="Codigo" autocomplete="off" readonly>
+                <input type="text" class="form-control" name = "Codigo" id="Codigo" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
