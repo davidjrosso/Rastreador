@@ -67,27 +67,37 @@ $Con->CloseConexion();
 
           function agregarMotivo(){
             if (cantMotivos <= 4) {
-              cantMotivos++;
-              var divContenedor = document.getElementById('contenedorMotivos');
-              var divMotivo = document.createElement("div");
-              divMotivo.setAttribute('class','form-group row');
-              var labelMotivo = document.createElement("label");
-              labelMotivo.setAttribute('class','col-md-2 col-form-label LblForm');
-              labelMotivo.innerText = 'Motivo '+ cantMotivos +':';
-              var divBotonMotivo = document.createElement("div");
-              divBotonMotivo.setAttribute("id", "Motivo" + cantMotivos);
-              divBotonMotivo.setAttribute('class','col-md-10');
-              var boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo" + cantMotivos + "'>Seleccione un Motivo</button>";
-              divBotonMotivo.innerHTML = boton;      
-              divMotivo.appendChild(labelMotivo);
-              divMotivo.appendChild(divBotonMotivo);
-              divContenedor.appendChild(divMotivo);
-              var divInputsGenerales = document.getElementById('InputsGenerales');
-              var divInput = document.createElement("input");
-              divInput.setAttribute("id", "ID_Motivo" + cantMotivos);
-              divInput.setAttribute("name", "ID_Motivo" + cantMotivos);
-              divInput.setAttribute("type", "hidden");
-              divInputsGenerales.appendChild(divInput);
+              var BanderaMotivoDisponible = false;
+              var divBotonMotivo = null;
+
+              while (cantMotivos <= 4 && BanderaMotivoDisponible == false) {
+                cantMotivos++;
+                divBotonMotivo = document.getElementById("Motivo_" + cantMotivos);
+                BanderaMotivoDisponible = (divBotonMotivo === null)? true:false;
+              }
+
+              if (BanderaMotivoDisponible == true){
+                var divContenedor = document.getElementById('contenedorMotivos');
+                var divMotivo = document.createElement("div");
+                divMotivo.setAttribute('class','form-group row');
+                var labelMotivo = document.createElement("label");
+                labelMotivo.setAttribute('class','col-md-2 col-form-label LblForm');
+                labelMotivo.innerText = 'Motivo '+ cantMotivos +':';
+                divBotonMotivo = document.createElement("div");
+                divBotonMotivo.setAttribute("id", "Motivo_" + cantMotivos);
+                divBotonMotivo.setAttribute('class','col-md-10');
+                var boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_" + cantMotivos + "'>Seleccione un Motivo</button>";
+                divBotonMotivo.innerHTML = boton;      
+                divMotivo.appendChild(labelMotivo);
+                divMotivo.appendChild(divBotonMotivo);
+                divContenedor.appendChild(divMotivo);
+                var divInputsGenerales = document.getElementById('InputsGenerales');
+                var divInput = document.createElement("input");
+                divInput.setAttribute("id", "ID_Motivo_" + cantMotivos);
+                divInput.setAttribute("name", "ID_Motivo_" + cantMotivos);
+                divInput.setAttribute("type", "hidden");
+                divInputsGenerales.appendChild(divInput);
+              }
             }
           }
 
