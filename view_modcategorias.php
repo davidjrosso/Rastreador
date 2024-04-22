@@ -254,7 +254,7 @@ $Con->CloseConexion();
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Código: </label>
                   <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Codigo" id="inputPassword" autocomplete="off" value = "<?php echo $Cod_Categoria; ?>">
+                    <input type="text" class="form-control" name = "Codigo" id="inputPassword" autocomplete="off" readonly value = "<?php echo $Cod_Categoria; ?>">
                   </div>
                 </div>
                 <div class="form-group row">
