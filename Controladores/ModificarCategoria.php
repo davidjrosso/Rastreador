@@ -94,7 +94,7 @@ try {
 
 	$Consulta = "update motivos 
 				 set cod_categoria = '$Codigo' 
-				 where id_categoria = '$ID_Categoria' 
+				 where cod_categoria = '$Cod_CategoriaViejo' 
 				   and estado = 1";
 
 	$CodigoColorEsc = mysqli_real_escape_string($Con->Conexion, $NuevoColor);
