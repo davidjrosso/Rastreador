@@ -459,7 +459,7 @@ $Con->CloseConexion();
                   </div>
                 </div>
                 <?php  
-                  if($DtoMovimiento->getMotivo_4() != ""){
+                  if($DtoMovimiento->getMotivo_4() != "" && $DtoMovimiento->getMotivo_4() != 1){
                 ?>
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 4: </label>
@@ -474,7 +474,7 @@ $Con->CloseConexion();
                 }
                 ?>
                 <?php
-                  if($DtoMovimiento->getMotivo_5() != ""){
+                  if($DtoMovimiento->getMotivo_5() != "" && $DtoMovimiento->getMotivo_5() != 1){
                 ?>
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 5: </label>
@@ -569,14 +569,14 @@ $Con->CloseConexion();
                     <input type="hidden" name="ID_Motivo_2" id = "ID_Motivo_2" value = "<?php echo $ID_Motivo_2; ?>">
                     <input type="hidden" name="ID_Motivo_3" id = "ID_Motivo_3" value = "<?php echo $ID_Motivo_3; ?>">
                     <?php
-                      if($DtoMovimiento->getMotivo_4() != ""){
+                      if($DtoMovimiento->getMotivo_4() != "" && $DtoMovimiento->getMotivo_4() != 1){
                     ?>
                     <input type="hidden" name="ID_Motivo_4" id = "ID_Motivo_4" value = "<?php echo $ID_Motivo_4; ?>">
                     <?php
                       }
                     ?>
                     <?php
-                      if($DtoMovimiento->getMotivo_5() != ""){
+                      if($DtoMovimiento->getMotivo_5() != "" && $DtoMovimiento->getMotivo_5() != 1){
                     ?>
                     <input type="hidden" name="ID_Motivo_5" id = "ID_Motivo_5" value = "<?php echo $ID_Motivo_5; ?>">
                     <?php
