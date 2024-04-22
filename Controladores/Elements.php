@@ -966,6 +966,28 @@ public function getMenuSeguridad($ID){
     return $Boton;
   }
 
+  public function BTNModMotivo_4($xID){
+    $Con3 = new Conexion();
+    $Con3->OpenConexion();    
+    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $xID order by motivo")or die("Problemas al mostrar Personas");    
+    $Ret = mysqli_fetch_assoc($Consulta);    
+        
+    $Boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_4'>".$Ret['motivo']."</button>";
+    $Con3->CloseConexion();
+    return $Boton;
+  }
+
+  public function BTNModMotivo_5($xID){
+    $Con3 = new Conexion();
+    $Con3->OpenConexion();    
+    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $xID order by motivo")or die("Problemas al mostrar Personas");    
+    $Ret = mysqli_fetch_assoc($Consulta);    
+        
+    $Boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_5'>".$Ret['motivo']."</button>";
+    $Con3->CloseConexion();
+    return $Boton;
+  }
+
   public function CBPrimerMotivo(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();

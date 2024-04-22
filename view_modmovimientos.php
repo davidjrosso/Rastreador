@@ -196,8 +196,8 @@ $Con->CloseConexion();
 
       function seleccionMotivo(xMotivo,xID,xNumber){
         if(xNumber > 1){
-          var Motivo = document.getElementById("Motivo"+xNumber);
-          var ID_Motivo = document.getElementById("ID_Motivo"+xNumber);
+          var Motivo = document.getElementById("Motivo_"+xNumber);
+          var ID_Motivo = document.getElementById("ID_Motivo_"+xNumber);
           Motivo.innerHTML = "";
           Motivo.innerHTML = "<p>"+xMotivo+"</p>";
           ID_Motivo.setAttribute('value',xID);
@@ -388,7 +388,7 @@ $Con->CloseConexion();
               $ID_Centro = $Ret["id_centro"];
               $Centro_Salud = $Ret["centro_salud"];
               $ID_OtraInstitucion = $Ret["ID_OtraInstitucion"];
-              $OtraInstitucion = $Ret["Nombre"];              
+              $OtraInstitucion = $Ret["Nombre"];
 
               $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$ID_Motivo_1,$ID_Motivo_2,$ID_Motivo_3,$ID_Motivo_4,$ID_Motivo_5,$Observaciones,$Responsable,$Centro_Salud,$OtraInstitucion);
               $Con->CloseConexion();
@@ -448,6 +448,36 @@ $Con->CloseConexion();
                     ?>
                   </div>
                 </div>
+                <?php  
+                  if($DtoMovimiento->getMotivo_4() != ""){
+                ?>
+                <div class="form-group row">
+                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 4: </label>
+                  <div class="col-md-10" id = "Motivo_4">
+                <?php
+                  $Element = new Elements();
+                  echo $Element->BTNModMotivo_4($DtoMovimiento->getMotivo_4());
+                ?>
+                  </div>
+                </div>
+                <?php
+                }
+                ?>
+                <?php
+                  if($DtoMovimiento->getMotivo_5() != ""){
+                ?>
+                <div class="form-group row">
+                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 5: </label>
+                  <div class="col-md-10" id = "Motivo_5">
+                <?php
+                  $Element = new Elements();
+                  echo $Element->BTNModMotivo_5($DtoMovimiento->getMotivo_5());
+                ?>
+                  </div>
+                </div>
+                <?php
+                }
+                ?>
                 <div id="contenedorMotivos">              
                 </div>
                 <div class="form-group row">
@@ -501,7 +531,7 @@ $Con->CloseConexion();
                       ?>
                     </div>
                   </div>
-                <?php  
+                <?php
                 }
                 ?>
                 <div class="form-group row">
@@ -528,6 +558,21 @@ $Con->CloseConexion();
                     <input type="hidden" name="ID_Motivo_1" id = "ID_Motivo_1" value = "<?php echo $ID_Motivo_1; ?>">
                     <input type="hidden" name="ID_Motivo_2" id = "ID_Motivo_2" value = "<?php echo $ID_Motivo_2; ?>">
                     <input type="hidden" name="ID_Motivo_3" id = "ID_Motivo_3" value = "<?php echo $ID_Motivo_3; ?>">
+                    <?php
+                      if($DtoMovimiento->getMotivo_4() != ""){
+                    ?>
+                    <input type="hidden" name="ID_Motivo_4" id = "ID_Motivo_4" value = "<?php echo $ID_Motivo_4; ?>">
+                    <?php
+                      }
+                    ?>
+                    <?php
+                      if($DtoMovimiento->getMotivo_5() != ""){
+                    ?>
+                    <input type="hidden" name="ID_Motivo_5" id = "ID_Motivo_5" value = "<?php echo $ID_Motivo_5; ?>">
+                    <?php
+                      }
+                    ?>
+                    <input type="hidden" name="ID_Responsable" id = "ID_Responsable" value = "<?php echo $ID_Responsable; ?>">
                     <button type="submit" class="btn btn-outline-success">Guardar</button>
                     <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_movimientos.php'">Atras</button>
                   </div>
@@ -710,7 +755,7 @@ $Con->CloseConexion();
       </div>
       <!-- FIN MODAL SELECCION MOTIVO -->
       <!-- Modal SELECCION MOTIVO 4 -->
-      <div class="modal fade bd-example-modal-lg" id="ModalMotivo4" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal fade bd-example-modal-lg" id="ModalMotivo_4" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -750,7 +795,7 @@ $Con->CloseConexion();
       </div>
       <!-- FIN MODAL SELECCION MOTIVO -->
       <!-- Modal SELECCION MOTIVO 5 -->
-      <div class="modal fade bd-example-modal-lg" id="ModalMotivo5" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal fade bd-example-modal-lg" id="ModalMotivo_5" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
