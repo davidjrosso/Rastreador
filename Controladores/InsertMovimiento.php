@@ -58,7 +58,7 @@ if($ID_Motivo_3 == 0){
 }
 
 if($ID_Motivo_4 == 0){
-	$ID_Motivo_5 = 1;
+	$ID_Motivo_4 = 1;
 }
 if($ID_Motivo_5 == 0){
 	$ID_Motivo_5 = 1;
