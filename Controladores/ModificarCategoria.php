@@ -92,8 +92,19 @@ try {
 	$ID_FormaViejo = $TomarDatosViejos["ID_Forma"];
 	$ColorViejo = $TomarDatosViejos["color"];
 
+	$Consulta = "update motivos 
+				 set cod_categoria = '$Codigo' 
+				 where id_categoria = '$ID_Categoria' 
+				   and estado = 1";
+
 	$CodigoColorEsc = mysqli_real_escape_string($Con->Conexion, $NuevoColor);
-	$Consulta = "update categoria set cod_categoria = '$Codigo', categoria = '$Categoria', ID_Forma = $ID_Forma, color = '$CodigoColorEsc' where id_categoria = $ID_Categoria and estado = 1";
+	$Consulta = "update categoria 
+				 set cod_categoria = '$Codigo', 
+					 categoria = '$Categoria', 
+					 ID_Forma = $ID_Forma, 
+					 color = '$CodigoColorEsc' 
+				 where id_categoria = $ID_Categoria 
+				   and estado = 1";
 	
 	if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
 		throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 2);		
