@@ -203,7 +203,7 @@ $Con->CloseConexion();
               $Con = new Conexion();
               $Con->OpenConexion();
 
-              $ConsultarDatos = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, M.observaciones, R.responsable, M.id_resp_2, M.id_resp_3, M.id_resp_4, C.centro_salud, I.Nombre, M.motivo_1, M.motivo_2, M.motivo_3 
+              $ConsultarDatos = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, M.observaciones, R.responsable, M.id_resp_2, M.id_resp_3, M.id_resp_4, C.centro_salud, I.Nombre, M.motivo_1, M.motivo_2, M.motivo_3, M.motivo_4, M.motivo_5 
               from movimiento M, persona P, responsable R, centros_salud C, otras_instituciones I 
               where M.id_persona = P.id_persona and M.id_resp = R.id_resp and M.id_centro = C.id_centro and M.id_otrainstitucion = I.ID_OtraInstitucion and M.id_movimiento = $ID_Movimiento";
               $MensajeErrorDatos = "No se pudo consultar los Datos del Movimiento";
@@ -216,6 +216,8 @@ $Con->CloseConexion();
               $ID_Motivo_1 = $Ret["motivo_1"];
               $ID_Motivo_2 = $Ret["motivo_2"];
               $ID_Motivo_3 = $Ret["motivo_3"];
+              $ID_Motivo_4 = $Ret["motivo_4"];
+              $ID_Motivo_5 = $Ret["motivo_5"];
 
               $ConsultarMotivo1 = "select MT.motivo from motivo MT, movimiento M where MT.id_motivo = M.motivo_1 and M.motivo_1 = $ID_Motivo_1 and M.id_movimiento = $ID_Movimiento";
               $MensajeErrorMotivo1 = "No se pudo consultar el Motivo 1";
@@ -247,7 +249,7 @@ $Con->CloseConexion();
               $Centro_Salud = $Ret["centro_salud"];
               $OtraInstitucion = $Ret["Nombre"];
 
-              $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Observaciones,$Responsable,$Centro_Salud,$OtraInstitucion);
+              $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Motivo_4,$Motivo_5,$Observaciones,$Responsable,$Centro_Salud,$OtraInstitucion);
 
 
               if($ID_Resp_2 != null){
@@ -282,6 +284,8 @@ $Con->CloseConexion();
               $Table .= "<tr><td>Motivo 1</td><td>".$DtoMovimiento->getMotivo_1()."</td></tr>";
               $Table .= "<tr><td>Motivo 2</td><td>".$DtoMovimiento->getMotivo_2()."</td></tr>";
               $Table .= "<tr><td>Motivo 3</td><td>".$DtoMovimiento->getMotivo_3()."</td></tr>";
+              $Table .= "<tr><td>Motivo 4</td><td>".$DtoMovimiento->getMotivo_4()."</td></tr>";
+              $Table .= "<tr><td>Motivo 5</td><td>".$DtoMovimiento->getMotivo_5()."</td></tr>";
               $Table .= "<tr><td>Observaciones</td><td>".$DtoMovimiento->getObservaciones()."</td></tr>";
               $Table .= "<tr><td>Responsable</td><td>".$DtoMovimiento->getResponsable()."</td></tr>";
               if($ID_Resp_2 != null){
