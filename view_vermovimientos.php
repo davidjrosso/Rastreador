@@ -237,6 +237,17 @@ $Con->CloseConexion();
               $RetMotivo3 = mysqli_fetch_assoc($EjecutarConsultarMotivo3);
               $Motivo_3 = $RetMotivo3["motivo"];
 
+              $ConsultarMotivo4 = "select MT.motivo from motivo MT, movimiento M where MT.id_motivo = M.motivo_4 and M.motivo_4 = $ID_Motivo_4 and M.id_movimiento = $ID_Movimiento";
+              $MensajeErrorMotivo4 = "No se pudo consultar el Motivo 4";
+              $EjecutarConsultarMotivo4 = mysqli_query($Con->Conexion,$ConsultarMotivo4) or die($MensajeErrorMotivo4);
+              $RetMotivo4 = mysqli_fetch_assoc($EjecutarConsultarMotivo4);
+              $Motivo_4 = $RetMotivo4["motivo"];
+
+              $ConsultarMotivo5 = "select MT.motivo from motivo MT, movimiento M where MT.id_motivo = M.motivo_5 and M.motivo_5 = $ID_Motivo_5 and M.id_movimiento = $ID_Movimiento";
+              $MensajeErrorMotivo5 = "No se pudo consultar el Motivo 5";
+              $EjecutarConsultarMotivo5 = mysqli_query($Con->Conexion,$ConsultarMotivo5) or die($MensajeErrorMotivo5);
+              $RetMotivo5 = mysqli_fetch_assoc($EjecutarConsultarMotivo5);
+              $Motivo_5 = $RetMotivo5["motivo"];
 
               $Fecha = $Fecha_Nacimiento = implode("-", array_reverse(explode("-",$Ret["fecha"])));
               $Apellido = $Ret["apellido"];
