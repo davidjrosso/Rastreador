@@ -26,7 +26,7 @@ $ID_OtraInstitucion = $_REQUEST["ID"];
 
 $Fecha = date("Y-m-d");
 $ID_TipoAccion = 3;
-$Detalles = "El usuario con ID: $ID_Usuario ha dado de baja una Institucion. Datos: Institucion: $ID_OtraInstitucion";
+$Detalles = "El usuario con ID: $ID_Usuario ha dado de baja una Institución. Datos: Institución: $ID_OtraInstitucion";
 
 try {
 	$Con = new Conexion();
@@ -41,7 +41,7 @@ try {
 		throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 1);
 	}	
 	$Con->CloseConexion();
-	$Mensaje = "La Institucion fue eliminada Correctamente";
+	$Mensaje = "La Institución fue eliminada Correctamente";
 	header('Location: ../view_otrasinstituciones.php?Mensaje='.$Mensaje);
 } catch (Exception $e) {
 	echo "Error: ".$e->getMessage();

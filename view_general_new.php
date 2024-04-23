@@ -698,7 +698,7 @@ $Con->CloseConexion();
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 3: </label>
               <div class="col-md-10" id = "Motivo3">
-                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo3">Seleccione un Motivo</button>   
+                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo3">Seleccione un Motivo</button>
               </div>
             </div>
             <div class="form-group row">
@@ -780,7 +780,7 @@ $Con->CloseConexion();
 			        		<div class="col"></div>
 			        		<div class="col-8">
 			        			<div class="input-group mb-3">
-				        			<input class = "form-control" type="text" name="BuscarPersona" id = "SearchPersonas" onKeyUp="buscarPersonas()" autocomplete="off" placeholder="Ingrese el nombre, apellido o documento de la persona">
+				        			<input class = "form-control" type="text" name="BuscarPersona" id = "SearchPersonas" onKeyUp="buscarPersonas()" autocomplete="off" placeholder="Ingrese el nombre, apellido, documento o legajo">
 				        			<div class="input-group-append">
 				        				<span class="input-group-text" id="basic-addon2">Buscar</span>
 								      </div>	

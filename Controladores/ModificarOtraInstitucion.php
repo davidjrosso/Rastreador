@@ -45,7 +45,7 @@ try {
 	$Resultado = mysqli_num_rows($Ret);
 	if($Resultado > 0){
 		$Con->CloseConexion();
-		$Mensaje = "Ya existe una Institucion con ese Nombre";
+		$Mensaje = "Ya existe una Institución con ese Nombre";
 		header('Location: ../view_modotrasinstituciones.php?ID='.$ID_OtraInstitucion.'&MensajeError='.$Mensaje);
 	}else{
 		$ConsultarDatosViejos = "select * from otras_instituciones where ID_OtraInstitucion = $ID_OtraInstitucion and Estado = 1";
@@ -68,13 +68,13 @@ try {
 			throw new Exception("Error al intentar registrar. Consulta: ".$ConsultarRegistrosIguales, 2);
 		}
 
-		$Detalles = "El usuario con ID: $ID_Usuario ha modificado una Institucion. Datos: Dato Anterior: {$Institucion_Vieja->getNombre()} , Dato Nuevo: {$Institucion_Nueva->getNombre()} - Dato Anterior: {$Institucion_Vieja->getTelefono()} , Dato Nuevo: {$Institucion_Nueva->getTelefono()} - Dato Anterior: {$Institucion_Vieja->getMail()} , Dato Nuevo: {$Institucion_Nueva->getMail()}.";
+		$Detalles = "El usuario con ID: $ID_Usuario ha modificado una Institución. Datos: Dato Anterior: {$Institucion_Vieja->getNombre()} , Dato Nuevo: {$Institucion_Nueva->getNombre()} - Dato Anterior: {$Institucion_Vieja->getTelefono()} , Dato Nuevo: {$Institucion_Nueva->getTelefono()} - Dato Anterior: {$Institucion_Vieja->getMail()} , Dato Nuevo: {$Institucion_Nueva->getMail()}.";
 		$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
 		if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
 			throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 3);
 		}
 		$Con->CloseConexion();
-		$Mensaje = "La Institucion se modificó Correctamente";
+		$Mensaje = "La Institución se modificó Correctamente";
 		header('Location: ../view_modotrasinstituciones.php?ID='.$ID_OtraInstitucion.'&Mensaje='.$Mensaje);
 	}
 } catch (Exception $e) {

@@ -8,6 +8,9 @@ class DtoMovimiento{
 	private $Motivo_1;
 	private $Motivo_2;
 	private $Motivo_3;
+	private $Motivo_4;
+	private $Motivo_5;
+
 	private $Observaciones;
 	private $Responsable;
 	private $CentroSalud;
@@ -88,6 +91,14 @@ public function getMotivo_3(){
 	return $this->Motivo_3;
 }
 
+public function getMotivo_4(){
+	return $this->Motivo_4;
+}
+
+public function getMotivo_5(){
+	return $this->Motivo_5;
+}
+
 public function getObservaciones(){
 	return $this->Observaciones;
 }
@@ -104,7 +115,7 @@ public function getOtraInstitucion(){
 	return $this->OtraInstitucion;
 }
 
-public function __construct($xID_Movimiento,$xFecha,$xApellido,$xNombre,$xMotivo_1,$xMotivo_2,$xMotivo_3,$xObservaciones,$xResponsable,$xCentroSalud,$xOtraInstitucion){
+public function __construct($xID_Movimiento,$xFecha,$xApellido,$xNombre,$xMotivo_1,$xMotivo_2,$xMotivo_3,$xMotivo_4,$xMotivo_5,$xObservaciones,$xResponsable,$xCentroSalud,$xOtraInstitucion){
 	$this->ID_Movimiento = $xID_Movimiento;
 	$this->Fecha = $xFecha;
 	$this->Apellido = $xApellido;
@@ -112,6 +123,8 @@ public function __construct($xID_Movimiento,$xFecha,$xApellido,$xNombre,$xMotivo
 	$this->Motivo_1 = $xMotivo_1;
 	$this->Motivo_2 = $xMotivo_2;
 	$this->Motivo_3 = $xMotivo_3;
+	$this->Motivo_4 = $xMotivo_4;
+	$this->Motivo_5 = $xMotivo_5;
 	$this->Observaciones = $xObservaciones;
 	$this->Responsable = $xResponsable;
 	$this->CentroSalud = $xCentroSalud;

@@ -1,5 +1,5 @@
 <?php  
-require_once 'Conexion.php';
+require_once("Conexion.php");
 
 class CtrGeneral{
 	//Instanciando la Conexion
@@ -8,7 +8,7 @@ class CtrGeneral{
 	public function getMovimientos(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, R.responsable from movimiento M, persona P, responsable R where M.id_persona = P.id_persona and M.id_resp = R.id_resp and M.estado = 1 and P.estado = 1 order by M.id_movimiento desc";
+		$Consulta = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, R.responsable from movimiento M, persona P, responsable R where M.id_persona = P.id_persona and M.id_resp = R.id_resp and M.estado = 1 and P.estado = 1 order by M.fecha desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -806,7 +806,7 @@ class CtrGeneral{
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
 		if($Regis > 0){
-			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:100px;'>Registro 1</th><th style='min-width:100px;'>Registro 2</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Tipo</th><th style='min-width:100px;'>Accion</th></tr></thead>";
+			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:100px;'>Registro 1</th><th style='min-width:100px;'>Registro 2</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Tipo</th><th style='min-width:100px;'>Acción</th></tr></thead>";
 			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 				$Fecha = implode("/", array_reverse(explode("-",$Ret["Fecha"])));
 				$ID_Registro_1 = $Ret["ID_Registro_1"];
@@ -860,7 +860,7 @@ class CtrGeneral{
 						$Table .= "<tr><td>".$Ret["ID_Solicitud_Unificacion"]."</td><td>".$Fecha."</td><td>".$RetMotivo_1["Motivo"]."</td><td>".$RetMotivo_2["Motivo"]."</td><td>".$Ret["username"]."</td><td>".$TipoUnif."</td><td><button class='btn btn-success' onClick='VerificarUnificacion(".$ID_Registro_1.",".$ID_Registro_2.",\"".$TipoUnif."\",".$ID_Solicitud.")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarUnificacion(".$Ret["ID_Solicitud_Unificacion"].")'><i class='fa fa-times'></i></button></td></tr>";				
 					break;
 					case 2: 
-						$Table .= "<tr><td>".$Ret["ID_Solicitud_Unificacion"]."</td><td>".$Fecha."</td><td>".$RetMotivo_1["apellido"].", ".$RetMotivo_1["nombre"]."</td><td>".$RetMotivo_2["apellido"].", ".$RetMotivo_2["nombre"]."</td><td>".$Ret["username"]."</td><td>".$TipoUnif."</td><td><button class='btn btn-success' onClick='VerificarUnificacion(".$ID_Registro_1.",".$ID_Registro_2.",\"".$TipoUnif."\",".$ID_Solicitud.")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarUnificacion(".$Ret["ID_Solicitud_Unificacion"].")'><i class='fa fa-times'></i></button></td></tr>";					
+						$Table .= "<tr><td>".$Ret["ID_Solicitud_Unificacion"]."</td><td>".$Fecha."</td><td>".$RetMotivo_1["apellido"].", ".$RetMotivo_1["nombre"]."</td><td>".$RetMotivo_2["apellido"].", ".$RetMotivo_2["nombre"]."</td><td>".$Ret["username"]."</td><td>".$TipoUnif."</td><td><button class='btn btn-success' onClick='VerificarUnificacion(".$ID_Registro_1.",".$ID_Registro_2.",\"".$TipoUnif."\",".$ID_Solicitud.")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarUnificacion(".$Ret["ID_Solicitud_Unificacion"].")'><i class='fa fa-times'></i></button></td></tr>";
 					break;
 					case 3: 
 						$Table .= "<tr><td>".$Ret["ID_Solicitud_Unificacion"]."</td><td>".$Fecha."</td><td>".$RetMotivo_1["centro_salud"]."</td><td>".$RetMotivo_2["centro_salud"]."</td><td>".$Ret["username"]."</td><td>".$TipoUnif."</td><td><button class='btn btn-success' onClick='VerificarUnificacion(".$ID_Registro_1.",".$ID_Registro_2.",\"".$TipoUnif."\",".$ID_Solicitud.")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarUnificacion(".$Ret["ID_Solicitud_Unificacion"].")'><i class='fa fa-times'></i></button></td></tr>";					
@@ -902,7 +902,7 @@ class CtrGeneral{
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
 		if($Regis > 0){
-			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Motivo</th><th style='min-width:100px;'>Codigo</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Accion</th></tr></thead>";
+			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Motivo</th><th style='min-width:100px;'>Codigo</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Acción</th></tr></thead>";
 			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 				$ID = $Ret["ID"];
 				$Fecha = implode("/", array_reverse(explode("-",$Ret["Fecha"])));
@@ -941,7 +941,7 @@ class CtrGeneral{
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
 		if($Regis > 0){
-			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Codigo</th><th style='min-width:100px;'>Categoría</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Accion</th></tr></thead>";
+			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Codigo</th><th style='min-width:100px;'>Categoría</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Acción</th></tr></thead>";
 			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 				$ID = $Ret["ID"];
 				$Fecha = implode("/", array_reverse(explode("-",$Ret["Fecha"])));
@@ -981,7 +981,7 @@ class CtrGeneral{
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
 		if($Regis > 0){
-			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Motivo</th><th style='min-width:100px;'>Cod. Categoría</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Accion</th></tr></thead>";
+			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Motivo</th><th style='min-width:100px;'>Cod. Categoría</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Acción</th></tr></thead>";
 			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 				$ID = $Ret["ID"];
 				$Fecha = implode("/", array_reverse(explode("-",$Ret["Fecha"])));
@@ -1020,7 +1020,7 @@ class CtrGeneral{
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
 		if($Regis > 0){
-			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Motivo</th><th style='min-width:100px;'>Cod. Categoría</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Accion</th></tr></thead>";
+			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Motivo</th><th style='min-width:100px;'>Cod. Categoría</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Acción</th></tr></thead>";
 			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 				$ID = $Ret["ID"];
 				$Fecha = implode("/", array_reverse(explode("-",$Ret["Fecha"])));
@@ -1047,7 +1047,7 @@ class CtrGeneral{
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
 		if($Regis > 0){
-			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Detalle</th><th style='min-width:100px;'>Expira</th><th style='min-width:100px;'>Accion</th></tr></thead>";
+			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Detalle</th><th style='min-width:100px;'>Expira</th><th style='min-width:100px;'>Acción</th></tr></thead>";
 			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 				$RetFecha = explode(" ", $Ret["Fecha"]);		
 				$RetExpira = explode(" ", $Ret["Expira"]);	

@@ -38,7 +38,7 @@ if(empty($Mail)){
 
 $Fecha = date("Y-m-d");
 $ID_TipoAccion = 1;
-$Detalles = "El usuario con ID: $ID_Usuario ha registrado una nueva Institucion. Datos: Nombre: $Nombre - Telefono: $Telefono - Mail: $Mail";
+$Detalles = "El usuario con ID: $ID_Usuario ha registrado una nueva Institución. Datos: Nombre: $Nombre - Telefono: $Telefono - Mail: $Mail";
 
 $Con = new Conexion();
 $Con->OpenConexion();
@@ -51,7 +51,7 @@ try {
 	$Resultado = mysqli_num_rows($Ret);
 	if($Resultado > 0){
 		$Con->CloseConexion();
-		$Mensaje = "Ya existe una Institucion con ese Nombre";
+		$Mensaje = "Ya existe una Institución con ese Nombre";
 		header('Location: ../view_newotrasinstituciones.php?MensajeError='.$Mensaje);
 	}else{
 		$InstInstitucion = new OtraInstitucion(0,$Nombre,$Telefono,$Mail,$Estado);
@@ -64,7 +64,7 @@ try {
 			throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 2);
 		}
 		$Con->CloseConexion();
-		$Mensaje = "La Institucion se registro Correctamente";
+		$Mensaje = "La Institución se registro Correctamente";
 		header('Location: ../view_newotrasinstituciones.php?Mensaje='.$Mensaje);
 	}
 } catch (Exception $e) {

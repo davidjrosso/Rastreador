@@ -1,5 +1,6 @@
 <?php  
-require_once 'Conexion.php';
+require_once("Conexion.php");
+//require_once("Conexion.example.php");
 header("Content-Type: text/html;charset=utf-8");
 
 class Elements{
@@ -808,7 +809,7 @@ public function getMenuSeguridad($ID){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='ID_OtraInstitucion' name = 'ID_OtraInstitucion'>";
-    $Select .= "<option selected = 'true' disabled = 'disabled'>-Seleccione una Institucion-</option>";
+    $Select .= "<option selected = 'true' disabled = 'disabled'>-Seleccione una Institución-</option>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from otras_instituciones where estado = 1 order by Nombre")or die("Problemas al mostrar Otras Instituciones");
     while ($Ret = mysqli_fetch_array($Consulta)) {
       $Select .= "<option value = '".$Ret['ID_OtraInstitucion']."'>".$Ret['Nombre']."</option>";
@@ -822,7 +823,7 @@ public function getMenuSeguridad($ID){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_OtraInstitucion'>";    
-    $Select .= "<option disabled = 'disabled'>-Seleccione una Institucion-</option>";
+    $Select .= "<option disabled = 'disabled'>-Seleccione una Institución-</option>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from otras_instituciones where estado = 1 order by Nombre")or die("Problemas al mostrar Otras Instituciones");
     while ($Ret = mysqli_fetch_array($Consulta)) {      
       if($Ret['ID_OtraInstitucion'] == $xID_OtraInstitucion){
@@ -961,6 +962,28 @@ public function getMenuSeguridad($ID){
     $Ret = mysqli_fetch_assoc($Consulta);    
         
     $Boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_3'>".$Ret['motivo']."</button>";
+    $Con3->CloseConexion();
+    return $Boton;
+  }
+
+  public function BTNModMotivo_4($xID){
+    $Con3 = new Conexion();
+    $Con3->OpenConexion();    
+    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $xID order by motivo")or die("Problemas al mostrar Personas");    
+    $Ret = mysqli_fetch_assoc($Consulta);    
+        
+    $Boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_4'>".$Ret['motivo']."</button>";
+    $Con3->CloseConexion();
+    return $Boton;
+  }
+
+  public function BTNModMotivo_5($xID){
+    $Con3 = new Conexion();
+    $Con3->OpenConexion();    
+    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $xID order by motivo")or die("Problemas al mostrar Personas");    
+    $Ret = mysqli_fetch_assoc($Consulta);    
+        
+    $Boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_5'>".$Ret['motivo']."</button>";
     $Con3->CloseConexion();
     return $Boton;
   }

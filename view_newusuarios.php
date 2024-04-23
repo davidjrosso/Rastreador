@@ -76,6 +76,16 @@ $Con->CloseConexion();
       var ContenidoPagina = document.getElementById("ContenidoPagina");
 
       ContenidoPagina.appendChild(document.importNode(getContent, true));
+
+
+      function verPassword(){
+        var x = document.getElementById("UserPass");
+        if (x.type === "password") {
+          x.type = "text";
+        } else {
+          x.type = "password";    
+      }
+    }
   </script>
 
 </head>
@@ -235,8 +245,12 @@ $Con->CloseConexion();
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Password*: </label>
-              <div class="col-md-10">
-                <input type="password" class="form-control" name = "userpass" id = "UserPass" autocomplete="off">
+              <div class="col-md-9">
+                <input type="password" class="form-control input-password" name = "userpass" id = "UserPass" autocomplete="off">
+              </div>
+              <div class="col-md-1 div-buttom-padding">
+                <button type="button" class="btn btn-primary" onclick="verPassword()">Ver</button>
+                <!--<input type="checkbox" onclick="verPassword()">Mostrar Password -->
               </div>
             </div>
             <div class="form-group row">

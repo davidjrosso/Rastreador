@@ -25,9 +25,13 @@ if (isset($consultaBusqueda)) {
 	//o el apellido sea igual a $consultaBusqueda, 
 	//o $consultaBusqueda sea igual a nombre + (espacio) + apellido
 	if(is_numeric($consultaBusqueda)){
-		$consulta = mysqli_query($Con->Conexion, "SELECT * FROM persona WHERE documento LIKE '%$consultaBusqueda%' and estado = 1");
+		if(strlen((string)$consultaBusqueda) >= 8){
+			$consulta = mysqli_query($Con->Conexion, "SELECT * FROM persona WHERE documento LIKE '%$consultaBusqueda%' and estado = 1");
+	    } else {
+			$consulta = mysqli_query($Con->Conexion, "SELECT * FROM persona WHERE nro_legajo LIKE '%$consultaBusqueda%' and estado = 1");
+		}
 	}else{
-		$consulta = mysqli_query($Con->Conexion, "SELECT * FROM persona WHERE apellido LIKE '%$consultaBusqueda%' or nombre LIKE '%$consultaBusqueda%' and estado = 1");
+		$consulta = mysqli_query($Con->Conexion, "SELECT * FROM persona WHERE (apellido LIKE '%$consultaBusqueda%' or nombre LIKE '%$consultaBusqueda%') and estado = 1");
 	}
 
 	//Obtiene la cantidad de filas que hay en la consulta
@@ -35,7 +39,7 @@ if (isset($consultaBusqueda)) {
 
 	//Si no existe ninguna fila que sea igual a $consultaBusqueda, entonces mostramos el siguiente mensaje
 	if ($filas === 0) {
-		$mensaje = "<p>No hay ningún registro con ese nombre o documento</p>";
+		$mensaje = "<p>No hay ningún registro con ese nombre, documento o legajo</p>";
 	} else {
 		//Si existe alguna fila que sea igual a $consultaBusqueda, entonces mostramos el siguiente mensaje
 		//echo 'Resultados para <strong>'.$consultaBusqueda.'</strong>';
