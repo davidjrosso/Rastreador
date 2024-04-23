@@ -257,8 +257,8 @@ $Con->CloseConexion();
               // pero en la segunda query se traen todos los registros de todas las personas, no solo una persona.
               $ConsultarMovimientosPersona = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, P.domicilio,
                                                 P.fecha_nac, P.documento, P.obra_social, P.localidad, P.edad, P.meses,
-                                                B.Barrio, M.motivo_1, M.motivo_2, M.motivo_3, M.observaciones, R.responsable, 
-                                                CS.centro_salud, I.Nombre as 'NombreInst' 
+                                                B.Barrio, M.motivo_1, M.motivo_2, M.motivo_3, M.motivo_4,M.motivo_5,
+                                                M.observaciones, R.responsable, CS.centro_salud, I.Nombre as 'NombreInst' 
                                               from movimiento M,
                                                    persona P,
                                                    barrios B, 
@@ -283,7 +283,8 @@ $Con->CloseConexion();
                                   YEAR(M.fecha) as 'Anio', B.Barrio, P.manzana, P.documento, P.obra_social,
                                   P.localidad, P.edad, P.meses, P.lote, P.familia, P.apellido,
                                   P.nombre, P.fecha_nac, P.domicilio, M.motivo_1, M.motivo_2, M.motivo_3,
-                                  R.responsable, M.observaciones, CS.centro_salud, I.Nombre as 'NombreInst' 
+                                  M.motivo_4,M.motivo_5,R.responsable, M.observaciones, CS.centro_salud,
+                                  I.Nombre as 'NombreInst' 
                             from movimiento M,
                                  persona P,
                                  barrios B,
@@ -469,7 +470,7 @@ $Con->CloseConexion();
                 $filtros[] = "Motivo 1: ".$RetConsultarMotivo['motivo'];                
                 //$filtrosSeleccionados["ID_Motivo1"] = $ID_Motivo;
               }
-*/
+*//*
               $CantOpMotivos = count(array_filter($MotivosOpciones, function($x) { return !empty($x); }));
 
               if($CantOpMotivos > 0){
@@ -582,7 +583,7 @@ $Con->CloseConexion();
                 $ConsultarMovimientosPersona .= ")";
                 $Consulta .= ")";
               }
-
+*/
               if($ID_Categoria > 0){
                 $ConsultarMovimientosPersona .= " and  ((M.motivo_1 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria) 
                                                      or (M.motivo_2 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria) 
@@ -637,12 +638,12 @@ $Con->CloseConexion();
               }
 
               $ConsultarMovimientosPersona .= " group by M.id_movimiento,  M.fecha order by M.fecha DESC";
-
-              /*if($ID_Persona > 0){
+              //Revisar este agrupamiento 111111111111111111
+              if($ID_Persona > 0){
                 $Consulta .= " group by M.id_movimiento order by Anio, Mes, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";
               }else{
                 $Consulta .= " group by M.id_persona order by Anio, Mes, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";                
-              }*/
+              }
                             
 
               //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1048,6 +1049,18 @@ $Con->CloseConexion();
                 $RetMotivo_3 = mysqli_fetch_assoc($RetMotivo_3);
                 $Motivo_3 = $RetMotivo_3["motivo"];
 
+                $ID_Motivo_4 = $RetTodos["motivo_4"];
+                $ConsultarMotivo_4 = "select motivo from motivo where id_motivo = $ID_Motivo_4";
+                $RetMotivo_4 = mysqli_query($Con->Conexion,$ConsultarMotivo_4) or die($MensajeErrorMotivo_4);
+                $RetMotivo_4 = mysqli_fetch_assoc($RetMotivo_4);
+                $Motivo_4 = $RetMotivo_4["motivo"];
+
+                $ID_Motivo_5 = $RetTodos["motivo_5"];
+                $ConsultarMotivo_5 = "select motivo from motivo where id_motivo = $ID_Motivo_5";
+                $RetMotivo_5 = mysqli_query($Con->Conexion,$ConsultarMotivo_5) or die($MensajeErrorMotivo_3);
+                $RetMotivo_5 = mysqli_fetch_assoc($RetMotivo_5);
+                $Motivo_5 = $RetMotivo_5["motivo"];
+
                 $Observaciones = $RetTodos["observaciones"];
                 $Responsable = $RetTodos["responsable"];
                   //solucionar el error!
@@ -1055,7 +1068,7 @@ $Con->CloseConexion();
 
                 $CentroSalud = $RetTodos["centro_salud"]; //centro_salud
                 $OtraInstitucion = $RetTodos["NombreInst"]; //otraInstitucion                
-                $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);                                 
+                $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Motivo_4,$Motivo_5,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);                                 
                 if($ID_Config == 'grid'){
                   $TableMov = "<table class='table table-dark'>";                
                   $TableMov .= "<tr class='trFecha'><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>".$DtoMovimiento->getFecha()."</td></tr>";
@@ -1322,6 +1335,18 @@ $Con->CloseConexion();
                   $RetMotivo_3 = mysqli_fetch_assoc($RetMotivo_3);
                   $Motivo_3 = $RetMotivo_3["motivo"];
 
+                  $ID_Motivo_4 = $RetTodos["motivo_4"];
+                  $ConsultarMotivo_4 = "select motivo from motivo where id_motivo = $ID_Motivo_4";
+                  $RetMotivo_4 = mysqli_query($Con->Conexion,$ConsultarMotivo_4) or die($MensajeErrorMotivo_4);
+                  $RetMotivo_4 = mysqli_fetch_assoc($RetMotivo_4);
+                  $Motivo_4 = $RetMotivo_4["motivo"];
+  
+                  $ID_Motivo_5 = $RetTodos["motivo_5"];
+                  $ConsultarMotivo_5 = "select motivo from motivo where id_motivo = $ID_Motivo_5";
+                  $RetMotivo_5 = mysqli_query($Con->Conexion,$ConsultarMotivo_5) or die($MensajeErrorMotivo_3);
+                  $RetMotivo_5 = mysqli_fetch_assoc($RetMotivo_5);
+                  $Motivo_5 = $RetMotivo_5["motivo"];
+
                   $Observaciones = $RetTodos["observaciones"];
                   $Responsable = $RetTodos["responsable"];
                     //solucionar el error!
@@ -1329,7 +1354,7 @@ $Con->CloseConexion();
 
                   $CentroSalud = $RetTodos["centro_salud"]; //centro_salud
                   $OtraInstitucion = $RetTodos["NombreInst"]; //otraInstitucion
-                  $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);   
+                  $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Motivo_4,$Motivo_5,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);   
 
                   /////////////////////////////////////////////////////////////
                   $DNI = $RetTodos["documento"];
@@ -1472,6 +1497,18 @@ $Con->CloseConexion();
                 $RetMotivo_3 = mysqli_fetch_assoc($RetMotivo_3);
                 $Motivo_3 = $RetMotivo_3["motivo"];
 
+                $ID_Motivo_4 = $RetMovimientos["motivo_4"];
+                $ConsultarMotivo_4 = "select motivo from motivo where id_motivo = $ID_Motivo_4";
+                $RetMotivo_4 = mysqli_query($Con->Conexion,$ConsultarMotivo_4) or die($MensajeErrorMotivo_4);
+                $RetMotivo_4 = mysqli_fetch_assoc($RetMotivo_4);
+                $Motivo_4 = $RetMotivo_4["motivo"];
+
+                $ID_Motivo_5 = $RetMovimientos["motivo_5"];
+                $ConsultarMotivo_5 = "select motivo from motivo where id_motivo = $ID_Motivo_5";
+                $RetMotivo_5 = mysqli_query($Con->Conexion,$ConsultarMotivo_5) or die($MensajeErrorMotivo_5);
+                $RetMotivo_5 = mysqli_fetch_assoc($RetMotivo_5);
+                $Motivo_5 = $RetMotivo_5["motivo"];
+
                 $Observaciones = $RetMovimientos["observaciones"];
                 $Responsable = $RetMovimientos["responsable"];
 //solucionar el error!
@@ -1479,7 +1516,7 @@ $Con->CloseConexion();
                 
                 $CentroSalud=$RetMovimientos["nombre"]; //centro_salud
                 $OtraInstitucion=$RetMovimientos["nombre"];
-                $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);
+                $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Motivo_4,$Motivo_5,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);
 
                 /////////////////////////////////////////////////////////////
                 $DNI = $RetMovimientos["documento"];
