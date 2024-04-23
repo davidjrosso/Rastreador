@@ -236,13 +236,13 @@ $Con->CloseConexion();
                 $ID_Motivo4 = $_REQUEST["ID_Motivo4"];
                 $MotivosOpciones["ID_Motivo4"] = $ID_Motivo4;
               } else {
-                $ID_Motivo4 = 0;
+                $ID_Motivo4 = 1;
               }
               if (isset($_REQUEST["ID_Motivo5"])) {
                 $ID_Motivo5 = $_REQUEST["ID_Motivo5"];
                 $MotivosOpciones["ID_Motivo5"] = $ID_Motivo5;
               } else {
-                $ID_Motivo5 = 0;
+                $ID_Motivo5 = 1;
               } 
               $ID_Categoria = $_REQUEST["ID_Categoria"]; 
               $ID_Escuela = $_REQUEST["ID_Escuela"];
