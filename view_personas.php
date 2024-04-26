@@ -38,7 +38,8 @@ $Con->CloseConexion();
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <!--<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
        $(document).ready(function(){
               var date_input=$('input[name="date"]'); //our date input has the name "date"
@@ -52,9 +53,9 @@ $Con->CloseConexion();
           });
 
        function Verificar(xID){
-              swal({
+              /*swal({
                 title: "¿Está seguro?",
-                text: "¿Seguro de querer eliminar esta persona? Se eliminaran los movimientos vinculados con la persona a eliminar",
+                text: "¿Seguro de querer eliminar esta persona? \n Se eliminaran los movimientos vinculados con la persona a eliminar",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
@@ -62,10 +63,24 @@ $Con->CloseConexion();
               .then((willDelete) => {
                 if (willDelete) {
                   window.location.href = 'Controladores/DeletePersona.php?ID='+xID;
-                  //alert('SI');
+                } else {        
+                }
+              });*/
+              swal.fire({
+                title: "¿Está seguro?",
+                icon: "warning",
+                html: `<p style="margin-bottom:0px">¿Seguro de querer eliminar esta persona?</p>Se eliminaran los movimientos vinculados con la persona a eliminar`,
+                showCloseButton: true,
+                showCancelButton: true
+              })
+              .then((willDelete) => {
+                if (willDelete) {
+                  window.location.href = 'Controladores/DeletePersona.php?ID='+xID;
                 } else {        
                 }
               });
+              
+
         }
 
   </script>
