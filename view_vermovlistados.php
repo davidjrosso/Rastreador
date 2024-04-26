@@ -644,9 +644,9 @@ $Con->CloseConexion();
               // se agrega a la persona en el filtrado, se ordenara la lista de movimientos sobre los atributos de cada persona en general.
 
               if($ID_Persona > 0){
-                $Consulta .= " group by M.id_movimiento order by Anio DESC, Mes DESC, B.Barrio DESC, P.domicilio DESC, P.manzana DESC, P.lote DESC, P.familia DESC, P.domicilio DESC, P.apellido DESC, M.id_movimiento DESC";
+                $Consulta .= " group by M.id_movimiento order by M.fecha DESC, B.Barrio DESC, P.domicilio DESC, P.manzana DESC, P.lote DESC, P.familia DESC, P.domicilio DESC, P.apellido DESC, M.id_movimiento DESC";
               }else{
-                $Consulta .= " group by M.id_persona order by Anio DESC, Mes DESC, B.Barrio DESC, P.domicilio DESC, P.manzana DESC, P.lote DESC, P.familia DESC, P.domicilio DESC, P.apellido DESC, M.id_movimiento DESC";
+                $Consulta .= " group by M.id_persona order by M.fecha DESC, B.Barrio DESC, P.domicilio DESC, P.manzana DESC, P.lote DESC, P.familia DESC, P.domicilio DESC, P.apellido DESC, M.id_movimiento DESC";
               }
                             
 
