@@ -522,6 +522,9 @@ class Elements{
                 <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
                   <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
                 </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
+                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Direcciones</a>
+                </li>
             </ul>
         </div>';break;
     }
@@ -743,14 +746,14 @@ public function getMenuSeguridad($ID){
   public function CBModResponsables($xID_Responsable){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Responsable[]'>";    
+    $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Responsable[]'>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from responsable where estado = 1 order by responsable")or die("Problemas al mostrar Responsables");
-    while ($Ret = mysqli_fetch_array($Consulta)) {      
+    while ($Ret = mysqli_fetch_array($Consulta)) {
       if($Ret['id_resp'] == $xID_Responsable){
         $Select .= "<option value = '".$Ret['id_resp']."' selected>".$Ret['responsable']."</option>";
       }else{
         $Select .= "<option value = '".$Ret['id_resp']."'>".$Ret['responsable']."</option>";
-      }   
+      }
     }
     $Select .= "</select>";
     $Con3->CloseConexion();
