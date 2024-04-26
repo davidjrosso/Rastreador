@@ -71,10 +71,12 @@ $Con->CloseConexion();
                 icon: "warning",
                 html: `<p style="margin-bottom:0px">¿Seguro de querer eliminar esta persona?</p>Se eliminaran los movimientos vinculados con la persona a eliminar`,
                 showCloseButton: true,
-                showCancelButton: true
+                confirmButtonColor: "#3085d6",
+                showCancelButton: true,
+                showConfirmButton: true
               })
               .then((willDelete) => {
-                if (willDelete) {
+                if (willDelete.isConfirmed) {
                   window.location.href = 'Controladores/DeletePersona.php?ID='+xID;
                 } else {        
                 }
