@@ -71,7 +71,9 @@ $Con->CloseConexion();
                 icon: "warning",
                 html: `<p style="margin-bottom:0px">¿Seguro de querer eliminar esta persona?</p>Se eliminaran los movimientos vinculados con la persona a eliminar`,
                 showCloseButton: true,
-                confirmButtonColor: "#3085d6",
+                confirmButtonColor: "#e64942",
+                cancelButtonColor: "#efefef",
+                cancelButtonText: '<span style="color:#555">Cancel</span>',
                 showCancelButton: true,
                 showConfirmButton: true
               })
