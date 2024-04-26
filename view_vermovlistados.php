@@ -303,22 +303,22 @@ $Con->CloseConexion();
                                   and MT.estado = 1
                                   and C.estado = 1
                                   and M.fecha between '$Fecha_Inicio' and '$Fecha_Fin'"; 
-              // var_dump($Consulta);     
+
               $filtros = [];
               $filtrosSeleccionados = [];
 
               $filtrosSeleccionados["Fecha_Desde"] = $_REQUEST["Fecha_Desde"];
               $filtrosSeleccionados["Fecha_Hasta"] = $_REQUEST["Fecha_Hasta"];
               $Con = new Conexion();
-              $Con->OpenConexion();    
-              
+              $Con->OpenConexion();
+
               $tomarRetTodos = array();
 
               if($ID_Persona > 0){
                 $Consulta .= " and P.id_persona = $ID_Persona";
 
-                $ConsultarPersona = "select apellido, nombre 
-                                     from persona 
+                $ConsultarPersona = "select apellido, nombre
+                                     from persona
                                      where ID_Persona = ".$ID_Persona." limit 1";
 
                 $EjecutarConsultarPersona = mysqli_query($Con->Conexion,$ConsultarPersona) or die("Problemas al consultar filtro Persona");
@@ -407,12 +407,12 @@ $Con->CloseConexion();
                                         where ID_Barrio = ".$valueBarrio." limit 1";
 
                     $EjecutarConsultarBarrio = mysqli_query($Con->Conexion,$ConsultarBarrio) or die("Problemas al consultar filtro Barrios");
-                    $RetConsultarBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);   
+                    $RetConsultarBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);
                     if($key == $Barrio->array_key_first){
-                      $filtroBarrios .= " ".$RetConsultarBarrio['Barrio'];   
+                      $filtroBarrios .= " ".$RetConsultarBarrio['Barrio'];
                     }else{
-                      $filtroBarrios .= " - ".$RetConsultarBarrio['Barrio'];   
-                    }                                   
+                      $filtroBarrios .= " - ".$RetConsultarBarrio['Barrio'];
+                    }
                   }
                 }
                 $filtros[] = $filtroBarrios;
@@ -585,24 +585,24 @@ $Con->CloseConexion();
               }
 */
               if($ID_Categoria > 0){
-                $ConsultarMovimientosPersona .= " and  ((M.motivo_1 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria) 
-                                                     or (M.motivo_2 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria) 
+                $ConsultarMovimientosPersona .= " and  ((M.motivo_1 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria)
+                                                     or (M.motivo_2 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria)
                                                      or (M.motivo_3 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria)
                                                      or (M.motivo_4 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria)
                                                      or (M.motivo_5 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria))";
 
                 $Consulta .= " and  ((M.motivo_1 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria)
-                                  or (M.motivo_2 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria) 
+                                  or (M.motivo_2 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria)
                                   or (M.motivo_3 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria)
                                   or (M.motivo_4 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria)
                                   or (M.motivo_5 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria))";
 
-                $ConsultarCategoria = "select categoria 
-                                       from categoria 
+                $ConsultarCategoria = "select categoria
+                                       from categoria
                                        where id_categoria = ".$ID_Categoria." limit 1";
 
                 $EjecutarConsultarCategoria = mysqli_query($Con->Conexion,$ConsultarCategoria) or die("Problemas al consultar filtro Categoria");
-                $RetConsultarCategoria = mysqli_fetch_assoc($EjecutarConsultarCategoria);  
+                $RetConsultarCategoria = mysqli_fetch_assoc($EjecutarConsultarCategoria);
                 $filtros[] = "Categoria: ".$RetConsultarCategoria['categoria'];
                 $filtrosSeleccionados["ID_Categoria"] = $ID_Categoria;
               }
@@ -638,11 +638,15 @@ $Con->CloseConexion();
               }
 
               $ConsultarMovimientosPersona .= " group by M.id_movimiento,  M.fecha order by M.fecha DESC";
-              //Revisar este agrupamiento 111111111111111111
+
+              // Si la persona fue cargada en el formulario de la pagina de filtros de movimiento, se ordenara la lista
+              // de movimientos usando los atributos de los movimiento asociados a la persona, en casos contrario, si no
+              // se agrega a la persona en el filtrado, se ordenara la lista de movimientos sobre los atributos de cada persona en general.
+
               if($ID_Persona > 0){
-                $Consulta .= " group by M.id_movimiento order by Anio, Mes, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";
+                $Consulta .= " group by M.id_movimiento order by Anio DESC, Mes DESC, B.Barrio DESC, P.domicilio DESC, P.manzana DESC, P.lote DESC, P.familia DESC, P.domicilio DESC, P.apellido DESC, M.id_movimiento DESC";
               }else{
-                $Consulta .= " group by M.id_persona order by Anio, Mes, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";                
+                $Consulta .= " group by M.id_persona order by Anio DESC, Mes DESC, B.Barrio DESC, P.domicilio DESC, P.manzana DESC, P.lote DESC, P.familia DESC, P.domicilio DESC, P.apellido DESC, M.id_movimiento DESC";
               }
                             
 
@@ -650,8 +654,8 @@ $Con->CloseConexion();
               //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-              //	CREANDO FILTRO MOSTRAR              
-              if($Mostrar > 0){ 
+              //	CREANDO FILTRO MOSTRAR PERSONAS (SIN MOVIMIENTOS)              
+              if($Mostrar > 0){
                 //, P.nro_legajo, P.nro_carpeta
               	$ConsultarTodos = "select P.id_persona, B.Barrio, P.manzana, P.lote, P.familia, P.apellido, P.nombre, P.fecha_nac, P.domicilio
                  from persona P, barrios B, movimiento M
@@ -734,9 +738,9 @@ $Con->CloseConexion();
                 }
 
                 if($ID_Persona > 0){
-                  $ConsultarTodos .= " group by P.id_movimiento, M.fecha order by M.fecha, P.domicilio, P.apellido, P.nombre DESC";
+                  $ConsultarTodos .= " group by P.id_movimiento, M.fecha order by M.fecha DESC, P.domicilio DESC, P.apellido DESC, P.nombre DESC";
                 }else{
-                  $ConsultarTodos .= " group by P.id_persona,P.id_movimiento, M.fecha order by M.fecha, P.domicilio, P.apellido, P.nombre DESC";
+                  $ConsultarTodos .= " group by P.id_persona,P.id_movimiento, M.fecha order by M.fecha DESC, P.domicilio DESC, P.apellido DESC, P.nombre DESC";
                 }
 
                 // $ConsultarTodos .= " group by P.id_persona order by P.apellido, P.nombre";
@@ -749,7 +753,7 @@ $Con->CloseConexion();
               	$MensajeErrorTodos = "No se pudieron consultar los datos de todas las personas";
 
               	$EjecutarConsultarTodos = mysqli_query($Con->Conexion,$ConsultarTodos) or die($MensajeErrorTodos);                
-                
+
                 // CAMBIOS CON TODOS                
                 // $tomarRetTodos = mysqli_fetch_array($EjecutarConsultarTodos);
                 
@@ -788,10 +792,10 @@ $Con->CloseConexion();
               $MensajeError = "No se pudieron consultar los Datos";
 
               $Etiqueta_Fecha_Inicio = implode("-", array_reverse(explode("-",$Fecha_Inicio)));
-              $Etiqueta_Fecha_Fin = implode("-", array_reverse(explode("-",$Fecha_Fin)));                                
+              $Etiqueta_Fecha_Fin = implode("-", array_reverse(explode("-",$Fecha_Fin)));
 
       	?>
-        <center><p class = "LblForm">ENTRE: <?php echo $Etiqueta_Fecha_Inicio." Y ".$Etiqueta_Fecha_Fin; ?></p></center>  
+        <center><p class = "LblForm">ENTRE: <?php echo $Etiqueta_Fecha_Inicio." Y ".$Etiqueta_Fecha_Fin; ?></p></center>
         <span> Filtros seleccionados </span>
         <!-- <i class="fa fa-filter"></i> -->
         <!-- < ?php echo "DEBUG: ".$Consulta; ?>       -->
@@ -815,7 +819,7 @@ $Con->CloseConexion();
       <div class = "col-10">
           <!-- Search -->
         <div class = "row">
-          <?php  
+          <?php
             if(isset($_REQUEST["ID_Persona"]) && $_REQUEST["ID_Persona"]!=null && $_REQUEST["ID_Persona"] > 0){
               $ID_Persona = $_REQUEST["ID_Persona"];
 
@@ -829,11 +833,10 @@ $Con->CloseConexion();
 
               $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
 
-              $filtrosSeleccionados["NombrePersona"] = $Ret["apellido"].", ".$Ret["nombre"];     
-              
+              $filtrosSeleccionados["NombrePersona"] = $Ret["apellido"].", ".$Ret["nombre"];
+
               $_SESSION["datosNav"]["NombrePersona"] = $filtrosSeleccionados["NombrePersona"];
-            
-              
+
               $ConsultarBarrio = "select * from barrios where ID_Barrio = {$Ret['ID_Barrio']}";
               $MensajeErrorBarrio = "No se pudo consultar el Barrio de la persona";
 
@@ -874,7 +877,7 @@ $Con->CloseConexion();
               $ID_Escuela = $Ret["ID_Escuela"];
               $Estado = $Ret["estado"];
 
-              $Persona = new Persona($ID_Persona,$Apellido,$Nombre,$DNI,$Nro_Legajo, $Edad,$Meses,$Fecha_Nacimiento,$Nro_Carpeta,$Obra_Social,$Domicilio,$Barrio,$Localidad,$Circunscripcion,$Seccion,$Manzana,$Lote,$Familia,$Observaciones,$Cambio_Domicilio,$Telefono,$Mail,$ID_Escuela,$Estado,$Trabajo);              
+              $Persona = new Persona($ID_Persona,$Apellido,$Nombre,$DNI,$Nro_Legajo, $Edad,$Meses,$Fecha_Nacimiento,$Nro_Carpeta,$Obra_Social,$Domicilio,$Barrio,$Localidad,$Circunscripcion,$Seccion,$Manzana,$Lote,$Familia,$Observaciones,$Cambio_Domicilio,$Telefono,$Mail,$ID_Escuela,$Estado,$Trabajo);
               //$Persona = new Persona($ID_Persona,$Apellido,$Nombre,$DNI,$Nro_Legajo,$Edad,$Meses,$Fecha_Nacimiento,$Nro_Carpeta,$Obra_Social,$Domicilio,$Barrio,$Localidad,$Circunscripcion,$Seccion,$Manzana,$Lote,$Familia,$Observacion,$Cambio_Domicilio,$Telefono,$Mail,$ID_Escuela,$Estado);
               // var_dump($Persona);
               $ConsultarEscuela = "select Escuela from escuelas where ID_Escuela = $ID_Escuela";
@@ -970,12 +973,12 @@ $Con->CloseConexion();
 
               while($RetMovimientos = mysqli_fetch_assoc($TomarMovimientosPersona)){
                 $RetMovimientos['tipo'] = "CM";
-                $tomarRetTodos[] = $RetMovimientos; 
+                $tomarRetTodos[] = $RetMovimientos;
               }
 
-              foreach ($tomarRetTodos as $clave => $reg) {
-                $regdomicilio[$clave] = $reg['domicilio'];                
-              }
+              /*foreach ($tomarRetTodos as $clave => $reg) {
+                $regdomicilio[$clave] = $reg['domicilio'];
+              }*/
 
               //array_multisort($regdomicilio, SORT_ASC, $tomarRetTodos);
 
@@ -999,7 +1002,7 @@ $Con->CloseConexion();
                                 <th class='trResponsable'>Responsable</th>
                                 <th class='trCentrosSalud'>Centro de salud</th>
                                 <th class='trOtrasInstituciones'>Otras Instituciones</th>
-                              </tr>";  
+                              </tr>";
               }
 
               foreach($tomarRetTodos as $clave => $RetTodos){                
@@ -1232,7 +1235,6 @@ $Con->CloseConexion();
               $MensajeErrorMovimientos = "No se pudo consultar los movimientos de la persona";
 
               $TomarMovimientos = mysqli_query($Con->Conexion,$Consulta) or die($MensajeErrorMovimientos);
-
               $Rows = mysqli_num_rows($TomarMovimientos);
 
               if($Rows == 0){
@@ -1245,19 +1247,19 @@ $Con->CloseConexion();
 
               while($RetMovimientos = mysqli_fetch_assoc($TomarMovimientos)){
                 $RetMovimientos['tipo'] = "CM";
-                $tomarRetTodos[] = $RetMovimientos; 
+                $tomarRetTodos[] = $RetMovimientos;
               }
 
-              foreach ($tomarRetTodos as $clave => $reg) {
+              /*foreach ($tomarRetTodos as $clave => $reg) {
                 $regdomicilio[$clave] = $reg['domicilio'];                
-              }
+              }*/
 
               //array_multisort($regdomicilio, SORT_DESC, $tomarRetTodos);
 
               if($ID_Config == 'table'){
                 $MotivosTh = "";
-                if($ID_Motivo > 0 || $ID_Motivo2 > 0 || $ID_Motivo3 > 0){    
-                  $MotivosTh .= "<th class='trMotivos'>Motivo</th>";                                 
+                if($ID_Motivo > 0 || $ID_Motivo2 > 0 || $ID_Motivo3 > 0){
+                  $MotivosTh .= "<th class='trMotivos'>Motivo</th>";
                 }else{
                   $MotivosTh .= "<th class='trMotivos'>Motivo 1</th>";
                   $MotivosTh .= "<th class='trMotivos'>Motivo 2</th>";
@@ -1465,8 +1467,8 @@ $Con->CloseConexion();
                   }
 
 
-                }            
-              }              
+                }
+              }
               
 
               while ($RetMovimientos = mysqli_fetch_assoc($TomarMovimientos)) {

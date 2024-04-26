@@ -690,7 +690,7 @@ $datosNav = $_SESSION["datosNav"];
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Mostrar Personas: </label>
               <div class="col-md-10">
                 <select class="form-control" name="Mostrar" id="inpMostrar">
-                	<option value="0">Con Movimientos</option>
+                	<option value="0" selected>Con Movimientos</option>
                 	<option value="1">Todos</option>
                 </select>
               </div>
