@@ -708,12 +708,16 @@ $Con->CloseConexion();
 
             if ($ID_Persona > 0) {
               // SE PUEDE ROMPER
-              // $Consulta .= " group by M.id_movimiento order by Anio, Mes, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";
-              $Consulta .= " group by M.id_persona order by P.domicilio, P.apellido, M.id_movimiento";
+              $Consulta .= " group by M.id_movimiento 
+                             order by B.Barrio DESC, P.domicilio DESC, P.manzana DESC, P.lote DESC, P.familia DESC,
+                                   P.domicilio DESC, P.apellido DESC, M.fecha DESC, M.id_movimiento DESC";
+              //$Consulta .= " group by M.id_persona order by P.domicilio, P.apellido, M.id_movimiento";
             } else {
               // SE PUEDE ROMPER
-              // $Consulta .= " group by M.id_persona order by Anio, Mes, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";
-              $Consulta .= " group by M.id_persona order by P.domicilio, P.apellido, M.id_movimiento";
+              $Consulta .= " group by M.id_persona 
+                             order by B.Barrio DESC, P.domicilio DESC , P.manzana DESC, P.lote DESC, P.familia DESC,
+                                      P.domicilio DESC, P.apellido DESC, M.fecha DESC, M.id_movimiento DESC";
+              //$Consulta .= " group by M.id_persona order by P.domicilio, P.apellido, M.id_movimiento";
             }
 
             $Con->CloseConexion();
@@ -775,10 +779,7 @@ $Con->CloseConexion();
               $Con->OpenConexion();
 
               $tomarRetTodos = array();
-
               $Con->ResultSet = mysqli_query($Con->Conexion, $Consulta) or die($MensajeError . " Consulta: " . $Consulta);
-
-              // echo var_dump($Consulta);
             
               /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1021,9 +1022,11 @@ $Con->CloseConexion();
                 }
 
                 if ($ID_Persona > 0) {
-                  $ConsultarTodos .= " group by P.id_movimiento order by P.domicilio, P.apellido, P.nombre";
+                  $ConsultarTodos .= " group by P.id_movimiento 
+                                       order by B.Barrio DESC, P.domicilio DESC, P.apellido DESC, P.nombre DESC";
                 } else {
-                  $ConsultarTodos .= " group by P.id_persona order by P.domicilio, P.apellido, P.nombre";
+                  $ConsultarTodos .= " group by P.id_persona 
+                                       order by B.Barrio DESC, P.domicilio DESC, P.apellido DESC, P.nombre DESC";
                 }
 
                 // $ConsultarTodos .= " group by P.id_persona order by P.apellido, P.nombre";
@@ -1039,7 +1042,6 @@ $Con->CloseConexion();
 
                 // CAMBIOS CON TODOS                
                 // $tomarRetTodos = mysqli_fetch_array($EjecutarConsultarTodos);
-            
 
                 while ($RetTodos = mysqli_fetch_assoc($EjecutarConsultarTodos)) {
                   // PASAR A TODOS
@@ -1321,12 +1323,12 @@ $Con->CloseConexion();
               // ACA REBERIA GRAFICAR EL ARREGLO DE LOS REGISTROS UNIDOS
               //////////////////////////////////////////////////////////////////////////////////
             
-
+              /*
               foreach ($tomarRetTodos as $clave => $reg) {
                 $regdomicilio[$clave] = $reg['domicilio'];
               }
-
-              array_multisort($regdomicilio, SORT_DESC, $tomarRetTodos);
+              */
+              //array_multisort($regdomicilio, SORT_DESC, $tomarRetTodos);
 
               // echo "DEBUG 1: ".var_dump($tomarRetTodos);    
             
@@ -1451,7 +1453,19 @@ $Con->CloseConexion();
 
                     while ($Ret_Movimientos_Persona = mysqli_fetch_assoc($Tomar_Movimientos_Persona)) {
 
-                      $Consultar_Datos_Movimientos = "select M.id_movimiento, MONTH(M.fecha) as 'Mes', YEAR(M.fecha) as 'Anio', M.motivo_1, M.motivo_2, M.motivo_3 from movimiento M, motivo MT, categoria C where (M.motivo_1 = MT.id_motivo or M.motivo_2 = MT.id_motivo or M.motivo_3 = MT.id_motivo) and MT.cod_categoria = C.cod_categoria and M.id_movimiento = " . $Ret_Movimientos_Persona['id_movimiento'] . " and M.id_persona = " . $Ret_Movimientos_Persona['id_persona'] . " group by M.id_movimiento order by M.fecha";
+                      $Consultar_Datos_Movimientos = "select M.id_movimiento, MONTH(M.fecha) as 'Mes', YEAR(M.fecha) as 'Anio',
+                                                             M.motivo_1, M.motivo_2, M.motivo_3 
+                                                      from movimiento M, 
+                                                           motivo MT, 
+                                                           categoria C 
+                                                      where (M.motivo_1 = MT.id_motivo 
+                                                             or M.motivo_2 = MT.id_motivo
+                                                             or M.motivo_3 = MT.id_motivo) 
+                                                            and MT.cod_categoria = C.cod_categoria 
+                                                            and M.id_movimiento = " . $Ret_Movimientos_Persona['id_movimiento'] . " 
+                                                            and M.id_persona = " . $Ret_Movimientos_Persona['id_persona'] . " 
+                                                      group by M.id_movimiento 
+                                                      order by M.fecha DESC";
 
                       //echo " <br> DEBUG CONSULTAR MOVIMIENTO: ".var_dump($Consultar_Datos_Movimientos);
             
