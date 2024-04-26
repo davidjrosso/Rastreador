@@ -54,7 +54,7 @@ $Con->CloseConexion();
        function Verificar(xID){
               swal({
                 title: "¿Está seguro?",
-                text: "¿Seguro de querer eliminar esta persona?",
+                text: "¿Seguro de querer eliminar esta persona? Se eliminaran los movimientos vinculados con la persona a eliminar",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
