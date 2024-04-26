@@ -501,6 +501,25 @@ $Con->CloseConexion();
             $ID_Motivo = (isset($_REQUEST["ID_Motivo"])) ? $_REQUEST["ID_Motivo"] : null;
             $ID_Motivo2 = (isset($_REQUEST["ID_Motivo2"])) ? $_REQUEST["ID_Motivo2"] : null;
             $ID_Motivo3 = (isset($_REQUEST["ID_Motivo3"])) ? $_REQUEST["ID_Motivo3"] : null;
+            $MotivosOpciones = [
+              "ID_Motivo" => $ID_Motivo,
+              "ID_Motivo2" => $ID_Motivo2,
+              "ID_Motivo3" => $ID_Motivo3,
+            ];
+
+            if (isset($_REQUEST["ID_Motivo4"])) {
+              $ID_Motivo4 = $_REQUEST["ID_Motivo4"];
+              $MotivosOpciones["ID_Motivo4"] = $ID_Motivo4;
+            } else {
+              $ID_Motivo4 = 1;
+            }
+            if (isset($_REQUEST["ID_Motivo5"])) {
+              $ID_Motivo5 = $_REQUEST["ID_Motivo5"];
+              $MotivosOpciones["ID_Motivo5"] = $ID_Motivo5;
+            } else {
+              $ID_Motivo5 = 1;
+            }
+
             $ID_Categoria = (isset($_REQUEST["ID_Categoria"])) ? $_REQUEST["ID_Categoria"] : null;
             $ID_Escuela = (isset($_REQUEST["ID_Escuela"])) ? $_REQUEST["ID_Escuela"] : null;
             $Trabajo = (isset($_REQUEST["Trabajo"])) ? $_REQUEST["Trabajo"] : null;
@@ -640,6 +659,103 @@ $Con->CloseConexion();
               $filtros[] = "Trabajo: " . $Trabajo;
             }
             //////////////////////////////////////////////////////////////////////////// MOTIVOS ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+              $CantOpMotivos = count(array_filter($MotivosOpciones, function($x) { return !empty($x); }));
+
+              if($CantOpMotivos > 0){
+                $Consulta .= " and ";
+                if($CantOpMotivos > 1){
+                  $Consulta .= " (";
+                }
+              }
+
+              if($ID_Motivo > 1){
+                $Consulta .= " (M.motivo_1 = $ID_Motivo or M.motivo_2 = $ID_Motivo or M.motivo_3 = $ID_Motivo)";
+
+                $ConsultarMotivo = "select motivo 
+                                    from motivo 
+                                    where id_motivo = ".$ID_Motivo." limit 1";
+
+                $EjecutarConsultarMotivo = mysqli_query($Con->Conexion,$ConsultarMotivo) or die("Problemas al consultar filtro Motivo");
+                $RetConsultarMotivo = mysqli_fetch_assoc($EjecutarConsultarMotivo);  
+                $filtros[] = "Motivo 1: ".$RetConsultarMotivo['motivo'];                
+                //$filtrosSeleccionados["ID_Motivo1"] = $ID_Motivo;
+              }
+              if($ID_Motivo2 > 1){
+                if($ID_Motivo > 1 ){
+                  $Consulta .= " or ";
+                }
+                $Consulta .= "(M.motivo_1 = $ID_Motivo2 or M.motivo_2 = $ID_Motivo2 or M.motivo_3 = $ID_Motivo2)";
+
+                $ConsultarMotivo = "select motivo 
+                                    from motivo 
+                                    where id_motivo = ".$ID_Motivo2." limit 1";
+
+                $EjecutarConsultarMotivo = mysqli_query($Con->Conexion,$ConsultarMotivo) or die("Problemas al consultar filtro Motivo");
+                $RetConsultarMotivo = mysqli_fetch_assoc($EjecutarConsultarMotivo);
+                $filtros[] = "Motivo 2: ".$RetConsultarMotivo['motivo'];
+                //$filtrosSeleccionados["ID_Motivo2"] = $ID_Motivo2;
+              }
+
+              if($ID_Motivo3 > 1){
+                if($ID_Motivo > 1 || $ID_Motivo2 > 1){
+                  $Consulta .= " or ";
+                }
+
+                $Consulta .= "(M.motivo_1 = $ID_Motivo3 
+                            or M.motivo_2 = $ID_Motivo3 
+                            or M.motivo_3 = $ID_Motivo3)";
+
+                $ConsultarMotivo = "select motivo 
+                                    from motivo 
+                                    where id_motivo = ".$ID_Motivo3." limit 1";
+
+                $EjecutarConsultarMotivo = mysqli_query($Con->Conexion,$ConsultarMotivo) or die("Problemas al consultar filtro Motivo");
+                $RetConsultarMotivo = mysqli_fetch_assoc($EjecutarConsultarMotivo);  
+                $filtros[] = "Motivo 3: ".$RetConsultarMotivo['motivo'];
+                //$filtrosSeleccionados["ID_Motivo3"] = $ID_Motivo3;
+              }
+
+              if($ID_Motivo4 > 1){
+                if($ID_Motivo > 1 || $ID_Motivo2 > 1 || $ID_Motivo3 > 1){
+                  $Consulta .= " or ";
+                }
+
+                $Consulta .= "(M.motivo_1 = $ID_Motivo4 
+                            or M.motivo_2 = $ID_Motivo4 
+                            or M.motivo_3 = $ID_Motivo4)";
+
+                $ConsultarMotivo = "select motivo 
+                                    from motivo 
+                                    where id_motivo = ".$ID_Motivo4." limit 1";
+
+                $EjecutarConsultarMotivo = mysqli_query($Con->Conexion,$ConsultarMotivo) or die("Problemas al consultar filtro Motivo");
+                $RetConsultarMotivo = mysqli_fetch_assoc($EjecutarConsultarMotivo);  
+                $filtros[] = "Motivo 4: ".$RetConsultarMotivo['motivo'];
+              }
+
+              if($ID_Motivo5 > 1){
+                if($ID_Motivo > 1 || $ID_Motivo2 > 1 || $ID_Motivo3 > 1 || $ID_Motivo4 > 1){
+                  $Consulta .= " or ";
+                }
+
+                $Consulta .= "(M.motivo_1 = $ID_Motivo5
+                            or M.motivo_2 = $ID_Motivo5
+                            or M.motivo_3 = $ID_Motivo5)";
+
+                $ConsultarMotivo = "select motivo 
+                                    from motivo 
+                                    where id_motivo = ".$ID_Motivo5." limit 1";
+                $EjecutarConsultarMotivo = mysqli_query($Con->Conexion,$ConsultarMotivo) or die("Problemas al consultar filtro Motivo");
+                $RetConsultarMotivo = mysqli_fetch_assoc($EjecutarConsultarMotivo);  
+                $filtros[] = "Motivo 5: ".$RetConsultarMotivo['motivo'];
+              }
+
+              if($CantOpMotivos > 1){
+                $Consulta .= ")";
+              }
+
+            /*
             if ($ID_Motivo > 0) {
               if ($ID_Motivo2 > 0 || $ID_Motivo3 > 0) {
                 $Consulta .= " and (";
@@ -673,6 +789,9 @@ $Con->CloseConexion();
               $RetConsultarMotivo = mysqli_fetch_assoc($EjecutarConsultarMotivo);
               $filtros[] = "Motivo 3: " . $RetConsultarMotivo['motivo'];
             }
+            */
+
+
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             if ($ID_Categoria > 0) {
               $Consulta .= " and  ((M.motivo_1 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria) or (M.motivo_2 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria) or (M.motivo_3 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria))";
