@@ -25,7 +25,7 @@ if (isset($consultaBusqueda)) {
 	//o el apellido sea igual a $consultaBusqueda, 
 	//o $consultaBusqueda sea igual a nombre + (espacio) + apellido
 
-	$consulta = mysqli_query($Con->Conexion, "SELECT id_persona, apellido, nombre, domicilio FROM persona WHERE domicilio LIKE '%$consultaBusqueda%' and estado = 1");
+	$consulta = mysqli_query($Con->Conexion, "SELECT id_persona, apellido, nombre, domicilio FROM persona WHERE domicilio LIKE '%$consultaBusqueda%' and estado = 1 order by apellido ASC, nombre ASC, domicilio ASC");
 
 
 	//Obtiene la cantidad de filas que hay en la consulta
@@ -52,18 +52,15 @@ if (isset($consultaBusqueda)) {
 		while($resultados = mysqli_fetch_array($consulta)) {
 			$ID_Persona = $resultados["id_persona"];
 			$NombrePersona = $resultados["apellido"].", ".$resultados["nombre"];
-			$Domicilio = $resultados["domicilio"];			
+			$Domicilio = $resultados["domicilio"];
 
 			//Output
 			$mensaje .= '
 			    <tr>
-			      <th scope="row">'.$NombrePersona.'</th>			      	
-			      <th scope="row">'.$Domicilio.'</th>			      	
+			      <th scope="row">'.$NombrePersona.'</th>
+			      <th scope="row">'.$Domicilio.'</th>
 			      <td><button type = "button" class = "btn btn-outline-success" onClick="seleccionDireccion(\''.$ID_Persona.'\',this)">seleccionar</button></td>
 			    </tr>';
-
-
-
 
 		};//Fin while $resultados
 

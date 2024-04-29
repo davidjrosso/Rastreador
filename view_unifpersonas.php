@@ -96,7 +96,7 @@ $Con->CloseConexion();
 
               swal({
                 title: "¿Está seguro?",
-                text: "¿Seguro de querer unificar estos motivos?",
+                text: "¿Seguro de querer unificar estoas personas?",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
