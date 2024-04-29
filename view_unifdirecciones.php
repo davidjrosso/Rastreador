@@ -253,17 +253,17 @@ $Con->CloseConexion();
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Cambiar: </label>
               <div class="col-md-8">
-                <button type = "button" id="BotonModalPersona_1" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalPersona_1">Buscar Dirección</button>
-                <input type="hidden" name="ArrPersonas" id="ArrPersonas" value="0">
-                <!-- <input type="text" class="form-control" id="SearchDireccion" onKeyUp="buscarDireccion()" placeholder="Buscar Direccion" autocomplete="off"> -->
+                <button type = "button" id="BotonModalNuevaDireccion_1" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalDireccionNueva">Nueva Dirección</button>
+                <!--<input type="text" class="form-control" name="NewDireccion" placeholder="Nueva Direccion" autocomplete="off"> -->
+                <input type="hidden" name="NewDireccion" id = "NewDireccion" value = "">
               </div>
             </div>
             <div class="form-group row">
               <div class="col-md-2"></div>
               <div class="col-md-8">
-                <button type = "button" id="BotonModalNuevaDireccion_1" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalDireccionNueva">Nueva Dirección</button>
-                <!--<input type="text" class="form-control" name="NewDireccion" placeholder="Nueva Direccion" autocomplete="off"> -->
-                <input type="hidden" name="NewDireccion" id = "NewDireccion" value = "">
+                <button type = "button" id="BotonModalPersona_1" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalPersona_1">Buscar Dirección</button>
+                <input type="hidden" name="ArrPersonas" id="ArrPersonas" value="0">
+                <!-- <input type="text" class="form-control" id="SearchDireccion" onKeyUp="buscarDireccion()" placeholder="Buscar Direccion" autocomplete="off"> -->
               </div>
             </div>
             <div class="form-group row">
