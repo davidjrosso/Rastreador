@@ -88,8 +88,8 @@ $Con->CloseConexion();
           var Table_1 = ResultadoPersonas.childNodes[0];
           var Table_2 = ResultadoDirecciones.childNodes[0];
           var IndexFilaTabla = xBoton.parentElement.parentElement.rowIndex;
-          var Boton_1 = Table_1.rows[IndexFilaTabla].cells[2];
-          var Boton_2 = Table_2.rows[IndexFilaTabla].cells[2];
+          var Boton_1 = Table_1.rows[IndexFilaTabla].cells[2].childNodes[0];
+          var Boton_2 = Table_2.rows[IndexFilaTabla].cells[2].childNodes[0];
           Personas.push(xID_Persona);
           var ArrPersonas = document.getElementById("ArrPersonas");
           ArrPersonas.value = Personas;
@@ -252,7 +252,7 @@ $Con->CloseConexion();
           <form method = "post" onKeydown="return event.key != 'Enter';" id="form_1" name="form_1" action = "Controladores/unificardirecciones.php">
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Cambiar: </label>
-              <div class="col-md-9">
+              <div class="col-md-8">
                 <button type = "button" id="BotonModalPersona_1" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalPersona_1">Buscar Dirección</button>
                 <input type="hidden" name="ArrPersonas" id="ArrPersonas" value="0">
                 <!-- <input type="text" class="form-control" id="SearchDireccion" onKeyUp="buscarDireccion()" placeholder="Buscar Direccion" autocomplete="off"> -->
@@ -260,7 +260,7 @@ $Con->CloseConexion();
             </div>
             <div class="form-group row">
               <div class="col-md-2"></div>
-              <div class="col-md-9">
+              <div class="col-md-8">
                 <button type = "button" id="BotonModalNuevaDireccion_1" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalDireccionNueva">Nueva Dirección</button>
                 <!--<input type="text" class="form-control" name="NewDireccion" placeholder="Nueva Direccion" autocomplete="off"> -->
                 <input type="hidden" name="NewDireccion" id = "NewDireccion" value = "">
