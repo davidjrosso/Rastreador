@@ -43,13 +43,14 @@ $Con->CloseConexion();
   <script>
         var Personas = [];
 
-       function buscarDireccion(){
+        function buscarDireccionModal(){
           var xDireccion = document.getElementById('SearchDireccion').value;
           var textoBusqueda = xDireccion;
           xmlhttp=new XMLHttpRequest();
           xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState==4 && xmlhttp.status==200) {
               contenidosRecibidos = xmlhttp.responseText;
+              document.getElementById("ResultadosPersonas_1").innerHTML=contenidosRecibidos;
               document.getElementById("ResultadosDirecciones").innerHTML=contenidosRecibidos;
               }
           }
@@ -57,12 +58,63 @@ $Con->CloseConexion();
           xmlhttp.send();
         }
 
+        function actualizarContenido(){
+          var BotonModalPersona = document.getElementById("BotonModalPersona_1");
+          var SearchDireccionValue = document.getElementById("SearchDireccion").value;
+          
+          if(SearchDireccionValue != ""){
+            BotonModalPersona.innerText = SearchDireccionValue;
+          } else {
+            BotonModalPersona.innerText = "Buscar Dirección";
+          }
+        }
+
+        function actualizarContenidoNuevaDireccion(){
+          var BotonModalPersona = document.getElementById("BotonModalNuevaDireccion_1");
+          var SearchDireccionValue = document.getElementById("DireccionNueva_1").value;
+          var NewDireccion = document.getElementById("NewDireccion");
+          if(SearchDireccionValue != ""){
+            BotonModalPersona.innerText = SearchDireccionValue;
+            NewDireccion.value = SearchDireccionValue;
+          } else {
+            BotonModalPersona.innerText = "Nueva Dirección";
+            NewDireccion.value = "";
+          }
+        }
+
         function seleccionDireccion(xID_Persona,xBoton){
+          var ResultadoPersonas = document.getElementById("ResultadosPersonas_1");
+          var ResultadoDirecciones = document.getElementById("ResultadosDirecciones");
+          var Table_1 = ResultadoPersonas.childNodes[0];
+          var Table_2 = ResultadoDirecciones.childNodes[0];
+          var IndexFilaTabla = xBoton.parentElement.parentElement.rowIndex;
+          var Boton_1 = Table_1.rows[IndexFilaTabla].cells[2];
+          var Boton_2 = Table_2.rows[IndexFilaTabla].cells[2];
           Personas.push(xID_Persona);
-          xBoton.setAttribute('class','btn btn-danger disabled');
           var ArrPersonas = document.getElementById("ArrPersonas");
           ArrPersonas.value = Personas;
+          Boton_1.setAttribute('class','btn btn-danger disabled');
+          Boton_2.setAttribute('class','btn btn-danger disabled');
         }
+
+        function VerificarUnificacion(){
+              var Form_1= document.getElementById("form_1");
+              swal({
+                title: "¿Está seguro?",
+                text: "¿Seguro de querer unificar estas direcciones?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+              })
+              .then((result) => {
+                if (result) {
+                  Form_1.submit();
+                  return true;
+                } else {
+                  return false;
+                }
+              });
+            }
   </script>
 
 </head>
@@ -196,26 +248,38 @@ $Con->CloseConexion();
           <p class = "TextoAdvertenciaUnificar">¡ADVERTENCIA! El formato de Dirección que ingrese se le asignara a todas las direcciones que seleccione en las personas registradas.</p>
           <br>
            <!-- Carga -->
-          <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/unificardirecciones.php" onSubmit = "return ValidarUnifDirecciones();">
-              <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Cambiar: </label>
-                  <div class="col-md-4">
-                    <input type="text" class="form-control" id="SearchDireccion" onKeyUp="buscarDireccion()" placeholder="Buscar Direccion" autocomplete="off">
-                  </div>
-                  <div class="col-md-4">
-                    <input type="text" class="form-control" name="NewDireccion" placeholder="Nueva Direccion" autocomplete="off">
-                    <input type="hidden" name="ArrPersonas" id="ArrPersonas" value="0">
-                  </div>
-                  <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary btn-block">Ok</button>
-                  </div>
+          <!--<form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/unificardirecciones.php" onSubmit = "return ValidarUnifDirecciones();">-->
+          <form method = "post" onKeydown="return event.key != 'Enter';" id="form_1" name="form_1" action = "Controladores/unificardirecciones.php">
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Cambiar: </label>
+              <div class="col-md-9">
+                <button type = "button" id="BotonModalPersona_1" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalPersona_1">Buscar Dirección</button>
+                <input type="hidden" name="ArrPersonas" id="ArrPersonas" value="0">
+                <!-- <input type="text" class="form-control" id="SearchDireccion" onKeyUp="buscarDireccion()" placeholder="Buscar Direccion" autocomplete="off"> -->
               </div>
-              <div class="form-group row">
-                  <div class="col-md-2"></div>
-                  <div class="col-md-8" id="ResultadosDirecciones">
+            </div>
+            <div class="form-group row">
+              <div class="col-md-2"></div>
+              <div class="col-md-9">
+                <button type = "button" id="BotonModalNuevaDireccion_1" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalDireccionNueva">Nueva Dirección</button>
+                <!--<input type="text" class="form-control" name="NewDireccion" placeholder="Nueva Direccion" autocomplete="off"> -->
+                <input type="hidden" name="NewDireccion" id = "NewDireccion" value = "">
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-2"></div>
+              <div class="col-md-4">
+                <!--<button type="submit" class="btn btn-primary btn-block">Ok</button>-->
+                <button type="button" class="btn btn-outline-success" onclick="return VerificarUnificacion()">Aceptar</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
+              </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8" id="ResultadosDirecciones">
                       <p>No se ha realizado ninguna busqueda.</p>
-                  </div>                  
-              </div> 
+                </div>         
+            </div> 
           </form>
           <br><br>
           <!-- Fin Carga -->
@@ -299,6 +363,89 @@ $Con->CloseConexion();
         </div>
       </div>
       <!-- FIN MODAL SELECCION MOTIVO -->
+
+      <!-- Modal SELECCION PERSONAS -->
+      <div class="modal fade bd-example-modal-lg" id="ModalPersona_1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Buscar Dirección</h5>
+              <button type="button" class="close" data-dismiss="modal"  onclick="actualizarContenido();" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="row">
+                  <div class="col"></div>
+                  <div class="col-8">
+                    <div class="input-group mb-3">
+                      <input class = "form-control" type="text" name="BuscarPersona" id = "SearchDireccion" onKeyUp="buscarDireccionModal()" autocomplete="off" placeholder="Ingrese la dirección">
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">Buscar</span>
+                      </div>  
+                    </div>                    
+                  </div>
+                  <div class="col"></div>
+                </div>
+                <div class="row">
+                  <div class="col"></div>
+                  <div class="col-10" id = "ResultadosPersonas_1">
+                    
+                  </div>
+                  <div class="col"></div>
+                </div>                
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="actualizarContenido();">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- FIN MODAL SELECCION PERSONAS -->
+
+      <!-- Modal INGRESO DE NUEVA DIRECCION -->
+      <div class="modal fade bd-example-modal-lg" id="ModalDireccionNueva" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Nueva Dirección</h5>
+              <button type="button" class="close" onclick="actualizarContenidoNuevaDireccion();" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="row">
+                  <div class="col"></div>
+                  <div class="col-8">
+                    <div class="input-group mb-3">
+                      <input class = "form-control" type="text" name="DireccionNueva_1" id = "DireccionNueva_1" placeholder="Ingrese la dirección nueva" autocomplete="off">
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">Buscar</span>
+                      </div>  
+                    </div>                    
+                  </div>
+                  <div class="col"></div>
+                </div>
+                <div class="row">
+                  <div class="col"></div>
+                  <div class="col-10" id = "ResultadosMotivos3">
+                    
+                  </div>
+                  <div class="col"></div>
+                </div>                
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" onclick="actualizarContenidoNuevaDireccion();" data-dismiss="modal">Cerrar</button>             
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- FIN MODAL INGRESO DE NUEVA DIRECCION -->
+
   </div>
 </div>
 </div>
