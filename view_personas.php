@@ -69,7 +69,9 @@ $Con->CloseConexion();
               swal.fire({
                 title: "¿Está seguro?",
                 icon: "warning",
-                html: `<p style="margin-bottom:0px">¿Seguro de querer eliminar esta persona?</p><p style="margin-bottom:0px">Se eliminaran los movimientos vinculados </p> <p style="margin-bottom:0px">con la persona a eliminar</p>`,
+                html: `<p style="margin-bottom:0px">¿Seguro de querer eliminar esta persona?</p>
+                       <p style="margin-bottom:0px">Si se borra el registro de una persona</p>
+                       <p style="margin-bottom:0px"> también se eliminan sus movimientos</p>`,
                 showCloseButton: true,
                 confirmButtonColor: "#e64942",
                 cancelButtonColor: "#efefef",
