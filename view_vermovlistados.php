@@ -243,7 +243,7 @@ $Con->CloseConexion();
                 $MotivosOpciones["ID_Motivo5"] = $ID_Motivo5;
               } else {
                 $ID_Motivo5 = 1;
-              } 
+              }
               $ID_Categoria = $_REQUEST["ID_Categoria"]; 
               $ID_Escuela = $_REQUEST["ID_Escuela"];
               $Trabajo = $_REQUEST["Trabajo"];
@@ -482,7 +482,7 @@ $Con->CloseConexion();
                 }
               }
 
-              if($ID_Motivo > 0){
+              if($ID_Motivo > 1){
                 $ConsultarMovimientosPersona .= " (M.motivo_1 = $ID_Motivo or M.motivo_2 = $ID_Motivo or M.motivo_3 = $ID_Motivo)";
                 $Consulta .= " (M.motivo_1 = $ID_Motivo or M.motivo_2 = $ID_Motivo or M.motivo_3 = $ID_Motivo)";
 
@@ -495,8 +495,8 @@ $Con->CloseConexion();
                 $filtros[] = "Motivo 1: ".$RetConsultarMotivo['motivo'];                
                 //$filtrosSeleccionados["ID_Motivo1"] = $ID_Motivo;
               }
-              if($ID_Motivo2 > 0){
-                if($ID_Motivo > 0 ){
+              if($ID_Motivo2 > 1){
+                if($ID_Motivo > 1 ){
                   $ConsultarMovimientosPersona .= " or ";
                   $Consulta .= " or ";
                 }
@@ -513,8 +513,8 @@ $Con->CloseConexion();
                 //$filtrosSeleccionados["ID_Motivo2"] = $ID_Motivo2;
               }
 
-              if($ID_Motivo3 > 0){
-                if($ID_Motivo > 0 || $ID_Motivo2 > 0){
+              if($ID_Motivo3 > 1){
+                if($ID_Motivo > 1 || $ID_Motivo2 > 1){
                   $ConsultarMovimientosPersona .= " or ";
                   $Consulta .= " or ";
                 }
@@ -536,8 +536,8 @@ $Con->CloseConexion();
                 //$filtrosSeleccionados["ID_Motivo3"] = $ID_Motivo3;
               }
 
-              if($ID_Motivo4 > 0){
-                if($ID_Motivo > 0 || $ID_Motivo2 > 0 || $ID_Motivo3 > 0){
+              if($ID_Motivo4 > 1){
+                if($ID_Motivo > 1 || $ID_Motivo2 > 1 || $ID_Motivo3 > 1){
                   $ConsultarMovimientosPersona .= " or ";
                   $Consulta .= " or ";
                 }
@@ -558,8 +558,8 @@ $Con->CloseConexion();
                 $filtros[] = "Motivo 4: ".$RetConsultarMotivo['motivo'];
               }
 
-              if($ID_Motivo5 > 0){
-                if($ID_Motivo > 0 || $ID_Motivo2 > 0 || $ID_Motivo3 > 0 || $ID_Motivo4 > 0){
+              if($ID_Motivo5 > 1){
+                if($ID_Motivo > 1 || $ID_Motivo2 > 1 || $ID_Motivo3 > 1 || $ID_Motivo4 > 1){
                   $ConsultarMovimientosPersona .= " or ";
                   $Consulta .= " or ";
                 }

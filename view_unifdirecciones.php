@@ -58,10 +58,10 @@ $Con->CloseConexion();
         }
 
         function seleccionDireccion(xID_Persona,xBoton){
-          Personas.push(xID_Persona);          
+          Personas.push(xID_Persona);
           xBoton.setAttribute('class','btn btn-danger disabled');
           var ArrPersonas = document.getElementById("ArrPersonas");
-          ArrPersonas.value = Personas;                   
+          ArrPersonas.value = Personas;
         }
   </script>
 
@@ -200,10 +200,10 @@ $Con->CloseConexion();
               <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Cambiar: </label>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="SearchDireccion" onKeyUp="buscarDireccion()" placeholder="Buscar Direccion" autocomplete="off">  
+                    <input type="text" class="form-control" id="SearchDireccion" onKeyUp="buscarDireccion()" placeholder="Buscar Direccion" autocomplete="off">
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" name="NewDireccion" placeholder="Nueva Direccion" autocomplete="off">  
+                    <input type="text" class="form-control" name="NewDireccion" placeholder="Nueva Direccion" autocomplete="off">
                     <input type="hidden" name="ArrPersonas" id="ArrPersonas" value="0">
                   </div>
                   <div class="col-md-2">
@@ -238,7 +238,7 @@ $Con->CloseConexion();
                       <input class = "form-control" type="text" name="BuscarCentros" id = "SearchCentros_1" onKeyUp="buscarCentros_1()" autocomplete="off">
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
-                      </div>  
+                      </div>
                     </div>                    
                   </div>
                   <div class="col"></div>
