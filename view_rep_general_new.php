@@ -827,10 +827,12 @@ $Con->CloseConexion();
 
             if ($ID_Persona > 0) {
               // SE PUEDE ROMPER
-              $Consulta .= " group by M.id_movimiento 
+              //$Consulta .= " group by M.id_movimiento 
+              //               order by B.Barrio DESC, P.domicilio DESC, P.manzana DESC, P.lote DESC, P.familia DESC,
+              //                     P.domicilio DESC, P.apellido DESC, M.fecha DESC, M.id_movimiento DESC";
+              $Consulta .= " group by M.id_persona 
                              order by B.Barrio DESC, P.domicilio DESC, P.manzana DESC, P.lote DESC, P.familia DESC,
                                    P.domicilio DESC, P.apellido DESC, M.fecha DESC, M.id_movimiento DESC";
-              //$Consulta .= " group by M.id_persona order by P.domicilio, P.apellido, M.id_movimiento";
             } else {
               // SE PUEDE ROMPER
               $Consulta .= " group by M.id_persona 
@@ -1149,8 +1151,6 @@ $Con->CloseConexion();
                 }
 
                 // $ConsultarTodos .= " group by P.id_persona order by P.apellido, P.nombre";
-            
-                // echo "DEBUG: ".$ConsultarTodos;
                 // var_dump($ConsultarTodos);
             
 
@@ -1175,7 +1175,8 @@ $Con->CloseConexion();
             
                   // $ColSpans = $MesesDiferencia * 270;
                   // $Table .= "<td style='width:".$ColSpans."px'></td>";
-            
+
+                  //La abreviatura CM indica persona con movimiento
                   $RetTodos['tipo'] = "SM";
                   $tomarRetTodos[] = $RetTodos;
 
@@ -1424,6 +1425,8 @@ $Con->CloseConexion();
 
 
                 //}
+
+                //La abreviatura CM indica persona con movimiento
                 $Ret['tipo'] = "CM";
                 $tomarRetTodos[] = $Ret;
               }
@@ -1449,7 +1452,7 @@ $Con->CloseConexion();
               */
               //array_multisort($regdomicilio, SORT_DESC, $tomarRetTodos);
 
-              // echo "DEBUG 1: ".var_dump($tomarRetTodos);    
+              //echo "DEBUG 1: ".var_dump($tomarRetTodos);    
             
               foreach ($tomarRetTodos as $clave => $RetTodos) {
                 // echo var_dump($RetTodos);
@@ -1564,7 +1567,7 @@ $Con->CloseConexion();
             
 
                     $Tomar_Movimientos_Persona = mysqli_query($Con->Conexion, $Consultar_Movimientos_Persona) or die($MensajeErrorConsultar_Mov_Persona . " - " . $Consultar_Movimientos_Persona);
-
+                    //echo var_dump($Consultar_Movimientos_Persona);
                     // TODO: CAMBIANDO TOAMAÑO DE COLUMNAS
                     $Table .= "<td name='DatosResultados' style='min-width:225px'><div class = 'row'>";                  //250   
             
@@ -1583,11 +1586,11 @@ $Con->CloseConexion();
                                                             and MT.cod_categoria = C.cod_categoria 
                                                             and M.id_movimiento = " . $Ret_Movimientos_Persona['id_movimiento'] . " 
                                                             and M.id_persona = " . $Ret_Movimientos_Persona['id_persona'] . " 
-                                                      group by M.id_movimiento 
+                                                      group by M.id_movimiento
                                                       order by M.fecha DESC";
 
                       //echo " <br> DEBUG CONSULTAR MOVIMIENTO: ".var_dump($Consultar_Datos_Movimientos);
-            
+                      //echo var_dump($Consultar_Datos_Movimientos);
                       $MensajeErrorConsultar_Datos_Movimientos = "No se pudieron consultar los datos del movimiento";
                       $Tomar_Datos_Movimientos = mysqli_query($Con->Conexion, $Consultar_Datos_Movimientos) or die($MensajeErrorConsultar_Datos_Movimientos . " - " . $Consultar_Datos_Movimientos);
                       $Ret_Datos_Movimiento = mysqli_fetch_assoc($Tomar_Datos_Movimientos);
@@ -1617,7 +1620,15 @@ $Con->CloseConexion();
                       if ($Ret_Datos_Movimiento["motivo_1"] > 1) {
                         if ($ID_Motivo > 0) {
                           if ($ID_Motivo == $Ret_Datos_Movimiento["motivo_1"]) {
-                            $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_1"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
+                            $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color, M.codigo 
+                                                   from motivo M, 
+                                                        categoria C, 
+                                                        formas_categorias F 
+                                                    where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_1"] . " 
+                                                      and M.cod_categoria = C.cod_categoria 
+                                                      and C.ID_Forma = F.ID_Forma 
+                                                      and M.estado = 1 and 
+                                                      C.estado = 1";
                             $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
 
                             // echo $ConsultarCodyColor;               
@@ -1628,7 +1639,17 @@ $Con->CloseConexion();
 
                             // echo "DEBUG: ".var_dump($RetMotivo);
             
-                            $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo["color"] . ";'>" . $RetMotivo["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo["codigo"] . "</span></center></span></a></div>";
+                            $Table .= "<div class = 'col-md-1'>
+                                        <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
+                                          <span style='font-size: 30px; color: " . $RetMotivo["color"] . ";'>" . 
+                                            $RetMotivo["Forma_Categoria"] . 
+                                            "<center>
+                                              <span class='nombreCategoria'>" . $RetMotivo["codigo"] . "
+                                              </span>
+                                             </center>
+                                          </span>
+                                        </a>
+                                       </div>";
                           }
                         }
                         if ($ID_Motivo2 > 0) {
