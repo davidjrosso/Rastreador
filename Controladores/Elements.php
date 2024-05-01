@@ -734,7 +734,12 @@ public function getMenuSeguridad($ID){
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='ID_Responsable' name = 'ID_Responsable[]'>";
     $Select .= "<option selected = 'true' disabled = 'disabled'>-Seleccione un Responsable-</option>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from responsable where estado = 1 order by responsable")or die("Problemas al mostrar Responsables");
+    $Responsables = "select * 
+                     from responsable 
+                     where estado = 1 
+                       and id_resp <> 64 
+                     order by responsable";
+    $Consulta = mysqli_query($Con3->Conexion,$Responsables)or die("Problemas al mostrar Responsables");
     while ($Ret = mysqli_fetch_array($Consulta)) {
       $Select .= "<option value = '".$Ret['id_resp']."'>".$Ret['responsable']."</option>";
     }

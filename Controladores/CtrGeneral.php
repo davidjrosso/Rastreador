@@ -461,7 +461,11 @@ class CtrGeneral{
 	public function getResponsables(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_resp, responsable from responsable where estado = 1 order by id_resp";
+		$Consulta = "select id_resp, responsable 
+					 from responsable 
+					 where estado = 1 
+					   and id_resp <> 64
+					 order by id_resp";
 		$MessageError = "Problemas al intentar mostrar Responsables";
 		$Table = "<table class='table'><thead><tr><th>Responsable</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -511,7 +515,7 @@ class CtrGeneral{
 	public function getCentros(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_centro, centro_salud from centros_salud where estado = 1 order by id_centro";
+		$Consulta = "select id_centro, centro_salud from centros_salud where estado = 1 and id_centro <> 7 order by id_centro";
 		$MessageError = "Problemas al intentar mostrar Centros de Salud";
 		$Table = "<table class='table'><thead><tr><th>Centro de Salud</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -709,7 +713,11 @@ class CtrGeneral{
 	public function getOtrasInstituciones(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select ID_OtraInstitucion, Nombre, Telefono, Mail from otras_instituciones where estado = 1 order by Nombre";
+		$Consulta = "select ID_OtraInstitucion, Nombre, Telefono, Mail 
+					 from otras_instituciones
+					 where estado = 1
+					   and ID_OtraInstitucion <> 1
+					 order by Nombre";
 		$MessageError = "Problemas al intentar mostrar Instituciones";
 		$Table = "<table class='table'><thead><tr><th>Nombre</th><th>Telefono</th><th>E-Mail</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
