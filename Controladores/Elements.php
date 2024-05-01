@@ -737,7 +737,6 @@ public function getMenuSeguridad($ID){
     $Responsables = "select * 
                      from responsable 
                      where estado = 1 
-                       and id_resp <> 64 
                      order by responsable";
     $Consulta = mysqli_query($Con3->Conexion,$Responsables)or die("Problemas al mostrar Responsables");
     while ($Ret = mysqli_fetch_array($Consulta)) {
