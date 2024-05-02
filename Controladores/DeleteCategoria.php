@@ -41,6 +41,12 @@ try {
 	if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
 		throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 1);
 	}
+
+	$ConsultaSolicitud = "update solicitudes_eliminarcategorias set estado = 0 where ID_categoria = $ID_Categoria";
+	if(!$Ret = mysqli_query($Con->Conexion,$ConsultaSolicitud)){
+		throw new Exception("Problemas en la consulta. Consulta: ".$ConsultaSolicitud, 3);			
+	}
+
 	$Con->CloseConexion();
 	$Mensaje = "La categoria fue eliminada Correctamente";
 	header('Location: ../view_categorias.php?Mensaje='.$Mensaje);
