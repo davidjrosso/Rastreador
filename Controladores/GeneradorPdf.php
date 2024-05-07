@@ -1,22 +1,29 @@
 <?php
-require_once 'Conexion.php';
 require_once '../dompdf/autoload.inc.php';
 
 use Dompdf\Dompdf;
 //use Dompdf\Options;
 
-$tabla = $_REQUEST["tabla"];
+try{
+    $tabla = $_REQUEST["tabla"];
 
-//$options = new Options();
-//$options->set('isRemoteEnabled',true);
-//$dompdf = new Dompdf($options);
+    //$options = new Options();
+    //$options->set('isRemoteEnabled',true);
+    //$dompdf = new Dompdf($options);
 
-$dompdf = new Dompdf();
-$dompdf->loadHtml($tabla);
-$dompdf->setPaper('A4', 'landscape');
-$dompdf->render();
-$output = $dompdf->output();
-$data = base64_encode($output);
+    $dompdf = new Dompdf();
+    $dompdf->loadHtml($tabla);
+    $dompdf->setPaper('A4', 'landscape');
+    $dompdf->render();
+    //$output = $dompdf->output();
+    $output = $dompdf->output();
+    $data = base64_encode($output);
 
-header('Content-Type: application/pdf');
-echo $data;
+    header('Content-Type: application/pdf');
+    echo $data;
+} catch (Error $e) {
+    header("HTTP/1.1 503 Service Unavailable");
+    header('Content-Type: text/plain');
+    echo 'Error producido al generar el pdf: ',  $e->getMessage(), "\n";
+
+}
