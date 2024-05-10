@@ -1924,8 +1924,18 @@ $Con->CloseConexion();
                 $Table_imprimir ="<html>
                                     <head>
                                     <link href='https://fonts.cdnfonts.com/css/symbol' rel='stylesheet'>
+                                    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
                 
                                       <style>
+
+                                      .table_pdf {
+                                        width: 100%;
+                                      }
+                                      
+                                      /*p:before{
+                                        content:'\0022';
+                                      }*/
+
                                       table thead tr th {
                                         background-color: #ccc;
                                       }
@@ -1933,8 +1943,26 @@ $Con->CloseConexion();
                                         text-align: center;
                                         margin-bottom: 0px
                                       }
-                                      p {
-                                        text-align: right;
+
+                                      #InformacionDeCentro {
+                                        float: right;
+                                        text-align: left;
+                                      }
+
+                                      #frase {
+                                        font-weight: bold;
+                                      }
+
+                                      #encabezado {
+                                        text-align: center;
+                                        float: right;
+                                        padding-right: 5rem;
+                                      }
+
+                                      #InformacionDeCiudad {
+                                        text-align: left;
+                                        margin-bottom: 2rem;
+                                        margin-top: 2rem;
                                       }
 
                                       table, th, td {
@@ -1943,24 +1971,22 @@ $Con->CloseConexion();
                                       </style>
                                       </head> 
                                       <body>
-                                        <div>
-                                          <div>
-                                            <h5> Plan para el fortalecimiento del bieniestar Comunitario</h5>
-                                            <h2> GRAFICO DE SEGUIMIENTO</h2>
-                                            <h5> (Con Reporte Georeferenciado)</h5>
-                                          </div>
-                                          <div>
-                                            
-                                            <p> Centro de Atencion Primaria en Salud<br>
-                                                Direccion de Accion Social<br>
-                                            DESDE : ". $Etiqueta_Fecha_Inicio . " HASTA : " . $Etiqueta_Fecha_Fin ." </p>
-                                          </div>
-                                        </div>"
+                                        <p id='InformacionDeCentro'> Centro de Atencion Primaria en Salud<br>
+                                          Direccion de Accion Social<br>
+                                          DESDE : ". $Etiqueta_Fecha_Inicio . " HASTA : " . $Etiqueta_Fecha_Fin ." </p>
+                                        <p id='encabezado'> Plan para el fortalecimiento del bienestar Comunitario<br>
+                                          <span id='frase'> GRAFICO DE SEGUIMIENTO</span><br>
+                                          (Con Reporte Georeferenciado)
+                                        </p>
+                                        <p id='InformacionDeCiudad'>
+                                          Municipialidad de Rio Tercero
+                                        </p>"
                                       .$Table_imprimir ."
                                     </body>
                                   </html>";
                 $ColummasBarrioEliminadas = "~<th id='Contenido-Titulo-1'>Barrio</th>~";
                 $ColummasDirecEliminadas = "~<th id='Contenido-Titulo-2'>Direc.</th>~";
+                $EstilosTablaEliminadas = "~page-break-after:always;~";
                 //putenv("LANG=es_ES");
                 //setlocale(LC_ALL, "es_ES");
                 //bindtextdomain("messages", "locale");
@@ -1971,10 +1997,13 @@ $Con->CloseConexion();
                   //echo var_dump(gettext($dateObj->format('F')));
                   $Table_imprimir = preg_replace( "~".$i."/[0-2][0-9]~" ,$monthName ,$Table_imprimir);
                 }
+
                 $Table_imprimir = preg_replace( $ColummasBarrioEliminadas, "", $Table_imprimir);
                 $Table_imprimir = preg_replace( $ColummasDirecEliminadas, "", $Table_imprimir);
+                $Table_imprimir = preg_replace( $EstilosTablaEliminadas, "page-break-after: always; width: 100%;", $Table_imprimir);
 
               }
+
               if ($Con->ResultSet->num_rows > 0) {
                 echo $Table;
               }
@@ -1984,9 +2013,7 @@ $Con->CloseConexion();
             echo "No se pudo obtener el año";
           }
 
-
           ?>
-
           <input type="hidden" name="tabla_1" id = "tabla_1" value = "<?php echo $Table_imprimir;?>">
           </div>
 
