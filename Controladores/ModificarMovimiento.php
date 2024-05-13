@@ -27,6 +27,7 @@ $ID_Usuario = $_SESSION["Usuario"];
 
 $ID_Movimiento = $_REQUEST["ID"];
 $Fecha = implode("-", array_reverse(explode("/",$_REQUEST["Fecha"])));
+$Fecha_Creacion = null;
 $ID_Persona = $_REQUEST["ID_Persona"];
 $ID_Motivo_1 = $_REQUEST["ID_Motivo_1"];
 $ID_Motivo_2 = $_REQUEST["ID_Motivo_2"];
@@ -64,7 +65,7 @@ if(empty($ID_Centro)){
 }
 
 
-$Movimiento = new Movimiento($ID_Movimiento,$Fecha,$ID_Persona,$ID_Motivo_1,$ID_Motivo_2,$ID_Motivo_3,$ID_Motivo_4,$ID_Motivo_5,$Observaciones,$ID_Responsable,$ID_Responsable_2,$ID_Responsable_3,$ID_Responsable_4,$ID_Centro,$ID_OtraInstitucion,$Estado);
+$Movimiento = new Movimiento($ID_Movimiento,$Fecha,$Fecha_Creacion,$ID_Persona,$ID_Motivo_1,$ID_Motivo_2,$ID_Motivo_3,$ID_Motivo_4,$ID_Motivo_5,$Observaciones,$ID_Responsable,$ID_Responsable_2,$ID_Responsable_3,$ID_Responsable_4,$ID_Centro,$ID_OtraInstitucion,$Estado);
 $Con = new Conexion();
 $Con->OpenConexion();
 
@@ -79,6 +80,7 @@ $RetMovimientoViejo = mysqli_query($Con->Conexion,$ConsultarMovimientoViejo) or 
 $TomarMovimientoViejo = mysqli_fetch_assoc($RetMovimientoViejo);
 $ID_Movimiento_Viejo = $TomarMovimientoViejo["id_movimiento"];
 $Fecha_Viejo = $TomarMovimientoViejo["fecha"];
+$Fecha_Creacion_Viejo = $TomarMovimientoViejo["fecha_creacion"];
 $ID_Persona_Viejo = $TomarMovimientoViejo["id_persona"];
 $ID_Motivo_1_Viejo = $TomarMovimientoViejo["motivo_1"];
 $ID_Motivo_2_Viejo = $TomarMovimientoViejo["motivo_2"];
@@ -93,7 +95,7 @@ $ID_Responsable_4_Viejo = $TomarMovimientoViejo["id_resp_4"];
 $ID_Centro_Viejo = $TomarMovimientoViejo["id_centro"];
 $ID_OtraInstitucion_Viejo = $TomarMovimientoViejo["id_otrainstitucion"];
 
-$Movimiento_Viejo = new Movimiento($ID_Movimiento_Viejo,$Fecha_Viejo,$ID_Persona_Viejo,$ID_Motivo_1_Viejo,$ID_Motivo_2_Viejo,$ID_Motivo_3_Viejo,$ID_Motivo_4_Viejo,$ID_Motivo_5_Viejo,$Observaciones_Viejo,$ID_Responsable_Viejo,$ID_Responsable_2_Viejo,$ID_Responsable_3_Viejo,$ID_Responsable_4_Viejo,$ID_Centro_Viejo,$ID_OtraInstitucion_Viejo,$Estado);
+$Movimiento_Viejo = new Movimiento($ID_Movimiento_Viejo,$Fecha_Viejo,$Fecha_Creacion_Viejo,$ID_Persona_Viejo,$ID_Motivo_1_Viejo,$ID_Motivo_2_Viejo,$ID_Motivo_3_Viejo,$ID_Motivo_4_Viejo,$ID_Motivo_5_Viejo,$Observaciones_Viejo,$ID_Responsable_Viejo,$ID_Responsable_2_Viejo,$ID_Responsable_3_Viejo,$ID_Responsable_4_Viejo,$ID_Centro_Viejo,$ID_OtraInstitucion_Viejo,$Estado);
 
 $Consulta = "update movimiento set fecha = '{$Movimiento->getFecha()}', id_persona = {$Movimiento->getID_Persona()}, motivo_1 = {$Movimiento->getID_Motivo_1()}, motivo_2 = {$Movimiento->getID_Motivo_2()}, motivo_3 = {$Movimiento->getID_Motivo_3()}, motivo_4 = {$Movimiento->getID_Motivo_4()}, motivo_5 = {$Movimiento->getID_Motivo_5()}, observaciones = '{$Movimiento->getObservaciones()}', id_resp = {$Movimiento->getID_Responsable()}, id_resp_2 = {$Movimiento->getID_Responsable_2()}, id_resp_3 = {$Movimiento->getID_Responsable_3()}, id_resp_4 = {$Movimiento->getID_Responsable_4()}, id_centro = {$Movimiento->getID_Centro()}, id_otrainstitucion = {$Movimiento->getID_OtraInstitucion()} where id_movimiento = {$Movimiento->getID_Movimiento()} and estado = 1";
 echo $Consulta;

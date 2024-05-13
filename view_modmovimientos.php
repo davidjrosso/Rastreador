@@ -582,7 +582,6 @@ $Con->CloseConexion();
                     <?php
                       }
                     ?>
-                    <input type="hidden" name="ID_Responsable" id = "ID_Responsable" value = "<?php echo $ID_Responsable; ?>">
                     <button type="submit" class="btn btn-outline-success">Guardar</button>
                     <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_movimientos.php'">Atras</button>
                   </div>

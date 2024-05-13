@@ -8,12 +8,20 @@ class CtrGeneral{
 	public function getMovimientos(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, R.responsable from movimiento M, persona P, responsable R where M.id_persona = P.id_persona and M.id_resp = R.id_resp and M.estado = 1 and P.estado = 1 order by M.fecha desc";
+		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion, P.apellido, P.nombre, R.responsable 
+					 from movimiento M, 
+						  persona P, 
+						  responsable R 
+					 where M.id_persona = P.id_persona 
+					   and M.id_resp = R.id_resp 
+					   and M.estado = 1 
+					   and P.estado = 1 
+					 order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
+			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
 			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
@@ -25,12 +33,19 @@ class CtrGeneral{
 	public function getMovimientosxID($ID){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, R.responsable from movimiento M, persona P, responsable R where M.id_persona = P.id_persona and M.id_resp = R.id_resp and M.id_movimiento = $ID and M.estado = 1 and P.estado = 1 order by M.id_movimiento desc";
+		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
+					 from movimiento M, persona P, responsable R 
+					 where M.id_persona = P.id_persona
+					   and M.id_resp = R.id_resp 
+					   and M.id_movimiento = $ID 
+					   and M.estado = 1 
+					   and P.estado = 1 
+					 order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
+			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
 			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
@@ -43,12 +58,21 @@ class CtrGeneral{
 		$Fecha = implode("-", array_reverse(explode("/",$Fecha)));
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, R.responsable from movimiento M, persona P, responsable R where M.id_persona = P.id_persona and M.id_resp = R.id_resp and M.fecha = '$Fecha' and M.estado = 1 and P.estado = 1 order by M.id_movimiento desc";
+		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
+					 from movimiento M, 
+					 	  persona P, 
+						  responsable R 
+					 where M.id_persona = P.id_persona 
+					   and M.id_resp = R.id_resp 
+					   and M.fecha = '$Fecha' 
+					   and M.estado = 1 
+					   and P.estado = 1 
+					order M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
+			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
 			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
@@ -60,12 +84,21 @@ class CtrGeneral{
 	public function getMovimientosxApellido($Apellido){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, R.responsable from movimiento M, persona P, responsable R where M.id_persona = P.id_persona and M.id_resp = R.id_resp and P.apellido like '%$Apellido%' and M.estado = 1 and P.estado = 1 order by M.id_movimiento desc";
+		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
+					 from movimiento M, 
+					 	  persona P, 
+						  responsable R 
+					 where M.id_persona = P.id_persona 
+					   and M.id_resp = R.id_resp 
+					   and P.apellido like '%$Apellido%' 
+					   and M.estado = 1 
+					   and P.estado = 1 
+					order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
+			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
 			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
@@ -77,12 +110,21 @@ class CtrGeneral{
 	public function getMovimientosxNombre($Nombre){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, R.responsable from movimiento M, persona P, responsable R where M.id_persona = P.id_persona and M.id_resp = R.id_resp and P.nombre like '%$Nombre%' and M.estado = 1 and P.estado = 1 order by M.id_movimiento desc";
+		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
+					 from movimiento M, 
+						  persona P, 
+						  responsable R 
+					  where M.id_persona = P.id_persona 
+						and M.id_resp = R.id_resp 
+						and P.nombre like '%$Nombre%' 
+						and M.estado = 1 
+						and P.estado = 1 
+					  order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
+			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
 			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
@@ -94,12 +136,21 @@ class CtrGeneral{
 	public function getMovimientosxDocumento($Documento){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, R.responsable from movimiento M, persona P, responsable R where M.id_persona = P.id_persona and M.id_resp = R.id_resp and P.documento like '%$Documento%' and M.estado = 1 and P.estado = 1 order by M.id_movimiento desc";
+		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
+					 from movimiento M,
+					 	  persona P, 
+						  responsable R 
+					 where M.id_persona = P.id_persona 
+					   and M.id_resp = R.id_resp 
+					   and P.documento like '%$Documento%' 
+					   and M.estado = 1 
+					   and P.estado = 1 
+					 order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
+			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
 			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
@@ -111,12 +162,24 @@ class CtrGeneral{
 	public function getMovimientosxResponsable($Responsable){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, R.responsable from movimiento M, persona P, responsable R where M.id_persona = P.id_persona and (M.id_resp = R.id_resp or M.id_resp_2 = R.id_resp or M.id_resp_3 = R.id_resp or M.id_resp_4 = R.id_resp) and R.responsable like '%$Responsable%' and M.estado = 1 and P.estado = 1 order by M.id_movimiento desc";
+		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
+					 from movimiento M, 
+					 	  persona P, 
+						  responsable R 
+					 where M.id_persona = P.id_persona
+					   and (M.id_resp = R.id_resp 
+					   	 or M.id_resp_2 = R.id_resp 
+						 or M.id_resp_3 = R.id_resp 
+						 or M.id_resp_4 = R.id_resp) 
+					   and R.responsable like '%$Responsable%' 
+					   and M.estado = 1 
+					   and P.estado = 1 
+					 order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
+			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
 			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
@@ -128,12 +191,24 @@ class CtrGeneral{
 	public function getMovimientosxLegajo($Legajo){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, R.responsable from movimiento M, persona P, responsable R where M.id_persona = P.id_persona and (M.id_resp = R.id_resp or M.id_resp_2 = R.id_resp or M.id_resp_3 = R.id_resp or M.id_resp_4 = R.id_resp) and P.nro_legajo = '$Legajo' and M.estado = 1 and P.estado = 1 order by M.id_movimiento desc";
+		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
+					 from movimiento M, 
+					 	  persona P, 
+						  responsable R 
+					 where M.id_persona = P.id_persona 
+					   and (M.id_resp = R.id_resp 
+						 or M.id_resp_2 = R.id_resp 
+						 or M.id_resp_3 = R.id_resp 
+						 or M.id_resp_4 = R.id_resp) 
+					   and P.nro_legajo = '$Legajo' 
+					   and M.estado = 1 
+					   and P.estado = 1 
+					 order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
+			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
 			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
@@ -145,12 +220,24 @@ class CtrGeneral{
 	public function getMovimientosxCarpeta($Carpeta){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, R.responsable from movimiento M, persona P, responsable R where M.id_persona = P.id_persona and (M.id_resp = R.id_resp or M.id_resp_2 = R.id_resp or M.id_resp_3 = R.id_resp or M.id_resp_4 = R.id_resp) and P.nro_carpeta = '$Carpeta' and M.estado = 1 and P.estado = 1 order by M.id_movimiento desc";
+		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
+					 from movimiento M, 
+					 	  persona P, 
+						  responsable R 
+					 where M.id_persona = P.id_persona 
+					   and (M.id_resp = R.id_resp 
+					   	 or M.id_resp_2 = R.id_resp 
+						 or M.id_resp_3 = R.id_resp 
+						 or M.id_resp_4 = R.id_resp) 
+					   and P.nro_carpeta = '$Carpeta' 
+					   and M.estado = 1 
+					   and P.estado = 1 
+					 order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
+			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
 			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
@@ -1023,7 +1110,11 @@ class CtrGeneral{
 	public function getSolicitudes_EliminacionCategoria(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select S.ID, S.Fecha, S.Categoria, S.Cod_Categoria, U.username, S.ID_Categoria from solicitudes_eliminarcategorias S, accounts U where S.ID_Usuario = U.accountid and S.Estado = 1 order by S.Fecha";
+		$Consulta = "select S.ID, S.Fecha, S.Categoria, S.Cod_Categoria, U.username, S.ID_Categoria 
+					 from solicitudes_eliminarcategorias S, 
+					 	  accounts U
+					 where S.ID_Usuario = U.accountid and S.Estado = 1 order by S.Fecha";
+
 		$MessageError = "Problemas al intentar mostrar Solicitudes eliminar categorias";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
