@@ -41,7 +41,6 @@ if (isset($consultaBusqueda)) {
 			    <tr>
 			      <th scope="col">Codigo</th>
 			      <th scope="col">Nombre</th>
-			      <th scope="col">Abreviatura</th>
 			      <th scope="col">Accion</th>
 				</tr>
 			  </thead>
@@ -52,13 +51,11 @@ if (isset($consultaBusqueda)) {
 			$ID_Calle = $resultados["id_calle"];
 			$Codigo = $resultados["codigo_calle"];
 			$Nombre = $resultados['calle_nombre'];
-			$abreviatura = $resultados['calle_abreviado'];
 			//Output
 			$mensaje .= '
 			    <tr>
 			      <th scope="row">'.$Codigo.'</th>
-			      <td>'.$Nombre.'</td>
-			      <td>'.$abreviatura.'</td>				
+			      <td>'.$Nombre.'</td>			
 			      <td><button type = "button" class = "btn btn-outline-success" onClick="seleccionCalle(\''.$Nombre.'\','.$ID_Calle.')" data-dismiss="modal">seleccionar</button></td>
 			    </tr>';
 		};//Fin while $resultados
