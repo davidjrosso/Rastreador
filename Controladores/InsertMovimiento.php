@@ -93,8 +93,8 @@ $Movimiento = new Movimiento(0,$Fecha,$Fecha_Accion,$ID_Persona,$ID_Motivo_1,$ID
 $Con = new Conexion();
 $Con->OpenConexion();
 
-$Consulta = "insert into movimiento(fecha,id_persona,motivo_1,motivo_2,motivo_3,motivo_4,motivo_5,observaciones,id_resp,id_resp_2,id_resp_3,id_resp_4,id_centro,id_otrainstitucion,estado) 
-			 values('".$Movimiento->getFecha()."',".$Movimiento->getID_Persona().",".$Movimiento->getID_Motivo_1().",".$Movimiento->getID_Motivo_2().",".$Movimiento->getID_Motivo_3().",".$Movimiento->getID_Motivo_4().",".$Movimiento->getID_Motivo_5().",'".$Movimiento->getObservaciones()."',".$Movimiento->getID_Responsable().",".$Movimiento->getID_Responsable_2().",".$Movimiento->getID_Responsable_3().",".$Movimiento->getID_Responsable_4().",".$Movimiento->getID_Centro().",".$Movimiento->getID_OtraInstitucion().",".$Movimiento->getEstado().")";
+$Consulta = "insert into movimiento(fecha,fecha_creacion,id_persona,motivo_1,motivo_2,motivo_3,motivo_4,motivo_5,observaciones,id_resp,id_resp_2,id_resp_3,id_resp_4,id_centro,id_otrainstitucion,estado) 
+			 values('".$Movimiento->getFecha()."','".$Movimiento->getFecha_Creacion()."',".$Movimiento->getID_Persona().",".$Movimiento->getID_Motivo_1().",".$Movimiento->getID_Motivo_2().",".$Movimiento->getID_Motivo_3().",".$Movimiento->getID_Motivo_4().",".$Movimiento->getID_Motivo_5().",'".$Movimiento->getObservaciones()."',".$Movimiento->getID_Responsable().",".$Movimiento->getID_Responsable_2().",".$Movimiento->getID_Responsable_3().",".$Movimiento->getID_Responsable_4().",".$Movimiento->getID_Centro().",".$Movimiento->getID_OtraInstitucion().",".$Movimiento->getEstado().")";
 
 $Ret = mysqli_query($Con->Conexion,$Consulta)or die("Problemas en la consulta"." - ".$Consulta);
 
