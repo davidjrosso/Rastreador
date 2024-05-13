@@ -368,8 +368,14 @@ $Con->CloseConexion();
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Domicilio: </label>
-              <div class="col-md-10">
-                <input type="text" class="form-control" name = "Domicilio" id="inputPassword" autocomplete="off">
+              <div class="col-md-8">
+                <?php 
+                  $Element = new Elements();
+                  echo $Element->CBCalles();
+                ?>
+              </div>
+              <div class="col-md-2">
+                <input type="number" class="form-control" name = "NumeroDeCalle" id="NumeroDeCalle" placeholder="Numero" min="1" required autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
@@ -414,7 +420,7 @@ $Con->CloseConexion();
                 <?php 
                 $Element = new Elements();
                 echo $Element->CBNivelEscuelas();
-            ?>
+                ?>
               </div>
             </div>
             <div class="form-group row">

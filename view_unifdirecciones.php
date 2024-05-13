@@ -73,12 +73,12 @@ $Con->CloseConexion();
           var BotonModalPersona = document.getElementById("BotonModalNuevaDireccion_1");
           var SearchDireccionValue = document.getElementById("DireccionNueva_1").value;
           var NewDireccion = document.getElementById("NewDireccion");
-          if(SearchDireccionValue != ""){
-            BotonModalPersona.innerText = SearchDireccionValue;
-            NewDireccion.value = SearchDireccionValue;
-          } else {
+          if (SearchDireccionValue == "") {
             BotonModalPersona.innerText = "Nueva Dirección";
             NewDireccion.value = "";
+          }else {
+            BotonModalPersona.innerText = SearchDireccionValue;
+            NewDireccion.value = SearchDireccionValue;
           }
         }
 
@@ -114,7 +114,30 @@ $Con->CloseConexion();
                   return false;
                 }
               });
-            }
+        }
+
+        function buscarCalle(){
+          var xNombre = document.getElementById('DireccionNueva_1').value;
+          var textoBusqueda = xNombre;
+          xmlhttp=new XMLHttpRequest();
+          xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+              contenidosRecibidos = xmlhttp.responseText;
+              document.getElementById("ResultadosDireccion").innerHTML=contenidosRecibidos;
+              }
+          }
+          xmlhttp.open('POST', 'buscarCalle.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
+          xmlhttp.send();
+        }
+
+        function seleccionCalle(xNombre,xID){
+          var BotonModalPersona = document.getElementById("BotonModalNuevaDireccion_1");
+          var NewDireccion = document.getElementById("NewDireccion");
+          BotonModalPersona.innerHTML = "";
+          BotonModalPersona.innerHTML = xNombre;
+          NewDireccion.setAttribute('value',xNombre);
+        }
+
   </script>
 
 </head>
@@ -238,7 +261,7 @@ $Con->CloseConexion();
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
-        <p>Unificar Direcciones</p>
+        <p>Unificar Calles</p>
       </div>
       <div class="col"></div>
     </div><br>
@@ -253,7 +276,7 @@ $Con->CloseConexion();
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Cambiar: </label>
               <div class="col-md-8">
-                <button type = "button" id="BotonModalNuevaDireccion_1" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalDireccionNueva">Nueva Calle</button>
+                <button type = "button" id="BotonModalNuevaDireccion_1" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalDireccionNueva">Nombre de Calle elegido</button>
                 <!--<input type="text" class="form-control" name="NewDireccion" placeholder="Nueva Direccion" autocomplete="off"> -->
                 <input type="hidden" name="NewDireccion" id = "NewDireccion" value = "">
               </div>
@@ -261,7 +284,7 @@ $Con->CloseConexion();
             <div class="form-group row">
               <div class="col-md-2"></div>
               <div class="col-md-8">
-                <button type = "button" id="BotonModalPersona_1" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalPersona_1">Buscar Calle</button>
+                <button type = "button" id="BotonModalPersona_1" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalPersona_1">Nombre de Calle a cambiar</button>
                 <input type="hidden" name="ArrPersonas" id="ArrPersonas" value="0">
                 <!-- <input type="text" class="form-control" id="SearchDireccion" onKeyUp="buscarDireccion()" placeholder="Buscar Direccion" autocomplete="off"> -->
               </div>
@@ -411,7 +434,8 @@ $Con->CloseConexion();
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLongTitle">Nueva Dirección</h5>
-              <button type="button" class="close" onclick="actualizarContenidoNuevaDireccion();" data-dismiss="modal" aria-label="Close">
+              <!--<button type="button" class="close" onclick="actualizarContenidoNuevaDireccion();" data-dismiss="modal" aria-label="Close">-->
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -421,7 +445,7 @@ $Con->CloseConexion();
                   <div class="col"></div>
                   <div class="col-8">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="DireccionNueva_1" id = "DireccionNueva_1" placeholder="Ingrese la dirección nueva" autocomplete="off">
+                      <input class = "form-control" type="text" name="DireccionNueva_1" id = "DireccionNueva_1" onKeyUp="buscarCalle()" placeholder="Ingrese la dirección nueva" autocomplete="off">
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -431,7 +455,7 @@ $Con->CloseConexion();
                 </div>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-10" id = "ResultadosMotivos3">
+                  <div class="col-10" id = "ResultadosDireccion">
                     
                   </div>
                   <div class="col"></div>
@@ -439,7 +463,8 @@ $Con->CloseConexion();
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" onclick="actualizarContenidoNuevaDireccion();" data-dismiss="modal">Cerrar</button>             
+              <!--<button type="button" class="btn btn-danger" onclick="actualizarContenidoNuevaDireccion();" data-dismiss="modal">Cerrar</button>-->
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
             </div>
           </div>
         </div>
