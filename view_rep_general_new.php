@@ -1547,32 +1547,32 @@ $Con->CloseConexion();
                   $Table .= "<tr class='Datos'>";
                   $Table_imprimir .= "<tr class='Datos'>";
                   $Table .= "<td id='Contenido-1'>" . $RetTodos["Barrio"] . "</td><td id='Contenido-2'>" . $RetTodos["domicilio"] . "</td>";
-                  //$Table_imprimir .= "<td id='Contenido-1'>" . $RetTodos["Barrio"] . "</td><td id='Contenido-2'>" . $RetTodos["domicilio"] . "</td>";
+                  $Table_imprimir .= "<td id='Contenido-1'>" . $RetTodos["Barrio"] . "</td><td id='Contenido-2'>" . $RetTodos["domicilio"] . "</td>";
 
                   if ($cmb_seleccion != null && $cmb_seleccion != "") {
 
                     if ($cmb_seleccion == "manzana") {
                       $Table .= "<td id='Contenido-3' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>";
-                      //$Table_imprimir .= "<td id='Contenido-3' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>";
+                      $Table_imprimir .= "<td id='Contenido-3' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>";
                     }
 
                     if ($cmb_seleccion == "lote") {
                       $Table .= "<td id='Contenido-4' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>";
-                      //$Table_imprimir .= "<td id='Contenido-4' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>";
+                      $Table_imprimir .= "<td id='Contenido-4' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>";
                     }
 
                     if ($cmb_seleccion == "familia") {
                       $Table .= "<td id='Contenido-5' name='datosflia' style='max-width: 60px;'>" . $RetTodos["familia"] . "</td>";
-                      //$Table_imprimir .= "<td id='Contenido-5' name='datosflia' style='max-width: 60px;'>" . $RetTodos["familia"] . "</td>";
+                      $Table_imprimir .= "<td id='Contenido-5' name='datosflia' style='max-width: 60px;'>" . $RetTodos["familia"] . "</td>";
                     }
 
                     if ($cmb_seleccion == "todos") {
                       $Table .= "<td id='Contenido-3' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>
                       <td id='Contenido-4' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>
                       <td id='Contenido-5' name='datosflia' style='max-width: 60px;'>" . $RetTodos["familia"] . "</td>";
-                      //$Table_imprimir .= "<td id='Contenido-3' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>
-                      //<td id='Contenido-4' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>
-                      //<td id='Contenido-5' name='datosflia' style='max-width: 60px;'>" . $RetTodos["familia"] . "</td>";
+                      $Table_imprimir .= "<td id='Contenido-3' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>
+                      <td id='Contenido-4' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>
+                      <td id='Contenido-5' name='datosflia' style='max-width: 60px;'>" . $RetTodos["familia"] . "</td>";
                     }
                   }
 
@@ -1984,8 +1984,8 @@ $Con->CloseConexion();
                                       .$Table_imprimir ."
                                     </body>
                                   </html>";
-                $ColummasBarrioEliminadas = "~<th id='Contenido-Titulo-1'>Barrio</th>~";
-                $ColummasDirecEliminadas = "~<th id='Contenido-Titulo-2'>Direc.</th>~";
+                $ColummaBarrioEliminada = "~<th id='Contenido-Titulo-1'>Barrio</th>~";
+                $ColummaDirecEliminada = "~<th id='Contenido-Titulo-2'>Direc.</th>~";
                 $EstilosTablaEliminadas = "~page-break-after:always;~";
                 //putenv("LANG=es_ES");
                 //setlocale(LC_ALL, "es_ES");
@@ -1998,8 +1998,8 @@ $Con->CloseConexion();
                   $Table_imprimir = preg_replace( "~".$i."/[0-2][0-9]~" ,$monthName ,$Table_imprimir);
                 }
 
-                $Table_imprimir = preg_replace( $ColummasBarrioEliminadas, "", $Table_imprimir);
-                $Table_imprimir = preg_replace( $ColummasDirecEliminadas, "", $Table_imprimir);
+                //$Table_imprimir = preg_replace( $ColummaBarrioEliminada, "", $Table_imprimir);
+                //$Table_imprimir = preg_replace( $ColummaDirecEliminada, "", $Table_imprimir);
                 $Table_imprimir = preg_replace( $EstilosTablaEliminadas, "page-break-after: always; width: 100%;", $Table_imprimir);
 
               }
