@@ -18,7 +18,7 @@ class CtrGeneral{
 					   and P.estado = 1 
 					 order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
@@ -42,7 +42,7 @@ class CtrGeneral{
 					   and P.estado = 1 
 					 order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
@@ -69,7 +69,7 @@ class CtrGeneral{
 					   and P.estado = 1 
 					order M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
@@ -95,7 +95,7 @@ class CtrGeneral{
 					   and P.estado = 1 
 					order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
@@ -121,7 +121,7 @@ class CtrGeneral{
 						and P.estado = 1 
 					  order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
@@ -147,7 +147,7 @@ class CtrGeneral{
 					   and P.estado = 1 
 					 order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
@@ -176,7 +176,7 @@ class CtrGeneral{
 					   and P.estado = 1 
 					 order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
@@ -205,7 +205,7 @@ class CtrGeneral{
 					   and P.estado = 1 
 					 order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
@@ -234,7 +234,7 @@ class CtrGeneral{
 					   and P.estado = 1 
 					 order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th>Fecha</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
+		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
