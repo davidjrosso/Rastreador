@@ -1017,6 +1017,17 @@ class CtrGeneral{
 		return $Table;
 	}
 
+	public function getCantSolicitudes_Crear_Categoria(){
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "select ID from solicitudes_crearcategorias where Estado = 1";
+		$MessageError = "Problemas al intentar consultar cantidad de Solicitudes Categorias";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$Regis = mysqli_num_rows($Con->ResultSet);
+		$Con->CloseConexion();		
+		return $Regis;
+	}
+
 	public function getCantSolicitudes_Modificacion_Categoria(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
@@ -1026,6 +1037,36 @@ class CtrGeneral{
 		$Regis = mysqli_num_rows($Con->ResultSet);
 		$Con->CloseConexion();		
 		return $Regis;
+	}
+
+
+	public function getSolicitudes_Crear_Categoria(){
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "select S.ID, S.Fecha, S.Codigo, S.Categoria, S.ID_Forma, S.Color, S.Categoria, U.username from solicitudes_crearcategorias S, accounts U where S.ID_Usuario = U.accountid and S.Estado = 1 order by S.Fecha";
+		$MessageError = "Problemas al intentar mostrar Solicitudes Categorias";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$Regis = mysqli_num_rows($Con->ResultSet);
+		if($Regis > 0){
+			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Codigo</th><th style='min-width:100px;'>Categoría</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Acción</th></tr></thead>";
+			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
+				$ID = $Ret["ID"];
+				$Fecha = implode("/", array_reverse(explode("-",$Ret["Fecha"])));
+				$Codigo = $Ret["Codigo"];
+				$Categoria = $Ret["Categoria"];		
+				$ID_Forma = $Ret["ID_Forma"];
+				$Color = $Ret["Color"];
+				//$ID_Categoria = $Ret["ID"];	
+				$Usuario = $Ret["username"];							
+				$Table .= "<tr><td>".$ID."</td><td>".$Fecha."</td><td>".$Codigo."</td><td>".$Categoria."</td><td>".$Usuario."</td><td><button class='btn btn-success' onClick='VerificarCrearCategoria(".$ID.",\"".$Fecha."\",\"".$Codigo."\",\"".$Categoria."\",\"".$ID_Forma."\",\"".$Color."\")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarCrearCategoria(".$Ret["ID"].")'><i class='fa fa-times'></i></button></td></tr>";
+			}
+			$Table .= "</table>";
+		}else{
+			$Table = "No existen solicitudes de unificación pendientes de aprobación.";
+		}
+		$Con->CloseConexion();
+		
+		return $Table;
 	}
 
 	public function getSolicitudes_Modificacion_Categoria(){
@@ -1179,6 +1220,4 @@ class CtrGeneral{
 	}
 
 
-
 }
-?>

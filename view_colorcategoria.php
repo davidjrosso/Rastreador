@@ -229,16 +229,19 @@ $Con->CloseConexion();
               $Con = new Conexion();
               $Con->OpenConexion();
 
-              $ConsultarDatos = "select * from categoria where id_categoria = $ID_Categoria";
+              //$ConsultarDatos = "select * from categoria where id_categoria = $ID_Categoria";
+              $ConsultarID = "select * 
+                              from solicitudes_crearcategorias 
+                              where id = '$ID_Categoria' 
+                              limit 1";
               $MensajeErrorDatos = "No se pudo consultar los Datos de la Categoria";
 
-              $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
+              $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarID) or die($MensajeErrorDatos);
 
               $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);    
 
-              $ID_Categoria = $Ret["id_categoria"];
-              $Cod_Categoria = $Ret["cod_categoria"];
-              $Categoria = $Ret["categoria"];
+              $Cod_Categoria = $Ret["Codigo"];
+              $Categoria = $Ret["Categoria"];
 
               $Table = "<table class='table'><thead><tr><th></th><th>Detalles de la Categoria</th></tr></thead>";
 
@@ -285,12 +288,12 @@ $Con->CloseConexion();
                   <div class = 'TablaColores' style='background-color:#FFFFFF;' onClick = 'MostrarColor(this)' id = '#FFFFFF'></div><div class = 'TablaColores' style='background-color:#DDDDDD;' onClick = 'MostrarColor(this)' id = '#DDDDDD'></div><div class = 'TablaColores' style='background-color:#C0C0C0;' onClick = 'MostrarColor(this)' id = '#C0C0C0'></div><div class = 'TablaColores' style='background-color:#969696;' onClick = 'MostrarColor(this)' id = '#969696'></div><div class = 'TablaColores' style='background-color:#808080;' onClick = 'MostrarColor(this)' id = '#808080'></div><div class = 'TablaColores' style='background-color:#646464;' onClick = 'MostrarColor(this)' id = '#646464'></div><div class = 'TablaColores' style='background-color:#4B4B4B;' onClick = 'MostrarColor(this)' id = '#4B4B4B'></div><div class = 'TablaColores' style='background-color:#242424;' onClick = 'MostrarColor(this)' id = '#242424'></div><div class = 'TablaColores' style='background-color:#000000;' onClick = 'MostrarColor(this)' id = '#000000'></div>
               </div>
               <br>
-              <form method = 'post' action = 'Controladores/InsertColorCategoria.php'>
+              <form method = 'post' action = 'Controladores/CrearCategoria.php'>
               <div class = 'row'>
                   <div class = 'col-md-6'>
                         <label>Codigo del Color</label>
                         <input name = 'CodigoColor' id = 'CodigoColor' required>
-                        <input type = 'hidden' name = 'ID_Categoria' value = '".$ID_Categoria."'>
+                        <input type = 'hidden' name = 'ID' value = '".$ID_Categoria."'>
                         <input type = 'hidden' name = 'ID_Forma' value = '".$ID_Forma."'>
                   </div>
                   <div class = 'col-md-6'>

@@ -76,8 +76,29 @@ $Con->CloseConexion();
       var ContenidoPagina = document.getElementById("ContenidoPagina");
 
       ContenidoPagina.appendChild(document.importNode(getContent, true));
-  </script>
+  
+      function Verificar(){
+        var Form_1= document.getElementById("form_1");
+        swal({
+          title: "¿Está seguro?",
+          text: "¿Seguro de querer crear esta categoria?",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        })
+        .then((result) => {
 
+          if (result) {
+                Form_1.submit();
+                return true;
+              } else {
+                return false;
+              }
+
+        });
+      }
+  
+  </script>
 </head>
 <body>
 <div class = "row">
@@ -217,7 +238,7 @@ $Con->CloseConexion();
       <div class = "col-10">
           <!-- Carga -->
           <p class = "Titulos">Cargar Nueva Categoría</p>
-          <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/InsertCategoria.php" onSubmit = "return ValidarCategoria();">
+          <form method = "post" onKeydown="return event.key != 'Enter';" id = "form_1" action = "Controladores/CrearCategoria.php" onSubmit = "return ValidarCategoria();">
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Código *: </label>
               <div class="col-md-10">
@@ -239,7 +260,7 @@ $Con->CloseConexion();
             </div>
             <div class="form-group row">
               <div class="offset-md-2 col-md-10">
-                <button type="submit" class="btn btn-outline-success">Guardar</button>
+                <button type="button" class="btn btn-outline-success" onClick ="Verificar();">Guardar</button>
                 <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_categorias.php'">Atras</button>
               </div>
             </div>
@@ -254,7 +275,12 @@ $Con->CloseConexion();
   </div>
 </div>
 </div>
-<?php  
+<?php
+if(isset($_REQUEST["Mensaje"])){
+  echo "<script type='text/javascript'>
+  swal('".$_REQUEST["Mensaje"]."','','success');
+</script>";
+}
 if(isset($MensajeError)){
   echo "<script type='text/javascript'>
   swal('".$MensajeError."','','warning');

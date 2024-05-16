@@ -25,7 +25,7 @@ $ID_Usuario = $_SESSION["Usuario"];
 $Codigo = strtoupper($_REQUEST["Codigo"]);
 $ID_Forma = $_REQUEST["ID_Forma"];
 $Categoria = $_REQUEST["Categoria"];
-
+$Color = base64_decode($_REQUEST["Color"]);
 $Fecha = date("Y-m-d");
 $ID_TipoAccion = 1;
 $Detalles = "El usuario con ID: $ID_Usuario ha registrado una nueva Categoria. Datos: $Codigo - $Categoria";
@@ -45,7 +45,7 @@ try {
 		$Mensaje = "Ya existe una categoria con ese Codigo";
 		header('Location: ../view_newcategorias.php?MensajeError='.$Mensaje);
 	}else{
-		$Consulta = "insert into categoria(cod_categoria,categoria,ID_Forma) values('".$Codigo."','".$Categoria."',".$ID_Forma.")";
+		$Consulta = "insert into categoria(cod_categoria,categoria,ID_Forma,color,estado) values('".$Codigo."','".$Categoria."',".$ID_Forma.",'".$Color."',1)";
 		if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
 			throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 1);		
 		}
@@ -61,26 +61,24 @@ try {
 		$TomarID_Categoria = mysqli_fetch_assoc($RetID);
 		$RetID_Categoria = $TomarID_Categoria["id_categoria"];
 
+		$ActualizarSolicitud = "update solicitudes_crearcategorias set Estado = 0 where codigo = '$Codigo' and categoria = '$Categoria'";
+		$EjecutarConsultar = mysqli_query($Con->Conexion,$ActualizarSolicitud) or die($MensajeErrorDatos);
+
 		// CREANDO NOTIFICACION PARA EL USUARIO
+		/*
 		$DetalleNot = 'Se ha creado una nueva categoría: '.$Categoria.' , codigo: '.$Codigo;
 		$Expira = date("Y-m-d", strtotime($Fecha." + 30 days"));
 		
 		$ConsultaNot = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$DetalleNot','$Fecha', '$Expira',1)";
 		if(!$RetNot = mysqli_query($Con->Conexion,$ConsultaNot)){
 			throw new Exception("Error al intentar registrar Notificacion. Consulta: ".$ConsultaNot, 3);
-		}
+		}*/
 
 		$Con->CloseConexion();
-		header('Location: ../view_colorcategoria.php?ID='.$RetID_Categoria.'&ID_Forma='.$ID_Forma);
+		$Mensaje = "La categoria se creo Correctamente";
+		header('Location: ../view_inicio.php?Mensaje='.$Mensaje);
 	}
 
 } catch (Exception $e) {
 	echo "Error: ".$e->getMessage();
 }
-
-
-
-
-
-
-?>
