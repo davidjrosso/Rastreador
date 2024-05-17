@@ -40,8 +40,12 @@ if($ArrPersonas[0] === '0'){
 		$RetConsultarDireccion = mysqli_fetch_assoc($EjecutarConsultarDireccion);
 		$DomActual = $RetConsultarDireccion["domicilio"];
 
-		$DomActual = preg_replace('/[0-9]+/','', $DomActual);
-
+		//$DomActual = preg_replace('/[0-9]+/','', $DomActual);
+		$LongString = strlen($DomActual); 
+		$StringDelimitado = chunk_split($DomActual,$LongString - 4,"-");
+		$PartesDireccion = explode("-", $StringDelimitado);
+		$DomActual = $PartesDireccion[0];
+		
 		if($DomActual == ""){
 			$ModificarDireccion = "update persona set domicilio = '$NewDireccion' where id_persona = $value";
 		}else{
