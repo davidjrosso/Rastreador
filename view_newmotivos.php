@@ -76,6 +76,28 @@ $Con->CloseConexion();
       var ContenidoPagina = document.getElementById("ContenidoPagina");
 
       ContenidoPagina.appendChild(document.importNode(getContent, true));
+
+      function Verificar(){
+        var Form_1= document.getElementById("form_1");
+        swal({
+          title: "¿Está seguro?",
+          text: "¿Seguro de querer crear este motivo?",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        })
+        .then((result) => {
+
+          if (result) {
+                Form_1.submit();
+                return true;
+              } else {
+                return false;
+              }
+
+        });
+      }
+
   </script>
 
 </head>
@@ -217,7 +239,8 @@ $Con->CloseConexion();
       <div class = "col-10">
           <!-- Carga -->
           <p class = "Titulos">Cargar Nuevo Motivo</p>
-          <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/InsertMotivo.php" onSubmit = "return ValidarMotivo();">
+          <!--<form method = "post" onKeydown="return event.key != 'Enter';" id="form_1" action = "Controladores/InsertMotivo.php" onSubmit = "return ValidarMotivo();">-->
+          <form method = "post" onKeydown="return event.key != 'Enter';" id="form_1" action = "Controladores/PedirCrearMotivo.php" onSubmit = "return ValidarMotivo();">
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo *: </label>
               <div class="col-md-10">
@@ -241,7 +264,7 @@ $Con->CloseConexion();
             </div>
             <div class="form-group row">
               <div class="offset-md-2 col-md-10">
-                <button type="submit" class="btn btn-outline-success">Guardar</button>
+                <button type="button" class="btn btn-outline-success" onClick ="return Verificar()">Guardar</button>
                 <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_motivos.php'">Atras</button>
               </div>
             </div>

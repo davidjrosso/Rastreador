@@ -81,7 +81,7 @@ $Con->CloseConexion();
         var Form_1= document.getElementById("form_1");
         swal({
           title: "¿Está seguro?",
-          text: "¿Seguro de querer crear esta categoria?",
+          text: "¿Seguro de querer crear esta categoría?",
           icon: "warning",
           buttons: true,
           dangerMode: true,

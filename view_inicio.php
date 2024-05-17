@@ -89,6 +89,21 @@ $Con->CloseConexion();
               });
         }
 
+        function VerificarCrearMotivo(xID,xFecha,xMotivo,xCodigo,xNum_Motivo,xCategoria){
+              swal({
+                title: "¿Está seguro?",
+                text: "¿Seguro de querer crear este motivo?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+              })
+              .then((willDelete) => {
+                if (willDelete) {
+                  window.location.href = 'Controladores/InsertMotivo.php?ID='+xID+'&Fecha='+xFecha+'&Motivo='+xMotivo+'&Codigo='+xCodigo+'&Num_Motivo='+xNum_Motivo+'&Cod_Categoria='+xCategoria;
+                }
+              });
+        }
+
        function VerificarModificarMotivo(xID,xFecha,xMotivo,xCodigo,xNum_Motivo,xID_Motivo){
               swal({
                 title: "¿Está seguro?",
@@ -224,6 +239,20 @@ $Con->CloseConexion();
                   window.location.href = 'Controladores/DeletePeticionModificacionMotivo.php?ID='+xID;
                   //alert('SI');
                 } else {        
+                }
+              });
+        }
+        function CancelarCrearMotivo(xID){
+              swal({
+                title: "¿Está seguro?",
+                text: "¿Seguro de querer borrar esta petición de creación?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+              })
+              .then((willDelete) => {
+                if (willDelete) {
+                  window.location.href = 'Controladores/DeletePeticionCrearMotivo.php?ID='+xID;
                 }
               });
         }
@@ -462,13 +491,14 @@ $Con->CloseConexion();
       // SOLICITUDES
       $CantUnif = $CtrGeneral->getCantSolicitudes_Unificacion();
       $CantModMot = $CtrGeneral->getCantSolicitudes_Modificacion_Motivo();
+      $CantCrearMot = $CtrGeneral->getCantSolicitudes_Crear_Motivo();
       $CantCrearCat = $CtrGeneral->getCantSolicitudes_Crear_Categoria();
       $CantModCat = $CtrGeneral->getCantSolicitudes_Modificacion_Categoria();
       $CantDel = $CtrGeneral->getCantSolicitudes_EliminacionMotivo();
       $CantDelCat = $CtrGeneral->getCantSolicitudes_EliminacionCategoria();
       $CantNot = $Notificaciones["cant"];
       
-        if($CantUnif > 0 || $CantModMot > 0 || $CantModCat > 0 || $CantDel > 0 || $CantDelCat > 0 || $CantNot > 0 || $CantCrearCat > 0){
+        if($CantModMot > 0 || $CantUnif > 0 || $CantModMot > 0 || $CantModCat > 0 || $CantDel > 0 || $CantDelCat > 0 || $CantNot > 0 || $CantCrearCat > 0){
         ?>
       <div class = "row">
         <div class="col-1"></div>
@@ -484,6 +514,12 @@ $Con->CloseConexion();
                 <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Unificar Motivos</h3>
               <?php
               echo $CtrGeneral->getSolicitudes_Unificacion();
+            }
+            if($CantCrearMot > 0){
+              ?>
+                <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Crear Motivos</h3>
+              <?php
+              echo $CtrGeneral->getSolicitudes_Crear_Motivo();
             }
             if($CantModMot > 0){
               ?>

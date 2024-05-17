@@ -53,7 +53,7 @@ try {
 			throw new Exception("Error al intentar registrar Notificacion. Consulta: ".$ConsultaNot, 3);
 		}
 
-		$Mensaje = "La solicitud de creacion de categoria se envió a los administradores para ser confirmada.";
+		$Mensaje = "La solicitud de creacion de categoría se envió a los administradores para ser confirmada.";
 		header('Location: ../view_newcategorias.php?Mensaje='.$Mensaje);
 	} else {
 		$Insert_Solicitud = "insert into solicitudes_crearcategorias(Fecha,Codigo,Categoria,ID_Forma,Color,Estado,ID_Usuario) values('{$Fecha}','{$Codigo}','{$Categoria}',{$ID_Forma},'{$Color}',1,{$ID_Usuario})";
@@ -66,7 +66,7 @@ try {
 			throw new Exception("No se pudo consultar el ID de la categoria cargada. Consulta: ".$ConsultarID, 2);		
 		}
 		$Ret = mysqli_fetch_assoc($RetID);
-		$Mensaje = "La solicitud de creacion de categoria se envió a los administradores para ser confirmada.";	
+		$Mensaje = "La solicitud de creacion de categoría se envió a los administradores para ser confirmada.";	
 		header('Location: ../view_colorcategoria.php?ID='.$Ret["id"].'&ID_Forma='.$ID_Forma);
 		$Con->CloseConexion();
 	}
