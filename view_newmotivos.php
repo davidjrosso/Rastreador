@@ -239,8 +239,7 @@ $Con->CloseConexion();
       <div class = "col-10">
           <!-- Carga -->
           <p class = "Titulos">Cargar Nuevo Motivo</p>
-          <!--<form method = "post" onKeydown="return event.key != 'Enter';" id="form_1" action = "Controladores/InsertMotivo.php" onSubmit = "return ValidarMotivo();">-->
-          <form method = "post" onKeydown="return event.key != 'Enter';" id="form_1" action = "Controladores/PedirCrearMotivo.php" onSubmit = "return ValidarMotivo();">
+          <form method = "post" onKeydown="return event.key != 'Enter';" id="form_1" action = "Controladores/pedircrearmotivo.php" onSubmit = "return ValidarMotivo();">
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo *: </label>
               <div class="col-md-10">
