@@ -63,7 +63,7 @@ try {
 
 		$ConsultarID = "select id from solicitudes_crearcategorias where codigo = '$Codigo' and categoria = '$Categoria' limit 1";
 		if(!$RetID = mysqli_query($Con->Conexion,$ConsultarID)){
-			throw new Exception("No se pudo consultar el ID de la categoria cargada. Consulta: ".$ConsultarID, 2);		
+			throw new Exception("No se pudo consultar el ID de la categoría cargada. Consulta: ".$ConsultarID, 2);		
 		}
 		$Ret = mysqli_fetch_assoc($RetID);
 		$Mensaje = "La solicitud de creacion de categoría se envió a los administradores para ser confirmada.";	
