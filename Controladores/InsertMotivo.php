@@ -62,6 +62,7 @@ try	 {
 		$ActualizarSolicitud = "update solicitudes_crearmotivos set Estado = 0 where id = '$ID'";
 		$EjecutarConsultar = mysqli_query($Con->Conexion,$ActualizarSolicitud) or die($MensajeErrorDatos);
 
+		$Mensaje = "El Motivo se registro Correctamente";
 		$Con->CloseConexion();
 		header('Location: ../view_inicio.php?Mensaje='.$Mensaje);
 	}
