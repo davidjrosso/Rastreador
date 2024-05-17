@@ -1332,7 +1332,7 @@ public function getMenuSeguridad($ID){
     $Consulta = mysqli_query($Con3->Conexion,"select * from calle where estado = 1 order by calle_nombre ASC")or die("Problemas al mostrar Personas");
     $Select .= "<option value = '0' disabled = 'disabled' selected = 'true'>Seleccione una Calle</option>";
     while ($Ret = mysqli_fetch_array($Consulta)) {
-      $Select .= "<option value = '".$Ret['calle_nombre']."'>".$Ret['calle_abreviado']."</option>";
+      $Select .= "<option value = '".$Ret['calle_nombre']."'>".$Ret['calle_nombre']."</option>";
     }
     $Select .= "</select>";
     $Con3->CloseConexion();

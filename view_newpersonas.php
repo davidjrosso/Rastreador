@@ -375,7 +375,7 @@ $Con->CloseConexion();
                 ?>
               </div>
               <div class="col-md-2">
-                <input type="number" class="form-control" name = "NumeroDeCalle" id="NumeroDeCalle" placeholder="Numero" min="1" required autocomplete="off">
+                <input type="number" class="form-control" name = "NumeroDeCalle" id="NumeroDeCalle" placeholder="Número" min="1" required autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
