@@ -35,19 +35,20 @@ try {
 	$Con = new Conexion();
 	$Con->OpenConexion();
 	if($Color != null && $Color != ""){
-		$ConsultarRegistrosIguales = "select * from solicitudes_crearcategorias where ID = '$ID' and estado = 1";
-		if(!$RetIguales = mysqli_query($Con->Conexion,$ConsultarRegistrosIguales)){
-			throw new Exception("Problemas al consultar registros. Consulta: ".$ConsultarRegistrosIguales, 0);		
-		}
-
+		$ConsultarRegistros = "select * from solicitudes_crearcategorias where ID = '$ID' and estado = 1";
+		$MensajeErrorConsulta = "Ocurrio un error en la consulta de solicitudes de creacion de categorias";
+		$RetIguales = mysqli_query($Con->Conexion,$ConsultarRegistros) or die($MensajeErrorActualizarColor);
+		$TomarCategoria = mysqli_fetch_assoc($RetIguales);
+		$RetID_Categoria = $TomarCategoria["Categoria"];
+		$RetCodigo_Categoria = $TomarCategoria["Codigo"];
 		$ActualizarColor = "update solicitudes_crearcategorias set color = '$Color' where id = $ID and estado = 1";
 		$MensajeErrorActualizarColor = "No se pudo actualizar el color";
 		mysqli_query($Con->Conexion,$ActualizarColor) or die($MensajeErrorActualizarColor);
 
-		$DetalleNot = 'Se ha creado una nueva categoría: '.$Categoria.' , codigo: '.$Codigo;
+		$DetalleNot = "Se ha creado una nueva categoría: ".$RetID_Categoria." , codigo: ".$RetCodigo_Categoria."";
 		$Expira = date("Y-m-d", strtotime($Fecha." + 30 days"));
 
-		$ConsultaNot = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$DetalleNot','$Fecha', '$Expira',1)";
+		$ConsultaNot = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('".$DetalleNot."','".$Fecha."', '".$Expira."',1)";
 		if(!$RetNot = mysqli_query($Con->Conexion,$ConsultaNot)){
 			throw new Exception("Error al intentar registrar Notificacion. Consulta: ".$ConsultaNot, 3);
 		}
