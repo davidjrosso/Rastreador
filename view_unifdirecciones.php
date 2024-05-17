@@ -268,7 +268,7 @@ $Con->CloseConexion();
     <br>
      <div class = "row">
       <div class = "col-10">
-          <p class = "TextoAdvertenciaUnificar">¡ADVERTENCIA! El formato de Dirección que ingrese se le asignara a todas las direcciones que seleccione en las personas registradas.</p>
+          <p class = "TextoAdvertenciaUnificar">¡ADVERTENCIA! Al nombre de calle que ingrese se le asignarán todos los nombres de calles que seleccione en las personas registradas.</p>
           <br>
            <!-- Carga -->
           <!--<form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/unificardirecciones.php" onSubmit = "return ValidarUnifDirecciones();">-->
@@ -300,7 +300,7 @@ $Con->CloseConexion();
             <div class="form-group row">
                 <div class="col-md-2"></div>
                 <div class="col-md-8" id="ResultadosDirecciones">
-                      <p>No se ha realizado ninguna busqueda.</p>
+                      <p>No se ha realizado ninguna búsqueda.</p>
                 </div>         
             </div> 
           </form>
