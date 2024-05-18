@@ -3,6 +3,7 @@ class Movimiento{
 	//DECLARACION DE VARIABLES
 	private $ID_Movimiento;
 	private $Fecha;
+	private $Fecha_Creacion;
 	private $ID_Persona;
 	private $ID_Motivo_1;
 	private $ID_Motivo_2;
@@ -85,6 +86,10 @@ public function getFecha(){
 	return $this->Fecha;
 }
 
+public function getFecha_Creacion(){
+	return $this->Fecha_Creacion;
+}
+
 public function getID_Persona(){
 	return $this->ID_Persona;
 }
@@ -141,7 +146,7 @@ public function getEstado(){
 	return $this->Estado;
 }
 
-public function __construct($xID_Movimiento,$xFecha,$xID_Persona,$xID_Motivo_1,$xID_Motivo_2,$xID_Motivo_3,$xID_Motivo_4,$xID_Motivo_5,$xObservaciones,$xID_Responsable,$xID_Responsable_2,$xID_Responsable_3,$xID_Responsable_4,$xID_Centro,$xID_OtraInstitucion,$xEstado){
+public function __construct($xID_Movimiento,$xFecha,$Fecha_Creacion,$xID_Persona,$xID_Motivo_1,$xID_Motivo_2,$xID_Motivo_3,$xID_Motivo_4,$xID_Motivo_5,$xObservaciones,$xID_Responsable,$xID_Responsable_2,$xID_Responsable_3,$xID_Responsable_4,$xID_Centro,$xID_OtraInstitucion,$xEstado){
 	$this->ID_Movimiento = $xID_Movimiento;
 	$this->Fecha = $xFecha;
 	$this->ID_Persona = $xID_Persona;
@@ -158,6 +163,8 @@ public function __construct($xID_Movimiento,$xFecha,$xID_Persona,$xID_Motivo_1,$
 	$this->ID_Centro = $xID_Centro;
 	$this->ID_OtraInstitucion = $xID_OtraInstitucion;
 	$this->Estado = $xEstado;
+	$this->Fecha_Creacion = $Fecha_Creacion;
+	
 }
 
 /*public function insertMovimiento(){

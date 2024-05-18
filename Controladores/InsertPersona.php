@@ -57,7 +57,8 @@ if(empty($Nro_Carpeta)){
 	$Nro_Carpeta = 'null';
 }
 $Obra_Social = $_REQUEST["Obra_Social"];
-$Domicilio = ucwords($_REQUEST["Domicilio"]);
+$Domicilio = ucwords($_REQUEST["Calle"]);
+$Domicilio .= " " . $_REQUEST["NumeroDeCalle"];
 $ID_Barrio = ucwords($_REQUEST["ID_Barrio"]);
 if(empty($ID_Barrio)){
 	$ID_Barrio = 37;

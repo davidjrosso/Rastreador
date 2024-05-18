@@ -511,7 +511,7 @@ class Elements{
                   <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifcentros.php\'">
-                  <a href="view_unifcentros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                  <a href="view_unifcentros.php"><i class="fa  fa-file-text fa-lg"></i> Centros Salud</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
@@ -523,7 +523,7 @@ class Elements{
                   <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
-                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Direcciones</a>
+                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
                 </li>
             </ul>
         </div>';break;
@@ -1324,6 +1324,23 @@ public function getMenuSeguridad($ID){
     $Con3->CloseConexion();
     return $Select;
   }
+
+  public function CBCalles(){
+    $Con3 = new Conexion();
+    $Con3->OpenConexion();
+    $Select = "<select class='form-control' id='ID_Cale' name = 'Calle' required>";
+    $Consulta = mysqli_query($Con3->Conexion,"select * from calle where estado = 1 order by calle_nombre ASC")or die("Problemas al mostrar Personas");
+    $Select .= "<option value = '0' disabled = 'disabled' selected = 'true'>Seleccione una Calle</option>";
+    while ($Ret = mysqli_fetch_array($Consulta)) {
+      $Select .= "<option value = '".$Ret['calle_nombre']."'>".$Ret['calle_nombre']."</option>";
+    }
+    $Select .= "</select>";
+    $Con3->CloseConexion();
+    return $Select;
+  }
+
+
+
 
   /*
  *

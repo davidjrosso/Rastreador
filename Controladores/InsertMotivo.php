@@ -24,14 +24,15 @@ $ID_Usuario = $_SESSION["Usuario"];
 
 $Motivo = $_REQUEST["Motivo"];
 $Codigo = $_REQUEST["Codigo"];
-$ID_Categoria = $_REQUEST["ID_Categoria"];
+$ID = $_REQUEST["ID"];
+$Cod_Categoria = $_REQUEST["Cod_Categoria"];
 $Estado = 1;
 
 $Fecha = date("Y-m-d");
 $ID_TipoAccion = 1;
 $Detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Motivo. Datos: Motivo: $Motivo - Categoría : $ID_Categoria";
 
-try {
+try	 {
 	$Con = new Conexion();
 	$Con->OpenConexion();
 
@@ -44,38 +45,26 @@ try {
 	if($Registros > 0){
 		mysqli_free_result($RetIguales);
 		$Con->CloseConexion();
-		$Mensaje = "Ya hay un Motivo con ese Dato";
-		header('Location: ../view_newmotivos.php?MensajeError='.$Mensaje);
+		$Mensaje = "Ya hay un Motivo con los datos ingresados";
+		header('Location: ../view_inicio.php?MensajeError='.$Mensaje);
 	}else{
-		$ConsultarCod_Categoria = "select cod_categoria from categoria where id_categoria = $ID_Categoria";
-		if(!$RetCod = mysqli_query($Con->Conexion, $ConsultarCod_Categoria)){
-			throw new Exception("No se pudo consultar el código de la categoría seleccionada. Consulta: ".$ConsultarCod_Categoria, 1);			
-		}
-		$TomarCod_Categoria = mysqli_fetch_assoc($RetCod);
-		$Cod_Categoria = $TomarCod_Categoria["cod_categoria"];
-
-		$Consulta = "insert into motivo(motivo,codigo,cod_categoria,estado) values('".$Motivo."','".$Codigo."','".$Cod_Categoria."',$Estado)";
+		$Consulta = "insert into motivo(motivo,codigo,cod_categoria,estado) values('".$Motivo."','".$Codigo."','".$Cod_Categoria."',1)";
 
 		if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
 			throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 2);			
 		}
+
 		$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
 		if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
 			throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 3);
 		}
+
+		$ActualizarSolicitud = "update solicitudes_crearmotivos set Estado = 0 where id = '$ID'";
+		$EjecutarConsultar = mysqli_query($Con->Conexion,$ActualizarSolicitud) or die($MensajeErrorDatos);
+
 		$Mensaje = "El Motivo se registro Correctamente";
-
-		// CREANDO NOTIFICACION PARA EL USUARIO
-		$DetalleNot = 'Se ha creado un nuevo motivo: '.$Motivo.' , código: '.$Codigo;
-		$Expira = date("Y-m-d", strtotime($Fecha." + 3 days"));
-		
-		$ConsultaNot = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$DetalleNot','$Fecha', '$Expira',1)";
-		if(!$RetNot = mysqli_query($Con->Conexion,$ConsultaNot)){
-			throw new Exception("Error al intentar registrar Notificacion. Consulta: ".$ConsultaNot, 3);
-		}
-
 		$Con->CloseConexion();
-		header('Location: ../view_newmotivos.php?Mensaje='.$Mensaje);
+		header('Location: ../view_inicio.php?Mensaje='.$Mensaje);
 	}
 
 } catch (Exception $e) {
