@@ -66,7 +66,6 @@ $Con->CloseConexion();
   <script>
 
     function mostrar() {
-      // alert("mostrar!")
 
       document.getElementById("expandir").hidden = true;
       document.getElementById("ContenidoMenu").hidden = false;
@@ -82,7 +81,6 @@ $Con->CloseConexion();
     }
 
     function ocultar() {
-      // alert("mostrar el boton expandir")
       document.getElementById("expandir").hidden = false;
       document.getElementById("ContenidoMenu").hidden = true;
 
@@ -99,6 +97,53 @@ $Con->CloseConexion();
       document.getElementById("cerrar").style.display = "none";
     }
 
+    var currCell = null;
+    var editing = false;
+
+    $( document ).on( "keydown", function(e) {
+     NavegacionConTeclado(e);
+    });
+
+    function NavegacionConTeclado(e) {
+        var c = "";
+        if(currCell == null){
+          currCell = $("td:not([id*='Contenido'])").first();
+        };
+
+        if (e.which == 39) {
+            // Right Arrow
+            c = currCell.next();
+        } else if (e.which == 37) {
+            // Left Arrow
+            c = currCell.prev();
+        } else if (e.which == 38) {
+            // Up Arrow
+            c = currCell.closest('tr').prev().find('td:eq(' +
+              currCell.index() + ')');
+        } else if (e.which == 40) {
+            // Down Arrow
+            c = currCell.closest('tr').next().find('td:eq(' +
+              currCell.index() + ')');
+        } else if (!editing && (e.which == 13 || e.which == 32)) {
+            // Enter or Spacebar - edit cell
+            e.preventDefault();
+            edit();
+        } else if (!editing && (e.which == 9 && !e.shiftKey)) {
+            // Tab
+            e.preventDefault();
+            c = currCell.next();
+        } else if (!editing && (e.which == 9 && e.shiftKey)) {
+            // Shift + Tab
+            e.preventDefault();
+            c = currCell.prev();
+        }
+
+        if (c.length > 0) {
+            currCell = c;
+            currCell[0].focus();
+            currCell[0].scrollIntoView()
+        }
+    }
 
   </script>
 
@@ -967,7 +1012,7 @@ $Con->CloseConexion();
                 // $Lote_sel=true;
                 // $Familia_sel=true;
             
-                $Table = "<table class='table table-fixeder table-bordered table-sm' cellspacing='0' id='tablaMovimientos' style='page-break-after:always;'>
+                $Table = "<table class='table table-fixeder table-bordered table-sm' cellspacing='0' id='tablaMovimientos' style='page-break-after:always;' onkeydown = 'NavegacionConTeclado(event)'>
                              <thead class='thead-dark'>
                               <tr align='center' valign='middle'>
                                 <th id='Contenido-Titulo-1'>Barrio</th>
@@ -2127,8 +2172,8 @@ $Con->CloseConexion();
       }
 
       function enviarImprimir() {
+        console.log($("p"));
         alert("llega");
-
 
         var ficha = document.getElementById("ContenidoTabla");
         // document.getElementById("tabla-responsive");
