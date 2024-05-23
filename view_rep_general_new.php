@@ -99,49 +99,72 @@ $Con->CloseConexion();
 
     var currCell = null;
     var editing = false;
+    var columnaIndice = 5;
+    var filaIndice = 2;
 
     $( document ).on( "keydown", function(e) {
      NavegacionConTeclado(e);
     });
+    
 
     function NavegacionConTeclado(e) {
-        var c = "";
-        if(currCell == null){
-          currCell = $("td:not([id*='Contenido'])").first();
-        };
-
+        var columnaABorrar = null;
+        var headABorrar = null;
+        var filaABorrar = null;
+        var nroFilasTabla = $("tbody > tr").length - 2;
+        var nroColumnasTabla = $("thead > tr > th").length - 2;
+        var tabla = $("table");
+        tabla.scrollLeft(0);
+        //var tabla = document.getElementById("tabla-responsive");
+        //tabla.scrollLeft = '0';
         if (e.which == 39) {
-            // Right Arrow
-            c = currCell.next();
+            columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
+            headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');
+            if(columnaIndice <= nroColumnasTabla){
+              if(columnaIndice < nroColumnasTabla){
+                columnaIndice++;
+                columnaABorrar.toggle();
+                headABorrar.toggle();
+              }else if (columnaIndice == nroColumnasTabla){
+                headABorrar.hide();
+                columnaABorrar.hide();
+              }
+            }
         } else if (e.which == 37) {
             // Left Arrow
-            c = currCell.prev();
+            columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
+            headABorrar = $('thead tr >*:nth-child('+columnaIndice+')');
+            if(columnaIndice >= 5){
+              if(columnaIndice > 5){
+                columnaABorrar.toggle();
+                headABorrar.toggle();
+                columnaIndice--;
+              } else if (columnaIndice == 5){
+                headABorrar.show();
+                columnaABorrar.show();
+              }
+            } 
         } else if (e.which == 38) {
             // Up Arrow
-            c = currCell.closest('tr').prev().find('td:eq(' +
-              currCell.index() + ')');
+            filaABorrar = $('#tablaMovimientos tr:nth-child('+filaIndice+')');
+            if(filaIndice > 2){
+              filaABorrar.toggle();
+              filaIndice--;
+            } else if(filaIndice = 2){
+              filaABorrar.show();
+            }
         } else if (e.which == 40) {
             // Down Arrow
-            c = currCell.closest('tr').next().find('td:eq(' +
-              currCell.index() + ')');
-        } else if (!editing && (e.which == 13 || e.which == 32)) {
-            // Enter or Spacebar - edit cell
-            e.preventDefault();
-            edit();
-        } else if (!editing && (e.which == 9 && !e.shiftKey)) {
-            // Tab
-            e.preventDefault();
-            c = currCell.next();
-        } else if (!editing && (e.which == 9 && e.shiftKey)) {
-            // Shift + Tab
-            e.preventDefault();
-            c = currCell.prev();
-        }
-
-        if (c.length > 0) {
-            currCell = c;
-            currCell[0].focus();
-            currCell[0].scrollIntoView()
+            filaABorrar = $('#tablaMovimientos tr:nth-child('+filaIndice+')');
+            if(filaIndice <= nroFilasTabla){
+              if(filaIndice < nroFilasTabla){
+                filaABorrar.toggle();
+                filaIndice++;
+              } else if(filaIndice = nroFilasTabla){
+                filaABorrar.hide();
+              }
+            }
+            
         }
     }
 
@@ -1011,8 +1034,9 @@ $Con->CloseConexion();
                 // $Manzana_sel=true;
                 // $Lote_sel=true;
                 // $Familia_sel=true;
-            
-                $Table = "<table class='table table-fixeder table-bordered table-sm' cellspacing='0' id='tablaMovimientos' style='page-break-after:always;' onkeydown = 'NavegacionConTeclado(event)'>
+                
+                $IndexCelda = 0;
+                $Table = "<table class='table table-fixeder table-bordered table-sm' cellspacing='0' id='tablaMovimientos' style='page-break-after:always;'>
                              <thead class='thead-dark'>
                               <tr align='center' valign='middle'>
                                 <th id='Contenido-Titulo-1'>Barrio</th>
@@ -1650,7 +1674,8 @@ $Con->CloseConexion();
                     $Tomar_Movimientos_Persona = mysqli_query($Con->Conexion, $Consultar_Movimientos_Persona) or die($MensajeErrorConsultar_Mov_Persona . " - " . $Consultar_Movimientos_Persona);
                     //echo var_dump($Consultar_Movimientos_Persona);
                     // TODO: CAMBIANDO TOAMAÑO DE COLUMNAS
-                    $Table .= "<td name='DatosResultados' style='min-width:225px'><div class = 'row'>";                  //250   
+                    $IndexCelda += 1;
+                    $Table .= "<td name='DatosResultados' id=$IndexCelda style='min-width:225px'><div class = 'row'>";                  //250   
                     $Table_imprimir .= "<td name='DatosResultados' style='min-width:225px'><div class = 'row'>";
                     $Num_Movimientos_Persona = mysqli_num_rows($Tomar_Movimientos_Persona);
 
@@ -2072,12 +2097,12 @@ $Con->CloseConexion();
     <script>
       (function () {
         var tabla = document.getElementById("tabla-responsive");
-        tabla.scrollLeft = '9999';
+        //tabla.scrollLeft = '9999';
       })();
 
 
       function toggleZoomScreen() {
-        document.body.style.zoom = "55%"; //
+        document.body.style.zoom = "55%";
         var Tabla = document.getElementById("cuerpo-tabla");
         Tabla.style.height = "1800px";
 
