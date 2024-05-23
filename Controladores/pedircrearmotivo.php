@@ -56,7 +56,7 @@ if($ID_Categoria > 0){
 	}
 
 	$Con->CloseConexion();
-	$Mensaje = "La solicitud de creacion de motivo se envió a los administradores para ser confirmada.";
+	$Mensaje = "La solicitud de creación de motivo se envió a los administradores para ser confirmada.";
 	header('Location: ../view_motivos.php?Mensaje='.$Mensaje);
 }else{
 	$MensajeError = "Debe seleccionar una Categoria";

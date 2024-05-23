@@ -195,7 +195,7 @@ $Con->CloseConexion();
         function VerificarEliminarNotificacion(xID_Notificacion){
               swal({
                 title: "¿Está seguro?",
-                text: "¿Seguro de querer eliminar esta notificacion?",
+                text: "¿Seguro de querer eliminar esta notificación?",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
