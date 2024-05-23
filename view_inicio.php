@@ -167,8 +167,7 @@ $Con->CloseConexion();
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/DeleteMotivo.php?ID='+xID_Motivo;                
-                  //alert('SI');
+                  window.location.href = 'Controladores/DeleteMotivo.php?ID='+xID_Motivo;
                 } else {        
                 }
               });
@@ -184,7 +183,7 @@ $Con->CloseConexion();
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/DeleteCategoria.php?ID='+xID_Categoria;                
+                  window.location.href = 'Controladores/DeleteCategoria.php?ID='+xID_Categoria;
                   //alert('SI');
                 } else {
                   console.log("por aca");
@@ -203,8 +202,8 @@ $Con->CloseConexion();
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/DeleteNotificacion.php?ID='+xID_Notificacion;                                  
-                } else {        
+                  window.location.href = 'Controladores/DeleteNotificacion.php?ID='+xID_Notificacion;
+                } else {
                 }
               });
         }
@@ -487,7 +486,6 @@ $Con->CloseConexion();
     ?>
     <?php if($TipoUsuario == 1){ 
       // $CtrGeneral = new CtrGeneral();
-
       // SOLICITUDES
       $CantUnif = $CtrGeneral->getCantSolicitudes_Unificacion();
       $CantModMot = $CtrGeneral->getCantSolicitudes_Modificacion_Motivo();
@@ -497,9 +495,9 @@ $Con->CloseConexion();
       $CantDel = $CtrGeneral->getCantSolicitudes_EliminacionMotivo();
       $CantDelCat = $CtrGeneral->getCantSolicitudes_EliminacionCategoria();
       $CantNot = $Notificaciones["cant"];
-      
-        if($CantModMot > 0 || $CantUnif > 0 || $CantModMot > 0 || $CantModCat > 0 || $CantDel > 0 || $CantDelCat > 0 || $CantNot > 0 || $CantCrearCat > 0){
-        ?>
+
+      if($CantModMot > 0 || $CantUnif > 0 || $CantModCat > 0 || $CantDel > 0 || $CantDelCat > 0 || $CantNot > 0 || $CantCrearCat > 0 || $CantCrearMot > 0){
+      ?>
       <div class = "row">
         <div class="col-1"></div>
         <div class="col-4 Contenedor-Imagen-Inicio">
@@ -515,6 +513,7 @@ $Con->CloseConexion();
               <?php
               echo $CtrGeneral->getSolicitudes_Unificacion();
             }
+            
             if($CantCrearMot > 0){
               ?>
                 <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Crear Motivos</h3>
