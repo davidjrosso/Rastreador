@@ -100,7 +100,7 @@ $Con->CloseConexion();
     var currCell = null;
     var editing = false;
     var columnaIndice = 5;
-    var filaIndice = 2;
+    var filaIndice = 1;
 
     $( document ).on( "keydown", function(e) {
      NavegacionConTeclado(e);
@@ -115,16 +115,14 @@ $Con->CloseConexion();
         var nroColumnasTabla = $("thead > tr > th").length - 2;
         var tabla = $("table");
         tabla.scrollLeft(0);
-        //var tabla = document.getElementById("tabla-responsive");
-        //tabla.scrollLeft = '0';
         if (e.which == 39) {
             columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
             headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');
             if(columnaIndice <= nroColumnasTabla){
               if(columnaIndice < nroColumnasTabla){
+                columnaABorrar.hide();
+                headABorrar.hide();
                 columnaIndice++;
-                columnaABorrar.toggle();
-                headABorrar.toggle();
               }else if (columnaIndice == nroColumnasTabla){
                 headABorrar.hide();
                 columnaABorrar.hide();
@@ -132,13 +130,13 @@ $Con->CloseConexion();
             }
         } else if (e.which == 37) {
             // Left Arrow
-            columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
             headABorrar = $('thead tr >*:nth-child('+columnaIndice+')');
+            columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
             if(columnaIndice >= 5){
               if(columnaIndice > 5){
-                columnaABorrar.toggle();
-                headABorrar.toggle();
                 columnaIndice--;
+                columnaABorrar.show();
+                headABorrar.show();
               } else if (columnaIndice == 5){
                 headABorrar.show();
                 columnaABorrar.show();
@@ -146,26 +144,29 @@ $Con->CloseConexion();
             } 
         } else if (e.which == 38) {
             // Up Arrow
-            filaABorrar = $('#tablaMovimientos tr:nth-child('+filaIndice+')');
+            filaABorrar = $('tbody tr:nth-child('+filaIndice+')');
             if(filaIndice > 2){
-              filaABorrar.toggle();
               filaIndice--;
+              filaABorrar.show();
             } else if(filaIndice = 2){
               filaABorrar.show();
             }
+            tabla.scrollTop(0);
         } else if (e.which == 40) {
             // Down Arrow
-            filaABorrar = $('#tablaMovimientos tr:nth-child('+filaIndice+')');
+            filaABorrar = $('tbody tr:nth-child('+filaIndice+')');
             if(filaIndice <= nroFilasTabla){
               if(filaIndice < nroFilasTabla){
-                filaABorrar.toggle();
+                filaABorrar.hide();
                 filaIndice++;
               } else if(filaIndice = nroFilasTabla){
                 filaABorrar.hide();
               }
             }
+            tabla.scrollTop(0);
             
         }
+        tabla.scrollLeft(0);
     }
 
   </script>
