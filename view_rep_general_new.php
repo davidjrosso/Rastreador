@@ -172,6 +172,9 @@ $Con->CloseConexion();
   </script>
 
   <style>
+    div {
+      user-select:none;
+    }
     table thead tr th {
       background-color: #ccc;
       position: sticky;
@@ -211,7 +214,6 @@ $Con->CloseConexion();
       position: sticky;
       top: 0;
       display: block;
-      /* display: block;             */
     }
 
     /* .table-fixeder tbody {
@@ -221,8 +223,6 @@ $Con->CloseConexion();
         overflow-y: auto;
         overflow-x: hidden;        
       } */
-
-
 
     .table-fixeder td,
     .table-fixeder thead,
