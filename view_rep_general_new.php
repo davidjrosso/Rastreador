@@ -124,7 +124,7 @@ $Con->CloseConexion();
         headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');
         columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
         columnaABorrar.show();
-        headABorrar.show();        
+        headABorrar.show();
       } else if (value > columnaIndice){
         headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');        
         columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
@@ -157,8 +157,8 @@ $Con->CloseConexion();
                 headABorrar.hide();
                 columnaABorrar.hide();
               }*/
-              $("#BarraDeNavTabla").attr("value", columnaIndice);
             }
+            $("#BarraDeNavTabla").attr("value", columnaIndice);
         } else if (e.which == 37) {
             // Left Arrow
             headABorrar = $('thead tr >*:nth-child('+columnaIndice+')');
@@ -172,8 +172,8 @@ $Con->CloseConexion();
                 headABorrar.show();
                 columnaABorrar.show();
               }
-              $("#BarraDeNavTabla").attr("value", columnaIndice);
             } 
+            $("#BarraDeNavTabla").attr("value", columnaIndice);
         } else if (e.which == 38) {
             // Up Arrow
             filaABorrar = $('tbody tr:nth-child('+filaIndice+')');
@@ -213,6 +213,16 @@ $Con->CloseConexion();
       margin-left: 25%;
       opacity: 70%;
     }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -4px;
+      background-color: #23282e;
+      border-radius: 1rem;
+      height: 1rem;
+      width: 1rem;
+    }
 
     table thead tr th {
       background-color: #ccc;
@@ -232,8 +242,8 @@ $Con->CloseConexion();
     .table-responsive {
       height: 480px;
       width: 98%;
-      /*overflow-y: scroll;
-      overflow-x: scroll;*/
+      overflow-y: scroll;
+      /*overflow-x: scroll;*/
       overflow-y: hidden;
       overflow-x: hidden;
       position: absolute;
