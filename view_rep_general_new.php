@@ -153,12 +153,10 @@ $Con->CloseConexion();
                 columnaABorrar.hide();
                 headABorrar.hide();
                 columnaIndice++;
-              }/*else if (columnaIndice == nroColumnasTabla){
-                headABorrar.hide();
-                columnaABorrar.hide();
-              }*/
+              }
             }
-            $("#BarraDeNavTabla").attr("value", columnaIndice);
+            document.getElementById("BarraDeNavTabla").value = columnaIndice;
+            //$("#BarraDeNavTabla").attr("value", columnaIndice);
         } else if (e.which == 37) {
             // Left Arrow
             headABorrar = $('thead tr >*:nth-child('+columnaIndice+')');
@@ -173,7 +171,8 @@ $Con->CloseConexion();
                 columnaABorrar.show();
               }
             } 
-            $("#BarraDeNavTabla").attr("value", columnaIndice);
+            document.getElementById("BarraDeNavTabla").value = columnaIndice;
+            //$("#BarraDeNavTabla").attr("value", columnaIndice);
         } else if (e.which == 38) {
             // Up Arrow
             filaABorrar = $('tbody tr:nth-child('+filaIndice+')');
