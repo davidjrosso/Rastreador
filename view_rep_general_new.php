@@ -49,6 +49,7 @@ $Con->CloseConexion();
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript"
@@ -103,9 +104,36 @@ $Con->CloseConexion();
     var filaIndice = 1;
 
     $( document ).on( "keydown", function(e) {
-     NavegacionConTeclado(e);
+      NavegacionConTeclado(e);
     });
-    
+
+    $( document ).on( "ready", function(e) {
+        $( "#BarraDeNavTabla").on( "input", function(e) {
+        navegacionConBarNav(e);
+      });
+    });
+
+    function navegacionConBarNav(e){
+      var value = parseInt(e.target.value);
+      var nroFilasTabla = $("tbody > tr").length - 2;
+      var nroColumnasTabla = $("thead > tr > th").length - 2;
+      $("#BarraDeNavTabla").attr("max", nroColumnasTabla + 1);
+      $("#BarraDeNavTabla").attr("value", columnaIndice);
+      if(value < columnaIndice){
+        columnaIndice = value;
+        headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');
+        columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
+        columnaABorrar.show();
+        headABorrar.show();        
+      } else if (value > columnaIndice){
+        headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');        
+        columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
+        headABorrar.hide();
+        columnaABorrar.hide();
+        columnaIndice = value;
+      }
+      $("#BarraDeNavTabla").attr("value", value);
+    }
 
     function NavegacionConTeclado(e) {
         var columnaABorrar = null;
@@ -113,20 +141,23 @@ $Con->CloseConexion();
         var filaABorrar = null;
         var nroFilasTabla = $("tbody > tr").length - 2;
         var nroColumnasTabla = $("thead > tr > th").length - 2;
+        $("#BarraDeNavTabla").attr("max", nroColumnasTabla + 1);
+        $("#BarraDeNavTabla").attr("value", columnaIndice);
         var tabla = $("table");
         tabla.scrollLeft(0);
         if (e.which == 39) {
             columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
             headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');
             if(columnaIndice <= nroColumnasTabla){
-              if(columnaIndice < nroColumnasTabla){
+              if(columnaIndice <= nroColumnasTabla){
                 columnaABorrar.hide();
                 headABorrar.hide();
                 columnaIndice++;
-              }else if (columnaIndice == nroColumnasTabla){
+              }/*else if (columnaIndice == nroColumnasTabla){
                 headABorrar.hide();
                 columnaABorrar.hide();
-              }
+              }*/
+              $("#BarraDeNavTabla").attr("value", columnaIndice);
             }
         } else if (e.which == 37) {
             // Left Arrow
@@ -141,6 +172,7 @@ $Con->CloseConexion();
                 headABorrar.show();
                 columnaABorrar.show();
               }
+              $("#BarraDeNavTabla").attr("value", columnaIndice);
             } 
         } else if (e.which == 38) {
             // Up Arrow
@@ -175,6 +207,13 @@ $Con->CloseConexion();
     div {
       user-select:none;
     }
+
+    input[type="range"]{
+      width: 60%;
+      margin-left: 25%;
+      opacity: 70%;
+    }
+
     table thead tr th {
       background-color: #ccc;
       position: sticky;
@@ -193,8 +232,10 @@ $Con->CloseConexion();
     .table-responsive {
       height: 480px;
       width: 98%;
-      overflow-y: scroll;
-      overflow-x: scroll;
+      /*overflow-y: scroll;
+      overflow-x: scroll;*/
+      overflow-y: hidden;
+      overflow-x: hidden;
       position: absolute;
     }
 
@@ -2091,7 +2132,7 @@ $Con->CloseConexion();
         </div>
       </div>
     </div>
-
+    <input type="range" class="fixed-bottom form-range" step="1" value="5" min="5" id="BarraDeNavTabla">
 
 
 
