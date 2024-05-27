@@ -108,17 +108,20 @@ $Con->CloseConexion();
     });
 
     $( document ).on( "ready", function(e) {
-        $( "#BarraDeNavTabla").on( "input", function(e) {
-        navegacionConBarNav(e);
+        $( "#BarraDeNavHTabla").on( "input", function(e) {
+        navegacionConBarHNav(e);
+      });
+        $( "#BarraDeNavVTabla").on( "input", function(e) {
+        navegacionConBarVNav(e);
       });
     });
 
-    function navegacionConBarNav(e){
+    function navegacionConBarHNav(e){
       var value = parseInt(e.target.value);
       var nroFilasTabla = $("tbody > tr").length - 2;
       var nroColumnasTabla = $("thead > tr > th").length - 2;
-      $("#BarraDeNavTabla").attr("max", nroColumnasTabla + 1);
-      $("#BarraDeNavTabla").attr("value", columnaIndice);
+      $("#BarraDeNavHTabla").attr("max", nroColumnasTabla + 1);
+      $("#BarraDeNavHTabla").attr("value", columnaIndice);
       if(value < columnaIndice){
         columnaIndice = value;
         headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');
@@ -132,7 +135,25 @@ $Con->CloseConexion();
         columnaABorrar.hide();
         columnaIndice = value;
       }
-      $("#BarraDeNavTabla").attr("value", value);
+      $("#BarraDeNavHTabla").attr("value", value);
+    }
+
+    function navegacionConBarVNav(e){
+      var value = parseInt(e.target.value);
+      var nroFilasTabla = $("tbody > tr").length - 4;
+      var filaABorrar = null;
+      $("#BarraDeNavVTabla").attr("max", nroFilasTabla);
+      $("#BarraDeNavVTabla").attr("value", filaIndice);
+      if(value < filaIndice){
+        filaIndice = value;
+        filaABorrar = $('tbody tr:nth-child('+filaIndice+')');
+        filaABorrar.show();
+      } else if (value > filaIndice){
+        filaABorrar = $('tbody tr:nth-child('+filaIndice+')');
+        filaABorrar.hide();
+        filaIndice = value;
+      }
+      $("#BarraDeNavVTabla").attr("value", value);
     }
 
     function NavegacionConTeclado(e) {
@@ -141,8 +162,8 @@ $Con->CloseConexion();
         var filaABorrar = null;
         var nroFilasTabla = $("tbody > tr").length - 2;
         var nroColumnasTabla = $("thead > tr > th").length - 2;
-        $("#BarraDeNavTabla").attr("max", nroColumnasTabla + 1);
-        $("#BarraDeNavTabla").attr("value", columnaIndice);
+        $("#BarraDeNavHTabla").attr("max", nroColumnasTabla + 1);
+        $("#BarraDeNavHTabla").attr("value", columnaIndice);
         var tabla = $("table");
         tabla.scrollLeft(0);
         if (e.which == 39) {
@@ -155,8 +176,8 @@ $Con->CloseConexion();
                 columnaIndice++;
               }
             }
-            document.getElementById("BarraDeNavTabla").value = columnaIndice;
-            //$("#BarraDeNavTabla").attr("value", columnaIndice);
+            document.getElementById("BarraDeNavHTabla").value = columnaIndice;
+            //$("#BarraDeNavHTabla").attr("value", columnaIndice);
         } else if (e.which == 37) {
             // Left Arrow
             headABorrar = $('thead tr >*:nth-child('+columnaIndice+')');
@@ -170,9 +191,9 @@ $Con->CloseConexion();
                 headABorrar.show();
                 columnaABorrar.show();
               }
-            } 
-            document.getElementById("BarraDeNavTabla").value = columnaIndice;
-            //$("#BarraDeNavTabla").attr("value", columnaIndice);
+            }
+            document.getElementById("BarraDeNavHTabla").value = columnaIndice;
+            //$("#BarraDeNavHTabla").attr("value", columnaIndice);
         } else if (e.which == 38) {
             // Up Arrow
             filaABorrar = $('tbody tr:nth-child('+filaIndice+')');
@@ -208,19 +229,27 @@ $Con->CloseConexion();
     }
 
     input[type="range"]{
-      width: 60%;
-      margin-left: 25%;
+      width: 80%;
+      height:0.9rem;
+      margin-left: 17%;
       opacity: 70%;
     }
-    
+
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
       margin-top: -4px;
       background-color: #23282e;
       border-radius: 1rem;
-      height: 1rem;
-      width: 1rem;
+      height: 0.8rem;
+      width: 0.8rem;
+    }
+
+    #BarraDeNavVTabla{
+      margin-left: 59.3%;
+      transform:rotate(90deg);
+      /*writing-mode: vertical-lr;
+        direction: rtl;*/
     }
 
     table thead tr th {
@@ -238,12 +267,21 @@ $Con->CloseConexion();
         display: inline-block;
       } */
 
+    tr {
+      color: #fff;
+    }
+
+    td[id^="Contenido"]{
+      color: #212529;
+      background-color: #212529;
+    }
+
     .table-responsive {
       height: 480px;
       width: 98%;
-      overflow-y: scroll;
-      /*overflow-x: scroll;*/
-      overflow-y: hidden;
+      /*overflow-y: scroll;
+      overflow-x: scroll;
+      overflow-y: hidden;*/
       overflow-x: hidden;
       position: absolute;
     }
@@ -1717,8 +1755,17 @@ $Con->CloseConexion();
                     $Separar = explode("/", $value);
                     $Mes = $Separar[0];
                     $Anio = $Separar[1];
-                    $Consultar_Movimientos_Persona = "select * from movimiento where id_persona = " . $RetTodos["id_persona"] . " and MONTH(fecha) = " . $Mes . " and YEAR(fecha) like '%" . $Anio . "' order by fecha";
 
+                    $Consultar_Movimientos_Persona = "select * 
+                                                      from movimiento 
+                                                      where id_persona = " . $RetTodos["id_persona"] . " 
+                                                        and MONTH(fecha) = " . $Mes . " 
+                                                        and YEAR(fecha) like '%" . $Anio . "'
+                                                        and (motivo_1 <> 1
+                                                         or motivo_2 <> 1
+                                                         or motivo_3 <> 1) 
+                                                      order by fecha";
+                    
                     // echo "<br> DEBUG CONSULTAR MOVIMIENTO: ".var_dump($Consultar_Movimientos_Persona);
             
 
@@ -1731,7 +1778,6 @@ $Con->CloseConexion();
                     $Num_Movimientos_Persona = mysqli_num_rows($Tomar_Movimientos_Persona);
 
                     while ($Ret_Movimientos_Persona = mysqli_fetch_assoc($Tomar_Movimientos_Persona)) {
-
                       $Consultar_Datos_Movimientos = "select M.id_movimiento, MONTH(M.fecha) as 'Mes', YEAR(M.fecha) as 'Anio',
                                                              M.motivo_1, M.motivo_2, M.motivo_3 
                                                       from movimiento M, 
@@ -1773,7 +1819,6 @@ $Con->CloseConexion();
                       ////////////////////////////////////////////////////////////////                                             
                       ////////////////////////////////////////////////////////////////
                       ////////////////////////////////////////////////////////////////
-            
                       if ($Ret_Datos_Movimiento["motivo_1"] > 1) {
                         if ($ID_Motivo > 0) {
                           if ($ID_Motivo == $Ret_Datos_Movimiento["motivo_1"]) {
@@ -1862,7 +1907,15 @@ $Con->CloseConexion();
                           }
                         }
                         if ($ID_Motivo == 0 && $ID_Motivo2 == 0 && $ID_Motivo3 == 0) {
-                          $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_1"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
+                          $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color, M.codigo 
+                                                 from motivo M, 
+                                                      categoria C, 
+                                                      formas_categorias F 
+                                                 where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_1"] . " 
+                                                   and M.cod_categoria = C.cod_categoria 
+                                                   and C.ID_Forma = F.ID_Forma 
+                                                   and M.estado = 1 
+                                                   and C.estado = 1";
                           $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
 
                           //echo $ConsultarCodyColor;               
@@ -1871,8 +1924,6 @@ $Con->CloseConexion();
 
                           $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
 
-                          // echo "DEBUG NOT: ".var_dump($RetMotivo);
-            
                           $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; padding: 0px; color: " . $RetMotivo["color"] . ";'>" . $RetMotivo["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo["codigo"] . "</span></center></span></a></div>";
                           $Table_imprimir .= "<div class = 'col-md-1'><span style='font-size: 10px; padding: 0px; color: " . $RetMotivo["color"] . ";'>" . $RetMotivo["Forma_Categoria"] . "<center><span class='nombreCategoria' style='font-family: 'symbol', sans-serif;'>" . $RetMotivo["codigo"] . "</span></center></span></div>";
                         }
@@ -1936,7 +1987,6 @@ $Con->CloseConexion();
                           $Table_imprimir .= "<div class = 'col-md-1'><span style='font-size: 10px; color: " . $RetMotivo2["color"] . "; text-align= center;'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria' style='font-family: 'symbol', sans-serif;'>" . $RetMotivo2["codigo"] . "</span></center></span></div>";
                         }
                       }
-
 
                       if ($Ret_Datos_Movimiento["motivo_3"] > 1) {
                         if ($ID_Motivo > 0) {
@@ -2141,9 +2191,8 @@ $Con->CloseConexion();
         </div>
       </div>
     </div>
-    <input type="range" class="fixed-bottom form-range" step="1" value="5" min="5" id="BarraDeNavTabla">
-
-
+    <input type="range" class="fixed-bottom form-range" step="1" value="5" min="5" id="BarraDeNavHTabla">
+    <input type="range" class="fixed-bottom form-range" step="1" value="1" min="1" id="BarraDeNavVTabla">
 
     <script>
       (function () {
