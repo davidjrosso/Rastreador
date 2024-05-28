@@ -232,7 +232,9 @@ $Con->CloseConexion();
       overflow-y: hidden;
       overflow-x: hidden;
     }
-    
+    #ContenidoTabla{
+      padding-left: 0px;
+    }
     div {
       user-select:none;
     }
@@ -256,12 +258,12 @@ $Con->CloseConexion();
 
     
     #BarraDeNavVTabla{
-      margin-left: 84.4%;
-      margin-bottom: 16%;
+      margin-left: 87.7%;
+      margin-bottom: 12%;
       transform:rotate(90deg);
       /*writing-mode: vertical-lr;
         direction: rtl;*/
-      width: 30%;
+      width: 23.3%;
       height:0.9rem;
       opacity: 70%;
     }
