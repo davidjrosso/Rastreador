@@ -229,12 +229,13 @@ $Con->CloseConexion();
   <style>
 
     body {
-      overflow-y: hidden;
       overflow-x: hidden;
     }
-    #ContenidoTabla{
+
+    /*#ContenidoTabla{
       padding-left: 0px;
-    }
+    }*/
+
     div {
       user-select:none;
     }
@@ -258,12 +259,10 @@ $Con->CloseConexion();
 
     
     #BarraDeNavVTabla{
-      margin-left: 87.7%;
-      margin-bottom: 12%;
+      margin-left: 86.5%;
+      margin-bottom: 13.4%;
       transform:rotate(90deg);
-      /*writing-mode: vertical-lr;
-        direction: rtl;*/
-      width: 23.3%;
+      width: 26.1%;
       height:0.9rem;
       opacity: 70%;
     }
@@ -345,6 +344,10 @@ $Con->CloseConexion();
       border-bottom-width: 0;
       width: 150px;
       height: 70px;
+    }
+
+    .table-fixeder thead>tr>th {
+      height: 60px;
     }
 
     .table-fixeder tbody tr td .Datos,
@@ -468,7 +471,7 @@ $Con->CloseConexion();
       position: sticky;
       left: 450px;
       /* 350px  ACAAA */
-      width: 150px;
+      width: 145px;
       /* 50px  ACAAA */
       z-index: 200;
     }
@@ -1065,11 +1068,11 @@ $Con->CloseConexion();
           </div>
           <div class="col">
 
-            <button type="button" class="btn btn-danger" onclick="location.href = 'view_general_new.php'">Atras</button>
+            <button type="button" class="btn btn-danger" style="margin-left: 35%;"  onclick="location.href = 'view_general_new.php'">Atras</button>
 
-            <button type="button" class="btn btn-secondary" onclick="enviarImprimir()">**Imprimir</button>
+            <!--<button type="button" class="btn btn-secondary" onclick="enviarImprimir()">**Imprimir</button>-->
 
-            <button type="button" class="btn btn-secondary" onclick="enviarImprimirPdf();"> Imprimir</button>
+            <!--<button type="button" class="btn btn-secondary" onclick="enviarImprimirPdf();"> Imprimir</button>-->
 
           </div>
 
