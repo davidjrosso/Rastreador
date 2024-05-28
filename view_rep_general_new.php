@@ -107,10 +107,10 @@ $Con->CloseConexion();
     });
 
     $( document ).on( "ready", function(e) {
-        $( "#BarraDeNavHTabla").on( "input", function(e) {
+        $( "#BarraDeNavHTabla").on("input", function(e) {
         navegacionConBarHNav(e);
       });
-        $( "#BarraDeNavVTabla").on( "input", function(e) {
+        $( "#BarraDeNavVTabla").on("input", function(e) {
         navegacionConBarVNav(e);
       });
     });
@@ -122,7 +122,7 @@ $Con->CloseConexion();
       $("#BarraDeNavHTabla").attr("max", nroColumnasTabla + 1);
       $("#BarraDeNavHTabla").attr("value", columnaIndice);
       if(value < columnaIndice){
-        columnaIndice = value;
+        columnaIndice--;
         headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');
         columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
         columnaABorrar.show();
@@ -132,27 +132,28 @@ $Con->CloseConexion();
         columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
         headABorrar.hide();
         columnaABorrar.hide();
-        columnaIndice = value;
+        columnaIndice++;
       }
-      $("#BarraDeNavHTabla").attr("value", value);
+      $("#BarraDeNavHTabla").attr("value", columnaIndice);
     }
 
     function navegacionConBarVNav(e){
       var value = parseInt(e.target.value);
       var nroFilasTabla = $("tbody > tr").length - 4;
       var filaABorrar = null;
+      document.getElementById("BarraDeNavVTabla").value = filaIndice;
       $("#BarraDeNavVTabla").attr("max", nroFilasTabla);
       $("#BarraDeNavVTabla").attr("value", filaIndice);
       if(value < filaIndice){
-        filaIndice = value;
+        filaIndice--;
         filaABorrar = $('tbody tr:nth-child('+filaIndice+')');
         filaABorrar.show();
       } else if (value > filaIndice){
         filaABorrar = $('tbody tr:nth-child('+filaIndice+')');
         filaABorrar.hide();
-        filaIndice = value;
+        filaIndice++;
       }
-      $("#BarraDeNavVTabla").attr("value", value);
+      $("#BarraDeNavVTabla").attr("value", filaIndice);
     }
 
     function NavegacionConTeclado(e) {
@@ -175,8 +176,8 @@ $Con->CloseConexion();
                 columnaIndice++;
               }
             }
-            document.getElementById("BarraDeNavHTabla").value = columnaIndice;
             //$("#BarraDeNavHTabla").attr("value", columnaIndice);
+            document.getElementById("BarraDeNavHTabla").value = columnaIndice;
         } else if (e.which == 37) {
             // Left Arrow
             headABorrar = $('thead tr >*:nth-child('+columnaIndice+')');
@@ -191,8 +192,8 @@ $Con->CloseConexion();
                 columnaABorrar.show();
               }
             }
-            document.getElementById("BarraDeNavHTabla").value = columnaIndice;
             //$("#BarraDeNavHTabla").attr("value", columnaIndice);
+            document.getElementById("BarraDeNavHTabla").value = columnaIndice;
         } else if (e.which == 38) {
             // Up Arrow
             filaABorrar = $('tbody tr:nth-child('+filaIndice+')');
@@ -203,6 +204,8 @@ $Con->CloseConexion();
               filaABorrar.show();
             }
             tabla.scrollTop(0);
+            //$("#BarraDeNavVTabla").attr("value", filaIndice);
+            document.getElementById("BarraDeNavVTabla").value = filaIndice;
         } else if (e.which == 40) {
             // Down Arrow
             filaABorrar = $('tbody tr:nth-child('+filaIndice+')');
@@ -215,7 +218,8 @@ $Con->CloseConexion();
               }
             }
             tabla.scrollTop(0);
-            
+            //$("#BarraDeNavVTabla").attr("value", filaIndice);
+            document.getElementById("BarraDeNavVTabla").value = filaIndice;
         }
         tabla.scrollLeft(0);
     }
@@ -223,6 +227,12 @@ $Con->CloseConexion();
   </script>
 
   <style>
+
+    body {
+      overflow-y: hidden;
+      overflow-x: hidden;
+    }
+    
     div {
       user-select:none;
     }
@@ -244,11 +254,16 @@ $Con->CloseConexion();
       width: 0.8rem;
     }
 
+    
     #BarraDeNavVTabla{
-      margin-left: 59.3%;
+      margin-left: 84.4%;
+      margin-bottom: 16%;
       transform:rotate(90deg);
       /*writing-mode: vertical-lr;
         direction: rtl;*/
+      width: 30%;
+      height:0.9rem;
+      opacity: 70%;
     }
 
     table thead tr th {
@@ -269,8 +284,6 @@ $Con->CloseConexion();
     tr {
       color: #fff;
     }
-
-    
     
     td[id^="Contenido"]{
       color: #212529;
@@ -284,9 +297,7 @@ $Con->CloseConexion();
     .table-responsive {
       height: 480px;
       width: 98%;
-      /*overflow-y: scroll;
-      overflow-x: scroll;
-      overflow-y: hidden;*/
+      overflow-y: hidden;
       overflow-x: hidden;
       position: absolute;
     }
@@ -1212,7 +1223,7 @@ $Con->CloseConexion();
 
                 if ($value != "") {
                   // TODO: Cambiando de tamaño las columnas
-                  $Table .= "<th name='DatosResultados' style='min-width: 225px;'>" . $value . "</th>";
+                  $Table .= "<th name='DatosResultados' style='min-width: 190px;'>" . $value . "</th>";
                 }
 
               }
@@ -1778,8 +1789,8 @@ $Con->CloseConexion();
                     //echo var_dump($Consultar_Movimientos_Persona);
                     // TODO: CAMBIANDO TOAMAÑO DE COLUMNAS
                     $IndexCelda += 1;
-                    $Table .= "<td name='DatosResultados' id=$IndexCelda style='min-width:225px'><div class = 'row'>";                  //250   
-                    $Table_imprimir .= "<td name='DatosResultados' style='min-width:225px'><div class = 'row'>";
+                    $Table .= "<td name='DatosResultados' id=$IndexCelda style='min-width:190px'><div class = 'row'>";                  //250   
+                    $Table_imprimir .= "<td name='DatosResultados' style='min-width:190px'><div class = 'row'>";
                     $Num_Movimientos_Persona = mysqli_num_rows($Tomar_Movimientos_Persona);
 
                     while ($Ret_Movimientos_Persona = mysqli_fetch_assoc($Tomar_Movimientos_Persona)) {
@@ -2291,7 +2302,7 @@ $Con->CloseConexion();
         var DatosResultados = document.getElementsByName("DatosResultados");
         for (var i = 0; i < DatosResultados.length; i++) {
           // DatosResultados[i].removeAttribute("min-width");         
-          DatosResultados[i].setAttribute("style", "min-width: 250px;");
+          DatosResultados[i].setAttribute("style", "min-width: 190px;");
         }
 
         var DatosSinResultados = document.getElementsByName("DatosSinResultados");
