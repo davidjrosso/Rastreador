@@ -811,7 +811,7 @@ $Con->CloseConexion();
         <div class="col-md-2">
           <div class="row">
             <button type = "button" class = "btn btn-secondary" data-toggle="modal" data-target="#configModal">Config</button>
-            <button type="button" class="btn btn-secondary" onClick="enviarImprimir()">Imprimir</button>
+            <!--<button type="button" class="btn btn-secondary" onClick="enviarImprimir()">Imprimir</button>-->
           </div>
         </div>
      </div>
