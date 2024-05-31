@@ -32,7 +32,7 @@ if(empty($_REQUEST["Fecha_Nacimiento"])){
 }
 
 ///////////////////////////CALCULAR EDAD//////////////////////////////////////////////////
-if($Edad == 'null' || $Edad == "" && $Fecha_Nacimiento != 'null'){
+if(($Edad == 'null' || $Edad == "") && $Fecha_Nacimiento != 'null'){
 	list($ano,$mes,$dia) = explode("-",$Fecha_Nacimiento);
 	$ano_diferencia = date("Y") - $ano;
 	$mes_diferencia = date("m") - $mes;
