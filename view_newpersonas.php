@@ -373,7 +373,7 @@ $Con->CloseConexion();
                   $Element = new Elements();
                   echo $Element->CBCalles();
                 ?>
-              </div>
+              </div>  
               <div class="col-md-2">
                 <input type="number" class="form-control" name = "NumeroDeCalle" id="NumeroDeCalle" placeholder="Número" min="1" autocomplete="off">
               </div>
@@ -391,7 +391,7 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Familia: </label>
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Sublote: </label>
               <div class="col-md-10">
                 <input type="number" class="form-control" name = "Familia" id="inputPassword" autocomplete="off">
               </div>
