@@ -661,7 +661,7 @@ public function getMenuSeguridad($ID){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     //$Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Persona'>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from persona where estado = 1 and id_persona = $xID_Persona order by apellido")or die("Problemas al mostrar Personas");    
+    $Consulta = mysqli_query($Con3->Conexion,"select * from persona where estado = 1 and id_persona = $xID_Persona order by apellido, nombre")or die("Problemas al mostrar Personas");
     $Ret = mysqli_fetch_assoc($Consulta);    
         
     $Boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalPersona'>".$Ret['apellido'].", ".$Ret['nombre']."</button>";

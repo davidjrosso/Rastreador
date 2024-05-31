@@ -423,8 +423,8 @@ $Con->CloseConexion();
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Persona: </label>
                   <div class="col-md-10" id = "Persona">
                     <?php  
-                    // $Element = new Elements();
-                    // echo $Element->BTNModPersonas($ID_Persona);
+                    $Element = new Elements();
+                    echo $Element->BTNModPersonas($ID_Persona);
                     ?>
                   </div>
                 </div>
