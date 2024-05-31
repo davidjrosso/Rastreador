@@ -49,7 +49,7 @@ try {
 
 	$Con->CloseConexion();
 	$Mensaje = "La categoria fue eliminada Correctamente";
-	header('Location: ../view_categorias.php?Mensaje='.$Mensaje);
+	header('Location: ../view_inicio.php?Mensaje='.$Mensaje);
 } catch (Exception $e) {
 	echo "Error: ".$e->getMessage();
 }
