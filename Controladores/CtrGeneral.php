@@ -251,7 +251,7 @@ class CtrGeneral{
 	public function getPersonas(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, apellido, nombre, documento, nro_legajo from persona where estado = 1 order by apellido";
+		$Consulta = "select id_persona, apellido, nombre, documento, nro_legajo from persona where estado = 1 order by apellido, nombre";
 		$MessageError = "Problemas al intentar mostrar Personas";
 		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -269,7 +269,7 @@ class CtrGeneral{
 	public function getPersonasxID($ID){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, apellido, nombre, documento, nro_legajo from persona where id_persona = $ID and estado = 1 order by apellido";
+		$Consulta = "select id_persona, apellido, nombre, documento, nro_legajo from persona where id_persona = $ID and estado = 1 order by apellido, nombre";
 		$MessageError = "Problemas al intentar mostrar Personas por ID";
 		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -285,7 +285,7 @@ class CtrGeneral{
 	public function getPersonasxApellido($Apellido){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, apellido, nombre, documento,nro_legajo from persona where apellido like '%$Apellido%' and estado = 1 order by apellido";
+		$Consulta = "select id_persona, apellido, nombre, documento,nro_legajo from persona where apellido like '%$Apellido%' and estado = 1 order by apellido, nombre";
 		$MessageError = "Problemas al intentar mostrar Personas por Apellido";
 		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -301,7 +301,7 @@ class CtrGeneral{
 	public function getPersonasxNombre($Nombre){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, apellido, nombre, documento, nro_legajo from persona where nombre like '%$Nombre%' and estado = 1 order by apellido";
+		$Consulta = "select id_persona, apellido, nombre, documento, nro_legajo from persona where nombre like '%$Nombre%' and estado = 1 order by apellido, nombre";
 		$MessageError = "Problemas al intentar mostrar Personas por Nombre";
 		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -318,7 +318,7 @@ class CtrGeneral{
 		$buscDNI = trim(str_replace(array('.'),'',$DNI));
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, apellido, nombre, documento,nro_legajo from persona where documento like '%$buscDNI%' and estado = 1 order by apellido";
+		$Consulta = "select id_persona, apellido, nombre, documento,nro_legajo from persona where documento like '%$buscDNI%' and estado = 1 order by apellido, nombre";
 		$MessageError = "Problemas al intentar mostrar Personas por Documento";
 		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -334,7 +334,7 @@ class CtrGeneral{
 	public function getPersonasxLegajo($Legajo){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, apellido, nombre, documento,nro_legajo from persona where nro_legajo like '%$Legajo%' and estado = 1 order by apellido";
+		$Consulta = "select id_persona, apellido, nombre, documento,nro_legajo from persona where nro_legajo like '%$Legajo%' and estado = 1 order by apellido, nombre";
 		$MessageError = "Problemas al intentar mostrar Personas por Legajo";
 		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th></th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -350,7 +350,7 @@ class CtrGeneral{
 	public function getPersonasxCarpeta($Carpeta){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, apellido, nombre, documento,nro_legajo from persona where nro_carpeta = '$Carpeta' and estado = 1 order by apellido";
+		$Consulta = "select id_persona, apellido, nombre, documento,nro_legajo from persona where nro_carpeta = '$Carpeta' and estado = 1 order by apellido, nombre";
 		$MessageError = "Problemas al intentar mostrar Personas por Carpeta";
 		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th></th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -367,7 +367,7 @@ class CtrGeneral{
 	public function getPersonasxDomicilio($Domicilio){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "SELECT id_persona, apellido, nombre, documento, nro_legajo,domicilio FROM persona WHERE domicilio LIKE '%$Domicilio%' AND estado = 1 ORDER BY apellido";
+		$Consulta = "SELECT id_persona, apellido, nombre, documento, nro_legajo,domicilio FROM persona WHERE domicilio LIKE '%$Domicilio%' AND estado = 1 ORDER BY apellido, nombre";
 		$MessageError = "Problemas al intentar mostrar Personas por Domicilio";
 		$Table = "<table class='table'><thead><tr><th>Id</th><th>Apellido</th><th>Nombre</th><th>Documento</th></th><th>Nro. Legajo</th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
