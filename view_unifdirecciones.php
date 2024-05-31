@@ -72,13 +72,13 @@ $Con->CloseConexion();
         function actualizarContenidoNuevaDireccion(){
           var BotonModalPersona = document.getElementById("BotonModalNuevaDireccion_1");
           var SearchDireccionValue = document.getElementById("DireccionNueva_1").value;
-          var NewDireccion = document.getElementById("NewDireccion");
+          var Calle = document.getElementById("Calle");
           if (SearchDireccionValue == "") {
             BotonModalPersona.innerText = "Nueva Dirección";
-            NewDireccion.value = "";
+            Calle.value = "";
           }else {
             BotonModalPersona.innerText = SearchDireccionValue;
-            NewDireccion.value = SearchDireccionValue;
+            Calle.value = SearchDireccionValue;
           }
         }
 
@@ -132,10 +132,10 @@ $Con->CloseConexion();
 
         function seleccionCalle(xNombre,xID){
           var BotonModalPersona = document.getElementById("BotonModalNuevaDireccion_1");
-          var NewDireccion = document.getElementById("NewDireccion");
+          var Calle = document.getElementById("Calle");
           BotonModalPersona.innerHTML = "";
           BotonModalPersona.innerHTML = xNombre;
-          NewDireccion.setAttribute('value',xNombre);
+          Calle.setAttribute('value',xNombre);
         }
 
   </script>
@@ -273,14 +273,23 @@ $Con->CloseConexion();
            <!-- Carga -->
           <!--<form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/unificardirecciones.php" onSubmit = "return ValidarUnifDirecciones();">-->
           <form method = "post" onKeydown="return event.key != 'Enter';" id="form_1" name="form_1" action = "Controladores/unificardirecciones.php">
-            <div class="form-group row">
+          <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Cambiar: </label>
               <div class="col-md-8">
-                <button type = "button" id="BotonModalNuevaDireccion_1" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalDireccionNueva">Nombre de Calle elegido</button>
-                <!--<input type="text" class="form-control" name="NewDireccion" placeholder="Nueva Direccion" autocomplete="off"> -->
-                <input type="hidden" name="NewDireccion" id = "NewDireccion" value = "">
+                <?php 
+                  $Element = new Elements();
+                  echo $Element->CBCalles();
+                ?>
               </div>
-            </div>
+          </div>
+          <!--<div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Cambiar: </label>
+              <div class="col-md-8">
+                <button type = "button" id="BotonModalNuevaDireccion_1" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalDireccionNueva">Nombre de Calle elegido</button>-->
+                <!--<input type="text" class="form-control" name="Calle" placeholder="Nueva Direccion" autocomplete="off"> -->
+                <!--<input type="hidden" name="Calle" id = "Calle" value = "">
+              </div>
+            </div>-->
             <div class="form-group row">
               <div class="col-md-2"></div>
               <div class="col-md-8">

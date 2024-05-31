@@ -20,7 +20,7 @@ require_once 'Conexion.php';
  */
 
 $ArrPersonas = $_REQUEST["ArrPersonas"];
-$NewDireccion = ucwords($_REQUEST["NewDireccion"]);
+$Calle = ucwords($_REQUEST["Calle"]);
 
 $ArrPersonas = explode(",", $ArrPersonas);
 
@@ -47,9 +47,9 @@ if($ArrPersonas[0] === '0'){
 		$DomActual = $PartesDireccion[0];
 		
 		if($DomActual == ""){
-			$ModificarDireccion = "update persona set domicilio = '$NewDireccion' where id_persona = $value";
+			$ModificarDireccion = "update persona set domicilio = '$Calle' where id_persona = $value";
 		}else{
-			$ModificarDireccion = "update persona set domicilio = REPLACE(domicilio,'$DomActual','$NewDireccion ') where id_persona = $value";	
+			$ModificarDireccion = "update persona set domicilio = REPLACE(domicilio,'$DomActual','$Calle ') where id_persona = $value";	
 		}		
 		
 		$MensajeErrorModificar = "No se pudieron modificar las direcciones solicitadas";
