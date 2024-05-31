@@ -1366,7 +1366,7 @@ public function getMenuSeguridad($ID){
   public function CBCalles(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' id='ID_Cale' name = 'Calle' required>";
+    $Select = "<select class='form-control' id='ID_Cale' name = 'Calle'>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from calle where estado = 1 order by calle_nombre ASC")or die("Problemas al mostrar Personas");
     $Select .= "<option value = '0' disabled = 'disabled' selected = 'true'>Seleccione una Calle</option>";
     while ($Ret = mysqli_fetch_array($Consulta)) {
