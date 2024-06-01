@@ -171,6 +171,22 @@ public function getDomicilio(){
 	return $this->Domicilio;
 }
 
+public function getCalle(){
+	$LongString = strlen($this->Domicilio); 
+	$StringDelimitado = chunk_split($this->Domicilio,$LongString - 4,"-");
+	$PartesDireccion = explode("-", $StringDelimitado);
+	$DomActual = $PartesDireccion[0];
+	return $DomActual;
+}
+
+public function getNroCalle(){
+	$LongString = strlen($this->Domicilio); 
+	$StringDelimitado = chunk_split($this->Domicilio,$LongString - 4,"-");
+	$PartesDireccion = explode("-", $StringDelimitado);
+	$NroDomActual = $PartesDireccion[1];
+	return $NroDomActual;
+}
+
 public function getBarrio(){
 	return $this->Barrio;
 }
