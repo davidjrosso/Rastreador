@@ -1411,7 +1411,7 @@ public function getMenuSeguridad($ID){
     $ConsultaResult = mysqli_query($Con3->Conexion,$ConsultaNombre)or die("Problemas al mostrar Personas");
     if(mysqli_num_rows($ConsultaResult) > 0){
       $Resultado = mysqli_fetch_array($ConsultaResult);
-      $Select .= "<option value = '".$Resultado["calle_nombre"]."' selected = 'true'>$NombreCalle</option>";
+      $Select .= "<option value = '".$Resultado["calle_nombre"]."' selected = 'true'>".$Resultado["calle_nombre"]."</option>";
     } else {
       $Select .= "<option value = '0' disabled = 'disabled' selected = 'true'>- Seleccione una Calle -</option>";
     }
