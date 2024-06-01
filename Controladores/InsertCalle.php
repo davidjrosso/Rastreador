@@ -44,7 +44,7 @@ try {
 		$Mensaje = "Ya existe una Calle con ese Nombre";
 		header('Location: ../view_newcalles.php?MensajeError='.$Mensaje);
 	}else{
-		$Consulta = "insert into Calle(calle_nombre,estado) values('$Calle',$Estado)";
+		$Consulta = "insert into calle(calle_nombre,estado) values('$Calle',$Estado)";
 		if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
 			throw new Exception("Error al intentar registrar. Consulta: ".$Consulta, 1);
 		}	
