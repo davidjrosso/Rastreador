@@ -348,7 +348,7 @@ $Con->CloseConexion();
                     ?>
                   </div>  
                   <div class="col-md-2">
-                    <input type="number" class="form-control" name = "NumeroDeCalle" id="NumeroDeCalle" min="1" autocomplete="off" value = "<?php echo $Persona->getNroCalle(); ?>">
+                    <input type="number" class="form-control" name = "NumeroDeCalle" id="NumeroDeCalle" placeholder="Nro" min="1" autocomplete="off" <?php $NroCalle = $Persona->getNroCalle(); if ($NroCalle != null){ echo "value = '$NroCalle'";} ?>>
                   </div>
                 </div>               
                 <div class="form-group row">
