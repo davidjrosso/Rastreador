@@ -183,7 +183,7 @@ public function getNroCalle(){
 	$LongString = strlen($this->Domicilio); 
 	$StringDelimitado = chunk_split($this->Domicilio,$LongString - 4,"-");
 	$PartesDireccion = explode("-", $StringDelimitado);
-	$NroDomActual = $PartesDireccion[1];
+	$NroDomActual = (int) filter_var($PartesDireccion[1], FILTER_SANITIZE_NUMBER_INT);
 	return $NroDomActual;
 }
 
