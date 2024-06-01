@@ -1415,7 +1415,7 @@ public function getMenuSeguridad($ID){
       $Select .= "<option value = '".$Resultado["calle_nombre"]."' selected = 'true'>".$Resultado["calle_nombre"]."</option>";
     } else {
       if($Nombre){
-        $Select .= "<option value = '$Nombre' disabled = 'disabled' selected = 'true'>$Nombre</option>";
+        $Select .= "<option value = '$Nombre' selected = 'true'>$Nombre</option>";
       } else {
         $Select .= "<option value = '0' disabled = 'disabled' selected = 'true'>- Seleccione una Calle -</option>";
       }

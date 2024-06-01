@@ -45,7 +45,10 @@ if($Edad == 0){
 
 $Nro_Carpeta = $_REQUEST["Nro_Carpeta"];
 $Obra_Social = $_REQUEST["Obra_Social"];
-$Domicilio = ucwords($_REQUEST["Calle"])." ".$_REQUEST["NumeroDeCalle"];
+$Domicilio = ucwords($_REQUEST["Calle"]);
+if(isset($_REQUEST["NumeroDeCalle"])){
+  $Domicilio .= " ".$_REQUEST["NumeroDeCalle"];
+}
 $ID_Barrio = $_REQUEST["ID_Barrio"];
 $Localidad = ucwords($_REQUEST["Localidad"]);
 $Circunscripcion = 0;
