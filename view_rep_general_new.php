@@ -232,9 +232,9 @@ $Con->CloseConexion();
       overflow-x: hidden;
     }
 
-    /*#ContenidoTabla{
+    #ContenidoTabla{
       padding-left: 0px;
-    }*/
+    }
 
     div {
       user-select:none;
