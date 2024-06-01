@@ -1398,7 +1398,34 @@ public function getMenuSeguridad($ID){
     return $Select;
   }
 
-
+  public function CBCallesNombre($Nombre){
+    $Con3 = new Conexion();
+    $Con3->OpenConexion();
+    $NombreCalle = rtrim($Nombre);
+    $ConsultaNombre = "select *
+                 from calle 
+                 where estado = 1
+                   and UPPER(calle_nombre) = UPPER('$NombreCalle')
+                 order by calle_nombre ASC";
+    $Select = "<select class='form-control' id='ID_Cale' name = 'Calle'>";
+    $ConsultaResult = mysqli_query($Con3->Conexion,$ConsultaNombre)or die("Problemas al mostrar Personas");
+    if(mysqli_fetch_row($ConsultaResult) > 0){
+      $Select .= "<option value = '$NombreCalle' selected = 'true'>$NombreCalle</option>";
+    } else {
+      $Select .= "<option value = '0' disabled = 'disabled' selected = 'true'>- Seleccione una Calle -</option>";
+    }
+    $Consulta = "select *
+    from calle 
+    where estado = 1
+    order by calle_nombre ASC";
+    $ConsultaResult = mysqli_query($Con3->Conexion,$Consulta)or die("Problemas al mostrar Personas");
+    while ($Ret = mysqli_fetch_array($ConsultaResult)) {
+      $Select .= "<option value = '".$Ret['calle_nombre']."'>".$Ret['calle_nombre']."</option>";
+    }
+    $Select .= "</select>";
+    $Con3->CloseConexion();
+    return $Select;
+  }
 
 
   /*

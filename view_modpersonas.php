@@ -262,7 +262,7 @@ $Con->CloseConexion();
               $Trabajo = $Ret["Trabajo"];
 
 
-              $Persona = new Persona($ID_Persona,$Apellido,$Nombre,$DNI,$Nro_Legajo, $Edad,$Meses,$Fecha_Nacimiento,$Nro_Carpeta,$Obra_Social,$Domicilio,$Barrio,$Localidad,$Circunscripcion,$Seccion,$Manzana,$Lote,$Familia,$Observaciones,$Cambio_Domicilio,$Telefono,$Mail,$ID_Escuela,$Estado,$Trabajo);              
+              $Persona = new Persona($ID_Persona,$Apellido,$Nombre,$DNI,$Nro_Legajo, $Edad,$Meses,$Fecha_Nacimiento,$Nro_Carpeta,$Obra_Social,$Domicilio,$Barrio,$Localidad,$Circunscripcion,$Seccion,$Manzana,$Lote,$Familia,$Observaciones,$Cambio_Domicilio,$Telefono,$Mail,$ID_Escuela,$Estado,$Trabajo);
 
               $Con->CloseConexion();
               
@@ -341,8 +341,14 @@ $Con->CloseConexion();
                 </div>
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Domicilio: </label>
-                  <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Domicilio" id="inputPassword" autocomplete="off" value = "<?php echo $Persona->getDomicilio(); ?>">
+                  <div class="col-md-8">
+                    <?php 
+                      $Element = new Elements();
+                      echo $Element->CBCallesNombre($Persona->getCalle());
+                    ?>
+                  </div>  
+                  <div class="col-md-2">
+                    <input type="number" class="form-control" name = "NumeroDeCalle" id="NumeroDeCalle" min="1" autocomplete="off" value = "<?php echo $Persona->getNroCalle(); ?>">
                   </div>
                 </div>               
                 <div class="form-group row">
