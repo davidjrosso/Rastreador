@@ -173,17 +173,45 @@ public function getDomicilio(){
 
 public function getCalle(){
 	$LongString = strlen($this->Domicilio); 
-	$StringDelimitado = chunk_split($this->Domicilio,$LongString - 4,"-");
-	$PartesDireccion = explode("-", $StringDelimitado);
-	$DomActual = $PartesDireccion[0];
+	if($LongString > 1){
+	  $StringDelimitado = chunk_split($this->Domicilio,$LongString - 4,"-");
+	  $PartesDireccion = explode("-", $StringDelimitado);
+	  $DomActual = $PartesDireccion[0];
+	  if(!preg_match("~[0-9]~", $PartesDireccion[1])){
+	    $DomActual = $this->Domicilio;
+	  } else {
+		$NroCalle = $this->getNroCalle();
+		if($NroCalle < 10000){
+			$DomActual = substr($this->Domicilio, 0, $LongString - 5);
+			if($NroCalle < 1000){
+				$DomActual = substr($this->Domicilio, 0, $LongString - 4);
+				if($NroCalle < 100){
+					$DomActual = substr($this->Domicilio, 0, $LongString - 3);
+					if($NroCalle < 10){
+						$DomActual = substr($this->Domicilio, 0, $LongString - 2);
+					}
+				}
+			}
+		}
+	  }
+	} else{
+	  $DomActual = null;
+	}
 	return $DomActual;
 }
 
 public function getNroCalle(){
-	$LongString = strlen($this->Domicilio); 
-	$StringDelimitado = chunk_split($this->Domicilio,$LongString - 4,"-");
-	$PartesDireccion = explode("-", $StringDelimitado);
-	$NroDomActual = (int) filter_var($PartesDireccion[1], FILTER_SANITIZE_NUMBER_INT);
+	$LongString = strlen($this->Domicilio);
+	if($LongString > 1){
+	  $StringDelimitado = chunk_split($this->Domicilio,$LongString - 4,"-");
+	  $PartesDireccion = explode("-", $StringDelimitado);
+	  $NroDomActual = (int) filter_var($PartesDireccion[1], FILTER_SANITIZE_NUMBER_INT);
+	  if($NroDomActual == 0){
+		$NroDomActual = null;
+	  }
+	} else {
+	  $NroDomActual = null;
+	}
 	return $NroDomActual;
 }
 
