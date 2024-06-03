@@ -302,14 +302,14 @@ $Con->CloseConexion();
               }else{
               	$Table .= "<tr><td>Edad</td><td>".$Persona->getEdad()."</td></tr>";
               }              
-              $Table .= "<tr><td>Meses</td><td>".$Persona->getMeses()."</td></tr>";            
-              $Table .= "<tr><td>Nro. Carpeta</td><td>".$Persona->getNro_Carpeta()."</td></tr>";               
-              $Table .= "<tr><td>Nro. Legajo</td><td>".$Persona->getNro_Legajo()."</td></tr>";             
+              $Table .= "<tr><td>Meses</td><td>".(($Meses!="null")? $Persona->getMeses():"")."</td></tr>";            
+              $Table .= "<tr><td>Nro. Carpeta</td><td>".(($Nro_Carpeta!="null")?$Persona->getNro_Carpeta():"")."</td></tr>";               
+              $Table .= "<tr><td>Nro. Legajo</td><td>".(($Nro_Legajo!="null")? $Persona->getNro_Legajo():"")."</td></tr>";             
               $Table .= "<tr><td>Localidad</td><td>".$Persona->getLocalidad()."</td></tr>";
               $Table .= "<tr><td>Barrio</td><td>".$Persona->getBarrio()."</td></tr>";  
               $Table .= "<tr><td>Domicilio</td><td>".$Persona->getDomicilio()."</td></tr>";              
-              $Table .= "<tr><td>Manzana</td><td>".$Persona->getManzana()."</td></tr>";
-              $Table .= "<tr><td>Lote</td><td>".$Persona->getLote()."</td></tr>";
+              $Table .= "<tr><td>Manzana</td><td>".(($Manzana!="null")? $Persona->getManzana():"")."</td></tr>";
+              $Table .= "<tr><td>Lote</td><td>".(($Lote!="null")? $Persona->getLote():"")."</td></tr>";
               $Table .= "<tr><td>Sub-lote</td><td>".$Persona->getFamilia()."</td></tr>";
               $Table .= "<tr><td>Telefono</td><td>".$Persona->getTelefono()."</td></tr>";
               $Table .= "<tr><td>Mail</td><td>".$Persona->getMail()."</td></tr>";                            
