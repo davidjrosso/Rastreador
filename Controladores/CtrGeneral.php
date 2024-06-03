@@ -251,7 +251,11 @@ class CtrGeneral{
 	public function getPersonas(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, apellido, nombre, documento, IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
+		$Consulta = "select id_persona, 
+					 CONCAT(UPPER(SUBSTRING(apellido,1,1)),LOWER(SUBSTRING(apellido,2))) as apellido, 
+					 CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
+					 documento, 
+					 IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
 					 from persona 
 					 where estado = 1 
 					 order by apellido, nombre";
@@ -272,7 +276,11 @@ class CtrGeneral{
 	public function getPersonasxID($ID){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, apellido, nombre, documento, IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
+		$Consulta = "select id_persona, 
+							CONCAT(UPPER(SUBSTRING(apellido,1,1)),LOWER(SUBSTRING(apellido,2))) as apellido, 
+							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
+							documento, 
+							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
 					 from persona
 					 where id_persona = $ID 
 					   and estado = 1 
@@ -292,7 +300,11 @@ class CtrGeneral{
 	public function getPersonasxApellido($Apellido){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, apellido, nombre, documento, IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
+		$Consulta = "select id_persona, 
+							CONCAT(UPPER(SUBSTRING(apellido,1,1)),LOWER(SUBSTRING(apellido,2))) as apellido, 
+							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
+							documento, 
+							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
 					 from persona
 					 where apellido like '%$Apellido%' 
 					   and estado = 1 
@@ -312,7 +324,11 @@ class CtrGeneral{
 	public function getPersonasxNombre($Nombre){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, apellido, nombre, documento, IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
+		$Consulta = "select id_persona, 
+							CONCAT(UPPER(SUBSTRING(apellido,1,1)),LOWER(SUBSTRING(apellido,2))) as apellido, 
+							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
+							documento, 
+							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
 					 from persona
 					 where nombre like '%$Nombre%'
 					   and estado = 1 
@@ -333,7 +349,11 @@ class CtrGeneral{
 		$buscDNI = trim(str_replace(array('.'),'',$DNI));
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, apellido, nombre, documento, IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
+		$Consulta = "select id_persona, 
+							CONCAT(UPPER(SUBSTRING(apellido,1,1)),LOWER(SUBSTRING(apellido,2))) as apellido, 
+							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
+							documento, 
+							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
 					 from persona 
 					 where documento like '%$buscDNI%' 
 					   and estado = 1 
@@ -353,7 +373,11 @@ class CtrGeneral{
 	public function getPersonasxLegajo($Legajo){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, apellido, nombre, documento, IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
+		$Consulta = "select id_persona, 
+							CONCAT(UPPER(SUBSTRING(apellido,1,1)),LOWER(SUBSTRING(apellido,2))) as apellido, 
+							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
+							documento, 
+							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
 					 from persona 
 					 where nro_legajo like '%$Legajo%' 
 					   and estado = 1 
@@ -373,7 +397,11 @@ class CtrGeneral{
 	public function getPersonasxCarpeta($Carpeta){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, apellido, nombre, documento,IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
+		$Consulta = "select id_persona, 
+							CONCAT(UPPER(SUBSTRING(apellido,1,1)),LOWER(SUBSTRING(apellido,2))) as apellido, 
+							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
+							documento,
+							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
 					 from persona 
 					 where nro_carpeta = '$Carpeta' 
 					   and estado = 1 order by apellido, nombre";
@@ -393,7 +421,11 @@ class CtrGeneral{
 	public function getPersonasxDomicilio($Domicilio){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "SELECT id_persona, apellido, nombre, documento, IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo,domicilio 
+		$Consulta = "select id_persona, 
+					 		CONCAT(UPPER(SUBSTRING(apellido,1,1)),LOWER(SUBSTRING(apellido,2))) as apellido, 
+					 		CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
+					 		documento, 
+					 		IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo,domicilio 
 					 FROM persona 
 					 WHERE domicilio LIKE '%$Domicilio%' 
 					   AND estado = 1 
