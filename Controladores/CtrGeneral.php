@@ -251,7 +251,11 @@ class CtrGeneral{
 	public function getPersonas(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, apellido, nombre, documento, IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
+		$Consulta = "select id_persona, 
+					 CONCAT(UPPER(SUBSTRING(apellido,1,1)),LOWER(SUBSTRING(apellido,2))) as apellido, 
+					 CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
+					 documento, 
+					 IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
 					 from persona 
 					 where estado = 1 
 					 order by apellido, nombre";
@@ -272,7 +276,11 @@ class CtrGeneral{
 	public function getPersonasxID($ID){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, apellido, nombre, documento, IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
+		$Consulta = "select id_persona, 
+							CONCAT(UPPER(SUBSTRING(apellido,1,1)),LOWER(SUBSTRING(apellido,2))) as apellido, 
+							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
+							documento, 
+							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
 					 from persona
 					 where id_persona = $ID 
 					   and estado = 1 
@@ -292,7 +300,11 @@ class CtrGeneral{
 	public function getPersonasxApellido($Apellido){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, apellido, nombre, documento, IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
+		$Consulta = "select id_persona, 
+							CONCAT(UPPER(SUBSTRING(apellido,1,1)),LOWER(SUBSTRING(apellido,2))) as apellido, 
+							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
+							documento, 
+							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
 					 from persona
 					 where apellido like '%$Apellido%' 
 					   and estado = 1 
@@ -312,7 +324,11 @@ class CtrGeneral{
 	public function getPersonasxNombre($Nombre){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, apellido, nombre, documento, IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
+		$Consulta = "select id_persona, 
+							CONCAT(UPPER(SUBSTRING(apellido,1,1)),LOWER(SUBSTRING(apellido,2))) as apellido, 
+							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
+							documento, 
+							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
 					 from persona
 					 where nombre like '%$Nombre%'
 					   and estado = 1 
@@ -333,7 +349,11 @@ class CtrGeneral{
 		$buscDNI = trim(str_replace(array('.'),'',$DNI));
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, apellido, nombre, documento, IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
+		$Consulta = "select id_persona, 
+							CONCAT(UPPER(SUBSTRING(apellido,1,1)),LOWER(SUBSTRING(apellido,2))) as apellido, 
+							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
+							documento, 
+							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
 					 from persona 
 					 where documento like '%$buscDNI%' 
 					   and estado = 1 
@@ -353,7 +373,11 @@ class CtrGeneral{
 	public function getPersonasxLegajo($Legajo){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, apellido, nombre, documento, IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
+		$Consulta = "select id_persona, 
+							CONCAT(UPPER(SUBSTRING(apellido,1,1)),LOWER(SUBSTRING(apellido,2))) as apellido, 
+							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
+							documento, 
+							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
 					 from persona 
 					 where nro_legajo like '%$Legajo%' 
 					   and estado = 1 
@@ -373,7 +397,11 @@ class CtrGeneral{
 	public function getPersonasxCarpeta($Carpeta){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, apellido, nombre, documento,IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
+		$Consulta = "select id_persona, 
+							CONCAT(UPPER(SUBSTRING(apellido,1,1)),LOWER(SUBSTRING(apellido,2))) as apellido, 
+							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
+							documento,
+							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
 					 from persona 
 					 where nro_carpeta = '$Carpeta' 
 					   and estado = 1 order by apellido, nombre";
@@ -393,11 +421,15 @@ class CtrGeneral{
 	public function getPersonasxDomicilio($Domicilio){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "SELECT id_persona, apellido, nombre, documento, IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo,domicilio 
+		$Consulta = "select id_persona, 
+					 		CONCAT(UPPER(SUBSTRING(apellido,1,1)),LOWER(SUBSTRING(apellido,2))) as apellido, 
+					 		CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
+					 		documento, 
+					 		IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo,domicilio 
 					 FROM persona 
 					 WHERE domicilio LIKE '%$Domicilio%' 
 					   AND estado = 1 
-					 ORDER BY apellido";
+					 ORDER BY apellido, nombre";
 		$MessageError = "Problemas al intentar mostrar Personas por Domicilio";
 		$Table = "<table class='table'><thead><tr><th>Id</th><th>Apellido</th><th>Nombre</th><th>Documento</th></th><th>Nro. Legajo</th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -770,6 +802,56 @@ class CtrGeneral{
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Table .= "<tr><td>".$Ret["accountid"]."</td><td>".$Ret["lastname"]."</td><td>".$Ret["firstname"]."</td><td>".$Ret["username"]."</td><td>".$Ret["email"]."</td><td><a onClick='Verificar(".$Ret["accountid"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+		}
+		$Con->CloseConexion();
+		$Table .= "</table>";
+
+		return $Table;
+	}
+
+	////////////////////////////////////////////////-CALLES-///////////////////////////////////////////////////
+
+	public function getCalles(){
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "select ID_calle, calle_nombre from calle where estado = 1 order by calle_nombre";
+		$MessageError = "Problemas al intentar mostrar Calles";
+		$Table = "<table class='table'><thead><tr><th>Calle</th><th colspan='2'></th></tr></thead>";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
+			$Table .= "<tr><td>".$Ret["calle_nombre"]."</td><td><a href = 'view_modcalles.php?ID=".$Ret["ID_calle"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='Verificar(".$Ret["ID_calle"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+		}
+		$Con->CloseConexion();
+		$Table .= "</table>";
+
+		return $Table;
+	}
+
+	public function getCallesxID($ID){
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "select ID_calle, calle_nombre from calle where ID_Calle = $ID and estado = 1 order by calle_nombre";
+		$MessageError = "Problemas al intentar mostrar Calle por ID";
+		$Table = "<table class='table'><thead><tr><th>Calle</th><th colspan='2'></th></tr></thead>";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
+			$Table .= "<tr><td>".$Ret["calle_nombre"]."</td><td><a href = 'view_modcalles.php?ID=".$Ret["ID_Calle"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='Verificar(".$Ret["ID_Calle"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+		}
+		$Con->CloseConexion();
+		$Table .= "</table>";
+
+		return $Table;
+	}
+
+	public function getCallesxCalle_nombre($xCalle_nombre){
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "select ID_calle, calle_nombre from calle where calle_nombre like '%$xCalle_nombre%' and estado = 1 order by calle_nombre";
+		$MessageError = "Problemas al intentar mostrar Calles por Nombre";
+		$Table = "<table class='table'><thead><tr><th>Calles</th><th colspan='2'></th></tr></thead>";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
+			$Table .= "<tr><td>".$Ret["calle_nombre"]."</td><td><a href = 'view_modcalles.php?ID=".$Ret["ID_Calle"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='Verificar(".$Ret["ID_Calle"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
