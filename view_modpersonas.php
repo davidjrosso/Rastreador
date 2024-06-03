@@ -262,7 +262,7 @@ $Con->CloseConexion();
               $Trabajo = $Ret["Trabajo"];
 
 
-              $Persona = new Persona($ID_Persona,$Apellido,$Nombre,$DNI,$Nro_Legajo, $Edad,$Meses,$Fecha_Nacimiento,$Nro_Carpeta,$Obra_Social,$Domicilio,$Barrio,$Localidad,$Circunscripcion,$Seccion,$Manzana,$Lote,$Familia,$Observaciones,$Cambio_Domicilio,$Telefono,$Mail,$ID_Escuela,$Estado,$Trabajo);              
+              $Persona = new Persona($ID_Persona,$Apellido,$Nombre,$DNI,$Nro_Legajo, $Edad,$Meses,$Fecha_Nacimiento,$Nro_Carpeta,$Obra_Social,$Domicilio,$Barrio,$Localidad,$Circunscripcion,$Seccion,$Manzana,$Lote,$Familia,$Observaciones,$Cambio_Domicilio,$Telefono,$Mail,$ID_Escuela,$Estado,$Trabajo);
 
               $Con->CloseConexion();
               
@@ -297,7 +297,7 @@ $Con->CloseConexion();
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Fecha de Nacimiento: </label>
                   <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Fecha_Nacimiento" id="Fecha_Nacimiento" autocomplete="off" value = "<?php echo $Persona->getFecha_Nacimiento(); ?>" onFocusOut="calcularEdad()">
+                    <input type="text" class="form-control" name = "Fecha_Nacimiento" id="Fecha_Nacimiento" autocomplete="off" <?php if($Fecha_Nacimiento != "null") { echo "value = '".$Persona->getFecha_Nacimiento()."'";}; ?> onFocusOut="calcularEdad()">
                   </div>
                 </div>
                 <div class="form-group row">
@@ -321,7 +321,7 @@ $Con->CloseConexion();
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
                   <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Nro_Legajo" id="Nro_Legajo" autocomplete="off" value = "<?php echo $Persona->getNro_Legajo(); ?>">
+                    <input type="text" class="form-control" name = "Nro_Legajo" id="Nro_Legajo" autocomplete="off" <?php if($Nro_Legajo != "null") { echo "value = '". $Persona->getNro_Legajo()."'";}; ?>>
                   </div>
                 </div>
                 <div class="form-group row">
@@ -341,14 +341,20 @@ $Con->CloseConexion();
                 </div>
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Domicilio: </label>
-                  <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Domicilio" id="inputPassword" autocomplete="off" value = "<?php echo $Persona->getDomicilio(); ?>">
+                  <div class="col-md-8">
+                    <?php 
+                      $Element = new Elements();
+                      echo $Element->CBCallesNombre($Persona->getCalle());
+                    ?>
+                  </div>  
+                  <div class="col-md-2">
+                    <input type="number" class="form-control" name = "NumeroDeCalle" id="NumeroDeCalle" placeholder="Nro" min="1" autocomplete="off" <?php $NroCalle = $Persona->getNroCalle(); if ($NroCalle != null){ echo "value = '$NroCalle'";} ?>>
                   </div>
                 </div>               
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Manzana: </label>
                   <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Manzana" id="inputPassword" autocomplete="off" value = "<?php echo $Persona->getManzana(); ?>">
+                    <input type="text" class="form-control" name = "Manzana" id="inputPassword" autocomplete="off" <?php if($Manzana != "null") { echo "value = '". $Persona->getManzana()."'";}; ?>>
                   </div>
                 </div> 
                 <div class="form-group row">
