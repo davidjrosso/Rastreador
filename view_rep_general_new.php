@@ -274,9 +274,9 @@ $Con->CloseConexion();
 
     table thead tr th {
       background-color: #ccc;
-      position: sticky;
+      /*position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 100;*/
       display: block;
     }
 
@@ -321,8 +321,8 @@ $Con->CloseConexion();
     .table-fixeder thead {
       width: max-content;
       z-index: 2000;
-      position: sticky;
-      top: 0;
+      /*position: sticky;
+      top: 0;*/
       display: block;
     }
 
@@ -392,114 +392,114 @@ $Con->CloseConexion();
     /*/////////////////////////////////////////INTENDANDO SOLUCIONAR EL SCROLL HORIZONTAL DE LOS DATOS////////////////////////////////////////////////////*/
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
     #Contenido-1 {
-      position: sticky;
-      left: 0;
+      /*position: sticky;
+      left: 0;*/
       width: 150px;
-      z-index: 200;
+      /*z-index: 200;*/
       background-color: #FFF;
     }
 
     #Contenido-2 {
-      position: sticky;
-      left: 150px;
+      /*position: sticky;
+      left: 150px;*/
       width: 150px;
-      z-index: 200;
+      /*z-index: 200;*/
       background-color: #FFF;
     }
 
     #Contenido-3 {
-      position: sticky;
-      left: 300px;
+      /*position: sticky;
+      left: 300px;*/
       width: 150px;
       /* 50px  ACAAA */
-      z-index: 200;
+      /*z-index: 200;*/
       background-color: #FFF;
     }
 
     #Contenido-4 {
-      position: sticky;
-      left: 450px;
+      /*position: sticky;
+      left: 450px;*/
       /* 350px  ACAAA */
       width: 150px;
       /* 50px  ACAAA */
-      z-index: 200;
+      /*z-index: 200;*/
       background-color: #FFF;
     }
 
     #Contenido-5 {
-      position: sticky;
-      left: 400px;
+      /*position: sticky;
+      left: 400px;*/
       width: 60px;
-      z-index: 200;
+      /*z-index: 200;*/
       background-color: #FFF;
     }
 
     #Contenido-6 {
-      position: sticky;
-      left: 450px;
+      /*position: sticky;
+      left: 450px;*/
       width: 150px;
-      z-index: 200;
+      /*z-index: 200;*/
       background-color: #FFF;
     }
 
     #Contenido-7 {
-      position: sticky;
-      left: 600px;
+      /*position: sticky;
+      left: 600px;*/
       width: 150px;
-      z-index: 200;
+      /*z-index: 200;*/
       background-color: #FFF;
     }
 
     #Contenido-Titulo-1 {
-      position: sticky;
-      left: 0;
+      /*position: sticky;
+      left: 0;*/
       width: 150px;
-      z-index: 200;
+      /*z-index: 200;*/
     }
 
     #Contenido-Titulo-2 {
-      position: sticky;
-      left: 150px;
+      /*position: sticky;
+      left: 150px;*/
       width: 150px;
-      z-index: 200;
+      /*z-index: 200;*/
     }
 
     #Contenido-Titulo-3 {
-      position: sticky;
-      left: 300px;
+      /*position: sticky;
+      left: 300px;*/
       width: 150px;
       /* 50px  ACAAA */
-      z-index: 200;
+      /*z-index: 200;*/
     }
 
     #Contenido-Titulo-4 {
-      position: sticky;
-      left: 450px;
+      /*position: sticky;
+      left: 450px;*/
       /* 350px  ACAAA */
       width: 145px;
       /* 50px  ACAAA */
-      z-index: 200;
+      /*z-index: 200;*/
     }
 
     #Contenido-Titulo-5 {
-      position: sticky;
-      left: 400px;
+      /*position: sticky;
+      left: 400px;*/
       width: 70px;
-      z-index: 200;
+      /*z-index: 200;*/
     }
 
     #Contenido-Titulo-6 {
-      position: sticky;
-      left: 450px;
+      /*position: sticky;
+      left: 450px;*/
       width: 150px;
-      z-index: 200;
+      /*z-index: 200;*/
     }
 
     #Contenido-Titulo-7 {
-      position: sticky;
-      left: 600px;
+      /*position: sticky;
+      left: 600px;*/
       width: 150px;
-      z-index: 200;
+      /*z-index: 200;*/
     }
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
