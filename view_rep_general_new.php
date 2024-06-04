@@ -547,7 +547,13 @@ $Con->CloseConexion();
                            and B.ID_Barrio = P.ID_Barrio 
                            and M.id_centro = CS.id_centro 
                            and M.id_otrainstitucion = I.ID_OtraInstitucion 
-                           and M.id_resp = R.id_resp 
+                           and M.id_resp = R.id_resp
+                           and (MT.id_motivo = M.motivo_1
+                               or MT.id_motivo = M.motivo_2
+                               or MT.id_motivo = M.motivo_3
+                               or MT.id_motivo = M.motivo_4
+                               or MT.id_motivo = M.motivo_5)
+                           and MT.cod_categoria = C.cod_categoria
                            and M.estado = 1 
                            and P.estado = 1 
                            and MT.estado = 1 
@@ -583,7 +589,7 @@ $Con->CloseConexion();
 
             if ($Meses_Desde != null && $Meses_Desde != "" && $Meses_Hasta != null && $Meses_Hasta != "") {
               // $Consulta .= " and P.edad between $Edad_Desde and $Edad_Hasta";
-              $Consulta .= " and P.edad = 0 and P.meses > $Meses_Desde and P.meses < $Meses_Hasta";
+              $Consulta .= " and P.meses > $Meses_Desde and P.meses < $Meses_Hasta";
               $filtros[] = "Meses: Desde " . $Meses_Desde . " hasta " . $Meses_Hasta;
             }
 
@@ -1095,7 +1101,8 @@ $Con->CloseConexion();
                 }
 
                 if ($Meses_Desde != null && $Meses_Desde != "" && $Meses_Hasta != null && $Meses_Hasta != "") {
-                  $ConsultarTodos .= " and P.edad = 0 and P.meses > $Meses_Desde and P.meses < $Meses_Hasta";
+                  //$ConsultarTodos .= " and P.edad = 0 and P.meses > $Meses_Desde and P.meses < $Meses_Hasta";
+                  $Consulta .= " and P.meses > $Meses_Desde and P.meses < $Meses_Hasta";
                 }
 
                 if ($Domicilio != null && $Domicilio != "") {

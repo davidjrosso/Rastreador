@@ -27,12 +27,12 @@ while($RetDatosPersonas = mysqli_fetch_assoc($EjecutarConsultarDatosPersonas)){
 		}
 		$Edad = $ano_diferencia;
 	}
-			
+
 	if($Fecha_Nacimiento != 'null'){
 		$Fecha_Actual = new DateTime();
 		$Fecha_Nacimiento_Registrada = new DateTime($Fecha_Nacimiento);
 		$Diferencia = $Fecha_Nacimiento_Registrada->diff($Fecha_Actual);
-		$Meses = $Diferencia->m;
+		$Meses = ($Diferencia->y * 12) + $Diferencia->m + 1;
 	}
 
 	$ActualizarDatosPersonas = "update persona set edad = $Edad, meses = $Meses where id_persona = $ID";
