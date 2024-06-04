@@ -10,7 +10,7 @@ $ConsultarDatosPersonas = "select *
 						   where edad is not null
 						   and edad <> 'null' 
 						   and fecha_nac is not null
-						   or fecha_nac <> 'null'
+						   and fecha_nac <> 'null'
 						   and estado = 1";
 $MensajeErrorDatosPersonas = "No se pudieron consultar los datos de las personas registradas en el sistema";
 $EjecutarConsultarDatosPersonas = mysqli_query($Con->Conexion,$ConsultarDatosPersonas) or die($MensajeErrorDatosPersonas);
