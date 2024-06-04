@@ -67,8 +67,10 @@ $Con->CloseConexion();
 
     function mostrar() {
 
+      $("#expandir").removeAttr("style");
       document.getElementById("expandir").hidden = true;
       document.getElementById("ContenidoMenu").hidden = false;
+      $("#ContenerdorPrincipal").removeAttr("style");
 
       var ContenidoMenu = document.getElementById("ContenidoMenu");
       ContenidoMenu.setAttribute("class", "col-md-2");
@@ -76,6 +78,7 @@ $Con->CloseConexion();
 
       var ContenidoTabla = document.getElementById("ContenidoTabla");
       ContenidoTabla.setAttribute("class", "col-md-10");
+
       document.getElementById("abrir").style.display = "none";
       document.getElementById("cerrar").style.display = "inline";
     }
@@ -83,7 +86,7 @@ $Con->CloseConexion();
     function ocultar() {
       document.getElementById("expandir").hidden = false;
       document.getElementById("ContenidoMenu").hidden = true;
-
+      $("#ContenerdorPrincipal").attr("style","margin-left:5px;");
       // var ContenidoMenu = document.getElementById("ContenidoMenu");
       // ContenidoMenu.setAttribute("class","col-md-1");
       // document.getElementById("sidebar").style.width = "3%"; //5
@@ -93,7 +96,9 @@ $Con->CloseConexion();
       var ContenidoTabla = document.getElementById("ContenidoTabla");
       ContenidoTabla.setAttribute("class", "col-md-12");
 
-      document.getElementById("abrir").style.display = "inline";
+      $("#expandir").attr("style","padding-left:1px");
+      $("#abrir").attr("style","display:inline;");
+      //document.getElementById("abrir").style.display = "inline";
       document.getElementById("cerrar").style.display = "none";
     }
 
@@ -504,7 +509,7 @@ $Con->CloseConexion();
 </head>
 
 <body>
-  <div class="row">
+  <div id="ContenerdorPrincipal" class="row">
     <?php
     if ($TipoUsuario == 1) {
       ?>
