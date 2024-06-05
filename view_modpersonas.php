@@ -341,16 +341,10 @@ $Con->CloseConexion();
                 </div>
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Domicilio: </label>
-                  <div class="col-md-8">
-                    <?php 
-                      $Element = new Elements();
-                      echo $Element->CBCallesNombre($Persona->getCalle());
-                    ?>
-                  </div>  
-                  <div class="col-md-2">
-                    <input type="number" class="form-control" name = "NumeroDeCalle" id="NumeroDeCalle" placeholder="Nro" min="1" autocomplete="off" <?php $NroCalle = $Persona->getNroCalle(); if ($NroCalle != null){ echo "value = '$NroCalle'";} ?>>
+                  <div class="col-md-10">
+                    <input type="text" class="form-control" name = "Domicilio" id="inputPassword" autocomplete="off" <?php if($Domicilio != "null") { echo "value = '". $Persona->getDomicilio()."'"; };?>>
                   </div>
-                </div>               
+                </div>                
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Manzana: </label>
                   <div class="col-md-10">
