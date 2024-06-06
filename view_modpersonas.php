@@ -35,7 +35,8 @@ $Con->CloseConexion();
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
-  <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  <!--<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>-->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.0.0.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
   <script src="js/bootstrap-datepicker.min.js"></script> <!-- ESTO ES NECESARIO PARA QUE ANDE EN ESPAÑOL -->
@@ -50,7 +51,7 @@ $Con->CloseConexion();
                   container: container,
                   todayHighlight: true,
                   autoclose: true,
-                  closeText: 'Cerrar', /* HASTA ACA */
+                  closeText: 'Cerrar',
                   days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
                   daysShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
                   daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
@@ -59,36 +60,41 @@ $Con->CloseConexion();
                   today: "Hoy",
                   monthsTitle: "Meses",
                   clear: "Borrar",
-                  weekStart: 1,
-              });
+                  weekStart: 1
+              }).on('changeDate', calcularEdad);
+          });
 
-          }); 
+        function calcularEdad(){
+          var Fecha_Nac = document.getElementById("Fecha_Nacimiento").value;
+          console.log(Fecha_Nac);
+          var Fecha = Fecha_Nac.split('/').reverse().join('-');
+          console.log(Fecha);
+          var hoy = new Date();
+          console.log(hoy);
+          var cumpleanos = new Date(Fecha);
+          console.log(cumpleanos);
+          var edad = hoy.getFullYear() - cumpleanos.getFullYear();
+          var m = hoy.getMonth() - cumpleanos.getMonth();
+          console.log(edad);
+          console.log(m);
+          if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+              edad--;
+          }
 
-          function calcularEdad(){
-          	var Fecha_Nac = document.getElementById("Fecha_Nacimiento").value;
-          	var Fecha = Fecha_Nac.split('/').reverse().join('-');
-          	var hoy = new Date();
-          	var cumpleanos = new Date(Fecha);
-		    var edad = hoy.getFullYear() - cumpleanos.getFullYear();
-		    var m = hoy.getMonth() - cumpleanos.getMonth();
+          var Anios = document.getElementById("Edad");
+          console.log(Anios);
+          Anios.value = edad;
 
-		    if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
-		        edad--;
-		    }
-
-		    var Anios = document.getElementById("Edad");
-		    Anios.value = edad;
-
-		    var CalcMeses = 0;
-		    if(m<0){
-		    	CalcMeses = (12 + m);
-		    }else{
-		    	CalcMeses = m;
-		    }
-		    
-		    var Meses = document.getElementById("Meses");
-		    Meses.value = CalcMeses;		    
-          }      
+          var CalcMeses = 0;
+          if(m<0){
+            CalcMeses = (12 + m);
+          }else{
+            CalcMeses = m;
+          }
+          
+          var Meses = document.getElementById("Meses");
+          Meses.value = edad*12 + CalcMeses;		    
+        }      
   </script>
 
 </head>
@@ -297,7 +303,7 @@ $Con->CloseConexion();
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Fecha de Nacimiento: </label>
                   <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Fecha_Nacimiento" id="Fecha_Nacimiento" autocomplete="off" <?php if($Fecha_Nacimiento != "null") { echo "value = '".$Persona->getFecha_Nacimiento()."'";}; ?> onFocusOut="calcularEdad()">
+                    <input type="text" class="form-control" name = "Fecha_Nacimiento" id="Fecha_Nacimiento" autocomplete="off" <?php if($Fecha_Nacimiento != "null") { echo "value = '".$Persona->getFecha_Nacimiento()."'";}; ?>>
                   </div>
                 </div>
                 <div class="form-group row">
@@ -341,16 +347,10 @@ $Con->CloseConexion();
                 </div>
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Domicilio: </label>
-                  <div class="col-md-8">
-                    <?php 
-                      $Element = new Elements();
-                      echo $Element->CBCallesNombre($Persona->getCalle());
-                    ?>
-                  </div>  
-                  <div class="col-md-2">
-                    <input type="number" class="form-control" name = "NumeroDeCalle" id="NumeroDeCalle" placeholder="Nro" min="1" autocomplete="off" <?php $NroCalle = $Persona->getNroCalle(); if ($NroCalle != null){ echo "value = '$NroCalle'";} ?>>
+                  <div class="col-md-10">
+                    <input type="text" class="form-control" name = "Domicilio" id="inputPassword" autocomplete="off" <?php if($Domicilio != "null") { echo "value = '". $Persona->getDomicilio()."'"; };?>>
                   </div>
-                </div>               
+                </div>                
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Manzana: </label>
                   <div class="col-md-10">
