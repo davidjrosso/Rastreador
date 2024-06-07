@@ -199,7 +199,7 @@ $Con->CloseConexion();
             }
             //$("#BarraDeNavHTabla").attr("value", columnaIndice);
             document.getElementById("BarraDeNavHTabla").value = columnaIndice;
-        } else if (e.which == 38) {
+        } /*else if (e.which == 38) {
             // Up Arrow
             filaABorrar = $('tbody tr:nth-child('+filaIndice+')');
             if(filaIndice > 2){
@@ -225,7 +225,7 @@ $Con->CloseConexion();
             tabla.scrollTop(0);
             //$("#BarraDeNavVTabla").attr("value", filaIndice);
             document.getElementById("BarraDeNavVTabla").value = filaIndice;
-        }
+        }*/
         tabla.scrollLeft(0);
     }
 
