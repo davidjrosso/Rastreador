@@ -274,9 +274,9 @@ $Con->CloseConexion();
 
     table thead tr th {
       background-color: #ccc;
-      /*position: sticky;
+      position: sticky;
       top: 0;
-      z-index: 100;*/
+      z-index: 100;
       display: block;
     }
 
@@ -303,7 +303,7 @@ $Con->CloseConexion();
     .table-responsive {
       height: 480px;
       width: 98%;
-      overflow-y: hidden;
+      /*overflow-y: hidden;*/
       overflow-x: hidden;
       position: absolute;
     }
@@ -321,8 +321,8 @@ $Con->CloseConexion();
     .table-fixeder thead {
       width: max-content;
       z-index: 2000;
-      /*position: sticky;
-      top: 0;*/
+      position: sticky;
+      top: 0;
       display: block;
     }
 
@@ -451,55 +451,55 @@ $Con->CloseConexion();
     }
 
     #Contenido-Titulo-1 {
-      /*position: sticky;
-      left: 0;*/
+      position: sticky;
+      z-index: 200;
+      left: 0;
       width: 150px;
-      /*z-index: 200;*/
     }
 
     #Contenido-Titulo-2 {
-      /*position: sticky;
-      left: 150px;*/
+      position: sticky;
+      z-index: 200;
+      left: 150px;
       width: 150px;
-      /*z-index: 200;*/
     }
 
     #Contenido-Titulo-3 {
-      /*position: sticky;
-      left: 300px;*/
+      position: sticky;
+      left: 300px;
+      z-index: 200;
       width: 150px;
       /* 50px  ACAAA */
-      /*z-index: 200;*/
     }
 
     #Contenido-Titulo-4 {
-      /*position: sticky;
-      left: 450px;*/
+      position: sticky;
+      left: 450px;
+      z-index: 200;
       /* 350px  ACAAA */
       width: 145px;
       /* 50px  ACAAA */
-      /*z-index: 200;*/
     }
 
     #Contenido-Titulo-5 {
-      /*position: sticky;
-      left: 400px;*/
+      position: sticky;
+      left: 400px;
+      z-index: 200;
       width: 70px;
-      /*z-index: 200;*/
     }
 
     #Contenido-Titulo-6 {
-      /*position: sticky;
-      left: 450px;*/
+      position: sticky;
+      left: 450px;
+      z-index: 200;
       width: 150px;
-      /*z-index: 200;*/
     }
 
     #Contenido-Titulo-7 {
-      /*position: sticky;
-      left: 600px;*/
+      position: sticky;
+      z-index: 200;
+      left: 600px;
       width: 150px;
-      /*z-index: 200;*/
     }
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -2225,7 +2225,7 @@ $Con->CloseConexion();
       </div>
     </div>
     <input type="range" class="fixed-bottom form-range" step="1" value="5" min="5" id="BarraDeNavHTabla">
-    <input type="range" class="fixed-bottom form-range" step="1" value="1" min="1" id="BarraDeNavVTabla">
+    <!--<input type="range" class="fixed-bottom form-range" step="1" value="1" min="1" id="BarraDeNavVTabla">-->
 
     <script>
       (function () {
@@ -2427,7 +2427,7 @@ $Con->CloseConexion();
             //link.click();
           },
           error: function (e) {
-            var errorJsonString = JSON.stringify(e)
+            var errorJsonString = JSON.stringify(e);
             console.log(errorJsonString);
             var error = JSON.parse(errorJsonString);
             console.log(error);
