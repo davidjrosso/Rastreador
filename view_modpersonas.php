@@ -66,23 +66,16 @@ $Con->CloseConexion();
 
         function calcularEdad(){
           var Fecha_Nac = document.getElementById("Fecha_Nacimiento").value;
-          console.log(Fecha_Nac);
           var Fecha = Fecha_Nac.split('/').reverse().join('-');
-          console.log(Fecha);
           var hoy = new Date();
-          console.log(hoy);
           var cumpleanos = new Date(Fecha);
-          console.log(cumpleanos);
           var edad = hoy.getFullYear() - cumpleanos.getFullYear();
           var m = hoy.getMonth() - cumpleanos.getMonth();
-          console.log(edad);
-          console.log(m);
           if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
               edad--;
           }
 
           var Anios = document.getElementById("Edad");
-          console.log(Anios);
           Anios.value = edad;
 
           var CalcMeses = 0;
