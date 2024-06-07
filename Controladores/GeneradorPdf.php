@@ -10,7 +10,7 @@ try{
     //$dompdf = new Dompdf($options);
 
     $dompdf = new Dompdf();
-    $dompdf->loadHtml($tabla);
+    $dompdf->loadHtml(mb_convert_encoding($tabla, 'HTML-ENTITIES', 'UTF-8'));
     $dompdf->setPaper('A4', 'landscape');
     $dompdf->render();
     $output = $dompdf->output();
