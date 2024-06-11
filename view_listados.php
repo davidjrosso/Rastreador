@@ -1008,7 +1008,7 @@ $datosNav = $_SESSION["datosNav"];
                 <div class="col-4">
                   <select class="input-group mb-3" name="formatConfig" id="formatConfig" onchange="cambiarConfig()">
                     <option value="grid">Grilla</option>
-                    <option value="table">Tabla</option>
+                    <option value="table" selected>Tabla</option>
                   </select>
                 </div>
               </div>              
