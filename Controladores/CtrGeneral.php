@@ -1375,5 +1375,49 @@ class CtrGeneral{
 		return $ret;
 	}
 
-
+	public function getMes($mes){
+		 
+		switch($mes){
+			case "January": 
+				$mesColumna = "Enero";
+			break;
+			case "February": 
+				$mesColumna = "Febrero";
+			break;
+			case "March": 
+				$mesColumna ="Marzo";
+			break;
+			case "April": 
+				$mesColumna ="Abril";
+			break;
+			case "May": 
+				$mesColumna ="Mayo";
+			break;
+			case "June": 
+				$mesColumna ="Junio";
+			break;
+			case "July":
+				$mesColumna ="Julio";
+			break;
+			case "August":
+				$mesColumna ="Agosto";
+			break;
+			case "September":
+				$mesColumna ="Septiembre";
+			break;
+			case "October":
+				$mesColumna ="Octubre";
+				break;
+			case "November":
+				$mesColumna ="Noviembre";
+				break;
+			case "December":
+				$mesColumna ="Diciembre";
+				break;
+			default: 
+				$mesColumna ="Error";
+			break;
+		}
+		return $mesColumna;
+	}
 }
