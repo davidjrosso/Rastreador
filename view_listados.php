@@ -496,11 +496,14 @@ $datosNav = $_SESSION["datosNav"];
                     <input type="text" name="Fecha_Hasta" id = "Fecha_Hasta" class="form-control" autocomplete="off" value = "<?= (isset($datosNav["Fecha_Hasta"])) ? $datosNav["Fecha_Hasta"] : implode("/", array_reverse(explode("-",date('Y-m-d')))) ?>">
                 </div>
             </div>
-            <div class="form-group row">
+            <div class="form-group row" style="margin-bottom: 0.6rem;">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Persona: </label>
               <div class="col-md-10" id = "Persona">
               	 	<button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalPersona">Seleccione una Persona</button>                  
               </div>
+            </div>
+            <div class="row LblForm col-md-2" style="margin-bottom: 1.04%; font-size: 1.031rem">
+              Edad <br>
             </div>
             <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Desde (Edad): </label>
@@ -519,13 +522,13 @@ $datosNav = $_SESSION["datosNav"];
                   </div>
             </div> 
             <div class="form-group row">
-                <label for="inputPassword" class="col-md-2 col-form-label LblForm">Hasta (Edad): </label>
+                <label for="inputPassword" class="col-md-2 col-form-label LblForm">Hasta (Años): </label>
                 <div class="col-md-10">
                     <input type="number" name="Edad_Hasta" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarMeses(this)" value="<?= (isset($datosNav["Edad_Hasta"])) ? $datosNav["Edad_Hasta"] : '' ?>">
                 </div>
             </div> 
             <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Desde (Meses): </label>
+                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Desde (Años): </label>
                   <div class="col-md-10">
                       <input type="number" name="Meses_Desde" id="Meses_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarEdad(this)" value="<?= (isset($datosNav["Meses_Desde"])) ? $datosNav["Meses_Desde"] : '' ?>">
                   </div>
