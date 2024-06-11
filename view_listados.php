@@ -506,7 +506,7 @@ $datosNav = $_SESSION["datosNav"];
               Edad <br>
             </div>
             <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Desde (Edad): </label>
+                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Desde (Años): </label>
                   <div class="col-md-10">
                       <input type="number" name="Edad_Desde" id="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarMeses(this)" value="<?= (isset($datosNav["Edad_Desde"])) ? $datosNav["Edad_Desde"] : '' ?>">                      
                       <input type="hidden" name="ID_Persona" id = "ID_Persona" value = "0">
