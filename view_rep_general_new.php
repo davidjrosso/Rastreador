@@ -1083,7 +1083,7 @@ $Con->CloseConexion();
 
             <!--<button type="button" class="btn btn-secondary" onclick="enviarImprimir()">**Imprimir</button>-->
 
-            <button type="button" class="btn btn-secondary" onclick="enviarImprimirPdf();"> Imprimir</button>
+            <!--<button type="button" class="btn btn-secondary" onclick="enviarImprimirPdf();"> Imprimir</button>-->
 
           </div>
 
@@ -1886,7 +1886,7 @@ $Con->CloseConexion();
                                         </a>
                                        </div>";
                             $Table_imprimir .= "<div class = 'col-md-1'>
-                                                    <span style='font-size: 10px; color: " . $RetMotivo["color"] . ";'>" . 
+                                                    <span style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 10px; color: " . $RetMotivo["color"] . ";'>" . 
                                                       $RetMotivo["Forma_Categoria"] . 
                                                       "<center>
                                                         <span class='nombreCategoria'>" . $RetMotivo["codigo"] . "
@@ -1911,7 +1911,7 @@ $Con->CloseConexion();
             
                             $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo["color"] . ";'>" . $RetMotivo["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo["codigo"] . "</span></center></span></a></div>";
                             $Table_imprimir .= "<div class = 'col-md-1'>
-                                                  <span style='font-size: 10px; color: " . $RetMotivo["color"] . ";'>
+                                                  <span style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 10px; color: " . $RetMotivo["color"] . ";'>
                                                   " . $RetMotivo["Forma_Categoria"] . "
                                                     <center>
                                                       <span class='nombreCategoria'>
@@ -1936,7 +1936,7 @@ $Con->CloseConexion();
                             // echo "DEBUG: ".var_dump($RetMotivo);
             
                             $Table .= "<div class = 'col-md-1'><span style='font-size: 30px; color: " . $RetMotivo["color"] . ";'>" . $RetMotivo["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo["codigo"] . "</span></center></span></div>";
-                            $Table_imprimir .= "<div class = 'col-md-1'><span style='font-family: DejaVu Sans; font-size:  10px; color: " . $RetMotivo["color"] . "; '>" . $RetMotivo["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo["codigo"] . "</span></center></span></div>";
+                            $Table_imprimir .= "<div class = 'col-md-1'><span style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  10px; color: " . $RetMotivo["color"] . "; '>" . $RetMotivo["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo["codigo"] . "</span></center></span></div>";
                           }
                         }
                         if ($ID_Motivo == 0 && $ID_Motivo2 == 0 && $ID_Motivo3 == 0) {
@@ -1958,7 +1958,7 @@ $Con->CloseConexion();
                           $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
 
                           $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; padding: 0px; color: " . $RetMotivo["color"] . ";'>" . $RetMotivo["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo["codigo"] . "</span></center></span></a></div>";
-                          $Table_imprimir .= "<div class = 'col-md-1'><span style='font-family: DejaVu Sans; font-size: 10px; padding: 0px; color: " . $RetMotivo["color"] . ";'>" . $RetMotivo["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo["codigo"] . "</span></center></span></div>";
+                          $Table_imprimir .= "<div class = 'col-md-1'><span style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 10px; padding: 0px; color: " . $RetMotivo["color"] . ";'>" . $RetMotivo["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo["codigo"] . "</span></center></span></div>";
                         }
                       }
 
@@ -1974,7 +1974,7 @@ $Con->CloseConexion();
                             $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
 
                             $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; padding: 0px; color: " . $RetMotivo2["color"] . ";'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo2["codigo"] . "</span></center></span></a></div>";
-                            $Table_imprimir .=  "<div class = 'col-md-1'><span style='font-family: DejaVu Sans;font-size: 10px; padding: 0px; color: " . $RetMotivo2["color"] . ";'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo2["codigo"] . "</span></center></span></div>";
+                            $Table_imprimir .=  "<div class = 'col-md-1'><span style='font-family: DejaVu Sans, Noto Sans Symbols 2;font-size: 10px; padding: 0px; color: " . $RetMotivo2["color"] . ";'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo2["codigo"] . "</span></center></span></div>";
                           }
                         }
                         if ($ID_Motivo2 > 0) {
@@ -1988,7 +1988,7 @@ $Con->CloseConexion();
                             $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
 
                             $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo2["color"] . ";'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo2["codigo"] . "</span></center></span></a></div>";
-                            $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans; font-size:  10px;  color: " . $RetMotivo2["color"] . ";'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo2["codigo"] . "</span></center></span></div>";
+                            $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  10px;  color: " . $RetMotivo2["color"] . ";'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo2["codigo"] . "</span></center></span></div>";
                           }
                         }
                         if ($ID_Motivo3 > 0) {
@@ -2002,7 +2002,7 @@ $Con->CloseConexion();
                             $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
 
                             $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo2["color"] . ";'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo2["codigo"] . "</span></center></span></a></div>";
-                            $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans; font-size:  10px;  color: " . $RetMotivo2["color"] . ";'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo2["codigo"] . "</span></center></span></div>";
+                            $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  10px;  color: " . $RetMotivo2["color"] . ";'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo2["codigo"] . "</span></center></span></div>";
                           }
                         }
                         if ($ID_Motivo == 0 && $ID_Motivo2 == 0 && $ID_Motivo3 == 0) {
@@ -2017,7 +2017,7 @@ $Con->CloseConexion();
 
 
                           $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo2["color"] . "; text-align= center;'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo2["codigo"] . "</span></center></span></a></div>";
-                          $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans; font-size:  10px;  color: " . $RetMotivo2["color"] . "; text-align= center;'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo2["codigo"] . "</span></center></span></div>";
+                          $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  10px;  color: " . $RetMotivo2["color"] . "; text-align= center;'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo2["codigo"] . "</span></center></span></div>";
                         }
                       }
 
@@ -2034,7 +2034,7 @@ $Con->CloseConexion();
                             $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
 
                             $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo3["codigo"] . "</span></center></span></a></div>";
-                            $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans; font-size:  10px;  color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo3["codigo"] . "</span></center></span></div>";
+                            $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  10px;  color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo3["codigo"] . "</span></center></span></div>";
                           }
                         }
                         if ($ID_Motivo2 > 0) {
@@ -2049,7 +2049,7 @@ $Con->CloseConexion();
                             $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
 
                             $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo3["codigo"] . "</span></center></span></a></div>";
-                            $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans; font-size:  10px;  color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo3["codigo"] . "</span></center></span></div>";
+                            $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  10px;  color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo3["codigo"] . "</span></center></span></div>";
                           }
                         }
                         if ($ID_Motivo3 > 0) {
@@ -2064,7 +2064,7 @@ $Con->CloseConexion();
                             $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
 
                             $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo3["codigo"] . "</span></center></span></a></div>";
-                            $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans; font-size:  10px;  color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo3["codigo"] . "</span></center></span></div>";
+                            $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  10px;  color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo3["codigo"] . "</span></center></span></div>";
                           }
                         }
                         if ($ID_Motivo == 0 && $ID_Motivo2 == 0 && $ID_Motivo3 == 0) {
@@ -2078,7 +2078,7 @@ $Con->CloseConexion();
 
 
                           $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo3["codigo"] . "</span></center></span></a></div>";
-                          $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans; font-size:  10px;  color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo3["codigo"] . "</span></center></span></div>";
+                          $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  10px;  color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo3["codigo"] . "</span></center></span></div>";
                         }
                       }
                       ////////////////////////////////////////////////////////////////                                             
@@ -2135,14 +2135,11 @@ $Con->CloseConexion();
                                       .table_pdf {
                                         width: 100%;
                                       }
-                                      
-                                      /*p:before{
-                                        content:'\0022';
-                                      }*/
 
                                       table thead tr th {
                                         background-color: #ccc;
                                       }
+
                                       h5, h2{
                                         text-align: center;
                                         margin-bottom: 0px
@@ -2195,10 +2192,10 @@ $Con->CloseConexion();
                 //setlocale(LC_ALL, "es_ES");
                 //bindtextdomain("messages", "locale");
                 //textdomain("messages");
+                $DTGeneral = new CtrGeneral();
                 for ($i = 12; $i >= 1; $i--) {
                   $dateObj   = DateTime::createFromFormat('!m', $i);
-                  $monthName = gettext($dateObj->format('F'));
-                  //echo var_dump(gettext($dateObj->format('F')));
+                  $monthName = $DTGeneral->getMes(gettext($dateObj->format('F')));
                   $Table_imprimir = preg_replace( "~".$i."/[0-2][0-9]~" ,$monthName ,$Table_imprimir);
                 }
 
