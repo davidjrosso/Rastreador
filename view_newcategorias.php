@@ -253,7 +253,7 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Categoría *: </label>
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Denominación *: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Categoria" id="Categoria" autocomplete="off">
               </div>
