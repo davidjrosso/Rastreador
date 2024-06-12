@@ -300,7 +300,7 @@ $datosNav = $_SESSION["datosNav"];
     function cambiarConfig(){
       var ID_Config = document.getElementById('ID_Config');
       var formatConfig = document.getElementById('formatConfig');
-      ID_Config.value = formatConfig.value;      
+      ID_Config.value = formatConfig.value;
     }
 
     function disabledMeses(xBool){
@@ -704,7 +704,7 @@ $datosNav = $_SESSION["datosNav"];
                 <input type="hidden" name="ID_Motivo2" id = "ID_Motivo2" value = "0">
                 <input type="hidden" name="ID_Motivo3" id = "ID_Motivo3" value = "0">
                 <input type="hidden" name="ID_Categoria" id = "ID_Categoria" value = "0">
-                <input type="hidden" name="ID_Config" id="ID_Config" value="grid">
+                <input type="hidden" name="ID_Config" id="ID_Config" value="table">
                 <button type="submit" class="btn btn-outline-success">Aceptar</button>
                 <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
               </div>
