@@ -300,7 +300,7 @@ $Con->CloseConexion();
               if($Persona->getEdad() == 2020){
               	$Table .= "<tr><td>Edad</td><td>No se cargo fecha de nacimiento</td></tr>";
               }else{
-              	$Table .= "<tr><td>Edad</td><td>".$Persona->getEdad()."</td></tr>";
+              	$Table .= "<tr><td>Años</td><td>".$Persona->getEdad()."</td></tr>";
               }              
               $Table .= "<tr><td>Meses</td><td>".(($Meses!="null")? $Persona->getMeses():"")."</td></tr>";            
               $Table .= "<tr><td>Nro. Carpeta</td><td>".(($Nro_Carpeta!="null")?$Persona->getNro_Carpeta():"")."</td></tr>";               
