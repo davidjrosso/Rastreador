@@ -538,6 +538,26 @@ $datosNav = $_SESSION["datosNav"];
                 <div class="col-md-10">
                     <input type="number" name="Meses_Hasta" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarEdad(this)" value="<?= (isset($datosNav["Meses_Hasta"])) ? $datosNav["Meses_Hasta"] : '' ?>">
                 </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Barrio: </label>
+              <div class="col-md-9">
+                <?php  
+                $Element = new Elements();
+
+                if(isset($datosNav["ID_Barrio"])){
+                  echo $Element->CBModBarrios($datosNav["ID_Barrio"]);
+                }else{
+                  echo $Element->CBRepBarrios();
+                }            
+
+                ?>
+              </div>
+              <div class="col-md-1">
+                  <button type="button" class="btn btn-primary" onClick="agregarBarrio()" id="agregarBarrioID">+</button>
+              </div>
+            </div>
+            <div id="contenedorBarrios">              
             </div> 
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Domicilio/Familia: </label>
@@ -563,59 +583,17 @@ $datosNav = $_SESSION["datosNav"];
                 <input type="number" class="form-control" name = "Familia" id="inputPassword" autocomplete="off" value="<?= (isset($datosNav["Familia"])) ? $datosNav["Familia"] : '' ?>">
               </div>
             </div>
-            <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Barrio: </label>
-              <div class="col-md-9">
-                <?php  
-                $Element = new Elements();
 
-                if(isset($datosNav["ID_Barrio"])){
-                  echo $Element->CBModBarrios($datosNav["ID_Barrio"]);
-                }else{
-                  echo $Element->CBRepBarrios();
-                }            
-
-                ?>
-              </div>
-              <div class="col-md-1">
-                  <button type="button" class="btn btn-primary" onClick="agregarBarrio()" id="agregarBarrioID">+</button>
-              </div>
-            </div>
-            <div id="contenedorBarrios">              
-            </div>
-
-            <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
-              <div class="col-md-10">
-                <input type="text" class="form-control" name = "Nro_Carpeta" id="Nro_Carpeta" autocomplete="off" value="<?= (isset($datosNav["Nro_Carpeta"])) ? $datosNav["Nro_Carpeta"] : '' ?>">
-              </div>
-            </div>
-            <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
-              <div class="col-md-10">
-                <input type="text" class="form-control" name = "Nro_Legajo" id="Nro_Legajo" autocomplete="off" value="<?= (isset($datosNav["Nro_Legajo"])) ? $datosNav["Nro_Legajo"] : '' ?>">
-              </div>
-            </div>
-            
-            <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Escuela: </label>
-              <div class="col-md-10">
-                <?php  
-                $Element = new Elements();
-
-                if(isset($datosNav["ID_Escuela"])){
-                  echo $Element->CBModEscuelas($datosNav["ID_Escuela"]);
-                }else{
-                  echo $Element->CBRepEscuelas();
-                }
-                ?>
-              </div>
-            </div>
-          
-            <div class="form-group row">
+            <!--<div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Trabajo: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Trabajo" id="inputPassword" autocomplete="off" value="<?= (isset($datosNav["Trabajo"])) ? $datosNav["Trabajo"] : '' ?>">
+              </div>
+            </div>-->
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Categoría: </label>
+              <div class="col-md-10" id = "Categoria">
+                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalCategoria">Seleccione una Categoria</button>  
               </div>
             </div>
             <div class="form-group row">
@@ -642,12 +620,6 @@ $datosNav = $_SESSION["datosNav"];
             <div id="contenedorMotivos">              
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Categoría: </label>
-              <div class="col-md-10" id = "Categoria">
-                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalCategoria">Seleccione una Categoria</button>  
-              </div>
-            </div>
-            <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Centro Salud: </label>
               <div class="col-md-10">
                 <?php  
@@ -662,6 +634,19 @@ $datosNav = $_SESSION["datosNav"];
               </div>
             </div>
             <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" name = "Nro_Carpeta" id="Nro_Carpeta" autocomplete="off" value="<?= (isset($datosNav["Nro_Carpeta"])) ? $datosNav["Nro_Carpeta"] : '' ;?>">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" name = "Nro_Legajo" id="Nro_Legajo" autocomplete="off" value="<?= (isset($datosNav["Nro_Legajo"])) ? $datosNav["Nro_Legajo"] : '' ;?>">
+              </div>
+            </div>
+            
+            <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Otras Instituciones: </label>
               <div class="col-md-10">
                 <?php  
@@ -671,6 +656,20 @@ $datosNav = $_SESSION["datosNav"];
                   echo $Element->CBRepModOtrasInstituciones($datosNav["ID_OtraInstitucion"]);
                 }else{
                   echo $Element->CBRepOtrasInstituciones();
+                }
+                ?>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Escuela: </label>
+              <div class="col-md-10">
+                <?php  
+                $Element = new Elements();
+
+                if(isset($datosNav["ID_Escuela"])){
+                  echo $Element->CBModEscuelas($datosNav["ID_Escuela"]);
+                }else{
+                  echo $Element->CBRepEscuelas();
                 }
                 ?>
               </div>
