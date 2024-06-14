@@ -605,6 +605,20 @@ $Con->CloseConexion();
                 </div>
             </div> 
             <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Barrio: </label>
+              <div class="col-md-9">
+                <?php  
+                $Element = new Elements();
+                echo $Element->CBRepBarrios();
+                ?>
+              </div>
+              <div class="col-md-1">
+                  <button type="button" class="btn btn-primary" onClick="agregarBarrio()" id="agregarBarrioID">+</button>
+              </div>
+            </div>
+            <div id="contenedorBarrios">              
+            </div>
+            <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Domicilio/Familia: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Domicilio" id="Domicilio" autocomplete="off">
@@ -646,44 +660,15 @@ $Con->CloseConexion();
 
 <!-- ################################################################################ -->
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Barrio: </label>
-              <div class="col-md-9">
-                <?php  
-                $Element = new Elements();
-                echo $Element->CBRepBarrios();
-                ?>
-              </div>
-              <div class="col-md-1">
-                  <button type="button" class="btn btn-primary" onClick="agregarBarrio()" id="agregarBarrioID">+</button>
-              </div>
-            </div>
-            <div id="contenedorBarrios">              
-            </div>
-            <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
-              <div class="col-md-10">
-                <input type="text" class="form-control" name = "Nro_Carpeta" id="Nro_Carpeta" autocomplete="off">
-              </div>
-            </div>
-            <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
-              <div class="col-md-10">
-                <input type="text" class="form-control" name = "Nro_Legajo" id="Nro_Legajo" autocomplete="off">
-              </div>
-            </div>
-            <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Escuela: </label>
-              <div class="col-md-10">
-                <?php  
-                $Element = new Elements();
-                echo $Element->CBRepEscuelas();
-                ?>
-              </div>
-            </div>
-            <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Trabajo: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Trabajo" id="Trabajo" autocomplete="off">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Categoría: </label>
+              <div class="col-md-10" id = "Categoria">
+                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalCategoria">Seleccione una Categoria</button>  
               </div>
             </div>
             <div class="form-group row">
@@ -704,12 +689,7 @@ $Con->CloseConexion();
                 <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo3">Seleccione un Motivo</button>
               </div>
             </div>
-            <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Categoría: </label>
-              <div class="col-md-10" id = "Categoria">
-                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalCategoria">Seleccione una Categoria</button>  
-              </div>
-            </div>
+
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Centro Salud: </label>
               <div class="col-md-10">
@@ -726,6 +706,27 @@ $Con->CloseConexion();
                 $Element = new Elements();
                 echo $Element->CBRepOtrasInstituciones();
                 ?>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Escuela: </label>
+              <div class="col-md-10">
+                <?php  
+                $Element = new Elements();
+                echo $Element->CBRepEscuelas();
+                ?>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" name = "Nro_Carpeta" id="Nro_Carpeta" autocomplete="off">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" name = "Nro_Legajo" id="Nro_Legajo" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
