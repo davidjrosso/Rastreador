@@ -659,12 +659,12 @@ $Con->CloseConexion();
             </div>
 
 <!-- ################################################################################ -->
-            <div class="form-group row">
+            <!--<div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Trabajo: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Trabajo" id="Trabajo" autocomplete="off">
               </div>
-            </div>
+            </div>-->
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Categoría: </label>
               <div class="col-md-10" id = "Categoria">
@@ -709,15 +709,6 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Escuela: </label>
-              <div class="col-md-10">
-                <?php  
-                $Element = new Elements();
-                echo $Element->CBRepEscuelas();
-                ?>
-              </div>
-            </div>
-            <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Nro_Carpeta" id="Nro_Carpeta" autocomplete="off">
@@ -729,6 +720,16 @@ $Con->CloseConexion();
                 <input type="text" class="form-control" name = "Nro_Legajo" id="Nro_Legajo" autocomplete="off">
               </div>
             </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Escuela: </label>
+              <div class="col-md-10">
+                <?php  
+                $Element = new Elements();
+                echo $Element->CBRepEscuelas();
+                ?>
+              </div>
+            </div>
+
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Responsable: </label>
               <div class="col-md-10">
