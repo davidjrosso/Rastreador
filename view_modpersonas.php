@@ -294,13 +294,16 @@ $Con->CloseConexion();
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Fecha de Nacimiento: </label>
+                  <label for="inputPassword" class="col-md-2 col-form-label LblForm" style="margin-bottom: -8px;">Fecha de Nacimiento: </label>
                   <div class="col-md-10">
                     <input type="text" class="form-control" name = "Fecha_Nacimiento" id="Fecha_Nacimiento" autocomplete="off" <?php if($Fecha_Nacimiento != "null") { echo "value = '".$Persona->getFecha_Nacimiento()."'";}; ?>>
                   </div>
                 </div>
+                <div class="row LblForm col-md-2" style="margin-bottom: 1.04%; font-size: 1.031rem">
+                  Edad <br>
+                </div>
                 <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Edad: </label>
+                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Años: </label>
                   <div class="col-md-10">
                     <input type="text" class="form-control" name = "Edad" id="Edad" autocomplete="off" value = "<?php echo $Persona->getEdad(); ?>">
                   </div>

@@ -322,13 +322,16 @@ $Con->CloseConexion();
             <div class="div-modal-Error" id="ErrorDocumento">
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Fecha de Nacimiento: </label>
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm" style="margin-bottom: -8px;">Fecha de Nacimiento: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Fecha_Nacimiento" id="Fecha_Nacimiento" autocomplete="off" placeholder="Ejemplo: 01/01/2010" onFocusOut="calcularEdad()"> 
               </div>
             </div>
+            <div class="row LblForm col-md-2" style="margin-bottom: 1.04%; font-size: 1.031rem">
+                  Edad <br>
+            </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Edad: </label>
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Años: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Edad" id="Edad" autocomplete="off" readonly>
               </div>
