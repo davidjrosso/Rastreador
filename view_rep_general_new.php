@@ -247,7 +247,7 @@ $Con->CloseConexion();
 
     input[type="range"]{
       width: 80%;
-      height:0.9rem;
+      height:1.3rem;
       margin-left: 17%;
       opacity: 70%;
     }
@@ -270,6 +270,11 @@ input[type="range"]::-webkit-slider-runnable-track {
   height: 0.9rem;
 }
 */
+input[type="range"]::-webkit-slider-runnable-track {
+  background-color: #add8e6;
+  border-radius: 0.5rem;
+  height: 0.8rem;
+}
 
 /* slider thumb */
 input[type="range"]::-webkit-slider-thumb {
