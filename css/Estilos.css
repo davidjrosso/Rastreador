@@ -335,6 +335,10 @@ input[type=number].number-to-text {
     -moz-appearance: textfield;
 }
 
+#denominacion {
+  padding-right: 1px;
+}
+
 /*.div-modal-Error::before {
   content:"";
   position: absolute;
