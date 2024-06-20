@@ -252,15 +252,35 @@ $Con->CloseConexion();
       opacity: 70%;
     }
 
-    input[type="range"]::-webkit-slider-thumb {
+/*    input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
       margin-top: -4px;
-      background-color: #23282e;
-      border-radius: 1rem;
-      height: 0.8rem;
-      width: 0.8rem;
-    }
+      background-color:#b9c3d0;
+      border-radius: 0.1rem;
+      height: 1.8rem;
+      width: 1.8rem;
+    }*/
+
+/* slider track */
+/*
+input[type="range"]::-webkit-slider-runnable-track {
+  background-color: #add8e6;
+  border-radius: 0.5rem;
+  height: 0.9rem;
+}
+*/
+
+/* slider thumb */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  margin-top: -3.999999999999999px; /* Centers thumb on the track */
+  background-color: #b9c3d0;
+  border-radius: 0.1rem;
+  height: 1.4rem;
+  width: 1.9rem;
+}
 
     
     #BarraDeNavVTabla{
@@ -2221,7 +2241,7 @@ $Con->CloseConexion();
         </div>
       </div>
     </div>
-    <input type="range" class="fixed-bottom form-range" step="1" value="5" min="5" id="BarraDeNavHTabla">
+    <input type="range" class="fixed-bottom form-range" step="0.01" value="5" min="5" id="BarraDeNavHTabla">
     <!--<input type="range" class="fixed-bottom form-range" step="1" value="1" min="1" id="BarraDeNavVTabla">-->
 
     <script>
