@@ -81,6 +81,7 @@ $Con->CloseConexion();
 
       document.getElementById("abrir").style.display = "none";
       document.getElementById("cerrar").style.display = "inline";
+      $("#BarraDeNavHTabla").removeAttr("style")
     }
 
     function ocultar() {
@@ -100,6 +101,7 @@ $Con->CloseConexion();
       $("#abrir").attr("style","display:inline;");
       //document.getElementById("abrir").style.display = "inline";
       document.getElementById("cerrar").style.display = "none";
+      $("#BarraDeNavHTabla").attr("style","width: 95%; margin-left: 2%;")
     }
 
     var currCell = null;
