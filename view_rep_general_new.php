@@ -371,7 +371,7 @@ input[type="range"]::-webkit-slider-thumb {
     .table-fixeder tbody tr td,
     .table-fixeder thead>tr>th {
       float: left;
-      border-bottom-width: 0;
+      border-bottom-width: 1.5px;
       width: 150px;
       height: 70px;
     }
