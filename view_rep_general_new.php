@@ -376,6 +376,10 @@ input[type="range"]::-webkit-slider-thumb {
       height: 70px;
     }
 
+    .table-fixeder tbody tr:nth-child(1) td{
+      border-top-width: 0px;
+    }
+
     .table-fixeder thead>tr>th {
       height: 60px;
     }
