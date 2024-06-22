@@ -68,7 +68,7 @@ try {
 		}
 		$Ret = mysqli_fetch_assoc($RetID);
 
-		$Insert_Solicitud = "insert into Solicitudes_Permisos(ID, ID_TipoUsuario, Fecha, estado) values('{$Ret["id"]}','{$GrupoUsuarios}','{$Fecha}', 1)";
+		$Insert_Solicitud = "insert into solicitudes_permisos(ID, ID_TipoUsuario, Fecha, estado) values('{$Ret["id"]}','{$GrupoUsuarios}','{$Fecha}', 1)";
 		$MensajeError = "No se pudo insertar la solicitud de creacion de permisos";
 		if(!$RetID = mysqli_query($Con->Conexion,$Insert_Solicitud)){
 			throw new Exception("No se pudo consultar el ID de la categoría cargada. Consulta: ".$Insert_Solicitud, 2);
