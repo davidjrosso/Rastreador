@@ -28,7 +28,7 @@ $Categoria = (isset($_REQUEST["Categoria"]))?$_REQUEST["Categoria"]:null;
 $ID_Forma = $_REQUEST["ID_Forma"];
 $ID = (isset($_REQUEST["ID"]))?$_REQUEST["ID"]:null;
 $Color = (isset($_REQUEST["CodigoColor"]))?$_REQUEST["CodigoColor"]:null;
-$GrupoUsuarios = (isset($_REQUEST["GrupoUsuarios"]))?$_REQUEST["GrupoUsuarios"]:null;
+$GrupoUsuarios = (isset($_REQUEST["Tipo_Usuario"]))?$_REQUEST["Tipo_Usuario"]:null;
 
 $Fecha = date("Y-m-d");
 
