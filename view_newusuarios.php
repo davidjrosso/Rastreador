@@ -260,7 +260,7 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Tipo: </label>
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Rol: </label>
               <div class="col-md-10">
                 <?php $Element = new Elements();
                 echo $Element->CBTipoUsuarios();?>

@@ -1384,6 +1384,18 @@ public function getMenuSeguridad($ID){
     return $Select;
   }
 
+  public function CBTipos_Usuario(){
+    $Con3 = new Conexion();
+    $Con3->OpenConexion();
+    $Select = "<select class='form-control' name = 'Tipo_Usuario' id = 'Tipo_Usuario'>";
+    $Consulta = mysqli_query($Con3->Conexion,"select * from tipo_usuarios order by TipoUsuario")or die("Problemas al mostrar las Formas de las Categorías");
+    while ($Ret = mysqli_fetch_array($Consulta)) {      
+        $Select .= "<option value = '".$Ret['ID_TipoUsuario']."'>".$Ret['descripcion']."</option>";
+    }          
+    $Select .= "</select>";
+    $Con3->CloseConexion();
+    return $Select;
+  }
   public function CBCalles(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();

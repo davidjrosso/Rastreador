@@ -21,7 +21,7 @@ require_once 'Conexion.php';
  */
 
 $ID_Usuario = $_SESSION["Usuario"];
-
+$ID_Solicitud = $_REQUEST["ID"];
 $Codigo = strtoupper($_REQUEST["Codigo"]);
 $ID_Forma = $_REQUEST["ID_Forma"];
 $Categoria = $_REQUEST["Categoria"];
@@ -49,17 +49,33 @@ try {
 		if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
 			throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 1);		
 		}
-
+		
 		$ConsultarID_Categoria = "select id_categoria from categoria where cod_categoria = '$Codigo' and categoria = '$Categoria' limit 1";
 		if(!$RetID = mysqli_query($Con->Conexion,$ConsultarID_Categoria)){
 			throw new Exception("No se pudo consultar el ID de la categoria cargada. Consulta: ".$ConsultarID_Categoria, 2);		
 		}
+
+		$TomarID_Categoria = mysqli_fetch_assoc($RetID);
+		$RetID_Categoria = $TomarID_Categoria["id_categoria"];
+		
+		$ConsultaPermisos = "select *
+							 from solicitudes_permisos
+							 where ID = {$ID_Solicitud}
+							 and estado = 1";
+		$MessageError = "Problemas al consultar mostrar Solicitudes Permisos";
+		$Resultados = mysqli_query($Con->Conexion,$ConsultaPermisos) or die($MessageError);
+		while ($RetPermisos = mysqli_fetch_array($Resultados)) {
+			$Insert_Permiso = "insert into categoria_rol(id_categoria, fecha, ID_TipoUsuario, estado) values('{$RetID_Categoria }', '{$Fecha}','{$GrupoUsuarios}', 1)";
+			$MensajeError = "No se pudo insertar los permisos";
+			if(!$RetID = mysqli_query($Con->Conexion,$Insert_Permiso)){
+				throw new Exception("No se pudo insertar el conjunto de permisos. Consulta: ".$Insert_Permiso, 2);
+			}
+		}
+
 		$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
 		if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
 			throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 2);
 		}
-		$TomarID_Categoria = mysqli_fetch_assoc($RetID);
-		$RetID_Categoria = $TomarID_Categoria["id_categoria"];
 
 		$ActualizarSolicitud = "update solicitudes_crearcategorias set Estado = 0 where codigo = '$Codigo' and categoria = '$Categoria'";
 		$EjecutarConsultar = mysqli_query($Con->Conexion,$ActualizarSolicitud) or die($MensajeErrorDatos);

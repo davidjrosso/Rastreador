@@ -240,22 +240,31 @@ $Con->CloseConexion();
           <p class = "Titulos">Cargar Nueva Categoría</p>
           <form method = "post" onKeydown="return event.key != 'Enter';" id = "form_1" action = "Controladores/CrearCategoria.php" onSubmit = "return ValidarCategoria();">
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Código *: </label>
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Código : </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Codigo" id="Codigo" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Forma *: </label>
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Forma : </label>
               <div class="col-md-10">
                 <?php $Element = new Elements();
                 echo $Element->CBFormas_Categoria();?>
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Denominación *: </label>
+              <label id="denominacion" for="Categoria" class="col-md-2 col-form-label LblForm">Denominación : </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Categoria" id="Categoria" autocomplete="off">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label id="grupousuarios" for="grupousuarios" class="col-md-2 col-form-label LblForm">Permisos : </label>
+              
+              <div class="col-md-10">
+                <?php $Element = new Elements();
+                echo $Element->CBTipos_Usuario();?>
+              
               </div>
             </div>
             <div class="form-group row">

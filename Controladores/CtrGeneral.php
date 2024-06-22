@@ -1204,17 +1204,26 @@ class CtrGeneral{
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
 		if($Regis > 0){
-			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Codigo</th><th style='min-width:100px;'>Categoría</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Acción</th></tr></thead>";
+			$Table = "<table id='creacionCategoria' class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Codigo</th><th style='min-width:100px;'>Categoría</th><th style='min-width:100px;'>Permisos</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Acción</th></tr></thead>";
 			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 				$ID = $Ret["ID"];
+				$ConsultaPermisos = "select  *
+									 from solicitudes_permisos s inner join tipo_usuarios t on t.ID_TipoUsuario = s.ID_TipoUsuario
+									 where ID = {$ID}
+									   and estado = 1";
+				$MessageError = "Problemas al intentar mostrar Solicitudes Permisos";
+				$Resultados = mysqli_query($Con->Conexion,$ConsultaPermisos) or die($MessageError);
+				$Permisos = ""; 
+				while ($RetPermisos = mysqli_fetch_array($Resultados)) {
+					$Permisos .= $RetPermisos["abreviacion"] . " " ;
+				}
 				$Fecha = implode("/", array_reverse(explode("-",$Ret["Fecha"])));
 				$Codigo = $Ret["Codigo"];
-				$Categoria = $Ret["Categoria"];		
+				$Categoria = $Ret["Categoria"];
 				$ID_Forma = $Ret["ID_Forma"];
 				$Color = $Ret["Color"];
-				//$ID_Categoria = $Ret["ID"];	
-				$Usuario = $Ret["username"];							
-				$Table .= "<tr><td>".$ID."</td><td>".$Fecha."</td><td>".$Codigo."</td><td>".$Categoria."</td><td>".$Usuario."</td><td><button class='btn btn-success' onClick='VerificarCrearCategoria(".$ID.",\"".$Fecha."\",\"".$Codigo."\",\"".$Categoria."\",\"".$ID_Forma."\",\"".$Color."\")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarCrearCategoria(".$Ret["ID"].")'><i class='fa fa-times'></i></button></td></tr>";
+				$Usuario = $Ret["username"];						
+				$Table .= "<tr><td>".$ID."</td><td>".$Fecha."</td><td>".$Codigo."</td><td>".$Categoria."</td><td>".$Permisos."</td><td>".$Usuario."</td><td><button class='btn btn-success' onClick='VerificarCrearCategoria(".$ID.",\"".$Fecha."\",\"".$Codigo."\",\"".$Categoria."\",\"".$ID_Forma."\",\"".$Color."\")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarCrearCategoria(".$Ret["ID"].")'><i class='fa fa-times'></i></button></td></tr>";
 			}
 			$Table .= "</table>";
 		}else{
@@ -1343,10 +1352,10 @@ class CtrGeneral{
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
 		if($Regis > 0){
-			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Detalle</th><th style='min-width:100px;'>Expira</th><th style='min-width:100px;'>Acción</th></tr></thead>";
+			$Table = "<table id='eliminarNotificaciones' class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Detalle</th><th style='min-width:100px;'>Expira</th><th style='min-width:100px;'>Acción</th></tr></thead>";
 			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-				$RetFecha = explode(" ", $Ret["Fecha"]);		
-				$RetExpira = explode(" ", $Ret["Expira"]);	
+				$RetFecha = explode(" ", $Ret["Fecha"]);
+				$RetExpira = explode(" ", $Ret["Expira"]);
 				$ID_Notificacion = $Ret["ID_Notificacion"];
 				$Fecha = implode("/", array_reverse(explode("-",$RetFecha[0])));
 				$Detalle = $Ret["Detalle"];												

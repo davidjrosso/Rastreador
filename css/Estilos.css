@@ -339,6 +339,14 @@ input[type=number].number-to-text {
   padding-right: 1px;
 }
 
+#creacionCategoria td, #creacionCategoria th {
+  text-align: center;
+}
+
+#eliminarNotificaciones td, #eliminarNotificaciones th {
+  text-align: center;
+}
+
 /*.div-modal-Error::before {
   content:"";
   position: absolute;
