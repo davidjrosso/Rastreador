@@ -1208,7 +1208,7 @@ class CtrGeneral{
 			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 				$ID = $Ret["ID"];
 				$ConsultaPermisos = "select  *
-									 from solicitudes_permisos s inner join tipo_usuarios t on t.ID_TipoUsuario = s.ID_TipoUsuario
+									 from solicitudes_permisos s inner join Tipo_Usuarios t on t.ID_TipoUsuario = s.ID_TipoUsuario
 									 where ID = {$ID}
 									   and estado = 1";
 				$MessageError = "Problemas al intentar mostrar Solicitudes Permisos";
