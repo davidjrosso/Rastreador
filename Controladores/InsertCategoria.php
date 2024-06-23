@@ -57,17 +57,25 @@ try {
 
 		$TomarID_Categoria = mysqli_fetch_assoc($RetID);
 		$RetID_Categoria = $TomarID_Categoria["id_categoria"];
-		
+
 		$ConsultaPermisos = "select ID_TipoUsuario
 							 from solicitudes_permisos
 							 where ID = {$ID_Solicitud}
 							 and estado = 1";
 		$MessageError = "Problemas al consultar mostrar Solicitudes Permisos";
-		$Resultados = mysqli_query($Con->Conexion,$ConsultaPermisos) or die($MessageError);
+		if(!$Resultados = mysqli_query($Con->Conexion,$ConsultaPermisos)){
+			throw new Exception("No se pudo insertar el conjunto de permisos. Consulta: ".$ConsultaPermisos, 2);
+		}
 		while ($RetPermisos = mysqli_fetch_array($Resultados)) {
 			$GrupoUsuarios = $RetPermisos["ID_TipoUsuario"];
 			$Insert_Permiso = "insert into categorias_roles(id_categoria, fecha, ID_TipoUsuario, estado) values('{$RetID_Categoria }', '{$Fecha}','{$GrupoUsuarios}', 1)";
-			$MensajeError = "No se pudo insertar los permisos";
+			$updatePermisos = "update solicitudes_permisos
+							   set estado = 0
+							   where ID = {$ID_Solicitud}
+							   and ID_TipoUsuario = {$GrupoUsuarios} 
+							   and estado = 1";
+			$MensajeError = "No se pudo dar de baja el permiso categoria {$RetID_Categoria } rol {$GrupoUsuarios}";
+			$ResultadosUpdate = mysqli_query($Con->Conexion,$updatePermisos) or die($MessageError);
 			if(!$RetID = mysqli_query($Con->Conexion,$Insert_Permiso)){
 				throw new Exception("No se pudo insertar el conjunto de permisos. Consulta: ".$Insert_Permiso, 2);
 			}

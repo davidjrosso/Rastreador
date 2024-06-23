@@ -229,18 +229,20 @@ $Con->CloseConexion();
               $Con->OpenConexion();
 
               $ConsultarDatos = "select * from categoria where id_categoria = $ID_Categoria";
+              $ConsultarPermisos = "select id_tipousuario from categorias_roles where id_categoria = $ID_Categoria";
               $MensajeErrorDatos = "No se pudo consultar los Datos de la Categoria";
-
+              $MensajeErrorPermisos = "No se pudo consultar los Permisos de la Categoria";
               $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
-
+              $EjecutarConsultarPermisos = mysqli_query($Con->Conexion,$ConsultarPermisos) or die($MensajeErrorPermisos);
               $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
+              $RetPermisos = mysqli_fetch_array($EjecutarConsultarPermisos);
 
               $ID_Categoria = $Ret["id_categoria"];
               $Cod_Categoria = $Ret["cod_categoria"];
               $Categoria = $Ret["categoria"];
               $ID_Forma = $Ret["ID_Forma"];
               $Color = $Ret["color"];
-
+              $Permisos = $RetPermisos["id_tipousuario"];
               ?>
             <div class = "col-10">
             <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/pedirmodificarcategoria.php">
@@ -332,6 +334,19 @@ $Con->CloseConexion();
                         </div>
                     </div>
                   </div>                 
+                </div>
+                <div class="form-group row">
+                  <label id="grupousuarios" for="grupousuarios" class="col-md-2 col-form-label LblForm">Permisos : </label>                  
+                  <div class="col-md-10">
+                    <?php 
+                      if(isset($Permisos)){                    
+                        $Element = new Elements();
+                        echo $Element->CBCategorias_Roles_ID($ID_Categoria);
+                      } else {
+                        echo $Element->CBTipos_Usuario();
+                      }
+                    ?>                  
+                  </div>
                 </div>
                 <div class="form-group row">
                   <div class="offset-md-2 col-md-10">

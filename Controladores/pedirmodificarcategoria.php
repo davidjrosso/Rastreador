@@ -22,7 +22,7 @@ require_once '../Modelo/Solicitud_ModificarCategoria.php';
  */
 
 $ID_Usuario = $_SESSION["Usuario"];
-
+$Grupo_Usuarios = $_REQUEST["Categorias_Roles"];
 $ID_Categoria = $_REQUEST["ID"];
 $Codigo = strtoupper($_REQUEST["Codigo"]);
 $Categoria = $_REQUEST["Categoria"];
@@ -41,6 +41,12 @@ if($ID_Categoria > 0){
 	$MensajeError = "No se pudo enviar la solicitud";
 
 	mysqli_query($Con->Conexion,$Insert_Solicitud) or die($MensajeError." ".$Solicitud);
+
+	$Insert_Solicitud = "insert into solicitudes_permisos(ID, ID_TipoUsuario, Fecha, estado) values('{{$Solicitud->getID_Categoria()}}','{$Grupo_Usuarios}','{$Fecha}', 1)";
+	$MensajeError = "No se pudo insertar la solicitud de creacion de permisos";
+	if(!$RetID = mysqli_query($Con->Conexion,$Insert_Solicitud)){
+		throw new Exception("No se pudo consultar el ID de la categoría cargada. Consulta: ".$Insert_Solicitud, 2);
+	}
 
 	$Con->CloseConexion();
 	$Mensaje = "La solicitud de modificación se envió a los administradores para ser confirmada.";

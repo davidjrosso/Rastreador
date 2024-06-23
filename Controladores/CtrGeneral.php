@@ -1263,6 +1263,26 @@ class CtrGeneral{
 		return $Table;
 	}
 
+	public function getCategorias_Roles_ID($XID){
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "select cr.id_categoria, tip.abreviacion from categorias_roles cr inner join tipo_usuarios tip on cr.ID_TipoUsuario = tip.ID_TipoUsuario
+					 where cr.id_categoria = {$XID}
+					   and cr.estado = 1";
+		$MessageError = "Problemas al intentar mostrar Solicitudes Categorias";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$Regis = mysqli_num_rows($Con->ResultSet);
+		if($Regis > 0){
+				$Permisos = ""; 
+				while ($RetPermisos = mysqli_fetch_array($Con->ResultSet)) {
+					$Permisos .= $RetPermisos["abreviacion"] . " " ;
+				}
+		}
+		$Con->CloseConexion();
+		
+		return $Permisos;
+	}
+
 	public function getCantSolicitudes_EliminacionMotivo(){
 		$Con = new Conexion();
 		$Con->OpenConexion();

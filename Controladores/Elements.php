@@ -1396,6 +1396,22 @@ public function getMenuSeguridad($ID){
     $Con3->CloseConexion();
     return $Select;
   }
+
+  public function CBCategorias_Roles_ID($XID){
+    $Con3 = new Conexion();
+    $Con3->OpenConexion();
+    $Select = "<select class='form-control' name = 'Categorias_Roles' id = 'Categorias_Roles'>";
+    $ConsultaSQL = "select *
+                    from categorias_roles cs  inner join Tipo_Usuarios tip on cs.id_tipousuario = tip.ID_TipoUsuario 
+                    where id_categoria = {$XID}";
+    $Consulta = mysqli_query($Con3->Conexion, $ConsultaSQL) or die("Problemas al mostrar las Formas de las Categorías");
+    while ($Ret = mysqli_fetch_array($Consulta)) {
+        $Select .= "<option value = '".$Ret['ID_TipoUsuario']."'>".$Ret['descripcion']."</option>";
+    }          
+    $Select .= "</select>";
+    $Con3->CloseConexion();
+    return $Select;
+  }
   public function CBCalles(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
