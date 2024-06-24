@@ -242,7 +242,7 @@ $Con->CloseConexion();
               $Categoria = $Ret["categoria"];
               $ID_Forma = $Ret["ID_Forma"];
               $Color = $Ret["color"];
-              $Permisos = $RetPermisos["id_tipousuario"];
+              $Permisos = (isset($RetPermisos["id_tipousuario"]))?$RetPermisos["id_tipousuario"]:null;
               ?>
             <div class = "col-10">
             <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/pedirmodificarcategoria.php">
@@ -339,8 +339,8 @@ $Con->CloseConexion();
                   <label id="grupousuarios" for="grupousuarios" class="col-md-2 col-form-label LblForm">Permisos : </label>                  
                   <div class="col-md-10">
                     <?php 
-                      if(isset($Permisos)){                    
-                        $Element = new Elements();
+                      $Element = new Elements();
+                      if(isset($Permisos)){    
                         echo $Element->CBCategorias_Roles_ID($ID_Categoria);
                       } else {
                         echo $Element->CBTipos_Usuario();

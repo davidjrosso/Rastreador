@@ -1400,7 +1400,7 @@ public function getMenuSeguridad($ID){
   public function CBCategorias_Roles_ID($XID){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' name = 'Categorias_Roles' id = 'Categorias_Roles'>";
+    $Select = "<select class='form-control' name = 'Tipo_Usuario' id = 'Categorias_Roles'>";
     $ConsultaSQL = "select *
                     from categorias_roles cs  inner join Tipo_Usuarios tip on cs.id_tipousuario = tip.ID_TipoUsuario 
                     where id_categoria = {$XID}";
