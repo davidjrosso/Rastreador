@@ -343,6 +343,10 @@ input[type=number].number-to-text {
   text-align: center;
 }
 
+#modificacionCategoria td, #modificacionCategoria th {
+  text-align: center;
+}
+
 #eliminarNotificaciones td, #eliminarNotificaciones th {
   text-align: center;
 }

@@ -1242,9 +1242,20 @@ class CtrGeneral{
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
 		if($Regis > 0){
-			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Codigo</th><th style='min-width:100px;'>Categoría</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Acción</th></tr></thead>";
+			$Table = "<table id='modificacionCategoria' class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Codigo</th><th style='min-width:100px;'>Categoría</th><th style='min-width:100px;'>Permisos</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Acción</th></tr></thead>";
 			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 				$ID = $Ret["ID"];
+				$ConsultaPermisos = "select  *
+									 from solicitudes_permisos s inner join Tipo_Usuarios t on t.ID_TipoUsuario = s.ID_TipoUsuario
+									 where ID = {$ID}
+									   and estado = 1";
+				$MessageError = "Problemas al intentar mostrar Solicitudes Permisos";
+				$Resultados = mysqli_query($Con->Conexion,$ConsultaPermisos) or die($MessageError);
+				$Permisos = ""; 
+				while ($RetPermisos = mysqli_fetch_array($Resultados)) {
+					$Permisos .= $RetPermisos["abreviacion"] . " " ;
+				}
+
 				$Fecha = implode("/", array_reverse(explode("-",$Ret["Fecha"])));
 				$Codigo = $Ret["Codigo"];
 				$Categoria = $Ret["Categoria"];		
@@ -1252,7 +1263,7 @@ class CtrGeneral{
 				$NuevoColor = $Ret["NuevoColor"];	
 				$ID_Categoria = $Ret["ID_Categoria"];	
 				$Usuario = $Ret["username"];							
-				$Table .= "<tr><td>".$ID."</td><td>".$Fecha."</td><td>".$Codigo."</td><td>".$Categoria."</td><td>".$Usuario."</td><td><button class='btn btn-success' onClick='VerificarModificarCategoria(".$ID.",\"".$Fecha."\",\"".$Codigo."\",\"".$Categoria."\",\"".$ID_Forma."\",\"".$NuevoColor."\",\"".$ID_Categoria."\")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarModificacionCategoria(".$Ret["ID"].")'><i class='fa fa-times'></i></button></td></tr>";
+				$Table .= "<tr><td>".$ID."</td><td>".$Fecha."</td><td>".$Codigo."</td><td>".$Categoria."</td><td>".$Permisos."</td><td>".$Usuario."</td><td><button class='btn btn-success' onClick='VerificarModificarCategoria(".$ID.",\"".$Fecha."\",\"".$Codigo."\",\"".$Categoria."\",\"".$ID_Forma."\",\"".$NuevoColor."\",\"".$ID_Categoria."\")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarModificacionCategoria(".$Ret["ID"].")'><i class='fa fa-times'></i></button></td></tr>";
 			}			
 			$Table .= "</table>";
 		}else{
