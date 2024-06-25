@@ -1272,8 +1272,8 @@ class CtrGeneral{
 		$MessageError = "Problemas al intentar mostrar Solicitudes Categorias";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
+		$Permisos = ""; 
 		if($Regis > 0){
-				$Permisos = ""; 
 				while ($RetPermisos = mysqli_fetch_array($Con->ResultSet)) {
 					$Permisos .= $RetPermisos["abreviacion"] . " " ;
 				}
