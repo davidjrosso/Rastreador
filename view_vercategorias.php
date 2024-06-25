@@ -11,6 +11,7 @@ if(!isset($_SESSION["Usuario"])){
 
 $Con = new Conexion();
 $Con->OpenConexion();
+$CtrGeneral = new CtrGeneral();
 $ID_Usuario = $_SESSION["Usuario"];
 $ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
 $MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
@@ -221,6 +222,7 @@ $Con->CloseConexion();
               $Table .= "<tr><td>Categoria</td><td>".$Categoria."</td></tr>";
               $Table .= "<tr><td>Forma</td><td style='color:".$Color."'>".$Forma_Categoria."</td></tr>";
               $Table .= "<tr><td>Color</td><td bgcolor='".$Color."'></td></tr>";
+              $Table .= "<tr><td>Permisos</td><td bgcolor='".$CtrGeneral->getCategorias_Roles_ID($ID_Categoria)."'></td></tr>";
               $Table .= "</table>";
 
               echo $Table;

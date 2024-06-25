@@ -1387,7 +1387,7 @@ public function getMenuSeguridad($ID){
   public function CBTipos_Usuario(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' name = 'Tipo_Usuario' id = 'Tipo_Usuario'>";
+    $Select = "<select class='form-control'  multiple='multiple' name = 'Tipo_Usuario[]' id = 'Tipo_Usuario'>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from Tipo_Usuarios order by TipoUsuario")or die("Problemas al mostrar las Formas de las Categorías");
     while ($Ret = mysqli_fetch_array($Consulta)) {      
         $Select .= "<option value = '".$Ret['ID_TipoUsuario']."'>".$Ret['descripcion']."</option>";
@@ -1400,7 +1400,7 @@ public function getMenuSeguridad($ID){
   public function CBCategorias_Roles_ID($XID){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' name = 'Tipo_Usuario' id = 'Categorias_Roles'>";
+    $Select = "<select class='form-control' name = 'Tipo_Usuario[]' id = 'Categorias_Roles'>";
     $ConsultaSQL = "select *
                     from categorias_roles cs  inner join Tipo_Usuarios tip on cs.id_tipousuario = tip.ID_TipoUsuario 
                     where id_categoria = {$XID}";

@@ -49,6 +49,19 @@ $Con->CloseConexion();
                   todayHighlight: true,
                   autoclose: true,
               });
+              $('#Categorias_Roles').multiselect({
+                onChange: function(element, checked) {
+                  console.log("Hola");
+                var opts = $('*[data-group="'+ element.val() +'"]');
+                console.log(opts);
+                    if (checked === true) {
+                        opts.prop('disabled', false).prop('selected', false);
+                    }
+                    else if (checked === false) {
+                      opts.prop('disabled', true).prop('selected', false);
+                    }
+                }
+            });
           });
 
        function CalcularPrecio(){

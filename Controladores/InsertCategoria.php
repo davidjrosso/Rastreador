@@ -77,7 +77,7 @@ try {
 			$MensajeError = "No se pudo dar de baja el permiso categoria {$RetID_Categoria } rol {$GrupoUsuarios}";
 			$ResultadosUpdate = mysqli_query($Con->Conexion,$updatePermisos) or die($MessageError);
 			if(!$RetID = mysqli_query($Con->Conexion,$Insert_Permiso)){
-				throw new Exception("No se pudo insertar el conjunto de permisos. Consulta: ".$Insert_Permiso, 2);
+				throw new Exception("No se pudo actualizar el permisos. Consulta: ".$Insert_Permiso, 2);
 			}
 		}
 
