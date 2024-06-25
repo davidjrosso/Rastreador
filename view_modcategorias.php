@@ -64,7 +64,7 @@ $Con->CloseConexion();
   <script>
        $(document).ready(function(){
 
-              $('#Categorias_Roles').multiselect({
+              $('#Tipo_Usuario').multiselect({
                 onChange: function(element, checked) {
                 var opts = $('*[data-group="'+ element.val() +'"]');
                     if (checked === true) {
