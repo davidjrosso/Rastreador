@@ -216,7 +216,7 @@ $Con->CloseConexion();
               $Forma_Categoria = $Ret["Forma_categoria"];
               $Color = $Ret["color"];
 
-              $Table = "<table class='table'><thead><tr><th></th><th>Detalles de la Categoria</th></tr></thead>";
+              $Table = "<table id='ImagenDeCategoria' class='table'><thead><tr><th></th><th>Detalles de la Categoria</th></tr></thead>";
 
               $Table .= "<tr><td>Código</td><td>".$Cod_Categoria."</td></tr>";
               $Table .= "<tr><td>Categoria</td><td>".$Categoria."</td></tr>";
