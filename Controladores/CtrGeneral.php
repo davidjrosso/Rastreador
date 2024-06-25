@@ -1266,7 +1266,7 @@ class CtrGeneral{
 	public function getCategorias_Roles_ID($XID){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select cr.id_categoria, tip.abreviacion from categorias_roles cr inner join tipo_usuarios tip on cr.ID_TipoUsuario = tip.ID_TipoUsuario
+		$Consulta = "select cr.id_categoria, tip.abreviacion from categorias_roles cr inner join Tipo_Usuarios tip on cr.ID_TipoUsuario = tip.ID_TipoUsuario
 					 where cr.id_categoria = {$XID}
 					   and cr.estado = 1";
 		$MessageError = "Problemas al intentar mostrar Solicitudes Categorias";
