@@ -287,7 +287,7 @@ $Con->CloseConexion();
                 </div>
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Color Actual: </label>
-                  <div class="col-md-10" style = "background-color: <?php echo $Color; ?>;">
+                  <div class="col-md-10" style = "background-color: <?php echo $Color; ?>; background-clip: content-box;border-radius: 17px 17px 17px 17px;;">
                   </div>
                 </div>
                 <div class="form-group row">
