@@ -1400,14 +1400,18 @@ public function getMenuSeguridad($ID){
   public function CBCategorias_Roles_ID($XID){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' name = 'Tipo_Usuario[]' id = 'Tipo_Usuario'>";
-    $ConsultaSQL = "select *
-                    from categorias_roles cs  inner join Tipo_Usuarios tip on cs.id_tipousuario = tip.ID_TipoUsuario 
-                    where id_categoria = {$XID}";
+    $Select = "<select class='form-control'  multiple='multiple' name = 'Tipo_Usuario[]' id = 'Tipo_Usuario'>";
+    $ConsultaSQL = "select tip.ID_TipoUsuario, tip.descripcion, IF(cs.ID_TipoUsuario IS NULL,true ,false) as disable
+                          from (SELECT * FROM categorias_roles where id_categoria = {$XID} and estado = 1) cs  
+                                right join Tipo_Usuarios tip on cs.id_tipousuario = tip.ID_TipoUsuario";
     $Consulta = mysqli_query($Con3->Conexion, $ConsultaSQL) or die("Problemas al mostrar las Formas de las Categorías");
     while ($Ret = mysqli_fetch_array($Consulta)) {
-        $Select .= "<option value = '".$Ret['ID_TipoUsuario']."'>".$Ret['descripcion']."</option>";
-    }          
+        if( $Ret["disable"] != "1"){
+          $Select .= "<option selected value = '".$Ret['ID_TipoUsuario']."'>".$Ret['descripcion']."</option>"; 
+        } else {
+          $Select .= "<option value = '".$Ret['ID_TipoUsuario']."'>".$Ret['descripcion']."</option>"; 
+        }
+    }
     $Select .= "</select>";
     $Con3->CloseConexion();
     return $Select;

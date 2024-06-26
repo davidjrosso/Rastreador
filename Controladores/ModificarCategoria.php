@@ -70,10 +70,8 @@ try {
 		throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 3);
 	}
 
-	$ConsultaPermisos = "select ID_TipoUsuario
-						 from solicitudes_permisos
-						 where ID = {$ID_Solicitud}
-						   and estado = 1";
+	$ConsultaPermisos = "select tip.ID_TipoUsuario, IF(slp.ID_TipoUsuario IS NULL, 'si', 'no') as disable
+						 from (SELECT * FROM solicitudes_permisos WHERE ID = {$ID_Solicitud} and estado = 1) slp right join Tipo_Usuarios tip ON slp.ID_TipoUsuario = tip.ID_TipoUsuario";
 	$MessageError = "Problemas al consultar Solicitudes Permisos";
 	if(!$Resultados = mysqli_query($Con->Conexion,$ConsultaPermisos)){
 		throw new Exception("No se pudo insertar el conjunto de permisos. Consulta: ".$ConsultaPermisos, 2);
@@ -87,26 +85,48 @@ try {
 							   			and id_tipousuario = {$GrupoUsuarios} 
 							   			and estado = 1";
 
-										$MessageError = "Problemas al consultar Categorias Permisos";
+		$MessageError = "Problemas al consultar Categorias Permisos";
 		if(!$ResultadosPermisosCategorias = mysqli_query($Con->Conexion,$ConsultaPermisosCategoria)){
 			throw new Exception("No se pudo consultar conjunto de permisos sobre la categoria. Consulta: ".$ConsultaPermisosCategoria, 2);
 		}
 
 		if(mysqli_num_rows($ResultadosPermisosCategorias) == 0){
-			$Insert_Permiso = "insert into categorias_roles(id_categoria, fecha, ID_TipoUsuario, estado) values('{$ID_Categoria}', '{$Fecha}','{$GrupoUsuarios}', 1)";
-			if(!$RetID = mysqli_query($Con->Conexion,$Insert_Permiso)){
-				throw new Exception("No se pudo actualizar el permisos. Consulta: ".$Insert_Permiso, 2);
+			if( $RetPermisos["disable"] == "no"){
+				$Insert_Permiso = "insert into categorias_roles(id_categoria, fecha, ID_TipoUsuario, estado) values('{$ID_Categoria}', '{$Fecha}','{$GrupoUsuarios}', 1)";
+				if(!$RetID = mysqli_query($Con->Conexion,$Insert_Permiso)){
+					throw new Exception("No se pudo actualizar el permisos. Consulta: ".$Insert_Permiso, 2);
+				}
+				$updatePermisos = "update solicitudes_permisos
+								   set estado = 0
+								   where ID = {$ID_Solicitud}
+									 and ID_TipoUsuario = {$GrupoUsuarios} 
+									 and estado = 1";
+				$MensajeError = "No se pudo dar de baja el permiso categoria {$ID_Categoria} rol {$GrupoUsuarios}";
+				$ResultadosUpdate = mysqli_query($Con->Conexion,$updatePermisos) or die($MessageError);
+			}
+		} else {
+			if( $RetPermisos["disable"] == "si"){
+				$updatePermisos = "update categorias_roles
+								   set estado = 0
+								   where id_categoria = {$ID_Categoria}
+				  				   and ID_TipoUsuario = {$GrupoUsuarios} 
+				  				   and estado = 1";
+				$MensajeError = "No se pudo dar de baja el permiso categoria {$ID_Categoria} rol {$GrupoUsuarios}";
+				if(!$RetID = mysqli_query($Con->Conexion,$updatePermisos)){
+					throw new Exception($MensajeError . ". Consulta: ".$updatePermisos, 2);
+				}
+			} else {
+				$updatePermisos = "update solicitudes_permisos
+								   set estado = 0
+								   where ID = {$ID_Solicitud}
+				  				   and ID_TipoUsuario = {$GrupoUsuarios} 
+				  				   and estado = 1";
+				$MensajeError = "No se pudo dar de baja el permiso categoria {$ID_Categoria} rol {$GrupoUsuarios}";
+				$ResultadosUpdate = mysqli_query($Con->Conexion,$updatePermisos) or die($MessageError);
 			}
 		}
-		$updatePermisos = "update solicitudes_permisos
-						   set estado = 0
-						   where ID = {$ID_Solicitud}
-							 and ID_TipoUsuario = {$GrupoUsuarios} 
-							 and estado = 1";
-		$MensajeError = "No se pudo dar de baja el permiso categoria {$ID_Categoria} rol {$GrupoUsuarios}";
-		$ResultadosUpdate = mysqli_query($Con->Conexion,$updatePermisos) or die($MessageError);
 	}
-		
+
 	$ConsultaSolicitud = "update solicitudes_modificarcategorias set estado = 0 where Codigo = '$Codigo' and estado = 1";
 	if(!$Ret = mysqli_query($Con->Conexion,$ConsultaSolicitud)){
 		throw new Exception("Problemas en la consulta. Consulta: ".$ConsultaSolicitud, 3);			
