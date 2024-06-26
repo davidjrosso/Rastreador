@@ -93,7 +93,6 @@ $Con->CloseConexion();
         $('#Tipo_Usuario').multiselect({
             onChange: function(element, checked) {
             var opts = $('*[data-group="'+ element.val() +'"]');
-            console.log(opts);
                 if (checked === true) {
                     opts.prop('disabled', false).prop('selected', false);
                 }

@@ -41,11 +41,24 @@ if($ID_Categoria > 0){
 	$MensajeError = "No se pudo enviar la solicitud";
 
 	mysqli_query($Con->Conexion,$Insert_Solicitud) or die($MensajeError." ".$Solicitud);
-	
-	$Insert_Solicitud = "insert into solicitudes_permisos(ID, ID_TipoUsuario, Fecha, estado) values('{{$Solicitud->getID_Categoria()}}','{$Grupo_Usuarios}','{$Fecha}', 1)";
-	$MensajeError = "No se pudo insertar la solicitud de creacion de permisos";
-	if(!$RetID = mysqli_query($Con->Conexion,$Insert_Solicitud)){
-		throw new Exception("No se pudo consultar el ID de la categoría cargada. Consulta: ".$Insert_Solicitud, 2);
+
+	$ConsultarID = "select id 
+					from solicitudes_modificarcategorias 
+					where codigo = '$Codigo' 
+					  and categoria = '$Categoria' 
+					  and estado = 1 
+					limit 1";
+	if(!$RetID = mysqli_query($Con->Conexion,$ConsultarID)){
+		throw new Exception("No se pudo consultar el ID de la categoría modificada. Consulta: ".$ConsultarID, 2);
+	}
+	$Ret = mysqli_fetch_array($RetID);
+
+	foreach ($Grupo_Usuarios as $key => $value) {
+		$Insert_Solicitud = "insert into solicitudes_permisos(ID, ID_TipoUsuario, Fecha, estado) values('{$Ret["id"]}','{$value}','{$Fecha}', 1)";
+		$MensajeError = "No se pudo insertar la solicitud de modificacion de permisos";
+		if(!$RetID = mysqli_query($Con->Conexion,$Insert_Solicitud)){
+			throw new Exception($MensajeError. " . Consulta :".$Insert_Solicitud, 2);
+		}
 	}
 
 	$Con->CloseConexion();

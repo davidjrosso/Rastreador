@@ -64,20 +64,22 @@ try {
 			throw new Exception($MensajeError." ".$Insert_Solicitud, 2);
 		}
 
-		$ConsultarID = "select id from solicitudes_crearcategorias where codigo = '$Codigo' and categoria = '$Categoria' limit 1";
+		$ConsultarID = "select id 
+						from solicitudes_crearcategorias 
+						where codigo = '$Codigo' 
+						  and categoria = '$Categoria' 
+						  and estado = 1 
+						limit 1";
 		if(!$RetID = mysqli_query($Con->Conexion,$ConsultarID)){
 			throw new Exception("No se pudo consultar el ID de la categoría cargada. Consulta: ".$ConsultarID, 2);
 		}
 		$Ret = mysqli_fetch_array($RetID);
 
-		if(count($GrupoUsuarios) == 0){
-			throw new Exception("No se tiene un array", 2);
-		}
 		foreach ($GrupoUsuarios as $key => $value) {
 			$Insert_Solicitud = "insert into solicitudes_permisos(ID, ID_TipoUsuario, Fecha, estado) values('{$Ret["id"]}','{$value}','{$Fecha}', 1)";
 			$MensajeError = "No se pudo insertar la solicitud de creacion de permisos";
 			if(!$RetID = mysqli_query($Con->Conexion,$Insert_Solicitud)){
-				throw new Exception("No se pudo consultar el ID de la categoría cargada. Consulta: ".$Insert_Solicitud, 2);
+				throw new Exception($MensajeError. " . Consulta :".$Insert_Solicitud, 2);
 			}
 		}
 		$Mensaje = "La solicitud de creacion de categoría se envió a los administradores para ser confirmada.";
