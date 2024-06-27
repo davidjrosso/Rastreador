@@ -1274,15 +1274,33 @@ public function getMenuSeguridad($ID){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='ID_TipoUsuario' name = 'ID_TipoUsuario'>";
-    $Select .= "<option selected = 'true' disabled = 'disabled' value = '0'>- Seleccione un Tipo -</option>";
+    $Select .= "<option selected = 'true' disabled = 'disabled' value = '0'>- Seleccione un Permiso -</option>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from Tipo_Usuarios order by ID_TipoUsuario")or die("Problemas al mostrar Tipo de Usuarios");
     while ($Ret = mysqli_fetch_array($Consulta)) {
-      $Select .= "<option value = '".$Ret['ID_TipoUsuario']."'>".$Ret['TipoUsuario']."</option>";
+      $Select .= "<option value = '".$Ret['ID_TipoUsuario']."'>".$Ret['TipoUsuario']." ( ".$Ret['abreviacion']. " )"."</option>";
     }
     $Select .= "</select>";
     $Con3->CloseConexion();
     return $Select;
   }
+  public function CBTipoUsuariosID($ID){
+    $Con3 = new Conexion();
+    $Con3->OpenConexion();
+    $Select = "<select class='form-control' id='ID_TipoUsuario' name = 'ID_TipoUsuario'>";
+    $Select .= "<option selected = 'true' disabled = 'disabled' value = '0'>- Seleccione un Permiso -</option>";
+    $Consulta = mysqli_query($Con3->Conexion,"select * from Tipo_Usuarios order by ID_TipoUsuario")or die("Problemas al mostrar Tipo de Usuarios");
+    while ($Ret = mysqli_fetch_array($Consulta)) {
+      if($Ret['ID_TipoUsuario'] == $ID){
+        $Select .= "<option SELECTED value = '".$Ret['ID_TipoUsuario']."'>".$Ret['TipoUsuario']." ( ".$Ret['abreviacion']. " )"."</option>";
+      } else {
+        $Select .= "<option value = '".$Ret['ID_TipoUsuario']."'>".$Ret['TipoUsuario']." ( ".$Ret['abreviacion']. " )"."</option>";
+      }
+    }
+    $Select .= "</select>";
+    $Con3->CloseConexion();
+    return $Select;
+  }
+
 
   ////////////////////////////////////////////// ESCUELAS //////////////////////////////////////////////////////////////////
   public function CBNivelEscuelas(){

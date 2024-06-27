@@ -766,10 +766,35 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select accountid, firstname, lastname, username, email from accounts where estado = 1 order by lastname";
 		$MessageError = "Problemas al intentar mostrar Usuarios";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Apellido</th><th>Nombre</th><th>Nombre de Usuario</th><th>E-Mail</th></tr></thead>";
+		$Table = "<table class='table'>
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Apellido</th>
+							<th>Nombre</th>
+							<th>Nombre de Usuario</th>
+							<th>E-Mail</th>
+							<th></th>
+							<th></th>
+						</tr>
+					</thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["accountid"]."</td><td>".$Ret["lastname"]."</td><td>".$Ret["firstname"]."</td><td>".$Ret["username"]."</td><td>".$Ret["email"]."</td><td><a onClick='Verificar(".$Ret["accountid"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr>
+							<td>".$Ret["accountid"]."</td>
+							<td>".$Ret["lastname"]."</td>
+							<td>".$Ret["firstname"]."</td>
+							<td>".$Ret["username"]."</td>
+							<td>".$Ret["email"]."</td>
+							<td>
+								<a href = 'view_modusuario.php?account_id=".$Ret["accountid"]."'>
+									<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+								</a>
+							<td>
+							<td><a onClick='Verificar(".$Ret["accountid"].")'>
+								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a>
+							</td>
+						</tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -782,10 +807,37 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select accountid, firstname, lastname, username, email from accounts where accountid = $ID and estado = 1 order by lastname";
 		$MessageError = "Problemas al intentar mostrar Usuarios por ID";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Apellido</th><th>Nombre</th><th>Nombre de Usuario</th><th>E-Mail</th></tr></thead>";
+		$Table = "<table class='table'>
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Apellido</th>
+							<th>Nombre</th>
+							<th>Nombre de Usuario</th>
+							<th>E-Mail</th>
+							<th></th>
+							<th></th>
+						</tr>
+					</thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["accountid"]."</td><td>".$Ret["lastname"]."</td><td>".$Ret["firstname"]."</td><td>".$Ret["username"]."</td><td>".$Ret["email"]."</td><td><a onClick='Verificar(".$Ret["accountid"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr>
+							<td>".$Ret["accountid"]."</td>
+							<td>".$Ret["lastname"]."</td>
+							<td>".$Ret["firstname"]."</td>
+							<td>".$Ret["username"]."</td>
+							<td>".$Ret["email"]."</td>
+							<td>
+								<a href = 'view_modusuario.php?account_id=".$Ret["accountid"]."'>
+									<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+								</a>
+							<td>
+							<td>
+								<a onClick='Verificar(".$Ret["accountid"].")'>
+									<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
+								</a>
+							</td>
+						</tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -798,10 +850,37 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select accountid, firstname, lastname, username, email from accounts where username like '%$xUserName%' and estado = 1 order by lastname";
 		$MessageError = "Problemas al intentar mostrar Usuarios por UserName";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Apellido</th><th>Nombre</th><th>Nombre de Usuario</th><th>E-Mail</th></tr></thead>";
+		$Table = "<table class='table'>
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Apellido</th>
+							<th>Nombre</th>
+							<th>Nombre de Usuario</th>
+							<th>E-Mail</th>
+							<th></th>
+							<th></th>
+						</tr>
+					</thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["accountid"]."</td><td>".$Ret["lastname"]."</td><td>".$Ret["firstname"]."</td><td>".$Ret["username"]."</td><td>".$Ret["email"]."</td><td><a onClick='Verificar(".$Ret["accountid"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr>
+							<td>".$Ret["accountid"]."</td>
+							<td>".$Ret["lastname"]."</td>
+							<td>".$Ret["firstname"]."</td>
+							<td>".$Ret["username"]."</td>
+							<td>".$Ret["email"]."</td>
+							<td>
+								<a href = 'view_modusuario.php?account_id=".$Ret["accountid"]."'>
+									<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+								</a>
+							<td>
+							<td>
+								<a onClick='Verificar(".$Ret["accountid"].")'>
+									<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
+								</a>
+							</td>
+						</tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -816,10 +895,28 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select ID_calle, calle_nombre from calle where estado = 1 order by calle_nombre";
 		$MessageError = "Problemas al intentar mostrar Calles";
-		$Table = "<table class='table'><thead><tr><th>Calle</th><th colspan='2'></th></tr></thead>";
+		$Table = "<table class='table'>
+					<thead>
+						<tr>
+							<th>Calle</th>
+							<th colspan='2'></th>
+						</tr>
+					</thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["calle_nombre"]."</td><td><a href = 'view_modcalles.php?ID=".$Ret["ID_calle"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='Verificar(".$Ret["ID_calle"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr>
+							<td>".$Ret["calle_nombre"]."</td>
+							<td>
+								<a href = 'view_modcalles.php?ID=".$Ret["ID_calle"]."'>
+									<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+								</a>
+							</td>
+							<td>
+								<a onClick='Verificar(".$Ret["ID_calle"].")'>
+									<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
+								</a>
+							</td>
+						</tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -1204,7 +1301,18 @@ class CtrGeneral{
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
 		if($Regis > 0){
-			$Table = "<table id='creacionCategoria' class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Codigo</th><th style='min-width:100px;'>Categoría</th><th style='min-width:100px;'>Permisos</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Acción</th></tr></thead>";
+			$Table = "<table id='creacionCategoria' class='table-responsive table-bordered'>
+						<thead>
+							<tr>
+								<th style='min-width:50px;'>Id</th>
+								<th style='min-width:100px;'>Fecha</th>
+								<th style='min-width:100px;'>Código</th>
+								<th style='min-width:130px;'>Denominación</th>
+								<th style='min-width:100px;'>Permisos</th>
+								<th style='min-width:100px;'>Usuario</th>
+								<th style='min-width:100px;'>Acción</th>
+							</tr>
+						</thead>";
 			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 				$ID = $Ret["ID"];
 				$ConsultaPermisos = "select  *
@@ -1223,7 +1331,22 @@ class CtrGeneral{
 				$ID_Forma = $Ret["ID_Forma"];
 				$Color = $Ret["Color"];
 				$Usuario = $Ret["username"];						
-				$Table .= "<tr><td>".$ID."</td><td>".$Fecha."</td><td>".$Codigo."</td><td>".$Categoria."</td><td>".$Permisos."</td><td>".$Usuario."</td><td><button class='btn btn-success' onClick='VerificarCrearCategoria(".$ID.",\"".$Fecha."\",\"".$Codigo."\",\"".$Categoria."\",\"".$ID_Forma."\",\"".$Color."\")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarCrearCategoria(".$Ret["ID"].")'><i class='fa fa-times'></i></button></td></tr>";
+				$Table .= "<tr>
+								<td>".$ID."</td>
+								<td>".$Fecha."</td>
+								<td>".$Codigo."</td>
+								<td>".$Categoria."</td>
+								<td>".(($Permisos !="")?$Permisos:"Ninguno")."</td>
+								<td>".$Usuario."</td>
+								<td>
+									<button class='btn btn-success' onClick='VerificarCrearCategoria(".$ID.",\"".$Fecha."\",\"".$Codigo."\",\"".$Categoria."\",\"".$ID_Forma."\",\"".$Color."\")'>
+										<i class='fa fa-check'></i>
+									</button>
+									<button class='btn btn-danger' onClick='CancelarCrearCategoria(".$Ret["ID"].")'>
+										<i class='fa fa-times'></i>
+									</button>
+								</td>
+							</tr>";
 			}
 			$Table .= "</table>";
 		}else{
@@ -1242,7 +1365,18 @@ class CtrGeneral{
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
 		if($Regis > 0){
-			$Table = "<table id='modificacionCategoria' class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Codigo</th><th style='min-width:100px;'>Categoría</th><th style='min-width:100px;'>Permisos</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Acción</th></tr></thead>";
+			$Table = "<table id='modificacionCategoria' class='table-responsive table-bordered'>
+						<thead>
+							<tr>
+								<th style='min-width:50px;'>Id</th>
+								<th style='min-width:100px;'>Fecha</th>
+								<th style='min-width:300px;'>Código</th>
+								<th style='min-width:130px;'>Denominación</th>
+								<th style='min-width:100px;'>Permisos</th>
+								<th style='min-width:100px;'>Usuario</th>
+								<th style='min-width:100px;'>Acción</th>
+							</tr>
+						</thead>";
 			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 				$ID = $Ret["ID"];
 				$ConsultaPermisos = "select  *
@@ -1263,7 +1397,22 @@ class CtrGeneral{
 				$NuevoColor = $Ret["NuevoColor"];	
 				$ID_Categoria = $Ret["ID_Categoria"];	
 				$Usuario = $Ret["username"];							
-				$Table .= "<tr><td>".$ID."</td><td>".$Fecha."</td><td>".$Codigo."</td><td>".$Categoria."</td><td>".$Permisos."</td><td>".$Usuario."</td><td><button class='btn btn-success' onClick='VerificarModificarCategoria(".$ID.",\"".$Fecha."\",\"".$Codigo."\",\"".$Categoria."\",\"".$ID_Forma."\",\"".$NuevoColor."\",\"".$ID_Categoria."\")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarModificacionCategoria(".$Ret["ID"].")'><i class='fa fa-times'></i></button></td></tr>";
+				$Table .= "<tr>
+								<td>".$ID."</td>
+								<td>".$Fecha."</td>
+								<td>".$Codigo."</td>
+								<td>".$Categoria."</td>
+								<td>".(($Permisos !="")?$Permisos:"Ninguno")."</td>
+								<td>".$Usuario."</td>
+								<td>
+									<button class='btn btn-success' onClick='VerificarModificarCategoria(".$ID.",\"".$Fecha."\",\"".$Codigo."\",\"".$Categoria."\",\"".$ID_Forma."\",\"".$NuevoColor."\",\"".$ID_Categoria."\")'>
+										<i class='fa fa-check'></i>
+									</button>
+									<button class='btn btn-danger' onClick='CancelarModificacionCategoria(".$Ret["ID"].")'>
+										<i class='fa fa-times'></i>
+									</button>
+								</td>
+							</tr>";
 			}			
 			$Table .= "</table>";
 		}else{
@@ -1313,7 +1462,17 @@ class CtrGeneral{
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
 		if($Regis > 0){
-			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Motivo</th><th style='min-width:100px;'>Cod. Categoría</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Acción</th></tr></thead>";
+			$Table = "<table class='table-responsive table-bordered'>
+						<thead>
+							<tr>
+								<th style='min-width:50px;'>Id</th>
+								<th style='min-width:100px;'>Fecha</th>
+								<th style='min-width:300px;'>Motivo</th>
+								<th style='min-width:100px;'>Cod. Categoría</th>
+								<th style='min-width:100px;'>Usuario</th>
+								<th style='min-width:100px;'>Acción</th>
+							</tr>
+						</thead>";
 			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 				$ID = $Ret["ID"];
 				$Fecha = implode("/", array_reverse(explode("-",$Ret["Fecha"])));
@@ -1356,7 +1515,17 @@ class CtrGeneral{
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
 		if($Regis > 0){
-			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Motivo</th><th style='min-width:100px;'>Cod. Categoría</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Acción</th></tr></thead>";
+			$Table = "<table class='table-responsive table-bordered'>
+						<thead>
+							<tr>
+								<th style='min-width:50px;'>Id</th>
+								<th style='min-width:100px;'>Fecha</th>
+								<th style='min-width:130px;'>Denominación</th>
+								<th style='min-width:100px;'>Código</th>
+								<th style='min-width:100px;'>Usuario</th>
+								<th style='min-width:100px;'>Acción</th>
+							</tr>
+						</thead>";
 			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 				$ID = $Ret["ID"];
 				$Fecha = implode("/", array_reverse(explode("-",$Ret["Fecha"])));
@@ -1364,8 +1533,22 @@ class CtrGeneral{
 				$Cod_Categoria = $Ret["Cod_Categoria"];				
 				$Usuario = $Ret["username"];	
 				$ID_Categoria = $Ret["ID_Categoria"];			
-				$Table .= "<tr><td>".$ID."</td><td>".$Fecha."</td><td>".$Categoria."</td><td>".$Cod_Categoria."</td><td>".$Usuario."</td><td><button class='btn btn-success' onClick='VerificarEliminarCategoria(".$ID_Categoria.")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarEliminacionCategoria(".$Ret["ID"].")'><i class='fa fa-times'></i></button></td></tr>";
-			}			
+				$Table .= "<tr>
+								<td>".$ID."</td>
+								<td>".$Fecha."</td>
+								<td>".$Categoria."</td>
+								<td>".$Cod_Categoria."</td>
+								<td>".$Usuario."</td>
+								<td>
+									<button class='btn btn-success' onClick='VerificarEliminarCategoria(".$ID_Categoria.")'>
+										<i class='fa fa-check'></i>
+									</button>
+									<button class='btn btn-danger' onClick='CancelarEliminacionCategoria(".$Ret["ID"].")'>
+										<i class='fa fa-times'></i>
+									</button>
+								</td>
+							</tr>";
+			}
 			$Table .= "</table>";
 		}else{
 			$Table = "No existen solicitudes de eliminar categoria pendientes de aprobación.";
