@@ -1072,42 +1072,45 @@ class CtrGeneral{
 	public function getUsuariosxID($ID){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select accountid, firstname, lastname, username, email from accounts where accountid = $ID and estado = 1 order by lastname";
-		$MessageError = "Problemas al intentar mostrar Usuarios por ID";
-		$Table = "<table class='table'>
-					<thead>
-						<tr>
-							<th>Id</th>
-							<th>Apellido</th>
-							<th>Nombre</th>
-							<th>Nombre de Usuario</th>
-							<th>E-Mail</th>
-							<th></th>
-							<th></th>
-						</tr>
-					</thead>";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
-		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr>
-							<td>".$Ret["accountid"]."</td>
-							<td>".$Ret["lastname"]."</td>
-							<td>".$Ret["firstname"]."</td>
-							<td>".$Ret["username"]."</td>
-							<td>".$Ret["email"]."</td>
-							<td>
-								<a href = 'view_modusuario.php?account_id=".$Ret["accountid"]."'>
-									<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
-								</a>
-							<td>
-							<td>
-								<a onClick='Verificar(".$Ret["accountid"].")'>
-									<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
-								</a>
-							</td>
-						</tr>";
+		$Table = "";
+		if(is_numeric($ID)){
+			$Consulta = "select accountid, firstname, lastname, username, email from accounts where accountid = $ID and estado = 1 order by lastname";
+			$MessageError = "Problemas al intentar mostrar Usuarios por ID";
+			$Table = "<table class='table'>
+						<thead>
+							<tr>
+								<th>Id</th>
+								<th>Apellido</th>
+								<th>Nombre</th>
+								<th>Nombre de Usuario</th>
+								<th>E-Mail</th>
+								<th></th>
+								<th></th>
+							</tr>
+						</thead>";
+			$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
+				$Table .= "<tr>
+								<td>".$Ret["accountid"]."</td>
+								<td>".$Ret["lastname"]."</td>
+								<td>".$Ret["firstname"]."</td>
+								<td>".$Ret["username"]."</td>
+								<td>".$Ret["email"]."</td>
+								<td>
+									<a href = 'view_modusuario.php?account_id=".$Ret["accountid"]."'>
+										<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+									</a>
+								<td>
+								<td>
+									<a onClick='Verificar(".$Ret["accountid"].")'>
+										<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
+									</a>
+								</td>
+							</tr>";
+				$Table .= "</table>";
+			}
 		}
 		$Con->CloseConexion();
-		$Table .= "</table>";
 
 		return $Table;
 	}
