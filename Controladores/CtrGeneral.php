@@ -5,18 +5,98 @@ class CtrGeneral{
 	//Instanciando la Conexion
 
 	////////////////////////////////////////////////-MOVIMIENTOS-///////////////////////////////////////////////////
-	public function getMovimientos(){
+	public function getMovimientos($TipoUsuario){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion, P.apellido, P.nombre, R.responsable 
-					 from movimiento M, 
-						  persona P, 
-						  responsable R 
-					 where M.id_persona = P.id_persona 
-					   and M.id_resp = R.id_resp 
-					   and M.estado = 1 
-					   and P.estado = 1 
-					 order by M.fecha_creacion desc";
+
+		$Consulta = "CREATE TEMPORARY TABLE INN  SELECT MT.id_motivo
+												 FROM motivo MT,
+													  categoria  C,
+													  categorias_roles CS
+												 WHERE CS.id_categoria = C.id_categoria
+												   and C.cod_categoria = MT.cod_categoria
+												   and CS.id_tipousuario = $TipoUsuario
+												   and CS.estado = 1";
+
+		$MessageError = "Problemas al crear la tabla temporaria";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+
+		$Consulta = "select M.id_movimiento, 
+							M.fecha, 
+							M.fecha_creacion, 
+							P.apellido, 
+							P.nombre, 
+							R.responsable
+							from movimiento M, 
+								persona P, 
+								responsable R
+							where M.id_persona = P.id_persona 
+								and M.id_resp = R.id_resp
+								and (M.motivo_1 IN (SELECT * FROM INN)
+									AND M.motivo_2 IN (SELECT * FROM INN) 
+									AND M.motivo_3 IN (SELECT * FROM INN)
+									AND M.motivo_4 IN (SELECT * FROM INN)
+									AND M.motivo_5 IN (SELECT * FROM INN))
+								and M.estado = 1 
+								and P.estado = 1  
+							order by M.fecha_creacion desc;";
+		$MessageError = "Problemas al intentar mostrar Movimientos";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+/*$Consulta =  "select M.id_movimiento, 
+							M.fecha, 
+							M.fecha_creacion, 
+							P.apellido, 
+							P.nombre, 
+							R.responsable
+							from movimiento M, 
+								persona P, 
+								responsable R
+							where M.id_persona = P.id_persona 
+								and M.id_resp = R.id_resp
+								and (M.motivo_1 IN  (SELECT MT.id_motivo
+														FROM motivo MT,
+																categoria  C,
+																categorias_roles CS
+														WHERE CS.id_categoria = C.id_categoria
+															and C.cod_categoria = MT.cod_categoria
+														and CS.id_tipousuario = $TipoUsuario
+															and CS.estado = 1) 
+									AND M.motivo_2 IN  (SELECT MT.id_motivo
+														FROM motivo MT,
+																categoria  C,
+																categorias_roles CS
+														WHERE CS.id_categoria = C.id_categoria
+															and C.cod_categoria = MT.cod_categoria
+														and CS.id_tipousuario = $TipoUsuario
+															and CS.estado = 1)
+									AND M.motivo_3 IN  (SELECT MT.id_motivo
+														FROM motivo MT,
+																categoria  C,
+																categorias_roles CS
+														WHERE CS.id_categoria = C.id_categoria
+															and C.cod_categoria = MT.cod_categoria
+														and CS.id_tipousuario = $TipoUsuario
+															and CS.estado = 1)
+									AND M.motivo_4 IN  (SELECT MT.id_motivo
+														FROM motivo MT,
+																categoria  C,
+																categorias_roles CS
+														WHERE CS.id_categoria = C.id_categoria
+															and C.cod_categoria = MT.cod_categoria
+														and CS.id_tipousuario = $TipoUsuario
+															and CS.estado = 1)
+									AND M.motivo_5 IN  (SELECT MT.id_motivo
+														FROM motivo MT,
+																categoria  C,
+																categorias_roles CS
+														WHERE CS.id_categoria = C.id_categoria
+															and C.cod_categoria = MT.cod_categoria
+														and CS.id_tipousuario = $TipoUsuario
+															and CS.estado = 1))
+								and M.estado = 1 
+								and P.estado = 1  
+							order by M.fecha_creacion desc";*/
+
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -30,16 +110,42 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getMovimientosxID($ID){
+	public function getMovimientosxID($ID, $TipoUsuario){
 		$Con = new Conexion();
 		$Con->OpenConexion();
+		$Consulta = "CREATE TEMPORARY TABLE INN  SELECT MT.id_motivo
+												 FROM motivo MT,
+													  categoria  C,
+													  categorias_roles CS
+												 WHERE CS.id_categoria = C.id_categoria
+												   and C.cod_categoria = MT.cod_categoria
+												   and CS.id_tipousuario = $TipoUsuario
+												   and CS.estado = 1";
+
+		$MessageError = "Problemas al crear la tabla temporaria";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+
 		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
-					 from movimiento M, persona P, responsable R 
+					 from movimiento M,
+					 	  persona P,
+						  responsable R,
+						  categoria C,
+						  categorias_roles CS,
+						  motivo MT
 					 where M.id_persona = P.id_persona
 					   and M.id_resp = R.id_resp 
-					   and M.id_movimiento = $ID 
+					   and M.id_movimiento = $ID
+					   and CS.id_categoria = C.id_categoria
+					   and C.cod_categoria = MT.cod_categoria
+					   and (M.motivo_1 IN (SELECT * FROM INN)
+						AND M.motivo_2 IN (SELECT * FROM INN) 
+						AND M.motivo_3 IN (SELECT * FROM INN)
+						AND M.motivo_4 IN (SELECT * FROM INN)
+						AND M.motivo_5 IN (SELECT * FROM INN))
+					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
-					   and P.estado = 1 
+					   and P.estado = 1
+					   and CS.estado = 1  
 					 order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
@@ -54,19 +160,42 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getMovimientosxFecha($Fecha){
+	public function getMovimientosxFecha($Fecha,$TipoUsuario){
 		$Fecha = implode("-", array_reverse(explode("/",$Fecha)));
 		$Con = new Conexion();
 		$Con->OpenConexion();
+		$Consulta = "CREATE TEMPORARY TABLE INN  SELECT MT.id_motivo
+												 FROM motivo MT,
+													  categoria  C,
+													  categorias_roles CS
+												 WHERE CS.id_categoria = C.id_categoria
+												   and C.cod_categoria = MT.cod_categoria
+												   and CS.id_tipousuario = $TipoUsuario
+												   and CS.estado = 1";
+
+		$MessageError = "Problemas al crear la tabla temporaria";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
 					 from movimiento M, 
 					 	  persona P, 
-						  responsable R 
+						  responsable R,
+						  categoria C,
+						  categorias_roles CS,
+						  motivo MT
 					 where M.id_persona = P.id_persona 
 					   and M.id_resp = R.id_resp 
-					   and M.fecha = '$Fecha' 
-					   and M.estado = 1 
-					   and P.estado = 1 
+					   and M.fecha = '$Fecha'
+					   and CS.id_categoria = C.id_categoria
+					   and C.cod_categoria = MT.cod_categoria
+					   and (M.motivo_1 IN (SELECT * FROM INN)
+						AND M.motivo_2 IN (SELECT * FROM INN) 
+						AND M.motivo_3 IN (SELECT * FROM INN)
+						AND M.motivo_4 IN (SELECT * FROM INN)
+						AND M.motivo_5 IN (SELECT * FROM INN))
+					   and CS.id_tipousuario = $TipoUsuario
+					   and M.estado = 1
+					   and P.estado = 1
+					   and CS.estado = 1 
 					order M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
@@ -81,18 +210,41 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getMovimientosxApellido($Apellido){
+	public function getMovimientosxApellido($Apellido, $TipoUsuario){
 		$Con = new Conexion();
 		$Con->OpenConexion();
+		$Consulta = "CREATE TEMPORARY TABLE INN  SELECT MT.id_motivo
+												 FROM motivo MT,
+													  categoria  C,
+													  categorias_roles CS
+												 WHERE CS.id_categoria = C.id_categoria
+												   and C.cod_categoria = MT.cod_categoria
+												   and CS.id_tipousuario = $TipoUsuario
+												   and CS.estado = 1";
+
+		$MessageError = "Problemas al crear la tabla temporaria";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
 					 from movimiento M, 
 					 	  persona P, 
-						  responsable R 
+						  responsable R,
+						  categoria C,
+						  categorias_roles CS,
+						  motivo MT
 					 where M.id_persona = P.id_persona 
 					   and M.id_resp = R.id_resp 
-					   and P.apellido like '%$Apellido%' 
+					   and P.apellido like '%$Apellido%'
+					   and CS.id_categoria = C.id_categoria
+					   and C.cod_categoria = MT.cod_categoria
+					   and (M.motivo_1 IN (SELECT * FROM INN)
+						AND M.motivo_2 IN (SELECT * FROM INN) 
+						AND M.motivo_3 IN (SELECT * FROM INN)
+						AND M.motivo_4 IN (SELECT * FROM INN)
+						AND M.motivo_5 IN (SELECT * FROM INN))
+					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
-					   and P.estado = 1 
+					   and P.estado = 1
+					   and CS.estado = 1  
 					order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
@@ -107,18 +259,41 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getMovimientosxNombre($Nombre){
+	public function getMovimientosxNombre($Nombre, $TipoUsuario){
 		$Con = new Conexion();
 		$Con->OpenConexion();
+		$Consulta = "CREATE TEMPORARY TABLE INN  SELECT MT.id_motivo
+												 FROM motivo MT,
+													  categoria  C,
+													  categorias_roles CS
+												 WHERE CS.id_categoria = C.id_categoria
+												   and C.cod_categoria = MT.cod_categoria
+												   and CS.id_tipousuario = $TipoUsuario
+												   and CS.estado = 1";
+
+		$MessageError = "Problemas al crear la tabla temporaria";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
 					 from movimiento M, 
 						  persona P, 
-						  responsable R 
+						  responsable R,
+						  categoria C,
+						  categorias_roles CS,
+						  motivo MT
 					  where M.id_persona = P.id_persona 
 						and M.id_resp = R.id_resp 
-						and P.nombre like '%$Nombre%' 
+						and P.nombre like '%$Nombre%'
+					    and CS.id_categoria = C.id_categoria
+						and C.cod_categoria = MT.cod_categoria
+					   and (M.motivo_1 IN (SELECT * FROM INN)
+						AND M.motivo_2 IN (SELECT * FROM INN) 
+						AND M.motivo_3 IN (SELECT * FROM INN)
+						AND M.motivo_4 IN (SELECT * FROM INN)
+						AND M.motivo_5 IN (SELECT * FROM INN))
+					    and CS.id_tipousuario = $TipoUsuario
 						and M.estado = 1 
-						and P.estado = 1 
+						and P.estado = 1
+					   and CS.estado = 1  
 					  order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
@@ -133,18 +308,41 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getMovimientosxDocumento($Documento){
+	public function getMovimientosxDocumento($Documento, $TipoUsuario){
 		$Con = new Conexion();
 		$Con->OpenConexion();
+		$Consulta = "CREATE TEMPORARY TABLE INN  SELECT MT.id_motivo
+												 FROM motivo MT,
+													  categoria  C,
+													  categorias_roles CS
+												 WHERE CS.id_categoria = C.id_categoria
+												   and C.cod_categoria = MT.cod_categoria
+												   and CS.id_tipousuario = $TipoUsuario
+												   and CS.estado = 1";
+
+		$MessageError = "Problemas al crear la tabla temporaria";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
 					 from movimiento M,
-					 	  persona P, 
-						  responsable R 
+					 	  persona P,
+						  responsable R,
+						  categoria C,
+						  categorias_roles CS,
+						  motivo MT
 					 where M.id_persona = P.id_persona 
 					   and M.id_resp = R.id_resp 
 					   and P.documento like '%$Documento%' 
+					   and CS.id_categoria = C.id_categoria
+					   and C.cod_categoria = MT.cod_categoria
+					   and (M.motivo_1 IN (SELECT * FROM INN)
+						AND M.motivo_2 IN (SELECT * FROM INN) 
+						AND M.motivo_3 IN (SELECT * FROM INN)
+						AND M.motivo_4 IN (SELECT * FROM INN)
+						AND M.motivo_5 IN (SELECT * FROM INN))
+					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
-					   and P.estado = 1 
+					   and P.estado = 1
+					   and CS.estado = 1  
 					 order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
@@ -159,21 +357,44 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getMovimientosxResponsable($Responsable){
+	public function getMovimientosxResponsable($Responsable, $TipoUsuario){
 		$Con = new Conexion();
 		$Con->OpenConexion();
+		$Consulta = "CREATE TEMPORARY TABLE INN  SELECT MT.id_motivo
+												 FROM motivo MT,
+													  categoria  C,
+													  categorias_roles CS
+												 WHERE CS.id_categoria = C.id_categoria
+												   and C.cod_categoria = MT.cod_categoria
+												   and CS.id_tipousuario = $TipoUsuario
+												   and CS.estado = 1";
+
+		$MessageError = "Problemas al crear la tabla temporaria";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
 					 from movimiento M, 
 					 	  persona P, 
-						  responsable R 
+						  responsable R,
+						  categoria C,
+						  categorias_roles CS,
+						  motivo MT
 					 where M.id_persona = P.id_persona
 					   and (M.id_resp = R.id_resp 
 					   	 or M.id_resp_2 = R.id_resp 
 						 or M.id_resp_3 = R.id_resp 
 						 or M.id_resp_4 = R.id_resp) 
-					   and R.responsable like '%$Responsable%' 
+					   and R.responsable like '%$Responsable%'
+					   and CS.id_categoria = C.id_categoria
+					   and C.cod_categoria = MT.cod_categoria
+					   and (M.motivo_1 IN (SELECT * FROM INN)
+						AND M.motivo_2 IN (SELECT * FROM INN) 
+						AND M.motivo_3 IN (SELECT * FROM INN)
+						AND M.motivo_4 IN (SELECT * FROM INN)
+						AND M.motivo_5 IN (SELECT * FROM INN))
+					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
-					   and P.estado = 1 
+					   and P.estado = 1
+					   and CS.estado = 1  
 					 order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
@@ -188,21 +409,44 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getMovimientosxLegajo($Legajo){
+	public function getMovimientosxLegajo($Legajo, $TipoUsuario){
 		$Con = new Conexion();
 		$Con->OpenConexion();
+		$Consulta = "CREATE TEMPORARY TABLE INN  SELECT MT.id_motivo
+												 FROM motivo MT,
+													  categoria  C,
+													  categorias_roles CS
+												 WHERE CS.id_categoria = C.id_categoria
+												   and C.cod_categoria = MT.cod_categoria
+												   and CS.id_tipousuario = $TipoUsuario
+												   and CS.estado = 1";
+
+		$MessageError = "Problemas al crear la tabla temporaria";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
 					 from movimiento M, 
 					 	  persona P, 
-						  responsable R 
+						  responsable R,
+						  categoria C,
+						  categorias_roles CS,
+						  motivo MT
 					 where M.id_persona = P.id_persona 
 					   and (M.id_resp = R.id_resp 
 						 or M.id_resp_2 = R.id_resp 
 						 or M.id_resp_3 = R.id_resp 
 						 or M.id_resp_4 = R.id_resp) 
-					   and P.nro_legajo = '$Legajo' 
+					   and P.nro_legajo = '$Legajo'
+					   and CS.id_categoria = C.id_categoria
+					   and C.cod_categoria = MT.cod_categoria
+					   and (M.motivo_1 IN (SELECT * FROM INN)
+						AND M.motivo_2 IN (SELECT * FROM INN) 
+						AND M.motivo_3 IN (SELECT * FROM INN)
+						AND M.motivo_4 IN (SELECT * FROM INN)
+						AND M.motivo_5 IN (SELECT * FROM INN))
+					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
-					   and P.estado = 1 
+					   and P.estado = 1
+					   and CS.estado = 1  
 					 order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
@@ -217,21 +461,44 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getMovimientosxCarpeta($Carpeta){
+	public function getMovimientosxCarpeta($Carpeta, $TipoUsuario){
 		$Con = new Conexion();
 		$Con->OpenConexion();
+		$Consulta = "CREATE TEMPORARY TABLE INN  SELECT MT.id_motivo
+												 FROM motivo MT,
+													  categoria  C,
+													  categorias_roles CS
+												 WHERE CS.id_categoria = C.id_categoria
+												   and C.cod_categoria = MT.cod_categoria
+												   and CS.id_tipousuario = $TipoUsuario
+												   and CS.estado = 1";
+
+		$MessageError = "Problemas al crear la tabla temporaria";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
 					 from movimiento M, 
 					 	  persona P, 
-						  responsable R 
+						  responsable R,
+						  categoria C,
+						  categorias_roles CS,
+						  motivo MT,
 					 where M.id_persona = P.id_persona 
 					   and (M.id_resp = R.id_resp 
 					   	 or M.id_resp_2 = R.id_resp 
 						 or M.id_resp_3 = R.id_resp 
 						 or M.id_resp_4 = R.id_resp) 
-					   and P.nro_carpeta = '$Carpeta' 
+					   and P.nro_carpeta = '$Carpeta'
+					   and CS.id_categoria = C.id_categoria
+					   and C.cod_categoria = MT.cod_categoria
+					   and (M.motivo_1 IN (SELECT * FROM INN)
+						AND M.motivo_2 IN (SELECT * FROM INN) 
+						AND M.motivo_3 IN (SELECT * FROM INN)
+						AND M.motivo_4 IN (SELECT * FROM INN)
+						AND M.motivo_5 IN (SELECT * FROM INN))
+					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
-					   and P.estado = 1 
+					   and P.estado = 1
+					   and CS.estado = 1  
 					 order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
