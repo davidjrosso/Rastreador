@@ -479,55 +479,55 @@ $Con->CloseConexion();
               </div>
             </div>
             <input type="hidden" name="Calle" id="Calle" value = "">
+
           </form>
           <div class="row">
               <div class="col-10"></div>
-              <div class="col-2">
-                
-              </div>
+              <div class="col-2"></div>
           </div>
           <!-- Fin Carga -->
 
           <!-- Modal de Carga de Calle-->
 
-          <div class="modal fade bd-example-modal-lg" id="ModalCalle" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-			  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-			    <div class="modal-content">
-			      <div class="modal-header">
-			        <h5 class="modal-title" id="exampleModalLongTitle">Seleccione una Calle</h5>
-			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			          <span aria-hidden="true">&times;</span>
-			        </button>
-			      </div>
-			      <div class="modal-body">
-			        <form>
-			        	<div class="row">
-			        		<div class="col"></div>
-			        		<div class="col-8">
-			        			<div class="input-group mb-3">
-				        			<input class = "form-control" type="text" name="BuscarCalle" id = "SearchCalle" onKeyUp="buscarCalles()" autocomplete="off" placeholder="Ingrese el nombre de calle">
-				        			<div class="input-group-append">
-				        				<span class="input-group-text" id="basic-addon2">Buscar</span>
-								      </div>	
-								    </div>		        				
-			        		</div>
-			        		<div class="col"></div>
-			        	</div>
-			        	<div class="row">
-			        		<div class="col"></div>
-			        		<div class="col-10" id = "ResultadosCalles">
-			        			
-			        		</div>
-			        		<div class="col"></div>
-			        	</div>
-			        </form>
-			      </div>
-			      <div class="modal-footer">
-			        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>			        
-			      </div>
-			    </div>
-			  </div>
-			</div>
+      <div class="modal fade bd-example-modal-lg" id="ModalCalle" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Seleccione una Calle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="row">
+                    <div class="col"></div>
+                    <div class="col-8">
+                      <div class="input-group mb-3">
+                        <input class = "form-control" type="text" name="BuscarCalle" id = "SearchCalle" onKeyUp="buscarCalles()" autocomplete="off" placeholder="Ingrese el nombre de calle">
+                        <div class="input-group-append">
+                          <span class="input-group-text" id="basic-addon2">Buscar</span>
+                        </div>	
+                      </div>		        				
+                    </div>
+                    <div class="col"></div>
+                  </div>
+                  <div class="row">
+                    <div class="col"></div>
+                    <div class="col-10" id = "ResultadosCalles">
+                      
+                    </div>
+                    <div class="col"></div>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>			        
+              </div>
+            </div>
+        </div>
+      </div>
+      <!-- Modal de Carga de Calle-->
   </div>
 </div>
 </div>
