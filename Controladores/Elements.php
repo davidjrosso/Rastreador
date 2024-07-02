@@ -1291,9 +1291,9 @@ public function getMenuSeguridad($ID){
     $Consulta = mysqli_query($Con3->Conexion,"select * from Tipo_Usuarios order by ID_TipoUsuario")or die("Problemas al mostrar Tipo de Usuarios");
     while ($Ret = mysqli_fetch_array($Consulta)) {
       if($Ret['ID_TipoUsuario'] == $ID){
-        $Select .= "<option SELECTED value = '".$Ret['ID_TipoUsuario']."'>".$Ret['TipoUsuario']." ( ".$Ret['abreviacion']. " )"."</option>";
+        $Select .= "<option SELECTED value = '".$Ret['ID_TipoUsuario']."'>".$Ret['descripcion']." ( ".$Ret['abreviacion']. " )"."</option>";
       } else {
-        $Select .= "<option value = '".$Ret['ID_TipoUsuario']."'>".$Ret['TipoUsuario']." ( ".$Ret['abreviacion']. " )"."</option>";
+        $Select .= "<option value = '".$Ret['ID_TipoUsuario']."'>".$Ret['descripcion']." ( ".$Ret['abreviacion']. " )"."</option>";
       }
     }
     $Select .= "</select>";
