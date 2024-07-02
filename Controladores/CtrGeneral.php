@@ -33,10 +33,10 @@ class CtrGeneral{
 							where M.id_persona = P.id_persona 
 								and M.id_resp = R.id_resp
 								and (M.motivo_1 IN (SELECT * FROM INN)
-									AND M.motivo_2 IN (SELECT * FROM INN) 
-									AND M.motivo_3 IN (SELECT * FROM INN)
-									AND M.motivo_4 IN (SELECT * FROM INN)
-									AND M.motivo_5 IN (SELECT * FROM INN))
+									OR M.motivo_2 IN (SELECT * FROM INN) 
+									OR M.motivo_3 IN (SELECT * FROM INN)
+									OR M.motivo_4 IN (SELECT * FROM INN)
+									OR M.motivo_5 IN (SELECT * FROM INN))
 								and M.estado = 1 
 								and P.estado = 1  
 							order by M.fecha_creacion desc;";
@@ -138,10 +138,10 @@ class CtrGeneral{
 					   and CS.id_categoria = C.id_categoria
 					   and C.cod_categoria = MT.cod_categoria
 					   and (M.motivo_1 IN (SELECT * FROM INN)
-						AND M.motivo_2 IN (SELECT * FROM INN) 
-						AND M.motivo_3 IN (SELECT * FROM INN)
-						AND M.motivo_4 IN (SELECT * FROM INN)
-						AND M.motivo_5 IN (SELECT * FROM INN))
+									OR M.motivo_2 IN (SELECT * FROM INN) 
+									OR M.motivo_3 IN (SELECT * FROM INN)
+									OR M.motivo_4 IN (SELECT * FROM INN)
+									OR M.motivo_5 IN (SELECT * FROM INN))
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
@@ -188,10 +188,10 @@ class CtrGeneral{
 					   and CS.id_categoria = C.id_categoria
 					   and C.cod_categoria = MT.cod_categoria
 					   and (M.motivo_1 IN (SELECT * FROM INN)
-						AND M.motivo_2 IN (SELECT * FROM INN) 
-						AND M.motivo_3 IN (SELECT * FROM INN)
-						AND M.motivo_4 IN (SELECT * FROM INN)
-						AND M.motivo_5 IN (SELECT * FROM INN))
+									OR M.motivo_2 IN (SELECT * FROM INN) 
+									OR M.motivo_3 IN (SELECT * FROM INN)
+									OR M.motivo_4 IN (SELECT * FROM INN)
+									OR M.motivo_5 IN (SELECT * FROM INN))
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1
 					   and P.estado = 1
@@ -237,10 +237,10 @@ class CtrGeneral{
 					   and CS.id_categoria = C.id_categoria
 					   and C.cod_categoria = MT.cod_categoria
 					   and (M.motivo_1 IN (SELECT * FROM INN)
-						AND M.motivo_2 IN (SELECT * FROM INN) 
-						AND M.motivo_3 IN (SELECT * FROM INN)
-						AND M.motivo_4 IN (SELECT * FROM INN)
-						AND M.motivo_5 IN (SELECT * FROM INN))
+									OR M.motivo_2 IN (SELECT * FROM INN) 
+									OR M.motivo_3 IN (SELECT * FROM INN)
+									OR M.motivo_4 IN (SELECT * FROM INN)
+									OR M.motivo_5 IN (SELECT * FROM INN))
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
@@ -286,10 +286,10 @@ class CtrGeneral{
 					    and CS.id_categoria = C.id_categoria
 						and C.cod_categoria = MT.cod_categoria
 					   and (M.motivo_1 IN (SELECT * FROM INN)
-						AND M.motivo_2 IN (SELECT * FROM INN) 
-						AND M.motivo_3 IN (SELECT * FROM INN)
-						AND M.motivo_4 IN (SELECT * FROM INN)
-						AND M.motivo_5 IN (SELECT * FROM INN))
+									OR M.motivo_2 IN (SELECT * FROM INN) 
+									OR M.motivo_3 IN (SELECT * FROM INN)
+									OR M.motivo_4 IN (SELECT * FROM INN)
+									OR M.motivo_5 IN (SELECT * FROM INN))
 					    and CS.id_tipousuario = $TipoUsuario
 						and M.estado = 1 
 						and P.estado = 1
@@ -335,10 +335,10 @@ class CtrGeneral{
 					   and CS.id_categoria = C.id_categoria
 					   and C.cod_categoria = MT.cod_categoria
 					   and (M.motivo_1 IN (SELECT * FROM INN)
-						AND M.motivo_2 IN (SELECT * FROM INN) 
-						AND M.motivo_3 IN (SELECT * FROM INN)
-						AND M.motivo_4 IN (SELECT * FROM INN)
-						AND M.motivo_5 IN (SELECT * FROM INN))
+									OR M.motivo_2 IN (SELECT * FROM INN) 
+									OR M.motivo_3 IN (SELECT * FROM INN)
+									OR M.motivo_4 IN (SELECT * FROM INN)
+									OR M.motivo_5 IN (SELECT * FROM INN))
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
@@ -387,10 +387,10 @@ class CtrGeneral{
 					   and CS.id_categoria = C.id_categoria
 					   and C.cod_categoria = MT.cod_categoria
 					   and (M.motivo_1 IN (SELECT * FROM INN)
-						AND M.motivo_2 IN (SELECT * FROM INN) 
-						AND M.motivo_3 IN (SELECT * FROM INN)
-						AND M.motivo_4 IN (SELECT * FROM INN)
-						AND M.motivo_5 IN (SELECT * FROM INN))
+									OR M.motivo_2 IN (SELECT * FROM INN) 
+									OR M.motivo_3 IN (SELECT * FROM INN)
+									OR M.motivo_4 IN (SELECT * FROM INN)
+									OR M.motivo_5 IN (SELECT * FROM INN))
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
@@ -439,10 +439,10 @@ class CtrGeneral{
 					   and CS.id_categoria = C.id_categoria
 					   and C.cod_categoria = MT.cod_categoria
 					   and (M.motivo_1 IN (SELECT * FROM INN)
-						AND M.motivo_2 IN (SELECT * FROM INN) 
-						AND M.motivo_3 IN (SELECT * FROM INN)
-						AND M.motivo_4 IN (SELECT * FROM INN)
-						AND M.motivo_5 IN (SELECT * FROM INN))
+									OR M.motivo_2 IN (SELECT * FROM INN) 
+									OR M.motivo_3 IN (SELECT * FROM INN)
+									OR M.motivo_4 IN (SELECT * FROM INN)
+									OR M.motivo_5 IN (SELECT * FROM INN))
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
@@ -491,10 +491,10 @@ class CtrGeneral{
 					   and CS.id_categoria = C.id_categoria
 					   and C.cod_categoria = MT.cod_categoria
 					   and (M.motivo_1 IN (SELECT * FROM INN)
-						AND M.motivo_2 IN (SELECT * FROM INN) 
-						AND M.motivo_3 IN (SELECT * FROM INN)
-						AND M.motivo_4 IN (SELECT * FROM INN)
-						AND M.motivo_5 IN (SELECT * FROM INN))
+									OR M.motivo_2 IN (SELECT * FROM INN) 
+									OR M.motivo_3 IN (SELECT * FROM INN)
+									OR M.motivo_4 IN (SELECT * FROM INN)
+									OR M.motivo_5 IN (SELECT * FROM INN))
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
@@ -1702,11 +1702,12 @@ class CtrGeneral{
 		$MessageError = "Problemas al intentar mostrar Solicitudes Categorias";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
-		$Permisos = ""; 
+		$Permisos = "";
 		if($Regis > 0){
-				while ($RetPermisos = mysqli_fetch_array($Con->ResultSet)) {
-					$Permisos .= $RetPermisos["abreviacion"] . " " ;
-				}
+			while ($RetPermisos = mysqli_fetch_array($Con->ResultSet)) {
+				$Permisos .= $RetPermisos["abreviacion"] . " - " ;
+			}
+			$Permisos = preg_replace("/- $/", "", $Permisos);
 		}
 		$Con->CloseConexion();
 		
