@@ -118,6 +118,7 @@ $Con->CloseConexion();
       });
     });
 
+/*
     function navegacionConBarHNav(e){
       var value = parseInt(e.target.value);
       var nroFilasTabla = $("tbody > tr").length - 2;
@@ -135,6 +136,44 @@ $Con->CloseConexion();
         columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
         headABorrar.hide();
         columnaABorrar.hide();
+        columnaIndice++;
+      }
+      $("#BarraDeNavHTabla").attr("value", columnaIndice);
+    }
+      */
+
+    function navegacionConBarHNav(e){
+      var value = parseInt(e.target.value);
+      var nroFilasTabla = $("tbody > tr").length - 2;
+      var nroColumnasTabla = $("thead > tr > th").length - 2;
+      $("#BarraDeNavHTabla").attr("max", nroColumnasTabla + 1);
+      $("#BarraDeNavHTabla").attr("value", columnaIndice);
+      if(value < columnaIndice){
+        columnaIndice--;
+        headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');
+        columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
+        columnaABorrar.show();
+        headABorrar.show();
+        columnaABorrar.removeClass( "hiddenColTablaAnimacion");
+        headABorrar.addClass( "hiddenColTablaAnimacion");
+        columnaABorrar.removeClass( "hiddenColTablaAnimacionfire");
+        headABorrar.removeClass( "hiddenColTablaAnimacionfire");
+        columnaABorrar.addClass( "showColTablaAnimacion");
+        headABorrar.addClass( "showColTablaAnimacion");
+        columnaABorrar.addClass( "showColTablaAnimacionfire");
+        headABorrar.addClass( "showColTablaAnimacionfire");
+      } else if (value > columnaIndice){
+        headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');        
+        columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
+
+        columnaABorrar.removeClass( "showColTablaAnimacion");
+        headABorrar.removeClass( "showColTablaAnimacion");
+        columnaABorrar.removeClass( "showColTablaAnimacionfire");
+        headABorrar.removeClass( "showColTablaAnimacionfire");
+        columnaABorrar.addClass( "hiddenColTablaAnimacion");
+        headABorrar.addClass( "hiddenColTablaAnimacion");
+        columnaABorrar.addClass( "hiddenColTablaAnimacionfire");
+        headABorrar.addClass( "hiddenColTablaAnimacionfire");
         columnaIndice++;
       }
       $("#BarraDeNavHTabla").attr("value", columnaIndice);
