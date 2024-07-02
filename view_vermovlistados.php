@@ -1259,34 +1259,37 @@ $Con->CloseConexion();
               if($ID_Config == 'table'){
                 $MotivosTh = "";
                 if($ID_Motivo > 0 || $ID_Motivo2 > 0 || $ID_Motivo3 > 0){
-                  $MotivosTh .= "<th class='trMotivos'>Motivo</th>";
+                  $MotivosTh .= "<th rowspan='2' class='trMotivos'>Motivo</th>";
                 }else{
-                  $MotivosTh .= "<th class='trMotivos'>Motivo 1</th>";
-                  $MotivosTh .= "<th class='trMotivos'>Motivo 2</th>";
-                  $MotivosTh .= "<th class='trMotivos'>Motivo 3</th>";
+                  $MotivosTh .= "<th rowspan='2' class='trMotivos'>Motivo 1</th>";
+                  $MotivosTh .= "<th rowspan='2' class='trMotivos'>Motivo 2</th>";
+                  $MotivosTh .= "<th rowspan='2' class='trMotivos'>Motivo 3</th>";
                 }
 
 
                 $TableMov = "<table class='table'>
-                              <tr class='thead-dark'>
-                                <th class='trFecha' style='min-width: 150px;'>Fecha</th>
-                                <th class='trPersona'>Persona</th>";
+                              <tr rowspan='2' class='thead-dark'>
+                                <th rowspan='2' class='trFecha' style='min-width: 150px;'>Fecha</th>
+                                <th rowspan='2' class='trPersona'>Persona</th>";
                 
                 $TableMov .= $MotivosTh;
 
-                $TableMov .= "  <th class='trDNI'>DNI</th>
-                                <th class='trFechaNac'>Fecha Nac.</th>
-                                <th class='trEdad'>Edad</th>
-                                <th class='trMeses'>Meses</th>
-                                <th class='trObraSocial'>Obra Social</th>
-                                <th class='trDomicilio'>Domicilio</th>
-                                <th class='trBarrio'>Barrio</th>
-                                <th class='trLocalidad'>Localidad</th>
-                                <th class='trObservaciones'>Observaciones</th>
-                                <th class='trResponsable'>Responsable</th>
-                                <th class='trCentrosSalud'>Centro de salud</th>
-                                <th class='trOtrasInstituciones'>Otras Instituciones</th>
-                              </tr>";  
+                $TableMov .= "  <th rowspan='2' class='trDNI'>DNI</th>
+                                <th rowspan='2' class='trFechaNac'>Fecha Nac.</th>
+                                <th colspan='2' class='trEdad' style='text-align: center;' >Edad</th>
+                                <th rowspan='2' class='trObraSocial'>Obra Social</th>
+                                <th rowspan='2' class='trDomicilio'>Domicilio</th>
+                                <th rowspan='2' class='trBarrio'>Barrio</th>
+                                <th rowspan='2' class='trLocalidad'>Localidad</th>
+                                <th rowspan='2' class='trObservaciones'>Observaciones</th>
+                                <th rowspan='2' class='trResponsable'>Responsable</th>
+                                <th rowspan='2' class='trCentrosSalud'>Centro de salud</th>
+                                <th rowspan='2' class='trOtrasInstituciones'>Otras Instituciones</th>
+                              </tr>"; 
+                $TableMov .= " <tr class='thead-dark'>
+                                  <th scope='col' class='trEdad' style='text-align: center;border-top: 0px solid #dee2e6;'>Años</th>
+                                  <th scope='col' class='trMeses' style='text-align: center;border-top: 0px solid #dee2e6;'>Meses</th>
+                                </tr>";
               }
 
               foreach($tomarRetTodos as $clave => $RetTodos){                
