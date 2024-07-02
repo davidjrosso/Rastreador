@@ -478,6 +478,7 @@ $Con->CloseConexion();
                 <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_personas.php'">Atras</button>
               </div>
             </div>
+            <input type="hidden" name="Calle" id="Calle" value = "">
           </form>
           <div class="row">
               <div class="col-10"></div>
@@ -487,6 +488,7 @@ $Con->CloseConexion();
           </div>
           <!-- Fin Carga -->
 
+          <!-- Modal de Carga de Calle-->
 
           <div class="modal fade bd-example-modal-lg" id="ModalCalle" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 			  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -518,7 +520,6 @@ $Con->CloseConexion();
 			        		</div>
 			        		<div class="col"></div>
 			        	</div>
-                <input type="hidden" name="Calle" id = "Calle" value = "">
 			        </form>
 			      </div>
 			      <div class="modal-footer">
