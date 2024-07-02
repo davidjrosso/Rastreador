@@ -1277,7 +1277,7 @@ public function getMenuSeguridad($ID){
     $Select .= "<option selected = 'true' disabled = 'disabled' value = '0'>- Seleccione un Permiso -</option>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from Tipo_Usuarios order by ID_TipoUsuario")or die("Problemas al mostrar Tipo de Usuarios");
     while ($Ret = mysqli_fetch_array($Consulta)) {
-      $Select .= "<option value = '".$Ret['ID_TipoUsuario']."'>".$Ret['TipoUsuario']." ( ".$Ret['abreviacion']. " )"."</option>";
+      $Select .= "<option value = '".$Ret['ID_TipoUsuario']."'>".$Ret['descripcion']." ( ".$Ret['abreviacion']. " )"."</option>";
     }
     $Select .= "</select>";
     $Con3->CloseConexion();
