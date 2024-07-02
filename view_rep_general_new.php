@@ -16,9 +16,6 @@ if (!isset($_SESSION["Usuario"])) {
   header("Location: Error_Session.php");
 }
 
-
-
-
 $Con = new Conexion();
 $Con->OpenConexion();
 $ID_Usuario = $_SESSION["Usuario"];
@@ -28,7 +25,6 @@ $EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion, $ConsultarTipoUsuar
 $Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
 $TipoUsuario = $Ret["ID_TipoUsuario"];
 $Con->CloseConexion();
-
 
 ?>
 <!DOCTYPE html>
@@ -144,6 +140,97 @@ $Con->CloseConexion();
       $("#BarraDeNavHTabla").attr("value", columnaIndice);
     }
 
+    function NavegacionConTeclado(e) {
+        var columnaABorrar = null;
+        var headABorrar = null;
+        var filaABorrar = null;
+        var nroFilasTabla = $("tbody > tr").length - 2;
+        var nroColumnasTabla = $("thead > tr > th").length - 2;
+        $("#BarraDeNavHTabla").attr("max", nroColumnasTabla + 1);
+        $("#BarraDeNavHTabla").attr("value", columnaIndice);
+        var tabla = $("table");
+        tabla.scrollLeft(0);
+        if (e.which == 39) {
+
+            columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
+            headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');
+            if(columnaIndice <= nroColumnasTabla){
+              if(columnaIndice <= nroColumnasTabla){
+                columnaABorrar.removeClass( "showColTablaAnimacion");
+                headABorrar.removeClass( "showColTablaAnimacion");
+                columnaABorrar.removeClass( "showColTablaAnimacionfire");
+                headABorrar.removeClass( "showColTablaAnimacionfire");
+                columnaABorrar.addClass( "hiddenColTablaAnimacion");
+                headABorrar.addClass( "hiddenColTablaAnimacion");
+                columnaABorrar.addClass( "hiddenColTablaAnimacionfire");
+                headABorrar.addClass( "hiddenColTablaAnimacionfire");
+                columnaIndice++;
+              }
+            }
+            //$("#BarraDeNavHTabla").attr("value", columnaIndice);
+            document.getElementById("BarraDeNavHTabla").value = columnaIndice;
+        } else if (e.which == 37) {
+            // Left Arrow
+            headABorrar = $('thead tr >*:nth-child('+columnaIndice+')');
+            columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
+            if(columnaIndice >= 5){
+              if(columnaIndice > 5){
+                columnaIndice--;
+                columnaABorrar.show();
+                headABorrar.show();
+                columnaABorrar.removeClass( "hiddenColTablaAnimacion");
+                headABorrar.addClass( "hiddenColTablaAnimacion");
+                columnaABorrar.removeClass( "hiddenColTablaAnimacionfire");
+                headABorrar.removeClass( "hiddenColTablaAnimacionfire");
+                columnaABorrar.addClass( "showColTablaAnimacion");
+                headABorrar.addClass( "showColTablaAnimacion");
+                columnaABorrar.addClass( "showColTablaAnimacionfire");
+                headABorrar.addClass( "showColTablaAnimacionfire");
+              } else if (columnaIndice == 5){
+                headABorrar.show();
+                columnaABorrar.show();
+                columnaABorrar.removeClass( "hiddenColTablaAnimacion");
+                headABorrar.removeClass( "hiddenColTablaAnimacion");
+                columnaABorrar.removeClass( "hiddenColTablaAnimacionfire");
+                headABorrar.removeClass( "hiddenColTablaAnimacionfire");
+                columnaABorrar.addClass( "showColTablaAnimacion");
+                headABorrar.addClass( "showColTablaAnimacion");
+                columnaABorrar.addClass( "showColTablaAnimacionfire");
+                headABorrar.addClass( "showColTablaAnimacionfire");
+              }
+            }
+            //$("#BarraDeNavHTabla").attr("value", columnaIndice);
+            document.getElementById("BarraDeNavHTabla").value = columnaIndice;
+        } /*else if (e.which == 38) {
+            // Up Arrow
+            filaABorrar = $('tbody tr:nth-child('+filaIndice+')');
+            if(filaIndice > 2){
+              filaIndice--;
+              filaABorrar.show();
+            } else if(filaIndice = 2){
+              filaABorrar.show();
+            }
+            tabla.scrollTop(0);
+            //$("#BarraDeNavVTabla").attr("value", filaIndice);
+            document.getElementById("BarraDeNavVTabla").value = filaIndice;
+        } else if (e.which == 40) {
+            // Down Arrow
+            filaABorrar = $('tbody tr:nth-child('+filaIndice+')');
+            if(filaIndice <= nroFilasTabla){
+              if(filaIndice < nroFilasTabla){
+                filaABorrar.hide();
+                filaIndice++;
+              } else if(filaIndice = nroFilasTabla){
+                filaABorrar.hide();
+              }
+            }
+            tabla.scrollTop(0);
+            //$("#BarraDeNavVTabla").attr("value", filaIndice);
+            document.getElementById("BarraDeNavVTabla").value = filaIndice;
+        }*/
+        tabla.scrollLeft(0);
+    }
+
     function navegacionConBarVNav(e){
       var value = parseInt(e.target.value);
       var nroFilasTabla = $("tbody > tr").length - 4;
@@ -163,7 +250,7 @@ $Con->CloseConexion();
       $("#BarraDeNavVTabla").attr("value", filaIndice);
     }
 
-    function NavegacionConTeclado(e) {
+/*    function NavegacionConTeclado(e) {
         var columnaABorrar = null;
         var headABorrar = null;
         var filaABorrar = null;
@@ -228,8 +315,8 @@ $Con->CloseConexion();
             //$("#BarraDeNavVTabla").attr("value", filaIndice);
             document.getElementById("BarraDeNavVTabla").value = filaIndice;
         }*/
-        tabla.scrollLeft(0);
-    }
+        //tabla.scrollLeft(0);
+//    }
 
   </script>
 
