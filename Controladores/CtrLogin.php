@@ -13,6 +13,7 @@ $ConsultarDatosPersonas = "select *
 $MensajeErrorDatosPersonas = "No se pudieron consultar los datos de las personas registradas en el sistema";
 $EjecutarConsultarDatosPersonas = mysqli_query($Con->Conexion,$ConsultarDatosPersonas) or die($MensajeErrorDatosPersonas);
 
+$Fecha_Nacimiento = 'null';
 while($RetDatosPersonas = mysqli_fetch_assoc($EjecutarConsultarDatosPersonas)){
 	$ID = $RetDatosPersonas['id_persona'];
 	$Edad = (isset($RetDatosPersonas['edad']))?$RetDatosPersonas['edad']:null;
@@ -33,7 +34,7 @@ while($RetDatosPersonas = mysqli_fetch_assoc($EjecutarConsultarDatosPersonas)){
 		$Fecha_Nacimiento_Registrada = new DateTime($Fecha_Nacimiento);
 		$Diferencia = $Fecha_Nacimiento_Registrada->diff($Fecha_Actual);
 		//$Meses = ($Diferencia->y * 12) + $Diferencia->m + 1;
-		$Meses = $Diferencia->m + 1;
+		$Meses = $Diferencia->m;
 	}
 
 	$ActualizarDatosPersonas = "update persona set edad = $Edad, meses = $Meses where id_persona = $ID";
