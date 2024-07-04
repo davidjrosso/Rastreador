@@ -225,7 +225,7 @@ $Con->CloseConexion();
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
-        <p>Actualización de Categoría</p>
+        <p>Modificación de Categoría</p>
       </div>
       <div class="col"></div>
     </div><br>
