@@ -77,7 +77,7 @@ $Con->CloseConexion();
 
       document.getElementById("abrir").style.display = "none";
       document.getElementById("cerrar").style.display = "inline";
-      $("#BarraDeNavHTabla").removeAttr("style")
+      $("#BarraDeNavHTabla").removeAttr("style");
     }
 
     function ocultar() {
@@ -97,7 +97,7 @@ $Con->CloseConexion();
       $("#abrir").attr("style","display:inline;");
       //document.getElementById("abrir").style.display = "inline";
       document.getElementById("cerrar").style.display = "none";
-      $("#BarraDeNavHTabla").attr("style","width: 95%; margin-left: 2%;")
+      $("#BarraDeNavHTabla").attr("style","width: 95%; margin-left: 2%;");
     }
 
     var currCell = null;
@@ -116,7 +116,36 @@ $Con->CloseConexion();
         $( "#BarraDeNavVTabla").on("input", function(e) {
         navegacionConBarVNav(e);
       });
+      $( "#BarraDeNavHTabla").on("mouseup", function(e) {
+        actualizacionDePosicionBarraDenavegacionH(e, $(this).attr("value"));
+      });
     });
+
+    function fireKey(el) {
+        var key = el;
+        if(document.createEventObject)
+        {
+            var eventObj = document.createEventObject();
+            eventObj.keyCode = key;
+            el.fireEvent("onkeydown", eventObj);   
+        } else if(document.createEvent)
+        {
+            var eventObj = document.createEvent("Events");
+            eventObj.initEvent("keydown", true, true);
+            eventObj.which = key;
+            el.dispatchEvent(eventObj);
+        }
+    } 
+
+    function actualizacionDePosicionBarraDenavegacionH(e, element){
+      var value = $("#BarraDeNavHTabla").val();
+      var columnaActual = columnaIndice;
+      if(Math.round(value) == Math.floor(value)){
+        $("#BarraDeNavHTabla").val(Math.floor(value));
+      } else {
+        $("#BarraDeNavHTabla").val(Math.round(value));
+      }
+    }
 
 /*
     function navegacionConBarHNav(e){
@@ -143,12 +172,12 @@ $Con->CloseConexion();
       */
 
     function navegacionConBarHNav(e){
-      var value = parseInt(e.target.value);
+      var value = $("#BarraDeNavHTabla").val();
       var nroFilasTabla = $("tbody > tr").length - 2;
       var nroColumnasTabla = $("thead > tr > th").length - 2;
       $("#BarraDeNavHTabla").attr("max", nroColumnasTabla + 1);
       $("#BarraDeNavHTabla").attr("value", columnaIndice);
-      if(value < columnaIndice){
+      if(value < (columnaIndice - 0.5)){
         columnaIndice--;
         headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');
         columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
@@ -162,7 +191,7 @@ $Con->CloseConexion();
         headABorrar.addClass( "showColTablaAnimacion");
         columnaABorrar.addClass( "showColTablaAnimacionfire");
         headABorrar.addClass( "showColTablaAnimacionfire");
-      } else if (value > columnaIndice){
+      } else if (value > (columnaIndice + 0.5)){
         headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');        
         columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
 
@@ -356,9 +385,7 @@ $Con->CloseConexion();
         }*/
         //tabla.scrollLeft(0);
 //    }
-
   </script>
-
   <style>
 
     body {
@@ -380,42 +407,23 @@ $Con->CloseConexion();
       opacity: 70%;
     }
 
-/*    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
+    input[type="range"]::-webkit-slider-runnable-track {
+      background-color: #add8e6;
+      border-radius: 0.5rem;
+      height: 0.8rem;
+    }
+
+    /* slider thumb */
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; /* Override default look */
       appearance: none;
-      margin-top: -4px;
-      background-color:#b9c3d0;
+      margin-top: -3.999999999999999px; /* Centers thumb on the track */
+      background-color: #b9c3d0;
       border-radius: 0.1rem;
-      height: 1.8rem;
-      width: 1.8rem;
-    }*/
+      height: 1.4rem;
+      width: 1.9rem;
+    }
 
-/* slider track */
-/*
-input[type="range"]::-webkit-slider-runnable-track {
-  background-color: #add8e6;
-  border-radius: 0.5rem;
-  height: 0.9rem;
-}
-*/
-input[type="range"]::-webkit-slider-runnable-track {
-  background-color: #add8e6;
-  border-radius: 0.5rem;
-  height: 0.8rem;
-}
-
-/* slider thumb */
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none; /* Override default look */
-  appearance: none;
-  margin-top: -3.999999999999999px; /* Centers thumb on the track */
-  background-color: #b9c3d0;
-  border-radius: 0.1rem;
-  height: 1.4rem;
-  width: 1.9rem;
-}
-
-    
     #BarraDeNavVTabla{
       margin-left: 86.5%;
       margin-bottom: 13.4%;
