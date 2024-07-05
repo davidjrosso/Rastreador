@@ -9,93 +9,116 @@ class CtrGeneral{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 
-		$Consulta = "CREATE TEMPORARY TABLE INN  SELECT MT.id_motivo
-												 FROM motivo MT,
-													  categoria  C,
-													  categorias_roles CS
-												 WHERE CS.id_categoria = C.id_categoria
-												   and C.cod_categoria = MT.cod_categoria
-												   and CS.id_tipousuario = $TipoUsuario
-												   and CS.estado = 1";
+		$consultaGeneral = "CREATE TEMPORARY TABLE GIN " ;
+		$consultaUsuario = "CREATE TEMPORARY TABLE INN ";
 
-		$MessageError = "Problemas al crear la tabla temporaria";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$consulta = "SELECT MT.id_motivo
+					 FROM motivo MT,
+					 	  categoria  C,
+						  categorias_roles CS
+					 WHERE C.cod_categoria = MT.cod_categoria
+					   and MT.estado = 1
+					   and C.estado = 1";
 
-		$Consulta = "select M.id_movimiento, 
-							M.fecha, 
-							M.fecha_creacion, 
-							P.apellido, 
-							P.nombre, 
+		$motivosVisiblesParaUsuario = $consultaUsuario . $consulta . " 
+											and CS.id_categoria = C.id_categoria
+											and CS.id_tipousuario = $TipoUsuario
+											and CS.estado = 1";
+
+		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
+								   and C.id_categoria NOT IN (SELECT id_categoria
+								                              FROM categorias_roles CS)";
+
+		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
+		$Con->ResultSet = mysqli_query(
+									   $Con->Conexion,$motivosVisiblesParaUsuario
+									   ) or die($MessageError);
+
+		$MessageError = "Problemas al crear la tabla temporaria general";
+		$Con->ResultSet = mysqli_query(
+									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
+									   ) or die($MessageError);
+
+		$Consulta = "select M.id_movimiento,
+							M.fecha,
+							M.fecha_creacion,
+							P.apellido,
+							P.nombre,
 							R.responsable
-							from movimiento M, 
-								persona P, 
+							from movimiento M,
+								persona P,
 								responsable R
-							where M.id_persona = P.id_persona 
+							where M.id_persona = P.id_persona
 								and M.id_resp = R.id_resp
-								and (M.motivo_1 IN (SELECT * FROM INN)
-									OR M.motivo_2 IN (SELECT * FROM INN) 
-									OR M.motivo_3 IN (SELECT * FROM INN)
-									OR M.motivo_4 IN (SELECT * FROM INN)
-									OR M.motivo_5 IN (SELECT * FROM INN))
-								and M.estado = 1 
-								and P.estado = 1  
+								and ((M.motivo_1 IN (SELECT * FROM INN) 
+								   OR M.motivo_1 IN (SELECT * FROM GIN))
+								  OR (M.motivo_2 IN (SELECT * FROM INN) 
+								   OR M.motivo_2 IN (SELECT * FROM GIN))
+								  OR (M.motivo_3 IN (SELECT * FROM INN) 
+								   OR M.motivo_3 IN (SELECT * FROM GIN))
+								  OR (M.motivo_4 IN (SELECT * FROM INN) 
+								   OR M.motivo_4 IN (SELECT * FROM GIN))
+								  OR (M.motivo_5 IN (SELECT * FROM INN) 
+								   OR M.motivo_5 IN (SELECT * FROM GIN)))
+								and M.estado = 1
+								and P.estado = 1
 							order by M.fecha_creacion desc;";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
-/*$Consulta =  "select M.id_movimiento, 
-							M.fecha, 
-							M.fecha_creacion, 
-							P.apellido, 
-							P.nombre, 
-							R.responsable
-							from movimiento M, 
-								persona P, 
-								responsable R
-							where M.id_persona = P.id_persona 
-								and M.id_resp = R.id_resp
-								and (M.motivo_1 IN  (SELECT MT.id_motivo
-														FROM motivo MT,
-																categoria  C,
-																categorias_roles CS
-														WHERE CS.id_categoria = C.id_categoria
-															and C.cod_categoria = MT.cod_categoria
-														and CS.id_tipousuario = $TipoUsuario
-															and CS.estado = 1) 
-									AND M.motivo_2 IN  (SELECT MT.id_motivo
-														FROM motivo MT,
-																categoria  C,
-																categorias_roles CS
-														WHERE CS.id_categoria = C.id_categoria
-															and C.cod_categoria = MT.cod_categoria
-														and CS.id_tipousuario = $TipoUsuario
-															and CS.estado = 1)
-									AND M.motivo_3 IN  (SELECT MT.id_motivo
-														FROM motivo MT,
-																categoria  C,
-																categorias_roles CS
-														WHERE CS.id_categoria = C.id_categoria
-															and C.cod_categoria = MT.cod_categoria
-														and CS.id_tipousuario = $TipoUsuario
-															and CS.estado = 1)
-									AND M.motivo_4 IN  (SELECT MT.id_motivo
-														FROM motivo MT,
-																categoria  C,
-																categorias_roles CS
-														WHERE CS.id_categoria = C.id_categoria
-															and C.cod_categoria = MT.cod_categoria
-														and CS.id_tipousuario = $TipoUsuario
-															and CS.estado = 1)
-									AND M.motivo_5 IN  (SELECT MT.id_motivo
-														FROM motivo MT,
-																categoria  C,
-																categorias_roles CS
-														WHERE CS.id_categoria = C.id_categoria
-															and C.cod_categoria = MT.cod_categoria
-														and CS.id_tipousuario = $TipoUsuario
-															and CS.estado = 1))
-								and M.estado = 1 
-								and P.estado = 1  
-							order by M.fecha_creacion desc";*/
+		/*$Consulta =  "select M.id_movimiento, 
+									M.fecha, 
+									M.fecha_creacion, 
+									P.apellido, 
+									P.nombre, 
+									R.responsable
+									from movimiento M, 
+										persona P, 
+										responsable R
+									where M.id_persona = P.id_persona 
+										and M.id_resp = R.id_resp
+										and (M.motivo_1 IN  (SELECT MT.id_motivo
+																FROM motivo MT,
+																		categoria  C,
+																		categorias_roles CS
+																WHERE CS.id_categoria = C.id_categoria
+																	and C.cod_categoria = MT.cod_categoria
+																and CS.id_tipousuario = $TipoUsuario
+																	and CS.estado = 1) 
+											AND M.motivo_2 IN  (SELECT MT.id_motivo
+																FROM motivo MT,
+																		categoria  C,
+																		categorias_roles CS
+																WHERE CS.id_categoria = C.id_categoria
+																	and C.cod_categoria = MT.cod_categoria
+																and CS.id_tipousuario = $TipoUsuario
+																	and CS.estado = 1)
+											AND M.motivo_3 IN  (SELECT MT.id_motivo
+																FROM motivo MT,
+																		categoria  C,
+																		categorias_roles CS
+																WHERE CS.id_categoria = C.id_categoria
+																	and C.cod_categoria = MT.cod_categoria
+																and CS.id_tipousuario = $TipoUsuario
+																	and CS.estado = 1)
+											AND M.motivo_4 IN  (SELECT MT.id_motivo
+																FROM motivo MT,
+																		categoria  C,
+																		categorias_roles CS
+																WHERE CS.id_categoria = C.id_categoria
+																	and C.cod_categoria = MT.cod_categoria
+																and CS.id_tipousuario = $TipoUsuario
+																	and CS.estado = 1)
+											AND M.motivo_5 IN  (SELECT MT.id_motivo
+																FROM motivo MT,
+																		categoria  C,
+																		categorias_roles CS
+																WHERE CS.id_categoria = C.id_categoria
+																	and C.cod_categoria = MT.cod_categoria
+																and CS.id_tipousuario = $TipoUsuario
+																	and CS.estado = 1))
+										and M.estado = 1 
+										and P.estado = 1  
+									order by M.fecha_creacion desc";*/
 
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
@@ -113,17 +136,35 @@ class CtrGeneral{
 	public function getMovimientosxID($ID, $TipoUsuario){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "CREATE TEMPORARY TABLE INN  SELECT MT.id_motivo
-												 FROM motivo MT,
-													  categoria  C,
-													  categorias_roles CS
-												 WHERE CS.id_categoria = C.id_categoria
-												   and C.cod_categoria = MT.cod_categoria
-												   and CS.id_tipousuario = $TipoUsuario
-												   and CS.estado = 1";
+		$consultaGeneral = "CREATE TEMPORARY TABLE GIN " ;
+		$consultaUsuario = "CREATE TEMPORARY TABLE INN ";
 
-		$MessageError = "Problemas al crear la tabla temporaria";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$consulta = "SELECT MT.id_motivo
+					 FROM motivo MT,
+					 	  categoria  C,
+						  categorias_roles CS
+					 WHERE C.cod_categoria = MT.cod_categoria
+					   and MT.estado = 1
+					   and C.estado = 1";
+
+		$motivosVisiblesParaUsuario = $consultaUsuario . $consulta . " 
+											and CS.id_categoria = C.id_categoria
+											and CS.id_tipousuario = $TipoUsuario
+											and CS.estado = 1";
+
+		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
+								   and C.id_categoria NOT IN (SELECT id_categoria
+								                              FROM categorias_roles CS)";
+
+		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
+		$Con->ResultSet = mysqli_query(
+									   $Con->Conexion,$motivosVisiblesParaUsuario
+									   ) or die($MessageError);
+
+		$MessageError = "Problemas al crear la tabla temporaria general";
+		$Con->ResultSet = mysqli_query(
+									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
+									   ) or die($MessageError);
 
 		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
 					 from movimiento M,
@@ -137,11 +178,16 @@ class CtrGeneral{
 					   and M.id_movimiento = $ID
 					   and CS.id_categoria = C.id_categoria
 					   and C.cod_categoria = MT.cod_categoria
-					   and (M.motivo_1 IN (SELECT * FROM INN)
-									OR M.motivo_2 IN (SELECT * FROM INN) 
-									OR M.motivo_3 IN (SELECT * FROM INN)
-									OR M.motivo_4 IN (SELECT * FROM INN)
-									OR M.motivo_5 IN (SELECT * FROM INN))
+								and ((M.motivo_1 IN (SELECT * FROM INN) 
+								   OR M.motivo_1 IN (SELECT * FROM GIN))
+								  OR (M.motivo_2 IN (SELECT * FROM INN) 
+								   OR M.motivo_2 IN (SELECT * FROM GIN))
+								  OR (M.motivo_3 IN (SELECT * FROM INN) 
+								   OR M.motivo_3 IN (SELECT * FROM GIN))
+								  OR (M.motivo_4 IN (SELECT * FROM INN) 
+								   OR M.motivo_4 IN (SELECT * FROM GIN))
+								  OR (M.motivo_5 IN (SELECT * FROM INN) 
+								   OR M.motivo_5 IN (SELECT * FROM GIN)))
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
@@ -164,17 +210,36 @@ class CtrGeneral{
 		$Fecha = implode("-", array_reverse(explode("/",$Fecha)));
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "CREATE TEMPORARY TABLE INN  SELECT MT.id_motivo
-												 FROM motivo MT,
-													  categoria  C,
-													  categorias_roles CS
-												 WHERE CS.id_categoria = C.id_categoria
-												   and C.cod_categoria = MT.cod_categoria
-												   and CS.id_tipousuario = $TipoUsuario
-												   and CS.estado = 1";
+		$consultaGeneral = "CREATE TEMPORARY TABLE GIN " ;
+		$consultaUsuario = "CREATE TEMPORARY TABLE INN ";
 
-		$MessageError = "Problemas al crear la tabla temporaria";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$consulta = "SELECT MT.id_motivo
+					 FROM motivo MT,
+					 	  categoria  C,
+						  categorias_roles CS
+					 WHERE C.cod_categoria = MT.cod_categoria
+					   and MT.estado = 1
+					   and C.estado = 1";
+
+		$motivosVisiblesParaUsuario = $consultaUsuario . $consulta . " 
+											and CS.id_categoria = C.id_categoria
+											and CS.id_tipousuario = $TipoUsuario
+											and CS.estado = 1";
+
+		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
+								   and C.id_categoria NOT IN (SELECT id_categoria
+								                              FROM categorias_roles CS)";
+
+		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
+		$Con->ResultSet = mysqli_query(
+									   $Con->Conexion,$motivosVisiblesParaUsuario
+									   ) or die($MessageError);
+
+		$MessageError = "Problemas al crear la tabla temporaria general";
+		$Con->ResultSet = mysqli_query(
+									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
+									   ) or die($MessageError);
+
 		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
 					 from movimiento M, 
 					 	  persona P, 
@@ -187,11 +252,16 @@ class CtrGeneral{
 					   and M.fecha = '$Fecha'
 					   and CS.id_categoria = C.id_categoria
 					   and C.cod_categoria = MT.cod_categoria
-					   and (M.motivo_1 IN (SELECT * FROM INN)
-									OR M.motivo_2 IN (SELECT * FROM INN) 
-									OR M.motivo_3 IN (SELECT * FROM INN)
-									OR M.motivo_4 IN (SELECT * FROM INN)
-									OR M.motivo_5 IN (SELECT * FROM INN))
+								and ((M.motivo_1 IN (SELECT * FROM INN) 
+								   OR M.motivo_1 IN (SELECT * FROM GIN))
+								  OR (M.motivo_2 IN (SELECT * FROM INN) 
+								   OR M.motivo_2 IN (SELECT * FROM GIN))
+								  OR (M.motivo_3 IN (SELECT * FROM INN) 
+								   OR M.motivo_3 IN (SELECT * FROM GIN))
+								  OR (M.motivo_4 IN (SELECT * FROM INN) 
+								   OR M.motivo_4 IN (SELECT * FROM GIN))
+								  OR (M.motivo_5 IN (SELECT * FROM INN) 
+								   OR M.motivo_5 IN (SELECT * FROM GIN)))
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1
 					   and P.estado = 1
@@ -213,17 +283,36 @@ class CtrGeneral{
 	public function getMovimientosxApellido($Apellido, $TipoUsuario){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "CREATE TEMPORARY TABLE INN  SELECT MT.id_motivo
-												 FROM motivo MT,
-													  categoria  C,
-													  categorias_roles CS
-												 WHERE CS.id_categoria = C.id_categoria
-												   and C.cod_categoria = MT.cod_categoria
-												   and CS.id_tipousuario = $TipoUsuario
-												   and CS.estado = 1";
+		$consultaGeneral = "CREATE TEMPORARY TABLE GIN " ;
+		$consultaUsuario = "CREATE TEMPORARY TABLE INN ";
 
-		$MessageError = "Problemas al crear la tabla temporaria";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$consulta = "SELECT MT.id_motivo
+					 FROM motivo MT,
+					 	  categoria  C,
+						  categorias_roles CS
+					 WHERE C.cod_categoria = MT.cod_categoria
+					   and MT.estado = 1
+					   and C.estado = 1";
+
+		$motivosVisiblesParaUsuario = $consultaUsuario . $consulta . " 
+											and CS.id_categoria = C.id_categoria
+											and CS.id_tipousuario = $TipoUsuario
+											and CS.estado = 1";
+
+		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
+								   and C.id_categoria NOT IN (SELECT id_categoria
+								                              FROM categorias_roles CS)";
+
+		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
+		$Con->ResultSet = mysqli_query(
+									   $Con->Conexion,$motivosVisiblesParaUsuario
+									   ) or die($MessageError);
+
+		$MessageError = "Problemas al crear la tabla temporaria general";
+		$Con->ResultSet = mysqli_query(
+									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
+									   ) or die($MessageError);
+
 		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
 					 from movimiento M, 
 					 	  persona P, 
@@ -236,11 +325,16 @@ class CtrGeneral{
 					   and P.apellido like '%$Apellido%'
 					   and CS.id_categoria = C.id_categoria
 					   and C.cod_categoria = MT.cod_categoria
-					   and (M.motivo_1 IN (SELECT * FROM INN)
-									OR M.motivo_2 IN (SELECT * FROM INN) 
-									OR M.motivo_3 IN (SELECT * FROM INN)
-									OR M.motivo_4 IN (SELECT * FROM INN)
-									OR M.motivo_5 IN (SELECT * FROM INN))
+								and ((M.motivo_1 IN (SELECT * FROM INN) 
+								   OR M.motivo_1 IN (SELECT * FROM GIN))
+								  OR (M.motivo_2 IN (SELECT * FROM INN) 
+								   OR M.motivo_2 IN (SELECT * FROM GIN))
+								  OR (M.motivo_3 IN (SELECT * FROM INN) 
+								   OR M.motivo_3 IN (SELECT * FROM GIN))
+								  OR (M.motivo_4 IN (SELECT * FROM INN) 
+								   OR M.motivo_4 IN (SELECT * FROM GIN))
+								  OR (M.motivo_5 IN (SELECT * FROM INN) 
+								   OR M.motivo_5 IN (SELECT * FROM GIN)))
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
@@ -262,17 +356,36 @@ class CtrGeneral{
 	public function getMovimientosxNombre($Nombre, $TipoUsuario){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "CREATE TEMPORARY TABLE INN  SELECT MT.id_motivo
-												 FROM motivo MT,
-													  categoria  C,
-													  categorias_roles CS
-												 WHERE CS.id_categoria = C.id_categoria
-												   and C.cod_categoria = MT.cod_categoria
-												   and CS.id_tipousuario = $TipoUsuario
-												   and CS.estado = 1";
+		$consultaGeneral = "CREATE TEMPORARY TABLE GIN " ;
+		$consultaUsuario = "CREATE TEMPORARY TABLE INN ";
 
-		$MessageError = "Problemas al crear la tabla temporaria";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$consulta = "SELECT MT.id_motivo
+					 FROM motivo MT,
+					 	  categoria  C,
+						  categorias_roles CS
+					 WHERE C.cod_categoria = MT.cod_categoria
+					   and MT.estado = 1
+					   and C.estado = 1";
+
+		$motivosVisiblesParaUsuario = $consultaUsuario . $consulta . " 
+											and CS.id_categoria = C.id_categoria
+											and CS.id_tipousuario = $TipoUsuario
+											and CS.estado = 1";
+
+		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
+								   and C.id_categoria NOT IN (SELECT id_categoria
+								                              FROM categorias_roles CS)";
+
+		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
+		$Con->ResultSet = mysqli_query(
+									   $Con->Conexion,$motivosVisiblesParaUsuario
+									   ) or die($MessageError);
+
+		$MessageError = "Problemas al crear la tabla temporaria general";
+		$Con->ResultSet = mysqli_query(
+									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
+									   ) or die($MessageError);
+
 		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
 					 from movimiento M, 
 						  persona P, 
@@ -285,11 +398,16 @@ class CtrGeneral{
 						and P.nombre like '%$Nombre%'
 					    and CS.id_categoria = C.id_categoria
 						and C.cod_categoria = MT.cod_categoria
-					   and (M.motivo_1 IN (SELECT * FROM INN)
-									OR M.motivo_2 IN (SELECT * FROM INN) 
-									OR M.motivo_3 IN (SELECT * FROM INN)
-									OR M.motivo_4 IN (SELECT * FROM INN)
-									OR M.motivo_5 IN (SELECT * FROM INN))
+								and ((M.motivo_1 IN (SELECT * FROM INN) 
+								   OR M.motivo_1 IN (SELECT * FROM GIN))
+								  OR (M.motivo_2 IN (SELECT * FROM INN) 
+								   OR M.motivo_2 IN (SELECT * FROM GIN))
+								  OR (M.motivo_3 IN (SELECT * FROM INN) 
+								   OR M.motivo_3 IN (SELECT * FROM GIN))
+								  OR (M.motivo_4 IN (SELECT * FROM INN) 
+								   OR M.motivo_4 IN (SELECT * FROM GIN))
+								  OR (M.motivo_5 IN (SELECT * FROM INN) 
+								   OR M.motivo_5 IN (SELECT * FROM GIN)))
 					    and CS.id_tipousuario = $TipoUsuario
 						and M.estado = 1 
 						and P.estado = 1
@@ -311,17 +429,36 @@ class CtrGeneral{
 	public function getMovimientosxDocumento($Documento, $TipoUsuario){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "CREATE TEMPORARY TABLE INN  SELECT MT.id_motivo
-												 FROM motivo MT,
-													  categoria  C,
-													  categorias_roles CS
-												 WHERE CS.id_categoria = C.id_categoria
-												   and C.cod_categoria = MT.cod_categoria
-												   and CS.id_tipousuario = $TipoUsuario
-												   and CS.estado = 1";
+		$consultaGeneral = "CREATE TEMPORARY TABLE GIN " ;
+		$consultaUsuario = "CREATE TEMPORARY TABLE INN ";
 
-		$MessageError = "Problemas al crear la tabla temporaria";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$consulta = "SELECT MT.id_motivo
+					 FROM motivo MT,
+					 	  categoria  C,
+						  categorias_roles CS
+					 WHERE C.cod_categoria = MT.cod_categoria
+					   and MT.estado = 1
+					   and C.estado = 1";
+
+		$motivosVisiblesParaUsuario = $consultaUsuario . $consulta . " 
+											and CS.id_categoria = C.id_categoria
+											and CS.id_tipousuario = $TipoUsuario
+											and CS.estado = 1";
+
+		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
+								   and C.id_categoria NOT IN (SELECT id_categoria
+								                              FROM categorias_roles CS)";
+
+		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
+		$Con->ResultSet = mysqli_query(
+									   $Con->Conexion,$motivosVisiblesParaUsuario
+									   ) or die($MessageError);
+
+		$MessageError = "Problemas al crear la tabla temporaria general";
+		$Con->ResultSet = mysqli_query(
+									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
+									   ) or die($MessageError);
+
 		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
 					 from movimiento M,
 					 	  persona P,
@@ -334,11 +471,16 @@ class CtrGeneral{
 					   and P.documento like '%$Documento%' 
 					   and CS.id_categoria = C.id_categoria
 					   and C.cod_categoria = MT.cod_categoria
-					   and (M.motivo_1 IN (SELECT * FROM INN)
-									OR M.motivo_2 IN (SELECT * FROM INN) 
-									OR M.motivo_3 IN (SELECT * FROM INN)
-									OR M.motivo_4 IN (SELECT * FROM INN)
-									OR M.motivo_5 IN (SELECT * FROM INN))
+								and ((M.motivo_1 IN (SELECT * FROM INN) 
+								   OR M.motivo_1 IN (SELECT * FROM GIN))
+								  OR (M.motivo_2 IN (SELECT * FROM INN) 
+								   OR M.motivo_2 IN (SELECT * FROM GIN))
+								  OR (M.motivo_3 IN (SELECT * FROM INN) 
+								   OR M.motivo_3 IN (SELECT * FROM GIN))
+								  OR (M.motivo_4 IN (SELECT * FROM INN) 
+								   OR M.motivo_4 IN (SELECT * FROM GIN))
+								  OR (M.motivo_5 IN (SELECT * FROM INN) 
+								   OR M.motivo_5 IN (SELECT * FROM GIN)))
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
@@ -360,17 +502,36 @@ class CtrGeneral{
 	public function getMovimientosxResponsable($Responsable, $TipoUsuario){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "CREATE TEMPORARY TABLE INN  SELECT MT.id_motivo
-												 FROM motivo MT,
-													  categoria  C,
-													  categorias_roles CS
-												 WHERE CS.id_categoria = C.id_categoria
-												   and C.cod_categoria = MT.cod_categoria
-												   and CS.id_tipousuario = $TipoUsuario
-												   and CS.estado = 1";
+		$consultaGeneral = "CREATE TEMPORARY TABLE GIN " ;
+		$consultaUsuario = "CREATE TEMPORARY TABLE INN ";
 
-		$MessageError = "Problemas al crear la tabla temporaria";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$consulta = "SELECT MT.id_motivo
+					 FROM motivo MT,
+					 	  categoria  C,
+						  categorias_roles CS
+					 WHERE C.cod_categoria = MT.cod_categoria
+					   and MT.estado = 1
+					   and C.estado = 1";
+
+		$motivosVisiblesParaUsuario = $consultaUsuario . $consulta . " 
+											and CS.id_categoria = C.id_categoria
+											and CS.id_tipousuario = $TipoUsuario
+											and CS.estado = 1";
+
+		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
+								   and C.id_categoria NOT IN (SELECT id_categoria
+								                              FROM categorias_roles CS)";
+
+		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
+		$Con->ResultSet = mysqli_query(
+									   $Con->Conexion,$motivosVisiblesParaUsuario
+									   ) or die($MessageError);
+
+		$MessageError = "Problemas al crear la tabla temporaria general";
+		$Con->ResultSet = mysqli_query(
+									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
+									   ) or die($MessageError);
+
 		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
 					 from movimiento M, 
 					 	  persona P, 
@@ -386,11 +547,16 @@ class CtrGeneral{
 					   and R.responsable like '%$Responsable%'
 					   and CS.id_categoria = C.id_categoria
 					   and C.cod_categoria = MT.cod_categoria
-					   and (M.motivo_1 IN (SELECT * FROM INN)
-									OR M.motivo_2 IN (SELECT * FROM INN) 
-									OR M.motivo_3 IN (SELECT * FROM INN)
-									OR M.motivo_4 IN (SELECT * FROM INN)
-									OR M.motivo_5 IN (SELECT * FROM INN))
+								and ((M.motivo_1 IN (SELECT * FROM INN) 
+								   OR M.motivo_1 IN (SELECT * FROM GIN))
+								  OR (M.motivo_2 IN (SELECT * FROM INN) 
+								   OR M.motivo_2 IN (SELECT * FROM GIN))
+								  OR (M.motivo_3 IN (SELECT * FROM INN) 
+								   OR M.motivo_3 IN (SELECT * FROM GIN))
+								  OR (M.motivo_4 IN (SELECT * FROM INN) 
+								   OR M.motivo_4 IN (SELECT * FROM GIN))
+								  OR (M.motivo_5 IN (SELECT * FROM INN) 
+								   OR M.motivo_5 IN (SELECT * FROM GIN)))
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
@@ -412,17 +578,36 @@ class CtrGeneral{
 	public function getMovimientosxLegajo($Legajo, $TipoUsuario){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "CREATE TEMPORARY TABLE INN  SELECT MT.id_motivo
-												 FROM motivo MT,
-													  categoria  C,
-													  categorias_roles CS
-												 WHERE CS.id_categoria = C.id_categoria
-												   and C.cod_categoria = MT.cod_categoria
-												   and CS.id_tipousuario = $TipoUsuario
-												   and CS.estado = 1";
+		$consultaGeneral = "CREATE TEMPORARY TABLE GIN " ;
+		$consultaUsuario = "CREATE TEMPORARY TABLE INN ";
 
-		$MessageError = "Problemas al crear la tabla temporaria";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$consulta = "SELECT MT.id_motivo
+					 FROM motivo MT,
+					 	  categoria  C,
+						  categorias_roles CS
+					 WHERE C.cod_categoria = MT.cod_categoria
+					   and MT.estado = 1
+					   and C.estado = 1";
+
+		$motivosVisiblesParaUsuario = $consultaUsuario . $consulta . " 
+											and CS.id_categoria = C.id_categoria
+											and CS.id_tipousuario = $TipoUsuario
+											and CS.estado = 1";
+
+		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
+								   and C.id_categoria NOT IN (SELECT id_categoria
+								                              FROM categorias_roles CS)";
+
+		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
+		$Con->ResultSet = mysqli_query(
+									   $Con->Conexion,$motivosVisiblesParaUsuario
+									   ) or die($MessageError);
+
+		$MessageError = "Problemas al crear la tabla temporaria general";
+		$Con->ResultSet = mysqli_query(
+									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
+									   ) or die($MessageError);
+
 		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
 					 from movimiento M, 
 					 	  persona P, 
@@ -438,11 +623,16 @@ class CtrGeneral{
 					   and P.nro_legajo = '$Legajo'
 					   and CS.id_categoria = C.id_categoria
 					   and C.cod_categoria = MT.cod_categoria
-					   and (M.motivo_1 IN (SELECT * FROM INN)
-									OR M.motivo_2 IN (SELECT * FROM INN) 
-									OR M.motivo_3 IN (SELECT * FROM INN)
-									OR M.motivo_4 IN (SELECT * FROM INN)
-									OR M.motivo_5 IN (SELECT * FROM INN))
+								and ((M.motivo_1 IN (SELECT * FROM INN) 
+								   OR M.motivo_1 IN (SELECT * FROM GIN))
+								  OR (M.motivo_2 IN (SELECT * FROM INN) 
+								   OR M.motivo_2 IN (SELECT * FROM GIN))
+								  OR (M.motivo_3 IN (SELECT * FROM INN) 
+								   OR M.motivo_3 IN (SELECT * FROM GIN))
+								  OR (M.motivo_4 IN (SELECT * FROM INN) 
+								   OR M.motivo_4 IN (SELECT * FROM GIN))
+								  OR (M.motivo_5 IN (SELECT * FROM INN) 
+								   OR M.motivo_5 IN (SELECT * FROM GIN)))
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
@@ -464,17 +654,36 @@ class CtrGeneral{
 	public function getMovimientosxCarpeta($Carpeta, $TipoUsuario){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "CREATE TEMPORARY TABLE INN  SELECT MT.id_motivo
-												 FROM motivo MT,
-													  categoria  C,
-													  categorias_roles CS
-												 WHERE CS.id_categoria = C.id_categoria
-												   and C.cod_categoria = MT.cod_categoria
-												   and CS.id_tipousuario = $TipoUsuario
-												   and CS.estado = 1";
+		$consultaGeneral = "CREATE TEMPORARY TABLE GIN " ;
+		$consultaUsuario = "CREATE TEMPORARY TABLE INN ";
 
-		$MessageError = "Problemas al crear la tabla temporaria";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$consulta = "SELECT MT.id_motivo
+					 FROM motivo MT,
+					 	  categoria  C,
+						  categorias_roles CS
+					 WHERE C.cod_categoria = MT.cod_categoria
+					   and MT.estado = 1
+					   and C.estado = 1";
+
+		$motivosVisiblesParaUsuario = $consultaUsuario . $consulta . " 
+											and CS.id_categoria = C.id_categoria
+											and CS.id_tipousuario = $TipoUsuario
+											and CS.estado = 1";
+
+		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
+								   and C.id_categoria NOT IN (SELECT id_categoria
+								                              FROM categorias_roles CS)";
+
+		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
+		$Con->ResultSet = mysqli_query(
+									   $Con->Conexion,$motivosVisiblesParaUsuario
+									   ) or die($MessageError);
+
+		$MessageError = "Problemas al crear la tabla temporaria general";
+		$Con->ResultSet = mysqli_query(
+									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
+									   ) or die($MessageError);
+
 		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
 					 from movimiento M, 
 					 	  persona P, 
@@ -490,11 +699,16 @@ class CtrGeneral{
 					   and P.nro_carpeta = '$Carpeta'
 					   and CS.id_categoria = C.id_categoria
 					   and C.cod_categoria = MT.cod_categoria
-					   and (M.motivo_1 IN (SELECT * FROM INN)
-									OR M.motivo_2 IN (SELECT * FROM INN) 
-									OR M.motivo_3 IN (SELECT * FROM INN)
-									OR M.motivo_4 IN (SELECT * FROM INN)
-									OR M.motivo_5 IN (SELECT * FROM INN))
+								and ((M.motivo_1 IN (SELECT * FROM INN) 
+								   OR M.motivo_1 IN (SELECT * FROM GIN))
+								  OR (M.motivo_2 IN (SELECT * FROM INN) 
+								   OR M.motivo_2 IN (SELECT * FROM GIN))
+								  OR (M.motivo_3 IN (SELECT * FROM INN) 
+								   OR M.motivo_3 IN (SELECT * FROM GIN))
+								  OR (M.motivo_4 IN (SELECT * FROM INN) 
+								   OR M.motivo_4 IN (SELECT * FROM GIN))
+								  OR (M.motivo_5 IN (SELECT * FROM INN) 
+								   OR M.motivo_5 IN (SELECT * FROM GIN)))
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
