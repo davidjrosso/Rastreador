@@ -56,7 +56,7 @@ $Con->CloseConexion();
         var Litros = document.getElementById("Litros").value;
         var Combustible = document.getElementById("Combustible");
         var PrecioxL = Combustible.options[Combustible.selectedIndex].getAttribute("name");
-        
+
         var Total = parseFloat(PrecioxL) * parseFloat(Litros);
 
         var Precio = document.getElementById("Precio");
@@ -203,13 +203,58 @@ $Con->CloseConexion();
               $Con = new Conexion();
               $Con->OpenConexion();
 
-              $ConsultarDatos = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, M.observaciones, R.responsable, M.id_resp_2, M.id_resp_3, M.id_resp_4, C.centro_salud, I.Nombre, M.motivo_1, M.motivo_2, M.motivo_3, M.motivo_4, M.motivo_5 
-              from movimiento M, persona P, responsable R, centros_salud C, otras_instituciones I 
-              where M.id_persona = P.id_persona 
-                and M.id_resp = R.id_resp 
-                and M.id_centro = C.id_centro 
-                and M.id_otrainstitucion = I.ID_OtraInstitucion 
-                and M.id_movimiento = $ID_Movimiento";
+              $consultaGeneral = "CREATE TEMPORARY TABLE MTPERM select DISTINCT(MT.id_motivo), MT.motivo 
+                                   from motivo MT inner join categoria C on (MT.cod_categoria = C.cod_categoria) 
+                                     inner join categorias_roles CR on (CR.id_categoria = CR.id_categoria)" ;
+              $MessageError = "Problemas al crear la tabla temporaria de usuarios";
+              $Con->ResultSet = mysqli_query($Con->Conexion,$consultaGeneral
+                                            ) or die($MessageError);
+
+              $ConsultarDatos = "select M.id_movimiento, M.fecha, P.apellido,
+                                        P.nombre, M.observaciones,
+                                        R.responsable, M.id_resp_2,
+                                        M.id_resp_3, M.id_resp_4,
+                                        C.centro_salud, I.Nombre,
+                                        M.motivo_1,
+                                        M.motivo_1 not in (SELECT id_motivo
+                                                           FROM MTPERM) as mt1,
+                                        (SELECT motivo
+                                         FROM motivo
+                                         WHERE id_motivo = M.motivo_1) as Mot1,
+                                        M.motivo_2, 
+                                        M.motivo_2 not in (SELECT id_motivo
+                                                           FROM MTPERM) as mt2,
+                                        (SELECT motivo
+                                         FROM motivo
+                                         WHERE id_motivo = M.motivo_2) as Mot2,
+                                        M.motivo_3,
+                                        M.motivo_3 not in (SELECT id_motivo
+                                                           FROM MTPERM) as mt3,
+                                        (SELECT motivo
+                                         FROM motivo
+                                         WHERE id_motivo = M.motivo_3) as Mot3, 
+                                        M.motivo_4,
+                                        M.motivo_4 not in (SELECT id_motivo
+                                                           FROM MTPERM) as mt4,
+                                        (SELECT motivo
+                                         FROM motivo
+                                         WHERE id_motivo = M.motivo_4) as Mot4,
+                                        M.motivo_5,
+                                        M.motivo_5 not in (SELECT id_motivo
+                                                           FROM MTPERM) as mt5,
+                                        (SELECT motivo
+                                         FROM motivo
+                                         WHERE id_motivo = M.motivo_5) as Mot5
+                                 from movimiento M, 
+                                      persona P, 
+                                      responsable R, 
+                                      centros_salud C, 
+                                      otras_instituciones I 
+                                 where M.id_persona = P.id_persona 
+                                   and M.id_resp = R.id_resp 
+                                   and M.id_centro = C.id_centro 
+                                   and M.id_otrainstitucion = I.ID_OtraInstitucion 
+                                   and M.id_movimiento = $ID_Movimiento";
               $MensajeErrorDatos = "No se pudo consultar los Datos del Movimiento";
 
               $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
@@ -218,60 +263,92 @@ $Con->CloseConexion();
 
               $ID_Movimiento = $Ret["id_movimiento"];
               $ID_Motivo_1 = $Ret["motivo_1"];
+              $tieneRolMT1 = $Ret["mt1"];
+              $nombreRolMT1 = $Ret["Mot1"];
               $ID_Motivo_2 = $Ret["motivo_2"];
+              $tieneRolMT2 = $Ret["mt2"];
+              $nombreRolMT2 = $Ret["Mot2"];
               $ID_Motivo_3 = $Ret["motivo_3"];
+              $tieneRolMT3 = $Ret["mt3"];
+              $nombreRolMT3 = $Ret["Mot3"];
               $ID_Motivo_4 = $Ret["motivo_4"];
+              $tieneRolMT4 = $Ret["mt4"];
+              $nombreRolMT4 = $Ret["Mot4"];
               $ID_Motivo_5 = $Ret["motivo_5"];
+              $tieneRolMT5 = $Ret["mt5"];
+              $nombreRolMT5 = $Ret["Mot5"];
 
-              $ConsultarMotivo1 = "select MT.motivo from motivo MT inner join categoria C on (MT.cod_categoria = C.cod_categoria) 
-                                     inner join categorias_roles CR on (CR.id_categoria = CR.id_categoria) 
-                                   where MT.id_motivo = $ID_Motivo_1 
+              if($tieneRolMT1 == "1"){
+                $ConsultarMotivo1 = "select MT.motivo 
+                                     from motivo MT inner join categoria C on (MT.cod_categoria = C.cod_categoria) 
+                                          inner join categorias_roles CR on (CR.id_categoria = CR.id_categoria) 
+                                     where MT.id_motivo = $ID_Motivo_1 
                                      and (CR.id_tipousuario = $TipoUsuario or MT.id_motivo = 1)
                                      and CR.estado = 1";
-              $MensajeErrorMotivo1 = "No se pudo consultar el Motivo 1";
-              $EjecutarConsultarMotivo1 = mysqli_query($Con->Conexion,$ConsultarMotivo1) or die($MensajeErrorMotivo1);
-              $RetMotivo1 = mysqli_fetch_assoc($EjecutarConsultarMotivo1);
-              $Motivo_1 = (isset($RetMotivo1["motivo"])?$RetMotivo1["motivo"]:"");
-
-              $ConsultarMotivo2 = "select MT.motivo from motivo MT inner join categoria C on (MT.cod_categoria = C.cod_categoria) 
+                $MensajeErrorMotivo1 = "No se pudo consultar el Motivo 1";
+                $EjecutarConsultarMotivo1 = mysqli_query($Con->Conexion,$ConsultarMotivo1) or die($MensajeErrorMotivo1);
+                $RetMotivo1 = mysqli_fetch_assoc($EjecutarConsultarMotivo1);
+                $Motivo_1 = (isset($RetMotivo1["motivo"])?$RetMotivo1["motivo"]:"");
+              } else {
+                $Motivo_1 = $nombreRolMT1;
+              }
+              if($tieneRolMT2 == "1"){
+                $ConsultarMotivo2 = "select MT.motivo 
+                                   from motivo MT inner join categoria C on (MT.cod_categoria = C.cod_categoria) 
                                      inner join categorias_roles CR on (CR.id_categoria = CR.id_categoria) 
-                                   where MT.id_motivo = $ID_Motivo_2 
-                                     and (CR.id_tipousuario = $TipoUsuario or MT.id_motivo = 1)
+                                   where MT.id_motivo = $ID_Motivo_2
+                                   and (CR.id_tipousuario = $TipoUsuario or MT.id_motivo = 1)
                                      and CR.estado = 1";
-              $MensajeErrorMotivo2 = "No se pudo consultar el Motivo 2";
-              $EjecutarConsultarMotivo2 = mysqli_query($Con->Conexion,$ConsultarMotivo2) or die($MensajeErrorMotivo2);
-              $RetMotivo2 = mysqli_fetch_assoc($EjecutarConsultarMotivo2);
-              $Motivo_2 = (isset($RetMotivo2["motivo"])?$RetMotivo2["motivo"]:"");
+                $MensajeErrorMotivo2 = "No se pudo consultar el Motivo 2";
+                $EjecutarConsultarMotivo2 = mysqli_query($Con->Conexion,$ConsultarMotivo2) or die($MensajeErrorMotivo2);
+                $RetMotivo2 = mysqli_fetch_assoc($EjecutarConsultarMotivo2);
+                $Motivo_2 = (isset($RetMotivo2["motivo"])?$RetMotivo2["motivo"]:"");
+              } else {
+                $Motivo_2 = $nombreRolMT2;
+              }
+              if($tieneRolMT3 == "1"){
+                  $ConsultarMotivo3 = "select MT.motivo 
+                                      from motivo MT inner join categoria C on (MT.cod_categoria = C.cod_categoria) 
+                                        inner join categorias_roles CR on (CR.id_categoria = CR.id_categoria) 
+                                      where MT.id_motivo = $ID_Motivo_3 
+                                        and (CR.id_tipousuario = $TipoUsuario or MT.id_motivo = 1)
+                                        and CR.estado = 1";
+                  $MensajeErrorMotivo3 = "No se pudo consultar el Motivo 3";
+                  $EjecutarConsultarMotivo3 = mysqli_query($Con->Conexion,$ConsultarMotivo3) or die($MensajeErrorMotivo3);
+                  $RetMotivo3 = mysqli_fetch_assoc($EjecutarConsultarMotivo3);
+                  $Motivo_3 = (isset($RetMotivo3["motivo"])?$RetMotivo3["motivo"]:"");
+              } else {
+                $Motivo_3 = $nombreRolMT3;
+              }
+              if($tieneRolMT4 == "1"){
+                  $ConsultarMotivo4 = "select MT.motivo 
+                                      from motivo MT inner join categoria C on (MT.cod_categoria = C.cod_categoria) 
+                                        inner join categorias_roles CR on (CR.id_categoria = CR.id_categoria) 
+                                      where MT.id_motivo = $ID_Motivo_4 
+                                        and (CR.id_tipousuario = $TipoUsuario or MT.id_motivo = 1)
+                                        and CR.estado = 1";
+                  $MensajeErrorMotivo4 = "No se pudo consultar el Motivo 4";
+                  $EjecutarConsultarMotivo4 = mysqli_query($Con->Conexion,$ConsultarMotivo4) or die($MensajeErrorMotivo4);
+                  $RetMotivo4 = mysqli_fetch_assoc($EjecutarConsultarMotivo4);
+                  $Motivo_4 = (isset($RetMotivo4["motivo"])?$RetMotivo4["motivo"]:"");
+              } else {
+                $Motivo_4 = $nombreRolMT4;
+              }
 
-              $ConsultarMotivo3 = "select MT.motivo from motivo MT inner join categoria C on (MT.cod_categoria = C.cod_categoria) 
-                                     inner join categorias_roles CR on (CR.id_categoria = CR.id_categoria) 
-                                   where MT.id_motivo = $ID_Motivo_3 
-                                     and (CR.id_tipousuario = $TipoUsuario or MT.id_motivo = 1)
-                                     and CR.estado = 1";
-              $MensajeErrorMotivo3 = "No se pudo consultar el Motivo 3";
-              $EjecutarConsultarMotivo3 = mysqli_query($Con->Conexion,$ConsultarMotivo3) or die($MensajeErrorMotivo3);
-              $RetMotivo3 = mysqli_fetch_assoc($EjecutarConsultarMotivo3);
-              $Motivo_3 = (isset($RetMotivo3["motivo"])?$RetMotivo3["motivo"]:"");
-
-              $ConsultarMotivo4 = "select MT.motivo from motivo MT inner join categoria C on (MT.cod_categoria = C.cod_categoria) 
-                                     inner join categorias_roles CR on (CR.id_categoria = CR.id_categoria) 
-                                   where MT.id_motivo = $ID_Motivo_4 
-                                     and (CR.id_tipousuario = $TipoUsuario or MT.id_motivo = 1)
-                                     and CR.estado = 1";
-              $MensajeErrorMotivo4 = "No se pudo consultar el Motivo 4";
-              $EjecutarConsultarMotivo4 = mysqli_query($Con->Conexion,$ConsultarMotivo4) or die($MensajeErrorMotivo4);
-              $RetMotivo4 = mysqli_fetch_assoc($EjecutarConsultarMotivo4);
-              $Motivo_4 = (isset($RetMotivo4["motivo"])?$RetMotivo4["motivo"]:"");
-
-              $ConsultarMotivo5 = "select MT.motivo from motivo MT inner join categoria C on (MT.cod_categoria = C.cod_categoria) 
-                                     inner join categorias_roles CR on (CR.id_categoria = CR.id_categoria) 
-                                   where MT.id_motivo = $ID_Motivo_5 
-                                     and (CR.id_tipousuario = $TipoUsuario or MT.id_motivo = 1)
-                                     and CR.estado = 1";
-              $MensajeErrorMotivo5 = "No se pudo consultar el Motivo 5";
-              $EjecutarConsultarMotivo5 = mysqli_query($Con->Conexion,$ConsultarMotivo5) or die($MensajeErrorMotivo5);
-              $RetMotivo5 = mysqli_fetch_assoc($EjecutarConsultarMotivo5);
-              $Motivo_5 = (isset($RetMotivo5["motivo"])?$RetMotivo5["motivo"]:"");
+              if($tieneRolMT5 == "1"){
+                  $ConsultarMotivo5 = "select MT.motivo 
+                                      from motivo MT inner join categoria C on (MT.cod_categoria = C.cod_categoria) 
+                                        inner join categorias_roles CR on (CR.id_categoria = CR.id_categoria) 
+                                      where MT.id_motivo = $ID_Motivo_5 
+                                        and (CR.id_tipousuario = $TipoUsuario or MT.id_motivo = 1)
+                                        and CR.estado = 1";
+                  $MensajeErrorMotivo5 = "No se pudo consultar el Motivo 5";
+                  $EjecutarConsultarMotivo5 = mysqli_query($Con->Conexion,$ConsultarMotivo5) or die($MensajeErrorMotivo5);
+                  $RetMotivo5 = mysqli_fetch_assoc($EjecutarConsultarMotivo5);
+                  $Motivo_5 = (isset($RetMotivo5["motivo"])?$RetMotivo5["motivo"]:"");
+              } else {
+                $Motivo_5 = $nombreRolMT5;
+              }
 
               $Fecha = $Fecha_Nacimiento = implode("-", array_reverse(explode("-",$Ret["fecha"])));
               $Apellido = $Ret["apellido"];
