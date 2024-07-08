@@ -119,6 +119,17 @@ $Con->CloseConexion();
       $( "#BarraDeNavHTabla").on("mouseup", function(e) {
         actualizacionDePosicionBarraDenavegacionH(e, $(this).attr("value"));
       });
+      $('thead tr >*').on("transitionstart", function(e) {
+        var columnaRemoverClass = $("tbody tr > *:nth-child("+ (this.cellIndex + 1) +")[class ~='hiddenColTablaAnimacion'] div div");
+        columnaRemoverClass.removeClass( "itemMotivoAccesible");
+      });
+      $('thead tr >*').on("transitionend", function(e) {
+        var columnaRemoverClass = $("tbody tr > *:nth-child("+ (this.cellIndex + 1) +")[class ~='showColTablaAnimacion'] div div");
+        columnaRemoverClass.addClass( "itemMotivoAccesible");
+        columnaRemoverClass.removeClass( "showColTablaAnimacionfire");
+        columnaRemoverClass.removeClass( "showColTablaAnimacion");
+      });
+
     });
 
     function fireKey(el) {
@@ -146,30 +157,6 @@ $Con->CloseConexion();
         $("#BarraDeNavHTabla").val(Math.round(value));
       }
     }
-
-/*
-    function navegacionConBarHNav(e){
-      var value = parseInt(e.target.value);
-      var nroFilasTabla = $("tbody > tr").length - 2;
-      var nroColumnasTabla = $("thead > tr > th").length - 2;
-      $("#BarraDeNavHTabla").attr("max", nroColumnasTabla + 1);
-      $("#BarraDeNavHTabla").attr("value", columnaIndice);
-      if(value < columnaIndice){
-        columnaIndice--;
-        headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');
-        columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
-        columnaABorrar.show();
-        headABorrar.show();
-      } else if (value > columnaIndice){
-        headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');        
-        columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
-        headABorrar.hide();
-        columnaABorrar.hide();
-        columnaIndice++;
-      }
-      $("#BarraDeNavHTabla").attr("value", columnaIndice);
-    }
-      */
 
     function navegacionConBarHNav(e){
       var value = $("#BarraDeNavHTabla").val();
@@ -219,7 +206,7 @@ $Con->CloseConexion();
         var tabla = $("table");
         tabla.scrollLeft(0);
         if (e.which == 39) {
-
+            //right Arrow
             columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
             headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');
             if(columnaIndice <= nroColumnasTabla){

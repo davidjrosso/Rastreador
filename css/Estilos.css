@@ -392,7 +392,8 @@ a.disabled {
 
 .showColTablaAnimacion {
   opacity: 1;
-  transition: margin-left 0.5s ease, border 0.7s steps(1, end), z-index 0.7s steps(3, end);
+  /*transition: margin-left 0.5s ease, border 0.7s steps(1, end), z-index 0.7s steps(1, end);*/
+  transition: margin-left 0.5s ease, border 0.7s steps(1, end);
 }
 
 .hiddenColTablaAnimacion.hiddenColTablaAnimacionfire {
@@ -411,7 +412,7 @@ a.disabled {
 .showColTablaAnimacion.showColTablaAnimacionfire {
   margin-left: 0px;
   border: 1px solid #dee2e6;
-  z-index: 300 !important;
+  /*z-index: 300 !important;*/
 }
 
 
@@ -420,7 +421,7 @@ thead tr > *:nth-child(4) {
   z-index: 300 !important;
 }
 
-tbody tr > *:nth-child(4){
+tbody tr > *:nth-child(-n + 4){
   z-index: 300;
   background-color: white !important;
 }
@@ -433,10 +434,14 @@ tbody tr > *:nth-child(n + 5).hiddenColTablaAnimacionfire > div > div{
   z-index: -1;
 }
 
+tbody tr > *:nth-child(n + 5).showColTablaAnimacionfire > div > div{
+  z-index: -1;
+}
+
 /*.hiddenColTablaAnimacionfire > div > div{
   z-index: -1;
 }*/
 
 .itemMotivoAccesible{
-  z-index: 300;
+  z-index: 1 !important;
 }
