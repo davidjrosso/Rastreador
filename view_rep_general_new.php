@@ -104,6 +104,7 @@ $Con->CloseConexion();
     var editing = false;
     var columnaIndice = 5;
     var filaIndice = 1;
+    var valInputRangePrev = columnaIndice; 
 
     $( document ).on( "keydown", function(e) {
       NavegacionConTeclado(e);
@@ -146,8 +147,74 @@ $Con->CloseConexion();
             eventObj.which = key;
             el.dispatchEvent(eventObj);
         }
-    } 
+    }
 
+    function actualizacionDePosicionBarraDenavegacionH(e, element){
+      var value = $("#BarraDeNavHTabla").val();
+      var columnaActual = columnaIndice;
+      if(value < (columnaIndice - 0.5)){
+        columnaIndice--;
+        headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');
+        columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
+        columnaABorrar.show();
+        headABorrar.show();
+        columnaABorrar.removeClass( "hiddenColTablaAnimacion");
+        headABorrar.addClass( "hiddenColTablaAnimacion");
+        columnaABorrar.removeClass( "hiddenColTablaAnimacionfire");
+        headABorrar.removeClass( "hiddenColTablaAnimacionfire");
+        columnaABorrar.addClass( "showColTablaAnimacion");
+        headABorrar.addClass( "showColTablaAnimacion");
+        columnaABorrar.addClass( "showColTablaAnimacionfire");
+        headABorrar.addClass( "showColTablaAnimacionfire");
+      } else if (value > (columnaIndice + 0.5)){
+        headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');
+        columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
+        columnaABorrar.removeClass( "showColTablaAnimacion");
+        headABorrar.removeClass( "showColTablaAnimacion");
+        columnaABorrar.removeClass( "showColTablaAnimacionfire");
+        headABorrar.removeClass( "showColTablaAnimacionfire");
+        columnaABorrar.addClass( "hiddenColTablaAnimacion");
+        headABorrar.addClass( "hiddenColTablaAnimacion");
+        columnaABorrar.addClass( "hiddenColTablaAnimacionfire");
+        headABorrar.addClass( "hiddenColTablaAnimacionfire");
+        columnaIndice++;
+      } else if(((columnaIndice - 0.5) < value) &&  (value < columnaIndice)){
+        headABorrar = $('thead tr > *:nth-child('+(columnaIndice - 1) + ')');
+        columnaABorrar = $('tbody tr > *:nth-child('+(columnaIndice - 1) + ')');
+        columnaABorrar.removeClass( "showColTablaAnimacion");
+        headABorrar.removeClass( "showColTablaAnimacion");
+        columnaABorrar.removeClass( "showColTablaAnimacionfire");
+        headABorrar.removeClass( "showColTablaAnimacionfire");
+        columnaABorrar.addClass( "hiddenColTablaAnimacion");
+        headABorrar.addClass( "hiddenColTablaAnimacion");
+        columnaABorrar.addClass( "hiddenColTablaAnimacionfire");
+        headABorrar.addClass( "hiddenColTablaAnimacionfire");
+      } else if(( value < (columnaIndice + 0.5)) &&  (columnaIndice < value)){
+        headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');
+        columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
+        columnaABorrar.show();
+        headABorrar.show();
+        columnaABorrar.removeClass( "hiddenColTablaAnimacion");
+        headABorrar.addClass( "hiddenColTablaAnimacion");
+        columnaABorrar.removeClass( "hiddenColTablaAnimacionfire");
+        headABorrar.removeClass( "hiddenColTablaAnimacionfire");
+        columnaABorrar.addClass( "showColTablaAnimacion");
+        headABorrar.addClass( "showColTablaAnimacion");
+        columnaABorrar.addClass( "showColTablaAnimacionfire");
+        headABorrar.addClass( "showColTablaAnimacionfire");
+      }
+
+      if(Math.round(value) == Math.floor(value)){
+        $("#BarraDeNavHTabla").val(Math.floor(value));
+      } else {
+        $("#BarraDeNavHTabla").val(Math.round(value));
+      }
+    }
+
+
+
+    
+/*
     function actualizacionDePosicionBarraDenavegacionH(e, element){
       var value = $("#BarraDeNavHTabla").val();
       var columnaActual = columnaIndice;
@@ -156,8 +223,10 @@ $Con->CloseConexion();
       } else {
         $("#BarraDeNavHTabla").val(Math.round(value));
       }
+      
     }
-
+*/
+/*
     function navegacionConBarHNav(e){
       var value = $("#BarraDeNavHTabla").val();
       var nroFilasTabla = $("tbody > tr").length - 2;
@@ -194,6 +263,52 @@ $Con->CloseConexion();
       }
       $("#BarraDeNavHTabla").attr("value", columnaIndice);
     }
+*/
+
+    function navegacionConBarHNav(e){
+      var value = $("#BarraDeNavHTabla").val();
+      var movDecrec = (value < valInputRangePrev);
+      var nroFilasTabla = $("tbody > tr").length - 2;
+      var nroColumnasTabla = $("thead > tr > th").length - 2;
+      columnaActual = (value < columnaIndice)? Math.floor(value): columnaIndice;
+      $("#BarraDeNavHTabla").attr("max", nroColumnasTabla + 1);
+      $("#BarraDeNavHTabla").attr("value", columnaIndice);
+      headABorrar = $('thead tr > *:nth-child('+columnaActual+')');
+      columnaABorrar = $('tbody tr > *:nth-child('+columnaActual+')');
+      columnaABorrar.map( function() {
+                          var margin = Math.abs(value - columnaActual);
+                          var marginElment = parseInt($(this).css("margin-left"), 10);
+                          var width = parseInt($(this).css("width"), 10);
+                          var updateMarginLeft =  "-" + margin*width + "px";
+                          $(this).removeClass( "showColTablaAnimacion");
+                          $(this).removeClass( "showColTablaAnimacionfire");
+                          $(this).find("div div").removeClass( "itemMotivoAccesible");
+                          $(this).removeClass( "hiddenColTablaAnimacion");
+                          $(this).removeClass( "hiddenColTablaAnimacionfire");
+                          $(this).find("div div").css("z-index", "-1");
+                          $(this).css("margin-left", updateMarginLeft);
+                          $(this).css("border-right-width", ((value < columnaIndice)?"":"0px"));
+                          $(this).css("border-left-width", "0px");
+                          return $(this);
+                        });
+      headABorrar.map( function() {
+                        var margin = Math.abs(value - columnaActual);
+                        var marginElment = parseInt($( this ).css("margin-left"), 10);
+                        var width = parseInt($( this ).css("width"), 10);
+                        var updateMarginLeft =  "-" + margin*width + "px";
+                        $( this ).css("margin-left", updateMarginLeft);
+                        $(this).removeClass( "showColTablaAnimacion");
+                          $(this).removeClass( "showColTablaAnimacionfire");
+                          $(this).removeClass( "hiddenColTablaAnimacion");
+                          $(this).removeClass( "hiddenColTablaAnimacionfire");
+                        return $( this );
+                      });
+      if(columnaIndice + 1 <= value){
+        columnaIndice++;
+      }
+      $("#BarraDeNavHTabla").attr("value", columnaIndice);
+    }
+
 
     function NavegacionConTeclado(e) {
         var columnaABorrar = null;
@@ -241,8 +356,6 @@ $Con->CloseConexion();
                 headABorrar.addClass( "showColTablaAnimacion");
                 columnaABorrar.addClass( "showColTablaAnimacionfire");
                 headABorrar.addClass( "showColTablaAnimacionfire");
-                console.log("incrementar 1 " + columnaIndice + " " + headABorrar.attr("class"));
-                console.log( headABorrar);
 
               } else if (columnaIndice == 5){
                 headABorrar.show();
@@ -255,7 +368,6 @@ $Con->CloseConexion();
                 headABorrar.addClass( "showColTablaAnimacion");
                 columnaABorrar.addClass( "showColTablaAnimacionfire");
                 headABorrar.addClass( "showColTablaAnimacionfire");
-                console.log("incrementar 2" + columnaIndice);
               }
             }
             //$("#BarraDeNavHTabla").attr("value", columnaIndice);
