@@ -226,21 +226,24 @@ $Con->CloseConexion();
             document.getElementById("BarraDeNavHTabla").value = columnaIndice;
         } else if (e.which == 37) {
             // Left Arrow
-            headABorrar = $('thead tr >*:nth-child('+columnaIndice+')');
-            columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
+            headABorrar = $('thead tr >*:nth-child('+(columnaIndice - 1 )+ ')');
+            columnaABorrar = $('tbody tr > *:nth-child('+(columnaIndice - 1 )+')');
             if(columnaIndice >= 5){
               if(columnaIndice > 5){
                 columnaIndice--;
                 columnaABorrar.show();
                 headABorrar.show();
                 columnaABorrar.removeClass( "hiddenColTablaAnimacion");
-                headABorrar.addClass( "hiddenColTablaAnimacion");
+                headABorrar.removeClass( "hiddenColTablaAnimacion");
                 columnaABorrar.removeClass( "hiddenColTablaAnimacionfire");
                 headABorrar.removeClass( "hiddenColTablaAnimacionfire");
                 columnaABorrar.addClass( "showColTablaAnimacion");
                 headABorrar.addClass( "showColTablaAnimacion");
                 columnaABorrar.addClass( "showColTablaAnimacionfire");
                 headABorrar.addClass( "showColTablaAnimacionfire");
+                console.log("incrementar 1 " + columnaIndice + " " + headABorrar.attr("class"));
+                console.log( headABorrar);
+
               } else if (columnaIndice == 5){
                 headABorrar.show();
                 columnaABorrar.show();
@@ -252,6 +255,7 @@ $Con->CloseConexion();
                 headABorrar.addClass( "showColTablaAnimacion");
                 columnaABorrar.addClass( "showColTablaAnimacionfire");
                 headABorrar.addClass( "showColTablaAnimacionfire");
+                console.log("incrementar 2" + columnaIndice);
               }
             }
             //$("#BarraDeNavHTabla").attr("value", columnaIndice);
