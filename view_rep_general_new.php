@@ -1027,6 +1027,43 @@ $Con->CloseConexion();
             $Con = new Conexion();
             $Con->OpenConexion();
 
+            // Tabla asociada a los permisos de usuarios sobre las categorias
+            $consultaGeneralPermisos = "CREATE TEMPORARY TABLE GIN " ;
+            $consultaUsuarioPermisos = "CREATE TEMPORARY TABLE INN ";
+        
+            $motivosVisiblesParaUsuario =  "SELECT MT.id_motivo
+                                            FROM motivo MT,
+                                                categoria  C,
+                                                categorias_roles CS
+                                            WHERE C.cod_categoria = MT.cod_categoria
+                                              and MT.estado = 1
+                                              and C.estado = 1
+                                              and CS.id_categoria = C.id_categoria
+                                              and CS.id_tipousuario = $TipoUsuario
+                                              and CS.estado = 1";
+        
+            $motivosVisiblesParaTodoUsuario = "SELECT MT.id_motivo
+                                               FROM motivo MT,
+                                                    categoria  C
+                                            WHERE C.cod_categoria = MT.cod_categoria
+                                              and MT.estado = 1
+                                              and C.estado = 1               
+                                              and C.id_categoria NOT IN (SELECT id_categoria
+                                                                         FROM categorias_roles CS)";
+            $motivosVisiblesParaUsuario = $consultaUsuarioPermisos . $motivosVisiblesParaUsuario;
+            $motivosVisiblesParaTodoUsuario = $consultaGeneralPermisos . $motivosVisiblesParaTodoUsuario;
+            $MessageError = "Problemas al crear la tabla temporaria de usuarios";
+            $motivosUsuario = mysqli_query(
+                             $Con->Conexion,$motivosVisiblesParaUsuario
+                             ) or die($MessageError);
+        
+            $MessageError = "Problemas al crear la tabla temporaria general";
+            $motivosTodoUsuario = mysqli_query(
+                             $Con->Conexion,$motivosVisiblesParaTodoUsuario
+                             ) or die($MessageError);
+
+
+
             if ($ID_Persona > 0) { //P.nro_legajo,P.nro_carpeta
               $ConsultaFlia = $Consulta;
               $Consulta .= " and P.id_persona = $ID_Persona";
@@ -1327,7 +1364,7 @@ $Con->CloseConexion();
               //$Consulta .= " group by M.id_persona order by P.domicilio, P.apellido, M.id_movimiento";
             }
 
-            $Con->CloseConexion();
+            //$Con->CloseConexion();
 
             // $Consulta .= " group by M.id_persona order by Anio, Mes, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";
           
@@ -1382,8 +1419,8 @@ $Con->CloseConexion();
 
             <div class="table-responsive" id="tabla-responsive">
               <?php
-              $Con = new Conexion();
-              $Con->OpenConexion();
+              //$Con = new Conexion();
+              //$Con->OpenConexion();
 
               $tomarRetTodos = array();
               $Con->ResultSet = mysqli_query($Con->Conexion, $Consulta) or die($MensajeError . " Consulta: " . $Consulta);
@@ -1998,7 +2035,9 @@ $Con->CloseConexion();
                   $Table .= "<td name='DatosSinResultados' style='width:" . $ColSpans . "px'></td>";
                   $Table_imprimir .= "<td name='DatosSinResultados' style='width:" . $ColSpans . "px'></td>";
                 } else {
-                  // echo "Entra aca CM";
+
+                  //En este punto se cominza a procesar los movimientos asociados a una persona persona
+
                   // ACA IRIA TODO LO OTRO PARA LOS QUE SI TIENEN MOVIMIENTOS
                   $ID_Persona_Nuevo = $RetTodos["id_persona"];
 
@@ -2135,7 +2174,11 @@ $Con->CloseConexion();
                       if ($Ret_Datos_Movimiento["motivo_1"] > 1) {
                         if ($ID_Motivo > 0) {
                           if ($ID_Motivo == $Ret_Datos_Movimiento["motivo_1"]) {
-                            $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color, M.codigo 
+                            $ConsultarCodyColor = "select M.id_motivo IN (SELECT *
+                                                                          FROM INN) as ConPermisoParaUsr,
+                                                          M.id_motivo IN (SELECT *
+                                                                          FROM GIN) as ConPermisoGeneral,
+                                                          M.cod_categoria, F.Forma_Categoria, C.color, M.codigo 
                                                    from motivo M, 
                                                         categoria C, 
                                                         formas_categorias F 
@@ -2147,38 +2190,54 @@ $Con->CloseConexion();
                             $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
 
                             // echo $ConsultarCodyColor;               
-            
+
                             $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor . " - " . $ConsultarCodyColor . " valor:" . $Ret_Datos_Movimiento["motivo_1"]);
 
                             $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
 
                             // echo "DEBUG: ".var_dump($RetMotivo);
-            
-                            $Table .= "<div class = 'col-md-1'>
-                                        <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
-                                          <span style='font-size: 30px; color: " . $RetMotivo["color"] . ";'>" . 
-                                            $RetMotivo["Forma_Categoria"] . 
-                                            "<center>
-                                              <span class='nombreCategoria'>" . $RetMotivo["codigo"] . "
-                                              </span>
-                                             </center>
-                                          </span>
-                                        </a>
-                                       </div>";
-                            $Table_imprimir .= "<div class = 'col-md-1'>
-                                                    <span style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 10px; color: " . $RetMotivo["color"] . ";'>" . 
-                                                      $RetMotivo["Forma_Categoria"] . 
-                                                      "<center>
-                                                        <span class='nombreCategoria'>" . $RetMotivo["codigo"] . "
-                                                        </span>
-                                                      </center>
-                                                    </span>
-                                                </div>";
+                            if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                              $Table .= "<div class = 'col-md-1'>
+                                          <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
+                                            <span style='font-size: 30px; color: " . $RetMotivo["color"] . ";'>" . 
+                                              $RetMotivo["Forma_Categoria"] . 
+                                              "<center>
+                                                <span class='nombreCategoria'>" . $RetMotivo["codigo"] . "
+                                                </span>
+                                               </center>
+                                            </span>
+                                          </a>
+                                         </div>";
+                              $Table_imprimir .= "<div class = 'col-md-1'>
+                                                      <span style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 10px; color: " . $RetMotivo["color"] . ";'>" . 
+                                                        $RetMotivo["Forma_Categoria"] . 
+                                                        "<center>
+                                                          <span class='nombreCategoria'>" . $RetMotivo["codigo"] . "
+                                                          </span>
+                                                        </center>
+                                                      </span>
+                                                  </div>";
+                            }
                           }
                         }
                         if ($ID_Motivo2 > 0) {
                           if ($ID_Motivo2 == $Ret_Datos_Movimiento["motivo_1"]) {
-                            $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_1"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
+                            $ConsultarCodyColor = "select M.id_motivo IN (SELECT *
+                                                                          FROM INN) as ConPermisoParaUsr,
+                                                          M.id_motivo IN (SELECT *
+                                                                          FROM GIN) as ConPermisoGeneral,
+                                                          M.cod_categoria, F.Forma_Categoria, C.color, M.codigo  M.cod_categoria, 
+                                                          F.Forma_Categoria, 
+                                                          C.color, 
+                                                          M.codigo 
+                                                    from motivo M, 
+                                                         categoria C, 
+                                                         formas_categorias F 
+                                                    where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_1"] . " 
+                                                      and M.cod_categoria = C.cod_categoria 
+                                                      and C.ID_Forma = F.ID_Forma 
+                                                      and M.estado = 1 
+                                                      and C.estado = 1";
                             $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
 
                             // echo $ConsultarCodyColor;               
@@ -2188,23 +2247,48 @@ $Con->CloseConexion();
                             $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
 
                             // echo "DEBUG: ".var_dump($RetMotivo);
-            
-                            $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo["color"] . ";'>" . $RetMotivo["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo["codigo"] . "</span></center></span></a></div>";
-                            $Table_imprimir .= "<div class = 'col-md-1'>
-                                                  <span style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 10px; color: " . $RetMotivo["color"] . ";'>
-                                                  " . $RetMotivo["Forma_Categoria"] . "
-                                                    <center>
-                                                      <span class='nombreCategoria'>
-                                                        " . $RetMotivo["codigo"] . "
-                                                      </span>
-                                                    </center>
+                            if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                              $Table .= "<div class = 'col-md-1'>
+                                            <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
+                                              <span style='font-size: 30px; color: " . $RetMotivo["color"] . ";'>" . $RetMotivo["Forma_Categoria"] . "
+                                                <center>
+                                                  <span class='nombreCategoria'>" . $RetMotivo["codigo"] . "
                                                   </span>
-                                                </div>";
+                                                </center>
+                                              </span>
+                                            </a>
+                                        </div>";
+                              $Table_imprimir .= "<div class = 'col-md-1'>
+                                                    <span style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 10px; color: " . $RetMotivo["color"] . ";'>
+                                                    " . $RetMotivo["Forma_Categoria"] . "
+                                                      <center>
+                                                        <span class='nombreCategoria'>
+                                                          " . $RetMotivo["codigo"] . "
+                                                        </span>
+                                                      </center>
+                                                    </span>
+                                                  </div>";
+                            }
                           }
                         }
                         if ($ID_Motivo3 > 0) {
                           if ($ID_Motivo3 == $Ret_Datos_Movimiento["motivo_1"]) {
-                            $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_1"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
+                            $ConsultarCodyColor = "select M.id_motivo IN (SELECT *
+                                                                          FROM INN) as ConPermisoParaUsr,
+                                                          M.id_motivo IN (SELECT *
+                                                                          FROM GIN) as ConPermisoGeneral,
+                                                          M.cod_categoria,
+                                                          F.Forma_Categoria,
+                                                          C.color, 
+                                                          M.codigo 
+                                                   from motivo M,
+                                                        categoria C,
+                                                        formas_categorias F
+                                                        where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_1"] . " 
+                                                          and M.cod_categoria = C.cod_categoria 
+                                                          and C.ID_Forma = F.ID_Forma 
+                                                          and M.estado = 1 
+                                                          and C.estado = 1";
                             $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
 
                             // echo $ConsultarCodyColor;               
@@ -2214,13 +2298,35 @@ $Con->CloseConexion();
                             $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
 
                             // echo "DEBUG: ".var_dump($RetMotivo);
-            
-                            $Table .= "<div class = 'col-md-1'><span style='font-size: 30px; color: " . $RetMotivo["color"] . ";'>" . $RetMotivo["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo["codigo"] . "</span></center></span></div>";
-                            $Table_imprimir .= "<div class = 'col-md-1'><span style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  10px; color: " . $RetMotivo["color"] . "; '>" . $RetMotivo["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo["codigo"] . "</span></center></span></div>";
+                            if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                                $Table .= "<div class = 'col-md-1'>
+                                            <span style='font-size: 30px; color: " . $RetMotivo["color"] . ";'>" . $RetMotivo["Forma_Categoria"] . "
+                                              <center>
+                                                <span class='nombreCategoria'>" . $RetMotivo["codigo"] . "
+                                                </span>
+                                              </center>
+                                            </span>
+                                          </div>";
+                                $Table_imprimir .= "<div class = 'col-md-1'>
+                                                      <span style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  10px; color: " . $RetMotivo["color"] . "; '>" . $RetMotivo["Forma_Categoria"] . "
+                                                        <center>
+                                                          <span class='nombreCategoria' >" . $RetMotivo["codigo"] . "
+                                                          </span>
+                                                        </center>
+                                                      </span>
+                                                    </div>";
+                            }
                           }
                         }
                         if ($ID_Motivo == 0 && $ID_Motivo2 == 0 && $ID_Motivo3 == 0) {
-                          $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color, M.codigo 
+                          $ConsultarCodyColor = "select M.id_motivo IN (SELECT id_motivo
+                                                                          FROM INN) as ConPermisoParaUsr ,
+                                                        M.id_motivo IN (SELECT id_motivo
+                                                                          FROM GIN)  as ConPermisoGeneral,
+                                                        M.cod_categoria,
+                                                        F.Forma_Categoria,
+                                                        C.color,
+                                                        M.codigo
                                                  from motivo M, 
                                                       categoria C, 
                                                       formas_categorias F 
@@ -2229,6 +2335,7 @@ $Con->CloseConexion();
                                                    and C.ID_Forma = F.ID_Forma 
                                                    and M.estado = 1 
                                                    and C.estado = 1";
+
                           $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
 
                           //echo $ConsultarCodyColor;               
@@ -2236,16 +2343,36 @@ $Con->CloseConexion();
                           $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor . " - " . $ConsultarCodyColor . " valor:" . $Ret_Datos_Movimiento["motivo_1"]);
 
                           $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
-
-                          $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; padding: 0px; color: " . $RetMotivo["color"] . ";'>" . $RetMotivo["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo["codigo"] . "</span></center></span></a></div>";
-                          $Table_imprimir .= "<div class = 'col-md-1'><span style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 10px; padding: 0px; color: " . $RetMotivo["color"] . ";'>" . $RetMotivo["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo["codigo"] . "</span></center></span></div>";
+                          if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                              $Table .= "<div class = 'col-md-1'>
+                                          <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
+                                            <span style='font-size: 30px; padding: 0px; color: " . $RetMotivo["color"] . ";'>" . $RetMotivo["Forma_Categoria"] . "
+                                              <center>
+                                                <span class='nombreCategoria'>" . $RetMotivo["codigo"] . "</span>
+                                              </center>
+                                            </span>
+                                          </a>
+                                        </div>";
+                              $Table_imprimir .= "<div class = 'col-md-1'>
+                                                    <span style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 10px; padding: 0px; color: " . $RetMotivo["color"] . ";'>" . $RetMotivo["Forma_Categoria"] . "
+                                                      <center>
+                                                        <span class='nombreCategoria' >" . $RetMotivo["codigo"] . "
+                                                        </span>
+                                                      </center>
+                                                    </span>
+                                                  </div>";
+                          }
                         }
                       }
 
                       if ($Ret_Datos_Movimiento["motivo_2"] > 1) {
                         if ($ID_Motivo > 0) {
                           if ($ID_Motivo == $Ret_Datos_Movimiento["motivo_2"]) {
-                            $ConsultarCodyColor2 = "select M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_2"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
+                            $ConsultarCodyColor2 = "select M.id_motivo IN (SELECT *
+                                                                          FROM INN) as ConPermisoParaUsr,
+                                                           M.id_motivo IN (SELECT *
+                                                                          FROM GIN) as ConPermisoGeneral,
+                                                           M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_2"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
                             $MensajeErrorConsultarCodyColor2 = "No se pudieron consultar los motivos de los Movimientos";
 
 
@@ -2253,40 +2380,69 @@ $Con->CloseConexion();
 
                             $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
 
-                            $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; padding: 0px; color: " . $RetMotivo2["color"] . ";'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo2["codigo"] . "</span></center></span></a></div>";
-                            $Table_imprimir .=  "<div class = 'col-md-1'><span style='font-family: DejaVu Sans, Noto Sans Symbols 2;font-size: 10px; padding: 0px; color: " . $RetMotivo2["color"] . ";'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo2["codigo"] . "</span></center></span></div>";
+                            if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                                $Table .= "<div class = 'col-md-1'>
+                                              <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
+                                                <span style='font-size: 30px; padding: 0px; color: " . $RetMotivo2["color"] . ";'>" . $RetMotivo2["Forma_Categoria"] . "
+                                                  <center>
+                                                    <span class='nombreCategoria'>" . $RetMotivo2["codigo"] . "
+                                                    </span>
+                                                  </center>
+                                                </span>
+                                              </a>
+                                            </div>";
+                                $Table_imprimir .=  "<div class = 'col-md-1'>
+                                                      <span style='font-family: DejaVu Sans, Noto Sans Symbols 2;font-size: 10px; padding: 0px; color: " . $RetMotivo2["color"] . ";'>" . $RetMotivo2["Forma_Categoria"] . "
+                                                        <center>
+                                                          <span class='nombreCategoria' >" . $RetMotivo2["codigo"] . "
+                                                          </span>
+                                                        </center>
+                                                      </span>
+                                                    </div>";
+                            }
                           }
                         }
                         if ($ID_Motivo2 > 0) {
                           if ($ID_Motivo2 == $Ret_Datos_Movimiento["motivo_2"]) {
-                            $ConsultarCodyColor2 = "select M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_2"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
+                            $ConsultarCodyColor2 = "select M.id_motivo IN (SELECT *
+                                                                          FROM INN) as ConPermisoParaUsr,
+                                                           M.id_motivo IN (SELECT *
+                                                                          FROM GIN) as ConPermisoGeneral, M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_2"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
                             $MensajeErrorConsultarCodyColor2 = "No se pudieron consultar los motivos de los Movimientos";
 
 
                             $TomarCodyColor2 = mysqli_query($Con->Conexion, $ConsultarCodyColor2) or die($MensajeErrorConsultarCodyColor2 . " - " . $ConsultarCodyColor2 . " valor:" . $Ret_Datos_Movimiento["motivo_2"]);
 
                             $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
-
-                            $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo2["color"] . ";'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo2["codigo"] . "</span></center></span></a></div>";
-                            $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  10px;  color: " . $RetMotivo2["color"] . ";'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo2["codigo"] . "</span></center></span></div>";
+                            if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                                $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo2["color"] . ";'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo2["codigo"] . "</span></center></span></a></div>";
+                                $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  10px;  color: " . $RetMotivo2["color"] . ";'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo2["codigo"] . "</span></center></span></div>";
+                            }
                           }
                         }
                         if ($ID_Motivo3 > 0) {
                           if ($ID_Motivo3 == $Ret_Datos_Movimiento["motivo_2"]) {
-                            $ConsultarCodyColor2 = "select M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_2"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
+                            $ConsultarCodyColor2 = "select M.id_motivo IN (SELECT *
+                                                                          FROM INN) as ConPermisoParaUsr,
+                                                           M.id_motivo IN (SELECT *
+                                                                          FROM GIN) as ConPermisoGeneral, M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_2"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
                             $MensajeErrorConsultarCodyColor2 = "No se pudieron consultar los motivos de los Movimientos";
 
 
                             $TomarCodyColor2 = mysqli_query($Con->Conexion, $ConsultarCodyColor2) or die($MensajeErrorConsultarCodyColor2 . " - " . $ConsultarCodyColor2 . " valor:" . $Ret_Datos_Movimiento["motivo_2"]);
 
                             $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
-
-                            $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo2["color"] . ";'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo2["codigo"] . "</span></center></span></a></div>";
-                            $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  10px;  color: " . $RetMotivo2["color"] . ";'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo2["codigo"] . "</span></center></span></div>";
+                            if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                              $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo2["color"] . ";'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo2["codigo"] . "</span></center></span></a></div>";
+                              $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  10px;  color: " . $RetMotivo2["color"] . ";'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo2["codigo"] . "</span></center></span></div>";
+                            }
                           }
                         }
                         if ($ID_Motivo == 0 && $ID_Motivo2 == 0 && $ID_Motivo3 == 0) {
-                          $ConsultarCodyColor2 = "select M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_2"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
+                          $ConsultarCodyColor2 = "select M.id_motivo IN (SELECT *
+                                                                          FROM INN) as ConPermisoParaUsr,
+                                                           M.id_motivo IN (SELECT *
+                                                                          FROM GIN) as ConPermisoGeneral, M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_2"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
                           $MensajeErrorConsultarCodyColor2 = "No se pudieron consultar los motivos de los Movimientos";
 
 
@@ -2295,16 +2451,20 @@ $Con->CloseConexion();
                           $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
 
 
-
-                          $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo2["color"] . "; text-align= center;'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo2["codigo"] . "</span></center></span></a></div>";
-                          $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  10px;  color: " . $RetMotivo2["color"] . "; text-align= center;'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo2["codigo"] . "</span></center></span></div>";
+                          if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                              $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo2["color"] . "; text-align= center;'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo2["codigo"] . "</span></center></span></a></div>";
+                              $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  10px;  color: " . $RetMotivo2["color"] . "; text-align= center;'>" . $RetMotivo2["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo2["codigo"] . "</span></center></span></div>";
+                          }
                         }
                       }
 
                       if ($Ret_Datos_Movimiento["motivo_3"] > 1) {
                         if ($ID_Motivo > 0) {
                           if ($ID_Motivo == $Ret_Datos_Movimiento["motivo_3"]) {
-                            $ConsultarCodyColor3 = "select M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
+                            $ConsultarCodyColor3 = "select M.id_motivo IN (SELECT *
+                                                                          FROM INN) as ConPermisoParaUsr,
+                                                           M.id_motivo IN (SELECT *
+                                                                          FROM GIN) as ConPermisoGeneral, M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
                             $MensajeErrorConsultarCodyColor3 = "No se pudieron consultar los motivos de los Movimientos";
 
                             // echo $ConsultarCodyColor;               
@@ -2313,13 +2473,18 @@ $Con->CloseConexion();
 
                             $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
 
-                            $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo3["codigo"] . "</span></center></span></a></div>";
-                            $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  10px;  color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo3["codigo"] . "</span></center></span></div>";
+                            if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                                $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo3["codigo"] . "</span></center></span></a></div>";
+                                $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  10px;  color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo3["codigo"] . "</span></center></span></div>";
+                            }
                           }
                         }
                         if ($ID_Motivo2 > 0) {
                           if ($ID_Motivo2 == $Ret_Datos_Movimiento["motivo_3"]) {
-                            $ConsultarCodyColor3 = "select M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
+                            $ConsultarCodyColor3 = "select M.id_motivo IN (SELECT *
+                                                                          FROM INN) as ConPermisoParaUsr,
+                                                           M.id_motivo IN (SELECT *
+                                                                          FROM GIN) as ConPermisoGeneral, M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
                             $MensajeErrorConsultarCodyColor3 = "No se pudieron consultar los motivos de los Movimientos";
 
                             // echo $ConsultarCodyColor;               
@@ -2327,14 +2492,18 @@ $Con->CloseConexion();
                             $TomarCodyColor3 = mysqli_query($Con->Conexion, $ConsultarCodyColor3) or die($MensajeErrorConsultarCodyColor3 . " - " . $ConsultarCodyColor3 . " valor:" . $Ret_Datos_Movimiento["motivo_3"]);
 
                             $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
-
-                            $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo3["codigo"] . "</span></center></span></a></div>";
-                            $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  10px;  color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo3["codigo"] . "</span></center></span></div>";
+                            if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                              $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo3["codigo"] . "</span></center></span></a></div>";
+                              $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  10px;  color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo3["codigo"] . "</span></center></span></div>";
+                            }
                           }
                         }
                         if ($ID_Motivo3 > 0) {
                           if ($ID_Motivo3 == $Ret_Datos_Movimiento["motivo_3"]) {
-                            $ConsultarCodyColor3 = "select M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
+                            $ConsultarCodyColor3 = "select M.id_motivo IN (SELECT *
+                                                                          FROM INN) as ConPermisoParaUsr,
+                                                           M.id_motivo IN (SELECT *
+                                                                          FROM GIN) as ConPermisoGeneral, M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
                             $MensajeErrorConsultarCodyColor3 = "No se pudieron consultar los motivos de los Movimientos";
 
                             // echo $ConsultarCodyColor;               
@@ -2343,12 +2512,17 @@ $Con->CloseConexion();
 
                             $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
 
-                            $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo3["codigo"] . "</span></center></span></a></div>";
-                            $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  10px;  color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo3["codigo"] . "</span></center></span></div>";
+                            if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                              $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo3["codigo"] . "</span></center></span></a></div>";
+                              $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  10px;  color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo3["codigo"] . "</span></center></span></div>";
+                            }    
                           }
                         }
                         if ($ID_Motivo == 0 && $ID_Motivo2 == 0 && $ID_Motivo3 == 0) {
-                          $ConsultarCodyColor3 = "select M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
+                          $ConsultarCodyColor3 = "select M.id_motivo IN (SELECT *
+                                                                          FROM INN) as ConPermisoParaUsr,
+                                                           M.id_motivo IN (SELECT *
+                                                                          FROM GIN) as ConPermisoGeneral, M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
                           $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
 
 
@@ -2356,9 +2530,10 @@ $Con->CloseConexion();
 
                           $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
 
-
-                          $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo3["codigo"] . "</span></center></span></a></div>";
-                          $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  10px;  color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo3["codigo"] . "</span></center></span></div>";
+                          if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                              $Table .= "<div class = 'col-md-1'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo3["codigo"] . "</span></center></span></a></div>";
+                              $Table_imprimir .= "<div class = 'col-md-1'><span style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  10px;  color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria' >" . $RetMotivo3["codigo"] . "</span></center></span></div>";
+                          }
                         }
                       }
                       ////////////////////////////////////////////////////////////////                                             
