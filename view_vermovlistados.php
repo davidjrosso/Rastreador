@@ -205,7 +205,43 @@ $Con->CloseConexion();
           <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_listados.php'">Atras</button>
         </div>
         <div class="col-md-8">
-        <?php  
+        <?php
+        $Con = new Conexion();
+        $Con->OpenConexion();
+
+        $consultaGeneralPermisos = "CREATE TEMPORARY TABLE GIN " ;
+        $consultaUsuarioPermisos = "CREATE TEMPORARY TABLE INN ";
+    
+        $motivosVisiblesParaUsuario =  "SELECT MT.id_motivo
+                                        FROM motivo MT,
+                                            categoria  C,
+                                            categorias_roles CS
+                                        WHERE C.cod_categoria = MT.cod_categoria
+                                          and MT.estado = 1
+                                          and C.estado = 1
+                                          and CS.id_categoria = C.id_categoria
+                                          and CS.id_tipousuario = $TipoUsuario
+                                          and CS.estado = 1";
+    
+        $motivosVisiblesParaTodoUsuario = "SELECT MT.id_motivo
+                                            FROM motivo MT,
+                                                categoria  C
+                                        WHERE C.cod_categoria = MT.cod_categoria
+                                          and MT.estado = 1
+                                          and C.estado = 1               
+                                          and C.id_categoria NOT IN (SELECT id_categoria
+                                                                      FROM categorias_roles CS)";
+        $motivosVisiblesParaUsuario = $consultaUsuarioPermisos . $motivosVisiblesParaUsuario;
+        $motivosVisiblesParaTodoUsuario = $consultaGeneralPermisos . $motivosVisiblesParaTodoUsuario;
+        $MessageError = "Problemas al crear la tabla temporaria de usuarios";
+        $motivosUsuario = mysqli_query(
+                          $Con->Conexion,$motivosVisiblesParaUsuario
+                          ) or die($MessageError);
+    
+        $MessageError = "Problemas al crear la tabla temporaria general";
+        $motivosTodoUsuario = mysqli_query(
+                          $Con->Conexion,$motivosVisiblesParaTodoUsuario
+                          ) or die($MessageError);
       	if(!isset($_REQUEST["Anio"])){
               $Fecha_Inicio = implode("-", array_reverse(explode("/",$_REQUEST["Fecha_Desde"])));
               $Fecha_Fin = implode("-", array_reverse(explode("/",$_REQUEST["Fecha_Hasta"])));
@@ -309,8 +345,7 @@ $Con->CloseConexion();
 
               $filtrosSeleccionados["Fecha_Desde"] = $_REQUEST["Fecha_Desde"];
               $filtrosSeleccionados["Fecha_Hasta"] = $_REQUEST["Fecha_Hasta"];
-              $Con = new Conexion();
-              $Con->OpenConexion();
+
 
               $tomarRetTodos = array();
 
@@ -783,7 +818,7 @@ $Con->CloseConexion();
               //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               
 
-              $Con->CloseConexion();
+              //$Con->CloseConexion();
 
               // $Consulta .= " group by M.id_persona order by Anio, Mes, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";
             
@@ -823,8 +858,8 @@ $Con->CloseConexion();
             if(isset($_REQUEST["ID_Persona"]) && $_REQUEST["ID_Persona"]!=null && $_REQUEST["ID_Persona"] > 0){
               $ID_Persona = $_REQUEST["ID_Persona"];
 
-              $Con = new Conexion();
-              $Con->OpenConexion();
+              //$Con = new Conexion();
+              //$Con->OpenConexion();
 
               $ConsultarDatos = "select * from persona where id_persona = $ID_Persona";
               $MensajeErrorDatos = "No se pudo consultar los Datos de la Persona";
@@ -1031,38 +1066,68 @@ $Con->CloseConexion();
                 //////////////////////////////////////////////////////////
 
                 $ID_Motivo_1 = $RetTodos["motivo_1"];
-                $ConsultarMotivo_1 = "select motivo from motivo where id_motivo = $ID_Motivo_1";
+                $ConsultarMotivo_1 = "select M.id_motivo IN (SELECT id_motivo 
+                                                             FROM INN) as ConPermisoParaUsr,
+                                             M.id_motivo IN (SELECT id_motivo
+                                                             FROM GIN) as ConPermisoGeneral,
+                                             motivo
+                                      from motivo M
+                                      where id_motivo = $ID_Motivo_1";
 
                 // echo "DEBUG: ".var_dump($ConsultarMotivo_1);
 
                 $MensajeErrorMotivo_1 = "No se pudo consultar el motivo 1";
                 $RetMotivo_1 = mysqli_query($Con->Conexion,$ConsultarMotivo_1) or die($MensajeErrorMotivo_1);
                 $RetMotivo_1 = mysqli_fetch_assoc($RetMotivo_1);
-                $Motivo_1 = $RetMotivo_1["motivo"];
+                $Motivo_1 = ($RetMotivo_1["ConPermisoParaUsr"] || $RetMotivo_1["ConPermisoGeneral"])?$RetMotivo_1["motivo"]:"";;
 
                 $ID_Motivo_2 = $RetTodos["motivo_2"];
-                $ConsultarMotivo_2 = "select motivo from motivo where id_motivo = $ID_Motivo_2";
+                $ConsultarMotivo_2 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                             M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                             motivo
+                                      from motivo M
+                                      where id_motivo = $ID_Motivo_2";
                 $RetMotivo_2 = mysqli_query($Con->Conexion,$ConsultarMotivo_2) or die($MensajeErrorMotivo_2);
                 $RetMotivo_2 = mysqli_fetch_assoc($RetMotivo_2);
-                $Motivo_2 = $RetMotivo_2["motivo"];
+                $Motivo_2 = ($RetMotivo_2["ConPermisoParaUsr"] || $RetMotivo_2["ConPermisoGeneral"])?$RetMotivo_2["motivo"]:"";;
 
                 $ID_Motivo_3 = $RetTodos["motivo_3"];
-                $ConsultarMotivo_3 = "select motivo from motivo where id_motivo = $ID_Motivo_3";
+                $ConsultarMotivo_3 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                             M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                             motivo
+                                      from motivo M
+                                      where id_motivo = $ID_Motivo_3";
                 $RetMotivo_3 = mysqli_query($Con->Conexion,$ConsultarMotivo_3) or die($MensajeErrorMotivo_3);
                 $RetMotivo_3 = mysqli_fetch_assoc($RetMotivo_3);
-                $Motivo_3 = $RetMotivo_3["motivo"];
+                $Motivo_3 = ($RetMotivo_3["ConPermisoParaUsr"] || $RetMotivo_3["ConPermisoGeneral"])?$RetMotivo_3["motivo"]:"";
 
                 $ID_Motivo_4 = $RetTodos["motivo_4"];
-                $ConsultarMotivo_4 = "select motivo from motivo where id_motivo = $ID_Motivo_4";
+                $ConsultarMotivo_4 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                               M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                               motivo
+                                      from motivo M
+                                      where id_motivo = $ID_Motivo_4";
                 $RetMotivo_4 = mysqli_query($Con->Conexion,$ConsultarMotivo_4) or die($MensajeErrorMotivo_4);
                 $RetMotivo_4 = mysqli_fetch_assoc($RetMotivo_4);
-                $Motivo_4 = $RetMotivo_4["motivo"];
+                $Motivo_4 = ($RetMotivo_4["ConPermisoParaUsr"] || $RetMotivo_4["ConPermisoGeneral"])?$RetMotivo_4["motivo"]:"";
 
                 $ID_Motivo_5 = $RetTodos["motivo_5"];
-                $ConsultarMotivo_5 = "select motivo from motivo where id_motivo = $ID_Motivo_5";
+                $ConsultarMotivo_5 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                               M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                               motivo
+                                      from motivo M
+                                      where id_motivo = $ID_Motivo_5";
                 $RetMotivo_5 = mysqli_query($Con->Conexion,$ConsultarMotivo_5) or die($MensajeErrorMotivo_3);
                 $RetMotivo_5 = mysqli_fetch_assoc($RetMotivo_5);
-                $Motivo_5 = $RetMotivo_5["motivo"];
+                $Motivo_5 = ($RetMotivo_5["ConPermisoParaUsr"] || $RetMotivo_5["ConPermisoGeneral"])?$RetMotivo_5["motivo"]:"";;
 
                 $Observaciones = $RetTodos["observaciones"];
                 $Responsable = $RetTodos["responsable"];
@@ -1223,13 +1288,13 @@ $Con->CloseConexion();
 
 //               }
 
-              $Con->CloseConexion();
+              //$Con->CloseConexion();
               
 
             }else{
 
-              $Con = new Conexion();
-              $Con->OpenConexion();
+              //$Con = new Conexion();
+              //$Con->OpenConexion();
               // ACA EMPIEZA EL ELSE POR SI SE ME PIERDE
               //////////////////////////////////////////////////////TABLAS MOVIMIENTOS DE LA PERSONA /////////////////////////////            
               $MensajeErrorMovimientos = "No se pudo consultar los movimientos de la persona";
@@ -1319,38 +1384,68 @@ $Con->CloseConexion();
                   $Nombre = $RetTodos["nombre"];
 
                   $ID_Motivo_1 = $RetTodos["motivo_1"];
-                  $ConsultarMotivo_1 = "select motivo from motivo where id_motivo = $ID_Motivo_1";
+                  $ConsultarMotivo_1 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                               M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                               motivo 
+                                        from motivo M
+                                        where id_motivo = $ID_Motivo_1";
 
                   // echo "DEBUG: ".var_dump($ConsultarMotivo_1);
 
                   $MensajeErrorMotivo_1 = "No se pudo consultar el motivo 1";
                   $RetMotivo_1 = mysqli_query($Con->Conexion,$ConsultarMotivo_1) or die($MensajeErrorMotivo_1);
                   $RetMotivo_1 = mysqli_fetch_assoc($RetMotivo_1);
-                  $Motivo_1 = $RetMotivo_1["motivo"];
+                  $Motivo_1 = ($RetMotivo_1["ConPermisoParaUsr"] || $RetMotivo_1["ConPermisoGeneral"])?$RetMotivo_1["motivo"]:"";;
 
                   $ID_Motivo_2 = $RetTodos["motivo_2"];
-                  $ConsultarMotivo_2 = "select motivo from motivo where id_motivo = $ID_Motivo_2";
+                  $ConsultarMotivo_2 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                               M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                               motivo
+                                        from motivo M
+                                        where id_motivo = $ID_Motivo_2";
                   $RetMotivo_2 = mysqli_query($Con->Conexion,$ConsultarMotivo_2) or die($MensajeErrorMotivo_2);
                   $RetMotivo_2 = mysqli_fetch_assoc($RetMotivo_2);
-                  $Motivo_2 = $RetMotivo_2["motivo"];
+                  $Motivo_2 = ($RetMotivo_2["ConPermisoParaUsr"] || $RetMotivo_2["ConPermisoGeneral"])?$RetMotivo_2["motivo"]:"";
 
                   $ID_Motivo_3 = $RetTodos["motivo_3"];
-                  $ConsultarMotivo_3 = "select motivo from motivo where id_motivo = $ID_Motivo_3";
+                  $ConsultarMotivo_3 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                               M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                               motivo
+                                        from motivo M
+                                        where id_motivo = $ID_Motivo_3";
                   $RetMotivo_3 = mysqli_query($Con->Conexion,$ConsultarMotivo_3) or die($MensajeErrorMotivo_3);
                   $RetMotivo_3 = mysqli_fetch_assoc($RetMotivo_3);
-                  $Motivo_3 = $RetMotivo_3["motivo"];
+                  $Motivo_3 = ($RetMotivo_3["ConPermisoParaUsr"] || $RetMotivo_3["ConPermisoGeneral"])?$RetMotivo_3["motivo"]:"";
 
                   $ID_Motivo_4 = $RetTodos["motivo_4"];
-                  $ConsultarMotivo_4 = "select motivo from motivo where id_motivo = $ID_Motivo_4";
+                  $ConsultarMotivo_4 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                               M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                               motivo
+                                        from motivo M
+                                        where id_motivo = $ID_Motivo_4";
                   $RetMotivo_4 = mysqli_query($Con->Conexion,$ConsultarMotivo_4) or die($MensajeErrorMotivo_4);
                   $RetMotivo_4 = mysqli_fetch_assoc($RetMotivo_4);
-                  $Motivo_4 = $RetMotivo_4["motivo"];
+                  $Motivo_4 = ($RetMotivo_4["ConPermisoParaUsr"] || $RetMotivo_4["ConPermisoGeneral"])?$RetMotivo_4["motivo"]:"";
   
                   $ID_Motivo_5 = $RetTodos["motivo_5"];
-                  $ConsultarMotivo_5 = "select motivo from motivo where id_motivo = $ID_Motivo_5";
+                  $ConsultarMotivo_5 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                               M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                               motivo
+                                        from motivo M
+                                        where id_motivo = $ID_Motivo_5";
                   $RetMotivo_5 = mysqli_query($Con->Conexion,$ConsultarMotivo_5) or die($MensajeErrorMotivo_3);
                   $RetMotivo_5 = mysqli_fetch_assoc($RetMotivo_5);
-                  $Motivo_5 = $RetMotivo_5["motivo"];
+                  $Motivo_5 = ($RetMotivo_5["ConPermisoParaUsr"] || $RetMotivo_5["ConPermisoGeneral"])?$RetMotivo_5["motivo"]:"";
 
                   $Observaciones = $RetTodos["observaciones"];
                   $Responsable = $RetTodos["responsable"];
@@ -1481,7 +1576,13 @@ $Con->CloseConexion();
                 $Nombre = $RetMovimientos["nombre"];
 
                 $ID_Motivo_1 = $RetMovimientos["motivo_1"];
-                $ConsultarMotivo_1 = "select motivo from motivo where id_motivo = $ID_Motivo_1";
+                $ConsultarMotivo_1 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                               M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                               motivo 
+                                        from motivo M
+                                        where id_motivo = $ID_Motivo_1";
 
                 // echo "DEBUG: ".var_dump($ConsultarMotivo_1);
 
@@ -1491,25 +1592,49 @@ $Con->CloseConexion();
                 $Motivo_1 = $RetMotivo_1["motivo"];
 
                 $ID_Motivo_2 = $RetMovimientos["motivo_2"];
-                $ConsultarMotivo_2 = "select motivo from motivo where id_motivo = $ID_Motivo_2";
+                $ConsultarMotivo_2 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                               M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                               motivo 
+                                        from motivo M
+                                        where id_motivo = $ID_Motivo_2";
                 $RetMotivo_2 = mysqli_query($Con->Conexion,$ConsultarMotivo_2) or die($MensajeErrorMotivo_2);
                 $RetMotivo_2 = mysqli_fetch_assoc($RetMotivo_2);
                 $Motivo_2 = $RetMotivo_2["motivo"];
 
                 $ID_Motivo_3 = $RetMovimientos["motivo_3"];
-                $ConsultarMotivo_3 = "select motivo from motivo where id_motivo = $ID_Motivo_3";
+                $ConsultarMotivo_3 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                               M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                               motivo 
+                                        from motivo M
+                                        where id_motivo = $ID_Motivo_3";
                 $RetMotivo_3 = mysqli_query($Con->Conexion,$ConsultarMotivo_3) or die($MensajeErrorMotivo_3);
                 $RetMotivo_3 = mysqli_fetch_assoc($RetMotivo_3);
                 $Motivo_3 = $RetMotivo_3["motivo"];
 
                 $ID_Motivo_4 = $RetMovimientos["motivo_4"];
-                $ConsultarMotivo_4 = "select motivo from motivo where id_motivo = $ID_Motivo_4";
+                $ConsultarMotivo_4 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                               M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                               motivo 
+                                        from motivo M
+                                        where id_motivo = $ID_Motivo_4";
                 $RetMotivo_4 = mysqli_query($Con->Conexion,$ConsultarMotivo_4) or die($MensajeErrorMotivo_4);
                 $RetMotivo_4 = mysqli_fetch_assoc($RetMotivo_4);
                 $Motivo_4 = $RetMotivo_4["motivo"];
 
                 $ID_Motivo_5 = $RetMovimientos["motivo_5"];
-                $ConsultarMotivo_5 = "select motivo from motivo where id_motivo = $ID_Motivo_5";
+                $ConsultarMotivo_5 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                               M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                               motivo 
+                                        from motivo M
+                                        where id_motivo = $ID_Motivo_5";
                 $RetMotivo_5 = mysqli_query($Con->Conexion,$ConsultarMotivo_5) or die($MensajeErrorMotivo_5);
                 $RetMotivo_5 = mysqli_fetch_assoc($RetMotivo_5);
                 $Motivo_5 = $RetMotivo_5["motivo"];
