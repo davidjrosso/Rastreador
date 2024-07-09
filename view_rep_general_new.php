@@ -100,6 +100,8 @@ $Con->CloseConexion();
       $("#BarraDeNavHTabla").attr("style","width: 95%; margin-left: 2%;");
     }
 
+    var nroFilasTabla = 0;
+    var nroColumnasTabla = 0;
     var currCell = null;
     var editing = false;
     var columnaIndice = 5;
@@ -111,6 +113,10 @@ $Con->CloseConexion();
     });
 
     $( document ).on( "ready", function(e) {
+      nroFilasTabla = $("tbody > tr").length - 2;
+      nroColumnasTabla = $("thead > tr > th").length - 2;
+
+      $("#BarraDeNavHTabla").attr("max", nroColumnasTabla + 1);
         $( "#BarraDeNavHTabla").on("input", function(e) {
         navegacionConBarHNav(e);
       });
@@ -268,10 +274,17 @@ $Con->CloseConexion();
     function navegacionConBarHNav(e){
       var value = $("#BarraDeNavHTabla").val();
       var movDecrec = (value < valInputRangePrev);
-      var nroFilasTabla = $("tbody > tr").length - 2;
-      var nroColumnasTabla = $("thead > tr > th").length - 2;
-      columnaActual = (value < columnaIndice)? Math.floor(value): columnaIndice;
-      $("#BarraDeNavHTabla").attr("max", nroColumnasTabla + 1);
+      if(columnaIndice + 1 <= value && (Math.floor(valInputRangePrev) == columnaIndice)){
+        columnaActual = columnaIndice;
+      } else {
+        if(value < columnaIndice){
+          columnaIndice--;
+          columnaActual = columnaIndice;
+        } else {
+          columnaActual = (value < columnaIndice)? Math.floor(value): columnaIndice;
+        }
+      }
+      valInputRangePrev = value;
       $("#BarraDeNavHTabla").attr("value", columnaIndice);
       headABorrar = $('thead tr > *:nth-child('+columnaActual+')');
       columnaABorrar = $('tbody tr > *:nth-child('+columnaActual+')');
@@ -280,6 +293,9 @@ $Con->CloseConexion();
                           var marginElment = parseInt($(this).css("margin-left"), 10);
                           var width = parseInt($(this).css("width"), 10);
                           var updateMarginLeft =  "-" + margin*width + "px";
+                          if(columnaIndice + 1 <= value){
+                            var updateMarginLeft =  "-200px";
+                          }
                           $(this).removeClass( "showColTablaAnimacion");
                           $(this).removeClass( "showColTablaAnimacionfire");
                           $(this).find("div div").removeClass( "itemMotivoAccesible");
@@ -296,6 +312,9 @@ $Con->CloseConexion();
                         var marginElment = parseInt($( this ).css("margin-left"), 10);
                         var width = parseInt($( this ).css("width"), 10);
                         var updateMarginLeft =  "-" + margin*width + "px";
+                          if(columnaIndice + 1 <= value){
+                            var updateMarginLeft =  "-200px";
+                          }
                         $( this ).css("margin-left", updateMarginLeft);
                         $(this).removeClass( "showColTablaAnimacion");
                           $(this).removeClass( "showColTablaAnimacionfire");
