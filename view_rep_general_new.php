@@ -315,10 +315,10 @@ $Con->CloseConexion();
                           $(this).find("div div").removeClass( "itemMotivoAccesible");
                           $(this).removeClass( "hiddenColTablaAnimacion");
                           $(this).removeClass( "hiddenColTablaAnimacionfire");
-                          $(this).find("div div").css("z-index", "-1");
+                          $(this).find("div div").css("z-index", ((value < columnaIndice)?"300":"-1"));
                           $(this).css("margin-left", updateMarginLeft);
-                          $(this).css("border-right-width", ((value < columnaIndice)?"":"0px"));
-                          $(this).css("border-left-width", "0px");
+                          $(this).css("border-right-width", ((value < columnaIndice)?"1px":"0px"));
+                          $(this).css("border-left-width", ((value < columnaIndice)?"1px":"0px"));
                           return $(this);
                         });
       headABorrar.map( function() {
