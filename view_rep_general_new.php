@@ -274,7 +274,7 @@ $Con->CloseConexion();
     function navegacionConBarHNav(e){
       var value = $("#BarraDeNavHTabla").val();
       var movDecrec = (value < valInputRangePrev);
-      if(columnaIndice + 1 <= value && (Math.floor(valInputRangePrev) == columnaIndice)){
+/*      if(columnaIndice + 1 <= value && (Math.floor(valInputRangePrev) == columnaIndice)){
         columnaActual = columnaIndice;
       } else {
         if(value < columnaIndice){
@@ -283,7 +283,19 @@ $Con->CloseConexion();
         } else {
           columnaActual = (value < columnaIndice)? Math.floor(value): columnaIndice;
         }
-      }
+      } */
+      if(columnaIndice + 1 <= value && (Math.floor(valInputRangePrev) == columnaIndice)){
+        columnaActual = columnaIndice;
+      } else if(value < columnaIndice && columnaIndice < valInputRangePrev){
+        columnaActual = columnaIndice;
+      } else {
+        if(value < columnaIndice){
+          columnaIndice--;
+          columnaActual = columnaIndice;
+        } else {
+          columnaActual = (value < columnaIndice)? Math.floor(value): columnaIndice;
+        }
+      } 
       valInputRangePrev = value;
       $("#BarraDeNavHTabla").attr("value", columnaIndice);
       headABorrar = $('thead tr > *:nth-child('+columnaActual+')');
@@ -294,8 +306,10 @@ $Con->CloseConexion();
                           var width = parseInt($(this).css("width"), 10);
                           var updateMarginLeft =  "-" + margin*width + "px";
                           if(columnaIndice + 1 <= value){
-                            var updateMarginLeft =  "-200px";
-                          }
+                            updateMarginLeft =  "-190px";
+                          } else if(value < columnaIndice){
+                            updateMarginLeft =  "0px";
+                          } 
                           $(this).removeClass( "showColTablaAnimacion");
                           $(this).removeClass( "showColTablaAnimacionfire");
                           $(this).find("div div").removeClass( "itemMotivoAccesible");
@@ -312,9 +326,11 @@ $Con->CloseConexion();
                         var marginElment = parseInt($( this ).css("margin-left"), 10);
                         var width = parseInt($( this ).css("width"), 10);
                         var updateMarginLeft =  "-" + margin*width + "px";
-                          if(columnaIndice + 1 <= value){
-                            var updateMarginLeft =  "-200px";
-                          }
+                        if(columnaIndice + 1 <= value){
+                            updateMarginLeft =  "-190px";
+                          } else if(value < columnaIndice){
+                            updateMarginLeft =  "0px";
+                        }
                         $( this ).css("margin-left", updateMarginLeft);
                         $(this).removeClass( "showColTablaAnimacion");
                           $(this).removeClass( "showColTablaAnimacionfire");
