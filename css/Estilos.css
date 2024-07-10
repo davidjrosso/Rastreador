@@ -417,11 +417,11 @@ a.disabled {
 
 
 
-thead tr > *:nth-child(4) {
+#tabla-responsive thead tr > *:nth-child(4) {
   z-index: 300 !important;
 }
 
-tbody tr > *:nth-child(-n + 4){
+#tabla-responsive tbody tr > *:nth-child(-n + 4){
   z-index: 300;
   background-color: white !important;
 }
