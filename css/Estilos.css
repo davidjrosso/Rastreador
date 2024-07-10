@@ -445,3 +445,7 @@ tbody tr > *:nth-child(n + 5).showColTablaAnimacionfire > div > div{
 .itemMotivoAccesible{
   z-index: 1 !important;
 }
+
+div .nav-side-menu {
+  z-index: 400;
+}
