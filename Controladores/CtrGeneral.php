@@ -1268,10 +1268,8 @@ class CtrGeneral{
 							<td>".$Ret["username"]."</td>
 							<td>".$Ret["email"]."</td>
 							<td>
-								<a class='disabled' href = 'view_modusuario.php?account_id=".$Ret["accountid"]."'>
-								<!--<a  href = 'view_modusuario.php?account_id=".$Ret["accountid"]."'> -->
-										<!--<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'> -->
-									<img src='./images/icons/ModDatos-Disable.png' class = 'IconosAcciones'>
+								<a  href = 'view_modusuario.php?account_id=".$Ret["accountid"]."'> 
+									<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
 								</a>
 							<td>
 							<td><a onClick='Verificar(".$Ret["accountid"].")'>
@@ -1313,10 +1311,8 @@ class CtrGeneral{
 								<td>".$Ret["username"]."</td>
 								<td>".$Ret["email"]."</td>
 								<td>
-									<a class='disabled' href = 'view_modusuario.php?account_id=".$Ret["accountid"]."'>
-									<!--<a  href = 'view_modusuario.php?account_id=".$Ret["accountid"]."'> -->
-										<!--<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'> -->
-										<img src='./images/icons/ModDatos-Disable.png' class = 'IconosAcciones'>
+								<a  href = 'view_modusuario.php?account_id=".$Ret["accountid"]."'>
+										<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
 									</a>
 								<td>
 								<td>
@@ -1359,10 +1355,8 @@ class CtrGeneral{
 							<td>".$Ret["username"]."</td>
 							<td>".$Ret["email"]."</td>
 							<td>
-								<a class='disabled' href = 'view_modusuario.php?account_id=".$Ret["accountid"]."'>
-								<!--<a  href = 'view_modusuario.php?account_id=".$Ret["accountid"]."'> -->
-									<!--<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'> -->
-									<img src='./images/icons/ModDatos-Disable.png' class = 'IconosAcciones'>
+								<a  href = 'view_modusuario.php?account_id=".$Ret["accountid"]."'>
+									<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
 								</a>
 							<td>
 							<td>
