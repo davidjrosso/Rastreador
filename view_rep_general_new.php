@@ -770,6 +770,12 @@ $Con->CloseConexion();
             <?php $Element = new Elements();
             $Element->getMenuActualizaciones(0); ?>
           </div>
+          <div class="brand">Reportes</div>
+          <div class="menu-list">
+  
+            <?php $Element = new Elements();
+            $Element->getMenuReportes(0);?>
+          </div>
           <div class="brand">El Proyecto</div>
           <div class="menu-list">
             <?php $Element = new Elements();
@@ -1350,7 +1356,7 @@ $Con->CloseConexion();
               //     //TODO: revisar bien esto
               //     // $arrIDMovimientos[] = $value;
               // }
-            
+
               while ($Ret = $Con->ResultSet->fetch_assoc()) {
                 // echo "DEBUG :".$Ret['id_movimiento'];
                 $arrIDMovimientos[] = $Ret['id_movimiento'];
