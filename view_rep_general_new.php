@@ -227,60 +227,6 @@ $Con->CloseConexion();
       }
     }
 
-
-
-    
-/*
-    function actualizacionDePosicionBarraDenavegacionH(e, element){
-      var value = $("#BarraDeNavHTabla").val();
-      var columnaActual = columnaIndice;
-      if(Math.round(value) == Math.floor(value)){
-        $("#BarraDeNavHTabla").val(Math.floor(value));
-      } else {
-        $("#BarraDeNavHTabla").val(Math.round(value));
-      }
-      
-    }
-*/
-/*
-    function navegacionConBarHNav(e){
-      var value = $("#BarraDeNavHTabla").val();
-      var nroFilasTabla = $("tbody > tr").length - 2;
-      var nroColumnasTabla = $("thead > tr > th").length - 2;
-      $("#BarraDeNavHTabla").attr("max", nroColumnasTabla + 1);
-      $("#BarraDeNavHTabla").attr("value", columnaIndice);
-      if(value < (columnaIndice - 0.5)){
-        columnaIndice--;
-        headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');
-        columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
-        columnaABorrar.show();
-        headABorrar.show();
-        columnaABorrar.removeClass( "hiddenColTablaAnimacion");
-        headABorrar.addClass( "hiddenColTablaAnimacion");
-        columnaABorrar.removeClass( "hiddenColTablaAnimacionfire");
-        headABorrar.removeClass( "hiddenColTablaAnimacionfire");
-        columnaABorrar.addClass( "showColTablaAnimacion");
-        headABorrar.addClass( "showColTablaAnimacion");
-        columnaABorrar.addClass( "showColTablaAnimacionfire");
-        headABorrar.addClass( "showColTablaAnimacionfire");
-      } else if (value > (columnaIndice + 0.5)){
-        headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');        
-        columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
-
-        columnaABorrar.removeClass( "showColTablaAnimacion");
-        headABorrar.removeClass( "showColTablaAnimacion");
-        columnaABorrar.removeClass( "showColTablaAnimacionfire");
-        headABorrar.removeClass( "showColTablaAnimacionfire");
-        columnaABorrar.addClass( "hiddenColTablaAnimacion");
-        headABorrar.addClass( "hiddenColTablaAnimacion");
-        columnaABorrar.addClass( "hiddenColTablaAnimacionfire");
-        headABorrar.addClass( "hiddenColTablaAnimacionfire");
-        columnaIndice++;
-      }
-      $("#BarraDeNavHTabla").attr("value", columnaIndice);
-    }
-*/
-
     function navegacionConBarHNav(e){
       var value = $("#BarraDeNavHTabla").val();
       var movDecrec = (value < valInputRangePrev);
@@ -458,73 +404,6 @@ $Con->CloseConexion();
       $("#BarraDeNavVTabla").attr("value", filaIndice);
     }
 
-/*    function NavegacionConTeclado(e) {
-        var columnaABorrar = null;
-        var headABorrar = null;
-        var filaABorrar = null;
-        var nroFilasTabla = $("tbody > tr").length - 2;
-        var nroColumnasTabla = $("thead > tr > th").length - 2;
-        $("#BarraDeNavHTabla").attr("max", nroColumnasTabla + 1);
-        $("#BarraDeNavHTabla").attr("value", columnaIndice);
-        var tabla = $("table");
-        tabla.scrollLeft(0);
-        if (e.which == 39) {
-            columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
-            headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');
-            if(columnaIndice <= nroColumnasTabla){
-              if(columnaIndice <= nroColumnasTabla){
-                columnaABorrar.hide();
-                headABorrar.hide();
-                columnaIndice++;
-              }
-            }
-            //$("#BarraDeNavHTabla").attr("value", columnaIndice);
-            document.getElementById("BarraDeNavHTabla").value = columnaIndice;
-        } else if (e.which == 37) {
-            // Left Arrow
-            headABorrar = $('thead tr >*:nth-child('+columnaIndice+')');
-            columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
-            if(columnaIndice >= 5){
-              if(columnaIndice > 5){
-                columnaIndice--;
-                columnaABorrar.show();
-                headABorrar.show();
-              } else if (columnaIndice == 5){
-                headABorrar.show();
-                columnaABorrar.show();
-              }
-            }
-            //$("#BarraDeNavHTabla").attr("value", columnaIndice);
-            document.getElementById("BarraDeNavHTabla").value = columnaIndice;
-        } /*else if (e.which == 38) {
-            // Up Arrow
-            filaABorrar = $('tbody tr:nth-child('+filaIndice+')');
-            if(filaIndice > 2){
-              filaIndice--;
-              filaABorrar.show();
-            } else if(filaIndice = 2){
-              filaABorrar.show();
-            }
-            tabla.scrollTop(0);
-            //$("#BarraDeNavVTabla").attr("value", filaIndice);
-            document.getElementById("BarraDeNavVTabla").value = filaIndice;
-        } else if (e.which == 40) {
-            // Down Arrow
-            filaABorrar = $('tbody tr:nth-child('+filaIndice+')');
-            if(filaIndice <= nroFilasTabla){
-              if(filaIndice < nroFilasTabla){
-                filaABorrar.hide();
-                filaIndice++;
-              } else if(filaIndice = nroFilasTabla){
-                filaABorrar.hide();
-              }
-            }
-            tabla.scrollTop(0);
-            //$("#BarraDeNavVTabla").attr("value", filaIndice);
-            document.getElementById("BarraDeNavVTabla").value = filaIndice;
-        }*/
-        //tabla.scrollLeft(0);
-//    }
   </script>
   <style>
 
@@ -2140,7 +2019,8 @@ $Con->CloseConexion();
                                                         and YEAR(fecha) like '%" . $Anio . "'
                                                         and (motivo_1 <> 1
                                                          or motivo_2 <> 1
-                                                         or motivo_3 <> 1) 
+                                                         or motivo_3 <> 1)
+                                                        and estado = 1 
                                                       order by fecha";
                     
                     // echo "<br> DEBUG CONSULTAR MOVIMIENTO: ".var_dump($Consultar_Movimientos_Persona);
