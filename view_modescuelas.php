@@ -135,9 +135,11 @@ $Con->CloseConexion();
             <?php $Element = new Elements();
             $Element->getMenuActualizaciones(6);?>
         </div>
+        <div class="brand">Reportes</div>
         <div class="menu-list">
+  
             <?php $Element = new Elements();
-            $Element->getMenuReportes(0);?>
+            $Element->getMenuReportes(1);?>
         </div>
         <div class="brand">El Proyecto</div>
         <div class="menu-list">
