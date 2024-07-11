@@ -106,7 +106,8 @@ $Con->CloseConexion();
     var editing = false;
     var columnaIndice = 5;
     var filaIndice = 1;
-    var valInputRangePrev = columnaIndice; 
+    var valInputRangePrev = columnaIndice;
+    var focusBarraNavegacionH = false;
 
     $( document ).on( "keydown", function(e) {
       NavegacionConTeclado(e);
@@ -117,13 +118,23 @@ $Con->CloseConexion();
       nroColumnasTabla = $("thead > tr > th").length - 2;
 
       $("#BarraDeNavHTabla").attr("max", nroColumnasTabla + 1);
-        $( "#BarraDeNavHTabla").on("input", function(e) {
-        navegacionConBarHNav(e);
+
+      $("#BarraDeNavHTabla").on("mousedown", function(e) {
+        focusBarraNavegacionH = true;
       });
-        $( "#BarraDeNavVTabla").on("input", function(e) {
+
+      $("#BarraDeNavHTabla").on("input", function(e) {
+        //if (e.originalEvent.detail){
+        if (focusBarraNavegacionH){
+          navegacionConBarHNav(e);
+        }
+        //}
+      });
+      $("#BarraDeNavVTabla").on("input", function(e) {
         navegacionConBarVNav(e);
       });
-      $( "#BarraDeNavHTabla").on("mouseup", function(e) {
+      $("#BarraDeNavHTabla").on("mouseup", function(e) {
+        focusBarraNavegacionH = false;
         actualizacionDePosicionBarraDenavegacionH(e, $(this).attr("value"));
       });
       $('thead tr >*').on("transitionstart", function(e) {
@@ -136,7 +147,6 @@ $Con->CloseConexion();
         columnaRemoverClass.removeClass( "showColTablaAnimacionfire");
         columnaRemoverClass.removeClass( "showColTablaAnimacion");
       });
-
     });
 
     function fireKey(el) {
@@ -336,12 +346,21 @@ $Con->CloseConexion();
             //right Arrow
             columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
             headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');
+            divABorrar = $('tbody tr > *:nth-child('+columnaIndice+') div div');
             if(columnaIndice <= nroColumnasTabla){
               if(columnaIndice <= nroColumnasTabla){
                 columnaABorrar.removeClass( "showColTablaAnimacion");
                 headABorrar.removeClass( "showColTablaAnimacion");
                 columnaABorrar.removeClass( "showColTablaAnimacionfire");
                 headABorrar.removeClass( "showColTablaAnimacionfire");
+
+                columnaABorrar.css({
+                  "margin-left": "",
+                  "border-right-width": "",
+                  "border-left-width": ""
+                });
+                divABorrar.css("z-index", "");
+
                 columnaABorrar.addClass( "hiddenColTablaAnimacion");
                 headABorrar.addClass( "hiddenColTablaAnimacion");
                 columnaABorrar.addClass( "hiddenColTablaAnimacionfire");
@@ -364,6 +383,12 @@ $Con->CloseConexion();
                 headABorrar.removeClass( "hiddenColTablaAnimacion");
                 columnaABorrar.removeClass( "hiddenColTablaAnimacionfire");
                 headABorrar.removeClass( "hiddenColTablaAnimacionfire");
+                columnaABorrar.css({
+                  "margin-left": "",
+                  "border-right-width": "",
+                  "border-left-width": ""
+                });
+                //divABorrar.css("z-index", "");
                 columnaABorrar.addClass( "showColTablaAnimacion");
                 headABorrar.addClass( "showColTablaAnimacion");
                 columnaABorrar.addClass( "showColTablaAnimacionfire");
