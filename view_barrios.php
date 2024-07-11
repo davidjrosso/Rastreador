@@ -136,7 +136,7 @@ $Con->CloseConexion();
         <div class="menu-list">
   
             <?php $Element = new Elements();
-            $Element->getMenuActualizaciones(6);?>
+            $Element->getMenuActualizaciones(7);?>
         </div>
         <div class="brand">Reportes</div>
         <div class="menu-list">
@@ -170,7 +170,7 @@ $Con->CloseConexion();
         <div class="menu-list">
   
             <?php $Element = new Elements();
-            $Element->getMenuActualizaciones(6);?>
+            $Element->getMenuActualizaciones(7);?>
         </div>
         <div class="brand">Reportes</div>
         <div class="menu-list">
