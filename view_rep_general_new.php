@@ -1797,7 +1797,7 @@ $Con->CloseConexion();
                                                         and (motivo_1 <> 1
                                                          or motivo_2 <> 1
                                                          or motivo_3 <> 1) 
-                                                        and estado = 1;
+                                                        and estado = 1
                                                       order by fecha";
                     
                     // echo "<br> DEBUG CONSULTAR MOVIMIENTO: ".var_dump($Consultar_Movimientos_Persona);
