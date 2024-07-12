@@ -64,7 +64,6 @@ $Con->CloseConexion();
               });
           });
 
-
         function ValidarDocumento(){
           var Documento = document.getElementById("idDocumento");
           var NroDocumento = Documento.value;
@@ -150,6 +149,29 @@ $Con->CloseConexion();
             }
             
       } 
+
+      function buscarCalles(){
+      var xNombre = document.getElementById('SearchCalle').value;
+      console.log(xNombre);
+      var textoBusqueda = xNombre;
+      xmlhttp=new XMLHttpRequest();
+      xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+          contenidosRecibidos = xmlhttp.responseText;
+          document.getElementById("ResultadosCalles").innerHTML=contenidosRecibidos;
+          }
+      }
+      xmlhttp.open('POST', 'buscarCalle.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
+      xmlhttp.send();
+    }
+
+    function seleccionCalle(xNombre,xID){
+          var BotonModalPersona = document.getElementById("BotonModalDireccion_1");
+          var Calle = document.getElementById("Calle");
+          BotonModalPersona.innerHTML = "";
+          BotonModalPersona.innerHTML = xNombre;
+          Calle.setAttribute('value',xNombre);
+        }
   </script>
   <!--
   <script type="text/javascript">
@@ -228,6 +250,12 @@ $Con->CloseConexion();
   
             <?php $Element = new Elements();
             $Element->getMenuActualizaciones(1);?>
+        </div>
+        <div class="brand">Reportes</div>
+        <div class="menu-list">
+  
+            <?php $Element = new Elements();
+            $Element->getMenuReportes(0);?>
         </div>
         <div class="brand">El Proyecto</div>
         <div class="menu-list">
@@ -322,13 +350,16 @@ $Con->CloseConexion();
             <div class="div-modal-Error" id="ErrorDocumento">
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Fecha de Nacimiento: </label>
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm" style="margin-bottom: -8px;">Fecha de Nacimiento: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Fecha_Nacimiento" id="Fecha_Nacimiento" autocomplete="off" placeholder="Ejemplo: 01/01/2010" onFocusOut="calcularEdad()"> 
               </div>
             </div>
+            <div class="row LblForm col-md-2" style="margin-bottom: 1.04%; font-size: 1.031rem">
+                  Edad <br>
+            </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Edad: </label>
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Años: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Edad" id="Edad" autocomplete="off" readonly>
               </div>
@@ -366,16 +397,13 @@ $Con->CloseConexion();
                 ?>
               </div>
             </div>
-            <div class="form-group row">
+            <div class="form-group row" style="margin-bottom: 0.6rem;">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Domicilio: </label>
-              <div class="col-md-8">
-                <?php 
-                  $Element = new Elements();
-                  echo $Element->CBCalles();
-                ?>
-              </div>  
+              <div class="col-md-8" id = "Persona">
+              	 	<button type = "button" id="BotonModalDireccion_1" class = "btn btn-lg btn-primary btn-block" style="padding-top: 4px;padding-bottom: 4px;" data-toggle="modal" data-target="#ModalCalle">Seleccione una Calle</button>                  
+              </div>
               <div class="col-md-2">
-                <input type="number" class="form-control" name = "NumeroDeCalle" id="NumeroDeCalle" placeholder="Número" min="1" autocomplete="off">
+                <input type="number" class="form-control" style="margin-top: 1px;" name = "NumeroDeCalle" id="NumeroDeCalle" placeholder="Número" min="1" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
@@ -456,14 +484,56 @@ $Con->CloseConexion();
                 <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_personas.php'">Atras</button>
               </div>
             </div>
+            <input type="hidden" name="Calle" id="Calle" value = "">
+
           </form>
           <div class="row">
               <div class="col-10"></div>
-              <div class="col-2">
-                
-              </div>
+              <div class="col-2"></div>
           </div>
           <!-- Fin Carga -->
+
+          <!-- Modal de Carga de Calle-->
+
+      <div class="modal fade bd-example-modal-lg" id="ModalCalle" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Seleccione una Calle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="row">
+                    <div class="col"></div>
+                    <div class="col-8">
+                      <div class="input-group mb-3">
+                        <input class = "form-control" type="text" name="BuscarCalle" id = "SearchCalle" onKeyUp="buscarCalles()" autocomplete="off" placeholder="Ingrese el nombre de calle">
+                        <div class="input-group-append">
+                          <span class="input-group-text" id="basic-addon2">Buscar</span>
+                        </div>	
+                      </div>		        				
+                    </div>
+                    <div class="col"></div>
+                  </div>
+                  <div class="row">
+                    <div class="col"></div>
+                    <div class="col-10" id = "ResultadosCalles">
+                      
+                    </div>
+                    <div class="col"></div>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>			        
+              </div>
+            </div>
+        </div>
+      </div>
+      <!-- Modal de Carga de Calle-->
   </div>
 </div>
 </div>
