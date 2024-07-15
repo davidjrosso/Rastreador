@@ -234,7 +234,8 @@ $Con->CloseConexion();
                                                 categoria  C
                                         WHERE C.cod_categoria = MT.cod_categoria
                                           and MT.estado = 1
-                                          and C.estado = 1               
+                                          and C.estado = 1
+                                          and MT.id_motivo <> 1   
                                           and C.id_categoria NOT IN (SELECT id_categoria
                                                                       FROM categorias_roles CS)";
         $motivosVisiblesParaUsuario = $consultaUsuarioPermisos . $motivosVisiblesParaUsuario;
@@ -1208,6 +1209,17 @@ $Con->CloseConexion();
                   $Motivo_5 = $RetMotivo_5["motivo"];
                 }
 
+                $movimientoVisible = false;
+                $movimientoVisible = $movimientoVisible || ($Motivo_1 != "");
+                $movimientoVisible = $movimientoVisible || ($Motivo_2 != "");
+                $movimientoVisible = $movimientoVisible || ($Motivo_3 != "");
+                $movimientoVisible = $movimientoVisible || ($Motivo_4 != "");
+                $movimientoVisible = $movimientoVisible || ($Motivo_5 != "");
+
+                if (!$movimientoVisible){
+                  continue;
+                }
+
                 $Observaciones = $RetTodos["observaciones"];
                 $Responsable = $RetTodos["responsable"];
                   //solucionar el error!
@@ -1559,6 +1571,17 @@ $Con->CloseConexion();
                     $Motivo_5 = $RetMotivo_5["motivo"];
                   }
 
+                  $movimientoVisible = false;
+                  $movimientoVisible = $movimientoVisible || ($Motivo_1 != "");
+                  $movimientoVisible = $movimientoVisible || ($Motivo_2 != "");
+                  $movimientoVisible = $movimientoVisible || ($Motivo_3 != "");
+                  $movimientoVisible = $movimientoVisible || ($Motivo_4 != "");
+                  $movimientoVisible = $movimientoVisible || ($Motivo_5 != "");
+  
+                  if (!$movimientoVisible){
+                    continue;
+                  }
+
                   $Observaciones = $RetTodos["observaciones"];
                   $Responsable = $RetTodos["responsable"];
                     //solucionar el error!
@@ -1767,9 +1790,20 @@ $Con->CloseConexion();
                 $RetMotivo_5 = mysqli_fetch_assoc($RetMotivo_5);
                 if(count(array_filter($MotivosOpciones)) > 0){
                     $Motivo_5 = (in_array($ID_Motivo_5, array_values($MotivosOpciones)))?$RetMotivo_5["motivo"]:"";
-                  } else {
-                    $Motivo_5 = $RetMotivo_5["motivo"];
-                  }
+                } else {
+                  $Motivo_5 = $RetMotivo_5["motivo"];
+                }
+
+                $movimientoVisible = false;
+                $movimientoVisible = $movimientoVisible || ($Motivo_1 != "");
+                $movimientoVisible = $movimientoVisible || ($Motivo_2 != "");
+                $movimientoVisible = $movimientoVisible || ($Motivo_3 != "");
+                $movimientoVisible = $movimientoVisible || ($Motivo_4 != "");
+                $movimientoVisible = $movimientoVisible || ($Motivo_5 != "");
+
+                if (!$movimientoVisible){
+                  continue;
+                }
 
                 $Observaciones = $RetMovimientos["observaciones"];
                 $Responsable = $RetMovimientos["responsable"];
