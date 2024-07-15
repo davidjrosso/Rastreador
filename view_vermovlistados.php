@@ -1122,7 +1122,7 @@ $Con->CloseConexion();
                     $Motivo_1 = "";
                   }
                 } else {
-                  $Motivo_1 = $RetMotivo_1["motivo"];
+                  $Motivo_1 = ($RetMotivo_1["ConPermisoParaUsr"] || $RetMotivo_1["ConPermisoGeneral"])?$RetMotivo_1["motivo"]:"";
                 }
 
                 $ID_Motivo_2 = $RetTodos["motivo_2"];
@@ -1142,7 +1142,7 @@ $Con->CloseConexion();
                     $Motivo_2 = "";
                   }
                 } else {
-                    $Motivo_2 = $RetMotivo_2["motivo"];
+                  $Motivo_2 = ($RetMotivo_2["ConPermisoParaUsr"] || $RetMotivo_2["ConPermisoGeneral"])?$RetMotivo_2["motivo"]:"";
                 }
 
                 $ID_Motivo_3 = $RetTodos["motivo_3"];
@@ -1163,7 +1163,7 @@ $Con->CloseConexion();
                     $Motivo_3 = "";
                   }
                 } else {
-                    $Motivo_3 = $RetMotivo_3["motivo"];
+                  $Motivo_3 = ($RetMotivo_3["ConPermisoParaUsr"] || $RetMotivo_3["ConPermisoGeneral"])?$RetMotivo_3["motivo"]:"";
                 }
 
                 $ID_Motivo_4 = $RetTodos["motivo_4"];
@@ -1178,14 +1178,13 @@ $Con->CloseConexion();
                 $RetMotivo_4 = mysqli_fetch_assoc($RetMotivo_4);
 
                 if(count(array_filter($MotivosOpciones)) > 0){
-                  $Motivo_4 = (in_array($ID_Motivo_4, array_values($MotivosOpciones)))?$RetMotivo_4["motivo"]:"";
                   if(in_array($ID_Motivo_4, array_values($MotivosOpciones))){
                     $Motivo_4 = ($RetMotivo_4["ConPermisoParaUsr"] || $RetMotivo_4["ConPermisoGeneral"])?$RetMotivo_4["motivo"]:"";
                   } else {
                     $Motivo_4 = "";
                   }
                 } else {
-                    $Motivo_4 = $RetMotivo_4["motivo"];
+                  $Motivo_4 = ($RetMotivo_4["ConPermisoParaUsr"] || $RetMotivo_4["ConPermisoGeneral"])?$RetMotivo_4["motivo"]:"";
                 }
 
                 $ID_Motivo_5 = $RetTodos["motivo_5"];
@@ -1206,7 +1205,7 @@ $Con->CloseConexion();
                     $Motivo_5 = "";
                   }
                 } else {
-                  $Motivo_5 = $RetMotivo_5["motivo"];
+                  $Motivo_5 = ($RetMotivo_5["ConPermisoParaUsr"] || $RetMotivo_5["ConPermisoGeneral"])?$RetMotivo_5["motivo"]:"";
                 }
 
                 $movimientoVisible = false;
@@ -1485,7 +1484,7 @@ $Con->CloseConexion();
                       $Motivo_1 = "";
                     }
                   } else {
-                    $Motivo_1 = $RetMotivo_1["motivo"];
+                    $Motivo_1 = ($RetMotivo_1["ConPermisoParaUsr"] || $RetMotivo_1["ConPermisoGeneral"])?$RetMotivo_1["motivo"]:"";
                   }
 
                   $ID_Motivo_2 = $RetTodos["motivo_2"];
@@ -1506,7 +1505,7 @@ $Con->CloseConexion();
                       $Motivo_2 = "";
                     }
                   } else {
-                    $Motivo_2 = $RetMotivo_2["motivo"];
+                    $Motivo_2 = ($RetMotivo_2["ConPermisoParaUsr"] || $RetMotivo_2["ConPermisoGeneral"])?$RetMotivo_2["motivo"]:"";
                   }
 
                   $ID_Motivo_3 = $RetTodos["motivo_3"];
@@ -1527,7 +1526,7 @@ $Con->CloseConexion();
                       $Motivo_3 = "";
                     }
                   } else {
-                    $Motivo_3 = $RetMotivo_3["motivo"];
+                    $Motivo_3 = ($RetMotivo_3["ConPermisoParaUsr"] || $RetMotivo_3["ConPermisoGeneral"])?$RetMotivo_3["motivo"]:"";
                   }
 
                   $ID_Motivo_4 = $RetTodos["motivo_4"];
@@ -1548,7 +1547,7 @@ $Con->CloseConexion();
                       $Motivo_4 = "";
                     }
                   } else {
-                    $Motivo_4 = $RetMotivo_4["motivo"];
+                    $Motivo_4 = ($RetMotivo_4["ConPermisoParaUsr"] || $RetMotivo_4["ConPermisoGeneral"])?$RetMotivo_4["motivo"]:"";
                   }
   
                   $ID_Motivo_5 = $RetTodos["motivo_5"];
@@ -1568,7 +1567,7 @@ $Con->CloseConexion();
                       $Motivo_5 = "";
                     }
                   } else {
-                    $Motivo_5 = $RetMotivo_5["motivo"];
+                    $Motivo_5 = ($RetMotivo_5["ConPermisoParaUsr"] || $RetMotivo_5["ConPermisoGeneral"])?$RetMotivo_5["motivo"]:"";
                   }
 
                   $movimientoVisible = false;
@@ -1725,9 +1724,13 @@ $Con->CloseConexion();
                 $RetMotivo_1 = mysqli_query($Con->Conexion,$ConsultarMotivo_1) or die($MensajeErrorMotivo_1);
                 $RetMotivo_1 = mysqli_fetch_assoc($RetMotivo_1);
                 if(count(array_filter($MotivosOpciones)) > 0){
-                  $Motivo_1 = (in_array($ID_Motivo_1, array_values($MotivosOpciones)))?$RetMotivo_1["motivo"]:"";
+                  if(in_array($ID_Motivo_1, array_values($MotivosOpciones))){
+                    $Motivo_1 = ($RetMotivo_1["ConPermisoParaUsr"] || $RetMotivo_1["ConPermisoGeneral"])?$RetMotivo_1["motivo"]:"";
+                  } else {
+                    $Motivo_1 = "";
+                  }
                 } else {
-                  $Motivo_1 = $RetMotivo_1["motivo"];
+                  $Motivo_1 = ($RetMotivo_1["ConPermisoParaUsr"] || $RetMotivo_1["ConPermisoGeneral"])?$RetMotivo_1["motivo"]:"";
                 }
 
                 $ID_Motivo_2 = $RetMovimientos["motivo_2"];
@@ -1741,9 +1744,13 @@ $Con->CloseConexion();
                 $RetMotivo_2 = mysqli_query($Con->Conexion,$ConsultarMotivo_2) or die($MensajeErrorMotivo_2);
                 $RetMotivo_2 = mysqli_fetch_assoc($RetMotivo_2);
                 if(count(array_filter($MotivosOpciones)) > 0){
-                    $Motivo_2 = (in_array($ID_Motivo_2, array_values($MotivosOpciones)))?$RetMotivo_2["motivo"]:"";
+                  if(in_array($ID_Motivo_2, array_values($MotivosOpciones))){
+                    $Motivo_2 = ($RetMotivo_2["ConPermisoParaUsr"] || $RetMotivo_2["ConPermisoGeneral"])?$RetMotivo_2["motivo"]:"";
                   } else {
-                    $Motivo_2 = $RetMotivo_2["motivo"];
+                    $Motivo_2 = "";
+                  }
+                } else {
+                  $Motivo_2 = ($RetMotivo_2["ConPermisoParaUsr"] || $RetMotivo_2["ConPermisoGeneral"])?$RetMotivo_2["motivo"]:"";
                 }
 
                 $ID_Motivo_3 = $RetMovimientos["motivo_3"];
@@ -1757,10 +1764,14 @@ $Con->CloseConexion();
                 $RetMotivo_3 = mysqli_query($Con->Conexion,$ConsultarMotivo_3) or die($MensajeErrorMotivo_3);
                 $RetMotivo_3 = mysqli_fetch_assoc($RetMotivo_3);
                 if(count(array_filter($MotivosOpciones)) > 0){
-                    $Motivo_3 = (in_array($ID_Motivo_3, array_values($MotivosOpciones)))?$RetMotivo_3["motivo"]:"";
+                  if(in_array($ID_Motivo_3, array_values($MotivosOpciones))){
+                    $Motivo_3 = ($RetMotivo_3["ConPermisoParaUsr"] || $RetMotivo_3["ConPermisoGeneral"])?$RetMotivo_3["motivo"]:"";
                   } else {
-                    $Motivo_3 = $RetMotivo_3["motivo"];
+                    $Motivo_3 = "";
                   }
+                } else {
+                  $Motivo_3 = ($RetMotivo_3["ConPermisoParaUsr"] || $RetMotivo_3["ConPermisoGeneral"])?$RetMotivo_3["motivo"]:"";
+                }
 
                 $ID_Motivo_4 = $RetMovimientos["motivo_4"];
                 $ConsultarMotivo_4 = "select M.id_motivo IN (SELECT id_motivo 
@@ -1773,10 +1784,14 @@ $Con->CloseConexion();
                 $RetMotivo_4 = mysqli_query($Con->Conexion,$ConsultarMotivo_4) or die($MensajeErrorMotivo_4);
                 $RetMotivo_4 = mysqli_fetch_assoc($RetMotivo_4);
                 if(count(array_filter($MotivosOpciones)) > 0){
-                    $Motivo_4 = (in_array($ID_Motivo_4, array_values($MotivosOpciones)))?$RetMotivo_4["motivo"]:"";
+                  if(in_array($ID_Motivo_4, array_values($MotivosOpciones))){
+                    $Motivo_4 = ($RetMotivo_4["ConPermisoParaUsr"] || $RetMotivo_4["ConPermisoGeneral"])?$RetMotivo_4["motivo"]:"";
                   } else {
-                    $Motivo_4 = $RetMotivo_4["motivo"];
+                    $Motivo_4 = "";
                   }
+                } else {
+                  $Motivo_4 = ($RetMotivo_4["ConPermisoParaUsr"] || $RetMotivo_4["ConPermisoGeneral"])?$RetMotivo_4["motivo"]:"";
+                }
 
                 $ID_Motivo_5 = $RetMovimientos["motivo_5"];
                 $ConsultarMotivo_5 = "select M.id_motivo IN (SELECT id_motivo 
@@ -1789,9 +1804,13 @@ $Con->CloseConexion();
                 $RetMotivo_5 = mysqli_query($Con->Conexion,$ConsultarMotivo_5) or die($MensajeErrorMotivo_5);
                 $RetMotivo_5 = mysqli_fetch_assoc($RetMotivo_5);
                 if(count(array_filter($MotivosOpciones)) > 0){
-                    $Motivo_5 = (in_array($ID_Motivo_5, array_values($MotivosOpciones)))?$RetMotivo_5["motivo"]:"";
+                  if(in_array($ID_Motivo_5, array_values($MotivosOpciones))){
+                    $Motivo_5 = ($RetMotivo_5["ConPermisoParaUsr"] || $RetMotivo_5["ConPermisoGeneral"])?$RetMotivo_5["motivo"]:"";
+                  } else {
+                    $Motivo_5 = "";
+                  }
                 } else {
-                  $Motivo_5 = $RetMotivo_5["motivo"];
+                  $Motivo_5 = ($RetMotivo_5["ConPermisoParaUsr"] || $RetMotivo_5["ConPermisoGeneral"])?$RetMotivo_5["motivo"]:"";
                 }
 
                 $movimientoVisible = false;
