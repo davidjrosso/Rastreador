@@ -39,7 +39,8 @@ header("Content-Type: text/html;charset=utf-8");
 	</div>
 </body>    
 </body>
-<?php  
+<?php
+$MensajeError = isset($_REQUEST["MensajeError"])?$_REQUEST["MensajeError"] : ""; 
 if(isset($MensajeError)){
 	echo "<script type='text/javascript'>
 		  swal('".$MensajeError."','','warning');
