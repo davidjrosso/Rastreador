@@ -752,7 +752,7 @@ $Con->CloseConexion();
       </div>
       <?php
     }
-    if ($TipoUsuario == 2) {
+    if($TipoUsuario == 2 || $TipoUsuario > 3){
       ?>
       <div class="col-md-2" id="ContenidoMenu">
         <div class="nav-side-menu" id="sidebar" style="padding-left: 5px;">
@@ -2015,7 +2015,7 @@ $Con->CloseConexion();
                   // if($ID_Persona_Nuevo !== $ID_Persona_Bandera){
                   foreach ($arr as $key => $value) {
                     $Separar = explode("/", $value);
-                    $Mes = $Separar[0];
+                    $Mes = $Separar[0]; 
                     $Anio = $Separar[1];
 
                     $Consultar_Movimientos_Persona = "select * 
