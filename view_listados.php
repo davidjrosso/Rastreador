@@ -398,7 +398,7 @@ $datosNav = $_SESSION["datosNav"];
   </div>
   <?php 
     }
-    if($TipoUsuario == 2){
+    if($TipoUsuario == 2 || $TipoUsuario > 3){
   ?>
   <div class = "col-md-3">
     <div class="nav-side-menu">

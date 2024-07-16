@@ -372,7 +372,7 @@ $Con->CloseConexion();
   </div>
   <?php 
     }
-    if($TipoUsuario == 2){
+    if($TipoUsuario == 2 || $TipoUsuario > 3){
   ?>
   <div class = "col-md-2" id="ContenidoMenu">
     <div class="nav-side-menu" id="sidebar" style="padding-left: 5px;">
