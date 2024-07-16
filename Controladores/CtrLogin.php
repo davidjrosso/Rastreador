@@ -52,7 +52,11 @@ if(isset($_SESSION["Usuario"])){
 }else{
 	$Con = new Conexion();
 	$Con->OpenConexion();
- 	$Consulta = "select * from accounts where username = '$UserName' and password = '$UserPass'";
+ 	$Consulta = "select * 
+				 from accounts 
+				 where username = '$UserName' 
+				 and password = '$UserPass'
+				 and estado = 1";
  	$RS = mysqli_query($Con->Conexion,$Consulta)or die("Problemas al tomar Sesion. Nombre de usuario o password incorrectos");
  	$Cont = mysqli_num_rows($RS);
  	if($Cont > 0){
