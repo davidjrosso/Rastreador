@@ -39,12 +39,12 @@ $ID_Persona = $_REQUEST["ID_Persona"];
 $ID_Motivo_1 = $_REQUEST["ID_Motivo_1"];
 $ID_Motivo_2 = $_REQUEST["ID_Motivo_2"];
 $ID_Motivo_3 = $_REQUEST["ID_Motivo_3"];
-$ID_Motivo_4 = $_REQUEST["ID_Motivo_4"];
-$ID_Motivo_5 = $_REQUEST["ID_Motivo_5"];
+$ID_Motivo_4 = (isset($_REQUEST["ID_Motivo_4"])) ? $_REQUEST["ID_Motivo_4"]:0;
+$ID_Motivo_5 = (isset($_REQUEST["ID_Motivo_5"])) ? $_REQUEST["ID_Motivo_5"]:0;
 $Observaciones = $_REQUEST["Observaciones"];
 $ID_Responsable = $Arr_ID_Responsable[0];
-$ID_Centro = $_REQUEST["ID_Centro"];
-$ID_OtraInstitucion = $_REQUEST["ID_OtraInstitucion"];
+$ID_Centro = (isset($_REQUEST["ID_Centro"])) ? $_REQUEST["ID_Centro"]:0;
+$ID_OtraInstitucion = (isset($_REQUEST["ID_OtraInstitucion"])) ? $_REQUEST["ID_OtraInstitucion"]:0;
 $Estado = 1;
 
 if($ID_Motivo_1 == 0){

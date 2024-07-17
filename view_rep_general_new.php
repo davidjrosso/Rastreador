@@ -2509,7 +2509,7 @@ $Con->CloseConexion();
 
                   if($tdExtenso){
                     $tdReemplazar = "~<td~";
-                    $tdClassExtenso = "~<td class='td--extenso-height-127'~";
+                    $tdClassExtenso = "<td class='td--extenso-height-127'";
                     $tagsTD = preg_replace( $tdReemplazar, $tdClassExtenso, $tagsTD);
                   }
 
