@@ -5,13 +5,10 @@ use Dompdf\Dompdf;
 
 try{
     $tabla = $_REQUEST["tabla"];
-    //$options = new Options();
-    //$options->set('isRemoteEnabled',true);
-    //$dompdf = new Dompdf($options);
-
-    $dompdf = new Dompdf();
+    $dompdf = new Dompdf(array('tempDir'=>$_SERVER["DOCUMENT_ROOT"]."/Rastreador-main/Rastreador/dompdf/lib/fonts"));
     $dompdf->loadHtml(mb_convert_encoding($tabla, 'HTML-ENTITIES', 'UTF-8'));
-    $dompdf->setPaper('A4', 'landscape');
+    $dompdf->setPaper('legal', 'landscape');
+    $dompdf->setOptions($dompdf->getOptions()->setFontDir($_SERVER["DOCUMENT_ROOT"]."/Rastreador-main/Rastreador/dompdf/lib/fonts"));
     $dompdf->render();
     $output = $dompdf->output();
     $data = base64_encode($output);
