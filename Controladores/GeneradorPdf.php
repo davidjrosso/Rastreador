@@ -5,7 +5,8 @@ use Dompdf\Dompdf;
 
 try{
     $tabla = $_REQUEST["tabla"];
-    $dompdf = new Dompdf(array('tempDir'=>$_SERVER["DOCUMENT_ROOT"]."/dompdf/lib/fonts"));
+    //$dompdf = new Dompdf(array('tempDir'=>$_SERVER["DOCUMENT_ROOT"]."/dompdf/lib/fonts"));
+    $dompdf = new Dompdf();
     $dompdf->loadHtml(mb_convert_encoding($tabla, 'HTML-ENTITIES', 'UTF-8'));
     $dompdf->setPaper('legal', 'landscape');
     $dompdf->setOptions($dompdf->getOptions()->setFontDir($_SERVER["DOCUMENT_ROOT"]."/dompdf/lib/fonts"));
