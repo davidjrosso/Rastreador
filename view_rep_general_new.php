@@ -2084,8 +2084,8 @@ $Con->CloseConexion();
                     }
                     $tagsTD .= "<td name='DatosResultados' id=$IndexCelda style='min-width:190px'>
                                  <div class = 'row' style='margin:0'>";   
-                    $tagsTD_imprimir .= "<td name='DatosResultados' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;'>
-                                          <div style='margin-left:-51px; padding-top:4px' align='left'>";
+                    $tagsTD_imprimir .= "<td style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;'>
+                                          <div style='margin-left:-25px; padding-top:4px;max-width:{$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;'>";
                     $Num_Movimientos_Persona = mysqli_num_rows($Tomar_Movimientos_Persona);
 
                     while ($Ret_Movimientos_Persona = mysqli_fetch_assoc($Tomar_Movimientos_Persona)) {
@@ -2666,7 +2666,7 @@ $Con->CloseConexion();
                                       }
 
                                       #InformacionDeCentro {
-                                        float: right;
+                                        float: right; 
                                         text-align: left;
                                       }
 
@@ -2923,6 +2923,7 @@ $Con->CloseConexion();
       function enviarImprimirPdf() {
         var tabla1 = document.getElementById("tabla_1");
         var dataString = "tabla=" + tabla1.value;
+        console.log(dataString);
         $.ajax({
           type: "POST",
           dataType: "html",
