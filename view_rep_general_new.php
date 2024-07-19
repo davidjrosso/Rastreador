@@ -1389,21 +1389,34 @@ $Con->CloseConexion();
                 // $Familia_sel=true;
                 
                 $IndexCelda = 0;
+                $nroColumnas = 0;
                 $Table = "<table class='table table-fixeder table-bordered table-sm' cellspacing='0' id='tablaMovimientos' style='page-break-after:always;'>
                              <thead class='thead-dark'>
                               <tr align='center' valign='middle'>
                                 <th id='Contenido-Titulo-1'>Barrio</th>
                                 <th id='Contenido-Titulo-2'>Direc.</th>";
+                $Table_imprimir = "<table cellspacing='0' id='tablaMovimientos' style='page-break-after:always;'>
+                                    <thead>
+                                      <tr align='center' valign='middle'>
+                                      <th id='Contenido-Titulo-1'>Barrio</th>
+                                      <th id='Contenido-Titulo-2'>Direc.</th>"; 
+                $nroColumnas += 2;
 
                 if ($cmb_seleccion != null && $cmb_seleccion != "") {
                   if ($cmb_seleccion == "manzana") {
                     $Table .= "<th id='Contenido-Titulo-3' name='datosflia' style='max-width: 50px;'>Mz.</th>";
+                    $Table_imprimir .= "<th id='Contenido-Titulo-3' name='datosflia'>Mz.</th>";
+                    $nroColumnas += 1;
                   }
                   if ($cmb_seleccion == "lote") {
                     $Table .= "<th id='Contenido-Titulo-4' name='datosflia' style='max-width: 50px;'>Lote</th>";
+                    $Table_imprimir .= "<th id='Contenido-Titulo-4' name='datosflia'>Lote</th>";
+                    $nroColumnas += 1;
                   }
                   if ($cmb_seleccion == "familia") {
                     $Table .= "<th id='Contenido-Titulo-5' name='datosflia' style='max-width: 50px;'>Sublote</th>";
+                    $Table_imprimir .= "<th id='Contenido-Titulo-5' name='datosflia'>Sublote</th>";
+                    $nroColumnas += 1;
                   }
                   // if ($cmb_seleccion=="todos"){
                   //   $Table.="<th id='Contenido-Titulo-3' name='datosflia' style='max-width: 50px;'>Mz.</th>
@@ -1415,7 +1428,10 @@ $Con->CloseConexion();
 
 
                 $Table .= "<th id='Contenido-Titulo-3'>Persona</th>
-                              <th id='Contenido-Titulo-4' style='min-width: 150px;'>Fecha Nac.</th>";
+                           <th id='Contenido-Titulo-4' style='min-width: 150px;'>Fecha Nac.</th>";
+                $Table_imprimir .= "<th id='Contenido-Titulo-3'>Persona</th>
+                                    <th id='Contenido-Titulo-4'>Fecha Nac.</th>";
+                $nroColumnas += 2;           
               }
 
               $Tomar_Meses = mysqli_query($Con->Conexion, $Consulta) or die($MensajeError . " Consulta: " . $Consulta);
@@ -1439,6 +1455,7 @@ $Con->CloseConexion();
                 $Mes_Actual_Bandera++;
               }
 
+              $nroColumnas += $MesesDiferencia;
               // echo "DEBUG:".var_dump($arr);
             
 
@@ -1472,6 +1489,7 @@ $Con->CloseConexion();
                 if ($value != "") {
                   // TODO: Cambiando de tamaño las columnas
                   $Table .= "<th name='DatosResultados' style='min-width: 190px;'>" . $value . "</th>";
+                  $Table_imprimir .= "<th name='DatosResultados'>" . $value . "</th>";
                 }
 
               }
@@ -1484,6 +1502,9 @@ $Con->CloseConexion();
                     </thead>
                 <tbody id='cuerpo-tabla'>";
 
+              $Table_imprimir .= "</tr>
+                              </thead>
+                            <tbody id='cuerpo-tabla'>";
 
               ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1910,45 +1931,55 @@ $Con->CloseConexion();
                 if ($RetTodos["tipo"] == "SM") {
                   // echo "Entra aca SM";
                   $Table .= "<tr class='SinMovimientos Datos'>";
-                  $Table .= "<td id='Contenido-1'>" . $RetTodos["Barrio"] . "</td>
-                             <td id='Contenido-2'>" . $RetTodos["domicilio"] . "</td>";
+                  $Table_imprimir .= "<tr>";
+
+                  $Table_imprimir .= "<td id='Contenido-1'>" . $RetTodos["Barrio"] . "</td>
+                                      <td id='Contenido-2'>" . $RetTodos["domicilio"] . "</td>";
+                  $Table .= "<td id='Contenido-1' style='max-width: 100px;'>" . $RetTodos["Barrio"] . "</td>
+                             <td id='Contenido-2' style='max-width: 100px;'>" . $RetTodos["domicilio"] . "</td>";
 
                   if ($cmb_seleccion != null && $cmb_seleccion != "") {
 
                     if ($cmb_seleccion == "manzana") {
                       $Table .= "<td id='Contenido-3' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>";
+                      $Table_imprimir .= "<td id='Contenido-3' name='datosflia' style='max-width: 100px;'>" . $RetTodos["manzana"] . "</td>";
 
                     }
 
                     if ($cmb_seleccion == "lote") {
                       $Table .= "<td id='Contenido-4' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>";
+                      $Table_imprimir .= "<td id='Contenido-4' name='datosflia' style='max-width: 100px;'>" . $RetTodos["lote"] . "</td>";
                     }
 
                     if ($cmb_seleccion == "familia") {
                       $Table .= "<td id='Contenido-5' name='datosflia' style='max-width: 60px;'>" . $RetTodos["familia"] . "</td>";
+                      $Table_imprimir .= "<td id='Contenido-5' name='datosflia' style='max-width: 100px;'>" . $RetTodos["familia"] . "</td>";
                     }
 
                     if ($cmb_seleccion == "todos") {
                       $Table .= "<td id='Contenido-3' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>
-                      <td id='Contenido-4' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>
-                      <td id='Contenido-5' name='datosflia' style='max-width: 60px;'>" . $RetTodos["familia"] . "</td>";
+                                 <td id='Contenido-4' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>
+                                 <td id='Contenido-5' name='datosflia' style='max-width: 60px;'>" . $RetTodos["familia"] . "</td>";
+                      $Table_imprimir .= "<td id='Contenido-3' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>
+                                          <td id='Contenido-4' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>
+                                          <td id='Contenido-5' name='datosflia' style='max-width: 60px;'>" . $RetTodos["familia"] . "</td>";
 
                     }
                   }
 
 
                   
-                  $Table_imprimir = (isset($Table_imprimir))? $Table : "";
+                  //$Table_imprimir = (isset($Table_imprimir))? $Table : "";
 
                   $Table .= " <td id='Contenido-3'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $RetTodos["id_persona"] . "\",\"Ventana" . $RetTodos["id_persona"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" . $RetTodos["apellido"] . ", " . $RetTodos["nombre"] . "</a></td>
                   <td id='Contenido-4' style='min-width: 150px;'>" . $Fecha_Nacimiento . "</td>";
                   
                   $Table_imprimir .= " <td id='Contenido-3'>" . $RetTodos["apellido"] . ", " . $RetTodos["nombre"] . "</td>
-                                       <td id='Contenido-4' style='min-width: 150px;'>" . $Fecha_Nacimiento . "</td>";
+                                       <td id='Contenido-4' style='max-width: 100px;'>" . $Fecha_Nacimiento . "</td>";
 
                   $ColSpans = $MesesDiferencia * 270;
                   $Table .= "<td name='DatosSinResultados' style='width:" . $ColSpans . "px'></td>";
-                  $Table_imprimir .= "<td name='DatosSinResultados' style='width:" . $ColSpans . "px'></td>";
+                  $Table_imprimir .= "<td name='DatosSinResultados' style='max-width: 100px;'></td>";
                 } else {
                   //En este punto se cominza a procesar los movimientos asociados a una persona persona
 
@@ -1974,35 +2005,36 @@ $Con->CloseConexion();
 
                   $Table .= "<tr class='Datos'>";
                   $Table_imprimir .= "<tr>";
+                  $nroColumnas = 70;
                   $tagsTD .= "<td id='Contenido-1'>" . $RetTodos["Barrio"] . "</td>
-                             <td id='Contenido-2'>" . $RetTodos["domicilio"] . "</td>";
-                  $tagsTD_imprimir .= "<td id='Contenido-1' style='font-size: 10px;'>" . $RetTodos["Barrio"] . "</td>
-                                      <td id='Contenido-2' style='font-size: 10px;'>" . $RetTodos["domicilio"] . "</td>";
+                              <td id='Contenido-2'>" . $RetTodos["domicilio"] . "</td>";
+                  $tagsTD_imprimir .= "<td id='Contenido-1' style='font-size: 10px;max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;'>" . $RetTodos["Barrio"] . "</td>
+                                       <td id='Contenido-2' style='font-size: 10px;max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;'>" . $RetTodos["domicilio"] . "</td>";
 
                   if ($cmb_seleccion != null && $cmb_seleccion != "") {
 
                     if ($cmb_seleccion == "manzana") {
                       $tagsTD .= "<td id='Contenido-3' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>";
-                      $tagsTD_imprimir .= "<td id='Contenido-3' name='datosflia' style='max-width: 50px;font-size: 10px;'>" . $RetTodos["manzana"] . "</td>";
+                      $tagsTD_imprimir .= "<td id='Contenido-3' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["manzana"] . "</td>";
                     }
 
                     if ($cmb_seleccion == "lote") {
                       $tagsTD .= "<td id='Contenido-4' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>";
-                      $tagsTD_imprimir .= "<td id='Contenido-4' name='datosflia' style='max-width: 50px;font-size: 10px;'>" . $RetTodos["lote"] . "</td>";
+                      $tagsTD_imprimir .= "<td id='Contenido-4' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["lote"] . "</td>";
                     }
 
                     if ($cmb_seleccion == "familia") {
                       $tagsTD .= "<td id='Contenido-5' name='datosflia' style='max-width: 60px;'>" . $RetTodos["familia"] . "</td>";
-                      $tagsTD_imprimir .= "<td id='Contenido-5' name='datosflia' style='max-width: 60px;font-size: 10px;'>" . $RetTodos["familia"] . "</td>";
+                      $tagsTD_imprimir .= "<td id='Contenido-5' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["familia"] . "</td>";
                     }
 
                     if ($cmb_seleccion == "todos") {
                       $tagsTD .= "<td id='Contenido-3' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>
                       <td id='Contenido-4' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>
                       <td id='Contenido-5' name='datosflia' style='max-width: 60px;'>" . $RetTodos["familia"] . "</td>";
-                      $tagsTD_imprimir .= "<td id='Contenido-3' name='datosflia' style='max-width: 50px;font-size: 10px;'>" . $RetTodos["manzana"] . "</td>
-                      <td id='Contenido-4' name='datosflia' style='max-width: 50px;font-size: 10px;'>" . $RetTodos["lote"] . "</td>
-                      <td id='Contenido-5' name='datosflia' style='max-width: 60px;font-size: 10px;'>" . $RetTodos["familia"] . "</td>";
+                      $tagsTD_imprimir .= "<td id='Contenido-3' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["manzana"] . "</td>
+                      <td id='Contenido-4' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["lote"] . "</td>
+                      <td id='Contenido-5' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["familia"] . "</td>";
                     }
                   }
 
@@ -2020,8 +2052,8 @@ $Con->CloseConexion();
                   <td id='Contenido-3'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $RetTodos["id_persona"] . "\",\"Ventana" . $RetTodos["id_persona"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" . $RetTodos["apellido"] . ", " . $RetTodos["nombre"] . "</a></td>
                   <td id='Contenido-4' style='min-width: 150px;'>" . $Fecha_Nacimiento . "</td>";
 
-                  $tagsTD_imprimir .= " <td id='Contenido-3' style='font-size: 10px;'>". $RetTodos["apellido"] . ", " . $RetTodos["nombre"] . "</td>
-                                       <td id='Contenido-4' style='min-width: 150px;font-size: 10px;'>" . $Fecha_Nacimiento . "</td>";
+                  $tagsTD_imprimir .= " <td id='Contenido-3' style='font-size: 10px;max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;'>". $RetTodos["apellido"] . ", " . $RetTodos["nombre"] . "</td>
+                                       <td id='Contenido-4' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $Fecha_Nacimiento . "</td>";
                   // if($ID_Persona_Nuevo !== $ID_Persona_Bandera){
                   foreach ($arr as $key => $value) {
                     $Separar = explode("/", $value);
@@ -2051,9 +2083,9 @@ $Con->CloseConexion();
                       $tdExtenso = true;
                     }
                     $tagsTD .= "<td name='DatosResultados' id=$IndexCelda style='min-width:190px'>
-                                 <div class = 'row' style='margin:0'>";                  //250   
-                    $tagsTD_imprimir .= "<td name='DatosResultados' style='min-width:190px;'>
-                                          <div style='float: left; margin-left:-35px;' align='left'>";
+                                 <div class = 'row' style='margin:0'>";   
+                    $tagsTD_imprimir .= "<td name='DatosResultados' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;'>
+                                          <div style='margin-left:-57px; padding-top:4px' align='left'>";
                     $Num_Movimientos_Persona = mysqli_num_rows($Tomar_Movimientos_Persona);
 
                     while ($Ret_Movimientos_Persona = mysqli_fetch_assoc($Tomar_Movimientos_Persona)) {
@@ -2137,7 +2169,7 @@ $Con->CloseConexion();
                                           </a>
                                          </div>";
 
-                              $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:0px; text-align: center; display: inline-block;'>
+                              $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
                                                       <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 7px; color: " . $RetMotivo["color"] . ";'>" . 
                                                         $RetMotivo["Forma_Categoria"] . "
                                                       </div>
@@ -2188,7 +2220,7 @@ $Con->CloseConexion();
                                             </a>
                                         </div>";
 
-                              $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:0px; text-align: center; display: inline-block;'>
+                              $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
                                                     <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 7px; color: " . $RetMotivo["color"] . ";'>" . 
                                                       $RetMotivo["Forma_Categoria"] . "
                                                     </div>
@@ -2237,7 +2269,7 @@ $Con->CloseConexion();
                                               </center>
                                             </span>
                                           </div>";
-                                $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:0px; text-align: center; display: inline-block;'>
+                                $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
                                                       <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px; color: " . $RetMotivo["color"] . "; '>" . 
                                                         $RetMotivo["Forma_Categoria"] . "
                                                       </div>
@@ -2284,7 +2316,7 @@ $Con->CloseConexion();
                                             </span>
                                           </a>
                                         </div>";
-                              $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:0px; text-align: center; display: inline-block;'>
+                              $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
                                                     <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 7px; padding: 0px; color: " . $RetMotivo["color"] . ";'>" . 
                                                       $RetMotivo["Forma_Categoria"] . "
                                                     </div>
@@ -2322,7 +2354,7 @@ $Con->CloseConexion();
                                                 </span>
                                               </a>
                                             </div>";
-                                $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:0px;text-align: center; display: inline-block;'>
+                                $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:2px;text-align: center; display: inline-block;'>
                                                       <div style='font-family: DejaVu Sans, Noto Sans Symbols 2;font-size: 7px; padding: 0px; color: " . $RetMotivo2["color"] . ";'>" . 
                                                         $RetMotivo2["Forma_Categoria"] . "
                                                       </div>
@@ -2359,7 +2391,7 @@ $Con->CloseConexion();
                                               </span>
                                             </a>
                                           </div>";
-                                $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:0px; text-align: center; display: inline-block;'>
+                                $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
                                                       <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo2["color"] . ";'>" . 
                                                         $RetMotivo2["Forma_Categoria"] . "
                                                       </div>
@@ -2395,7 +2427,7 @@ $Con->CloseConexion();
                                               </span>
                                             </a>
                                           </div>";
-                              $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:0px; text-align: center; display: inline-block;'>
+                              $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
                                                     <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo2["color"] . ";'>" . 
                                                       $RetMotivo2["Forma_Categoria"] . "
                                                     </div>
@@ -2432,7 +2464,7 @@ $Con->CloseConexion();
                                               </span>
                                             </a>
                                           </div>";
-                              $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:0px; text-align: center;  display: inline-block;'>
+                              $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:2px; text-align: center;  display: inline-block;'>
                                                     <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo2["color"] . "; text-align= center;'>" . 
                                                       $RetMotivo2["Forma_Categoria"] . "
                                                     </div>
@@ -2472,7 +2504,7 @@ $Con->CloseConexion();
                                                 </span>
                                               </a>
                                             </div>";
-                                $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:0px; text-align: center; display: inline-block;'>
+                                $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
                                                       <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" . 
                                                         $RetMotivo3["Forma_Categoria"] . "
                                                       </div>
@@ -2498,7 +2530,7 @@ $Con->CloseConexion();
                             $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
                             if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo3["codigo"] . "</span></center></span></a></div>";
-                              $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:0px; text-align: center; display: inline-block;'>
+                              $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
                                                     <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" . 
                                                       $RetMotivo3["Forma_Categoria"] . "
                                                     </div>
@@ -2525,7 +2557,7 @@ $Con->CloseConexion();
 
                             if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo3["codigo"] . "</span></center></span></a></div>";
-                              $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:0px; text-align: center; display: inline-block;'>
+                              $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
                                                     <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" . 
                                                       $RetMotivo3["Forma_Categoria"] . "
                                                     </div>
@@ -2550,7 +2582,7 @@ $Con->CloseConexion();
 
                           if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo3["codigo"] . "</span></center></span></a></div>";
-                              $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:0px; text-align: center; display: inline-block; '>
+                              $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block; '>
                                                     <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" . 
                                                       $RetMotivo3["Forma_Categoria"] . "
                                                     </div>

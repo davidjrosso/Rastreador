@@ -2087,40 +2087,40 @@ class CtrGeneral{
 		 
 		switch($mes){
 			case "January": 
-				$mesColumna = "Enero";
+				$mesColumna = "Ene";
 			break;
 			case "February": 
-				$mesColumna = "Febrero";
+				$mesColumna = "Feb";
 			break;
 			case "March": 
-				$mesColumna ="Marzo";
+				$mesColumna ="Mar";
 			break;
 			case "April": 
-				$mesColumna ="Abril";
+				$mesColumna ="Abr";
 			break;
 			case "May": 
-				$mesColumna ="Mayo";
+				$mesColumna ="May";
 			break;
 			case "June": 
-				$mesColumna ="Junio";
+				$mesColumna ="Jun";
 			break;
 			case "July":
-				$mesColumna ="Julio";
+				$mesColumna ="Jul";
 			break;
 			case "August":
-				$mesColumna ="Agosto";
+				$mesColumna ="Ago";
 			break;
 			case "September":
-				$mesColumna ="Septiembre";
+				$mesColumna ="Sep";
 			break;
 			case "October":
-				$mesColumna ="Octubre";
+				$mesColumna ="Oct";
 				break;
 			case "November":
-				$mesColumna ="Noviembre";
+				$mesColumna ="Nov";
 				break;
 			case "December":
-				$mesColumna ="Diciembre";
+				$mesColumna ="Dic";
 				break;
 			default: 
 				$mesColumna ="Error";
