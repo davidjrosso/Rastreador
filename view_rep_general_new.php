@@ -2085,7 +2085,7 @@ $Con->CloseConexion();
                     $tagsTD .= "<td name='DatosResultados' id=$IndexCelda style='min-width:190px'>
                                  <div class = 'row' style='margin:0'>";   
                     $tagsTD_imprimir .= "<td name='DatosResultados' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;'>
-                                          <div style='margin-left:-57px; padding-top:4px' align='left'>";
+                                          <div style='margin-left:-51px; padding-top:4px' align='left'>";
                     $Num_Movimientos_Persona = mysqli_num_rows($Tomar_Movimientos_Persona);
 
                     while ($Ret_Movimientos_Persona = mysqli_fetch_assoc($Tomar_Movimientos_Persona)) {
@@ -2648,7 +2648,10 @@ $Con->CloseConexion();
                                     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
                 
                                       <style>
-
+                                      @page {
+                                        margin: 15px !important;
+                                        padding: 15px !important;
+                                      } 
                                       .table_pdf {
                                         width: 100%;
                                       }
