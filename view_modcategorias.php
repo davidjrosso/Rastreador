@@ -26,43 +26,56 @@ $Con->CloseConexion();
   <meta charset="utf-8">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-  <!--<link href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-  <!--<script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script> -->
-  <link rel="stylesheet" type="text/css" href="css/Estilos.css">
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+  <link rel="import" href="https://sites.google.com/view/generales2019riotercero/página-principal">
 
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-  <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" type="text/css" href="css/Estilos.css">
+
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  
+
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" 	crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" 		crossorigin="anonymous"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/davidstutz/bootstrap-multiselect@master/dist/css/bootstrap-multiselect.min.css">
+<link rel="stylesheet" href="https://cdn.rawgit.com/davidstutz/bootstrap-multiselect/master/dist/css/bootstrap-multiselect.css">
+<script src="https://cdn.rawgit.com/davidstutz/bootstrap-multiselect/master/dist/js/bootstrap-multiselect.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/davidstutz/bootstrap-multiselect@master/dist/js/bootstrap-multiselect.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@floating-ui/core@1.6.2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.6.5"></script>
+
   <script>
        $(document).ready(function(){
-              var date_input=$('input[name="date"]'); //our date input has the name "date"
-              var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-              date_input.datepicker({
-                  format: 'dd/mm/yyyy',
-                  container: container,
-                  todayHighlight: true,
-                  autoclose: true,
-              });
+
+              $('#Tipo_Usuario').multiselect({
+                onChange: function(element, checked) {
+                var opts = $('*[data-group="'+ element.val() +'"]');
+                    if (checked === true) {
+                        opts.prop('disabled', false).prop('selected', false);
+                    }
+                    else if (checked === false) {
+                      opts.prop('disabled', true).prop('selected', false);
+                    }
+                }
+            });
           });
-
-       function CalcularPrecio(){
-        //var Combus = document.getElementById("Combustible").value;
-        var Litros = document.getElementById("Litros").value;
-        var Combustible = document.getElementById("Combustible");
-        var PrecioxL = Combustible.options[Combustible.selectedIndex].getAttribute("name");
-        
-        var Total = parseFloat(PrecioxL) * parseFloat(Litros);
-
-        var Precio = document.getElementById("Precio");
-        Precio.setAttribute("value",parseFloat(Total).toFixed(2));
-        //Terminar esta parte cuando termine lo demas.
-       }
 
        function MostrarColor(xDiv){
          var Color = xDiv.style.backgroundColor;
@@ -141,7 +154,7 @@ $Con->CloseConexion();
   </div>
   <?php 
     }
-    if($TipoUsuario == 2){
+    if($TipoUsuario == 2 || $TipoUsuario > 3){
   ?>
   <div class = "col-md-3">
     <div class="nav-side-menu">
@@ -158,6 +171,12 @@ $Con->CloseConexion();
   
             <?php $Element = new Elements();
             $Element->getMenuActualizaciones(3);?>
+        </div>
+        <div class="brand">Reportes</div>
+        <div class="menu-list">
+  
+            <?php $Element = new Elements();
+            $Element->getMenuReportes(0);?>
         </div>
         <div class="brand">El Proyecto</div>
         <div class="menu-list">
@@ -212,7 +231,7 @@ $Con->CloseConexion();
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
-        <p>Movimientos</p>
+        <p>Modificación de Categoría</p>
       </div>
       <div class="col"></div>
     </div><br>
@@ -229,18 +248,20 @@ $Con->CloseConexion();
               $Con->OpenConexion();
 
               $ConsultarDatos = "select * from categoria where id_categoria = $ID_Categoria";
+              $ConsultarPermisos = "select id_tipousuario from categorias_roles where id_categoria = $ID_Categoria";
               $MensajeErrorDatos = "No se pudo consultar los Datos de la Categoria";
-
+              $MensajeErrorPermisos = "No se pudo consultar los Permisos de la Categoria";
               $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
-
+              $EjecutarConsultarPermisos = mysqli_query($Con->Conexion,$ConsultarPermisos) or die($MensajeErrorPermisos);
               $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
+              $RetPermisos = mysqli_fetch_array($EjecutarConsultarPermisos);
 
               $ID_Categoria = $Ret["id_categoria"];
               $Cod_Categoria = $Ret["cod_categoria"];
               $Categoria = $Ret["categoria"];
               $ID_Forma = $Ret["ID_Forma"];
               $Color = $Ret["color"];
-
+              $Permisos = (isset($RetPermisos["id_tipousuario"]))?$RetPermisos["id_tipousuario"]:null;
               ?>
             <div class = "col-10">
             <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/pedirmodificarcategoria.php">
@@ -272,12 +293,12 @@ $Con->CloseConexion();
                 </div>
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Color Actual: </label>
-                  <div class="col-md-10" style = "background-color: <?php echo $Color; ?>;">
+                  <div class="col-md-10" style = "background-color: <?php echo $Color; ?>; background-clip: content-box;border-radius: 17px 17px 17px 17px;;">
                   </div>
                 </div>
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Color Nuevo: </label>
-                  <div class="col-md-10">
+                  <div id="CuadroDeColores" class="col-md-10">
                     <!-- COLORES PARA MODIFICAR -->
                     <div class = 'row'>
                       <div class = 'TablaColores' style='background-color:#006600;' onClick = 'MostrarColor(this)' id = '#006600'></div><div class = 'TablaColores' style='background-color:#006633;' onClick = 'MostrarColor(this)' id = '#006633'></div><div class = 'TablaColores' style='background-color:#006666;' onClick = 'MostrarColor(this)' id = '#006666'></div><div class = 'TablaColores' style='background-color:#006699;' onClick = 'MostrarColor(this)' id = '#006699'></div><div class = 'TablaColores' style='background-color:#0066CC;' onClick = 'MostrarColor(this)' id = '#0066CC'></div><div class = 'TablaColores' style='background-color:#0066FF;' onClick = 'MostrarColor(this)' id = '#0066FF'></div><div class = 'TablaColores' style='background-color:#003300;' onClick = 'MostrarColor(this)' id = '#003300'></div><div class = 'TablaColores' style='background-color:#003333;' onClick = 'MostrarColor(this)' id = '#003333'></div><div class = 'TablaColores' style='background-color:#003366;' onClick = 'MostrarColor(this)' id = '#003366'></div><div class = 'TablaColores' style='background-color:#003399;' onClick = 'MostrarColor(this)' id = '#003399'></div><div class = 'TablaColores' style='background-color:#0033CC;' onClick = 'MostrarColor(this)' id = '#0033CC'></div><div class = 'TablaColores' style='background-color:#0033FF;' onClick = 'MostrarColor(this)' id = '#0033FF'></div><div class = 'TablaColores' style='background-color:#000000;' onClick = 'MostrarColor(this)' id = '#000000'></div><div class = 'TablaColores' style='background-color:#000033;' onClick = 'MostrarColor(this)' id = '#000033'></div><div class = 'TablaColores' style='background-color:#000066;' onClick = 'MostrarColor(this)' id = '#000066'></div><div class = 'TablaColores' style='background-color:#000099;' onClick = 'MostrarColor(this)' id = '#000099'></div><div class = 'TablaColores' style='background-color:#0000CC;' onClick = 'MostrarColor(this)' id = '#0000CC'></div><div class = 'TablaColores' style='background-color:#0000FF;' onClick = 'MostrarColor(this)' id = '#0000FF'></div>
@@ -324,7 +345,7 @@ $Con->CloseConexion();
                         <div class = 'col-md-6'>
                               <label>Codigo del Color</label>
                               <input name = 'CodigoColor' id = 'CodigoColor' value = '<?php echo $Color; ?>'>
-                              <input type = 'hidden' name = 'ID_Categoria' value = '".$ID_Categoria."'>
+                              <input type = 'hidden' name = 'ID_Categoria' value = '<?php echo $ID_Categoria ; ?>'>
                         </div>
                         <div class = 'col-md-6'>
                               <label>Muestra</label>
@@ -332,6 +353,19 @@ $Con->CloseConexion();
                         </div>
                     </div>
                   </div>                 
+                </div>
+                <div class="form-group row">
+                  <label id="grupousuarios" for="grupousuarios" class="col-md-2 col-form-label LblForm">Permisos : </label>                  
+                  <div class="col-md-10">
+                    <?php 
+                      $Element = new Elements();
+                      if(isset($Permisos)){    
+                        echo $Element->CBCategorias_Roles_ID($ID_Categoria);
+                      } else {
+                        echo $Element->CBTipos_Usuario();
+                      }
+                    ?>                  
+                  </div>
                 </div>
                 <div class="form-group row">
                   <div class="offset-md-2 col-md-10">

@@ -149,7 +149,7 @@ try {
 
 
 		$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) 
-		values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
+						   values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
 		if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
 			throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 1);
 		}

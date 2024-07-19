@@ -116,7 +116,7 @@ $Con->CloseConexion();
   </div>
   <?php 
     }
-    if($TipoUsuario == 2){
+    if($TipoUsuario == 2 || $TipoUsuario > 3){
   ?>
   <div class = "col-md-3">
     <div class="nav-side-menu">
@@ -133,6 +133,12 @@ $Con->CloseConexion();
   
             <?php $Element = new Elements();
             $Element->getMenuActualizaciones(4);?>
+        </div>
+        <div class="brand">Reportes</div>
+        <div class="menu-list">
+  
+            <?php $Element = new Elements();
+            $Element->getMenuReportes(0);?>
         </div>
         <div class="brand">El Proyecto</div>
         <div class="menu-list">

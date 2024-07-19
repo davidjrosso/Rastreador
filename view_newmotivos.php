@@ -150,7 +150,7 @@ $Con->CloseConexion();
   </div>
   <?php 
     }
-    if($TipoUsuario == 2){
+    if($TipoUsuario == 2 || $TipoUsuario > 3){
   ?>
   <div class = "col-md-3">
     <div class="nav-side-menu">
@@ -167,6 +167,12 @@ $Con->CloseConexion();
   
             <?php $Element = new Elements();
             $Element->getMenuActualizaciones(2);?>
+        </div>
+        <div class="brand">Reportes</div>
+        <div class="menu-list">
+  
+            <?php $Element = new Elements();
+            $Element->getMenuReportes(0);?>
         </div>
         <div class="brand">El Proyecto</div>
         <div class="menu-list">
@@ -241,7 +247,7 @@ $Con->CloseConexion();
           <p class = "Titulos">Cargar Nuevo Motivo</p>
           <form method = "post" onKeydown="return event.key != 'Enter';" id="form_1" action = "Controladores/pedircrearmotivo.php" onSubmit = "return ValidarMotivo();">
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo *: </label>
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Denominación *: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Motivo" id="Motivo" autocomplete="off">
               </div>

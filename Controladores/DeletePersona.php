@@ -39,7 +39,28 @@ try {
 	$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
 	if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
 		throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 1);
-	}	
+	}
+
+	$ConsultarDatos = "select * from persona where id_persona = $ID_Persona";
+	$ErrorDatos = "No se pudieron consultar los datos : ";
+	if(!$RetDatos = mysqli_query($Con->Conexion,$ConsultarDatos)){
+		throw new Exception($ErrorDatos.$ConsultarDatos, 1);
+	}
+
+	$TomarDatos = mysqli_fetch_assoc($RetDatos);
+	$Apellido = $TomarDatos["apellido"];
+	$Nombre = $TomarDatos["nombre"];
+	$DNI = $TomarDatos["documento"];
+	
+	// CREANDO NOTIFICACION PARA EL USUARIO		
+	$DetalleNot = 'Se elimino la persona Nombre: '.$Apellido. ', '.$Nombre. (($DNI == null)?'':' dni: '. $DNI);
+	$Expira = date("Y-m-d", strtotime($Fecha." + 15 days"));
+	
+	$ConsultaNot = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$DetalleNot','$Fecha', '$Expira',1)";
+	if(!$RetNot = mysqli_query($Con->Conexion,$ConsultaNot)){
+		throw new Exception("Error al intentar registrar Notificacion. Consulta: ".$ConsultaNot, 3);
+	}
+
 	$Con->CloseConexion();
 	$Mensaje = "La persona se elimino Correctamente";
 	header('Location: ../view_personas.php?Mensaje='.$Mensaje);

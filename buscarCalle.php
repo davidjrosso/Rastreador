@@ -10,7 +10,7 @@ $consultaBusqueda = $_REQUEST['valorBusqueda'];
 $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
 $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
 $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consultaBusqueda);
-
+$consultaBusqueda = strtolower($consultaBusqueda);
 //Variable vacía (para evitar los E_NOTICE)
 $mensaje = "";
 
@@ -24,7 +24,13 @@ if (isset($consultaBusqueda)) {
 	//donde el nombre sea igual a $consultaBusqueda, 
 	//o el apellido sea igual a $consultaBusqueda, 
 	//o $consultaBusqueda sea igual a nombre + (espacio) + apellido
-	$consulta = mysqli_query($Con->Conexion, "SELECT * FROM calle WHERE calle_nombre LIKE '%$consultaBusqueda%' and estado = 1 order by calle_nombre ASC");
+	$consultaCalles = "SELECT id_calle, codigo_calle, calle_nombre
+					   FROM calle	
+					   WHERE estado = 1
+						 and ((LOWER(calle_nombre) REGEXP '[a-z]* ".$consultaBusqueda."[a-z]*')
+						 	   or (LOWER(calle_nombre) REGEXP '^".$consultaBusqueda."[a-z]*'))
+					   order by calle_nombre ASC";
+	$consulta = mysqli_query($Con->Conexion, $consultaCalles);
 
 	//Obtiene la cantidad de filas que hay en la consulta
 	$filas = mysqli_num_rows($consulta);
@@ -52,6 +58,11 @@ if (isset($consultaBusqueda)) {
 			$Codigo = $resultados["codigo_calle"];
 			$Nombre = $resultados['calle_nombre'];
 			//Output
+			//$fragmentos = explode(" ",$Nombre);
+			//preg_grep();
+			//if($Nombre){
+
+			//}
 			$mensaje .= '
 			    <tr>
 			      <th scope="row">'.$Codigo.'</th>

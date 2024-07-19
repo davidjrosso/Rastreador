@@ -22,7 +22,7 @@ require_once '../Modelo/Solicitud_ModificarCategoria.php';
  */
 
 $ID_Usuario = $_SESSION["Usuario"];
-
+$Grupo_Usuarios = $_REQUEST["Tipo_Usuario"];
 $ID_Categoria = $_REQUEST["ID"];
 $Codigo = strtoupper($_REQUEST["Codigo"]);
 $Categoria = $_REQUEST["Categoria"];
@@ -41,6 +41,25 @@ if($ID_Categoria > 0){
 	$MensajeError = "No se pudo enviar la solicitud";
 
 	mysqli_query($Con->Conexion,$Insert_Solicitud) or die($MensajeError." ".$Solicitud);
+
+	$ConsultarID = "select id 
+					from solicitudes_modificarcategorias 
+					where codigo = '$Codigo' 
+					  and categoria = '$Categoria' 
+					  and estado = 1 
+					limit 1";
+	if(!$RetID = mysqli_query($Con->Conexion,$ConsultarID)){
+		throw new Exception("No se pudo consultar el ID de la categoría modificada. Consulta: ".$ConsultarID, 2);
+	}
+	$Ret = mysqli_fetch_array($RetID);
+
+	foreach ($Grupo_Usuarios as $key => $value) {
+		$Insert_Solicitud = "insert into solicitudes_permisos(ID, ID_TipoUsuario, Fecha, estado) values('{$Ret["id"]}','{$value}','{$Fecha}', 1)";
+		$MensajeError = "No se pudo insertar la solicitud de modificacion de permisos";
+		if(!$RetID = mysqli_query($Con->Conexion,$Insert_Solicitud)){
+			throw new Exception($MensajeError. " . Consulta :".$Insert_Solicitud, 2);
+		}
+	}
 
 	$Con->CloseConexion();
 	$Mensaje = "La solicitud de modificación se envió a los administradores para ser confirmada.";

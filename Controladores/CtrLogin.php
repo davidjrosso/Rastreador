@@ -13,6 +13,7 @@ $ConsultarDatosPersonas = "select *
 $MensajeErrorDatosPersonas = "No se pudieron consultar los datos de las personas registradas en el sistema";
 $EjecutarConsultarDatosPersonas = mysqli_query($Con->Conexion,$ConsultarDatosPersonas) or die($MensajeErrorDatosPersonas);
 
+$Fecha_Nacimiento = 'null';
 while($RetDatosPersonas = mysqli_fetch_assoc($EjecutarConsultarDatosPersonas)){
 	$ID = $RetDatosPersonas['id_persona'];
 	$Edad = (isset($RetDatosPersonas['edad']))?$RetDatosPersonas['edad']:null;
@@ -22,7 +23,7 @@ while($RetDatosPersonas = mysqli_fetch_assoc($EjecutarConsultarDatosPersonas)){
 		$ano_diferencia = date("Y") - $ano;
 		$mes_diferencia = date("m") - $mes;
 		$dia_diferencia = date("d") - $dia;
-		if($dia_diferencia < 0 || $mes_diferencia < 0){
+		if($dia_diferencia < 0 || $mes_diferencia > 0){
 			$ano_diferencia--;
 		}
 		$Edad = $ano_diferencia;
@@ -32,7 +33,8 @@ while($RetDatosPersonas = mysqli_fetch_assoc($EjecutarConsultarDatosPersonas)){
 		$Fecha_Actual = new DateTime();
 		$Fecha_Nacimiento_Registrada = new DateTime($Fecha_Nacimiento);
 		$Diferencia = $Fecha_Nacimiento_Registrada->diff($Fecha_Actual);
-		$Meses = ($Diferencia->y * 12) + $Diferencia->m + 1;
+		//$Meses = ($Diferencia->y * 12) + $Diferencia->m + 1;
+		$Meses = $Diferencia->m;
 	}
 
 	$ActualizarDatosPersonas = "update persona set edad = $Edad, meses = $Meses where id_persona = $ID";
@@ -50,7 +52,11 @@ if(isset($_SESSION["Usuario"])){
 }else{
 	$Con = new Conexion();
 	$Con->OpenConexion();
- 	$Consulta = "select * from accounts where username = '$UserName' and password = '$UserPass'";
+ 	$Consulta = "select * 
+				 from accounts 
+				 where username = '$UserName' 
+				 and password = '$UserPass'
+				 and estado = 1";
  	$RS = mysqli_query($Con->Conexion,$Consulta)or die("Problemas al tomar Sesion. Nombre de usuario o password incorrectos");
  	$Cont = mysqli_num_rows($RS);
  	if($Cont > 0){

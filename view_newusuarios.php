@@ -138,7 +138,7 @@ $Con->CloseConexion();
   </div>
   <?php 
     }
-    if($TipoUsuario == 2){
+    if($TipoUsuario == 2 || $TipoUsuario > 3){
   ?>
   <div class = "col-md-3">
     <div class="nav-side-menu">
@@ -155,6 +155,12 @@ $Con->CloseConexion();
   
             <?php $Element = new Elements();
             $Element->getMenuActualizaciones(0);?>
+        </div>
+        <div class="brand">Reportes</div>
+        <div class="menu-list">
+  
+            <?php $Element = new Elements();
+            $Element->getMenuReportes(0);?>
         </div>
         <div class="brand">El Proyecto</div>
         <div class="menu-list">
@@ -260,7 +266,7 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Tipo: </label>
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Permiso: </label>
               <div class="col-md-10">
                 <?php $Element = new Elements();
                 echo $Element->CBTipoUsuarios();?>
@@ -269,7 +275,7 @@ $Con->CloseConexion();
             <div class="form-group row">
               <div class="offset-md-2 col-md-10">
                 <button type="submit" class="btn btn-outline-success">Guardar</button>
-                <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_usuarios.php'">Atras</button>
+                <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_usuarios.php'">Atrás</button>
               </div>
             </div>
           </form>

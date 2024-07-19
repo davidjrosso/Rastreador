@@ -17,6 +17,21 @@ $MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
 $EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
 $Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
 $TipoUsuario = $Ret["ID_TipoUsuario"];
+$AccountID = $_REQUEST["account_id"];
+$ConsultarUsuario = "select * from accounts where accountid = $AccountID";
+$MensajeErrorConsultarModificacion = "No se pudo consultar el Tipo de Usuario";
+$EjecutarConsultarUsuario = mysqli_query($Con->Conexion,$ConsultarUsuario) or die($MensajeErrorConsultarModificacion);
+$Registros = mysqli_fetch_assoc($EjecutarConsultarUsuario);
+$lastname = ucfirst($Registros["lastname"]);
+$firstname = ucwords($Registros["firstname"]);
+$initials = strtoupper($Registros["initials"]);
+$username = $Registros["username"];
+$userpass = $Registros["password"];
+$email = $Registros["email"];
+$ID_Tipo = $Registros["ID_TipoUsuario"];
+
+
+
 $Con->CloseConexion();
 ?>
 <!DOCTYPE html>
@@ -33,41 +48,32 @@ $Con->CloseConexion();
   <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script> -->
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+  <link rel="import" href="https://sites.google.com/view/generales2019riotercero/página-principal">
 
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  <script src="js/ValidarUsuario.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  <script>
-       $(document).ready(function(){
-              var date_input=$('input[name="date"]'); //our date input has the name "date"
-              var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-              date_input.datepicker({
-                  format: 'dd/mm/yyyy',
-                  container: container,
-                  todayHighlight: true,
-                  autoclose: true,
-              });
-          });
+ 
+  <script type="text/javascript">
+      var getImport = document.quearySelector ('link [rel = import]'); 
+      var getContent = getImport.import.querySelector('body');
 
-       function Verificar(xID){
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer eliminar este responsable?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'Controladores/DeleteResponsable.php?ID='+xID;
-                  //alert('SI');
-                } else {        
-                }
-              });
-        }
+      var ContenidoPagina = document.getElementById("ContenidoPagina");
 
+      ContenidoPagina.appendChild(document.importNode(getContent, true));
+
+
+      function verPassword(){
+        var x = document.getElementById("UserPass");
+        if (x.type === "password") {
+          x.type = "text";
+        } else {
+          x.type = "password";    
+      }
+    }
   </script>
 
 </head>
@@ -90,7 +96,7 @@ $Con->CloseConexion();
         <div class="menu-list">
   
             <?php $Element = new Elements();
-            $Element->getMenuActualizaciones(4);?>
+            $Element->getMenuActualizaciones(0);?>
         </div>
         <div class="brand">Reportes</div>
         <div class="menu-list">
@@ -108,7 +114,7 @@ $Con->CloseConexion();
         <div class="menu-list">
   
             <?php $Element = new Elements();
-            $Element->getMenuSeguridad(0);?>
+            $Element->getMenuSeguridad(1);?>
         </div>
         <div class="brand">El Proyecto</div>
         <div class="menu-list">
@@ -136,7 +142,7 @@ $Con->CloseConexion();
         <div class="menu-list">
   
             <?php $Element = new Elements();
-            $Element->getMenuActualizaciones(4);?>
+            $Element->getMenuActualizaciones(0);?>
         </div>
         <div class="brand">Reportes</div>
         <div class="menu-list">
@@ -170,7 +176,7 @@ $Con->CloseConexion();
         <div class="menu-list">
   
             <?php $Element = new Elements();
-            $Element->getMenuActualizaciones(4);?>
+            $Element->getMenuActualizaciones(0);?>
         </div>
         <div class="brand">Reportes</div>
         <div class="menu-list">
@@ -197,70 +203,92 @@ $Con->CloseConexion();
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
-        <p>Actualización de Responsables</p>
+        <p>Nuevo Usuario</p>
       </div>
       <div class="col"></div>
     </div><br>
-    <div class="row">
-      <div class = "col"></div>
-      <div class = "col-4">
-          <center><button class = "btn btn-secondary" onClick = "location.href='view_newresponsables.php'">Agregar Nuevo Responsable</button></center>
-      </div>
-      <div class="col-2">
-                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
-      </div>
-      <div class = "col"></div>
-    </div>
     <br>
      <div class = "row">
       <div class = "col-10">
-           <!-- Carga -->
-          <form method = "post" action = "Controladores/CtrBuscarResponsables.php">
+          <!-- Carga -->
+          <p class = "Titulos">Modificar Usuario</p>
+          <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/ModificarUsuario.php" onSubmit = "return ValidarModificacionUsuario();">
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Buscar: </label>
-              <div class="col-md-4">
-                <input type="text" class="form-control" name = "Search" id="inputPassword" width="100%" autocomplete="off">
-              </div>
-              <label for="inputPassword" class="col-md-1 col-form-label LblForm">En: </label>
-              <div class="col-md-3">
-                <select name = "ID_Filtro" class = "form-control">                    
-                    <option value = "Responsable">Responsable</option>
-                    <!-- <option value = "ID">Id</option> -->
-                </select>
-              </div>
-              <div class = "col-md-1">
-                  <button class = "btn btn-secondary">Ir</button>
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Apellido*: </label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" name = "lastname" id="Apellido" value="<?php echo $lastname;?>"  autocomplete="off">
               </div>
             </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nombre*: </label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" name = "firstname" id="Nombre" value="<?php echo $firstname;?>" autocomplete="off">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Iniciales: </label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" name = "initials" id="inputPassword" value="<?php echo $initials;?>" autocomplete="off">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nombre de Usuario*: </label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" name = "username" id = "UserName" value="<?php echo $username;?>" autocomplete="off">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Password*: </label>
+              <div class="col-md-9">
+                <input type="password" class="form-control input-password" name = "userpass" id = "UserPass" autocomplete="off">
+              </div>
+              <div class="col-md-1 div-buttom-padding">
+                <button type="button" class="btn btn-primary" onclick="verPassword()">Ver</button>
+                <!--<input type="checkbox" onclick="verPassword()">Mostrar Password -->
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">E-Mail: </label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" name = "email" id="inputPassword" value="<?php echo $email;?>" autocomplete="off">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Permiso: </label>
+              <div class="col-md-10">
+                <?php $Element = new Elements();
+                echo $Element->CBTipoUsuariosID($ID_Tipo);?>
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="offset-md-2 col-md-10">
+                <button type="submit" class="btn btn-outline-success">Guardar</button>
+                <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_usuarios.php'">Atras</button>
+              </div>
+            </div>
+            <input type="number" hidden id="account_id" name="account_id" value="<?php echo $AccountID;?>"> 
           </form>
-          <br><br>
+          <div class="row">
+              <div class="col-10"></div>
+              <div class="col-2">
+                
+              </div>
+          </div>
           <!-- Fin Carga -->
-          <!-- Search -->
-        <div class = "row">
-          <?php  
-            if(isset($_REQUEST["Filtro"]) && $_REQUEST["Filtro"]!=null){
-              $Filtro = $_REQUEST["Filtro"];
-              $ID_Filtro = $_REQUEST["ID_Filtro"];
-              $DTGeneral = new CtrGeneral();
-
-              switch ($ID_Filtro) {
-                case 'ID': echo $DTGeneral->getResponsablesxID($Filtro);break;
-                case 'Responsable': echo $DTGeneral->getResponsablesxResponsable($Filtro);break;
-                default: echo $DTGeneral->getResponsablesxID($Filtro);break;
-              }
-            }else{
-              $DTGeneral = new CtrGeneral();
-              echo $DTGeneral->getResponsables();
-            }
-          ?>
-        </div>
   </div>
 </div>
 </div>
 <?php  
 if(isset($_REQUEST['Mensaje'])){
+  $Mensaje = $_REQUEST['Mensaje'];
   echo "<script type='text/javascript'>
-    swal('".$_REQUEST['Mensaje']."','','success');
+  swal('".$Mensaje."','','success');
+</script>";
+}
+if(isset($_REQUEST['MensajeError'])){
+  $MensajeError = $_REQUEST['MensajeError'];
+  echo "<script type='text/javascript'>
+  swal('".$MensajeError."','','warning');
 </script>";
 }
 ?>

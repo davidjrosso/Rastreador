@@ -163,9 +163,6 @@ try {
 
 		$Persona_Viejo = new Persona($ID_Persona_Viejo,$Apellido_Viejo,$Nombre_Viejo,$DNI_Viejo,$Nro_Legajo_Viejo,$Edad_Viejo,$Meses_Viejo,$Fecha_Nacimiento_Viejo,$Nro_Carpeta_Viejo,$Obra_Social_Viejo,$Domicilio_Viejo,$ID_Barrio_Viejo,$Localidad_Viejo,$Circunscripcion_Viejo,$Seccion_Viejo,$Manzana_Viejo,$Lote_Viejo,$Familia_Viejo,$Observaciones_Viejo,$Cambio_Domicilio_Viejo,$Telefono_Viejo,$Mail_Viejo,$ID_Escuela_Viejo,$Estado_Viejo,$Trabajo_Viejo);
 
-
-
-
 		$Consulta = "update persona set apellido = '{$Persona->getApellido()}', nombre = '{$Persona->getNombre()}', documento = '{$Persona->getDNI()}', nro_legajo = '{$Persona->getNro_Legajo()}', edad = {$Persona->getEdad()}, fecha_nac = '{$Persona->getFecha_Nacimiento()}', telefono = '{$Persona->getTelefono()}', mail = '{$Persona->getMail()}', nro_carpeta = {$Persona->getNro_Carpeta()}, obra_social = '{$Persona->getObra_Social()}', domicilio = '{$Persona->getDomicilio()}', ID_Barrio = {$Persona->getBarrio()}, localidad = '{$Persona->getLocalidad()}', circunscripcion = {$Persona->getCircunscripcion()}, seccion = {$Persona->getSeccion()}, manzana = '{$Persona->getManzana()}', lote = {$Persona->getLote()}, familia = {$Persona->getFamilia()}, observacion = '{$Persona->getObservaciones()}', cambio_domicilio = '{$Persona->getCambio_Domicilio()}', Telefono = '{$Persona->getTelefono()}', Mail = '{$Persona->getMail()}', ID_Escuela = {$Persona->getID_Escuela()}, Meses = {$Persona->getMeses()}, Trabajo = '{$Persona->getTrabajo()}' where id_persona = {$Persona->getID_Persona()}";
 
 		
@@ -182,7 +179,16 @@ try {
 		if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
 			throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 3);
 		}
-	
+
+		// CREANDO NOTIFICACION PARA EL USUARIO		
+		$DetalleNot = 'Se modifico la persona Nombre: '.$Persona->getApellido(). ', '.$Persona->getNombre(). (($Persona->getDNI() == null)?'':' dni: '. $Persona->getDNI());
+		$Expira = date("Y-m-d", strtotime($Fecha." + 15 days"));
+		
+		$ConsultaNot = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$DetalleNot','$Fecha', '$Expira',1)";
+		if(!$RetNot = mysqli_query($Con->Conexion,$ConsultaNot)){
+			throw new Exception("Error al intentar registrar Notificacion. Consulta: ".$ConsultaNot, 3);
+		}
+
 	 	$Con->CloseConexion();
 	 	$Mensaje = "La Persona fue modificada Correctamente";
 		header('Location: ../view_modpersonas.php?ID='.$ID_Persona.'&Mensaje='.$Mensaje);		

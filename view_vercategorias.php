@@ -11,6 +11,7 @@ if(!isset($_SESSION["Usuario"])){
 
 $Con = new Conexion();
 $Con->OpenConexion();
+$CtrGeneral = new CtrGeneral();
 $ID_Usuario = $_SESSION["Usuario"];
 $ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
 $MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
@@ -115,7 +116,7 @@ $Con->CloseConexion();
   </div>
   <?php 
     }
-    if($TipoUsuario == 2){
+    if($TipoUsuario == 2 || $TipoUsuario > 3){
   ?>
   <div class = "col-md-3">
     <div class="nav-side-menu">
@@ -132,6 +133,12 @@ $Con->CloseConexion();
   
             <?php $Element = new Elements();
             $Element->getMenuActualizaciones(3);?>
+        </div>
+        <div class="brand">Reportes</div>
+        <div class="menu-list">
+  
+            <?php $Element = new Elements();
+            $Element->getMenuReportes(0);?>
         </div>
         <div class="brand">El Proyecto</div>
         <div class="menu-list">
@@ -215,12 +222,13 @@ $Con->CloseConexion();
               $Forma_Categoria = $Ret["Forma_categoria"];
               $Color = $Ret["color"];
 
-              $Table = "<table class='table'><thead><tr><th></th><th>Detalles de la Categoria</th></tr></thead>";
+              $Table = "<table id='ImagenDeCategoria' class='table'><thead><tr><th></th><th>Detalles de la Categoria</th></tr></thead>";
 
               $Table .= "<tr><td>Código</td><td>".$Cod_Categoria."</td></tr>";
               $Table .= "<tr><td>Categoria</td><td>".$Categoria."</td></tr>";
               $Table .= "<tr><td>Forma</td><td style='color:".$Color."'>".$Forma_Categoria."</td></tr>";
               $Table .= "<tr><td>Color</td><td bgcolor='".$Color."'></td></tr>";
+              $Table .= "<tr><td>Permisos</td><td>".$CtrGeneral->getCategorias_Roles_ID($ID_Categoria)."</td></tr>";
               $Table .= "</table>";
 
               echo $Table;

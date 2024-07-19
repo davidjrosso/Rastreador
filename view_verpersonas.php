@@ -118,7 +118,7 @@ $Con->CloseConexion();
   </div>
   <?php 
     }
-    if($TipoUsuario == 2){
+    if($TipoUsuario == 2 || $TipoUsuario > 3){
   ?>
   <div class = "col-md-3">
     <div class="nav-side-menu">
@@ -135,6 +135,12 @@ $Con->CloseConexion();
   
             <?php $Element = new Elements();
             $Element->getMenuActualizaciones(1);?>
+        </div>
+        <div class="brand">Reportes</div>
+        <div class="menu-list">
+  
+            <?php $Element = new Elements();
+            $Element->getMenuReportes(0);?>
         </div>
         <div class="brand">El Proyecto</div>
         <div class="menu-list">
@@ -300,7 +306,7 @@ $Con->CloseConexion();
               if($Persona->getEdad() == 2020){
               	$Table .= "<tr><td>Edad</td><td>No se cargo fecha de nacimiento</td></tr>";
               }else{
-              	$Table .= "<tr><td>Edad</td><td>".$Persona->getEdad()."</td></tr>";
+              	$Table .= "<tr><td>Años</td><td>".$Persona->getEdad()."</td></tr>";
               }              
               $Table .= "<tr><td>Meses</td><td>".(($Meses!="null")? $Persona->getMeses():"")."</td></tr>";            
               $Table .= "<tr><td>Nro. Carpeta</td><td>".(($Nro_Carpeta!="null")?$Persona->getNro_Carpeta():"")."</td></tr>";               

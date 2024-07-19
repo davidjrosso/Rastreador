@@ -111,6 +111,25 @@ if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
 	throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 3);
 }
 
+$ConsultarDatos = "select * from persona where id_persona = $ID_Persona_Viejo";
+$ErrorDatos = "No se pudieron consultar los datos :";
+if(!$RetDatos = mysqli_query($Con->Conexion,$ConsultarDatos)){
+	throw new Exception($ErrorDatos.$ConsultarDatos, 1);
+}
+
+$TomarDatos = mysqli_fetch_assoc($RetDatos);
+$Apellido = $TomarDatos["apellido"];
+$Nombre = $TomarDatos["nombre"];
+$DNI = $TomarDatos["documento"];
+
+// CREANDO NOTIFICACION PARA EL USUARIO
+$DetalleNot = 'Se modifico el movimiento vinculado a : '.$Apellido. ', '.$Nombre. ' fecha: '. $Fecha_Viejo;
+$Expira = date("Y-m-d", strtotime($FechaAccion." + 15 days"));
+
+$ConsultaNot = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$DetalleNot','$Fecha', '$Expira',1)";
+if(!$RetNot = mysqli_query($Con->Conexion,$ConsultaNot)){
+	throw new Exception("Error al intentar registrar Notificacion. Consulta: ".$ConsultaNot, 3);
+}
 
 $Con->CloseConexion();
 

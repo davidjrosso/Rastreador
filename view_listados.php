@@ -300,7 +300,7 @@ $datosNav = $_SESSION["datosNav"];
     function cambiarConfig(){
       var ID_Config = document.getElementById('ID_Config');
       var formatConfig = document.getElementById('formatConfig');
-      ID_Config.value = formatConfig.value;      
+      ID_Config.value = formatConfig.value;
     }
 
     function disabledMeses(xBool){
@@ -398,7 +398,7 @@ $datosNav = $_SESSION["datosNav"];
   </div>
   <?php 
     }
-    if($TipoUsuario == 2){
+    if($TipoUsuario == 2 || $TipoUsuario > 3){
   ?>
   <div class = "col-md-3">
     <div class="nav-side-menu">
@@ -415,6 +415,12 @@ $datosNav = $_SESSION["datosNav"];
   
             <?php $Element = new Elements();
             $Element->getMenuActualizaciones(0);?>
+        </div>
+        <div class="brand">Reportes</div>
+        <div class="menu-list">
+  
+            <?php $Element = new Elements();
+            $Element->getMenuReportes(0);?>
         </div>
         <div class="brand">El Proyecto</div>
         <div class="menu-list">
@@ -496,14 +502,17 @@ $datosNav = $_SESSION["datosNav"];
                     <input type="text" name="Fecha_Hasta" id = "Fecha_Hasta" class="form-control" autocomplete="off" value = "<?= (isset($datosNav["Fecha_Hasta"])) ? $datosNav["Fecha_Hasta"] : implode("/", array_reverse(explode("-",date('Y-m-d')))) ?>">
                 </div>
             </div>
-            <div class="form-group row">
+            <div class="form-group row" style="margin-bottom: 0.6rem;">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Persona: </label>
               <div class="col-md-10" id = "Persona">
               	 	<button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalPersona">Seleccione una Persona</button>                  
               </div>
             </div>
+            <div class="row LblForm col-md-2" style="margin-bottom: 1.04%; font-size: 1.031rem">
+              Edad <br>
+            </div>
             <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Desde (Edad): </label>
+                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Desde (Años): </label>
                   <div class="col-md-10">
                       <input type="number" name="Edad_Desde" id="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarMeses(this)" value="<?= (isset($datosNav["Edad_Desde"])) ? $datosNav["Edad_Desde"] : '' ?>">                      
                       <input type="hidden" name="ID_Persona" id = "ID_Persona" value = "0">
@@ -519,7 +528,7 @@ $datosNav = $_SESSION["datosNav"];
                   </div>
             </div> 
             <div class="form-group row">
-                <label for="inputPassword" class="col-md-2 col-form-label LblForm">Hasta (Edad): </label>
+                <label for="inputPassword" class="col-md-2 col-form-label LblForm">Hasta (Años): </label>
                 <div class="col-md-10">
                     <input type="number" name="Edad_Hasta" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarMeses(this)" value="<?= (isset($datosNav["Edad_Hasta"])) ? $datosNav["Edad_Hasta"] : '' ?>">
                 </div>
@@ -535,6 +544,26 @@ $datosNav = $_SESSION["datosNav"];
                 <div class="col-md-10">
                     <input type="number" name="Meses_Hasta" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarEdad(this)" value="<?= (isset($datosNav["Meses_Hasta"])) ? $datosNav["Meses_Hasta"] : '' ?>">
                 </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Barrio: </label>
+              <div class="col-md-9">
+                <?php  
+                $Element = new Elements();
+
+                if(isset($datosNav["ID_Barrio"])){
+                  echo $Element->CBModBarrios($datosNav["ID_Barrio"]);
+                }else{
+                  echo $Element->CBRepBarrios();
+                }            
+
+                ?>
+              </div>
+              <div class="col-md-1">
+                  <button type="button" class="btn btn-primary" onClick="agregarBarrio()" id="agregarBarrioID">+</button>
+              </div>
+            </div>
+            <div id="contenedorBarrios">              
             </div> 
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Domicilio/Familia: </label>
@@ -560,59 +589,17 @@ $datosNav = $_SESSION["datosNav"];
                 <input type="number" class="form-control" name = "Familia" id="inputPassword" autocomplete="off" value="<?= (isset($datosNav["Familia"])) ? $datosNav["Familia"] : '' ?>">
               </div>
             </div>
-            <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Barrio: </label>
-              <div class="col-md-9">
-                <?php  
-                $Element = new Elements();
 
-                if(isset($datosNav["ID_Barrio"])){
-                  echo $Element->CBModBarrios($datosNav["ID_Barrio"]);
-                }else{
-                  echo $Element->CBRepBarrios();
-                }            
-
-                ?>
-              </div>
-              <div class="col-md-1">
-                  <button type="button" class="btn btn-primary" onClick="agregarBarrio()" id="agregarBarrioID">+</button>
-              </div>
-            </div>
-            <div id="contenedorBarrios">              
-            </div>
-
-            <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
-              <div class="col-md-10">
-                <input type="text" class="form-control" name = "Nro_Carpeta" id="Nro_Carpeta" autocomplete="off" value="<?= (isset($datosNav["Nro_Carpeta"])) ? $datosNav["Nro_Carpeta"] : '' ?>">
-              </div>
-            </div>
-            <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
-              <div class="col-md-10">
-                <input type="text" class="form-control" name = "Nro_Legajo" id="Nro_Legajo" autocomplete="off" value="<?= (isset($datosNav["Nro_Legajo"])) ? $datosNav["Nro_Legajo"] : '' ?>">
-              </div>
-            </div>
-            
-            <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Escuela: </label>
-              <div class="col-md-10">
-                <?php  
-                $Element = new Elements();
-
-                if(isset($datosNav["ID_Escuela"])){
-                  echo $Element->CBModEscuelas($datosNav["ID_Escuela"]);
-                }else{
-                  echo $Element->CBRepEscuelas();
-                }
-                ?>
-              </div>
-            </div>
-          
-            <div class="form-group row">
+            <!--<div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Trabajo: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Trabajo" id="inputPassword" autocomplete="off" value="<?= (isset($datosNav["Trabajo"])) ? $datosNav["Trabajo"] : '' ?>">
+              </div>
+            </div>-->
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Categoría: </label>
+              <div class="col-md-10" id = "Categoria">
+                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalCategoria">Seleccione una Categoria</button>  
               </div>
             </div>
             <div class="form-group row">
@@ -639,12 +626,6 @@ $datosNav = $_SESSION["datosNav"];
             <div id="contenedorMotivos">              
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Categoría: </label>
-              <div class="col-md-10" id = "Categoria">
-                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalCategoria">Seleccione una Categoria</button>  
-              </div>
-            </div>
-            <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Centro Salud: </label>
               <div class="col-md-10">
                 <?php  
@@ -659,6 +640,19 @@ $datosNav = $_SESSION["datosNav"];
               </div>
             </div>
             <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" name = "Nro_Carpeta" id="Nro_Carpeta" autocomplete="off" value="<?= (isset($datosNav["Nro_Carpeta"])) ? $datosNav["Nro_Carpeta"] : '' ;?>">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
+              <div class="col-md-10">
+                <input type="text" class="form-control" name = "Nro_Legajo" id="Nro_Legajo" autocomplete="off" value="<?= (isset($datosNav["Nro_Legajo"])) ? $datosNav["Nro_Legajo"] : '' ;?>">
+              </div>
+            </div>
+            
+            <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Otras Instituciones: </label>
               <div class="col-md-10">
                 <?php  
@@ -668,6 +662,20 @@ $datosNav = $_SESSION["datosNav"];
                   echo $Element->CBRepModOtrasInstituciones($datosNav["ID_OtraInstitucion"]);
                 }else{
                   echo $Element->CBRepOtrasInstituciones();
+                }
+                ?>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Escuela: </label>
+              <div class="col-md-10">
+                <?php  
+                $Element = new Elements();
+
+                if(isset($datosNav["ID_Escuela"])){
+                  echo $Element->CBModEscuelas($datosNav["ID_Escuela"]);
+                }else{
+                  echo $Element->CBRepEscuelas();
                 }
                 ?>
               </div>
@@ -701,7 +709,7 @@ $datosNav = $_SESSION["datosNav"];
                 <input type="hidden" name="ID_Motivo2" id = "ID_Motivo2" value = "0">
                 <input type="hidden" name="ID_Motivo3" id = "ID_Motivo3" value = "0">
                 <input type="hidden" name="ID_Categoria" id = "ID_Categoria" value = "0">
-                <input type="hidden" name="ID_Config" id="ID_Config" value="grid">
+                <input type="hidden" name="ID_Config" id="ID_Config" value="table">
                 <button type="submit" class="btn btn-outline-success">Aceptar</button>
                 <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
               </div>
@@ -1005,13 +1013,13 @@ $datosNav = $_SESSION["datosNav"];
                 <div class="col-4">
                   <select class="input-group mb-3" name="formatConfig" id="formatConfig" onchange="cambiarConfig()">
                     <option value="grid">Grilla</option>
-                    <option value="table">Tabla</option>
+                    <option value="table" selected>Tabla</option>
                   </select>
                 </div>
               </div>              
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+              <button type="button" class="btn btn-danger" data-dismiss="modal">OK</button>             
             </div>
           </div>
         </div>

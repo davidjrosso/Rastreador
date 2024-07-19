@@ -120,7 +120,7 @@ $Con->CloseConexion();
   </div>
   <?php 
     }
-    if($TipoUsuario == 2){
+    if($TipoUsuario == 2 || $TipoUsuario > 3){
   ?>
   <div class = "col-md-3">
     <div class="nav-side-menu">
@@ -246,19 +246,18 @@ $Con->CloseConexion();
 
               switch ($ID_Filtro) {
                 // case 'ID': echo $DTGeneral->getMovimientosxID($Filtro);break;
-                case 'Fecha': echo $DTGeneral->getMovimientosxFecha($Filtro);break;
-                case 'Apellido': echo $DTGeneral->getMovimientosxApellido($Filtro);break;
-                case 'Documento': echo $DTGeneral->getMovimientosxDocumento($Filtro);break;
-                case 'Nombre': echo $DTGeneral->getMovimientosxNombre($Filtro);break;
-                case 'Responsable': echo $DTGeneral->getMovimientosxResponsable($Filtro);break;
-                case 'Legajo': echo $DTGeneral->getMovimientosxLegajo($Filtro);break;
-                case 'Carpeta': echo $DTGeneral->getMovimientosxCarpeta($Filtro);break;
-                
-                default: echo $DTGeneral->getMovimientosxID($Filtro);break;
+                case 'Fecha': echo $DTGeneral->getMovimientosxFecha($Filtro, $TipoUsuario);break;
+                case 'Apellido': echo $DTGeneral->getMovimientosxApellido($Filtro, $TipoUsuario);break;
+                case 'Documento': echo $DTGeneral->getMovimientosxDocumento($Filtro, $TipoUsuario);break;
+                case 'Nombre': echo $DTGeneral->getMovimientosxNombre($Filtro, $TipoUsuario);break;
+                case 'Responsable': echo $DTGeneral->getMovimientosxResponsable($Filtro, $TipoUsuario);break;
+                case 'Legajo': echo $DTGeneral->getMovimientosxLegajo($Filtro, $TipoUsuario);break;
+                case 'Carpeta': echo $DTGeneral->getMovimientosxCarpeta($Filtro, $TipoUsuario);break;
+                default: echo $DTGeneral->getMovimientosxID($Filtro, $TipoUsuario);break;
               }
             }else{
               $DTGeneral = new CtrGeneral();
-              echo $DTGeneral->getMovimientos();
+              echo $DTGeneral->getMovimientos($TipoUsuario);
             }
           ?>
         </div>
