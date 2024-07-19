@@ -124,7 +124,7 @@ $Con->CloseConexion();
   </div>
   <?php 
     }
-    if($TipoUsuario == 2){
+    if($TipoUsuario == 2 || $TipoUsuario > 3){
   ?>
   <div class = "col-md-3">
     <div class="nav-side-menu">
@@ -141,6 +141,12 @@ $Con->CloseConexion();
   
             <?php $Element = new Elements();
             $Element->getMenuActualizaciones(0);?>
+        </div>
+        <div class="brand">Reportes</div>
+        <div class="menu-list">
+  
+            <?php $Element = new Elements();
+            $Element->getMenuReportes(0);?>
         </div>
         <div class="brand">El Proyecto</div>
         <div class="menu-list">
@@ -205,7 +211,44 @@ $Con->CloseConexion();
           <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_listados.php'">Atras</button>
         </div>
         <div class="col-md-8">
-        <?php  
+        <?php
+        $Con = new Conexion();
+        $Con->OpenConexion();
+
+        $consultaGeneralPermisos = "CREATE TEMPORARY TABLE GIN " ;
+        $consultaUsuarioPermisos = "CREATE TEMPORARY TABLE INN ";
+    
+        $motivosVisiblesParaUsuario =  "SELECT MT.id_motivo
+                                        FROM motivo MT,
+                                            categoria  C,
+                                            categorias_roles CS
+                                        WHERE C.cod_categoria = MT.cod_categoria
+                                          and MT.estado = 1
+                                          and C.estado = 1
+                                          and CS.id_categoria = C.id_categoria
+                                          and CS.id_tipousuario = $TipoUsuario
+                                          and CS.estado = 1";
+    
+        $motivosVisiblesParaTodoUsuario = "SELECT MT.id_motivo
+                                            FROM motivo MT,
+                                                categoria  C
+                                        WHERE C.cod_categoria = MT.cod_categoria
+                                          and MT.estado = 1
+                                          and C.estado = 1
+                                          and MT.id_motivo <> 1   
+                                          and C.id_categoria NOT IN (SELECT id_categoria
+                                                                      FROM categorias_roles CS)";
+        $motivosVisiblesParaUsuario = $consultaUsuarioPermisos . $motivosVisiblesParaUsuario;
+        $motivosVisiblesParaTodoUsuario = $consultaGeneralPermisos . $motivosVisiblesParaTodoUsuario;
+        $MessageError = "Problemas al crear la tabla temporaria de usuarios";
+        $motivosUsuario = mysqli_query(
+                          $Con->Conexion,$motivosVisiblesParaUsuario
+                          ) or die($MessageError);
+    
+        $MessageError = "Problemas al crear la tabla temporaria general";
+        $motivosTodoUsuario = mysqli_query(
+                          $Con->Conexion,$motivosVisiblesParaTodoUsuario
+                          ) or die($MessageError);
       	if(!isset($_REQUEST["Anio"])){
               $Fecha_Inicio = implode("-", array_reverse(explode("/",$_REQUEST["Fecha_Desde"])));
               $Fecha_Fin = implode("-", array_reverse(explode("/",$_REQUEST["Fecha_Hasta"])));
@@ -312,8 +355,9 @@ $Con->CloseConexion();
 
               $filtrosSeleccionados["Fecha_Desde"] = $_REQUEST["Fecha_Desde"];
               $filtrosSeleccionados["Fecha_Hasta"] = $_REQUEST["Fecha_Hasta"];
-              $Con = new Conexion();
-              $Con->OpenConexion();
+
+              //$Con = new Conexion();
+              //$Con->OpenConexion();
               
               $filtMovimientoPorMotivo = " and (M.motivo_1 IN $listaDeMotivos
                                             or M.motivo_2 IN $listaDeMotivos
@@ -803,7 +847,7 @@ $Con->CloseConexion();
               //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               
 
-              $Con->CloseConexion();
+              //$Con->CloseConexion();
 
               // $Consulta .= " group by M.id_persona order by Anio, Mes, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";
             
@@ -843,8 +887,8 @@ $Con->CloseConexion();
             if(isset($_REQUEST["ID_Persona"]) && $_REQUEST["ID_Persona"]!=null && $_REQUEST["ID_Persona"] > 0){
               $ID_Persona = $_REQUEST["ID_Persona"];
 
-              $Con = new Conexion();
-              $Con->OpenConexion();
+              //$Con = new Conexion();
+              //$Con->OpenConexion();
 
               $ConsultarDatos = "select * 
                                  from persona 
@@ -1057,56 +1101,124 @@ $Con->CloseConexion();
                 //////////////////////////////////////////////////////////
 
                 $ID_Motivo_1 = $RetTodos["motivo_1"];
-                $ConsultarMotivo_1 = "select motivo from motivo where id_motivo = $ID_Motivo_1";
+                $ConsultarMotivo_1 = "select M.id_motivo IN (SELECT id_motivo 
+                                                             FROM INN) as ConPermisoParaUsr,
+                                             M.id_motivo IN (SELECT id_motivo
+                                                             FROM GIN) as ConPermisoGeneral,
+                                             motivo
+                                      from motivo M
+                                      where id_motivo = $ID_Motivo_1";
 
                 // echo "DEBUG: ".var_dump($ConsultarMotivo_1);
 
                 $MensajeErrorMotivo_1 = "No se pudo consultar el motivo 1";
                 $RetMotivo_1 = mysqli_query($Con->Conexion,$ConsultarMotivo_1) or die($MensajeErrorMotivo_1);
                 $RetMotivo_1 = mysqli_fetch_assoc($RetMotivo_1);
+
                 if(count(array_filter($MotivosOpciones)) > 0){
-                  $Motivo_1 = (in_array($ID_Motivo_1, array_values($MotivosOpciones)))?$RetMotivo_1["motivo"]:"";
+                  if(in_array($ID_Motivo_1, array_values($MotivosOpciones))){
+                    $Motivo_1 = ($RetMotivo_1["ConPermisoParaUsr"] || $RetMotivo_1["ConPermisoGeneral"])?$RetMotivo_1["motivo"]:"";
+                  } else {
+                    $Motivo_1 = "";
+                  }
                 } else {
-                  $Motivo_1 = $RetMotivo_1["motivo"];
+                  $Motivo_1 = ($RetMotivo_1["ConPermisoParaUsr"] || $RetMotivo_1["ConPermisoGeneral"])?$RetMotivo_1["motivo"]:"";
                 }
+
                 $ID_Motivo_2 = $RetTodos["motivo_2"];
-                $ConsultarMotivo_2 = "select motivo 
-                                      from motivo 
+                $ConsultarMotivo_2 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                             M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                             motivo
+                                      from motivo M
                                       where id_motivo = $ID_Motivo_2";
                 $RetMotivo_2 = mysqli_query($Con->Conexion,$ConsultarMotivo_2) or die($MensajeErrorMotivo_2);
                 $RetMotivo_2 = mysqli_fetch_assoc($RetMotivo_2);
                 if(count(array_filter($MotivosOpciones)) > 0){
-                  $Motivo_2 = (in_array($ID_Motivo_2, array_values($MotivosOpciones)))?$RetMotivo_2["motivo"]:"";
+                  if(in_array($ID_Motivo_2, array_values($MotivosOpciones))){
+                    $Motivo_2 = ($RetMotivo_2["ConPermisoParaUsr"] || $RetMotivo_2["ConPermisoGeneral"])?$RetMotivo_2["motivo"]:"";
+                  } else {
+                    $Motivo_2 = "";
+                  }
                 } else {
-                    $Motivo_2 = $RetMotivo_2["motivo"];
+                  $Motivo_2 = ($RetMotivo_2["ConPermisoParaUsr"] || $RetMotivo_2["ConPermisoGeneral"])?$RetMotivo_2["motivo"]:"";
                 }
+
                 $ID_Motivo_3 = $RetTodos["motivo_3"];
-                $ConsultarMotivo_3 = "select motivo from motivo where id_motivo = $ID_Motivo_3";
+                $ConsultarMotivo_3 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                             M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                             motivo
+                                      from motivo M
+                                      where id_motivo = $ID_Motivo_3";
                 $RetMotivo_3 = mysqli_query($Con->Conexion,$ConsultarMotivo_3) or die($MensajeErrorMotivo_3);
                 $RetMotivo_3 = mysqli_fetch_assoc($RetMotivo_3);
+
                 if(count(array_filter($MotivosOpciones)) > 0){
-                  $Motivo_3 = (in_array($ID_Motivo_3, array_values($MotivosOpciones)))?$RetMotivo_3["motivo"]:"";
+                  if(in_array($ID_Motivo_3, array_values($MotivosOpciones))){
+                    $Motivo_3 = ($RetMotivo_3["ConPermisoParaUsr"] || $RetMotivo_3["ConPermisoGeneral"])?$RetMotivo_3["motivo"]:"";
                   } else {
-                    $Motivo_3 = $RetMotivo_3["motivo"];
+                    $Motivo_3 = "";
                   }
+                } else {
+                  $Motivo_3 = ($RetMotivo_3["ConPermisoParaUsr"] || $RetMotivo_3["ConPermisoGeneral"])?$RetMotivo_3["motivo"]:"";
+                }
+
                 $ID_Motivo_4 = $RetTodos["motivo_4"];
-                $ConsultarMotivo_4 = "select motivo from motivo where id_motivo = $ID_Motivo_4";
+                $ConsultarMotivo_4 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                               M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                               motivo
+                                      from motivo M
+                                      where id_motivo = $ID_Motivo_4";
                 $RetMotivo_4 = mysqli_query($Con->Conexion,$ConsultarMotivo_4) or die($MensajeErrorMotivo_4);
                 $RetMotivo_4 = mysqli_fetch_assoc($RetMotivo_4);
+
                 if(count(array_filter($MotivosOpciones)) > 0){
-                  $Motivo_4 = (in_array($ID_Motivo_4, array_values($MotivosOpciones)))?$RetMotivo_4["motivo"]:"";
+                  if(in_array($ID_Motivo_4, array_values($MotivosOpciones))){
+                    $Motivo_4 = ($RetMotivo_4["ConPermisoParaUsr"] || $RetMotivo_4["ConPermisoGeneral"])?$RetMotivo_4["motivo"]:"";
                   } else {
-                    $Motivo_4 = $RetMotivo_4["motivo"];
+                    $Motivo_4 = "";
                   }
+                } else {
+                  $Motivo_4 = ($RetMotivo_4["ConPermisoParaUsr"] || $RetMotivo_4["ConPermisoGeneral"])?$RetMotivo_4["motivo"]:"";
+                }
+
                 $ID_Motivo_5 = $RetTodos["motivo_5"];
-                $ConsultarMotivo_5 = "select motivo from motivo where id_motivo = $ID_Motivo_5";
+                $ConsultarMotivo_5 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                               M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                               motivo
+                                      from motivo M
+                                      where id_motivo = $ID_Motivo_5";
                 $RetMotivo_5 = mysqli_query($Con->Conexion,$ConsultarMotivo_5) or die($MensajeErrorMotivo_3);
                 $RetMotivo_5 = mysqli_fetch_assoc($RetMotivo_5);
+
                 if(count(array_filter($MotivosOpciones)) > 0){
-                  $Motivo_5 = (in_array($ID_Motivo_5, array_values($MotivosOpciones)))?$RetMotivo_5["motivo"]:"";
+                  if(in_array($ID_Motivo_5, array_values($MotivosOpciones))){
+                    $Motivo_5 = ($RetMotivo_5["ConPermisoParaUsr"] || $RetMotivo_5["ConPermisoGeneral"])?$RetMotivo_5["motivo"]:"";
                   } else {
-                    $Motivo_5 = $RetMotivo_5["motivo"];
+                    $Motivo_5 = "";
                   }
+                } else {
+                  $Motivo_5 = ($RetMotivo_5["ConPermisoParaUsr"] || $RetMotivo_5["ConPermisoGeneral"])?$RetMotivo_5["motivo"]:"";
+                }
+
+                $movimientoVisible = false;
+                $movimientoVisible = $movimientoVisible || ($Motivo_1 != "");
+                $movimientoVisible = $movimientoVisible || ($Motivo_2 != "");
+                $movimientoVisible = $movimientoVisible || ($Motivo_3 != "");
+                $movimientoVisible = $movimientoVisible || ($Motivo_4 != "");
+                $movimientoVisible = $movimientoVisible || ($Motivo_5 != "");
+
+                if (!$movimientoVisible){
+                  continue;
+                }
+
                 $Observaciones = $RetTodos["observaciones"];
                 $Responsable = $RetTodos["responsable"];
                   //solucionar el error!
@@ -1255,13 +1367,13 @@ $Con->CloseConexion();
 
 //               }
 
-              $Con->CloseConexion();
+              //$Con->CloseConexion();
               
 
             }else{
 
-              $Con = new Conexion();
-              $Con->OpenConexion();
+              //$Con = new Conexion();
+              //$Con->OpenConexion();
               // ACA EMPIEZA EL ELSE POR SI SE ME PIERDE
               //////////////////////////////////////////////////////TABLAS MOVIMIENTOS DE LA PERSONA /////////////////////////////            
               $MensajeErrorMovimientos = "No se pudo consultar los movimientos de la persona";
@@ -1291,34 +1403,37 @@ $Con->CloseConexion();
               if($ID_Config == 'table'){
                 $MotivosTh = "";
                 if($ID_Motivo > 0 || $ID_Motivo2 > 0 || $ID_Motivo3 > 0){
-                  $MotivosTh .= "<th class='trMotivos'>Motivo</th>";
+                  $MotivosTh .= "<th rowspan='2' class='trMotivos'>Motivo</th>";
                 }else{
-                  $MotivosTh .= "<th class='trMotivos'>Motivo 1</th>";
-                  $MotivosTh .= "<th class='trMotivos'>Motivo 2</th>";
-                  $MotivosTh .= "<th class='trMotivos'>Motivo 3</th>";
+                  $MotivosTh .= "<th rowspan='2' class='trMotivos'>Motivo 1</th>";
+                  $MotivosTh .= "<th rowspan='2' class='trMotivos'>Motivo 2</th>";
+                  $MotivosTh .= "<th rowspan='2' class='trMotivos'>Motivo 3</th>";
                 }
 
 
                 $TableMov = "<table class='table'>
-                              <tr class='thead-dark'>
-                                <th class='trFecha' style='min-width: 150px;'>Fecha</th>
-                                <th class='trPersona'>Persona</th>";
+                              <tr rowspan='2' class='thead-dark'>
+                                <th rowspan='2' class='trFecha' style='min-width: 150px;'>Fecha</th>
+                                <th rowspan='2' class='trPersona'>Persona</th>";
                 
                 $TableMov .= $MotivosTh;
 
-                $TableMov .= "  <th class='trDNI'>DNI</th>
-                                <th class='trFechaNac'>Fecha Nac.</th>
-                                <th class='trEdad'>Edad</th>
-                                <th class='trMeses'>Meses</th>
-                                <th class='trObraSocial'>Obra Social</th>
-                                <th class='trDomicilio'>Domicilio</th>
-                                <th class='trBarrio'>Barrio</th>
-                                <th class='trLocalidad'>Localidad</th>
-                                <th class='trObservaciones'>Observaciones</th>
-                                <th class='trResponsable'>Responsable</th>
-                                <th class='trCentrosSalud'>Centro de salud</th>
-                                <th class='trOtrasInstituciones'>Otras Instituciones</th>
-                              </tr>";  
+                $TableMov .= "  <th rowspan='2' class='trDNI'>DNI</th>
+                                <th rowspan='2' class='trFechaNac'>Fecha Nac.</th>
+                                <th colspan='2' class='trEdad' style='text-align: center;' >Edad</th>
+                                <th rowspan='2' class='trObraSocial'>Obra Social</th>
+                                <th rowspan='2' class='trDomicilio'>Domicilio</th>
+                                <th rowspan='2' class='trBarrio'>Barrio</th>
+                                <th rowspan='2' class='trLocalidad'>Localidad</th>
+                                <th rowspan='2' class='trObservaciones'>Observaciones</th>
+                                <th rowspan='2' class='trResponsable'>Responsable</th>
+                                <th rowspan='2' class='trCentrosSalud'>Centro de salud</th>
+                                <th rowspan='2' class='trOtrasInstituciones'>Otras Instituciones</th>
+                              </tr>"; 
+                $TableMov .= " <tr class='thead-dark'>
+                                  <th scope='col' class='trEdad' style='text-align: center;border-top: 0px solid #dee2e6;'>Años</th>
+                                  <th scope='col' class='trMeses' style='text-align: center;border-top: 0px solid #dee2e6;'>Meses</th>
+                                </tr>";
               }
 
               foreach($tomarRetTodos as $clave => $RetTodos){                
@@ -1348,55 +1463,122 @@ $Con->CloseConexion();
                   $Nombre = $RetTodos["nombre"];
 
                   $ID_Motivo_1 = $RetTodos["motivo_1"];
-                  $ConsultarMotivo_1 = "select motivo from motivo where id_motivo = $ID_Motivo_1";
+                  $ConsultarMotivo_1 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                               M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                               motivo 
+                                        from motivo M
+                                        where id_motivo = $ID_Motivo_1";
 
                   // echo "DEBUG: ".var_dump($ConsultarMotivo_1);
 
                   $MensajeErrorMotivo_1 = "No se pudo consultar el motivo 1";
                   $RetMotivo_1 = mysqli_query($Con->Conexion,$ConsultarMotivo_1) or die($MensajeErrorMotivo_1);
                   $RetMotivo_1 = mysqli_fetch_assoc($RetMotivo_1);
+
                   if(count(array_filter($MotivosOpciones)) > 0){
-                    $Motivo_1 = (in_array($ID_Motivo_1, array_values($MotivosOpciones)))?$RetMotivo_1["motivo"]:"";
+                    if(in_array($ID_Motivo_1, array_values($MotivosOpciones))){
+                      $Motivo_1 = ($RetMotivo_1["ConPermisoParaUsr"] || $RetMotivo_1["ConPermisoGeneral"])?$RetMotivo_1["motivo"]:"";
+                    } else {
+                      $Motivo_1 = "";
+                    }
                   } else {
-                    $Motivo_1 = $RetMotivo_1["motivo"];
+                    $Motivo_1 = ($RetMotivo_1["ConPermisoParaUsr"] || $RetMotivo_1["ConPermisoGeneral"])?$RetMotivo_1["motivo"]:"";
                   }
+
                   $ID_Motivo_2 = $RetTodos["motivo_2"];
-                  $ConsultarMotivo_2 = "select motivo from motivo where id_motivo = $ID_Motivo_2";
+                  $ConsultarMotivo_2 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                               M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                               motivo
+                                        from motivo M
+                                        where id_motivo = $ID_Motivo_2";
                   $RetMotivo_2 = mysqli_query($Con->Conexion,$ConsultarMotivo_2) or die($MensajeErrorMotivo_2);
                   $RetMotivo_2 = mysqli_fetch_assoc($RetMotivo_2);
+
                   if(count(array_filter($MotivosOpciones)) > 0){
-                    $Motivo_2 = (in_array($ID_Motivo_2, array_values($MotivosOpciones)))?$RetMotivo_2["motivo"]:"";
+                    if(in_array($ID_Motivo_2, array_values($MotivosOpciones))){
+                      $Motivo_2 = ($RetMotivo_2["ConPermisoParaUsr"] || $RetMotivo_2["ConPermisoGeneral"])?$RetMotivo_2["motivo"]:"";
+                    } else {
+                      $Motivo_2 = "";
+                    }
                   } else {
-                    $Motivo_2 = $RetMotivo_2["motivo"];
+                    $Motivo_2 = ($RetMotivo_2["ConPermisoParaUsr"] || $RetMotivo_2["ConPermisoGeneral"])?$RetMotivo_2["motivo"]:"";
                   }
+
                   $ID_Motivo_3 = $RetTodos["motivo_3"];
-                  $ConsultarMotivo_3 = "select motivo from motivo where id_motivo = $ID_Motivo_3";
+                  $ConsultarMotivo_3 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                               M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                               motivo
+                                        from motivo M
+                                        where id_motivo = $ID_Motivo_3";
                   $RetMotivo_3 = mysqli_query($Con->Conexion,$ConsultarMotivo_3) or die($MensajeErrorMotivo_3);
                   $RetMotivo_3 = mysqli_fetch_assoc($RetMotivo_3);
+
                   if(count(array_filter($MotivosOpciones)) > 0){
-                    $Motivo_3 = (in_array($ID_Motivo_3, array_values($MotivosOpciones)))?$RetMotivo_3["motivo"]:"";
+                    if(in_array($ID_Motivo_3, array_values($MotivosOpciones))){
+                      $Motivo_3 = ($RetMotivo_3["ConPermisoParaUsr"] || $RetMotivo_3["ConPermisoGeneral"])?$RetMotivo_3["motivo"]:"";
+                    } else {
+                      $Motivo_3 = "";
+                    }
                   } else {
-                    $Motivo_3 = $RetMotivo_3["motivo"];
+                    $Motivo_3 = ($RetMotivo_3["ConPermisoParaUsr"] || $RetMotivo_3["ConPermisoGeneral"])?$RetMotivo_3["motivo"]:"";
                   }
 
                   $ID_Motivo_4 = $RetTodos["motivo_4"];
-                  $ConsultarMotivo_4 = "select motivo from motivo where id_motivo = $ID_Motivo_4";
+                  $ConsultarMotivo_4 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                               M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                               motivo
+                                        from motivo M
+                                        where id_motivo = $ID_Motivo_4";
                   $RetMotivo_4 = mysqli_query($Con->Conexion,$ConsultarMotivo_4) or die($MensajeErrorMotivo_4);
                   $RetMotivo_4 = mysqli_fetch_assoc($RetMotivo_4);
+
                   if(count(array_filter($MotivosOpciones)) > 0){
-                    $Motivo_4 = (in_array($ID_Motivo_4, array_values($MotivosOpciones)))?$RetMotivo_4["motivo"]:"";
+                    if(in_array($ID_Motivo_4, array_values($MotivosOpciones))){
+                      $Motivo_4 = ($RetMotivo_4["ConPermisoParaUsr"] || $RetMotivo_4["ConPermisoGeneral"])?$RetMotivo_4["motivo"]:"";
+                    } else {
+                      $Motivo_4 = "";
+                    }
                   } else {
-                    $Motivo_4 = $RetMotivo_4["motivo"];
+                    $Motivo_4 = ($RetMotivo_4["ConPermisoParaUsr"] || $RetMotivo_4["ConPermisoGeneral"])?$RetMotivo_4["motivo"]:"";
                   }
   
                   $ID_Motivo_5 = $RetTodos["motivo_5"];
-                  $ConsultarMotivo_5 = "select motivo from motivo where id_motivo = $ID_Motivo_5";
+                  $ConsultarMotivo_5 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                               M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                               motivo
+                                        from motivo M
+                                        where id_motivo = $ID_Motivo_5";
                   $RetMotivo_5 = mysqli_query($Con->Conexion,$ConsultarMotivo_5) or die($MensajeErrorMotivo_3);
                   $RetMotivo_5 = mysqli_fetch_assoc($RetMotivo_5);
                   if(count(array_filter($MotivosOpciones)) > 0){
-                    $Motivo_5 = (in_array($ID_Motivo_5, array_values($MotivosOpciones)))?$RetMotivo_5["motivo"]:"";
+                    if(in_array($ID_Motivo_5, array_values($MotivosOpciones))){
+                      $Motivo_5 = ($RetMotivo_5["ConPermisoParaUsr"] || $RetMotivo_5["ConPermisoGeneral"])?$RetMotivo_5["motivo"]:"";
+                    } else {
+                      $Motivo_5 = "";
+                    }
                   } else {
-                    $Motivo_5 = $RetMotivo_5["motivo"];
+                    $Motivo_5 = ($RetMotivo_5["ConPermisoParaUsr"] || $RetMotivo_5["ConPermisoGeneral"])?$RetMotivo_5["motivo"]:"";
+                  }
+
+                  $movimientoVisible = false;
+                  $movimientoVisible = $movimientoVisible || ($Motivo_1 != "");
+                  $movimientoVisible = $movimientoVisible || ($Motivo_2 != "");
+                  $movimientoVisible = $movimientoVisible || ($Motivo_3 != "");
+                  $movimientoVisible = $movimientoVisible || ($Motivo_4 != "");
+                  $movimientoVisible = $movimientoVisible || ($Motivo_5 != "");
+  
+                  if (!$movimientoVisible){
+                    continue;
                   }
 
                   $Observaciones = $RetTodos["observaciones"];
@@ -1528,7 +1710,13 @@ $Con->CloseConexion();
                 $Nombre = $RetMovimientos["nombre"];
 
                 $ID_Motivo_1 = $RetMovimientos["motivo_1"];
-                $ConsultarMotivo_1 = "select motivo from motivo where id_motivo = $ID_Motivo_1";
+                $ConsultarMotivo_1 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                               M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                               motivo 
+                                        from motivo M
+                                        where id_motivo = $ID_Motivo_1";
 
                 // echo "DEBUG: ".var_dump($ConsultarMotivo_1);
 
@@ -1536,50 +1724,105 @@ $Con->CloseConexion();
                 $RetMotivo_1 = mysqli_query($Con->Conexion,$ConsultarMotivo_1) or die($MensajeErrorMotivo_1);
                 $RetMotivo_1 = mysqli_fetch_assoc($RetMotivo_1);
                 if(count(array_filter($MotivosOpciones)) > 0){
-                  $Motivo_1 = (in_array($ID_Motivo_1, array_values($MotivosOpciones)))?$RetMotivo_1["motivo"]:"";
+                  if(in_array($ID_Motivo_1, array_values($MotivosOpciones))){
+                    $Motivo_1 = ($RetMotivo_1["ConPermisoParaUsr"] || $RetMotivo_1["ConPermisoGeneral"])?$RetMotivo_1["motivo"]:"";
+                  } else {
+                    $Motivo_1 = "";
+                  }
                 } else {
-                  $Motivo_1 = $RetMotivo_1["motivo"];
+                  $Motivo_1 = ($RetMotivo_1["ConPermisoParaUsr"] || $RetMotivo_1["ConPermisoGeneral"])?$RetMotivo_1["motivo"]:"";
                 }
 
                 $ID_Motivo_2 = $RetMovimientos["motivo_2"];
-                $ConsultarMotivo_2 = "select motivo from motivo where id_motivo = $ID_Motivo_2";
+                $ConsultarMotivo_2 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                               M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                               motivo 
+                                        from motivo M
+                                        where id_motivo = $ID_Motivo_2";
                 $RetMotivo_2 = mysqli_query($Con->Conexion,$ConsultarMotivo_2) or die($MensajeErrorMotivo_2);
                 $RetMotivo_2 = mysqli_fetch_assoc($RetMotivo_2);
                 if(count(array_filter($MotivosOpciones)) > 0){
-                    $Motivo_2 = (in_array($ID_Motivo_2, array_values($MotivosOpciones)))?$RetMotivo_2["motivo"]:"";
+                  if(in_array($ID_Motivo_2, array_values($MotivosOpciones))){
+                    $Motivo_2 = ($RetMotivo_2["ConPermisoParaUsr"] || $RetMotivo_2["ConPermisoGeneral"])?$RetMotivo_2["motivo"]:"";
                   } else {
-                    $Motivo_2 = $RetMotivo_2["motivo"];
+                    $Motivo_2 = "";
+                  }
+                } else {
+                  $Motivo_2 = ($RetMotivo_2["ConPermisoParaUsr"] || $RetMotivo_2["ConPermisoGeneral"])?$RetMotivo_2["motivo"]:"";
                 }
 
                 $ID_Motivo_3 = $RetMovimientos["motivo_3"];
-                $ConsultarMotivo_3 = "select motivo from motivo where id_motivo = $ID_Motivo_3";
+                $ConsultarMotivo_3 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                               M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                               motivo 
+                                        from motivo M
+                                        where id_motivo = $ID_Motivo_3";
                 $RetMotivo_3 = mysqli_query($Con->Conexion,$ConsultarMotivo_3) or die($MensajeErrorMotivo_3);
                 $RetMotivo_3 = mysqli_fetch_assoc($RetMotivo_3);
                 if(count(array_filter($MotivosOpciones)) > 0){
-                    $Motivo_3 = (in_array($ID_Motivo_3, array_values($MotivosOpciones)))?$RetMotivo_3["motivo"]:"";
+                  if(in_array($ID_Motivo_3, array_values($MotivosOpciones))){
+                    $Motivo_3 = ($RetMotivo_3["ConPermisoParaUsr"] || $RetMotivo_3["ConPermisoGeneral"])?$RetMotivo_3["motivo"]:"";
                   } else {
-                    $Motivo_3 = $RetMotivo_3["motivo"];
+                    $Motivo_3 = "";
                   }
+                } else {
+                  $Motivo_3 = ($RetMotivo_3["ConPermisoParaUsr"] || $RetMotivo_3["ConPermisoGeneral"])?$RetMotivo_3["motivo"]:"";
+                }
 
                 $ID_Motivo_4 = $RetMovimientos["motivo_4"];
-                $ConsultarMotivo_4 = "select motivo from motivo where id_motivo = $ID_Motivo_4";
+                $ConsultarMotivo_4 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                               M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                               motivo 
+                                        from motivo M
+                                        where id_motivo = $ID_Motivo_4";
                 $RetMotivo_4 = mysqli_query($Con->Conexion,$ConsultarMotivo_4) or die($MensajeErrorMotivo_4);
                 $RetMotivo_4 = mysqli_fetch_assoc($RetMotivo_4);
                 if(count(array_filter($MotivosOpciones)) > 0){
-                    $Motivo_4 = (in_array($ID_Motivo_4, array_values($MotivosOpciones)))?$RetMotivo_4["motivo"]:"";
+                  if(in_array($ID_Motivo_4, array_values($MotivosOpciones))){
+                    $Motivo_4 = ($RetMotivo_4["ConPermisoParaUsr"] || $RetMotivo_4["ConPermisoGeneral"])?$RetMotivo_4["motivo"]:"";
                   } else {
-                    $Motivo_4 = $RetMotivo_4["motivo"];
+                    $Motivo_4 = "";
                   }
+                } else {
+                  $Motivo_4 = ($RetMotivo_4["ConPermisoParaUsr"] || $RetMotivo_4["ConPermisoGeneral"])?$RetMotivo_4["motivo"]:"";
+                }
 
                 $ID_Motivo_5 = $RetMovimientos["motivo_5"];
-                $ConsultarMotivo_5 = "select motivo from motivo where id_motivo = $ID_Motivo_5";
+                $ConsultarMotivo_5 = "select M.id_motivo IN (SELECT id_motivo 
+                                                                      FROM INN) as ConPermisoParaUsr,
+                                               M.id_motivo IN (SELECT id_motivo
+                                                               FROM GIN) as ConPermisoGeneral,
+                                               motivo 
+                                        from motivo M
+                                        where id_motivo = $ID_Motivo_5";
                 $RetMotivo_5 = mysqli_query($Con->Conexion,$ConsultarMotivo_5) or die($MensajeErrorMotivo_5);
                 $RetMotivo_5 = mysqli_fetch_assoc($RetMotivo_5);
                 if(count(array_filter($MotivosOpciones)) > 0){
-                    $Motivo_5 = (in_array($ID_Motivo_5, array_values($MotivosOpciones)))?$RetMotivo_5["motivo"]:"";
+                  if(in_array($ID_Motivo_5, array_values($MotivosOpciones))){
+                    $Motivo_5 = ($RetMotivo_5["ConPermisoParaUsr"] || $RetMotivo_5["ConPermisoGeneral"])?$RetMotivo_5["motivo"]:"";
                   } else {
-                    $Motivo_5 = $RetMotivo_5["motivo"];
+                    $Motivo_5 = "";
                   }
+                } else {
+                  $Motivo_5 = ($RetMotivo_5["ConPermisoParaUsr"] || $RetMotivo_5["ConPermisoGeneral"])?$RetMotivo_5["motivo"]:"";
+                }
+
+                $movimientoVisible = false;
+                $movimientoVisible = $movimientoVisible || ($Motivo_1 != "");
+                $movimientoVisible = $movimientoVisible || ($Motivo_2 != "");
+                $movimientoVisible = $movimientoVisible || ($Motivo_3 != "");
+                $movimientoVisible = $movimientoVisible || ($Motivo_4 != "");
+                $movimientoVisible = $movimientoVisible || ($Motivo_5 != "");
+
+                if (!$movimientoVisible){
+                  continue;
+                }
 
                 $Observaciones = $RetMovimientos["observaciones"];
                 $Responsable = $RetMovimientos["responsable"];
