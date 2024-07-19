@@ -2677,7 +2677,7 @@ $Con->CloseConexion();
                                       #encabezado {
                                         text-align: center;
                                         float: right;
-                                        padding-right: 5rem;
+                                        padding-right: 13rem;
                                       }
 
                                       #InformacionDeCiudad {
