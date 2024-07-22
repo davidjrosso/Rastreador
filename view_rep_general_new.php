@@ -2076,9 +2076,9 @@ $Con->CloseConexion();
 
                     $Tomar_Movimientos_Persona = mysqli_query($Con->Conexion, $Consultar_Movimientos_Persona) or die($MensajeErrorConsultar_Mov_Persona . " - " . $Consultar_Movimientos_Persona);
                     //echo var_dump($Consultar_Movimientos_Persona);
-                    // TODO: CAMBIANDO TOAMAÑO DE COLUMNAS
+                    // TODO: CAMBIANDO TAMAÑO DE COLUMNAS
                     $IndexCelda += 1;
-
+                    $nroMotivosEnFecha = 0;
                     if(mysqli_num_rows($Tomar_Movimientos_Persona) > 6){
                       $tdExtenso = true;
                     }
@@ -2086,6 +2086,9 @@ $Con->CloseConexion();
                                  <div class = 'row' style='margin:0'>";   
                     $tagsTD_imprimir .= "<td style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;'>
                                           <div style='margin-left:-25px; padding-top:4px;max-width:{$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;'>";
+
+                    $tagsMotivos = "";
+
                     $Num_Movimientos_Persona = mysqli_num_rows($Tomar_Movimientos_Persona);
 
                     while ($Ret_Movimientos_Persona = mysqli_fetch_assoc($Tomar_Movimientos_Persona)) {
@@ -2151,11 +2154,12 @@ $Con->CloseConexion();
                             // echo $ConsultarCodyColor;               
 
                             $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor . " - " . $ConsultarCodyColor . " valor:" . $Ret_Datos_Movimiento["motivo_1"]);
-
                             $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
+                            $nroMotivosEnFecha += 1;
 
                             // echo "DEBUG: ".var_dump($RetMotivo);
                             if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                              $tagsMotivos .= ($nroMotivosEnFecha == 6)?"<div>": "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                           <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
                                             <span style='font-size: 30px; color: " . $RetMotivo["color"] . ";'>" . 
@@ -2169,14 +2173,15 @@ $Con->CloseConexion();
                                           </a>
                                          </div>";
 
-                              $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
-                                                      <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 7px; color: " . $RetMotivo["color"] . ";'>" . 
-                                                        $RetMotivo["Forma_Categoria"] . "
-                                                      </div>
-                                                      <div style='font-size: 7px;  color: " . $RetMotivo["color"] . ";'>" . 
-                                                        $RetMotivo["codigo"] . "
-                                                      </div>
-                                                  </div>";
+                              $tagsMotivos .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
+                                                 <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 7px; color: " . $RetMotivo["color"] . ";'>" . 
+                                                   $RetMotivo["Forma_Categoria"] . "
+                                                 </div>
+                                                 <div style='font-size: 7px;  color: " . $RetMotivo["color"] . ";'>" . 
+                                                   $RetMotivo["codigo"] . "
+                                                 </div>
+                                               </div>";
+                              
                             }
                           }
                         }
@@ -2203,11 +2208,12 @@ $Con->CloseConexion();
                             // echo $ConsultarCodyColor;               
             
                             $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor . " - " . $ConsultarCodyColor . " valor:" . $Ret_Datos_Movimiento["motivo_1"]);
-
                             $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
+                            $nroMotivosEnFecha += 1;
 
                             // echo "DEBUG: ".var_dump($RetMotivo);
                             if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                              $tagsMotivos .= ($nroMotivosEnFecha == 6)?"<div>": "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
                                               <span style='font-size: 30px; color: " . $RetMotivo["color"] . ";'>" . 
@@ -2220,14 +2226,15 @@ $Con->CloseConexion();
                                             </a>
                                         </div>";
 
-                              $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
-                                                    <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 7px; color: " . $RetMotivo["color"] . ";'>" . 
-                                                      $RetMotivo["Forma_Categoria"] . "
-                                                    </div>
-                                                    <div style='font-size: 7px;  color: " . $RetMotivo["color"] . ";'>" . 
-                                                      $RetMotivo["codigo"] . "
-                                                    </div>
-                                                  </div>";
+                              $tagsMotivos .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
+                                                 <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 7px; color: " . $RetMotivo["color"] . ";'>" . 
+                                                   $RetMotivo["Forma_Categoria"] . "
+                                                 </div>
+                                                 <div style='font-size: 7px;  color: " . $RetMotivo["color"] . ";'>" . 
+                                                   $RetMotivo["codigo"] . "
+                                                 </div>
+                                               </div>";
+                              
                             }
                           }
                         }
@@ -2252,13 +2259,14 @@ $Con->CloseConexion();
                             $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
 
                             // echo $ConsultarCodyColor;               
-            
-                            $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor . " - " . $ConsultarCodyColor . " valor:" . $Ret_Datos_Movimiento["motivo_1"]);
 
+                            $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor . " - " . $ConsultarCodyColor . " valor:" . $Ret_Datos_Movimiento["motivo_1"]);
                             $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
+                            $nroMotivosEnFecha += 1;
 
                             // echo "DEBUG: ".var_dump($RetMotivo);
                             if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                                $tagsMotivos .= ($nroMotivosEnFecha == 6)?"<div>": "";
                                 $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <span style='font-size: 30px; color: " . $RetMotivo["color"] . ";'>" . 
                                               $RetMotivo["Forma_Categoria"] . "
@@ -2269,7 +2277,7 @@ $Con->CloseConexion();
                                               </center>
                                             </span>
                                           </div>";
-                                $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
+                                $tagsMotivos .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
                                                       <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px; color: " . $RetMotivo["color"] . "; '>" . 
                                                         $RetMotivo["Forma_Categoria"] . "
                                                       </div>
@@ -2277,6 +2285,7 @@ $Con->CloseConexion();
                                                         $RetMotivo["codigo"] . "
                                                       </div>
                                                     </div>";
+                                
                             }
                           }
                         }
@@ -2303,9 +2312,11 @@ $Con->CloseConexion();
                           //echo $ConsultarCodyColor;               
             
                           $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor . " - " . $ConsultarCodyColor . " valor:" . $Ret_Datos_Movimiento["motivo_1"]);
-
                           $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
+                          $nroMotivosEnFecha += 1;
+
                           if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                              $tagsMotivos .= ($nroMotivosEnFecha == 6)?"<div>": "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                           <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
                                             <span style='font-size: 30px; padding: 0px; color: " . $RetMotivo["color"] . ";'>" . 
@@ -2316,14 +2327,15 @@ $Con->CloseConexion();
                                             </span>
                                           </a>
                                         </div>";
-                              $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
-                                                    <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 7px; padding: 0px; color: " . $RetMotivo["color"] . ";'>" . 
-                                                      $RetMotivo["Forma_Categoria"] . "
-                                                    </div>
-                                                    <div style='font-size: 7px;  color: " . $RetMotivo["color"] . ";'>" . 
-                                                      $RetMotivo["codigo"] . "
-                                                    </div>
-                                                  </div>";
+                              $tagsMotivos .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
+                                                  <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 7px; padding: 0px; color: " . $RetMotivo["color"] . ";'>" . 
+                                                    $RetMotivo["Forma_Categoria"] . "
+                                                  </div>
+                                                  <div style='font-size: 7px;  color: " . $RetMotivo["color"] . ";'>" . 
+                                                    $RetMotivo["codigo"] . "
+                                                  </div>
+                                                </div>";
+                              
                           }
                         }
                       }
@@ -2343,7 +2355,9 @@ $Con->CloseConexion();
 
                             $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
 
+                            $nroMotivosEnFecha += 1;
                             if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                                $tagsMotivos .= ($nroMotivosEnFecha == 6)?"<div>": "";
                                 $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                               <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
                                                 <span style='font-size: 30px; padding: 0px; color: " . $RetMotivo2["color"] . ";'>" . $RetMotivo2["Forma_Categoria"] . "
@@ -2354,14 +2368,15 @@ $Con->CloseConexion();
                                                 </span>
                                               </a>
                                             </div>";
-                                $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:2px;text-align: center; display: inline-block;'>
-                                                      <div style='font-family: DejaVu Sans, Noto Sans Symbols 2;font-size: 7px; padding: 0px; color: " . $RetMotivo2["color"] . ";'>" . 
-                                                        $RetMotivo2["Forma_Categoria"] . "
-                                                      </div>
-                                                      <div style='font-size: 7px;  color: " . $RetMotivo2["color"] . ";'>" . 
-                                                        $RetMotivo2["codigo"] . "
-                                                      </div>
-                                                    </div>";
+                                $tagsMotivos .= "<div style = 'padding: 0; margin-left:2px;text-align: center; display: inline-block;'>
+                                                    <div style='font-family: DejaVu Sans, Noto Sans Symbols 2;font-size: 7px; padding: 0px; color: " . $RetMotivo2["color"] . ";'>" . 
+                                                      $RetMotivo2["Forma_Categoria"] . "
+                                                    </div>
+                                                    <div style='font-size: 7px;  color: " . $RetMotivo2["color"] . ";'>" . 
+                                                      $RetMotivo2["codigo"] . "
+                                                    </div>
+                                                  </div>";
+                                
 
                             }
                           }
@@ -2376,9 +2391,11 @@ $Con->CloseConexion();
 
 
                             $TomarCodyColor2 = mysqli_query($Con->Conexion, $ConsultarCodyColor2) or die($MensajeErrorConsultarCodyColor2 . " - " . $ConsultarCodyColor2 . " valor:" . $Ret_Datos_Movimiento["motivo_2"]);
-
                             $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
+                            $nroMotivosEnFecha += 1;
+
                             if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                                $tagsMotivos .= ($nroMotivosEnFecha == 6)?"<div>": "";
                                 $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
                                               <span style='font-size: 30px; color: " . $RetMotivo2["color"] . ";'>" . 
@@ -2391,14 +2408,15 @@ $Con->CloseConexion();
                                               </span>
                                             </a>
                                           </div>";
-                                $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
-                                                      <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo2["color"] . ";'>" . 
-                                                        $RetMotivo2["Forma_Categoria"] . "
-                                                      </div>
-                                                      <div style='font-size: 7px;  color: " . $RetMotivo2["color"] . ";'>" . 
-                                                        $RetMotivo2["codigo"] . "
-                                                      </div>
-                                                    </div>";
+                                $tagsMotivos .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
+                                                    <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo2["color"] . ";'>" . 
+                                                      $RetMotivo2["Forma_Categoria"] . "
+                                                    </div>
+                                                    <div style='font-size: 7px;  color: " . $RetMotivo2["color"] . ";'>" . 
+                                                      $RetMotivo2["codigo"] . "
+                                                   </div>
+                                                 </div>";
+                                
                             }
                           }
                         }
@@ -2414,7 +2432,10 @@ $Con->CloseConexion();
                             $TomarCodyColor2 = mysqli_query($Con->Conexion, $ConsultarCodyColor2) or die($MensajeErrorConsultarCodyColor2 . " - " . $ConsultarCodyColor2 . " valor:" . $Ret_Datos_Movimiento["motivo_2"]);
 
                             $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
+                            $nroMotivosEnFecha += 1;
+
                             if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                              $tagsMotivos .= ($nroMotivosEnFecha == 6)?"<div>": "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
                                               <span style='font-size: 30px; color: " . $RetMotivo2["color"] . ";'>" . 
@@ -2427,14 +2448,15 @@ $Con->CloseConexion();
                                               </span>
                                             </a>
                                           </div>";
-                              $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
-                                                    <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo2["color"] . ";'>" . 
-                                                      $RetMotivo2["Forma_Categoria"] . "
-                                                    </div>
-                                                    <div style='font-size: 7px;  color: " . $RetMotivo2["color"] . ";'>" . 
-                                                      $RetMotivo2["codigo"] . "
-                                                    </div>
-                                                  </div>";
+                              $tagsMotivos .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
+                                                 <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo2["color"] . ";'>" . 
+                                                   $RetMotivo2["Forma_Categoria"] . "
+                                                 </div>
+                                                 <div style='font-size: 7px;  color: " . $RetMotivo2["color"] . ";'>" . 
+                                                   $RetMotivo2["codigo"] . "
+                                                 </div>
+                                               </div>";
+                              
                             }
                           }
                         }
@@ -2449,9 +2471,10 @@ $Con->CloseConexion();
                           $TomarCodyColor2 = mysqli_query($Con->Conexion, $ConsultarCodyColor2) or die($MensajeErrorConsultarCodyColor2 . " - " . $ConsultarCodyColor2);
 
                           $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
+                          $nroMotivosEnFecha += 1;
 
                           if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
-
+                              $tagsMotivos .= ($nroMotivosEnFecha == 6)?"<div>": "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
                                               <span style='font-size: 30px; color: " . $RetMotivo2["color"] . "; text-align= center;'>" . 
@@ -2464,14 +2487,15 @@ $Con->CloseConexion();
                                               </span>
                                             </a>
                                           </div>";
-                              $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:2px; text-align: center;  display: inline-block;'>
-                                                    <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo2["color"] . "; text-align= center;'>" . 
-                                                      $RetMotivo2["Forma_Categoria"] . "
-                                                    </div>
-                                                    <div style='font-size: 7px;  color: " . $RetMotivo2["color"] . ";'>" . 
-                                                      $RetMotivo2["codigo"] . "
-                                                    </div>
-                                                  </div>";
+                              $tagsMotivos .= "<div style = 'padding: 0; margin-left:2px; text-align: center;  display: inline-block;'>
+                                                 <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo2["color"] . "; text-align= center;'>" . 
+                                                   $RetMotivo2["Forma_Categoria"] . "
+                                                 </div>
+                                                 <div style='font-size: 7px;  color: " . $RetMotivo2["color"] . ";'>" . 
+                                                   $RetMotivo2["codigo"] . "
+                                                 </div>
+                                               </div>";
+                              
                           }
                         }
                       }
@@ -2490,8 +2514,10 @@ $Con->CloseConexion();
                             $TomarCodyColor3 = mysqli_query($Con->Conexion, $ConsultarCodyColor3) or die($MensajeErrorConsultarCodyColor3 . " - " . $ConsultarCodyColor3 . " valor:" . $Ret_Datos_Movimiento["motivo_3"]);
 
                             $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
+                            $nroMotivosEnFecha += 1;
 
                             if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                                $tagsMotivos .= ($nroMotivosEnFecha == 6)?"<div>": "";
                                 $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
                                               <span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" . 
@@ -2504,14 +2530,15 @@ $Con->CloseConexion();
                                                 </span>
                                               </a>
                                             </div>";
-                                $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
-                                                      <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" . 
-                                                        $RetMotivo3["Forma_Categoria"] . "
-                                                      </div>
-                                                      <div style='font-size: 7px;  color: " . $RetMotivo3["color"] . ";'>" . 
-                                                        $RetMotivo3["codigo"] . "
-                                                      </div>
-                                                    </div>";
+                                $tagsMotivos .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
+                                                    <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" . 
+                                                      $RetMotivo3["Forma_Categoria"] . "
+                                                    </div>
+                                                    <div style='font-size: 7px;  color: " . $RetMotivo3["color"] . ";'>" . 
+                                                      $RetMotivo3["codigo"] . "
+                                                    </div>
+                                                 </div>";
+                                
                             }
                           }
                         }
@@ -2526,18 +2553,21 @@ $Con->CloseConexion();
                             // echo $ConsultarCodyColor;               
             
                             $TomarCodyColor3 = mysqli_query($Con->Conexion, $ConsultarCodyColor3) or die($MensajeErrorConsultarCodyColor3 . " - " . $ConsultarCodyColor3 . " valor:" . $Ret_Datos_Movimiento["motivo_3"]);
-
                             $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
+                            $nroMotivosEnFecha += 1;
+
                             if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                              $tagsMotivos .= ($nroMotivosEnFecha == 6)?"<div>": "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo3["codigo"] . "</span></center></span></a></div>";
-                              $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
-                                                    <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" . 
-                                                      $RetMotivo3["Forma_Categoria"] . "
-                                                    </div>
-                                                    <div style='font-size: 7px;  color: " . $RetMotivo3["color"] . ";'>" . 
-                                                      $RetMotivo3["codigo"] . "
-                                                    </div>
-                                                  </div>";
+                              $tagsMotivos .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
+                                                 <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" . 
+                                                   $RetMotivo3["Forma_Categoria"] . "
+                                                 </div>
+                                                 <div style='font-size: 7px;  color: " . $RetMotivo3["color"] . ";'>" . 
+                                                   $RetMotivo3["codigo"] . "
+                                                 </div>
+                                               </div>";
+                              
                             }
                           }
                         }
@@ -2552,19 +2582,21 @@ $Con->CloseConexion();
                             // echo $ConsultarCodyColor;               
             
                             $TomarCodyColor3 = mysqli_query($Con->Conexion, $ConsultarCodyColor3) or die($MensajeErrorConsultarCodyColor3 . " - " . $ConsultarCodyColor3 . " valor:" . $Ret_Datos_Movimiento["motivo_3"]);
-
                             $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
+                            $nroMotivosEnFecha += 1;
 
                             if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                              $tagsMotivos .= ($nroMotivosEnFecha == 6)?"<div>": "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo3["codigo"] . "</span></center></span></a></div>";
-                              $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
-                                                    <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" . 
-                                                      $RetMotivo3["Forma_Categoria"] . "
-                                                    </div>
-                                                    <div style='font-size: 7px;  color: " . $RetMotivo3["color"] . ";'>" . 
-                                                      $RetMotivo3["codigo"] . "
-                                                    </div>
-                                                  </div>";
+                              $tagsMotivos .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block;'>
+                                                 <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" . 
+                                                    $RetMotivo3["Forma_Categoria"] . "
+                                                 </div>
+                                                 <div style='font-size: 7px;  color: " . $RetMotivo3["color"] . ";'>" . 
+                                                    $RetMotivo3["codigo"] . "
+                                                 </div>
+                                               </div>";
+                              
                             }    
                           }
                         }
@@ -2577,19 +2609,21 @@ $Con->CloseConexion();
 
 
                           $TomarCodyColor3 = mysqli_query($Con->Conexion, $ConsultarCodyColor3) or die($MensajeErrorConsultarCodyColor3 . " - " . $ConsultarCodyColor3);
-
                           $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
+                          $nroMotivosEnFecha += 1;
 
                           if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                              $tagsMotivos .= ($nroMotivosEnFecha == 6)?"<div>": "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" . $RetMotivo3["Forma_Categoria"] . "<center><span class='nombreCategoria'>" . $RetMotivo3["codigo"] . "</span></center></span></a></div>";
-                              $tagsTD_imprimir .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block; '>
-                                                    <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" . 
-                                                      $RetMotivo3["Forma_Categoria"] . "
-                                                    </div>
-                                                    <div style='font-size: 7px;  color: " . $RetMotivo3["color"] . ";'>" . 
-                                                      $RetMotivo3["codigo"] . "
-                                                    </div>
-                                                  </div>";
+                              $tagsMotivos .= "<div style = 'padding: 0; margin-left:2px; text-align: center; display: inline-block; '>
+                                                 <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" . 
+                                                   $RetMotivo3["Forma_Categoria"] . "
+                                                 </div>
+                                                 <div style='font-size: 7px;  color: " . $RetMotivo3["color"] . ";'>" . 
+                                                   $RetMotivo3["codigo"] . "
+                                                 </div>
+                                               </div>";
+                              
                           }
                         }
                       }
@@ -2600,9 +2634,9 @@ $Con->CloseConexion();
 
 
                     }
-
+                    $tagsMotivos .= ($nroMotivosEnFecha >= 6)?"</div>": "";
                     $tagsTD .= "</div></td>";
-                    $tagsTD_imprimir .= "</div></td>";
+                    $tagsTD_imprimir .= $tagsMotivos . "</div></td>";
 
                     $ID_Persona_Bandera = $RetTodos["id_persona"];
                     // POSIBLEMENTE OBSOLETO      
