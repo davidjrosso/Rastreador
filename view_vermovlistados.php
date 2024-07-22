@@ -1055,23 +1055,26 @@ $Con->CloseConexion();
               if($ID_Config == 'table'){
                 $TableMov = "<table class='table'>
                               <tr class='thead-dark'>
-                                <th class='trFecha' style='min-width: 150px;'>Fecha</th>
-                                <th class='trMotivos'>Motivo 1</th>
-                                <th class='trMotivos'>Motivo 2</th>
-                                <th class='trMotivos'>Motivo 3</th>
-                                <th class='trPersona'>Persona</th>
-                                <th class='trDNI'>DNI</th>
-                                <th class='trFechaNac'>Fecha Nac.</th>
-                                <th class='trEdad'>Edad</th>
-                                <th class='trMeses'>Meses</th>
-                                <th class='trObraSocial'>Obra Social</th>
-                                <th class='trDomicilio'>Domicilio</th>
-                                <th class='trBarrio'>Barrio</th>
-                                <th class='trLocalidad'>Localidad</th>
-                                <th class='trObservaciones'>Observaciones</th>
-                                <th class='trResponsable'>Responsable</th>
-                                <th class='trCentrosSalud'>Centro de salud</th>
-                                <th class='trOtrasInstituciones'>Otras Instituciones</th>
+                                <th rowspan=2 class='trFecha' style='min-width: 150px;'>Fecha</th>
+                                <th rowspan=2 class='trMotivos'>Motivo 1</th>
+                                <th rowspan=2 class='trMotivos'>Motivo 2</th>
+                                <th rowspan=2 class='trMotivos'>Motivo 3</th>
+                                <th rowspan=2 class='trPersona'>Persona</th>
+                                <th rowspan=2 class='trDNI'>DNI</th>
+                                <th rowspan=2 class='trFechaNac'>Fecha Nac.</th>
+                                <th rowspan=1 colspan=2 style='text-align:center;' class='trEdad'>Edad</th>
+                                <th rowspan=2 class='trObraSocial'>Obra Social</th>
+                                <th rowspan=2 class='trDomicilio'>Domicilio</th>
+                                <th rowspan=2 class='trBarrio'>Barrio</th>
+                                <th rowspan=2 class='trLocalidad'>Localidad</th>
+                                <th rowspan=2 class='trObservaciones'>Observaciones</th>
+                                <th rowspan=2 class='trResponsable'>Responsable</th>
+                                <th rowspan=2 class='trCentrosSalud'>Centro de salud</th>
+                                <th rowspan=2 class='trOtrasInstituciones'>Otras Instituciones</th>
+                              </tr>
+                              <tr>
+                                <td class='trEdad' style='color: #fff;background-color: #212529;border-color: #212529;font-weight: bold;'>Año</th>
+                                <td class='trMeses' style='color: #fff;background-color: #212529;border-color: #212529;font-weight: bold;'>Meses</th>
                               </tr>";
               }
 
