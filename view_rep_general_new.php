@@ -635,7 +635,7 @@ $Con->CloseConexion();
       /*position: sticky;
       left: 450px;*/
       /* 350px  ACAAA */
-      width: 150px;
+      width: 120px;
       /* 50px  ACAAA */
       /*z-index: 200;*/
       background-color: #FFF;
@@ -692,7 +692,7 @@ $Con->CloseConexion();
       left: 450px;
       z-index: 200;
       /* 350px  ACAAA */
-      width: 145px;
+      width: 120px;
       /* 50px  ACAAA */
     }
 
@@ -1460,7 +1460,7 @@ $Con->CloseConexion();
 
 
                 $Table .= "<th id='Contenido-Titulo-3'>Persona</th>
-                           <th id='Contenido-Titulo-4' style='min-width: 150px;'>Fecha Nac.</th>";
+                           <th id='Contenido-Titulo-4' style='min-width: 120px;'>Fecha Nac.</th>";
                 $Table_imprimir .= "<th id='Contenido-Titulo-3'>Persona</th>
                                     <th id='Contenido-Titulo-4'>Fecha Nac.</th>";
                 $nroColumnas += 2;           
@@ -2004,7 +2004,7 @@ $Con->CloseConexion();
                   //$Table_imprimir = (isset($Table_imprimir))? $Table : "";
 
                   $Table .= " <td id='Contenido-3'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $RetTodos["id_persona"] . "\",\"Ventana" . $RetTodos["id_persona"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" . $RetTodos["apellido"] . ", " . $RetTodos["nombre"] . "</a></td>
-                  <td id='Contenido-4' style='min-width: 150px;'>" . $Fecha_Nacimiento . "</td>";
+                  <td id='Contenido-4' style='min-width: 120px;'>" . $Fecha_Nacimiento . "</td>";
                   
                   $Table_imprimir .= " <td id='Contenido-3'>" . $RetTodos["apellido"] . ", " . $RetTodos["nombre"] . "</td>
                                        <td id='Contenido-4' style='max-width: 100px;'>" . $Fecha_Nacimiento . "</td>";
@@ -2082,7 +2082,7 @@ $Con->CloseConexion();
                   // }
                   $tagsTD .= " 
                   <td id='Contenido-3'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $RetTodos["id_persona"] . "\",\"Ventana" . $RetTodos["id_persona"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" . $RetTodos["apellido"] . ", " . $RetTodos["nombre"] . "</a></td>
-                  <td id='Contenido-4' style='min-width: 150px;'>" . $Fecha_Nacimiento . "</td>";
+                  <td id='Contenido-4' style='min-width: 120px;'>" . $Fecha_Nacimiento . "</td>";
 
                   $tagsTD_imprimir .= " <td id='Contenido-3' style='font-size: 10px;max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;'>". $RetTodos["apellido"] . ", " . $RetTodos["nombre"] . "</td>
                                        <td id='Contenido-4' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $Fecha_Nacimiento . "</td>";
