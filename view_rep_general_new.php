@@ -108,7 +108,7 @@ $Con->CloseConexion();
     var filaIndice = 1;
     var valInputRangePrev = columnaIndice;
     var focusBarraNavegacionH = false;
-
+    var timeout = null;
     $( document ).on( "keydown", function(e) {
       NavegacionConTeclado(e);
     });
@@ -117,6 +117,32 @@ $Con->CloseConexion();
 
       nroFilasTabla = $("tbody > tr").length - 2;
       nroColumnasTabla = $("thead > tr > th").length - 2;
+
+      $("#input-zoom").on("input", function(e) {
+        toggleZoom($('#input-zoom').prop("value"));
+      });
+
+      $("#zoomIncrementar").on("mousedown", function(e) {
+        timeout = setInterval(function(){
+          $('#input-zoom')[0].stepUp();
+          toggleZoom($('#input-zoom').prop("value"));
+        }, 37);
+      });
+
+      $("#zoomIncrementar").on("mouseup", function(e) {
+        clearInterval(timeout);       
+      });
+
+      $("#zoomDecrementar").on("mousedown", function(e) {
+        timeout = setInterval(function(){
+          $('#input-zoom')[0].stepDown();
+          toggleZoom($('#input-zoom').prop("value"));
+        }, 37);        
+      });
+
+      $("#zoomDecrementar").on("mouseup", function(e) {
+        clearInterval(timeout);
+      });
 
       $("#BarraDeNavHTabla").attr("max", nroColumnasTabla + 1);
 
@@ -845,8 +871,14 @@ $Con->CloseConexion();
       </div><br>
       <div class="row">
         <div class="col">
-          <button class="btn btn-info btn-sm" onClick="toggleZoomScreen()">Zoom +</button> <button
-            class="btn btn-info btn-sm" onClick="toggleZoomScreenNormal()">Zoom -</button>
+          <!--<button class="btn btn-info btn-sm" onClick="toggleZoomScreen()">Zoom +</button> 
+            <button class="btn btn-info btn-sm" onClick="toggleZoomScreenNormal()">Zoom -</button>-->
+          <div class="number-input">
+             <button id="zoomIncrementar" class="plus"></button>
+             <input id="input-zoom" value="100" class="quantity" style="padding-right: 3px;" min="0" name="quantity" value="1" type="number">
+             <div id="divporcentaje">%</div>
+             <button id="zoomDecrementar"></button>
+          </div>
         </div>
         <div class="col">
           <?php
@@ -2784,9 +2816,13 @@ $Con->CloseConexion();
         //tabla.scrollLeft = '9999';
       })();
 
+      function toggleZoom(porcentaje){
+        var Tabla = document.getElementById("tablaMovimientos");
+        Tabla.style.zoom = porcentaje + "%";
+      }
 
       function toggleZoomScreen() {
-        document.body.style.zoom = "55%";
+        //document.body.style.zoom = "55%";
         var Tabla = document.getElementById("cuerpo-tabla");
         Tabla.style.height = "1800px";
 
@@ -2836,7 +2872,7 @@ $Con->CloseConexion();
       }
 
       function toggleZoomScreenNormal() {
-        document.body.style.zoom = "normal";
+        //document.body.style.zoom = "normal";
         var Tabla = document.getElementById("cuerpo-tabla");
         Tabla.style.height = "480px";
 
