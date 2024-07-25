@@ -857,10 +857,7 @@ $Con->CloseConexion();
       </div>
     <?php } ?>
 
-
     <div class="col-md-10" id="ContenidoTabla">
-
-
       <div class="row">
         <div class="col"></div>
         <div class="col-10 Titulo">
@@ -1486,7 +1483,7 @@ $Con->CloseConexion();
                 $arr[] = $Mes_Actual_Bandera . "/" . $Anio_Actual_Bandera;
                 $Mes_Actual_Bandera++;
               }
-
+              $arr = array_reverse($arr);
               $nroColumnas += $MesesDiferencia;
               // echo "DEBUG:".var_dump($arr);
             
@@ -1950,7 +1947,6 @@ $Con->CloseConexion();
               //array_multisort($regdomicilio, SORT_DESC, $tomarRetTodos);
 
               //echo "DEBUG 1: ".var_dump($tomarRetTodos);    
-
               foreach ($tomarRetTodos as $clave => $RetTodos) {
                 // echo var_dump($RetTodos);
                 // echo "<br>";
