@@ -368,14 +368,14 @@ $Con->CloseConexion();
 
 
     //################################################################
-    
+
     function habilitar_seleccion(val) {
       // alert (val)
       if(val!=0){      
       
         if(val=="todos"){
-          document.getElementById("div_manzana").hidden=false;  
-          document.getElementById("div_lote").hidden=false;  
+          document.getElementById("div_manzana").hidden=false;
+          document.getElementById("div_lote").hidden=false;
           document.getElementById("div_familia").hidden=false;            
         }
         else if(val=="manzana"){
@@ -630,34 +630,34 @@ $Con->CloseConexion();
                 <input type="text" class="form-control" name = "Domicilio" id="Domicilio" autocomplete="off">
               </div>
             </div>
- <!-- ################################################################################ -->
-
- <div class="form-group row">
-  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Maz./lote/sub-lote: </label>
-  <div class="col-md-10">
-    <select class="form-control" name="cmb_seleccion" id="cmb_seleccion"  onchange="habilitar_seleccion(this.value)">
-    	<option value="0">seleccionar</option>
-    	<option value="manzana">Manzana</option>
-      <option value="lote">Lote</option>
-      <option value="familia">Sub-lote</option>
-      <option value="todos">Todos</option>
-    </select>
-  </div>
-</div>
-            
-            <div class="form-group row" hidden id="div_manzana">
+            <!-- ################################################################################ -->
+            <!--
+            <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Maz./lote/sub-lote: </label>
+              <div class="col-md-10">
+                <select class="form-control" name="cmb_seleccion" id="cmb_seleccion"  onchange="habilitar_seleccion(this.value)">
+                  <option value="0">seleccionar</option>
+                  <option value="manzana">Manzana</option>
+                  <option value="lote">Lote</option>
+                  <option value="familia">Sub-lote</option>
+                  <option value="todos">Todos</option>
+                </select>
+              </div>
+            </div>
+            -->
+            <div class="form-group row" id="div_manzana">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Manzana: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Manzana" id="Manzana" autocomplete="off">
               </div>
             </div>
-            <div class="form-group row" hidden id="div_lote">
+            <div class="form-group row" id="div_lote">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Lote: </label>
               <div class="col-md-10">
                 <input type="number" class="form-control" name = "Lote" id="Lote" autocomplete="off">
               </div>
             </div>
-            <div class="form-group row" hidden id="div_familia">
+            <div class="form-group row" id="div_familia">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Sub-lote: </label>
               <div class="col-md-10">
                 <input type="number" class="form-control" name = "Familia" id="Familia" autocomplete="off">
