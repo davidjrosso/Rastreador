@@ -8,10 +8,36 @@ header("Content-Type: text/html;charset=utf-8");
   <meta charset="UTF-8">
   <title>Rastreador III</title>
   <meta charset="utf-8">
+
+  <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="css/style.css">
+  <script src="js/ValidarGeneral.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.slim.js"
+		  integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc="
+		  crossorigin="anonymous"></script>
+
+  <script>
+	$(document).ready(function(){
+	  $("#spanMostrar").on("click", function(){
+		var elementInput= $("#login-pass");
+		var elementIcon= $("#iconMostrar");
+		if(elementIcon.hasClass("active")){
+			elementIcon.removeClass("active");
+			elementIcon.html("visibility");
+			elementInput.prop("type","password");
+		} else{
+			elementIcon.addClass("active");
+			elementIcon.html("visibility_off");
+			elementInput.prop("type","text");
+		}
+	  });
+	});
+  </script>
 </head>
 <body>
   <body>
@@ -24,19 +50,25 @@ header("Content-Type: text/html;charset=utf-8");
 			<div class="login-form">
 				<form method = "post" action = "Controladores/CtrLogin.php" autocomplete="off">
 				<div class="control-group">
-				<input type="text" class="login-field" value="" placeholder="Nombre de Usuario" id="login-name" name = "UserName" autocomplete = "off">
-				<label class="login-field-icon fui-user" for="login-name"></label>
+					<input type="text" class="login-field" value="" placeholder="Nombre de Usuario" id="login-name" name = "UserName" autocomplete = "off">
+					<label class="login-field-icon fui-user" for="login-name"></label>
 				</div>
 
-				<div class="control-group">
-				<input type="password" class="login-field" value="" placeholder="Contraseña" id="login-pass" name = "UserPass" autocomplete="off">
-				<label class="login-field-icon fui-lock" for="login-pass"></label>
+				<div class="control-group" style="position:relative">
+					<input type="password" class="login-field" value="" placeholder="Contraseña" id="login-pass" name = "UserPass" autocomplete="off">
+					<label class="login-field-icon fui-lock" for="login-pass"></label>
+					<span id="spanMostrar" class="form-clear d-none">
+						<i id="iconMostrar" class="material-icons mdc-text-field__icon">
+							visibility
+						</i>
+					</span>
 				</div>
 				<button class="btn btn-primary btn-large btn-block Hander" type = "submit">Entrar</button>				
 				</form>
 			</div>
 		</div>
 	</div>
+
 </body>    
 </body>
 <?php
