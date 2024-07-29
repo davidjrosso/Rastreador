@@ -522,11 +522,6 @@ div .nav-side-menu {
   font-size: 1.15rem;
 }
 
-
-
-
-
-
 #container input {
   padding-right: 32px;
 }
@@ -547,4 +542,36 @@ div .nav-side-menu {
   position:absolute;
   top:0px;
   right:0px!important;
+}
+
+.letras-circle {
+  display: inline-block !important;
+  background-color: #17a2b8!important;
+  color: #fff !important;
+  border-radius: 50% !important;
+  font-size: 16px !important;
+  line-height: 30px !important; /* set to same size as width, height */
+  width: 32px !important;
+  height: 32px !important;
+  text-align: center !important;
+  border: 2px solid #fff;
+  border-style: ridge;
+  margin: 4% 0 4% 37%;
+}
+
+.letras-circle-2 {
+  display: inline-block !important;
+  background-color: green!important;
+  padding: 2px;
+  border-radius: 50% !important;
+  line-height: 30px !important; /* set to same size as width, height */
+  width: 35px !important;
+  height: 35px !important;
+  text-align: center !important;
+}
+
+.title-session {
+  padding-left: 27%;
+  padding-bottom: 4%;
+  font-size: 15px;
 }
