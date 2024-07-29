@@ -989,11 +989,11 @@ $Con->CloseConexion();
             $motivosVisiblesParaTodoUsuario = "SELECT MT.id_motivo
                                                FROM motivo MT,
                                                     categoria  C
-                                            WHERE C.cod_categoria = MT.cod_categoria
-                                              and MT.estado = 1
-                                              and C.estado = 1               
-                                              and C.id_categoria NOT IN (SELECT id_categoria
-                                                                         FROM categorias_roles CS)";
+                                               WHERE C.cod_categoria = MT.cod_categoria
+                                                 and MT.estado = 1
+                                                 and C.estado = 1               
+                                                 and C.id_categoria NOT IN (SELECT id_categoria
+                                                                          FROM categorias_roles CS)";
             $motivosVisiblesParaUsuario = $consultaUsuarioPermisos . $motivosVisiblesParaUsuario;
             $motivosVisiblesParaTodoUsuario = $consultaGeneralPermisos . $motivosVisiblesParaTodoUsuario;
             $MessageError = "Problemas al crear la tabla temporaria de usuarios";
@@ -1010,10 +1010,28 @@ $Con->CloseConexion();
 
             if ($ID_Persona > 0) { //P.nro_legajo,P.nro_carpeta
               $ConsultaFlia = $Consulta;
-              $Consulta .= " and P.id_persona = $ID_Persona";
-              $ConsultarPersona = "select apellido, nombre, domicilio from persona where ID_Persona = " . $ID_Persona . " limit 1";
+              $ConsultarPersona = "select apellido, 
+                                          nombre, 
+                                          domicilio,
+                                          ID_Barrio
+                                   from persona 
+                                   where ID_Persona = " . $ID_Persona . " 
+                                     and estado = 1 
+                                   limit 1";
               $EjecutarConsultarPersona = mysqli_query($Con->Conexion, $ConsultarPersona) or die("Problemas al consultar filtro Persona");
               $RetConsultarPersona = mysqli_fetch_assoc($EjecutarConsultarPersona);
+
+              if (!empty($RetConsultarPersona["ID_Barrio"])) {
+                $barrio = $RetConsultarPersona["ID_Barrio"];
+                $ConsultarPersonasBarrio = "select id_persona
+                                            from persona 
+                                            where ID_Barrio = " . $barrio  . "
+                                              and estado = 1";
+                $Consulta .= " and P.id_persona in ($ConsultarPersonasBarrio)";
+              } else {
+                $Consulta .= " and P.id_persona = $ID_Persona";
+              }
+
               $filtros[] = "Persona: " . $RetConsultarPersona["apellido"] . ", " . $RetConsultarPersona["nombre"];
 
               // TODO:
@@ -1373,10 +1391,10 @@ $Con->CloseConexion();
               /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               // TOMANDO LOS ID DE LOS MOVIMIENTOS PARA LUEGO HACER LA COMPARACION PARA EL PINTADO DE LOS MOTIVOS.
-              $ResultadosPrincipal = $Con->ResultSet->fetch_array();
+              //$ResultadosPrincipal = $Con->ResultSet->fetch_array();
               // echo "DEBUG DATOS IDS: ".var_dump($ResultadosPrincipal[5]);
             
-              $arrIDMovimientos = array();
+              //$arrIDMovimientos = array();
 
               // var_dump($ResultadosPrincipal["Manzana"]);
             
@@ -1391,10 +1409,10 @@ $Con->CloseConexion();
               //     // $arrIDMovimientos[] = $value;
               // }
 
-              while ($Ret = $Con->ResultSet->fetch_assoc()) {
+              /*while ($Ret = $Con->ResultSet->fetch_assoc()) {
                 // echo "DEBUG :".$Ret['id_movimiento'];
                 $arrIDMovimientos[] = $Ret['id_movimiento'];
-              }
+              }*/
 
               // echo "DEBUG IDS:".var_dump($arrIDMovimientos);
             
