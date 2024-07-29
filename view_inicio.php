@@ -332,9 +332,11 @@ $Con->CloseConexion();
   ?>
   <div class = "col-md-2">
     <div class="nav-side-menu">
-    <div class="brand">General</div>
-    <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
-  
+      <?php $Element = new Elements();
+            echo $Element->CBSessionNombre($ID_Usuario);
+      ?>
+      <div class="brand">General</div>
+        <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
         <div class="menu-list">
   
             <?php $Element = new Elements();
