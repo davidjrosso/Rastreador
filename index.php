@@ -28,11 +28,11 @@ header("Content-Type: text/html;charset=utf-8");
 		var elementIcon= $("#iconMostrar");
 		if(elementIcon.hasClass("active")){
 			elementIcon.removeClass("active");
-			elementIcon.html("visibility");
+			elementIcon.html("visibility_off");
 			elementInput.prop("type","password");
 		} else{
 			elementIcon.addClass("active");
-			elementIcon.html("visibility_off");
+			elementIcon.html("visibility");
 			elementInput.prop("type","text");
 		}
 	  });
@@ -55,7 +55,7 @@ header("Content-Type: text/html;charset=utf-8");
 				</div>
 
 				<div class="control-group" style="position:relative">
-					<input type="password" class="login-field" value="" placeholder="Contraseña" id="login-pass" name = "UserPass" autocomplete="off">
+					<input type="password" autocomplete="off" class="login-field" value="" placeholder="Contraseña" id="login-pass" name = "UserPass" >
 					<label class="login-field-icon fui-lock" for="login-pass"></label>
 					<span id="spanMostrar" class="form-clear d-none">
 						<i id="iconMostrar" class="material-icons mdc-text-field__icon">
