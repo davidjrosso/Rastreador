@@ -27,8 +27,7 @@ class Elements{
                 </li>
             </ul>
         </div>';break;   
-    }
-			
+    }	
 }
 
 
@@ -1481,6 +1480,29 @@ public function getMenuSeguridad($ID){
     $Select .= "</select>";
     $Con3->CloseConexion();
     return $Select;
+  }
+
+  public function CBSessionNombre($idAccount){
+    $Con3 = new Conexion();
+    $Con3->OpenConexion();
+    $ConsultaNombre = "select *
+                       from accounts 
+                       where estado = 1
+                         and accountid = $idAccount";
+    $ConsultaResult = mysqli_query($Con3->Conexion,$ConsultaNombre)or die("Problemas al mostrar Personas");
+    if(mysqli_num_rows($ConsultaResult) > 0){
+      $Resultado = mysqli_fetch_array($ConsultaResult);
+      $cardSession = "<div class='letras-circle'>".
+                        $Resultado["initials"] . "
+                      </div>
+                      <div class='title-session'>".
+                        $Resultado["firstname"] . "
+                      </div>";
+    } else {
+      $cardSession = "<div class='letras-circle'> Login </div>";
+    }
+    $Con3->CloseConexion();
+    echo $cardSession;
   }
 
 
