@@ -1492,11 +1492,8 @@ public function getMenuSeguridad($ID){
     $ConsultaResult = mysqli_query($Con3->Conexion,$ConsultaNombre)or die("Problemas al mostrar Personas");
     if(mysqli_num_rows($ConsultaResult) > 0){
       $Resultado = mysqli_fetch_array($ConsultaResult);
-      $cardSession = "<div class='letras-circle'>".
-                        $Resultado["initials"] . "
-                      </div>
-                      <div class='title-session'>".
-                        $Resultado["firstname"] . "
+      $cardSession = "<div class='title-session'>".
+                        $Resultado["username"] . "
                       </div>";
     } else {
       $cardSession = "<div class='letras-circle'> Login </div>";
