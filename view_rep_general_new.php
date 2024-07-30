@@ -3,6 +3,7 @@ session_start();
 require_once "Controladores/Elements.php";
 require_once "Controladores/CtrGeneral.php";
 require_once "Controladores/Conexion.php";
+require_once "Modelo/Persona.php";
 require_once "sys_config.php";
 
 require_once 'dompdf/autoload.inc.php';
@@ -935,9 +936,7 @@ $Con->CloseConexion();
             $ID_OtraInstitucion = (isset($_REQUEST["ID_OtraInstitucion"])) ? $_REQUEST["ID_OtraInstitucion"] : null;
             $ID_Responsable = (isset($_REQUEST["ID_Responsable"])) ? $_REQUEST["ID_Responsable"] : null;
 
-
             $cmb_seleccion = (isset($_REQUEST["cmb_seleccion"])) ? $_REQUEST["cmb_seleccion"] : null;
-
 
             // echo "<h3>$cmb_seleccion<h3>";
             $Consulta = "SELECT M.id_movimiento, M.id_persona, MONTH(M.fecha) as 'Mes', YEAR(M.fecha) as 'Anio', 
@@ -1006,8 +1005,6 @@ $Con->CloseConexion();
                              $Con->Conexion,$motivosVisiblesParaTodoUsuario
                              ) or die($MessageError);
 
-
-
             if ($ID_Persona > 0) { //P.nro_legajo,P.nro_carpeta
               $ConsultaFlia = $Consulta;
               $ConsultarPersona = "select apellido, 
@@ -1016,18 +1013,18 @@ $Con->CloseConexion();
                                           ID_Barrio
                                    from persona 
                                    where ID_Persona = " . $ID_Persona . " 
-                                     and estado = 1 
-                                   limit 1";
+                                     and estado = 1";
               $EjecutarConsultarPersona = mysqli_query($Con->Conexion, $ConsultarPersona) or die("Problemas al consultar filtro Persona");
               $RetConsultarPersona = mysqli_fetch_assoc($EjecutarConsultarPersona);
 
-              if (!empty($RetConsultarPersona["ID_Barrio"])) {
-                $barrio = $RetConsultarPersona["ID_Barrio"];
-                $ConsultarPersonasBarrio = "select id_persona
-                                            from persona 
-                                            where ID_Barrio = " . $barrio  . "
-                                              and estado = 1";
-                $Consulta .= " and P.id_persona in ($ConsultarPersonasBarrio)";
+              if (!empty($RetConsultarPersona["domicilio"])) {
+                $domicilio = $RetConsultarPersona["domicilio"];
+                $persona = new Persona(ID_Persona : $ID_Persona);
+                $ConsultarPersdomicilio = "select id_persona
+                                           from persona
+                                           where domicilio like '%" . $persona->getCalle() . "%". $persona->getNroCalle()."%'
+                                             and estado = 1";
+                $Consulta .= " and P.id_persona in ($ConsultarPersdomicilio)";
               } else {
                 $Consulta .= " and P.id_persona = $ID_Persona";
               }

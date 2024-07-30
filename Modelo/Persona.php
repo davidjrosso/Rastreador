@@ -1,4 +1,6 @@
-<?php  
+<?php
+require_once "Controladores/Conexion.php";
+
 class Persona{
 	//DECLARACION DE VARIABLES
 	private $ID_Persona;
@@ -271,32 +273,126 @@ public function getTrabajo(){
 	return $this->Trabajo;
 }
 
-public function __construct($xID_Persona,$xApellido,$xNombre,$xDNI,$xNro_Legajo,$xEdad,$xMeses,$xFecha_Nacimiento,$xNro_Carpeta,$xObra_Social,$xDomicilio,$xBarrio,$xLocalidad,$xCircunscripcion,$xSeccion,$xManzana,$xLote,$xFamilia,$xObservaciones,$xCambio_Domicilio,$xTelefono,$xMail,$xID_Escuela,$xEstado,$xTrabajo){
-	$this->ID_Persona = $xID_Persona;
-	$this->Apellido = $xApellido;
-	$this->Nombre = $xNombre;
-	$this->DNI = $xDNI;
-	$this->Nro_Legajo = $xNro_Legajo;
-	$this->Edad = $xEdad;
-	$this->Meses = $xMeses;
-	$this->Fecha_Nacimiento = $xFecha_Nacimiento;
-	$this->Nro_Carpeta = $xNro_Carpeta;
-	$this->Obra_Social = $xObra_Social;
-	$this->Domicilio = $xDomicilio;
-	$this->Barrio = $xBarrio;
-	$this->Localidad = $xLocalidad;
-	$this->Circunscripcion = $xCircunscripcion;
-	$this->Seccion = $xSeccion;
-	$this->Manzana = $xManzana;
-	$this->Lote = $xLote;
-	$this->Familia = $xFamilia;
-	$this->Observaciones = $xObservaciones;
-	$this->Cambio_Domicilio = $xCambio_Domicilio;
-	$this->Telefono = $xTelefono;
-	$this->Mail = $xMail;
-	$this->ID_Escuela = $xID_Escuela;	
-	$this->Estado = $xEstado;	
-	$this->Trabajo = $xTrabajo;
+public function __construct(
+	$ID_Persona = null,
+	$xApellido = null,
+	$xNombre = null,
+	$xDNI = null,
+	$xNro_Legajo = null,
+	$xEdad = null,
+	$xMeses = null,
+	$xFecha_Nacimiento = null,
+	$xNro_Carpeta = null,
+	$xObra_Social = null,
+	$xDomicilio = null,
+	$xBarrio = null,
+	$xLocalidad = null,
+	$xCircunscripcion = null,
+	$xSeccion = null,
+	$xManzana = null,
+	$xLote = null,
+	$xFamilia = null,
+	$xObservaciones = null,
+	$xCambio_Domicilio  = null,
+	$xTelefono = null,
+	$xMail = null,
+	$xID_Escuela = null,
+	$xEstado = null,
+	$xTrabajo = null
+){
+	if (!$ID_Persona) {
+		$this->ID_Persona =$ID_Persona;
+		$this->Apellido = $xApellido;
+		$this->Nombre = $xNombre;
+		$this->DNI = $xDNI;
+		$this->Nro_Legajo = $xNro_Legajo;
+		$this->Edad = $xEdad;
+		$this->Meses = $xMeses;
+		$this->Fecha_Nacimiento = $xFecha_Nacimiento;
+		$this->Nro_Carpeta = $xNro_Carpeta;
+		$this->Obra_Social = $xObra_Social;
+		$this->Domicilio = $xDomicilio;
+		$this->Barrio = $xBarrio;
+		$this->Localidad = $xLocalidad;
+		$this->Circunscripcion = $xCircunscripcion;
+		$this->Seccion = $xSeccion;
+		$this->Manzana = $xManzana;
+		$this->Lote = $xLote;
+		$this->Familia = $xFamilia;
+		$this->Observaciones = $xObservaciones;
+		$this->Cambio_Domicilio = $xCambio_Domicilio;
+		$this->Telefono = $xTelefono;
+		$this->Mail = $xMail;
+		$this->ID_Escuela = $xID_Escuela;	
+		$this->Estado = $xEstado;
+		$this->Trabajo = $xTrabajo;
+	} else {
+		$Con = new Conexion();
+        $Con->OpenConexion();
+		$ConsultarPersona = "select *
+							 from persona 
+							 where ID_Persona = " . $ID_Persona . " 
+							   and estado = 1";
+		$EjecutarConsultarPersona = mysqli_query(
+			$Con->Conexion, 
+			$ConsultarPersona) or die("Problemas al consultar filtro Persona");
+		$ret = mysqli_fetch_assoc($EjecutarConsultarPersona);
+
+		$ID_Persona = $ret["id_persona"];
+		$apellido = $ret["apellido"];
+		$nombre = $ret["nombre"];
+		$dni = $ret["documento"];
+		$edad = $ret["edad"];
+		$meses = $ret["meses"];
+		if(is_null($ret["fecha_nac"]) || $ret["fecha_nac"] == "null"){
+			$fecha_nacimiento = "No se cargo fecha de nacimiento";
+		}else{
+			$fecha_nacimiento = implode("/", array_reverse(explode("-",$ret["fecha_nac"])));    
+		}
+		$nro_Carpeta = $ret["nro_carpeta"];
+		$nro_Legajo = $ret["nro_legajo"];
+		$obra_Social = $ret["obra_social"];
+		$domicilio = $ret["domicilio"];
+		$barrio = $ret["ID_Barrio"];
+		$localidad = $ret["localidad"];
+		$circunscripcion = $ret["circunscripcion"];
+		$seccion = $ret["seccion"];
+		$manzana = $ret["manzana"];
+		$lote = $ret["lote"];
+		$familia = $ret["familia"];
+		$observacion = $ret["observacion"];
+		$cambio_Domicilio = $ret["cambio_domicilio"];
+		$telefono = $ret["telefono"];
+		$mail = $ret["mail"];
+		$ID_Escuela = $ret["ID_Escuela"];
+		$estado = $ret["estado"];
+		$trabajo = $ret["Trabajo"];
+		$this->ID_Persona = $ID_Persona;
+		$this->Apellido = $apellido;
+		$this->Nombre = $nombre;
+		$this->DNI = $dni;
+		$this->Nro_Legajo = $nro_Legajo;
+		$this->Edad = $edad;
+		$this->Meses = $meses;
+		$this->Fecha_Nacimiento = $fecha_nacimiento;
+		$this->Nro_Carpeta = $nro_Carpeta;
+		$this->Obra_Social = $obra_Social;
+		$this->Domicilio = $domicilio;
+		$this->Barrio = $barrio;
+		$this->Localidad = $localidad;
+		$this->Circunscripcion = $circunscripcion;
+		$this->Seccion = $seccion;
+		$this->Manzana = $manzana;
+		$this->Lote = $lote;
+		$this->Familia = $familia;
+		$this->Observaciones = $observacion;
+		$this->Cambio_Domicilio = $cambio_Domicilio;
+		$this->Telefono = $telefono;
+		$this->Mail = $mail;
+		$this->ID_Escuela = $ID_Escuela;	
+		$this->Estado = $estado;
+		$this->Trabajo = $trabajo;
+	}
 }
 
 }
