@@ -1506,7 +1506,7 @@ $Con->CloseConexion();
                 $arr[] = $Mes_Actual_Bandera . "/" . $Anio_Actual_Bandera;
                 $Mes_Actual_Bandera++;
               }
-              $arr = array_reverse($arr);
+              //$arr = array_reverse($arr);
               $nroColumnas += $MesesDiferencia;
               // echo "DEBUG:".var_dump($arr);
             
