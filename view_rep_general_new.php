@@ -1005,7 +1005,12 @@ $Con->CloseConexion();
                              $Con->Conexion,$motivosVisiblesParaTodoUsuario
                              ) or die($MessageError);
 
-            if ($ID_Persona > 0) { //P.nro_legajo,P.nro_carpeta
+
+            if ($ID_Persona > 0) {
+              $countPostfield = count(array_filter($_POST, function ($element){
+                return $element;
+              }));
+
               $ConsultaFlia = $Consulta;
               $ConsultarPersona = "select apellido, 
                                           nombre, 
@@ -1017,18 +1022,21 @@ $Con->CloseConexion();
               $EjecutarConsultarPersona = mysqli_query($Con->Conexion, $ConsultarPersona) or die("Problemas al consultar filtro Persona");
               $RetConsultarPersona = mysqli_fetch_assoc($EjecutarConsultarPersona);
 
-              if (!empty($RetConsultarPersona["domicilio"])) {
-                $domicilio = $RetConsultarPersona["domicilio"];
-                $persona = new Persona(ID_Persona : $ID_Persona);
-                $ConsultarPersdomicilio = "select id_persona
-                                           from persona
-                                           where domicilio like '%" . $persona->getCalle() . "%". $persona->getNroCalle()."%'
-                                             and estado = 1";
-                $Consulta .= " and P.id_persona in ($ConsultarPersdomicilio)";
+              if (($countPostfield - 3) == 1)  {
+                if (!empty($RetConsultarPersona["domicilio"])) {
+                  $domicilio = $RetConsultarPersona["domicilio"];
+                  $persona = new Persona(ID_Persona : $ID_Persona);
+                  $ConsultarPersdomicilio = "select id_persona
+                                            from persona
+                                            where domicilio like '%" . $persona->getCalle() . "%". $persona->getNroCalle()."%'
+                                              and estado = 1";
+                  $Consulta .= " and P.id_persona in ($ConsultarPersdomicilio)";
+                } else {
+                  $Consulta .= " and P.id_persona = $ID_Persona";
+                }
               } else {
                 $Consulta .= " and P.id_persona = $ID_Persona";
               }
-
               $filtros[] = "Persona: " . $RetConsultarPersona["apellido"] . ", " . $RetConsultarPersona["nombre"];
 
               // TODO:
