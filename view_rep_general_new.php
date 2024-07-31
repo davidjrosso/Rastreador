@@ -2887,7 +2887,7 @@ $Con->CloseConexion();
     <input type="range" class="fixed-bottom form-range" step="0.01" value="5" min="5" id="BarraDeNavHTabla">
     <!--<input type="range" class="fixed-bottom form-range" step="1" value="1" min="1" id="BarraDeNavVTabla">-->
 
-    <div class="modal fade" id="configModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade modal--show-z-indez-max" id="configModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 2001;">
       <div class="class_modal-dialog modal-dialog" role="document"  id="id_modal-dialog">
         <div class="modal-content">
           <div class="modal-header">

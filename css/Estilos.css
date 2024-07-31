@@ -576,3 +576,7 @@ div .nav-side-menu {
   padding-bottom: 4%;
   font-size: 12px;
 }
+
+.modal--show-overall{
+  z-index: 2001;
+}
