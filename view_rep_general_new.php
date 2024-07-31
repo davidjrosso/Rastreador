@@ -1362,13 +1362,10 @@ $Con->CloseConexion();
 
           </div>
           <div class="col">
-
             <button type="button" class="btn btn-danger" style="margin-left: 35%;"  onclick="location.href = 'view_general_new.php'">Atras</button>
-
             <!--<button type="button" class="btn btn-secondary" onclick="enviarImprimir()">**Imprimir</button>-->
-
             <button type="button" class="btn btn-secondary" onclick="enviarImprimirPdf();"> Imprimir</button>
-
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#configModal">Config</button>
           </div>
 
         </div>
@@ -2891,6 +2888,31 @@ $Con->CloseConexion();
     </div>
     <input type="range" class="fixed-bottom form-range" step="0.01" value="5" min="5" id="BarraDeNavHTabla">
     <!--<input type="range" class="fixed-bottom form-range" step="1" value="1" min="1" id="BarraDeNavVTabla">-->
+
+    <div class="modal fade" id="configModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="class_modal-dialog modal-dialog" role="document"  id="id_modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel" style="margin-left: auto;">Configurar resultados</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <ul type=none>
+              <li><input type="checkbox" id="chkFecha"> Fecha Nac</li>
+              <li><input type="checkbox" id="chkPersona"> Persona</li> 
+              <li><input type="checkbox" id="chkFechaNac"> Direc. </li>
+              <li><input type="checkbox" id="chkBarrio"> Barrio </li>
+            </ul>
+          </div>
+          <div class="modal-footer modal-footer-flex-center">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" onClick="configResultados()" data-dismiss="modal">Aceptar</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script>
       (function () {
