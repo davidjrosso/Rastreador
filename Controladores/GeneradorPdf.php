@@ -9,7 +9,7 @@ try{
     $dompdf = new Dompdf();
     $dompdf->loadHtml(mb_convert_encoding($tabla, 'HTML-ENTITIES', 'UTF-8'));
     $dompdf->setPaper('legal', 'landscape');
-    $dompdf->setOptions($dompdf->getOptions()->setFontDir($_SERVER["DOCUMENT_ROOT"]."/dompdf/lib/fonts"));
+    //$dompdf->setOptions($dompdf->getOptions()->setFontDir($_SERVER["DOCUMENT_ROOT"]."/dompdf/lib/fonts"));
     $dompdf->render();
     $output = $dompdf->output();
     $data = base64_encode($output);

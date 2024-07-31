@@ -67,10 +67,55 @@ $Con->CloseConexion();
        }
 
 
-       function enviarImprimir() {     
+       function base64ToArrayBuffer(data) {
+         var binaryString = window.atob(data);
+         var binaryLen = binaryString.length;
+         var bytes = new Uint8Array(binaryLen);
+         for (var i = 0; i < binaryLen; i++) {
+             var ascii = binaryString.charCodeAt(i);
+             bytes[i] = ascii;
+         }
+         return bytes;
+        };
 
-        alert("hacer imprimir!");
+        function enviarImprimir() {     
+
+          alert("hacer imprimir!");
       
+        }
+
+        function enviarImprimirPdf() {
+          var tabla1 = document.getElementById("tabla_1");
+          var dataString = "tabla=" + tabla1.value;
+          console.log(dataString);
+          $.ajax({
+            type: "POST",
+            dataType: "html",
+            contentType: "application/x-www-form-urlencoded",
+            cache: false,
+            url: "Controladores/GeneradorPdf.php",
+            data: dataString,
+            async: false,
+            cache: false,
+            success: function (res) {
+              var arrBuffer = base64ToArrayBuffer(res);
+              var blob = new Blob([arrBuffer], { type: "application/pdf" });
+              //location.href = res;
+              var link=document.createElement('a');
+              var url1 = window.URL.createObjectURL(blob);
+              window.open(url1);
+              //link.href=window.URL.createObjectURL(blob);
+              //link.download="<FILENAME_TO_SAVE_WITH_EXTENSION>.pdf";
+              //link.click();
+            },
+            error: function (e) {
+              var errorJsonString = JSON.stringify(e);
+              console.log(errorJsonString);
+              var error = JSON.parse(errorJsonString);
+              console.log(error);
+              alert("error " + atob(error.responseText));
+            }
+          });
         }
 
   </script>  
@@ -207,8 +252,9 @@ $Con->CloseConexion();
     </div><br>
     <br>
     <div class="row">
-        <div class="col-md-2">
+        <div class="col-md-2" style="padding-right: 0px;padding-left: 0pc;">
           <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_listados.php'">Atras</button>
+          <button type="button" class="btn btn-secondary" onclick="enviarImprimirPdf();"> Imprimir</button>
         </div>
         <div class="col-md-8">
         <?php
@@ -289,7 +335,11 @@ $Con->CloseConexion();
               }
               $ID_Categoria = $_REQUEST["ID_Categoria"]; 
               $ID_Escuela = $_REQUEST["ID_Escuela"];
-              $Trabajo = $_REQUEST["Trabajo"];
+              if (isset($_REQUEST["Trabajo"])) {
+                $Trabajo = $_REQUEST["Trabajo"];
+              } else {
+                $Trabajo = null;
+              }
               $Mostrar = $_REQUEST["Mostrar"];
               $ID_CentroSalud = $_REQUEST["ID_CentroSalud"];
               $ID_OtraInstitucion = $_REQUEST["ID_OtraInstitucion"];
@@ -903,122 +953,114 @@ $Con->CloseConexion();
 
               $_SESSION["datosNav"]["NombrePersona"] = $filtrosSeleccionados["NombrePersona"];
 
-              $ConsultarBarrio = "select * 
-                                  from barrios 
-                                  where ID_Barrio = {$Ret['ID_Barrio']}";
-              $MensajeErrorBarrio = "No se pudo consultar el Barrio de la persona";
-
-              $EjecutarConsultarBarrio = mysqli_query($Con->Conexion,$ConsultarBarrio) or die($MensajeErrorBarrio);
-
-              $RetBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);
-
-
-              $ID_Persona = $Ret["id_persona"];
-              $Apellido = $Ret["apellido"];
-              $Nombre = $Ret["nombre"];
-              $DNI = $Ret["documento"];
-              $Edad = $Ret["edad"];
-              $Meses = $Ret["meses"];
-              if(is_null($Ret["fecha_nac"]) || $Ret["fecha_nac"] == "null"){
-                $Fecha_Nacimiento = "No se cargo fecha de nacimiento";
-              }else{
-                $Fecha_Nacimiento = implode("/", array_reverse(explode("-",$Ret["fecha_nac"])));    
-              }
-              $Nro_Carpeta = $Ret["nro_carpeta"];
-              $Nro_Legajo = $Ret["nro_legajo"];
-
-              
-             
-              $Obra_Social = $Ret["obra_social"];
-              $Domicilio = $Ret["domicilio"];
-              $Barrio = $RetBarrio["Barrio"];
-              $Localidad = $Ret["localidad"];
-              $Circunscripcion = $Ret["circunscripcion"];
-              $Seccion = $Ret["seccion"];
-              $Manzana = $Ret["manzana"];
-              $Lote = $Ret["lote"];
-              $Familia = $Ret["familia"];
-              $Observacion = $Ret["observacion"];
-              $Cambio_Domicilio = $Ret["cambio_domicilio"];
-              $Telefono = $Ret["telefono"];
-              $Mail = $Ret["mail"];
-              $ID_Escuela = $Ret["ID_Escuela"];
-              $Estado = $Ret["estado"];
-
-              $Persona = new Persona($ID_Persona,$Apellido,$Nombre,$DNI,$Nro_Legajo, $Edad,$Meses,$Fecha_Nacimiento,$Nro_Carpeta,$Obra_Social,$Domicilio,$Barrio,$Localidad,$Circunscripcion,$Seccion,$Manzana,$Lote,$Familia,$Observaciones,$Cambio_Domicilio,$Telefono,$Mail,$ID_Escuela,$Estado,$Trabajo);
-              //$Persona = new Persona($ID_Persona,$Apellido,$Nombre,$DNI,$Nro_Legajo,$Edad,$Meses,$Fecha_Nacimiento,$Nro_Carpeta,$Obra_Social,$Domicilio,$Barrio,$Localidad,$Circunscripcion,$Seccion,$Manzana,$Lote,$Familia,$Observacion,$Cambio_Domicilio,$Telefono,$Mail,$ID_Escuela,$Estado);
-              // var_dump($Persona);
-              $ConsultarEscuela = "select Escuela 
-                                   from escuelas 
-                                   where ID_Escuela = $ID_Escuela";
-              $MensajeErrorConsultarEscuela = "No se pudo consultar la Escuela";
-
-              $EjecutarConsultarEscuela = mysqli_query($Con->Conexion,$ConsultarEscuela) or die($MensajeErrorConsultarEscuela);
-              $RetEscuela = mysqli_fetch_assoc($EjecutarConsultarEscuela);
-              $Escuela = $RetEscuela["Escuela"];
+              $Persona = new Persona($ID_Persona);
 
               if($ID_Config == 'grid'){
                 $Table = "<table class='table'><thead><tr><th></th><th>Detalles de la Persona</th></tr></thead>";
-  
+                $tablePrint = "<table><thead><tr><th></th><th>Detalles de la Persona</th></tr></thead>";  
                 $Table .= "<tr><td>Id</td><td>".$Persona->getID_Persona()."</td></tr>";
+                $tablePrint .= "<tr><td>Id</td><td>".$Persona->getID_Persona()."</td></tr>";
                 $Table .= "<tr><td>Apellido</td><td>".$Persona->getApellido()."</td></tr>";
+                $tablePrint .= "<tr><td>Apellido</td><td>".$Persona->getApellido()."</td></tr>";
                 $Table .= "<tr><td>Nombre</td><td>".$Persona->getNombre()."</td></tr>";
+                $tablePrint .= "<tr><td>Nombre</td><td>".$Persona->getNombre()."</td></tr>";
                 $Table .= "<tr><td>Documento</td><td>".$Persona->getDNI()."</td></tr>";
+                $tablePrint .= "<tr><td>Documento</td><td>".$Persona->getDNI()."</td></tr>";
                 $Table .= "<tr><td>Fecha de Nacimiento</td><td>".$Persona->getFecha_Nacimiento()."</td></tr>";
+                $tablePrint .= "<tr><td>Fecha de Nacimiento</td><td>".$Persona->getFecha_Nacimiento()."</td></tr>";
                 if($Persona->getEdad() == 2020){
                   $Table .= "<tr><td>Edad</td><td>No se cargo fecha de nacimiento</td></tr>";
+                  $tablePrint .= "<tr><td>Edad</td><td>No se cargo fecha de nacimiento</td></tr>";
                 }else{
                   $Table .= "<tr><td>Edad</td><td>".$Persona->getEdad()."</td></tr>";
+                  $tablePrint .= "<tr><td>Edad</td><td>".$Persona->getEdad()."</td></tr>";
                 }                            
                 $Table .= "<tr><td>Meses</td><td>".$Persona->getMeses()."</td></tr>";              
+                $tablePrint .= "<tr><td>Meses</td><td>".$Persona->getMeses()."</td></tr>";              
                              
                 $Table .= "<tr><td>Localidad</td><td>".$Persona->getLocalidad()."</td></tr>";
+                $tablePrint .= "<tr><td>Localidad</td><td>".$Persona->getLocalidad()."</td></tr>";
                 $Table .= "<tr><td>Barrio</td><td>".$Persona->getBarrio()."</td></tr>";      
+                $tablePrint .= "<tr><td>Barrio</td><td>".$Persona->getBarrio()."</td></tr>";      
                 $Table .= "<tr><td>Domicilio</td><td>".$Persona->getDomicilio()."</td></tr>";
+                $tablePrint .= "<tr><td>Domicilio</td><td>".$Persona->getDomicilio()."</td></tr>";
                 $Table .= "<tr><td>Manzana</td><td>".$Persona->getManzana()."</td></tr>";
+                $tablePrint .= "<tr><td>Manzana</td><td>".$Persona->getManzana()."</td></tr>";
                 $Table .= "<tr><td>Lote</td><td>".$Persona->getLote()."</td></tr>";
+                $tablePrint .= "<tr><td>Lote</td><td>".$Persona->getLote()."</td></tr>";
                 $Table .= "<tr><td>Sub-lote</td><td>".$Persona->getFamilia()."</td></tr>";
+                $tablePrint .= "<tr><td>Sub-lote</td><td>".$Persona->getFamilia()."</td></tr>";
                 $Table .= "<tr><td>Telefono</td><td>".$Persona->getTelefono()."</td></tr>";
-                $Table .= "<tr><td>E-Mail</td><td>".$Persona->getMail()."</td></tr>";                          
+                $tablePrint .= "<tr><td>Telefono</td><td>".$Persona->getTelefono()."</td></tr>";
+                $Table .= "<tr><td>E-Mail</td><td>".$Persona->getMail()."</td></tr>";
+                $tablePrint .= "<tr><td>E-Mail</td><td>".$Persona->getMail()."</td></tr>";
                 $Table .= "<tr><td>Obra Social</td><td>".$Persona->getObra_Social()."</td></tr>";
-                $Table .= "<tr><td>Escuela</td><td>".$Escuela."</td></tr>";  
-                $Table .= "<tr><td>Nro. Legajo</td><td>".$Persona->getNro_Carpeta()."</td></tr>"; 
-                $Table .= "<tr><td>Nro. Carpeta</td><td>".$Persona->getNro_Legajo()."</td></tr>";                                       
+                $tablePrint .= "<tr><td>Obra Social</td><td>".$Persona->getObra_Social()."</td></tr>";
+                $Table .= "<tr><td>Escuela</td><td>".$Persona->getEscuela()."</td></tr>";
+                $tablePrint .= "<tr><td>Escuela</td><td>".$Persona->getEscuela()."</td></tr>";
+                $Table .= "<tr><td>Nro. Legajo</td><td>".$Persona->getNro_Carpeta()."</td></tr>";
+                $tablePrint .= "<tr><td>Nro. Legajo</td><td>".$Persona->getNro_Carpeta()."</td></tr>";
+                $Table .= "<tr><td>Nro. Carpeta</td><td>".$Persona->getNro_Legajo()."</td></tr>";
+                $tablePrint .= "<tr><td>Nro. Carpeta</td><td>".$Persona->getNro_Legajo()."</td></tr>";
                 $Table .= "<tr><td>Observación</td><td>".$Persona->getObservaciones()."</td></tr>";
+                $tablePrint .= "<tr><td>Observación</td><td>".$Persona->getObservaciones()."</td></tr>";
                 $Table .= "<tr><td>Cambio de Domicilio</td><td>".$Persona->getCambio_Domicilio()."</td></tr>";
+                $tablePrint .= "<tr><td>Cambio de Domicilio</td><td>".$Persona->getCambio_Domicilio()."</td></tr>";
   
                 $Table .= "</table>";
+                $tablePrint .= "</table>";
               }else{
                 $Table = "<table class='table'><thead><tr><th></th><th>Detalles de la Persona</th></tr></thead>";
-  
+                $tablePrint .= "<table class='table'><thead><tr><th></th><th>Detalles de la Persona</th></tr></thead>";
                 $Table .= "<tr><td>Id</td><td>".$Persona->getID_Persona()."</td></tr>";
+                $tablePrint .= "<tr><td>Id</td><td>".$Persona->getID_Persona()."</td></tr>";
                 $Table .= "<tr><td>Apellido</td><td>".$Persona->getApellido()."</td></tr>";
+                $tablePrint .= "<tr><td>Apellido</td><td>".$Persona->getApellido()."</td></tr>";
                 $Table .= "<tr><td>Nombre</td><td>".$Persona->getNombre()."</td></tr>";
+                $tablePrint .= "<tr><td>Nombre</td><td>".$Persona->getNombre()."</td></tr>";
                 $Table .= "<tr><td>Documento</td><td>".$Persona->getDNI()."</td></tr>";
+                $tablePrint .= "<tr><td>Documento</td><td>".$Persona->getDNI()."</td></tr>";
                 $Table .= "<tr><td>Fecha de Nacimiento</td><td>".$Persona->getFecha_Nacimiento()."</td></tr>";
+                $tablePrint .= "<tr><td>Fecha de Nacimiento</td><td>".$Persona->getFecha_Nacimiento()."</td></tr>";
                 if($Persona->getEdad() == 2020){
                   $Table .= "<tr><td>Edad</td><td>No se cargo fecha de nacimiento</td></tr>";
+                  $tablePrint .= "<tr><td>Edad</td><td>No se cargo fecha de nacimiento</td></tr>";
                 }else{
                   $Table .= "<tr><td>Edad</td><td>".$Persona->getEdad()."</td></tr>";
+                  $tablePrint .= "<tr><td>Edad</td><td>".$Persona->getEdad()."</td></tr>";
                 }                            
-                $Table .= "<tr><td>Meses</td><td>".$Persona->getMeses()."</td></tr>";              
-                             
+                $Table .= "<tr><td>Meses</td><td>".$Persona->getMeses()."</td></tr>";
+                $tablePrint .= "<tr><td>Meses</td><td>".$Persona->getMeses()."</td></tr>";
                 $Table .= "<tr><td>Localidad</td><td>".$Persona->getLocalidad()."</td></tr>";
-                $Table .= "<tr><td>Barrio</td><td>".$Persona->getBarrio()."</td></tr>";      
+                $tablePrint .= "<tr><td>Localidad</td><td>".$Persona->getLocalidad()."</td></tr>";
+                $Table .= "<tr><td>Barrio</td><td>".$Persona->getBarrio()."</td></tr>";
+                $tablePrint .= "<tr><td>Barrio</td><td>".$Persona->getBarrio()."</td></tr>";
                 $Table .= "<tr><td>Domicilio</td><td>".$Persona->getDomicilio()."</td></tr>";
+                $tablePrint .= "<tr><td>Domicilio</td><td>".$Persona->getDomicilio()."</td></tr>";
                 $Table .= "<tr><td>Manzana</td><td>".$Persona->getManzana()."</td></tr>";
+                $tablePrint .= "<tr><td>Manzana</td><td>".$Persona->getManzana()."</td></tr>";
                 $Table .= "<tr><td>Lote</td><td>".$Persona->getLote()."</td></tr>";
+                $tablePrint .= "<tr><td>Lote</td><td>".$Persona->getLote()."</td></tr>";
                 $Table .= "<tr><td>Sub-lote</td><td>".$Persona->getFamilia()."</td></tr>";
+                $tablePrint .= "<tr><td>Sub-lote</td><td>".$Persona->getFamilia()."</td></tr>";
                 $Table .= "<tr><td>Telefono</td><td>".$Persona->getTelefono()."</td></tr>";
-                $Table .= "<tr><td>E-Mail</td><td>".$Persona->getMail()."</td></tr>";                          
+                $tablePrint .= "<tr><td>Telefono</td><td>".$Persona->getTelefono()."</td></tr>";
+                $Table .= "<tr><td>E-Mail</td><td>".$Persona->getMail()."</td></tr>";
+                $tablePrint .= "<tr><td>E-Mail</td><td>".$Persona->getMail()."</td></tr>";
                 $Table .= "<tr><td>Obra Social</td><td>".$Persona->getObra_Social()."</td></tr>";
-                $Table .= "<tr><td>Escuela</td><td>".$Escuela."</td></tr>";  
-                $Table .= "<tr><td>Nro. Legajo</td><td>".$Persona->getNro_Carpeta()."</td></tr>"; 
-                $Table .= "<tr><td>Nro. Carpeta</td><td>".$Persona->getNro_Legajo()."</td></tr>";                                       
+                $tablePrint .= "<tr><td>Obra Social</td><td>".$Persona->getObra_Social()."</td></tr>";
+                $Table .= "<tr><td>Escuela</td><td>".$Persona->getEscuela()."</td></tr>";
+                $tablePrint .= "<tr><td>Escuela</td><td>".$Persona->getEscuela()."</td></tr>";
+                $Table .= "<tr><td>Nro. Legajo</td><td>".$Persona->getNro_Carpeta()."</td></tr>";
+                $tablePrint .= "<tr><td>Nro. Legajo</td><td>".$Persona->getNro_Carpeta()."</td></tr>";
+                $Table .= "<tr><td>Nro. Carpeta</td><td>".$Persona->getNro_Legajo()."</td></tr>";
+                $tablePrint .= "<tr><td>Nro. Carpeta</td><td>".$Persona->getNro_Legajo()."</td></tr>";
                 $Table .= "<tr><td>Observación</td><td>".$Persona->getObservaciones()."</td></tr>";
+                $tablePrint .= "<tr><td>Observación</td><td>".$Persona->getObservaciones()."</td></tr>";
                 $Table .= "<tr><td>Cambio de Domicilio</td><td>".$Persona->getCambio_Domicilio()."</td></tr>";
-  
+                $tablePrint .= "<tr><td>Cambio de Domicilio</td><td>".$Persona->getCambio_Domicilio()."</td></tr>";
                 $Table .= "</table>";
+                $tablePrint .= "</table>";
               }
 
 
@@ -1076,6 +1118,7 @@ $Con->CloseConexion();
                                 <td class='trEdad' style='color: #fff;background-color: #212529;border-color: #212529;font-weight: bold;'>Año</th>
                                 <td class='trMeses' style='color: #fff;background-color: #212529;border-color: #212529;font-weight: bold;'>Meses</th>
                               </tr>";
+                $TableMovPrint = $TableMov;
               }
 
               foreach($tomarRetTodos as $clave => $RetTodos){                
@@ -1282,6 +1325,25 @@ $Con->CloseConexion();
 
               if($ID_Config == 'table'){
                 $TableMov .= "</table>";
+
+                $classAReemplazar[0] = "~class='table'~";
+                $classAReemplazar[] = "~class='table table-dark'~";
+                $classAReemplazar[] = "~class='trMeses'~";
+                $classAReemplazar[] = "~class='trEdad'~";
+                $classAReemplazar[] = "~class='trFechaNac'~";
+                $classAReemplazar[] = "~class='trDNI'~";
+                $classAReemplazar[] = "~class='trPersona'~";
+                $classAReemplazar[] = "~<class='trFecha'~";
+                $classAReemplazar[] = "~class='trMotivos'~";
+                $classAReemplazar[] = "~class='trOtrasInstituciones'~";
+                $classAReemplazar[] = "~class='trCentrosSalud'~";
+                $classAReemplazar[] = "~class='trResponsable'~";
+                $classAReemplazar[] = "~class='trLocalidad'~";
+                $classAReemplazar[] = "~class='trBarrio'~";
+                $classAReemplazar[] = "~class='trDomicilio'~";
+                $classAReemplazar[] = "~class='trObraSocial'~";
+                $TableMovPrint = preg_replace( $tdReemplazar, "", $TableMov);
+
                 echo $TableMov;
               }
 
@@ -1437,6 +1499,7 @@ $Con->CloseConexion();
                                   <th scope='col' class='trEdad' style='text-align: center;border-top: 0px solid #dee2e6;'>Años</th>
                                   <th scope='col' class='trMeses' style='text-align: center;border-top: 0px solid #dee2e6;'>Meses</th>
                                 </tr>";
+                $TableMovPrint = $TableMov;
               }
 
               foreach($tomarRetTodos as $clave => $RetTodos){                
@@ -1606,99 +1669,246 @@ $Con->CloseConexion();
                   if($ID_Config == 'grid'){
                     $TableMov = "<table class='table table-dark'>";                
                     $TableMov .= "<tr class='trFecha'><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>".$DtoMovimiento->getFecha()."</td></tr>";
-                    $TableMov .= "<tr><td style = 'width: 30%;'>Persona</td><td style = 'width: 70%;'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$DtoMovimiento->getApellido().", ".$DtoMovimiento->getNombre()."</a></td></tr>";
+                    $TableMovPrint = $TableMov;
+                    $TableMov .= "<tr>
+                                    <td style = 'width: 30%;'>
+                                      Persona
+                                    </td>
+                                    <td style = 'width: 70%;'>
+                                      <a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".
+                                        $DtoMovimiento->getApellido().", ".$DtoMovimiento->getNombre()."
+                                      </a>
+                                    </td>
+                                  </tr>";
+                    $TableMovPrint .= "<tr>
+                                    <td style = 'width: 30%;'>
+                                      Persona
+                                    </td>
+                                    <td style = 'width: 70%;'>".
+                                        $DtoMovimiento->getApellido().", ".$DtoMovimiento->getNombre()."
+                                    </td>
+                                  </tr>";
                     if($ID_Motivo > 0){    
                       switch ($ID_Motivo) {
-                        case $ID_Motivo_1: $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>"; break;
-                        case $ID_Motivo_2: $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_2()."</td></tr>"; break;
-                        case $ID_Motivo_3: $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>"; break;
+                        case $ID_Motivo_1: 
+                            $TableMov .= "<tr class='trMotivos'>
+                                            <td style = 'width: 30%;'>
+                                              Motivo 1
+                                            </td>
+                                          <td style = 'width: 70%;'>".
+                                            $DtoMovimiento->getMotivo_1()."
+                                          </td>
+                                        </tr>";
+                            $TableMovPrint .= "<tr class='trMotivos'>
+                                        <td style = 'width: 30%;'>
+                                          Motivo 1
+                                        </td>
+                                      <td style = 'width: 70%;'>".
+                                        $DtoMovimiento->getMotivo_1()."
+                                      </td>
+                                    </tr>";
+                            break;
+                        case $ID_Motivo_2:
+                            $TableMov .= "<tr class='trMotivos'>
+                                            <td style = 'width: 30%;'>
+                                              Motivo 2
+                                            </td>
+                                            <td style = 'width: 70%;'>".
+                                              $DtoMovimiento->getMotivo_2()."
+                                            </td>
+                                          </tr>";
+                            $TableMovPrint .= "<tr class='trMotivos'>
+                                            <td style = 'width: 30%;'>
+                                              Motivo 2
+                                            </td>
+                                            <td style = 'width: 70%;'>".
+                                              $DtoMovimiento->getMotivo_2()."
+                                            </td>
+                                          </tr>"; 
+                            break;
+                        case $ID_Motivo_3: 
+                            $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
+                            $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
+                            break;
                         
-                        default: $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>"; break;
+                        default: 
+                            $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>"; 
+                            $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>"; 
+                            break;
                       }                  
   
                     }elseif($ID_Motivo2 > 0){
 
                       switch ($ID_Motivo2) {
-                        case $ID_Motivo_1: $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>"; break;
-                        case $ID_Motivo_2: $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_2()."</td></tr>"; break;
-                        case $ID_Motivo_3: $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>"; break;
+                        case $ID_Motivo_1: 
+                            $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
+                            $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
+                            break;
+                        case $ID_Motivo_2:
+                            $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
+                            $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
+                            break;
+                        case $ID_Motivo_3:
+                            $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
+                            $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
+                            break;
                         
-                        default: $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>"; break;
+                        default: 
+                            $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
+                            $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
+                            break;
                       }
 
                     }elseif($ID_Motivo3 > 0){
 
                       switch ($ID_Motivo3) {
-                        case $ID_Motivo_1: $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>"; break;
-                        case $ID_Motivo_2: $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_2()."</td></tr>"; break;
-                        case $ID_Motivo_3: $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>"; break;
+                        case $ID_Motivo_1:
+                            $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
+                            $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
+                            break;
+                        case $ID_Motivo_2: 
+                            $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
+                            $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
+                            break;
+                        case $ID_Motivo_3:
+                            $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
+                            $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
+                            break;
                         
-                        default: $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>"; break;
+                        default:
+                            $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
+                            $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
+                            break;
                       }
 
                     }else{
                       $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
+                      $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
                       $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
+                      $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
                       $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
+                      $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
                     }
                     $TableMov .= "<tr class='trObservaciones'><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getObservaciones()."</td></tr>";
+                    $TableMovPrint .= "<tr class='trObservaciones'><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getObservaciones()."</td></tr>";
                     $TableMov .= "<tr class='trResponsable'><td style = 'width: 30%;'>Responsable</td><td style = 'width: 70%;'>".$DtoMovimiento->getResponsable()."</td></tr>";
+                    $TableMovPrint .= "<tr class='trResponsable'><td style = 'width: 30%;'>Responsable</td><td style = 'width: 70%;'>".$DtoMovimiento->getResponsable()."</td></tr>";
                     $TableMov .= "<tr class='trCentrosSalud'><td style = 'width: 30%;'>Centro de salud</td><td style = 'width: 70%;'>".$DtoMovimiento->getCentroSalud()."</td></tr>";
+                    $TableMovPrint .= "<tr class='trCentrosSalud'><td style = 'width: 30%;'>Centro de salud</td><td style = 'width: 70%;'>".$DtoMovimiento->getCentroSalud()."</td></tr>";
                     $TableMov .= "<tr class='trOtrasInstituciones'><td style = 'width: 30%;'>Otras instituciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
+                    $TableMovPrint .= "<tr class='trOtrasInstituciones'><td style = 'width: 30%;'>Otras instituciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
                     $TableMov .= "</table>";
+                    $TableMovPrint .= "</table>";
                     echo $TableMov;
-                  }else{        
-                    $TableMov .= "<tr>";                           
+                  }else{
+                    $TableMov .= "<tr>";
+                    $TableMovPrint .= "<tr>";
                     $TableMov .= "<td class='trFecha' style = 'width: auto;'>".$DtoMovimiento->getFecha()."</td>";
+                    $TableMovPrint .= "<td class='trFecha' style = 'width: auto;'>".$DtoMovimiento->getFecha()."</td>";
                     $TableMov .= "<td class='trPersona' style = 'width: auto;'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$DtoMovimiento->getApellido().", ".$DtoMovimiento->getNombre()."</a></td>";
+                    $TableMovPrint .= "<td class='trPersona' style = 'width: auto;'>".
+                                          $DtoMovimiento->getApellido().", ".$DtoMovimiento->getNombre()."
+                                      </td>";
                     if($ID_Motivo > 0){    
                       switch ($ID_Motivo) {
-                        case $ID_Motivo_1: $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>"; break;
-                        case $ID_Motivo_2: $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_2()."</td>"; break;
-                        case $ID_Motivo_3: $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_3()."</td>"; break;
+                        case $ID_Motivo_1:
+                            $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>";
+                            $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>";
+                            break;
+                        case $ID_Motivo_2:
+                            $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_2()."</td>";
+                            $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_2()."</td>";
+                            break;
+                        case $ID_Motivo_3:
+                            $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_3()."</td>";
+                            $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_3()."</td>";
+                            break;
                         
-                        default: $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>"; break;
+                        default:
+                            $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>";
+                            $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>";
+                            break;
                       }                  
   
                     }elseif($ID_Motivo2 > 0){
 
                       switch ($ID_Motivo2) {
-                        case $ID_Motivo_1: $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>"; break;
-                        case $ID_Motivo_2: $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_2()."</td>"; break;
-                        case $ID_Motivo_3: $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_3()."</td>"; break;
+                        case $ID_Motivo_1:
+                            $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>";
+                            $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>";
+                            break;
+                        case $ID_Motivo_2:
+                            $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_2()."</td>";
+                            $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_2()."</td>";
+                            break;
+                        case $ID_Motivo_3:
+                            $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_3()."</td>";
+                            $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_3()."</td>";
+                            break;
                         
-                        default: $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>"; break;
+                        default:
+                            $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>";
+                            $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>";
+                            break;
                       }
 
                     }elseif($ID_Motivo3 > 0){
 
                       switch ($ID_Motivo3) {
-                        case $ID_Motivo_1: $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>"; break;
-                        case $ID_Motivo_2: $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_2()."</td>"; break;
-                        case $ID_Motivo_3: $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_3()."</td>"; break;
+                        case $ID_Motivo_1:
+                            $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>";
+                            $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>";
+                            break;
+                        case $ID_Motivo_2:
+                            $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_2()."</td>";
+                            $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_2()."</td>";
+                            break;
+                        case $ID_Motivo_3:
+                            $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_3()."</td>";
+                            $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_3()."</td>";
+                            break;
                         
-                        default: $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>"; break;
+                        default:
+                            $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>";
+                            $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>";
+                            break;
                       }
 
                     }else{
                       $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>";
+                      $TableMovPrint .=  "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td>";
                       $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_2()."</td>";
+                      $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_2()."</td>";
                       $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_3()."</td>";  
+                      $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_3()."</td>";  
                     }
                                       
                     $TableMov .= "<td class='trDNI' style = 'width: auto;'>".$DNI."</td>";
+                    $TableMovPrint .= "<td class='trDNI' style = 'width: auto;'>".$DNI."</td>";
                     $TableMov .= "<td class='trFechaNac' style = 'width: auto;'>".$Fecha_Nacimiento."</td>";
+                    $TableMovPrint .= "<td class='trFechaNac' style = 'width: auto;'>".$Fecha_Nacimiento."</td>";
                     $TableMov .= "<td class='trEdad' style = 'width: auto;'>".$Edad."</td>";
+                    $TableMovPrint .= "<td class='trEdad' style = 'width: auto;'>".$Edad."</td>";
                     $TableMov .= "<td class='trMeses' style = 'width: auto;'>".$Meses."</td>";
+                    $TableMovPrint .= "<td class='trMeses' style = 'width: auto;'>".$Meses."</td>";
                     $TableMov .= "<td class='trObraSocial' style = 'width: auto;'>".$Obra_Social."</td>";
+                    $TableMovPrint .= "<td class='trObraSocial' style = 'width: auto;'>".$Obra_Social."</td>";
                     $TableMov .= "<td class='trDomicilio' style = 'width: auto;'>".$Domicilio."</td>";
+                    $TableMovPrint .= "<td class='trDomicilio' style = 'width: auto;'>".$Domicilio."</td>";
                     $TableMov .= "<td class='trBarrio' style = 'width: auto;'>".$Barrio."</td>";
+                    $TableMovPrint .= "<td class='trBarrio' style = 'width: auto;'>".$Barrio."</td>";
                     $TableMov .= "<td class='trLocalidad' style = 'width: auto;'>".$Localidad."</td>";
+                    $TableMovPrint .= "<td class='trLocalidad' style = 'width: auto;'>".$Localidad."</td>";
                     $TableMov .= "<td class='trObservaciones' style = 'width: auto;'>".$DtoMovimiento->getObservaciones()."</td>";
+                    $TableMovPrint .= "<td class='trObservaciones' style = 'width: auto;'>".$DtoMovimiento->getObservaciones()."</td>";
                     $TableMov .= "<td class='trResponsable' style = 'width: auto;'>".$DtoMovimiento->getResponsable()."</td>";
+                    $TableMovPrint .= "<td class='trResponsable' style = 'width: auto;'>".$DtoMovimiento->getResponsable()."</td>";
                     $TableMov .= "<td class='trCentrosSalud' style = 'width: auto;'>".$DtoMovimiento->getCentroSalud()."</td>";
+                    $TableMovPrint .= "<td class='trCentrosSalud' style = 'width: auto;'>".$DtoMovimiento->getCentroSalud()."</td>";
                     $TableMov .= "<td class='trOtrasInstituciones' style = 'width: auto;'>".$DtoMovimiento->getOtraInstitucion()."</td>";
+                    $TableMovPrint .= "<td class='trOtrasInstituciones' style = 'width: auto;'>".$DtoMovimiento->getOtraInstitucion()."</td>";
                     $TableMov .= "</tr>";
+                    $TableMovPrint .= "</tr>";
                   }
 
 
@@ -1858,31 +2068,80 @@ $Con->CloseConexion();
                   $TableMov .= "<tr class='trCentrosSalud'><td style = 'width: 30%;'>Centro de salud</td><td style = 'width: 70%;'>".$DtoMovimiento->getCentroSalud()."</td></tr>";
                   $TableMov .= "<tr class='trOtrasInstituciones'><td style = 'width: 30%;'>Otras instituciones</td><td style = 'width: 70%;'>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
                   $TableMov .= "</table>";
+
+                  $classAReemplazar[0] = "~class='table table-dark'~";
+                  $classAReemplazar[] = "~<class='trFecha'~";
+                  $classAReemplazar[] = "~class='trMotivos'~";
+                  $classAReemplazar[] = "~class='trOtrasInstituciones'~";
+                  $classAReemplazar[] = "~class='trCentrosSalud'~";
+                  $classAReemplazar[] = "~class='trResponsable'~";
+                  $classAReemplazar[] = "~class='trObservaciones'~";
+                  $TableMovPrint .= preg_replace( $tdReemplazar, "", $TableMov);
+
                   echo $TableMov;
-                }else{                                   
+                }else{
                   $TableMov .= "<td class='trFecha' style = 'width: auto;'>".$DtoMovimiento->getFecha()."</td></tr>";
+                  $TableMovPrint .= "<td class='trFecha' style = 'width: auto;'>".$DtoMovimiento->getFecha()."</td></tr>";
                   $TableMov .= "<td class='trPersona' style = 'width: auto;'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$DtoMovimiento->getApellido().", ".$DtoMovimiento->getNombre()."</a></td></tr>";
+                  $TableMovPrint .= "<td class='trPersona' style = 'width: auto;'>".
+                                      $DtoMovimiento->getApellido().", ".$DtoMovimiento->getNombre()."
+                                    </td>
+                                  </tr>";
                   $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
+                  $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_1()."</td></tr>";
                   $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
+                  $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_2()."</td></tr>";
                   $TableMov .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
+                  $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>".$DtoMovimiento->getMotivo_3()."</td></tr>";
                   $TableMov .= "<td class='trDNI' style = 'width: auto;'>".$DNI."</td>";
+                  $TableMovPrint .= "<td class='trDNI' style = 'width: auto;'>".$DNI."</td>";
                   $TableMov .= "<td class='trFechaNac' style = 'width: auto;'>".$Fecha_Nacimiento."</td>";
+                  $TableMovPrint .= "<td class='trFechaNac' style = 'width: auto;'>".$Fecha_Nacimiento."</td>";
                   $TableMov .= "<td class='trEdad' style = 'width: auto;'>".$Edad."</td>";
+                  $TableMovPrint .= "<td class='trEdad' style = 'width: auto;'>".$Edad."</td>";
                   $TableMov .= "<td class='trMeses' style = 'width: auto;'>".$Meses."</td>";
+                  $TableMovPrint .= "<td class='trMeses' style = 'width: auto;'>".$Meses."</td>";
                   $TableMov .= "<td class='trObraSocial' style = 'width: auto;'>".$Obra_Social."</td>";
+                  $TableMovPrint .= "<td class='trObraSocial' style = 'width: auto;'>".$Obra_Social."</td>";
                   $TableMov .= "<td class='trDomicilio' style = 'width: auto;'>".$Domicilio."</td>";
+                  $TableMovPrint .= "<td class='trDomicilio' style = 'width: auto;'>".$Domicilio."</td>";
                   $TableMov .= "<td class='trBarrio' style = 'width: auto;'>".$Barrio."</td>";
+                  $TableMovPrint .= "<td class='trBarrio' style = 'width: auto;'>".$Barrio."</td>";
                   $TableMov .= "<td class='trLocalidad' style = 'width: auto;'>".$Localidad."</td>";
+                  $TableMovPrint .= "<td class='trLocalidad' style = 'width: auto;'>".$Localidad."</td>";
                   $TableMov .= "<td class='trObservaciones' style = 'width: auto;'>".$DtoMovimiento->getObservaciones()."</td></tr>";
+                  $TableMovPrint .= "<td class='trObservaciones' style = 'width: auto;'>".$DtoMovimiento->getObservaciones()."</td></tr>";
                   $TableMov .= "<td class='trResponsable' style = 'width: auto;'>".$DtoMovimiento->getResponsable()."</td></tr>";
+                  $TableMovPrint .= "<td class='trResponsable' style = 'width: auto;'>".$DtoMovimiento->getResponsable()."</td></tr>";
                   $TableMov .= "<td class='trCentrosSalud' style = 'width: auto;'>".$DtoMovimiento->getCentroSalud()."</td></tr>";
+                  $TableMovPrint .= "<td class='trCentrosSalud' style = 'width: auto;'>".$DtoMovimiento->getCentroSalud()."</td></tr>";
                   $TableMov .= "<td class='trOtrasInstituciones' style = 'width: auto;'>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
+                  $TableMovPrint .= "<td class='trOtrasInstituciones' style = 'width: auto;'>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
                 }
 
               }
 
               if($ID_Config == 'table'){
                 $TableMov .= "</table>";
+
+                $classAReemplazar[0] = "~class='table'~";
+                $classAReemplazar[] = "~class='table table-dark'~";
+                $classAReemplazar[] = "~class='trMeses'~";
+                $classAReemplazar[] = "~class='trEdad'~";
+                $classAReemplazar[] = "~class='trFechaNac'~";
+                $classAReemplazar[] = "~class='trDNI'~";
+                $classAReemplazar[] = "~class='trPersona'~";
+                $classAReemplazar[] = "~<class='trFecha'~";
+                $classAReemplazar[] = "~class='trMotivos'~";
+                $classAReemplazar[] = "~class='trOtrasInstituciones'~";
+                $classAReemplazar[] = "~class='trCentrosSalud'~";
+                $classAReemplazar[] = "~class='trResponsable'~";
+                $classAReemplazar[] = "~class='trLocalidad'~";
+                $classAReemplazar[] = "~class='trBarrio'~";
+                $classAReemplazar[] = "~class='trDomicilio'~";
+                $classAReemplazar[] = "~class='trObraSocial'~";
+                $TableMovPrint .= preg_replace( $classAReemplazar, "", $TableMovPrint);
+
                 echo $TableMov;
               }
 
@@ -1924,8 +2183,6 @@ $Con->CloseConexion();
               // echo $Mensaje;
             }
 
-
-
             // ACA PONER
             
             //$_SESSION["datosNav"] = $filtrosSeleccionados;
@@ -1933,6 +2190,77 @@ $Con->CloseConexion();
             //unset($_SESSION["datosNav"]);
           ?>
         </div>
+        <?php 
+        $htmlPrint = "<html>
+                        <head>
+                        <link href='https://fonts.cdnfonts.com/css/symbol' rel='stylesheet'>
+                        <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+    
+                          <style>
+                            @page {
+                              margin: 15px !important;
+                              padding: 15px !important;
+                            } 
+                            .table_pdf {
+                              width: 100%;
+                            }
+
+                            table thead tr th {
+                              background-color: #ccc;
+                            }
+
+                            h5, h2{
+                              text-align: center;
+                              margin-bottom: 0px
+                            }
+
+                            #InformacionDeCentro {
+                              float: right; 
+                              text-align: left;
+                            }
+
+                            #frase {
+                              font-weight: bold;
+                            }
+
+                            #encabezado {
+                              text-align: center;
+                              float: right;
+                              padding-right: 13rem;
+                            }
+
+                            #InformacionDeCiudad {
+                              text-align: left;
+                              margin-bottom: 2rem;
+                              margin-top: 2rem;
+                            }
+
+                            table, th, td {
+                              border: 1px solid;
+                            }
+                          </style>
+                          </head> 
+                          <body>
+                            <p id='InformacionDeCentro'> Centro de Atencion Primaria en Salud<br>
+                              Direccion de Accion Social<br>
+                              DESDE : ". $Etiqueta_Fecha_Inicio . " HASTA : " . $Etiqueta_Fecha_Fin ." </p>
+                            <p id='encabezado'> Plan para el fortalecimiento del bienestar Comunitario<br>
+                              <span id='frase'> 
+                                Listado de moviminetos
+                              </span>
+                              <br>
+                            </p>
+                            <p id='InformacionDeCiudad'>
+                              Municipialidad de Rio Tercero
+                            </p>" .
+                            ((empty($tablePrint))?"":$tablePrint) ."
+                            <br>".
+                            $TableMovPrint."
+                        </body>
+                      </html>";
+        
+        ?>
+        <input type="hidden" name="tabla_1" id = "tabla_1" value = "<?php echo $htmlPrint;?>">
   </div>
 </div>
 </div>

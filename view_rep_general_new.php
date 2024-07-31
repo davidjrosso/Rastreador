@@ -2063,7 +2063,7 @@ $Con->CloseConexion();
                   $tdExtenso = false;
 
                   $Table .= "<tr class='Datos'>";
-                  $Table_imprimir .= "<tr>";
+                  $Table_imprimir .= "<tr style='text-align:center;'>";
                   $nroColumnas = 70;
                   $tagsTD .= "<td id='Contenido-1'>" . $RetTodos["Barrio"] . "</td>
                               <td id='Contenido-2'>" . $RetTodos["domicilio"] . "</td>";
@@ -2156,7 +2156,7 @@ $Con->CloseConexion();
                     $tagsTD .= "<td name='DatosResultados' id=$IndexCelda style='min-width:190px'>
                                  <div class = 'row' style='margin:0'>";   
                     $tagsTD_imprimir .= "<td style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;'>
-                                          <div style='margin-left:-25px; padding-top:4px;max-width:{$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;'>";
+                                          <div style='margin-left:-52px; padding-top:4px;height:38px;'>";
 
                     $tagsMotivos = "";
 
@@ -2553,7 +2553,7 @@ $Con->CloseConexion();
                               $tagsMotivos .= ($nroMotivosEnFecha == 7)?"<div>": "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
-                                              <span style='font-size: 30px; color: " . $RetMotivo2["color"] . "; text-align= center;'>" . 
+                                              <span style='font-size: 30px; color: " . $RetMotivo2["color"] . "; text-align: center;'>" . 
                                                 $RetMotivo2["Forma_Categoria"] . "
                                                 <center>
                                                   <span class='nombreCategoria'>" . 
@@ -3083,8 +3083,7 @@ $Con->CloseConexion();
           cache: false,
           url: "Controladores/GeneradorPdf.php",
           data: dataString,
-          async: false,
-          cache: false,
+          async: true,
           success: function (res) {
             var arrBuffer = base64ToArrayBuffer(res);
             var blob = new Blob([arrBuffer], { type: "application/pdf" });

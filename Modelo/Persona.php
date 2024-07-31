@@ -202,7 +202,8 @@ public function getCalle(){
 	return $DomActual;
 }
 
-public function getNroCalle(){
+public function getNroCalle()
+{
 	$LongString = strlen($this->Domicilio);
 	if($LongString > 1){
 	  $StringDelimitado = chunk_split($this->Domicilio,$LongString - 4,"-");
@@ -217,59 +218,99 @@ public function getNroCalle(){
 	return $NroDomActual;
 }
 
-public function getBarrio(){
-	return $this->Barrio;
+public function getBarrio()
+{
+	$Con = new Conexion();
+	$Con->OpenConexion();
+	$ConsultarBarrio = "select * 
+						from barrios 
+						where ID_Barrio = {$this->Barrio}";
+	$MensajeErrorBarrio = "No se pudo consultar el Barrio de la persona";
+	$EjecutarConsultarBarrio = mysqli_query($Con->Conexion,$ConsultarBarrio) or die($MensajeErrorBarrio);
+	$RetBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);
+	$Con->CloseConexion();
+	return $RetBarrio["Barrio"];
 }
 
-public function getLocalidad(){
+public function getLocalidad()
+{
 	return $this->Localidad;
 }
 
-public function getCircunscripcion(){
+public function getCircunscripcion()
+{
 	return $this->Circunscripcion;
 }
 
-public function getSeccion(){
+public function getSeccion()
+{
 	return $this->Seccion;
 }
 
-public function getManzana(){
+public function getManzana()
+{
 	return $this->Manzana;
 }
 
-public function getLote(){
+public function getLote()
+{
 	return $this->Lote;
 }
 
-public function getFamilia(){
+public function getFamilia()
+{
 	return $this->Familia;
 }
 
-public function getObservaciones(){
+public function getObservaciones()
+{
 	return $this->Observaciones;
 }
 
-public function getCambio_Domicilio(){
+public function getCambio_Domicilio()
+{
 	return $this->Cambio_Domicilio;
 }
 
-public function getTelefono(){
+public function getTelefono()
+{
 	return $this->Telefono;
 }
 
-public function getMail(){
+public function getMail()
+{
 	return $this->Mail;
 }
 
-public function getEstado(){
+public function getEstado()
+{
 	return $this->Estado;
 }
 
-public function getID_Escuela(){
+public function getID_Escuela()
+{
 	return $this->ID_Escuela;
 }
 
-public function getTrabajo(){
+public function getEscuela()
+{
+	$Con = new Conexion();
+	$Con->OpenConexion();
+	$ConsultarEscuela = "select Escuela 
+						 from escuelas 
+						 where ID_Escuela = {$this->ID_Escuela}";
+	$MensajeErrorConsultarEscuela = "No se pudo consultar la Escuela";
+	$EjecutarConsultarEscuela = mysqli_query(
+		$Con->Conexion,
+		$ConsultarEscuela
+		) or die($MensajeErrorConsultarEscuela);
+	$RetEscuela = mysqli_fetch_assoc($EjecutarConsultarEscuela);
+	$RetEscuela["Escuela"];
+	$Con->CloseConexion();
+	return $RetEscuela["Escuela"];
+}
+public function getTrabajo()
+{
 	return $this->Trabajo;
 }
 
@@ -392,10 +433,9 @@ public function __construct(
 		$this->ID_Escuela = $ID_Escuela;	
 		$this->Estado = $estado;
 		$this->Trabajo = $trabajo;
+		$Con->CloseConexion();
 	}
 }
 
 }
 
-
-?>
