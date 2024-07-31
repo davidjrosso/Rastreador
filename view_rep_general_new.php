@@ -5,9 +5,7 @@ require_once "Controladores/CtrGeneral.php";
 require_once "Controladores/Conexion.php";
 require_once "Modelo/Persona.php";
 require_once "sys_config.php";
-
 require_once 'dompdf/autoload.inc.php';
-
 
 header("Content-Type: text/html;charset=utf-8");
 

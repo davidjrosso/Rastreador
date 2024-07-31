@@ -296,11 +296,11 @@ body {
 /* FIN DE ARREGLO DEL HEADER DE LA TABLA   */
 
 .class_modal-dialog {
-  max-width: max-content;
+  max-width: max-content !important;
 }
 
 .modal-footer-flex-center {
-  justify-content: center;
+  justify-content: center !important;
 }
 
 .div-buttom-padding{
