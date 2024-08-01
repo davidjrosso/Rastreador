@@ -247,19 +247,19 @@ $Con->CloseConexion();
           <p class = "Titulos">Cargar Nuevo Motivo</p>
           <form method = "post" onKeydown="return event.key != 'Enter';" id="form_1" action = "Controladores/pedircrearmotivo.php" onSubmit = "return ValidarMotivo();">
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Denominación *: </label>
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Denominación</label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Motivo" id="Motivo" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Código *: </label>
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Código</label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Codigo" id="Codigo" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Categoría *: </label>
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Categoría</label>
               <div class="col-md-10">
                 <?php  
                 $Element = new Elements();
