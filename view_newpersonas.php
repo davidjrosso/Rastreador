@@ -398,7 +398,7 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row" style="margin-bottom: 0.6rem;">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Domicilio: </label>
+              <label for="BotonModalDireccion_1" class="col-md-2 col-form-label LblForm">Domicilio: </label>
               <div class="col-md-8" id = "Persona">
               	 	<button type = "button" id="BotonModalDireccion_1" class = "btn btn-lg btn-primary btn-block" style="padding-top: 4px;padding-bottom: 4px;" data-toggle="modal" data-target="#ModalCalle">Seleccione una Calle</button>                  
               </div>
@@ -443,7 +443,7 @@ $Con->CloseConexion();
               </div>
             </div>                        
             <div class="form-group row">
-              <label for="ID_Escuela" class="col-md-2 col-form-label LblForm">Nivel Escolar: </label>
+              <label for="ID_Nivel" class="col-md-2 col-form-label LblForm">Nivel Escolar: </label>
               <div class="col-md-10">
                 <?php 
                 $Element = new Elements();
@@ -461,9 +461,9 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Lugar de Trabajo: </label>
+              <label for="trabajo" class="col-md-2 col-form-label LblForm">Lugar de Trabajo: </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "Trabajo" id="inputPassword" autocomplete="off">
+                <input type="text" class="form-control" name = "Trabajo" id="trabajo" autocomplete="off">
               </div>
             </div>                                                
             <div class="form-group row">
