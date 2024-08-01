@@ -259,14 +259,14 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Forma</label>
+              <label for="ID_Forma" class="col-md-2 col-form-label LblForm">Forma</label>
               <div class="col-md-10">
                 <?php $Element = new Elements();
                 echo $Element->CBFormas_Categoria();?>
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Código</label>
+              <label for="Codigo" class="col-md-2 col-form-label LblForm">Código</label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Codigo" id="Codigo" autocomplete="off">
               </div>
