@@ -330,13 +330,13 @@ $Con->CloseConexion();
           <p class = "Titulos">Cargar Nueva Persona</p>
           <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/InsertPersona.php" onSubmit = "return ValidarPersona();">
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Apellido: </label>
+              <label for="Apellido" class="col-md-2 col-form-label LblForm">Apellido: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Apellido" id="Apellido" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nombre: </label>
+              <label for="Nombre" class="col-md-2 col-form-label LblForm">Nombre: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Nombre" id="Nombre" autocomplete="off">
               </div>
@@ -350,7 +350,7 @@ $Con->CloseConexion();
             <div class="div-modal-Error" id="ErrorDocumento">
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm" style="margin-bottom: -8px;">Fecha de Nacimiento: </label>
+              <label for="Fecha_Nacimiento" class="col-md-2 col-form-label LblForm" style="margin-bottom: -8px;">Fecha de Nacimiento: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Fecha_Nacimiento" id="Fecha_Nacimiento" autocomplete="off" placeholder="Ejemplo: 01/01/2010" onFocusOut="calcularEdad()"> 
               </div>
@@ -359,25 +359,25 @@ $Con->CloseConexion();
                   Edad <br>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Años: </label>
+              <label for="Edad" class="col-md-2 col-form-label LblForm">Años: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Edad" id="Edad" autocomplete="off" readonly>
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Meses: </label>
+              <label for="Meses" class="col-md-2 col-form-label LblForm">Meses: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Meses" id="Meses" autocomplete="off" readonly>
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
+              <label for="Nro_Carpeta" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Nro_Carpeta" id="Nro_Carpeta" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
+              <label for="Nro_Legajo" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Nro_Legajo" id="Nro_Legajo" autocomplete="off">
               </div>
@@ -389,7 +389,7 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Barrio: </label>
+              <label for="ID_Barrio" class="col-md-2 col-form-label LblForm">Barrio: </label>
               <div class="col-md-10">
                 <?php 
                 $Element = new Elements();
@@ -407,43 +407,43 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Manzana: </label>
+              <label for="Manzana" class="col-md-2 col-form-label LblForm">Manzana: </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "Manzana" id="inputPassword" autocomplete="off">
+                <input type="text" class="form-control" name = "Manzana" id="Manzana" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Lote: </label>
+              <label for="Lote" class="col-md-2 col-form-label LblForm">Lote: </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "Lote" id="inputPassword" autocomplete="off">
+                <input type="text" class="form-control" name = "Lote" id="Lote" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Sublote: </label>
+              <label for="Familia" class="col-md-2 col-form-label LblForm">Sublote: </label>
               <div class="col-md-10">
-                <input type="number" class="form-control" name = "Familia" id="inputPassword" autocomplete="off">
+                <input type="number" class="form-control" name = "Familia" id="Familia" autocomplete="off">
               </div>
             </div>            
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Teléfono: </label>
+              <label for="Telefono" class="col-md-2 col-form-label LblForm">Teléfono: </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "Telefono" id="inputPassword" autocomplete="off">
+                <input type="text" class="form-control" name = "Telefono" id="Telefono" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Mail: </label>
+              <label for="Mail" class="col-md-2 col-form-label LblForm">Mail: </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "Mail" id="inputPassword" autocomplete="off">
+                <input type="text" class="form-control" name = "Mail" id="Mail" autocomplete="off">
               </div>
             </div>            
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Obra Social(Si/No): </label>
+              <label for="Obra_Social" class="col-md-2 col-form-label LblForm">Obra Social(Si/No): </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "Obra_Social" id="inputPassword" autocomplete="off">
+                <input type="text" class="form-control" name = "Obra_Social" id="Obra_Social" autocomplete="off">
               </div>
             </div>                        
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nivel Escolar: </label>
+              <label for="ID_Escuela" class="col-md-2 col-form-label LblForm">Nivel Escolar: </label>
               <div class="col-md-10">
                 <?php 
                 $Element = new Elements();
@@ -452,7 +452,7 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Escuela: </label>
+              <label for="ID_Escuela" class="col-md-2 col-form-label LblForm">Escuela: </label>
               <div class="col-md-10" id = "Escuelas">
                 <?php 
                 $Element = new Elements();
@@ -467,15 +467,15 @@ $Con->CloseConexion();
               </div>
             </div>                                                
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Observaciones: </label>
+              <label for="bservaciones" class="col-md-2 col-form-label LblForm">Observaciones: </label>
               <div class="col-md-10">
-                <textarea class = "form-control" row = "3" name = "Observaciones"></textarea>
+                <textarea class = "form-control" row = "3" name = "Observaciones" id="observaciones"></textarea>
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Cambio de Domicilio: </label>
+              <label for="cambio_domicilio" class="col-md-2 col-form-label LblForm">Cambio de Domicilio:</label>
               <div class="col-md-10">
-                <textarea class = "form-control" row = "3" name = "Cambio_Domicilio"></textarea>
+                <textarea class="form-control" row="3" name="Cambio_Domicilio" id="cambio_domicilio"></textarea>
               </div>
             </div>
             <div class="form-group row">
