@@ -667,20 +667,20 @@ $Con->CloseConexion();
     #Contenido-Titulo-1 {
       position: sticky;
       z-index: 200;
-      left: 0;
+      /*left: 0;*/
       width: 150px;
     }
 
     #Contenido-Titulo-2 {
       position: sticky;
       z-index: 200;
-      left: 150px;
+      /*left: 150px;*/
       width: 150px;
     }
 
     #Contenido-Titulo-3 {
       position: sticky;
-      left: 300px;
+      /*left: 300px;*/
       z-index: 200;
       width: 150px;
       /* 50px  ACAAA */
@@ -688,7 +688,7 @@ $Con->CloseConexion();
 
     #Contenido-Titulo-4 {
       position: sticky;
-      left: 450px;
+      /*left: 450px;*/
       z-index: 200;
       /* 350px  ACAAA */
       width: 120px;
@@ -697,22 +697,22 @@ $Con->CloseConexion();
 
     #Contenido-Titulo-5 {
       position: sticky;
-      left: 400px;
+      /*left: 400px;*/
       z-index: 200;
       width: 70px;
     }
 
     #Contenido-Titulo-6 {
       position: sticky;
-      left: 450px;
+      /*left: 450px;*/
       z-index: 200;
       width: 150px;
     }
 
     #Contenido-Titulo-7 {
       position: sticky;
-      z-index: 200;
-      left: 600px;
+      z-index: 200;*/
+      /*left: 600px;
       width: 150px;
     }
 
