@@ -2200,7 +2200,13 @@ $Con->CloseConexion();
                             @page {
                               margin: 15px !important;
                               padding: 15px !important;
-                            } 
+                            }
+                            .table{
+                              border-collapse: collapse;
+                            }
+                            .thead-dark{
+                              background-color: #ccc;
+                            }
                             .table_pdf {
                               width: 100%;
                             }
