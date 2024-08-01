@@ -957,7 +957,7 @@ $Con->CloseConexion();
 
               if($ID_Config == 'grid'){
                 $Table = "<table class='table'><thead><tr><th></th><th>Detalles de la Persona</th></tr></thead>";
-                $tablePrint = "<table><thead><tr><th></th><th>Detalles de la Persona</th></tr></thead>";  
+                $tablePrint = "<table class='table'><thead><tr><th></th><th>Detalles de la Persona</th></tr></thead>";  
                 $Table .= "<tr><td>Id</td><td>".$Persona->getID_Persona()."</td></tr>";
                 $tablePrint .= "<tr><td>Id</td><td>".$Persona->getID_Persona()."</td></tr>";
                 $Table .= "<tr><td>Apellido</td><td>".$Persona->getApellido()."</td></tr>";
@@ -2267,7 +2267,7 @@ $Con->CloseConexion();
                             </p>" .
                             ((empty($tablePrint))?"":$tablePrint) ."
                             <br>".
-                            $TableMovPrint."
+                            ((empty($TableMovPrint))?"":$TableMovPrint)."
                         </body>
                       </html>";
         
