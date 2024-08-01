@@ -272,7 +272,7 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row">
-              <label id="grupousuarios" for="grupousuarios" class="col-md-2 col-form-label LblForm">Permisos</label>
+              <label id="grupousuarios" for="Tipo_Usuario" class="col-md-2 col-form-label LblForm">Permisos</label>
               
               <div class="col-md-10">
                 <?php $Element = new Elements();
