@@ -1305,7 +1305,7 @@ public function getMenuSeguridad($ID){
   public function CBNivelEscuelas(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' id='ID_Escuela' name = 'ID_Nivel' onChange='CargarEscuelas(this.value)'>";
+    $Select = "<select class='form-control' id='ID_Nivel' name = 'ID_Nivel' onChange='CargarEscuelas(this.value)'>";
     $Select .= "<option selected = 'true' disabled = 'disabled' value = '0'>- Seleccione un Nivel Escolar -</option>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from nivel_escuelas order by ID_Nivel")or die("Problemas al mostrar el Nivel de Escuelas");
     while ($Ret = mysqli_fetch_array($Consulta)) {

@@ -467,7 +467,7 @@ $Con->CloseConexion();
               </div>
             </div>                                                
             <div class="form-group row">
-              <label for="bservaciones" class="col-md-2 col-form-label LblForm">Observaciones: </label>
+              <label for="observaciones" class="col-md-2 col-form-label LblForm">Observaciones: </label>
               <div class="col-md-10">
                 <textarea class = "form-control" row = "3" name = "Observaciones" id="observaciones"></textarea>
               </div>
