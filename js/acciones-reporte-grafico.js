@@ -10,10 +10,10 @@ function configResultados()
     var thPersona = $('#Contenido-Titulo-3');
     var thFechaNac = $('#Contenido-Titulo-4');
 
-    var trBarrio = $('#Contenido-1');
-    var trDomicilio = $('#Contenido-2');
-    var trPersona = $('#Contenido-3');
-    var trFechaNac= $('#Contenido-4');
+    var trBarrio = $('tr #Contenido-1');
+    var trDomicilio = $('tr #Contenido-2');
+    var trPersona = $('tr #Contenido-3');
+    var trFechaNac= $('tr #Contenido-4');
 
     console.log(chkPersona.is(":checked"));
     console.log(chkFechaNac.is(":checked"));
@@ -45,10 +45,10 @@ function configResultados()
     }
 
     if (!chkBarrio.is(":checked")) {
-        //trBarrio.hide();
+        trBarrio.hide();
         thBarrio.hide();
     } else {
-        //trBarrio.show();
+        trBarrio.show();
         thBarrio.show();
     }
   }
