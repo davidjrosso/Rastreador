@@ -45,6 +45,7 @@ $Con->CloseConexion();
   <link rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
 
+  <script src="js/FileSaver.js"></script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript"
     src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
@@ -52,9 +53,8 @@ $Con->CloseConexion();
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
     integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
     crossorigin="anonymous"></script>
-  <script src="js/FileSaver.js"></script>
+  <script src="js/acciones-reporte-grafico.js"></script>
   <script src="js/jquery.wordexport.js"></script>
-
   <script src="html2pdf.bundle.min.js"></script>
 
 
@@ -2102,7 +2102,7 @@ $Con->CloseConexion();
                   // if($Familia != null && $Familia != ""){
                   // $Table.="<td id='Contenido-5' name='datosflia' style='max-width: 60px;'>".$RetTodos["familia"]."</td>";
                   // }
-                  $tagsTD .= " 
+                  $tagsTD .= "
                   <td id='Contenido-3' style='overflow: hidden;'>
                     <div style='position: relative;z-index: 1000;'>
                       <a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $RetTodos["id_persona"] . "\",\"Ventana" . $RetTodos["id_persona"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" . 
@@ -2110,7 +2110,7 @@ $Con->CloseConexion();
                       </a>
                     </div>
                   </td>
-                  <td id='Contenido-4' style='min-width: 120px;'>" . 
+                  <td id='Contenido-4' style='min-width: 120px;'>" .
                     $Fecha_Nacimiento . "
                   </td>";
 
@@ -2887,7 +2887,7 @@ $Con->CloseConexion();
     <input type="range" class="fixed-bottom form-range" step="0.01" value="5" min="5" id="BarraDeNavHTabla">
     <!--<input type="range" class="fixed-bottom form-range" step="1" value="1" min="1" id="BarraDeNavVTabla">-->
 
-    <div class="modal fade modal--show-z-indez-max" id="configModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 2001;">
+    <div class="modal fade modal--show-overall" id="configModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 2001;">
       <div class="class_modal-dialog modal-dialog" role="document"  id="id_modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -2898,9 +2898,9 @@ $Con->CloseConexion();
           </div>
           <div class="modal-body">
             <ul type=none>
-              <li><input type="checkbox" id="chkFecha"> Fecha Nac</li>
+              <li><input type="checkbox" id="chkFechaNac"> Fecha Nac</li>
               <li><input type="checkbox" id="chkPersona"> Persona</li> 
-              <li><input type="checkbox" id="chkFechaNac"> Direc. </li>
+              <li><input type="checkbox" id="chkDomicilio"> Direc. </li>
               <li><input type="checkbox" id="chkBarrio"> Barrio </li>
             </ul>
           </div>
