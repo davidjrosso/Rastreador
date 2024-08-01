@@ -1011,7 +1011,7 @@ $Con->CloseConexion();
                 $tablePrint .= "</table>";
               }else{
                 $Table = "<table class='table'><thead><tr><th></th><th>Detalles de la Persona</th></tr></thead>";
-                $tablePrint .= "<table class='table'><thead><tr><th></th><th>Detalles de la Persona</th></tr></thead>";
+                $tablePrint = "<table class='table'><thead><tr><th></th><th>Detalles de la Persona</th></tr></thead>";
                 $Table .= "<tr><td>Id</td><td>".$Persona->getID_Persona()."</td></tr>";
                 $tablePrint .= "<tr><td>Id</td><td>".$Persona->getID_Persona()."</td></tr>";
                 $Table .= "<tr><td>Apellido</td><td>".$Persona->getApellido()."</td></tr>";
@@ -1342,7 +1342,8 @@ $Con->CloseConexion();
                 $classAReemplazar[] = "~class='trBarrio'~";
                 $classAReemplazar[] = "~class='trDomicilio'~";
                 $classAReemplazar[] = "~class='trObraSocial'~";
-                $TableMovPrint = preg_replace( $tdReemplazar, "", $TableMov);
+                //$TableMovPrint = preg_replace( $tdReemplazar, "", $TableMov);
+                $TableMovPrint = $TableMov;
 
                 echo $TableMov;
               }
