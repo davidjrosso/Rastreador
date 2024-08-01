@@ -2210,6 +2210,9 @@ $Con->CloseConexion();
                             .table_pdf {
                               width: 100%;
                             }
+                            tr td {
+                              text-align: center;
+                            }
 
                             table thead tr th {
                               background-color: #ccc;
