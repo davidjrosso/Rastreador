@@ -2206,12 +2206,14 @@ $Con->CloseConexion();
                             }
                             .thead-dark{
                               background-color: #ccc;
+                              font-size: 12px;
                             }
                             .table_pdf {
                               width: 100%;
                             }
                             tr td {
                               text-align: center;
+                              font-size: 12px;
                             }
 
                             table thead tr th {
