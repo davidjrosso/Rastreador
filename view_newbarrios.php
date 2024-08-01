@@ -225,7 +225,7 @@ $Con->CloseConexion();
           <p class = "Titulos">Cargar Nuevo Barrio</p>
           <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/InsertBarrio.php">
             <div class="form-group row">
-              <label for="barrio" class="col-md-2 col-form-label LblForm">Barrio</label>
+              <label for="barrio" style="text-align:center;" class="col-md-2 col-form-label LblForm">Barrio</label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name="Barrio" id="barrio" autofocus autocomplete="off" required>
               </div>
