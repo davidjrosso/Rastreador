@@ -310,9 +310,9 @@ $Con->CloseConexion();
         resetearValorElemento("Edad_Desde"); 
         resetearValorElemento("Edad_Hasta"); 
         resetearValorElemento("Domicilio"); 
-        resetearValorElemento("Manzana"); 
-        resetearValorElemento("Lote"); 
-        resetearValorElemento("Familia");       
+        resetearValorElemento("manzana"); 
+        resetearValorElemento("lote"); 
+        resetearValorElemento("familia");       
         resetearValorElemento("Nro_Carpeta"); 
         resetearValorElemento("Nro_Legajo"); 
         resetearValorSelect("ID_Escuela");
@@ -648,19 +648,19 @@ $Con->CloseConexion();
             <div class="form-group row" id="div_manzana">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Manzana: </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "Manzana" id="Manzana" autocomplete="off">
+                <input type="text" class="form-control" name = "Manzana" id="manzana" autocomplete="off">
               </div>
             </div>
             <div class="form-group row" id="div_lote">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Lote: </label>
               <div class="col-md-10">
-                <input type="number" class="form-control" name = "Lote" id="Lote" autocomplete="off">
+                <input type="number" class="form-control" name = "Lote" id="lote" autocomplete="off">
               </div>
             </div>
             <div class="form-group row" id="div_familia">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Sub-lote: </label>
               <div class="col-md-10">
-                <input type="number" class="form-control" name = "Familia" id="Familia" autocomplete="off">
+                <input type="number" class="form-control" name = "Familia" id="familia" autocomplete="off">
               </div>
             </div>
 

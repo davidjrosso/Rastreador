@@ -615,6 +615,7 @@ $Con->CloseConexion();
 
     #Contenido-2 {
       /*position: sticky;
+      
       left: 150px;*/
       width: 150px;
       /*z-index: 200;*/
@@ -712,7 +713,7 @@ $Con->CloseConexion();
     #Contenido-Titulo-7 {
       position: sticky;
       z-index: 200;*/
-      /*left: 600px;
+      /*left: 600px;*/
       width: 150px;
     }
 
@@ -1451,18 +1452,18 @@ $Con->CloseConexion();
 
                 if ($cmb_seleccion != null && $cmb_seleccion != "") {
                   if ($cmb_seleccion == "manzana") {
-                    $Table .= "<th id='Contenido-Titulo-3' name='datosflia' style='max-width: 50px;'>Mz.</th>";
-                    $Table_imprimir .= "<th id='Contenido-Titulo-3' name='datosflia'>Mz.</th>";
+                    $Table .= "<th id='Contenido-Titulo-5' name='datosflia' style='max-width: 50px;'>Mz.</th>";
+                    $Table_imprimir .= "<th id='Contenido-Titulo-5' name='datosflia'>Mz.</th>";
                     $nroColumnas += 1;
                   }
                   if ($cmb_seleccion == "lote") {
-                    $Table .= "<th id='Contenido-Titulo-4' name='datosflia' style='max-width: 50px;'>Lote</th>";
-                    $Table_imprimir .= "<th id='Contenido-Titulo-4' name='datosflia'>Lote</th>";
+                    $Table .= "<th id='Contenido-Titulo-6' name='datosflia' style='max-width: 50px;'>Lote</th>";
+                    $Table_imprimir .= "<th id='Contenido-Titulo-6' name='datosflia'>Lote</th>";
                     $nroColumnas += 1;
                   }
                   if ($cmb_seleccion == "familia") {
-                    $Table .= "<th id='Contenido-Titulo-5' name='datosflia' style='max-width: 50px;'>Sublote</th>";
-                    $Table_imprimir .= "<th id='Contenido-Titulo-5' name='datosflia'>Sublote</th>";
+                    $Table .= "<th id='Contenido-Titulo-7' name='datosflia' style='max-width: 50px;'>Sublote</th>";
+                    $Table_imprimir .= "<th id='Contenido-Titulo-7' name='datosflia'>Sublote</th>";
                     $nroColumnas += 1;
                   }
                   // if ($cmb_seleccion=="todos"){
@@ -2897,11 +2898,16 @@ $Con->CloseConexion();
             </button>
           </div>
           <div class="modal-body">
-            <ul type=none>
-              <li><input type="checkbox" id="chkFechaNac"> Fecha Nac</li>
-              <li><input type="checkbox" id="chkPersona"> Persona</li> 
-              <li><input type="checkbox" id="chkDomicilio"> Direc. </li>
-              <li><input type="checkbox" id="chkBarrio"> Barrio </li>
+          <ul type=none>
+              <li><input type="checkbox" id="chk-fechaNac"> Fecha Nac</li>
+              <li><input type="checkbox" id="chk-persona"> Persona</li> 
+              <li><input type="checkbox" id="chk-domicilio"> Direc. </li>
+              <li><input type="checkbox" id="chk-barrio"> Barrio </li>
+              <li><input type="checkbox" id="chk-manzana"> Manzana </li>
+              <li><input type="checkbox" id="chk-lote"> Lote </li>
+              <li><input type="checkbox" id="chk-sublote"> Sublote </li>
+              <li><input type="checkbox" id="chk-anios"> Años (edad) </li>
+              <li><input type="checkbox" id="chk-meses"> Meses (edad) </li>
             </ul>
           </div>
           <div class="modal-footer modal-footer-flex-center">
@@ -3127,11 +3133,11 @@ $Con->CloseConexion();
 
       var tituloBarrio = document.getElementById("Contenido-Titulo-1");
       var tituloDirec = document.getElementById("Contenido-Titulo-2");
-      var tituloMz = document.getElementById("Contenido-Titulo-3");
-      var tituloLote = document.getElementById("Contenido-Titulo-4");
+      var tituloPersona = document.getElementById("Contenido-Titulo-3");
+      var tituloFechaNac = document.getElementById("Contenido-Titulo-4");
       var tituloFlia = document.getElementById("Contenido-Titulo-5");
-      var tituloPersona = document.getElementById("Contenido-Titulo-6");
-      var tituloFechaNac = document.getElementById("Contenido-Titulo-7");
+      var tituloMz = document.getElementById("Contenido-Titulo-6");
+      var tituloLote = document.getElementById("Contenido-Titulo-7");
 
     </script>
     <?php
