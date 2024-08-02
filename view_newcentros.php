@@ -225,9 +225,9 @@ $Con->CloseConexion();
           <p class = "Titulos">Cargar Nuevo Centro de Salud</p>
           <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/InsertCentroSalud.php">
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Centro Salud *: </label>
+              <label for="centro" class="col-md-2 col-form-label LblForm">Centro Salud</label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "Centro" id="Centro" autocomplete="off" required>
+                <input type="text" class="form-control" name = "Centro" id="centro" autocomplete="off" autofocus required>
               </div>
             </div>
             <div class="form-group row">
