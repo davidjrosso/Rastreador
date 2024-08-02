@@ -576,6 +576,13 @@ div .nav-side-menu {
   padding-bottom: 4%;
   font-size: 12px;
 }
+.div--padding-10px {
+  display: inline-block;
+}
+
+.div--padding-10px .title-session {
+  padding-left: 15px;
+}
 
 .modal--show-overall{
   z-index: 2001;

@@ -356,41 +356,42 @@ $datosNav = $_SESSION["datosNav"];
   ?>
   <div class = "col-md-3">
     <div class="nav-side-menu">
-    <div class="brand">Reporte por listados</div>
-    <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
-  
+      <?php $Element = new Elements();
+        echo $Element->CBSessionNombre($ID_Usuario);
+      ?>
+      <div class="brand">Reporte por listados</div>
+      <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
         <div class="menu-list">
-  
-            <?php $Element = new Elements();
+            <?php
             $Element->getMenuGeneral(0);?>
         </div>
         <div class="brand">Actualizaciones</div>
         <div class="menu-list">
   
-            <?php $Element = new Elements();
+            <?php
             $Element->getMenuActualizaciones(0);?>
         </div>
         <div class="brand">Reportes</div>
         <div class="menu-list">
   
-            <?php $Element = new Elements();
+            <?php
             $Element->getMenuReportes(2);?>
         </div>
         <div class="brand">Unificación</div>
         <div class="menu-list">
   
-            <?php $Element = new Elements();
+            <?php
             $Element->getMenuUnificacion(0);?>
         </div>
         <div class="brand">Seguridad</div>
         <div class="menu-list">
   
-            <?php $Element = new Elements();
+            <?php
             $Element->getMenuSeguridad(0);?>
         </div>
         <div class="brand">El Proyecto</div>
         <div class="menu-list">
-            <?php $Element = new Elements();
+            <?php
             $Element->getMenuHistorial(0);?>
         </div>
         <div class="brand btn-Salir" onClick = "location.href = 'Controladores/CtrLogout.php'">Salir</div>
@@ -401,7 +402,10 @@ $datosNav = $_SESSION["datosNav"];
     if($TipoUsuario == 2 || $TipoUsuario > 3){
   ?>
   <div class = "col-md-3">
-    <div class="nav-side-menu">
+<div class="nav-side-menu">
+      <?php $Element = new Elements();
+            echo $Element->CBSessionNombre($ID_Usuario);
+      ?>
     <div class="brand">General</div>
     <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
   
@@ -413,18 +417,18 @@ $datosNav = $_SESSION["datosNav"];
         <div class="brand">Actualizaciones</div>
         <div class="menu-list">
   
-            <?php $Element = new Elements();
+            <?php
             $Element->getMenuActualizaciones(0);?>
         </div>
         <div class="brand">Reportes</div>
         <div class="menu-list">
   
-            <?php $Element = new Elements();
+            <?php
             $Element->getMenuReportes(0);?>
         </div>
         <div class="brand">El Proyecto</div>
         <div class="menu-list">
-            <?php $Element = new Elements();
+            <?php
             $Element->getMenuHistorial(0);?>
         </div>
         <div class="brand btn-Salir" onClick = "location.href = 'Controladores/CtrLogout.php'">Salir</div>
@@ -436,35 +440,37 @@ $datosNav = $_SESSION["datosNav"];
   ?>
   <div class = "col-md-3">
     <div class="nav-side-menu">
-    <div class="brand">General</div>
-    <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
-  
+      <?php $Element = new Elements();
+        echo $Element->CBSessionNombre($ID_Usuario);
+      ?>
+      <div class="brand">General</div>
+      <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
         <div class="menu-list">
-  
-            <?php $Element = new Elements();
-            $Element->getMenuGeneral(0);?>
+          <?php
+            $Element->getMenuGeneral(0);
+          ?>
         </div>
         <div class="brand">Actualizaciones</div>
         <div class="menu-list">
   
-            <?php $Element = new Elements();
+            <?php
             $Element->getMenuActualizaciones(0);?>
         </div>
         <div class="brand">Reportes</div>
         <div class="menu-list">
   
-            <?php $Element = new Elements();
+            <?php
             $Element->getMenuReportes(1);?>
         </div>
         <div class="brand">Unificación</div>
         <div class="menu-list">
   
-            <?php $Element = new Elements();
+            <?php
             $Element->getMenuUnificacion(0);?>
         </div>
         <div class="brand">El Proyecto</div>
         <div class="menu-list">
-            <?php $Element = new Elements();
+            <?php
             $Element->getMenuHistorial(0);?>
         </div>
         <div class="brand btn-Salir" onClick = "location.href = 'Controladores/CtrLogout.php'">Salir</div>

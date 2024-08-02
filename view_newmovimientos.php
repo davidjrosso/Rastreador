@@ -349,7 +349,10 @@ $Con->CloseConexion();
   if($TipoUsuario == 1){  
   ?>
   <div class = "col-md-3">
-    <div class="nav-side-menu">
+<div class="nav-side-menu">
+      <?php $Element = new Elements();
+            echo $Element->CBSessionNombre($ID_Usuario);
+      ?>
     <div class="brand">General</div>
     <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
   
@@ -395,7 +398,10 @@ $Con->CloseConexion();
     if($TipoUsuario == 2 || $TipoUsuario > 3){
   ?>
   <div class = "col-md-3">
-    <div class="nav-side-menu">
+<div class="nav-side-menu">
+      <?php $Element = new Elements();
+            echo $Element->CBSessionNombre($ID_Usuario);
+      ?>
     <div class="brand">General</div>
     <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
   
@@ -429,7 +435,10 @@ $Con->CloseConexion();
   if($TipoUsuario == 3){    
   ?>
   <div class = "col-md-3">
-    <div class="nav-side-menu">
+<div class="nav-side-menu">
+      <?php $Element = new Elements();
+            echo $Element->CBSessionNombre($ID_Usuario);
+      ?>
     <div class="brand">General</div>
     <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
   
