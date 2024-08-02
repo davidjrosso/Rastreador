@@ -2934,7 +2934,7 @@ $Con->CloseConexion();
         </div>
       </div>
     </div>
-    <input type="range" class="fixed-bottom form-range" step="0.01" value="5" min="5" id="BarraDeNavHTabla">
+    <input type="range" class="fixed-bottom form-range input--transform-rotate180" step="0.01" value="5" min="5" id="BarraDeNavHTabla">
     <!--<input type="range" class="fixed-bottom form-range" step="1" value="1" min="1" id="BarraDeNavVTabla">-->
 
     <div class="modal fade modal--show-overall" id="configModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 2001;">

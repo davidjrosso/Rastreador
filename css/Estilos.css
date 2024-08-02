@@ -551,7 +551,7 @@ div .nav-side-menu {
   color: #fff !important;
   border-radius: 50% !important;
   font-size: 16px !important;
-  line-height: 30px !important; /* set to same size as width, height */
+  line-height: 30px !important;
   width: 32px !important;
   height: 32px !important;
   text-align: center !important;
@@ -565,7 +565,7 @@ div .nav-side-menu {
   background-color: green!important;
   padding: 2px;
   border-radius: 50% !important;
-  line-height: 30px !important; /* set to same size as width, height */
+  line-height: 30px !important;
   width: 35px !important;
   height: 35px !important;
   text-align: center !important;
@@ -586,4 +586,8 @@ div .nav-side-menu {
 
 .modal--show-overall{
   z-index: 2001;
+}
+
+.input--transform-rotate180 {
+  transform: rotate(180deg);
 }
