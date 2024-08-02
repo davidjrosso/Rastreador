@@ -116,6 +116,7 @@ $Con->CloseConexion();
 
       nroFilasTabla = $("tbody > tr").length - 2;
       nroColumnasTabla = $("thead > tr > th").length - 2;
+      DesaplazamientoIniciaDeTabla();
 
       $("#input-zoom").on("input", function(e) {
         toggleZoom($('#input-zoom').prop("value"));
@@ -267,7 +268,7 @@ $Con->CloseConexion();
         } else {
           columnaActual = (value < columnaIndice)? Math.floor(value): columnaIndice;
         }
-      } 
+      }
       valInputRangePrev = value;
 
       var margin = Math.abs(value - columnaActual);
@@ -277,7 +278,7 @@ $Con->CloseConexion();
         updateMarginLeft =  "-190px";
       } else if(value < columnaIndice){
         updateMarginLeft =  "0px";
-      } 
+      }
 
       $("#BarraDeNavHTabla").attr("value", columnaIndice);
       headABorrar = $('thead tr > *:nth-child('+columnaActual+')');
@@ -411,6 +412,45 @@ $Con->CloseConexion();
         tabla.scrollLeft(0);
     }
 
+    function DesaplazamientoIniciaDeTabla() {
+        var columnaABorrar = null;
+        var headABorrar = null;
+        var filaABorrar = null;
+        $("#BarraDeNavHTabla").attr("max", nroColumnasTabla + 1);
+        $("#BarraDeNavHTabla").attr("value", columnaIndice);
+        var tabla = $("table");
+        tabla.scrollLeft(0);
+        for (var i = 5; i<= (nroColumnasTabla - 1); i++) {
+            columnaABorrar = $('tbody tr > *:nth-child('+columnaIndice+')');
+            headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');
+            divABorrar = $('tbody tr > *:nth-child('+columnaIndice+') div div');
+            if(columnaIndice <= nroColumnasTabla){
+              if(columnaIndice <= nroColumnasTabla){
+                columnaABorrar.removeClass( "showColTablaAnimacion");
+                headABorrar.removeClass( "showColTablaAnimacion");
+                columnaABorrar.removeClass( "showColTablaAnimacionfire");
+                headABorrar.removeClass( "showColTablaAnimacionfire");
+
+                columnaABorrar.css({
+                  "margin-left": "",
+                  "border-right-width": "",
+                  "border-left-width": ""
+                });
+                divABorrar.css("z-index", "");
+
+                columnaABorrar.addClass( "hiddenColTablaAnimacion");
+                headABorrar.addClass( "hiddenColTablaAnimacion");
+                columnaABorrar.addClass( "hiddenColTablaAnimacionfire");
+                headABorrar.addClass( "hiddenColTablaAnimacionfire");
+                columnaIndice++;
+              }
+            }
+            //$("#BarraDeNavHTabla").attr("value", columnaIndice);
+            document.getElementById("BarraDeNavHTabla").value = columnaIndice;
+        } 
+        tabla.scrollLeft(0);
+    }
+
     function navegacionConBarVNav(e){
       var value = parseInt(e.target.value);
       var nroFilasTabla = $("tbody > tr").length - 4;
@@ -429,7 +469,6 @@ $Con->CloseConexion();
       }
       $("#BarraDeNavVTabla").attr("value", filaIndice);
     }
-
   </script>
   <style>
 
@@ -733,9 +772,7 @@ $Con->CloseConexion();
           <i class="fa fa-arrows-alt fa-lg" color="tomato"></i>
         </a>
       </div>
-
       <div class="col-md-2" id="ContenidoMenu">
-
         <div class="nav-side-menu" id="sidebar">
           <a id="cerrar" class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="ocultar()">
             <i class="fa fa-arrow-left fa-lg"></i>
@@ -747,9 +784,7 @@ $Con->CloseConexion();
           </div>
           <div class="brand">General</div>
           <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
-
           <div class="menu-list">
-
             <?php
             $Element->getMenuGeneral(0); ?>
           </div>
