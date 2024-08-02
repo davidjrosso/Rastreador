@@ -112,7 +112,7 @@ $Con->CloseConexion();
       NavegacionConTeclado(e);
     });
 
-    $( document ).on( "ready", function(e) {
+    $(document).on( "ready", function(e) {
 
       nroFilasTabla = $("tbody > tr").length - 2;
       nroColumnasTabla = $("thead > tr > th").length - 2;
@@ -445,7 +445,6 @@ $Con->CloseConexion();
                 columnaIndice++;
               }
             }
-            //$("#BarraDeNavHTabla").attr("value", columnaIndice);
             document.getElementById("BarraDeNavHTabla").value = columnaIndice;
         } 
         tabla.scrollLeft(0);
@@ -985,10 +984,12 @@ $Con->CloseConexion();
             $ID_Responsable = (isset($_REQUEST["ID_Responsable"])) ? $_REQUEST["ID_Responsable"] : null;
 
             $cmb_seleccion = (isset($_REQUEST["cmb_seleccion"])) ? $_REQUEST["cmb_seleccion"] : null;
+            $esPersonaSeleccionada = ($ID_Persona)?", IF(M.id_persona = $ID_Persona, 1, 0) as esPersona" : "";
 
-            // echo "<h3>$cmb_seleccion<h3>";
-            $Consulta = "SELECT M.id_movimiento, M.id_persona, MONTH(M.fecha) as 'Mes', YEAR(M.fecha) as 'Anio', 
-                                B.Barrio, P.manzana, P.lote, P.familia, P.apellido, P.nombre, P.fecha_nac, P.domicilio
+            $Consulta = "SELECT M.id_movimiento, M.id_persona, MONTH(M.fecha) as 'Mes',
+                                YEAR(M.fecha) as 'Anio', B.Barrio, P.manzana, P.lote,
+                                P.familia, P.apellido, P.nombre, P.fecha_nac, P.domicilio
+                                $esPersonaSeleccionada
                          FROM movimiento M, 
                               persona P, 
                               barrios B, 
@@ -1369,7 +1370,7 @@ $Con->CloseConexion();
               //               order by B.Barrio DESC, P.domicilio DESC, P.manzana DESC, P.lote DESC, P.familia DESC,
               //                     P.domicilio DESC, P.apellido DESC, M.fecha DESC, M.id_movimiento DESC";
               $Consulta .= " group by M.id_persona 
-                             order by B.Barrio DESC, P.domicilio DESC, P.manzana DESC, P.lote DESC, P.familia DESC,
+                             order by esPersona DESC, B.Barrio DESC, P.domicilio DESC, P.manzana DESC, P.lote DESC, P.familia DESC,
                                    P.domicilio DESC, P.apellido DESC, M.fecha DESC, M.id_movimiento DESC";
             } else {
               // SE PUEDE ROMPER
