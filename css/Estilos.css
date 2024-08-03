@@ -20,6 +20,7 @@
 .nav-side-menu .toggle-btn {
   display: none;
 }
+
 .nav-side-menu ul,
 .nav-side-menu li {
   list-style: none;
@@ -415,8 +416,6 @@ a.disabled {
   /*z-index: 300 !important;*/
 }
 
-
-
 #tabla-responsive thead tr > *:nth-child(4) {
   z-index: 300 !important;
 }
@@ -449,7 +448,6 @@ tbody tr > *:nth-child(n + 5).showColTablaAnimacionfire > div > div{
 div .nav-side-menu {
   z-index: 400;
 }
-
 
 #input-zoom {
   -webkit-appearance: textfield;
@@ -498,6 +496,7 @@ div .nav-side-menu {
   background-color: white;
   transform: translate(-50%, -50%);
 }
+
 .number-input button.plus:after {
   transform: translate(-50%, -50%) rotate(90deg);
 }
@@ -576,6 +575,7 @@ div .nav-side-menu {
   padding-bottom: 4%;
   font-size: 12px;
 }
+
 .div--padding-10px {
   display: inline-block;
 }

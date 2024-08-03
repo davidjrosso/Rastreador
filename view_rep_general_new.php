@@ -103,7 +103,8 @@ $Con->CloseConexion();
     var nroColumnasTabla = 0;
     var currCell = null;
     var editing = false;
-    var columnaIndice = 5;
+    //var columnaIndice = 5;
+    var columnaIndice = 8;
     var filaIndice = 1;
     var valInputRangePrev = columnaIndice;
     var focusBarraNavegacionH = false;
@@ -257,6 +258,7 @@ $Con->CloseConexion();
     function navegacionConBarHNav(e){
       var value = $("#BarraDeNavHTabla").val();
       var movDecrec = (value < valInputRangePrev);
+      var columnaActual = columnaIndice;
       if(columnaIndice + 1 <= value && (Math.floor(valInputRangePrev) == columnaIndice)){
         columnaActual = columnaIndice;
       } else if(value < columnaIndice && columnaIndice < valInputRangePrev){
@@ -1500,29 +1502,38 @@ $Con->CloseConexion();
                                       <th id='Contenido-Titulo-2'>Direc.</th>"; 
                 $nroColumnas += 2;
 
-                if ($cmb_seleccion != null && $cmb_seleccion != "") {
-                  if ($cmb_seleccion == "manzana") {
-                    $Table .= "<th id='Contenido-Titulo-5' name='datosflia' style='max-width: 50px;'>Mz.</th>";
-                    $Table_imprimir .= "<th id='Contenido-Titulo-5' name='datosflia'>Mz.</th>";
-                    $nroColumnas += 1;
-                  }
-                  if ($cmb_seleccion == "lote") {
-                    $Table .= "<th id='Contenido-Titulo-6' name='datosflia' style='max-width: 50px;'>Lote</th>";
-                    $Table_imprimir .= "<th id='Contenido-Titulo-6' name='datosflia'>Lote</th>";
-                    $nroColumnas += 1;
-                  }
-                  if ($cmb_seleccion == "familia") {
-                    $Table .= "<th id='Contenido-Titulo-7' name='datosflia' style='max-width: 50px;'>Sublote</th>";
-                    $Table_imprimir .= "<th id='Contenido-Titulo-7' name='datosflia'>Sublote</th>";
-                    $nroColumnas += 1;
-                  }
-                  // if ($cmb_seleccion=="todos"){
-                  //   $Table.="<th id='Contenido-Titulo-3' name='datosflia' style='max-width: 50px;'>Mz.</th>
-                  //   <th id='Contenido-Titulo-4' name='datosflia' style='max-width: 50px;'>Lote</th>
-                  //   <th id='Contenido-Titulo-5' name='datosflia' style='max-width: 50px;'>Sublote</th>";
-            
-                  // }
+                /*
+                if ($Manzana == "manzana") {
+                  $Table .= "<th id='Contenido-Titulo-5' name='datosflia' style='max-width: 50px;'>Mz.</th>";
+                  $Table_imprimir .= "<th id='Contenido-Titulo-5' name='datosflia'>Mz.</th>";
+                  $nroColumnas += 1;
                 }
+                if ($Lote == "lote") {
+                  $Table .= "<th id='Contenido-Titulo-6' name='datosflia' style='max-width: 50px;'>Lote</th>";
+                  $Table_imprimir .= "<th id='Contenido-Titulo-6' name='datosflia'>Lote</th>";
+                  $nroColumnas += 1;
+                }
+                if ($Familia == "familia") {
+                  $Table .= "<th id='Contenido-Titulo-7' name='datosflia' style='max-width: 50px;'>Sublote</th>";
+                  $Table_imprimir .= "<th id='Contenido-Titulo-7' name='datosflia'>Sublote</th>";
+                  $nroColumnas += 1;
+                }
+                */
+                $Table .= "<th id='Contenido-Titulo-5' name='datosflia' style='max-width: 50px;'>Mz.</th>";
+                $Table_imprimir .= "<th id='Contenido-Titulo-5' name='datosflia'>Mz.</th>";
+                $nroColumnas += 1;
+                $Table .= "<th id='Contenido-Titulo-6' name='datosflia' style='max-width: 50px;'>Lote</th>";
+                $Table_imprimir .= "<th id='Contenido-Titulo-6' name='datosflia'>Lote</th>";
+                $nroColumnas += 1;
+                $Table .= "<th id='Contenido-Titulo-7' name='datosflia' style='max-width: 70px;'>Sublote</th>";
+                $Table_imprimir .= "<th id='Contenido-Titulo-7' name='datosflia'>Sublote</th>";
+                $nroColumnas += 1;
+                // if ($cmb_seleccion=="todos"){
+                //   $Table.="<th id='Contenido-Titulo-3' name='datosflia' style='max-width: 50px;'>Mz.</th>
+                //   <th id='Contenido-Titulo-4' name='datosflia' style='max-width: 50px;'>Lote</th>
+                //   <th id='Contenido-Titulo-5' name='datosflia' style='max-width: 50px;'>Sublote</th>";
+          
+                // }
 
 
                 $Table .= "<th id='Contenido-Titulo-3'>Persona</th>
@@ -2034,39 +2045,29 @@ $Con->CloseConexion();
                                       <td id='Contenido-2'>" . $RetTodos["domicilio"] . "</td>";
                   $Table .= "<td id='Contenido-1' style='max-width: 100px;'>" . $RetTodos["Barrio"] . "</td>
                              <td id='Contenido-2' style='max-width: 100px;'>" . $RetTodos["domicilio"] . "</td>";
+                  /*
+                  if ($Manzana == "manzana") {
+                    $Table .= "<td id='Contenido-5' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>";
+                    $Table_imprimir .= "<td id='Contenido-5' name='datosflia' style='max-width: 100px;'>" . $RetTodos["manzana"] . "</td>";
 
-                  if ($cmb_seleccion != null && $cmb_seleccion != "") {
-
-                    if ($cmb_seleccion == "manzana") {
-                      $Table .= "<td id='Contenido-3' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>";
-                      $Table_imprimir .= "<td id='Contenido-3' name='datosflia' style='max-width: 100px;'>" . $RetTodos["manzana"] . "</td>";
-
-                    }
-
-                    if ($cmb_seleccion == "lote") {
-                      $Table .= "<td id='Contenido-4' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>";
-                      $Table_imprimir .= "<td id='Contenido-4' name='datosflia' style='max-width: 100px;'>" . $RetTodos["lote"] . "</td>";
-                    }
-
-                    if ($cmb_seleccion == "familia") {
-                      $Table .= "<td id='Contenido-5' name='datosflia' style='max-width: 60px;'>" . $RetTodos["familia"] . "</td>";
-                      $Table_imprimir .= "<td id='Contenido-5' name='datosflia' style='max-width: 100px;'>" . $RetTodos["familia"] . "</td>";
-                    }
-
-                    if ($cmb_seleccion == "todos") {
-                      $Table .= "<td id='Contenido-3' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>
-                                 <td id='Contenido-4' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>
-                                 <td id='Contenido-5' name='datosflia' style='max-width: 60px;'>" . $RetTodos["familia"] . "</td>";
-                      $Table_imprimir .= "<td id='Contenido-3' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>
-                                          <td id='Contenido-4' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>
-                                          <td id='Contenido-5' name='datosflia' style='max-width: 60px;'>" . $RetTodos["familia"] . "</td>";
-
-                    }
                   }
 
+                  if ($Lote == "lote") {
+                    $Table .= "<td id='Contenido-6' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>";
+                    $Table_imprimir .= "<td id='Contenido-6' name='datosflia' style='max-width: 100px;'>" . $RetTodos["lote"] . "</td>";
+                  }
 
-                  
-                  //$Table_imprimir = (isset($Table_imprimir))? $Table : "";
+                  if ($Familia == "familia") {
+                    $Table .= "<td id='Contenido-7' name='datosflia' style='max-width: 60px;'>" . $RetTodos["familia"] . "</td>";
+                    $Table_imprimir .= "<td id='Contenido-7' name='datosflia' style='max-width: 100px;'>" . $RetTodos["familia"] . "</td>";
+                  }
+                  */
+                  $Table .= "<td id='Contenido-5' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>";
+                  $Table_imprimir .= "<td id='Contenido-5' name='datosflia' style='max-width: 100px;'>" . $RetTodos["manzana"] . "</td>";
+                  $Table .= "<td id='Contenido-6' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>";
+                  $Table_imprimir .= "<td id='Contenido-6' name='datosflia' style='max-width: 100px;'>" . $RetTodos["lote"] . "</td>";
+                  $Table .= "<td id='Contenido-7' name='datosflia' style='max-width: 70px;'>" . $RetTodos["familia"] . "</td>";
+                  $Table_imprimir .= "<td id='Contenido-7' name='datosflia' style='max-width: 100px;'>" . $RetTodos["familia"] . "</td>";
 
                   $Table .= " <td id='Contenido-3' style='overflow: hidden;'>
                                 <div style='position: relative;z-index: 1000;'>
@@ -2116,43 +2117,28 @@ $Con->CloseConexion();
                   $tagsTD_imprimir .= "<td id='Contenido-1' style='text-align:center;font-size: 10px;max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;'>" . $RetTodos["Barrio"] . "</td>
                                        <td id='Contenido-2' style='text-align:center;font-size: 10px;max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;'>" . $RetTodos["domicilio"] . "</td>";
 
-                  if ($cmb_seleccion != null && $cmb_seleccion != "") {
-
-                    if ($cmb_seleccion == "manzana") {
-                      $tagsTD .= "<td id='Contenido-3' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>";
-                      $tagsTD_imprimir .= "<td id='Contenido-3' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["manzana"] . "</td>";
-                    }
-
-                    if ($cmb_seleccion == "lote") {
-                      $tagsTD .= "<td id='Contenido-4' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>";
-                      $tagsTD_imprimir .= "<td id='Contenido-4' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["lote"] . "</td>";
-                    }
-
-                    if ($cmb_seleccion == "familia") {
-                      $tagsTD .= "<td id='Contenido-5' name='datosflia' style='max-width: 60px;'>" . $RetTodos["familia"] . "</td>";
-                      $tagsTD_imprimir .= "<td id='Contenido-5' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["familia"] . "</td>";
-                    }
-
-                    if ($cmb_seleccion == "todos") {
-                      $tagsTD .= "<td id='Contenido-3' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>
-                      <td id='Contenido-4' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>
-                      <td id='Contenido-5' name='datosflia' style='max-width: 60px;'>" . $RetTodos["familia"] . "</td>";
-                      $tagsTD_imprimir .= "<td id='Contenido-3' name='datosflia' style='text-align:center;max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["manzana"] . "</td>
-                      <td id='Contenido-4' name='datosflia' style='text-align:center;max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["lote"] . "</td>
-                      <td id='Contenido-5' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["familia"] . "</td>";
-                    }
+                  /*
+                  if ($Manzana == "manzana") {
+                    $tagsTD .= "<td id='Contenido-5' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>";
+                    $tagsTD_imprimir .= "<td id='Contenido-5' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["manzana"] . "</td>";
                   }
 
-                  // if($Manzana != null && $Manzana != ""){ 
-                  // $Table.="<td id='Contenido-3' name='datosflia' style='max-width: 50px;'>".$RetTodos["manzana"]."</td>";
-                  // }
-                  // if($Lote != null && $Lote != ""){
-                  // 
-                  // $Table.="<td id='Contenido-4' name='datosflia' style='max-width: 50px;'>".$RetTodos["lote"]."</td>";
-                  // }
-                  // if($Familia != null && $Familia != ""){
-                  // $Table.="<td id='Contenido-5' name='datosflia' style='max-width: 60px;'>".$RetTodos["familia"]."</td>";
-                  // }
+                  if ($Lote == "lote") {
+                    $tagsTD .= "<td id='Contenido-6' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>";
+                    $tagsTD_imprimir .= "<td id='Contenido-6' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["lote"] . "</td>";
+                  }
+
+                  if ($Familia == "familia") {
+                    $tagsTD .= "<td id='Contenido-7' name='datosflia' style='max-width: 60px;'>" . $RetTodos["familia"] . "</td>";
+                    $tagsTD_imprimir .= "<td id='Contenido-7' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["familia"] . "</td>";
+                  }
+                  */
+                  $tagsTD .= "<td id='Contenido-5' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>";
+                  $tagsTD_imprimir .= "<td id='Contenido-5' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["manzana"] . "</td>";
+                  $tagsTD .= "<td id='Contenido-6' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>";
+                  $tagsTD_imprimir .= "<td id='Contenido-6' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["lote"] . "</td>";
+                  $tagsTD .= "<td id='Contenido-7' name='datosflia' style='max-width: 70px;'>" . $RetTodos["familia"] . "</td>";
+                  $tagsTD_imprimir .= "<td id='Contenido-7' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["familia"] . "</td>";
                   $tagsTD .= "
                   <td id='Contenido-3' style='overflow: hidden;'>
                     <div style='position: relative;z-index: 1000;'>
@@ -2935,7 +2921,7 @@ $Con->CloseConexion();
         </div>
       </div>
     </div>
-    <input type="range" class="fixed-bottom form-range input--transform-rotate180" step="0.01" value="5" min="5" id="BarraDeNavHTabla">
+    <input type="range" class="fixed-bottom form-range input--transform-rotate180" step="0.01" value="8" min="8" id="BarraDeNavHTabla">
     <!--<input type="range" class="fixed-bottom form-range" step="1" value="1" min="1" id="BarraDeNavVTabla">-->
 
     <div class="modal fade modal--show-overall" id="configModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 2001;">
