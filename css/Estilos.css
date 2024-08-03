@@ -144,18 +144,18 @@ body {
   padding: 0px;
 }
 
-.Titulos{
+.Titulos {
   font-size: 20px;
   font-weight: bold;
   text-decoration: underline;
   color: blue;
 }
 
-.LblForm{
+.LblForm {
   font-weight: bold;
 }
 
-.Titulo{
+.Titulo {
   background-color: #0489B1;
   color: #fff;
   text-align: center;
@@ -165,13 +165,13 @@ body {
   border-color: #000;
 }
 
-.IconosAcciones{
+.IconosAcciones {
   width: 30px;
   height: 30px;
   cursor: pointer;
 }
 
-.TablaColores{
+.TablaColores {
   width: 30px;
   height: 30px;
   min-width: 30px;
@@ -184,7 +184,7 @@ body {
   font-size: 10px;
 }
 
-.MuestraColor{
+.MuestraColor {
   width: 100px;
   height: 50px;
   min-width: 100px;
@@ -194,11 +194,11 @@ body {
   border-color: #000;
 }
 
-.TextoAdvertenciaUnificar{
+.TextoAdvertenciaUnificar {
   font-weight: bold;
 }
 
-.FondoInicio{
+.FondoInicio {
   width: auto;
   height: 300px;
   position: absolute;
@@ -206,7 +206,7 @@ body {
   left: 0;
 }
 
-.CopyRight{
+.CopyRight {
   color: #000;
   font-weight: bold;
   text-align: left;
@@ -217,13 +217,13 @@ body {
 /*.btn-Salir{
 }*/
 
-.btn-Salir:hover{
+.btn-Salir:hover {
   cursor: pointer;
   color: red;
   text-decoration: underline;
 }
 
-.TextoSinResultados{
+.TextoSinResultados {
   color: #000;
   font-size: 18px;
   font-weight: bold;
@@ -235,13 +235,13 @@ body {
 }
 
 @media print {
-  #areaImprimir{
+  #areaImprimir {
     height: auto !important;
     width: auto !important;
     overflow: visible !important;
   }
 
-  #tablePrint{
+  #tablePrint {
     height: auto !important;
     width: auto !important;
     overflow: visible !important;
@@ -252,7 +252,7 @@ body {
     width: auto;      
   }
 
-  .Test{
+  .Test {
     background-color: blue;
     width: 100%;
     overflow: none;
@@ -260,7 +260,7 @@ body {
   }
 }
 
-.reporte-tabla{
+.reporte-tabla {
   width: 100%;
   border: 1px;
   border-style: solid;
@@ -269,19 +269,19 @@ body {
   margin-bottom: 5%;
 }
 
-.reporte-tabla th{
+.reporte-tabla th {
   border: 1px;
   border-style: solid;
   border-color: #000;
 }
 
-.reporte-tabla td{
+.reporte-tabla td {
   border: 1px;
   border-style: solid;
   border-color: #000;
 }
 
-.Nota_Rep_General{
+.Nota_Rep_General {
   font-size: 14px;
   font-weight: bold;
   font-family: arial;  
@@ -420,7 +420,7 @@ a.disabled {
   z-index: 300 !important;
 }
 
-#tabla-responsive tbody tr > *:nth-child(-n + 4){
+#tabla-responsive tbody tr > *:nth-child(-n + 4) {
   z-index: 300;
   background-color: white !important;
 }
@@ -429,11 +429,11 @@ tbody tr > *:nth-child(n + 5) > div > div{
   z-index: -1;
 }*/
 
-tbody tr > *:nth-child(n + 5).hiddenColTablaAnimacionfire > div > div{
+tbody tr > *:nth-child(n + 5).hiddenColTablaAnimacionfire > div > div {
   z-index: -1;
 }
 
-tbody tr > *:nth-child(n + 5).showColTablaAnimacionfire > div > div{
+tbody tr > *:nth-child(n + 5).showColTablaAnimacionfire > div > div {
   z-index: -1;
 }
 
@@ -441,7 +441,7 @@ tbody tr > *:nth-child(n + 5).showColTablaAnimacionfire > div > div{
   z-index: -1;
 }*/
 
-.itemMotivoAccesible{
+.itemMotivoAccesible {
   z-index: 1 !important;
 }
 
@@ -511,10 +511,10 @@ div .nav-side-menu {
   height: 2rem;
   /*font-weight: bold;*/
   text-align: right;
-  color:#353d3d;
+  color: #353d3d;
 }
 
-#divporcentaje{
+#divporcentaje {
   font-family: sans-serif;
   padding-top: 1.9px;
   padding-right: 10.3px;
@@ -539,9 +539,9 @@ div .nav-side-menu {
 
 .form-clear .material-icons {
   font-size: 24px;
-  position:absolute;
-  top:0px;
-  right:0px!important;
+  position: absolute;
+  top: 0px;
+  right: 0px!important;
 }
 
 .letras-circle {
@@ -584,7 +584,7 @@ div .nav-side-menu {
   padding-left: 15px;
 }
 
-.modal--show-overall{
+.modal--show-overall {
   z-index: 2001;
 }
 
