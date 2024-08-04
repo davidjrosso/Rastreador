@@ -255,14 +255,30 @@ $Con->CloseConexion();
 
               switch ($ID_Filtro) {
                 // case 'ID': echo $DTGeneral->getMovimientosxID($Filtro);break;
-                case 'Fecha': echo $DTGeneral->getMovimientosxFecha($Filtro, $TipoUsuario);break;
-                case 'Apellido': echo $DTGeneral->getMovimientosxApellido($Filtro, $TipoUsuario);break;
-                case 'Documento': echo $DTGeneral->getMovimientosxDocumento($Filtro, $TipoUsuario);break;
-                case 'Nombre': echo $DTGeneral->getMovimientosxNombre($Filtro, $TipoUsuario);break;
-                case 'Responsable': echo $DTGeneral->getMovimientosxResponsable($Filtro, $TipoUsuario);break;
-                case 'Legajo': echo $DTGeneral->getMovimientosxLegajo($Filtro, $TipoUsuario);break;
-                case 'Carpeta': echo $DTGeneral->getMovimientosxCarpeta($Filtro, $TipoUsuario);break;
-                default: echo $DTGeneral->getMovimientosxID($Filtro, $TipoUsuario);break;
+                case 'Fecha':
+                  echo $DTGeneral->getMovimientosxFecha($Filtro, $TipoUsuario);
+                  break;
+                case 'Apellido':
+                  echo $DTGeneral->getMovimientosxApellido($Filtro, $TipoUsuario);
+                  break;
+                case 'Documento':
+                  echo $DTGeneral->getMovimientosxDocumento($Filtro, $TipoUsuario);
+                  break;
+                case 'Nombre':
+                  echo $DTGeneral->getMovimientosxNombre($Filtro, $TipoUsuario);
+                  break;
+                case 'Responsable':
+                  echo $DTGeneral->getMovimientosxResponsable($Filtro, $TipoUsuario);
+                  break;
+                case 'Legajo':
+                  echo $DTGeneral->getMovimientosxLegajo($Filtro, $TipoUsuario);
+                  break;
+                case 'Carpeta':
+                  echo $DTGeneral->getMovimientosxCarpeta($Filtro, $TipoUsuario);
+                  break;
+                default:
+                  echo $DTGeneral->getMovimientosxID($Filtro, $TipoUsuario);
+                  break;
               }
             }else{
               $DTGeneral = new CtrGeneral();
