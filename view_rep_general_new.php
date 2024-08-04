@@ -2175,14 +2175,10 @@ $Con->CloseConexion();
                                                          or motivo_2 <> 1
                                                          or motivo_3 <> 1) 
                                                         and estado = 1
-                                                      order by fecha";
-                    
-                    // echo "<br> DEBUG CONSULTAR MOVIMIENTO: ".var_dump($Consultar_Movimientos_Persona);
-            
+                                                      order by fecha";            
 
                     $Tomar_Movimientos_Persona = mysqli_query($Con->Conexion, $Consultar_Movimientos_Persona) or die($MensajeErrorConsultar_Mov_Persona . " - " . $Consultar_Movimientos_Persona);
-                    //echo var_dump($Consultar_Movimientos_Persona);
-                    // TODO: CAMBIANDO TAMAÑO DE COLUMNAS
+
                     $IndexCelda += 1;
                     $nroMotivosEnFecha = 0;
                     if(mysqli_num_rows($Tomar_Movimientos_Persona) > 6){
@@ -2199,7 +2195,7 @@ $Con->CloseConexion();
 
                     while ($Ret_Movimientos_Persona = mysqli_fetch_assoc($Tomar_Movimientos_Persona)) {
                       $Consultar_Datos_Movimientos = "select M.id_movimiento, MONTH(M.fecha) as 'Mes', YEAR(M.fecha) as 'Anio',
-                                                             M.motivo_1, M.motivo_2, M.motivo_3 
+                                                             M.motivo_1, M.motivo_2, M.motivo_3, M.motivo_4, M.motivo_5 
                                                       from movimiento M, 
                                                            motivo MT, 
                                                            categoria C 
@@ -2212,33 +2208,13 @@ $Con->CloseConexion();
                                                       group by M.id_movimiento
                                                       order by M.fecha DESC";
 
-                      //echo " <br> DEBUG CONSULTAR MOVIMIENTO: ".var_dump($Consultar_Datos_Movimientos);
-                      //echo var_dump($Consultar_Datos_Movimientos);
                       $MensajeErrorConsultar_Datos_Movimientos = "No se pudieron consultar los datos del movimiento";
                       $Tomar_Datos_Movimientos = mysqli_query($Con->Conexion, $Consultar_Datos_Movimientos) or die($MensajeErrorConsultar_Datos_Movimientos . " - " . $Consultar_Datos_Movimientos);
+                      if (mysqli_num_rows($Tomar_Datos_Movimientos) == 0) {
+                        continue;
+                      }
                       $Ret_Datos_Movimiento = mysqli_fetch_assoc($Tomar_Datos_Movimientos);
-
-                      // echo "DEBUG ID_Motivo2 : ".$ID_Motivo2;
-                      // if($Ret_Datos_Movimiento["motivo_1"] == $ID_Motivo2 || $Ret_Datos_Movimiento["motivo_2"] == $ID_Motivo2 || $Ret_Datos_Movimiento["motivo_3"] == $ID_Motivo2){
-                      //   echo "DEBUG SI HAY: ".var_dump($ID_Motivo2);
-                      //   echo "DATOS: ".var_dump($Ret_Datos_Movimiento);
-                      //   if($Ret_Datos_Movimiento["motivo_1"] > 1){
-                      //     echo "ENTRA AQUI 1";
-                      //     if($ID_Motivo2 > 0){
-                      //       echo "ENTRA AQUI 2";
-                      //       if($ID_Motivo2 == $Ret_Datos_Movimiento["motivo_1"]){
-                      //         echo "ENTRA AQUI 3";
-                      //         $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color from motivo M, categoria C, formas_categorias F where M.id_motivo = ".$Ret_Datos_Movimiento["motivo_1"]." and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
-                      //         echo $ConsultarCodyColor;
-                      //       }
-                      //     }
-                      //   }
-                      // }
             
-
-                      ////////////////////////////////////////////////////////////////                                             
-                      ////////////////////////////////////////////////////////////////
-                      ////////////////////////////////////////////////////////////////
                       if ($Ret_Datos_Movimiento["motivo_1"] > 1) {
                         if ($ID_Motivo > 0) {
                           if ($ID_Motivo == $Ret_Datos_Movimiento["motivo_1"]) {
@@ -2776,20 +2752,12 @@ $Con->CloseConexion();
                           }
                         }
                       }
-                      ////////////////////////////////////////////////////////////////                                             
-                      ////////////////////////////////////////////////////////////////
-                      ////////////////////////////////////////////////////////////////
-            
-
-
                     }
                     $tagsMotivos .= ($nroMotivosEnFecha >= 6)?"</div>": "";
                     $tagsTD .= "</div></td>";
                     $tagsTD_imprimir .= $tagsMotivos . "</div></td>";
 
                     $ID_Persona_Bandera = $RetTodos["id_persona"];
-                    // POSIBLEMENTE OBSOLETO      
-                    // }
                   }
 
                   if($tdExtenso){
