@@ -433,25 +433,18 @@ $Con->CloseConexion();
               headABorrar.removeClass(
                 "showColTablaAnimacion showColTablaAnimacionfire"
               );
-              columnaABorrar.addClass( "hiddenColTablaAnimacion");
-              headABorrar.addClass( "hiddenColTablaAnimacion");
 
               columnaABorrar.css({
-                "border-right-width": "",
-                "border-left-width": "",
-                "transition": ""
+                "margin-left":" -300px",
+                "border-right-width": "0px",
+                "border-left-width": "0px"
               });
-              divABorrar.css("z-index", "");
-              headABorrar.css({
-                "transition": ""
-              });
-
-              columnaABorrar.addClass( "hiddenColTablaAnimacionfire");
-              headABorrar.addClass( "hiddenColTablaAnimacionfire");
+              divABorrar.css("z-index", "-1");
+              headABorrar.css("margin-left"," -300px");
               columnaIndice++;
             }
             document.getElementById("BarraDeNavHTabla").value = columnaIndice;
-        } 
+        }
         tabla.scrollLeft(0);
     }
 
