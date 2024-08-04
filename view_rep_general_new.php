@@ -1515,13 +1515,13 @@ $Con->CloseConexion();
                   $nroColumnas += 1;
                 }
                 */
-                $Table .= "<th id='Contenido-Titulo-5' name='datosflia' style='max-width: 50px;'>Mz.</th>";
+                $Table .= "<th id='Contenido-Titulo-5' name='datosflia' style='max-width: 50px; display: none'>Mz.</th>";
                 $Table_imprimir .= "<th id='Contenido-Titulo-5' name='datosflia'>Mz.</th>";
                 $nroColumnas += 1;
-                $Table .= "<th id='Contenido-Titulo-6' name='datosflia' style='max-width: 50px;'>Lote</th>";
+                $Table .= "<th id='Contenido-Titulo-6' name='datosflia' style='max-width: 50px; display: none'>Lote</th>";
                 $Table_imprimir .= "<th id='Contenido-Titulo-6' name='datosflia'>Lote</th>";
                 $nroColumnas += 1;
-                $Table .= "<th id='Contenido-Titulo-7' name='datosflia' style='max-width: 70px;'>Sublote</th>";
+                $Table .= "<th id='Contenido-Titulo-7' name='datosflia' style='max-width: 70px; display: none'>Sublote</th>";
                 $Table_imprimir .= "<th id='Contenido-Titulo-7' name='datosflia'>Sublote</th>";
                 $nroColumnas += 1;
                 // if ($cmb_seleccion=="todos"){
@@ -2058,11 +2058,11 @@ $Con->CloseConexion();
                     $Table_imprimir .= "<td id='Contenido-7' name='datosflia' style='max-width: 100px;'>" . $RetTodos["familia"] . "</td>";
                   }
                   */
-                  $Table .= "<td id='Contenido-5' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>";
+                  $Table .= "<td id='Contenido-5' name='datosflia' style='max-width: 50px; display: none'>" . $RetTodos["manzana"] . "</td>";
                   $Table_imprimir .= "<td id='Contenido-5' name='datosflia' style='max-width: 100px;'>" . $RetTodos["manzana"] . "</td>";
-                  $Table .= "<td id='Contenido-6' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>";
+                  $Table .= "<td id='Contenido-6' name='datosflia' style='max-width: 50px; display: none'>" . $RetTodos["lote"] . "</td>";
                   $Table_imprimir .= "<td id='Contenido-6' name='datosflia' style='max-width: 100px;'>" . $RetTodos["lote"] . "</td>";
-                  $Table .= "<td id='Contenido-7' name='datosflia' style='max-width: 70px;'>" . $RetTodos["familia"] . "</td>";
+                  $Table .= "<td id='Contenido-7' name='datosflia' style='max-width: 70px; display: none'>" . $RetTodos["familia"] . "</td>";
                   $Table_imprimir .= "<td id='Contenido-7' name='datosflia' style='max-width: 100px;'>" . $RetTodos["familia"] . "</td>";
 
                   $Table .= " <td id='Contenido-3' style='overflow: hidden;'>
@@ -2129,11 +2129,11 @@ $Con->CloseConexion();
                     $tagsTD_imprimir .= "<td id='Contenido-7' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["familia"] . "</td>";
                   }
                   */
-                  $tagsTD .= "<td id='Contenido-5' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>";
+                  $tagsTD .= "<td id='Contenido-5' name='datosflia' style='max-width: 50px; display: none'>" . $RetTodos["manzana"] . "</td>";
                   $tagsTD_imprimir .= "<td id='Contenido-5' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["manzana"] . "</td>";
-                  $tagsTD .= "<td id='Contenido-6' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>";
+                  $tagsTD .= "<td id='Contenido-6' name='datosflia' style='max-width: 50px; display: none'>" . $RetTodos["lote"] . "</td>";
                   $tagsTD_imprimir .= "<td id='Contenido-6' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["lote"] . "</td>";
-                  $tagsTD .= "<td id='Contenido-7' name='datosflia' style='max-width: 70px;'>" . $RetTodos["familia"] . "</td>";
+                  $tagsTD .= "<td id='Contenido-7' name='datosflia' style='max-width: 70px; display: none'>" . $RetTodos["familia"] . "</td>";
                   $tagsTD_imprimir .= "<td id='Contenido-7' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["familia"] . "</td>";
                   $tagsTD .= "
                   <td id='Contenido-3' style='overflow: hidden;'>
@@ -2899,10 +2899,10 @@ $Con->CloseConexion();
           </div>
           <div class="modal-body">
           <ul type=none>
-              <li><input type="checkbox" id="chk-fechaNac"> Fecha Nac</li>
-              <li><input type="checkbox" id="chk-persona"> Persona</li> 
-              <li><input type="checkbox" id="chk-domicilio"> Direc. </li>
-              <li><input type="checkbox" id="chk-barrio"> Barrio </li>
+              <li><input type="checkbox" id="chk-fechaNac" checked> Fecha Nac</li>
+              <li><input type="checkbox" id="chk-persona" checked> Persona</li> 
+              <li><input type="checkbox" id="chk-domicilio" checked> Direc. </li>
+              <li><input type="checkbox" id="chk-barrio" checked> Barrio </li>
               <li><input type="checkbox" id="chk-manzana"> Manzana </li>
               <li><input type="checkbox" id="chk-lote"> Lote </li>
               <li><input type="checkbox" id="chk-sublote"> Sublote </li>
