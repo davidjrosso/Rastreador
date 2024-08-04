@@ -2906,8 +2906,8 @@ $Con->CloseConexion();
               <li><input type="checkbox" id="chk-manzana"> Manzana </li>
               <li><input type="checkbox" id="chk-lote"> Lote </li>
               <li><input type="checkbox" id="chk-sublote"> Sublote </li>
-              <li><input type="checkbox" id="chk-anios"> Años (edad) </li>
-              <li><input type="checkbox" id="chk-meses"> Meses (edad) </li>
+              <!--<li><input type="checkbox" id="chk-anios"> Años (edad) </li>
+              <li><input type="checkbox" id="chk-meses"> Meses (edad) </li>-->
             </ul>
           </div>
           <div class="modal-footer modal-footer-flex-center">
