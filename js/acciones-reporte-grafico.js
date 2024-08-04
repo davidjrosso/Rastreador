@@ -33,7 +33,7 @@ function configResultados()
         chkManzana.is(":checked")  || chkLote.is(":checked") ||
         chkSublote.is(":checked");
 
-    if (tieneCheck) {  
+    if (tieneCheck) {
         if (!chkPersona.is(":checked")) {
             trPersona.hide();
             thPersona.hide();

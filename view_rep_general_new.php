@@ -427,25 +427,28 @@ $Con->CloseConexion();
             headABorrar = $('thead tr > *:nth-child('+columnaIndice+')');
             divABorrar = $('tbody tr > *:nth-child('+columnaIndice+') div div');
             if(columnaIndice <= nroColumnasTabla){
-              if(columnaIndice <= nroColumnasTabla){
-                columnaABorrar.removeClass( "showColTablaAnimacion");
-                headABorrar.removeClass( "showColTablaAnimacion");
-                columnaABorrar.removeClass( "showColTablaAnimacionfire");
-                headABorrar.removeClass( "showColTablaAnimacionfire");
+              columnaABorrar.removeClass(
+                "showColTablaAnimacion showColTablaAnimacionfire"
+              );
+              headABorrar.removeClass(
+                "showColTablaAnimacion showColTablaAnimacionfire"
+              );
+              columnaABorrar.addClass( "hiddenColTablaAnimacion");
+              headABorrar.addClass( "hiddenColTablaAnimacion");
 
-                columnaABorrar.css({
-                  "margin-left": "",
-                  "border-right-width": "",
-                  "border-left-width": ""
-                });
-                divABorrar.css("z-index", "");
+              columnaABorrar.css({
+                "border-right-width": "",
+                "border-left-width": "",
+                "transition": ""
+              });
+              divABorrar.css("z-index", "");
+              headABorrar.css({
+                "transition": ""
+              });
 
-                columnaABorrar.addClass( "hiddenColTablaAnimacion");
-                headABorrar.addClass( "hiddenColTablaAnimacion");
-                columnaABorrar.addClass( "hiddenColTablaAnimacionfire");
-                headABorrar.addClass( "hiddenColTablaAnimacionfire");
-                columnaIndice++;
-              }
+              columnaABorrar.addClass( "hiddenColTablaAnimacionfire");
+              headABorrar.addClass( "hiddenColTablaAnimacionfire");
+              columnaIndice++;
             }
             document.getElementById("BarraDeNavHTabla").value = columnaIndice;
         } 
