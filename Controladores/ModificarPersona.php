@@ -71,41 +71,61 @@ if(empty($ID_Escuela)){
 
 
 // PASANDO LOS DATOS NUMERICOS VACIOS A NULL
-if(empty($Edad)){
-	$Edad = 'null';
+/*if(empty($Edad)){
+	$Edad = null;
 }
 if(empty($Meses)){
-	$Meses = 'null';
-}
+	$Meses = null;
+}*/
 if(empty($Nro_Carpeta)){
-	$Nro_Carpeta = 'null';
+	$Nro_Carpeta = null;
 }
 if(empty($Circunscripcion)){
-	$Circunscripcion = 'null';
+	$Circunscripcion = null;
 }
 if(empty($Seccion)){
-	$Seccion = 'null';
+	$Seccion = null;
 }
 if(empty($Manzana)){
-	$Manzana = 'null';
+	$Manzana = null;
 }
 if(empty($Lote)){
-	$Lote = 'null';
+	$Lote = null;
 }
 if(empty($Familia)){
-	$Familia = 'null';
+	$Familia = null;
 }
 
 if(empty($ID_Barrio)){
 	$ID_Barrio = 37;
 }
 
-
-
-/////////////////////////////////////////////
-
-$Persona = new Persona($ID_Persona,$Apellido,$Nombre,$DNI,$Nro_Legajo,$Edad,$Meses,$Fecha_Nacimiento,$Nro_Carpeta,$Obra_Social,$Domicilio,$ID_Barrio,$Localidad,$Circunscripcion,$Seccion,$Manzana,$Lote,$Familia,$Observaciones,$Cambio_Domicilio,$Telefono,$Mail,$ID_Escuela,$Estado,$Trabajo);
-
+$Persona = new Persona(
+					   xApellido : $Apellido,
+					   xNombre : $Nombre,
+					   xDNI : $DNI,
+					   xNro_Legajo : $Nro_Legajo,
+					   xEdad : $Edad,
+					   xMeses : $Meses,
+					   xFecha_Nacimiento: $Fecha_Nacimiento,
+					   xNro_Carpeta: $Nro_Carpeta,
+					   xObra_Social: $Obra_Social,
+					   xDomicilio : $Domicilio,
+					   xBarrio : $ID_Barrio,
+					   xLocalidad : $Localidad,
+					   xCircunscripcion : $Circunscripcion,
+					   xSeccion : $Seccion,
+					   xManzana : $Manzana,
+					   xLote : $Lote,
+					   xFamilia : $Familia,
+					   xObservaciones : $Observaciones,
+					   xCambio_Domicilio : $Cambio_Domicilio,
+					   xTelefono : $Telefono,
+					   xMail : $Mail,
+					   xID_Escuela : $ID_Escuela,
+					   xEstado : $Estado,
+					   xTrabajo : $Trabajo
+);
 
 $Fecha = date("Y-m-d");
 $ID_TipoAccion = 2;
@@ -132,49 +152,34 @@ try {
 		if(!$RetDatosViejos = mysqli_query($Con->Conexion,$ConsultarDatosViejos)){
 			throw new Exception("Error al intentar registrar. Consulta: ".$ConsultarDatosViejos, 1);
 		}		
-		$TomarDatosViejos = mysqli_fetch_assoc($RetDatosViejos);
-		$ID_Persona_Viejo = $TomarDatosViejos["id_persona"];
-		$Apellido_Viejo = $TomarDatosViejos["apellido"];
-		$Nombre_Viejo = $TomarDatosViejos["nombre"];
-		$DNI_Viejo = $TomarDatosViejos["documento"];
-		
-		$Nro_Legajo_Viejo = $TomarDatosViejos["nro_legajo"];
-
-		$Edad_Viejo = $TomarDatosViejos["edad"];
-		$Meses_Viejo = $TomarDatosViejos["meses"];
-		$Fecha_Nacimiento_Viejo = $TomarDatosViejos["fecha_nac"];
-		$Nro_Carpeta_Viejo = $TomarDatosViejos["nro_carpeta"];
-		$Obra_Social_Viejo = $TomarDatosViejos["obra_social"];
-		$Domicilio_Viejo = $TomarDatosViejos["domicilio"];
-		$ID_Barrio_Viejo = $TomarDatosViejos["ID_Barrio"];
-		$Localidad_Viejo = $TomarDatosViejos["localidad"];
-		$Circunscripcion_Viejo = $TomarDatosViejos["circunscripcion"];
-		$Seccion_Viejo = $TomarDatosViejos["seccion"];
-		$Manzana_Viejo = $TomarDatosViejos["manzana"];
-		$Lote_Viejo = $TomarDatosViejos["lote"];
-		$Familia_Viejo = $TomarDatosViejos["familia"];
-		$Observaciones_Viejo = $TomarDatosViejos["observacion"];
-		$Cambio_Domicilio_Viejo = $TomarDatosViejos["cambio_domicilio"];
-		$Telefono_Viejo = $TomarDatosViejos["telefono"];
-		$Mail_Viejo = $TomarDatosViejos["mail"];
-		$ID_Escuela_Viejo = $TomarDatosViejos["ID_Escuela"];
-		$Estado_Viejo = 0;
-		$Trabajo_Viejo = $TomarDatosViejos["Trabajo"];
-
-		$Persona_Viejo = new Persona($ID_Persona_Viejo,$Apellido_Viejo,$Nombre_Viejo,$DNI_Viejo,$Nro_Legajo_Viejo,$Edad_Viejo,$Meses_Viejo,$Fecha_Nacimiento_Viejo,$Nro_Carpeta_Viejo,$Obra_Social_Viejo,$Domicilio_Viejo,$ID_Barrio_Viejo,$Localidad_Viejo,$Circunscripcion_Viejo,$Seccion_Viejo,$Manzana_Viejo,$Lote_Viejo,$Familia_Viejo,$Observaciones_Viejo,$Cambio_Domicilio_Viejo,$Telefono_Viejo,$Mail_Viejo,$ID_Escuela_Viejo,$Estado_Viejo,$Trabajo_Viejo);
-
-		$Consulta = "update persona set apellido = '{$Persona->getApellido()}', nombre = '{$Persona->getNombre()}', documento = '{$Persona->getDNI()}', nro_legajo = '{$Persona->getNro_Legajo()}', edad = {$Persona->getEdad()}, fecha_nac = '{$Persona->getFecha_Nacimiento()}', telefono = '{$Persona->getTelefono()}', mail = '{$Persona->getMail()}', nro_carpeta = {$Persona->getNro_Carpeta()}, obra_social = '{$Persona->getObra_Social()}', domicilio = '{$Persona->getDomicilio()}', ID_Barrio = {$Persona->getBarrio()}, localidad = '{$Persona->getLocalidad()}', circunscripcion = {$Persona->getCircunscripcion()}, seccion = {$Persona->getSeccion()}, manzana = '{$Persona->getManzana()}', lote = {$Persona->getLote()}, familia = {$Persona->getFamilia()}, observacion = '{$Persona->getObservaciones()}', cambio_domicilio = '{$Persona->getCambio_Domicilio()}', Telefono = '{$Persona->getTelefono()}', Mail = '{$Persona->getMail()}', ID_Escuela = {$Persona->getID_Escuela()}, Meses = {$Persona->getMeses()}, Trabajo = '{$Persona->getTrabajo()}' where id_persona = {$Persona->getID_Persona()}";
-
-		
-
-		if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
-			throw new Exception("Problemas en la consulta".$Consulta, 2);		
-		}
-
-
+		$Persona_Viejo = new Persona($ID_Persona);
 		$Detalles = "El usuario con ID: $ID_Usuario ha modificado una Persona. Datos: Dato Anterior: {$Persona_Viejo->getApellido()} , Dato Nuevo: {$Persona->getApellido()} - Dato Anterior: {$Persona_Viejo->getNombre()} , Dato Nuevo: {$Persona->getNombre()} - Dato Anterior: {$Persona_Viejo->getDNI()}, Dato Nuevo: {$Persona->getDNI()} - Dato Anterior: {$Persona_Viejo->getNro_Legajo()}, Dato Nuevo: {$Persona->getNro_Legajo()} - Dato Anterior: {$Persona_Viejo->getEdad()}, Dato Nuevo: {$Persona->getEdad()} - Dato Anterior: {$Persona_Viejo->getFecha_Nacimiento()}, Dato Nuevo: {$Persona->getFecha_Nacimiento()} - Dato Anterior: {$Persona_Viejo->getTelefono()}, Dato Nuevo: {$Persona->getTelefono()} - Dato Anterior: {$Persona_Viejo->getMail()}, Dato Nuevo: {$Persona->getMail()} - Dato Anterior: {$Persona_Viejo->getNro_Carpeta()}, Dato Nuevo: {$Persona->getNro_Carpeta()} - Dato Anterior: {$Persona_Viejo->getObra_Social()}, Dato Nuevo: {$Persona->getObra_Social()} - Dato Anterior: {$Persona_Viejo->getSeccion()}, Dato Nuevo: {$Persona->getSeccion()} - Dato Anterior: {$Persona_Viejo->getManzana()}, Dato Nuevo: {$Persona->getManzana()} - Dato Anterior: {$Persona_Viejo->getLote()}, Dato Nuevo: {$Persona->getLote()} - Dato Anteior: {$Persona_Viejo->getFamilia()}, Dato Nuevo: {$Persona->getFamilia()} - Dato Anterior: {$Persona_Viejo->getObservaciones()}, Dato Nuevo: {$Persona->getObservaciones()} - Dato Anterior: {$Persona_Viejo->getCambio_Domicilio()}, Dato Nuevo: {$Persona->getCambio_Domicilio()} - Dato Anterior: {$Persona_Viejo->getTelefono()}, Dato Nuevo: {$Persona->getTelefono()} - Dato Anterior: {$Persona_Viejo->getMail()}, Dato Nuevo: {$Persona->getMail()} - Dato Anterior: {$Persona_Viejo->getID_Escuela()}, Dato Nuevo: {$Persona->getID_Escuela()} - Dato Anterior: {$Persona_Viejo->getMeses()}, Dato Nuevo: {$Persona->getMeses()}";
-		$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
+		$Persona_Viejo->setApellido($Persona->getApellido());
+		$Persona_Viejo->setBarrio($Persona->getId_Barrio());
+		$Persona_Viejo->setCamio_Domicilio($Persona->getCambio_Domicilio());
+		$Persona_Viejo->setCircunscripcion($Persona->getCircunscripcion());
+		$Persona_Viejo->setDNI($Persona->getDNI());
+		$Persona_Viejo->setDomicilio($Persona->getDomicilio());
+		$Persona_Viejo->setEdad($Persona->getEdad());
+		$Persona_Viejo->setNombre($Persona->getNombre());
+		$Persona_Viejo->setNro_Legajo($Persona->getNro_Legajo());
+		$Persona_Viejo->setFamilia($Persona->getFamilia());
+		$Persona_Viejo->setFecha_Nacimiento($Persona->getFecha_Nacimiento());
+		$Persona_Viejo->setID_Escuela($Persona->getID_Escuela());
+		$Persona_Viejo->setLocalidad($Persona->getLocalidad());
+		$Persona_Viejo->setLote($Persona->getLote());
+		$Persona_Viejo->setMail($Persona->getMail());
+		$Persona_Viejo->setManzana($Persona->getManzana());
+		$Persona_Viejo->setMeses($Persona->getMeses());
+		$Persona_Viejo->setNro_Carpeta($Persona->getNro_Carpeta());
+		$Persona_Viejo->setObra_Social($Persona->getObra_Social());
+		$Persona_Viejo->setObservaciones($Persona->getObservaciones());
+		$Persona_Viejo->setSeccion($Persona->getSeccion());
+		$Persona_Viejo->setTrabajo($Persona->getTrabajo());
+		$Persona_Viejo->setTelefono($Persona->getTelefono());
+		$Persona_Viejo->save();
 
+		$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
 
 		if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
 			throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 3);

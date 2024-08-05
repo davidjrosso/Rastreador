@@ -1,5 +1,4 @@
 <?php
-require_once "Controladores/Conexion.php";
 
 class Persona{
 	//DECLARACION DE VARIABLES
@@ -232,6 +231,11 @@ public function getBarrio()
 	return $RetBarrio["Barrio"];
 }
 
+public function getId_Barrio()
+{
+	return $this->Barrio;
+}
+
 public function getLocalidad()
 {
 	return $this->Localidad;
@@ -312,6 +316,43 @@ public function getEscuela()
 public function getTrabajo()
 {
 	return $this->Trabajo;
+}
+
+public function save(){
+	$Con = new Conexion();
+	$Con->OpenConexion();
+	$Consulta = "update persona 
+				 set apellido = " . ((!is_null($this->getApellido())) ? "'" . $this->getApellido()."'" : "null").", 
+				 	 nombre = " . ((!is_null($this->getNombre())) ? "'" . $this->getNombre()."'" : "null").", 
+					 documento = " . ((!is_null($this->getDNI())) ? "'" . $this->getDNI()."'" : "null").", 
+					 nro_legajo = " . ((!is_null($this->getNro_Legajo())) ? "'" . $this->getNro_Legajo()."'" : "null").", 
+					 edad = " . ((!is_null($this->getEdad())) ? "'" . $this->getEdad()."'" : "null").", 
+					 fecha_nac = " . ((!is_null($this->getFecha_Nacimiento())) ? "'" . $this->getFecha_Nacimiento()."'" : "null").", 
+					 telefono = " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono()."'" : "null").", 
+					 mail = " . ((!is_null($this->getMail())) ? "'" . $this->getMail()."'" : "null").", 
+					 nro_carpeta = " . ((!is_null($this->getNro_Carpeta())) ? "'" . $this->getNro_Carpeta()."'" : "null").", 
+					 obra_social = " . ((!is_null($this->getObra_Social())) ? "'" . $this->getObra_Social()."'" : "null").", 
+					 domicilio = " . ((!is_null($this->getDomicilio())) ? "'" . $this->getDomicilio()."'" : "null").", 
+					 ID_Barrio = " . ((!is_null($this->getId_Barrio())) ? "'" . $this->getId_Barrio()."'" : "null").", 
+					 localidad = " . ((!is_null($this->getLocalidad())) ? "'" . $this->getLocalidad()."'" : "null").", 
+					 circunscripcion = " . ((!is_null($this->getCircunscripcion())) ? "'" . $this->getCircunscripcion()."'" : "null").", 
+					 seccion = " . ((!is_null($this->getSeccion())) ? "'" . $this->getSeccion()."'" : "null").", 
+					 manzana = " . ((!is_null($this->getManzana())) ? "'" . $this->getManzana()."'" : "null").", 
+					 lote = " . ((!is_null($this->getLote())) ? $this->getLote() : "null").", 
+					 familia = " . ((!is_null($this->getFamilia())) ? $this->getFamilia() : "null").", 
+					 observacion = " . ((!is_null($this->getObservaciones())) ? "'" . $this->getObservaciones()."'" : "null").", 
+					 cambio_domicilio = " . ((!is_null($this->getCambio_Domicilio())) ? "'" . $this->getCambio_Domicilio()."'" : "null").", 
+					 Telefono = " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono()."'" : "null").", 
+					 Mail = " . ((!is_null($this->getMail())) ? "'" . $this->getMail()."'" : "null").", 
+					 ID_Escuela = " . ((!is_null($this->getID_Escuela())) ? "'" . $this->getID_Escuela()."'" : "null").", 
+					 Meses = " . ((!is_null($this->getMeses())) ? "'" . $this->getMeses()."'" : "null").", 
+					 Trabajo = " . ((!is_null($this->getTrabajo())) ? "'" . $this->getTrabajo()."'" : "null")." 
+				 where id_persona = " . $this->getID_Persona();
+				 $MensajeErrorConsultar = "No se pudo actualizar la Persona";
+				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+					throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+				}
+				 $Con->CloseConexion();
 }
 
 public function __construct(

@@ -351,8 +351,8 @@ $Con->CloseConexion();
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Barrio: </label>
                   <div class="col-md-10">
                     <?php 
-                    $Element2 = new Elements();
-                    echo $Element2->CBModBarrios($Persona->getBarrio());                    
+                    $Element = new Elements();
+                    echo $Element->CBModBarrios($Persona->getId_Barrio());                    
                     ?>                    
                   </div>
                 </div>
@@ -360,7 +360,6 @@ $Con->CloseConexion();
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Domicilio: </label>
                   <div class="col-md-8">
                     <?php 
-                      $Element = new Elements();
                       echo $Element->CBCallesNombre($Persona->getCalle());
                     ?>
                   </div>  
@@ -408,8 +407,7 @@ $Con->CloseConexion();
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Escuela: </label>
                   <div class="col-md-10">
                     <?php 
-                    $Element2 = new Elements();
-                    echo $Element2->CBModEscuelas($Persona->getID_Escuela());
+                    echo $Element->CBModEscuelas($Persona->getID_Escuela());
                     ?>                    
                   </div>
                 </div>
