@@ -177,7 +177,7 @@ try {
 		$Persona_Viejo->setSeccion($Persona->getSeccion());
 		$Persona_Viejo->setTrabajo($Persona->getTrabajo());
 		$Persona_Viejo->setTelefono($Persona->getTelefono());
-		$Persona_Viejo->save();
+		$Persona_Viejo->update();
 
 		$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
 
