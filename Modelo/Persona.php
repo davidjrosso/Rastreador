@@ -318,7 +318,24 @@ public function getTrabajo()
 	return $this->Trabajo;
 }
 
-public function save(){
+public function is_registered($documento)
+{
+	$Con = new Conexion();
+	$Con->OpenConexion();
+	$ConsRegistrosIguales = "select id_persona from persona where documento like '%" . $documento. "%' and estado = 1";
+	$MensajeErrorRegistrosIguales = "Hubo un problema al consultar los registros para validar";
+	$Ret = mysqli_query($Con->Conexion,
+		$ConsRegistrosIguales
+	) or die(
+		$MensajeErrorRegistrosIguales . " Consulta: " . $ConsRegistrosIguales
+	);
+	$is_multiple = (mysqli_num_rows($Ret) > 1);
+	$Con->CloseConexion();
+	return $is_multiple;
+}
+
+public function update()
+{
 	$Con = new Conexion();
 	$Con->OpenConexion();
 	$Consulta = "update persona 
@@ -342,16 +359,58 @@ public function save(){
 					 familia = " . ((!is_null($this->getFamilia())) ? $this->getFamilia() : "null").", 
 					 observacion = " . ((!is_null($this->getObservaciones())) ? "'" . $this->getObservaciones()."'" : "null").", 
 					 cambio_domicilio = " . ((!is_null($this->getCambio_Domicilio())) ? "'" . $this->getCambio_Domicilio()."'" : "null").", 
-					 Telefono = " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono()."'" : "null").", 
-					 Mail = " . ((!is_null($this->getMail())) ? "'" . $this->getMail()."'" : "null").", 
+					 telefono = " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono()."'" : "null").", 
 					 ID_Escuela = " . ((!is_null($this->getID_Escuela())) ? "'" . $this->getID_Escuela()."'" : "null").", 
-					 Meses = " . ((!is_null($this->getMeses())) ? "'" . $this->getMeses()."'" : "null").", 
+					 meses = " . ((!is_null($this->getMeses())) ? "'" . $this->getMeses()."'" : "null").", 
 					 Trabajo = " . ((!is_null($this->getTrabajo())) ? "'" . $this->getTrabajo()."'" : "null")." 
 				 where id_persona = " . $this->getID_Persona();
 				 $MensajeErrorConsultar = "No se pudo actualizar la Persona";
 				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
 					throw new Exception($MensajeErrorConsultar . $Consulta, 2);
 				}
+				 $Con->CloseConexion();
+}
+
+public function save(){
+	$Con = new Conexion();
+	$Con->OpenConexion();
+	$Consulta = "INSERT INTO persona (
+					apellido, nombre, documento, nro_legajo,
+					edad, fecha_nac, telefono, mail, nro_carpeta, obra_social,
+					domicilio, ID_Barrio, localidad, circunscripcion, seccion,
+					manzana, lote, familia, observacion, cambio_domicilio,
+					Telefono, ID_Escuela, meses, Trabajo, estado 
+				 )
+				 VALUES ( " . ((!is_null($this->getApellido())) ? "'" . $this->getApellido()."'" : "null").", 
+						 " . ((!is_null($this->getNombre())) ? "'" . $this->getNombre()."'" : "null").", 
+						 " . ((!is_null($this->getDNI())) ? "'" . $this->getDNI()."'" : "null").", 
+						 " . ((!is_null($this->getNro_Legajo())) ? "'" . $this->getNro_Legajo()."'" : "null").", 
+						 " . ((!is_null($this->getEdad())) ? $this->getEdad() : "null").", 
+						 " . ((!is_null($this->getFecha_Nacimiento())) ? "'" . $this->getFecha_Nacimiento()."'" : "null").", 
+						 " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono()."'" : "null").", 
+						 " . ((!is_null($this->getMail())) ? "'" . $this->getMail()."'" : "null").", 
+						 " . ((!is_null($this->getNro_Carpeta())) ? "'" . $this->getNro_Carpeta()."'" : "null").", 
+						 " . ((!is_null($this->getObra_Social())) ? "'" . $this->getObra_Social()."'" : "null").", 
+						 " . ((!is_null($this->getDomicilio())) ? "'" . $this->getDomicilio()."'" : "null").", 
+						 " . ((!is_null($this->getId_Barrio())) ? $this->getId_Barrio() : "null").", 
+						 " . ((!is_null($this->getLocalidad())) ? "'" . $this->getLocalidad()."'" : "null").", 
+						 " . ((!is_null($this->getCircunscripcion())) ? $this->getCircunscripcion() : "null").", 
+						 " . ((!is_null($this->getSeccion())) ? $this->getSeccion() : "null").", 
+						 " . ((!is_null($this->getManzana())) ? "'" . $this->getManzana()."'" : "null").", 
+						 " . ((!is_null($this->getLote())) ? $this->getLote() : "null").", 
+						 " . ((!is_null($this->getFamilia())) ? $this->getFamilia() : "null").", 
+						 " . ((!is_null($this->getObservaciones())) ? "'" . $this->getObservaciones()."'" : "null").", 
+						 " . ((!is_null($this->getCambio_Domicilio())) ? "'" . $this->getCambio_Domicilio()."'" : "null").", 
+						 " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono()."'" : "null").", 
+						 " . ((!is_null($this->getID_Escuela())) ? "'" . $this->getID_Escuela()."'" : "null").", 
+						 " . ((!is_null($this->getMeses())) ? "'" . $this->getMeses()."'" : "null").", 
+						 " . ((!is_null($this->getTrabajo())) ? "'" . $this->getTrabajo()."'" : "null").",
+						 0
+				 )";
+				 $MensajeErrorConsultar = "No se pudo insertar la Persona";
+				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+					throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+				 }
 				 $Con->CloseConexion();
 }
 
@@ -383,30 +442,30 @@ public function __construct(
 	$xTrabajo = null
 ){
 	if (!$ID_Persona) {
-		$this->ID_Persona =$ID_Persona;
 		$this->Apellido = $xApellido;
-		$this->Nombre = $xNombre;
-		$this->DNI = $xDNI;
-		$this->Nro_Legajo = $xNro_Legajo;
-		$this->Edad = $xEdad;
-		$this->Meses = $xMeses;
-		$this->Fecha_Nacimiento = $xFecha_Nacimiento;
-		$this->Nro_Carpeta = $xNro_Carpeta;
-		$this->Obra_Social = $xObra_Social;
-		$this->Domicilio = $xDomicilio;
 		$this->Barrio = $xBarrio;
-		$this->Localidad = $xLocalidad;
-		$this->Circunscripcion = $xCircunscripcion;
-		$this->Seccion = $xSeccion;
-		$this->Manzana = $xManzana;
-		$this->Lote = $xLote;
-		$this->Familia = $xFamilia;
-		$this->Observaciones = $xObservaciones;
 		$this->Cambio_Domicilio = $xCambio_Domicilio;
-		$this->Telefono = $xTelefono;
-		$this->Mail = $xMail;
-		$this->ID_Escuela = $xID_Escuela;	
+		$this->Circunscripcion = $xCircunscripcion;
+		$this->DNI = $xDNI;
+		$this->Domicilio = $xDomicilio;
+		$this->Edad = $xEdad;
 		$this->Estado = $xEstado;
+		$this->Familia = $xFamilia;
+		$this->Fecha_Nacimiento = $xFecha_Nacimiento;
+		$this->ID_Escuela = $xID_Escuela;	
+		$this->ID_Persona =$ID_Persona;
+		$this->Localidad = $xLocalidad;
+		$this->Lote = $xLote;
+		$this->Mail = $xMail;
+		$this->Manzana = $xManzana;
+		$this->Meses = $xMeses;
+		$this->Nombre = $xNombre;
+		$this->Nro_Carpeta = $xNro_Carpeta;
+		$this->Nro_Legajo = $xNro_Legajo;
+		$this->Obra_Social = $xObra_Social;
+		$this->Observaciones = $xObservaciones;
+		$this->Seccion = $xSeccion;
+		$this->Telefono = $xTelefono;
 		$this->Trabajo = $xTrabajo;
 	} else {
 		$Con = new Conexion();
@@ -479,4 +538,3 @@ public function __construct(
 }
 
 }
-
