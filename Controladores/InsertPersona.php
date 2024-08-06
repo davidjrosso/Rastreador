@@ -33,7 +33,7 @@ if (empty($_REQUEST["Fecha_Nacimiento"])) {
 
 ///////////////////////////CALCULAR EDAD//////////////////////////////////////////////////
 if (($Edad == 'null' || is_null($Edad)) 
-	&& ($Fecha_Nacimiento != 'null' || !is_null($Fecha_Nacimiento))) {
+	&& ($Fecha_Nacimiento != 'null' && !is_null($Fecha_Nacimiento))) {
 	list($ano,$mes,$dia) = explode("-", $Fecha_Nacimiento);
 	$ano_diferencia = date("Y") - $ano;
 	$mes_diferencia = date("m") - $mes;
@@ -60,7 +60,9 @@ if (empty($Nro_Carpeta)) {
 $Obra_Social = $_REQUEST["Obra_Social"];
 $Domicilio = ucwords($_REQUEST["Calle"]);
 $Domicilio .= " " . $_REQUEST["NumeroDeCalle"];
-$ID_Barrio = ucwords($_REQUEST["ID_Barrio"]);
+if (isset($_REQUEST["ID_Barrio"])) {
+	$ID_Barrio = null;
+}
 if (empty($ID_Barrio)) {
 	$ID_Barrio = 37;
 }
@@ -92,7 +94,10 @@ $Cambio_Domicilio = $_REQUEST["Cambio_Domicilio"];
 $Telefono = $_REQUEST["Telefono"];
 $Mail = ucfirst($_REQUEST["Mail"]);
 $Estado = 1;
-$ID_Escuela = $_REQUEST["ID_Escuela"];
+if (isset($_REQUEST["ID_Escuela"])) {
+	$ID_Escuela = null;
+}
+
 $Trabajo = strtoupper($_REQUEST["Trabajo"]);
 
 if (empty($ID_Escuela)) {
@@ -104,14 +109,8 @@ $ID_TipoAccion = 1;
 $Detalles = "El usuario con ID: $ID_Usuario ha registrado una nueva Persona. Datos: Apellido: $Apellido - Nombre: $Nombre - Documento: $DNI - Nro Legajo: $Nro_Legajo - Edad: $Edad - Meses: $Meses - Fecha de Nacimiento: $Fecha_Nacimiento - Telefono: $Telefono - E-Mail: $Mail - Nro Carpeta: $Nro_Carpeta - Obra Social: $Obra_Social - Domicilio: $Domicilio - Barrio: $ID_Barrio - Escuela: $ID_Escuela - Localidad: $Localidad - Circunscripcion: $Circunscripcion - Seccion: $Seccion - Manzana: $Manzana - Lote: $Lote - Familia: $Familia - Observaciones: $Observaciones - Cambio Domicilio: $Cambio_Domicilio";
 
 try {
-	if (!$Ret = mysqli_query($Con->Conexion,$ConsultarRegistrosIguales)) {
-		throw new Exception("Error al consultar registros. Consulta: " . $ConsultarRegistrosIguales, 0);		
-	}	
-	$Rows = mysqli_num_rows($Ret);
-	if ($Rows > 0 && $DNI == '') {
+	if (Persona::is_registered($DNI)) {
 		$Mensaje = "Ya existe un Usuario con el mismo Apellido y Nombre que el que esta intentando crear. Por favor ingrese un DNI para identificar a la persona.";
-		mysqli_free_result($Ret);
-		$Con->CloseConexion();
 		header('Location: ../view_newpersonas.php?Mensaje=' . $Mensaje);
 	} else {
 		$Persona = new Persona(
@@ -143,7 +142,8 @@ try {
 		$Persona->save();
 
 		//TOMAR DATOS PARA ACTUALIZAR MESES
-		
+		$Con = new Conexion();
+		$Con->OpenConexion();
 		if ($Persona->getEdad() == 0) {
 			$ConsultarID_Persona = "select id_persona from persona where nombre = '{$Persona->getNombre()}' and apellido = '{$Persona->getApellido()}' and documento = '{$Persona->getDNI()}' limit 1";
 			$MensajeErrorConsultarID_Persona = "No se pudo consultar el ID de la persona";

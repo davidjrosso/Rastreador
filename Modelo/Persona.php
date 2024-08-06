@@ -318,7 +318,7 @@ public function getTrabajo()
 	return $this->Trabajo;
 }
 
-public function is_registered($documento)
+public static function is_registered($documento)
 {
 	$Con = new Conexion();
 	$Con->OpenConexion();
@@ -375,11 +375,30 @@ public function save(){
 	$Con = new Conexion();
 	$Con->OpenConexion();
 	$Consulta = "INSERT INTO persona (
-					apellido, nombre, documento, nro_legajo,
-					edad, fecha_nac, telefono, mail, nro_carpeta, obra_social,
-					domicilio, ID_Barrio, localidad, circunscripcion, seccion,
-					manzana, lote, familia, observacion, cambio_domicilio,
-					Telefono, ID_Escuela, meses, Trabajo, estado 
+									  apellido, 
+									  nombre, 
+									  documento, 
+									  nro_legajo,
+									  edad, 
+									  fecha_nac, 
+									  telefono, 
+									  mail, 
+									  nro_carpeta, 
+									  obra_social,
+									  domicilio, 
+									  ID_Barrio, 
+									  localidad, 
+									  circunscripcion, 
+									  seccion,
+									  manzana, 
+									  lote, 
+									  familia, 
+									  observacion, 
+									  cambio_domicilio,
+									  ID_Escuela, 
+									  meses, 
+									  Trabajo, 
+									  estado 
 				 )
 				 VALUES ( " . ((!is_null($this->getApellido())) ? "'" . $this->getApellido()."'" : "null").", 
 						 " . ((!is_null($this->getNombre())) ? "'" . $this->getNombre()."'" : "null").", 
@@ -401,11 +420,10 @@ public function save(){
 						 " . ((!is_null($this->getFamilia())) ? $this->getFamilia() : "null").", 
 						 " . ((!is_null($this->getObservaciones())) ? "'" . $this->getObservaciones()."'" : "null").", 
 						 " . ((!is_null($this->getCambio_Domicilio())) ? "'" . $this->getCambio_Domicilio()."'" : "null").", 
-						 " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono()."'" : "null").", 
 						 " . ((!is_null($this->getID_Escuela())) ? "'" . $this->getID_Escuela()."'" : "null").", 
 						 " . ((!is_null($this->getMeses())) ? "'" . $this->getMeses()."'" : "null").", 
 						 " . ((!is_null($this->getTrabajo())) ? "'" . $this->getTrabajo()."'" : "null").",
-						 0
+						 1
 				 )";
 				 $MensajeErrorConsultar = "No se pudo insertar la Persona";
 				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
