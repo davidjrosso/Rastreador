@@ -52,7 +52,7 @@ if ($Fecha_Nacimiento != 'null' || !is_null($Fecha_Nacimiento)) {
 	$Diferencia = $Fecha_Nacimiento_Registrada->diff($Fecha_Actual);
 	$Meses = $Diferencia->m;
 }
-/////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////	/
 $Nro_Carpeta = $_REQUEST["Nro_Carpeta"];
 if (empty($Nro_Carpeta)) {
 	$Nro_Carpeta = null;
@@ -62,6 +62,8 @@ $Domicilio = ucwords($_REQUEST["Calle"]);
 $Domicilio .= " " . $_REQUEST["NumeroDeCalle"];
 if (!isset($_REQUEST["ID_Barrio"])) {
 	$ID_Barrio = null;
+} else {
+	$ID_Barrio = $_REQUEST["ID_Barrio"];
 }
 if (empty($ID_Barrio)) {
 	$ID_Barrio = 37;
@@ -96,6 +98,8 @@ $Mail = ucfirst($_REQUEST["Mail"]);
 $Estado = 1;
 if (!isset($_REQUEST["ID_Escuela"])) {
 	$ID_Escuela = null;
+} else {
+	$ID_Escuela = $_REQUEST["ID_Escuela"];
 }
 
 $Trabajo = strtoupper($_REQUEST["Trabajo"]);
