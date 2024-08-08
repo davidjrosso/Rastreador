@@ -56,9 +56,9 @@ $Con->CloseConexion();
   <script src="js/acciones-reporte-grafico.js"></script>
   <script src="js/jquery.wordexport.js"></script>
   <script src="html2pdf.bundle.min.js"></script>
-
-
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.js"></script>
   <script>
+    const { PDFDocument, StandardFonts, rgb } = PDFLib
 
     function mostrar() {
 
@@ -109,14 +109,25 @@ $Con->CloseConexion();
     var valInputRangePrev = columnaIndice;
     var focusBarraNavegacionH = false;
     var timeout = null;
-    $( document ).on( "keydown", function(e) {
+    var rowsRequest = {};
+    let listaDeRequest = new Array();
+    let listaDePdf = new Array();
+    let documentoPdf = PDFDocument.create()
+    let nroPaginaPdf = 0;
+    let nroPaginaGeneradas = 0;
+    let thTable = null;
+
+    $(document).on("keydown", function(e) {
       NavegacionConTeclado(e);
     });
 
-    $(document).on( "ready", function(e) {
-
-      nroFilasTabla = $("tbody > tr").length - 2;
+    $(document).on("ready", function(e) {
+      nroFilasTabla = $("#tablaMovimientos tbody > tr").length - 2;
       nroColumnasTabla = $("thead > tr > th").length - 2;
+      let nroPag = (nroFilasTabla + 2) / 10;
+      let floorPag = Math.floor((nroFilasTabla + 2) / 10);
+      nroPaginaPdf = (nroPag > floorPag) ? (floorPag + 1) : floorPag;
+      thTable = $("thead > tr > th");
       DesaplazamientoIniciaDeTabla();
 
       $("#input-zoom").on("input", function(e) {
@@ -1495,7 +1506,8 @@ $Con->CloseConexion();
                                     <thead>
                                       <tr align='center' valign='middle'>
                                       <th id='Contenido-Titulo-1'>Barrio</th>
-                                      <th id='Contenido-Titulo-2'>Direc.</th>"; 
+                                      <th id='Contenido-Titulo-2'>Direc.</th>";
+                $jsonTable = array();
                 $nroColumnas += 2;
 
                 /*
@@ -2039,6 +2051,8 @@ $Con->CloseConexion();
 
                   $Table_imprimir .= "<td id='Contenido-1'>" . $RetTodos["Barrio"] . "</td>
                                       <td id='Contenido-2'>" . $RetTodos["domicilio"] . "</td>";
+                  $jsonTable[$clave]["barrio"] = $RetTodos["Barrio"];
+                  $jsonTable[$clave]["domicilio"] = $RetTodos["domicilio"];
                   $Table .= "<td id='Contenido-1' style='max-width: 100px;'>" . $RetTodos["Barrio"] . "</td>
                              <td id='Contenido-2' style='max-width: 100px;'>" . $RetTodos["domicilio"] . "</td>";
                   /*
@@ -2060,11 +2074,13 @@ $Con->CloseConexion();
                   */
                   $Table .= "<td id='Contenido-5' name='datosflia' style='max-width: 50px; display: none'>" . $RetTodos["manzana"] . "</td>";
                   $Table_imprimir .= "<td id='Contenido-5' name='datosflia' style='max-width: 100px;'>" . $RetTodos["manzana"] . "</td>";
+                  $jsonTable[$clave]["manzana"] = $RetTodos["manzana"];
                   $Table .= "<td id='Contenido-6' name='datosflia' style='max-width: 50px; display: none'>" . $RetTodos["lote"] . "</td>";
                   $Table_imprimir .= "<td id='Contenido-6' name='datosflia' style='max-width: 100px;'>" . $RetTodos["lote"] . "</td>";
+                  $jsonTable[$clave]["lote"] = $RetTodos["lote"];
                   $Table .= "<td id='Contenido-7' name='datosflia' style='max-width: 70px; display: none'>" . $RetTodos["familia"] . "</td>";
                   $Table_imprimir .= "<td id='Contenido-7' name='datosflia' style='max-width: 100px;'>" . $RetTodos["familia"] . "</td>";
-
+                  $jsonTable[$clave]["familia"] = $RetTodos["familia"];
                   $Table .= " <td id='Contenido-3' style='overflow: hidden;'>
                                 <div style='position: relative;z-index: 1000;'>
                                   <a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $RetTodos["id_persona"] . "\",\"Ventana" . $RetTodos["id_persona"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" . 
@@ -2078,7 +2094,8 @@ $Con->CloseConexion();
                   
                   $Table_imprimir .= " <td id='Contenido-3'>" . $RetTodos["apellido"] . ", " . $RetTodos["nombre"] . "</td>
                                        <td id='Contenido-4' style='max-width: 100px;'>" . $Fecha_Nacimiento . "</td>";
-
+                  $jsonTable[$clave]["apellido"] = $RetTodos["apellido"];
+                  $jsonTable[$clave]["fechanac"] = $Fecha_Nacimiento;
                   $ColSpans = $MesesDiferencia * 270;
                   $Table .= "<td name='DatosSinResultados' style='width:" . $ColSpans . "px'></td>";
                   $Table_imprimir .= "<td name='DatosSinResultados' style='max-width: 100px;'></td>";
@@ -2112,6 +2129,8 @@ $Con->CloseConexion();
                               <td id='Contenido-2'>" . $RetTodos["domicilio"] . "</td>";
                   $tagsTD_imprimir .= "<td id='Contenido-1' style='text-align:center;font-size: 10px;max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;'>" . $RetTodos["Barrio"] . "</td>
                                        <td id='Contenido-2' style='text-align:center;font-size: 10px;max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;'>" . $RetTodos["domicilio"] . "</td>";
+                  $jsonTable[$clave]["barrio"] = $RetTodos["Barrio"];
+                  $jsonTable[$clave]["domicilio"] = $RetTodos["domicilio"];
 
                   /*
                   if ($Manzana == "manzana") {
@@ -2131,10 +2150,13 @@ $Con->CloseConexion();
                   */
                   $tagsTD .= "<td id='Contenido-5' name='datosflia' style='max-width: 50px; display: none'>" . $RetTodos["manzana"] . "</td>";
                   $tagsTD_imprimir .= "<td id='Contenido-5' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["manzana"] . "</td>";
+                  $jsonTable[$clave]["manzana"] = $RetTodos["manzana"];
                   $tagsTD .= "<td id='Contenido-6' name='datosflia' style='max-width: 50px; display: none'>" . $RetTodos["lote"] . "</td>";
                   $tagsTD_imprimir .= "<td id='Contenido-6' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["lote"] . "</td>";
+                  $jsonTable[$clave]["lote"] = $RetTodos["lote"];
                   $tagsTD .= "<td id='Contenido-7' name='datosflia' style='max-width: 70px; display: none'>" . $RetTodos["familia"] . "</td>";
                   $tagsTD_imprimir .= "<td id='Contenido-7' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["familia"] . "</td>";
+                  $jsonTable[$clave]["familia"] = $RetTodos["familia"];
                   $tagsTD .= "
                   <td id='Contenido-3' style='overflow: hidden;'>
                     <div style='position: relative;z-index: 1000;'>
@@ -2153,7 +2175,9 @@ $Con->CloseConexion();
                                        <td id='Contenido-4' style='text-align:center;max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . 
                                          $Fecha_Nacimiento . "
                                        </td>";
-                  // if($ID_Persona_Nuevo !== $ID_Persona_Bandera){
+                  $jsonTable[$clave]["apellido"] = $RetTodos["apellido"];
+                  $jsonTable[$clave]["fechanac"] = $Fecha_Nacimiento;
+                  $jsonMotivos = [];
                   foreach ($arr as $key => $value) {
                     $Separar = explode("/", $value);
                     $Mes = $Separar[0]; 
@@ -2256,7 +2280,10 @@ $Con->CloseConexion();
                                                    $RetMotivo["codigo"] . "
                                                  </div>
                                                </div>";
-                              
+                              $jsonMotivos[] = [$RetMotivo["Forma_Categoria"], 
+                                $RetMotivo["codigo"],
+                                $RetMotivo["color"]
+                              ];
                             }
                           }
                         }
@@ -2309,7 +2336,10 @@ $Con->CloseConexion();
                                                    $RetMotivo["codigo"] . "
                                                  </div>
                                                </div>";
-                              
+                              $jsonMotivos[] = [$RetMotivo["Forma_Categoria"], 
+                                $RetMotivo["codigo"],
+                                $RetMotivo["color"]
+                              ];
                             }
                           }
                         }
@@ -2361,7 +2391,10 @@ $Con->CloseConexion();
                                                         $RetMotivo["codigo"] . "
                                                       </div>
                                                     </div>";
-                                
+                                $jsonMotivos[] = [$RetMotivo["Forma_Categoria"], 
+                                  $RetMotivo["codigo"],
+                                  $RetMotivo["color"]
+                                ];
                             }
                           }
                         }
@@ -2412,7 +2445,10 @@ $Con->CloseConexion();
                                                     $RetMotivo["codigo"] . "
                                                   </div>
                                                 </div>";
-                              
+                              $jsonMotivos[] = [$RetMotivo["Forma_Categoria"], 
+                                  $RetMotivo["codigo"],
+                                  $RetMotivo["color"]
+                              ];
                           }
                         }
                       }
@@ -2455,7 +2491,10 @@ $Con->CloseConexion();
                                                     </div>
                                                   </div>";
                                 
-
+                                $jsonMotivos[] = [$RetMotivo["Forma_Categoria"], 
+                                    $RetMotivo["codigo"],
+                                    $RetMotivo["color"]
+                                ];
                             }
                           }
                         }
@@ -2495,7 +2534,10 @@ $Con->CloseConexion();
                                                       $RetMotivo2["codigo"] . "
                                                    </div>
                                                  </div>";
-                                
+                                $jsonMotivos[] = [$RetMotivo["Forma_Categoria"], 
+                                    $RetMotivo["codigo"],
+                                    $RetMotivo["color"]
+                                ];
                             }
                           }
                         }
@@ -2536,7 +2578,10 @@ $Con->CloseConexion();
                                                    $RetMotivo2["codigo"] . "
                                                  </div>
                                                </div>";
-                              
+                              $jsonMotivos[] = [$RetMotivo["Forma_Categoria"], 
+                                  $RetMotivo["codigo"],
+                                  $RetMotivo["color"]
+                              ];
                             }
                           }
                         }
@@ -2576,7 +2621,10 @@ $Con->CloseConexion();
                                                    $RetMotivo2["codigo"] . "
                                                  </div>
                                                </div>";
-                              
+                              $jsonMotivos[] = [$RetMotivo["Forma_Categoria"], 
+                                  $RetMotivo["codigo"],
+                                  $RetMotivo["color"]
+                              ];
                           }
                         }
                       }
@@ -2620,7 +2668,10 @@ $Con->CloseConexion();
                                                       $RetMotivo3["codigo"] . "
                                                     </div>
                                                  </div>";
-                                
+                                $jsonMotivos[] = [$RetMotivo["Forma_Categoria"], 
+                                    $RetMotivo["codigo"],
+                                    $RetMotivo["color"]
+                                ];
                             }
                           }
                         }
@@ -2661,7 +2712,10 @@ $Con->CloseConexion();
                                                    $RetMotivo3["codigo"] . "
                                                  </div>
                                                </div>";
-                              
+                              $jsonMotivos[] = [$RetMotivo["Forma_Categoria"], 
+                                  $RetMotivo["codigo"],
+                                  $RetMotivo["color"]
+                              ];
                             }
                           }
                         }
@@ -2702,7 +2756,10 @@ $Con->CloseConexion();
                                                     $RetMotivo3["codigo"] . "
                                                  </div>
                                                </div>";
-                              
+                              $jsonMotivos[] = [$RetMotivo["Forma_Categoria"], 
+                                  $RetMotivo["codigo"],
+                                  $RetMotivo["color"]
+                              ];
                             }    
                           }
                         }
@@ -2741,7 +2798,10 @@ $Con->CloseConexion();
                                                    $RetMotivo3["codigo"] . "
                                                  </div>
                                                </div>";
-                              
+                              $jsonMotivos[] = [$RetMotivo["Forma_Categoria"], 
+                                  $RetMotivo["codigo"],
+                                  $RetMotivo["color"]
+                              ];
                           }
                         }
                       }
@@ -2749,7 +2809,7 @@ $Con->CloseConexion();
                     $tagsMotivos .= ($nroMotivosEnFecha >= 6)?"</div>": "";
                     $tagsTD .= "</div></td>";
                     $tagsTD_imprimir .= $tagsMotivos . "</div></td>";
-
+                    $jsonTable[$clave]["motivos"] = $jsonMotivos;
                     $ID_Persona_Bandera = $RetTodos["id_persona"];
                   }
 
@@ -2879,7 +2939,7 @@ $Con->CloseConexion();
           }
 
           ?>
-          <input type="hidden" name="tabla_1" id = "tabla_1" value = "<?php echo $Table_imprimir;?>">
+          <input type="hidden" name="tabla_1" id = "tabla_1" value = "<?php echo $jsonTable;?>">
           </div>
 
         </div>
@@ -3087,17 +3147,7 @@ $Con->CloseConexion();
 
       }
 
-      function base64ToArrayBuffer(data) {
-          var binaryString = window.atob(data);
-          var binaryLen = binaryString.length;
-          var bytes = new Uint8Array(binaryLen);
-          for (var i = 0; i < binaryLen; i++) {
-              var ascii = binaryString.charCodeAt(i);
-              bytes[i] = ascii;
-          }
-          return bytes;
-      };
-
+      /*
       function enviarImprimirPdf() {
         var tabla1 = document.getElementById("tabla_1");
         var dataString = "tabla=" + tabla1.value;
@@ -3129,6 +3179,19 @@ $Con->CloseConexion();
             alert("error " + atob(error.responseText));
           }
         });
+      }*/
+
+      function enviarImprimirPdf() {
+        let filas = $("tbody > tr").each(envioDeFilasEnBloques);
+
+        if (rowsRequest != {}) {
+          let request = new XMLHttpRequest();
+          listaDeRequest.push(request);
+          request.open("POST", "Controladores/GeneradorPdf.php", true);
+          request.onreadystatechange = addPdf;
+          request.send(JSON.stringify(rowsRequest));
+          rowsRequest = {};
+        }
       }
 
       var tituloBarrio = document.getElementById("Contenido-Titulo-1");

@@ -1,5 +1,4 @@
-function configResultados() 
-{
+function configResultados() {
     var chkPersona = $('#chk-persona');
     var chkFechaNac = $('#chk-fechaNac');
     var chkDomicilio = $('#chk-domicilio');
@@ -107,4 +106,124 @@ function configResultados()
         thMeses.show();
     }
     */
+  }
+
+  function base64ToArrayBuffer(data) {
+    var binaryString = window.atob(data);
+    var binaryLen = binaryString.length;
+    var bytes = new Uint8Array(binaryLen);
+    for (var i = 0; i < binaryLen; i++) {
+        var ascii = binaryString.charCodeAt(i);
+        bytes[i] = ascii;
+    }
+    return bytes;
+  }
+
+  async function mergePdfs() {
+    const documentoPdf = await PDFDocument.create();
+    const actions = listaDePdf.map(async pdfBuffer => {
+        const pdf = await PDFDocument.load(pdfBuffer);
+        const copiedPages = await documentoPdf.copyPages(pdf, pdf.getPageIndices());
+        copiedPages.forEach((page) => {
+            // console.log('page', page.getWidth(), page.getHeight());
+            // page.setWidth(210);
+            documentoPdf.addPage(page);
+        });
+    });
+    await Promise.all(actions);
+    const mergedPdfFile = await documentoPdf.save();
+    return mergedPdfFile;
+  }
+
+  /* function addPdf(element) {
+    if ((this.readyState == 4) && (this.status == 200)) {
+        let response = element.currentTarget.response;
+        let arrBuffer = base64ToArrayBuffer(response);
+        listaDePdf.push(arrBuffer);
+        var blob = new Blob([arrBuffer], { type: "application/pdf" });
+        var url1 = window.URL.createObjectURL(blob);
+        window.open(url1);
+    }
+  }*/
+
+  async function addPdf(element) {
+    if ((this.readyState == 4) && (this.status == 200)) {
+        let response = element.currentTarget.response;
+        let arrBuffer = base64ToArrayBuffer(response);
+        listaDePdf.push(arrBuffer);
+        nroPaginaGeneradas++
+        if (nroPaginaGeneradas == nroPaginaPdf) {
+            nroPaginaGeneradas = 0;
+            documentoPdf = await mergePdfs();
+            listaDePdf = new Array();
+            var blob = new Blob([documentoPdf], { type: "application/pdf" });
+            var url1 = window.URL.createObjectURL(blob);
+            window.open(url1);
+        }
+    }
+  }
+
+  function envioDeFilasEnBloques(index, elemento) {
+    let fila = index % 10;
+    var chkPersona = $('#chk-persona');
+    var chkFechaNac = $('#chk-fechaNac');
+    var chkDomicilio = $('#chk-domicilio');
+    var chkBarrio = $('#chk-barrio');
+    var chkManzana = $('#chk-manzana');
+    var chkLote = $('#chk-lote');
+    var chkSublote = $('#chk-sublote');
+    var chkAnios = $('#chk-anios');
+    var chkMeses = $('#chk-meses');
+    let cells = elemento.cells;
+    let rows = {};
+
+    let tdBarrio = elemento.cells[0].innerText;
+    let tdDomicilio = cells[1].innerText;
+    let tdManzana = cells[2].innerText;
+    let tdLote = cells[3].innerText;
+    let tdSublote = cells[4].innerText;
+    let tdPersona = cells[5].innerText;
+    let tFechaNac= cells[6].innerText;
+    for (let i = 7; i < (nroColumnasTabla + 2); i++) {
+        rows[thTable[i].innerText] = cells[i].innerText;
+        
+    }
+
+    if (chkPersona.is(":checked")) {
+        rows["persona"] = tdPersona;
+    }
+
+    if (chkFechaNac.is(":checked")) {
+        rows["fechanac"] = tFechaNac;
+    }
+
+    if (chkDomicilio.is(":checked")) {
+        rows["domicilio"] = tdDomicilio;
+    }
+
+    if (chkBarrio.is(":checked")) {
+        rows["barrio"] = tdBarrio;
+    }
+
+    if (chkManzana.is(":checked")) {
+        rows["manzana"] = tdManzana;
+    }
+
+    if (chkLote.is(":checked")) {
+        rows["lote"] = tdLote;
+    }
+
+    if (chkSublote.is(":checked")) {
+        rows["sublote"] = tdSublote;
+    }
+    rowsRequest[fila] = rows;
+
+    if (fila == 9) {
+        let request = new XMLHttpRequest();
+        request.open("POST", "Controladores/GeneradorPdf.php", true);
+        request.onreadystatechange = addPdf;
+        request.send(JSON.stringify(rowsRequest));
+        listaDeRequest.push(request);
+        rowsRequest = {};
+    }
   }
