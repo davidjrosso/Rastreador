@@ -323,11 +323,11 @@ $datosNav = $_SESSION["datosNav"];
         elem = xElemento.value;
 
         if(elem !== ""){
-          meses_desde.setAttribute('disabled', true);
-          meses_hasta.setAttribute('disabled', true);
-        }else{
           meses_desde.removeAttribute('disabled');
           meses_hasta.removeAttribute('disabled');
+        }else{
+          meses_desde.setAttribute('disabled', true);
+          meses_hasta.setAttribute('disabled', true);
         }
       }
       
@@ -337,11 +337,11 @@ $datosNav = $_SESSION["datosNav"];
         elem = xElemento.value;
 
         if(elem !== ""){
-          edad_desde.setAttribute('disabled', true);
-          edad_hasta.setAttribute('disabled', true);
-        }else{
           edad_desde.removeAttribute('disabled');
           edad_hasta.removeAttribute('disabled');
+        }else{
+          edad_desde.setAttribute('disabled', true);
+          edad_hasta.setAttribute('disabled', true);
         }
       }
 
