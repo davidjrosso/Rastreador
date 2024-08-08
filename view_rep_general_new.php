@@ -2094,7 +2094,7 @@ $Con->CloseConexion();
                   
                   $Table_imprimir .= " <td id='Contenido-3'>" . $RetTodos["apellido"] . ", " . $RetTodos["nombre"] . "</td>
                                        <td id='Contenido-4' style='max-width: 100px;'>" . $Fecha_Nacimiento . "</td>";
-                  $jsonTable[$clave]["apellido"] = $RetTodos["apellido"];
+                  $jsonTable[$clave]["persona"] = $RetTodos["apellido"] . ", " . $RetTodos["nombre"];
                   $jsonTable[$clave]["fechanac"] = $Fecha_Nacimiento;
                   $ColSpans = $MesesDiferencia * 270;
                   $Table .= "<td name='DatosSinResultados' style='width:" . $ColSpans . "px'></td>";
@@ -2175,9 +2175,9 @@ $Con->CloseConexion();
                                        <td id='Contenido-4' style='text-align:center;max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . 
                                          $Fecha_Nacimiento . "
                                        </td>";
-                  $jsonTable[$clave]["apellido"] = $RetTodos["apellido"];
+                  $jsonTable[$clave]["persona"] = $RetTodos["apellido"] . ", " . $RetTodos["nombre"];
                   $jsonTable[$clave]["fechanac"] = $Fecha_Nacimiento;
-                  $jsonMotivos = [];
+                  //$jsonMotivos = [];
                   foreach ($arr as $key => $value) {
                     $Separar = explode("/", $value);
                     $Mes = $Separar[0]; 
@@ -2280,7 +2280,7 @@ $Con->CloseConexion();
                                                    $RetMotivo["codigo"] . "
                                                  </div>
                                                </div>";
-                              $jsonMotivos[] = [$RetMotivo["Forma_Categoria"], 
+                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo["Forma_Categoria"], 
                                 $RetMotivo["codigo"],
                                 $RetMotivo["color"]
                               ];
@@ -2336,7 +2336,7 @@ $Con->CloseConexion();
                                                    $RetMotivo["codigo"] . "
                                                  </div>
                                                </div>";
-                              $jsonMotivos[] = [$RetMotivo["Forma_Categoria"], 
+                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo["Forma_Categoria"], 
                                 $RetMotivo["codigo"],
                                 $RetMotivo["color"]
                               ];
@@ -2391,7 +2391,7 @@ $Con->CloseConexion();
                                                         $RetMotivo["codigo"] . "
                                                       </div>
                                                     </div>";
-                                $jsonMotivos[] = [$RetMotivo["Forma_Categoria"], 
+                                $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo["Forma_Categoria"], 
                                   $RetMotivo["codigo"],
                                   $RetMotivo["color"]
                                 ];
@@ -2445,7 +2445,7 @@ $Con->CloseConexion();
                                                     $RetMotivo["codigo"] . "
                                                   </div>
                                                 </div>";
-                              $jsonMotivos[] = [$RetMotivo["Forma_Categoria"], 
+                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo["Forma_Categoria"], 
                                   $RetMotivo["codigo"],
                                   $RetMotivo["color"]
                               ];
@@ -2491,7 +2491,7 @@ $Con->CloseConexion();
                                                     </div>
                                                   </div>";
                                 
-                                $jsonMotivos[] = [$RetMotivo["Forma_Categoria"], 
+                                $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo["Forma_Categoria"], 
                                     $RetMotivo["codigo"],
                                     $RetMotivo["color"]
                                 ];
@@ -2534,7 +2534,7 @@ $Con->CloseConexion();
                                                       $RetMotivo2["codigo"] . "
                                                    </div>
                                                  </div>";
-                                $jsonMotivos[] = [$RetMotivo["Forma_Categoria"], 
+                                $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo["Forma_Categoria"], 
                                     $RetMotivo["codigo"],
                                     $RetMotivo["color"]
                                 ];
@@ -2578,7 +2578,7 @@ $Con->CloseConexion();
                                                    $RetMotivo2["codigo"] . "
                                                  </div>
                                                </div>";
-                              $jsonMotivos[] = [$RetMotivo["Forma_Categoria"], 
+                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo["Forma_Categoria"], 
                                   $RetMotivo["codigo"],
                                   $RetMotivo["color"]
                               ];
@@ -2621,7 +2621,7 @@ $Con->CloseConexion();
                                                    $RetMotivo2["codigo"] . "
                                                  </div>
                                                </div>";
-                              $jsonMotivos[] = [$RetMotivo["Forma_Categoria"], 
+                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo["Forma_Categoria"], 
                                   $RetMotivo["codigo"],
                                   $RetMotivo["color"]
                               ];
@@ -2668,7 +2668,7 @@ $Con->CloseConexion();
                                                       $RetMotivo3["codigo"] . "
                                                     </div>
                                                  </div>";
-                                $jsonMotivos[] = [$RetMotivo["Forma_Categoria"], 
+                                $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo["Forma_Categoria"], 
                                     $RetMotivo["codigo"],
                                     $RetMotivo["color"]
                                 ];
@@ -2712,7 +2712,7 @@ $Con->CloseConexion();
                                                    $RetMotivo3["codigo"] . "
                                                  </div>
                                                </div>";
-                              $jsonMotivos[] = [$RetMotivo["Forma_Categoria"], 
+                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo["Forma_Categoria"], 
                                   $RetMotivo["codigo"],
                                   $RetMotivo["color"]
                               ];
@@ -2756,7 +2756,7 @@ $Con->CloseConexion();
                                                     $RetMotivo3["codigo"] . "
                                                  </div>
                                                </div>";
-                              $jsonMotivos[] = [$RetMotivo["Forma_Categoria"], 
+                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo["Forma_Categoria"], 
                                   $RetMotivo["codigo"],
                                   $RetMotivo["color"]
                               ];
@@ -2798,7 +2798,7 @@ $Con->CloseConexion();
                                                    $RetMotivo3["codigo"] . "
                                                  </div>
                                                </div>";
-                              $jsonMotivos[] = [$RetMotivo["Forma_Categoria"], 
+                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo["Forma_Categoria"], 
                                   $RetMotivo["codigo"],
                                   $RetMotivo["color"]
                               ];
@@ -2809,7 +2809,7 @@ $Con->CloseConexion();
                     $tagsMotivos .= ($nroMotivosEnFecha >= 6)?"</div>": "";
                     $tagsTD .= "</div></td>";
                     $tagsTD_imprimir .= $tagsMotivos . "</div></td>";
-                    $jsonTable[$clave]["motivos"] = $jsonMotivos;
+                    //$jsonTable[$clave]["motivos"] = $jsonMotivos;
                     $ID_Persona_Bandera = $RetTodos["id_persona"];
                   }
 
@@ -2937,9 +2937,8 @@ $Con->CloseConexion();
           } else {
             echo "No se pudo obtener el año";
           }
-
           ?>
-          <input type="hidden" name="tabla_1" id = "tabla_1" value = "<?php echo $jsonTable;?>">
+          <input type="hidden" name="tabla_1" id = "tabla_1" value = "<?php echo json_encode($jsonTable);?>">
           </div>
 
         </div>
@@ -2983,6 +2982,9 @@ $Con->CloseConexion();
         var tabla = document.getElementById("tabla-responsive");
         //tabla.scrollLeft = '9999';
       })();
+
+
+      var objectJsonTabla = <?php echo json_encode($jsonTable);?>;
 
       function toggleZoom(porcentaje){
         var Tabla = document.getElementById("tablaMovimientos");
@@ -3181,9 +3183,20 @@ $Con->CloseConexion();
         });
       }*/
 
-      function enviarImprimirPdf() {
+      /* function enviarImprimirPdf() {
         let filas = $("tbody > tr").each(envioDeFilasEnBloques);
+        if (rowsRequest != {}) {
+          let request = new XMLHttpRequest();
+          listaDeRequest.push(request);
+          request.open("POST", "Controladores/GeneradorPdf.php", true);
+          request.onreadystatechange = addPdf;
+          request.send(JSON.stringify(rowsRequest));
+          rowsRequest = {};
+        }
+      } */
 
+      function enviarImprimirPdf() {
+        let filas = objectJsonTabla.forEach((element, index, array) => {envioDeFilasEnBloques(element, index, array);});
         if (rowsRequest != {}) {
           let request = new XMLHttpRequest();
           listaDeRequest.push(request);

@@ -8,23 +8,57 @@ try{
     $row = "";
     for ($i = 0; $i < count($array_filas); $i++) {
         $row .= "<tr>
-            <td>" . $array_filas[$i]["barrio"] . "</td>
-            <td>" . $array_filas[$i]["domicilio"] . "</td>
-            <td>" . $array_filas[$i]["persona"] . "</td>
-            <td>" . $array_filas[$i]["fechanac"] . "</td>
-            <td>" . $array_filas[$i]["8/23"] . "</td>
-            <td>" . $array_filas[$i]["9/23"] . "</td>
-            <td>" . $array_filas[$i]["10/23"] . "</td>
-            <td>" . $array_filas[$i]["11/23"] . "</td>
-            <td>" . $array_filas[$i]["12/23"] . "</td>
-            <td>" . $array_filas[$i]["1/24"] . "</td>
-            <td>" . $array_filas[$i]["2/24"] . "</td>
-            <td>" . $array_filas[$i]["3/24"] . "</td>
-            <td>" . $array_filas[$i]["4/24"] . "</td>
-            <td>" . $array_filas[$i]["5/24"] . "</td>
-            <td>" . $array_filas[$i]["6/24"] . "</td>
-            <td>" . $array_filas[$i]["7/24"] . "</td>
-            <td>" . $array_filas[$i]["8/24"] . "</td>
+            <td>" . 
+                (isset(($array_filas[$i]["barrio"])) ? $array_filas[$i]["barrio"] : "" ) . "
+            </td>
+            <td>" . 
+                (isset(($array_filas[$i]["domicilio"])) ? $array_filas[$i]["domicilio"] : "" ) . "
+            </td>
+            <td>" . 
+                (isset(($array_filas[$i]["persona"])) ? $array_filas[$i]["persona"] : "" ) . "
+            </td>
+            <td>" . 
+                (isset(($array_filas[$i]["fechanac"])) ? $array_filas[$i]["fechanac"] : "" ) . "
+            </td>
+            <td>" . 
+                (isset(($array_filas[$i]["8/23"])) ? $array_filas[$i]["8/23"][0][0] : "" ) . "
+            </td>
+            <td>" . 
+                (isset(($array_filas[$i]["9/23"])) ? $array_filas[$i]["9/23"][0][0] : "" ) . "
+            </td>
+            <td>" . 
+                (isset(($array_filas[$i]["10/23"])) ? $array_filas[$i]["10/23"][0][0] : "" ) . "
+            </td>
+            <td>" . 
+                (isset(($array_filas[$i]["11/23"])) ? $array_filas[$i]["11/23"][0][0] : "" ) . "
+            </td>
+            <td>" . 
+                (isset(($array_filas[$i]["12/23"])) ? $array_filas[$i]["12/23"][0][0] : "" ) . "
+            </td>
+            <td>" . 
+                (isset(($array_filas[$i]["1/24"])) ? $array_filas[$i]["1/24"][0][0] : "" ) . "
+            </td>
+            <td>" . 
+                (isset(($array_filas[$i]["2/24"])) ? $array_filas[$i]["2/24"][0][0] : "" ) . "
+            </td>
+            <td>" . 
+                (isset(($array_filas[$i]["3/24"])) ? $array_filas[$i]["3/24"][0][0] : "" ) . "
+            </td>
+            <td>" . 
+                (isset(($array_filas[$i]["4/24"])) ? $array_filas[$i]["4/24"][0][0] : "" ) . "
+            </td>
+            <td>" . 
+                (isset(($array_filas[$i]["5/24"])) ? $array_filas[$i]["5/24"][0][0] : "" ) . "
+            </td>
+            <td>" . 
+                (isset(($array_filas[$i]["6/24"])) ? $array_filas[$i]["6/24"][0][0] : "" ) . "
+            </td>
+            <td>" . 
+                (isset(($array_filas[$i]["7/24"])) ? $array_filas[$i]["7/24"][0][0] : "" ) . "
+            </td>
+            <td>" . 
+                (isset(($array_filas[$i]["8/24"])) ? $array_filas[$i]["8/24"][0][0] : "" ) . "
+            </td>
         </tr>";
     }
     $table = "<html>
@@ -120,8 +154,6 @@ try{
     //$dompdf->setPaper('legal', 'landscape');
     $dompdf->render();
     $output = $dompdf->output();
-    $file = fopen("file.pdf", "w+");
-    $out = fwrite($file, $output);
     $data = base64_encode($output);
     header('Content-Type: application/pdf');
     echo $data;

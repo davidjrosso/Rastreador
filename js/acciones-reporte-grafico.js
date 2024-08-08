@@ -163,7 +163,7 @@ function configResultados() {
     }
   }
 
-  function envioDeFilasEnBloques(index, elemento) {
+  /*function envioDeFilasEnBloques(index, elemento) {
     let fila = index % 10;
     var chkPersona = $('#chk-persona');
     var chkFechaNac = $('#chk-fechaNac');
@@ -217,6 +217,58 @@ function configResultados() {
         rows["sublote"] = tdSublote;
     }
     rowsRequest[fila] = rows;
+
+    if (fila == 9) {
+        let request = new XMLHttpRequest();
+        request.open("POST", "Controladores/GeneradorPdf.php", true);
+        request.onreadystatechange = addPdf;
+        request.send(JSON.stringify(rowsRequest));
+        listaDeRequest.push(request);
+        rowsRequest = {};
+    }
+  }*/
+
+  function envioDeFilasEnBloques(elemento, index, array) {
+    let objectJson = elemento;
+    let fila = index % 10;
+    var chkPersona = $('#chk-persona');
+    var chkFechaNac = $('#chk-fechaNac');
+    var chkDomicilio = $('#chk-domicilio');
+    var chkBarrio = $('#chk-barrio');
+    var chkManzana = $('#chk-manzana');
+    var chkLote = $('#chk-lote');
+    var chkSublote = $('#chk-sublote');
+    var chkAnios = $('#chk-anios');
+    var chkMeses = $('#chk-meses');
+
+    if (!chkPersona.is(":checked")) {
+        delete objectJson.persona;
+    }
+
+    if (!chkFechaNac.is(":checked")) {
+        delete objectJson.fechanac;
+    }
+
+    if (!chkDomicilio.is(":checked")) {
+        delete objectJson.domicilio;
+    }
+
+    if (!chkBarrio.is(":checked")) {
+        delete objectJson.barrio;
+    }
+
+    if (!chkManzana.is(":checked")) {
+        delete objectJson.manzana;
+    }
+
+    if (!chkLote.is(":checked")) {
+        delete objectJson.lote;
+    }
+
+    if (!chkSublote.is(":checked")) {
+        delete objectJson.sublote;
+    }
+    rowsRequest[fila] = objectJson;
 
     if (fila == 9) {
         let request = new XMLHttpRequest();
