@@ -60,7 +60,7 @@ if (empty($Nro_Carpeta)) {
 $Obra_Social = $_REQUEST["Obra_Social"];
 $Domicilio = ucwords($_REQUEST["Calle"]);
 $Domicilio .= " " . $_REQUEST["NumeroDeCalle"];
-if (isset($_REQUEST["ID_Barrio"])) {
+if (!isset($_REQUEST["ID_Barrio"])) {
 	$ID_Barrio = null;
 }
 if (empty($ID_Barrio)) {
@@ -94,7 +94,7 @@ $Cambio_Domicilio = $_REQUEST["Cambio_Domicilio"];
 $Telefono = $_REQUEST["Telefono"];
 $Mail = ucfirst($_REQUEST["Mail"]);
 $Estado = 1;
-if (isset($_REQUEST["ID_Escuela"])) {
+if (!isset($_REQUEST["ID_Escuela"])) {
 	$ID_Escuela = null;
 }
 
