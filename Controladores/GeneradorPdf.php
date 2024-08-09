@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once '../dompdf/autoload.inc.php';
 use Dompdf\Dompdf;
 
@@ -6,7 +7,8 @@ try{
     $json_filas = file_get_contents('php://input');
     $array_filas = json_decode($json_filas, true);
     $row = "";
-    for ($i = 0; $i < count($array_filas); $i++) {
+    $mesesHeader = $_SESSION["meses"];
+    for ($i = 0; $i < (count($array_filas) - 1); $i++) {
         $row .= "<tr>
                     <td style='width: 60px'>" . 
                         (isset(($array_filas[$i]["barrio"])) ? $array_filas[$i]["barrio"] : "" ) . "
@@ -20,97 +22,106 @@ try{
                     <td style='width: 60px'>" . 
                         (isset(($array_filas[$i]["fechanac"])) ? $array_filas[$i]["fechanac"] : "" ) . "
                     </td>";
-            if (isset(($array_filas[$i]["8/23"]))) {
-              $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
-              bloqueMotivos($array_filas[$i]["8/23"]) . "
-                       </td>";
-            } else {
-              $row .=  "<td> </td>";
-            }
-            if (isset(($array_filas[$i]["9/23"]))) {
+        /*for ($h = 0; $h < count($mesesHeader); $h++) {
+            if (isset($array_filas[$i][$mesesHeader[$h]])) {
                 $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
-                bloqueMotivos($array_filas[$i]["9/23"]) . "
-                         </td>";
-            } else {
-                $row .=  "<td> </td>";
-            }
-            if (isset(($array_filas[$i]["10/23"]))) {
-                $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
-                bloqueMotivos($array_filas[$i]["10/23"]) . "
-                         </td>";
-            } else {
-                $row .=  "<td> </td>";
-            }
-            if (isset(($array_filas[$i]["11/23"]))) {
-                $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
-                bloqueMotivos($array_filas[$i]["11/23"]) . "
-                         </td>";
-            } else {
-                $row .=  "<td> </td>";
-            }
-            if (isset(($array_filas[$i]["12/23"]))) {
-                $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
-                bloqueMotivos($array_filas[$i]["12/23"]) . "
-                         </td>";
-            } else {
-                $row .=  "<td> </td>";
-            }
-            if (isset(($array_filas[$i]["1/24"]))) {
-                $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
-                bloqueMotivos($array_filas[$i]["1/24"]) . "
-                         </td>";
-            } else {
-                $row .=  "<td> </td>";
-            }
-            if (isset(($array_filas[$i]["2/24"]))) {
-                $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
-                bloqueMotivos($array_filas[$i]["2/24"]) . "
-                         </td>";
-            } else {
-                $row .=  "<td> </td>";
-            }
-            if (isset(($array_filas[$i]["3/24"]))) {
-                $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
-                bloqueMotivos($array_filas[$i]["3/24"]) . "
-                         </td>";
-            } else {
-                $row .=  "<td> </td>";
-            }
-            if (isset(($array_filas[$i]["4/24"]))) {
-                $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
-                bloqueMotivos($array_filas[$i]["4/24"]) . "
-                         </td>";
-            } else {
-                $row .=  "<td> </td>";
-            }
-            if (isset(($array_filas[$i]["5/24"]))) {
-                $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
-                bloqueMotivos($array_filas[$i]["5/24"]) . "
-                         </td>";
-            } else {
-                $row .=  "<td> </td>";
-            }
-            if (isset(($array_filas[$i]["6/24"]))) {
-                $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
-                           bloqueMotivos($array_filas[$i]["6/24"]) . "
-                         </td>";
-            } else {
-                $row .=  "<td> </td>";
-            }
-            if (isset(($array_filas[$i]["7/24"]))) {
-                $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
-                bloqueMotivos($array_filas[$i]["7/24"]) . "
-                         </td>";
-            } else {
-                $row .=  "<td> </td>";
-            }
-            if (isset(($array_filas[$i]["8/24"]))) {
-                $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
-                bloqueMotivos($array_filas[$i]["8/24"]) . "
-                         </td>";
+                          bloqueMotivos($array_filas[$i][$mesesHeader[$h]]) . "
+                        </td>";
             } else {
                 $row .=  "<td></td>";
             }
+        }*/
+        if (isset($array_filas[$i][$mesesHeader[0]])) {
+            $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                      bloqueMotivos($array_filas[$i][$mesesHeader[0]]) . "
+                    </td>";
+        } else {
+            $row .=  "<td></td>";
+        }
+        if (isset($array_filas[$i][$mesesHeader[1]])) {
+            $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                      bloqueMotivos($array_filas[$i][$mesesHeader[1]]) . "
+                    </td>";
+        } else {
+            $row .=  "<td></td>";
+        }
+        if (isset($array_filas[$i][$mesesHeader[2]])) {
+            $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                      bloqueMotivos($array_filas[$i][$mesesHeader[2]]) . "
+                    </td>";
+        } else {
+            $row .=  "<td></td>";
+        }
+        if (isset($array_filas[$i][$mesesHeader[3]])) {
+            $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                      bloqueMotivos($array_filas[$i][$mesesHeader[3]]) . "
+                    </td>";
+        } else {
+            $row .=  "<td></td>";
+        }
+        if (isset($array_filas[$i][$mesesHeader[4]])) {
+            $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                      bloqueMotivos($array_filas[$i][$mesesHeader[4]]) . "
+                    </td>";
+        } else {
+            $row .=  "<td></td>";
+        }
+        if (isset($array_filas[$i][$mesesHeader[5]])) {
+            $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                      bloqueMotivos($array_filas[$i][$mesesHeader[5]]) . "
+                    </td>";
+        } else {
+            $row .=  "<td></td>";
+        }
+        if (isset($array_filas[$i][$mesesHeader[6]])) {
+            $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                      bloqueMotivos($array_filas[$i][$mesesHeader[6]]) . "
+                    </td>";
+        } else {
+            $row .=  "<td></td>";
+        }
+        if (isset($array_filas[$i][$mesesHeader[7]])) {
+            $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                      bloqueMotivos($array_filas[$i][$mesesHeader[7]]) . "
+                    </td>";
+        } else {
+            $row .=  "<td></td>";
+        }
+        if (isset($array_filas[$i][$mesesHeader[8]])) {
+            $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                      bloqueMotivos($array_filas[$i][$mesesHeader[8]]) . "
+                    </td>";
+        } else {
+            $row .=  "<td></td>";
+        }
+        if (isset($array_filas[$i][$mesesHeader[9]])) {
+            $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                      bloqueMotivos($array_filas[$i][$mesesHeader[9]]) . "
+                    </td>";
+        } else {
+            $row .=  "<td></td>";
+        }
+        if (isset($array_filas[$i][$mesesHeader[10]])) {
+            $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                      bloqueMotivos($array_filas[$i][$mesesHeader[10]]) . "
+                    </td>";
+        } else {
+            $row .=  "<td></td>";
+        }
+        if (isset($array_filas[$i][$mesesHeader[11]])) {
+            $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                      bloqueMotivos($array_filas[$i][$mesesHeader[11]]) . "
+                    </td>";
+        } else {
+            $row .=  "<td></td>";
+        }
+        if (isset($array_filas[$i][$mesesHeader[12]])) {
+            $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                      bloqueMotivos($array_filas[$i][$mesesHeader[11]]) . "
+                    </td>";
+        } else {
+            $row .=  "<td></td>";
+        }
     }
     $table = "<html>
                 <head>
@@ -181,19 +192,19 @@ try{
                         <th>Direc.</th>
                         <th>Persona</th>
                         <th>Fecha Nac.</th>
-                        <th>8/23</th>
-                        <th>9/23</th>
-                        <th>10/2</th>
-                        <th>11/2</th>
-                        <th>12/2</th>
-                        <th>1/24</th>
-                        <th>2/24</th>
-                        <th>3/24</th>
-                        <th>4/24</th>
-                        <th>5/24</th>
-                        <th>6/24</th>
-                        <th>7/24</th>
-                        <th>8/24</th>
+                        <th>" . $mesesHeader[0]  . "</th>
+                        <th>" . $mesesHeader[1] . "</th>
+                        <th>" . $mesesHeader[2] . "</th>
+                        <th>" . $mesesHeader[3] . "</th>
+                        <th>" . $mesesHeader[4] . "</th>
+                        <th>" . $mesesHeader[5] . "</th>
+                        <th>" . $mesesHeader[6] . "</th>
+                        <th>" . $mesesHeader[7] . "</th>
+                        <th>" . $mesesHeader[8] . "</th>
+                        <th>" . $mesesHeader[9] . "</th>
+                        <th>" . $mesesHeader[10] . "</th>
+                        <th>" . $mesesHeader[11] . "</th>
+                        <th>" . $mesesHeader[12] . "</th>
                     </tr>
             </thead>
             <tbody>". 
