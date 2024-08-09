@@ -1508,6 +1508,7 @@ $Con->CloseConexion();
                                       <th id='Contenido-Titulo-1'>Barrio</th>
                                       <th id='Contenido-Titulo-2'>Direc.</th>";
                 $jsonTable = array();
+                $mesesHeader = array();
                 $nroColumnas += 2;
 
                 /*
@@ -1607,6 +1608,7 @@ $Con->CloseConexion();
                   // TODO: Cambiando de tamaño las columnas
                   $Table .= "<th name='DatosResultados' style='min-width: 190px;'>" . $value . "</th>";
                   $Table_imprimir .= "<th name='DatosResultados'>" . $value . "</th>";
+                  $mesesHeader[] = $value;
                 }
 
               }
@@ -2983,7 +2985,7 @@ $Con->CloseConexion();
         //tabla.scrollLeft = '9999';
       })();
 
-
+      <?php $_SESSION["meses"] = $mesesHeader; ?>
       var objectJsonTabla = <?php echo json_encode($jsonTable);?>;
 
       function toggleZoom(porcentaje){
