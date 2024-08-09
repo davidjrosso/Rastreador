@@ -8,58 +8,109 @@ try{
     $row = "";
     for ($i = 0; $i < count($array_filas); $i++) {
         $row .= "<tr>
-            <td>" . 
-                (isset(($array_filas[$i]["barrio"])) ? $array_filas[$i]["barrio"] : "" ) . "
-            </td>
-            <td>" . 
-                (isset(($array_filas[$i]["domicilio"])) ? $array_filas[$i]["domicilio"] : "" ) . "
-            </td>
-            <td>" . 
-                (isset(($array_filas[$i]["persona"])) ? $array_filas[$i]["persona"] : "" ) . "
-            </td>
-            <td>" . 
-                (isset(($array_filas[$i]["fechanac"])) ? $array_filas[$i]["fechanac"] : "" ) . "
-            </td>
-            <td>" . 
-                (isset(($array_filas[$i]["8/23"])) ? $array_filas[$i]["8/23"][0][0] : "" ) . "
-            </td>
-            <td>" . 
-                (isset(($array_filas[$i]["9/23"])) ? $array_filas[$i]["9/23"][0][0] : "" ) . "
-            </td>
-            <td>" . 
-                (isset(($array_filas[$i]["10/23"])) ? $array_filas[$i]["10/23"][0][0] : "" ) . "
-            </td>
-            <td>" . 
-                (isset(($array_filas[$i]["11/23"])) ? $array_filas[$i]["11/23"][0][0] : "" ) . "
-            </td>
-            <td>" . 
-                (isset(($array_filas[$i]["12/23"])) ? $array_filas[$i]["12/23"][0][0] : "" ) . "
-            </td>
-            <td>" . 
-                (isset(($array_filas[$i]["1/24"])) ? $array_filas[$i]["1/24"][0][0] : "" ) . "
-            </td>
-            <td>" . 
-                (isset(($array_filas[$i]["2/24"])) ? $array_filas[$i]["2/24"][0][0] : "" ) . "
-            </td>
-            <td>" . 
-                (isset(($array_filas[$i]["3/24"])) ? $array_filas[$i]["3/24"][0][0] : "" ) . "
-            </td>
-            <td>" . 
-                (isset(($array_filas[$i]["4/24"])) ? $array_filas[$i]["4/24"][0][0] : "" ) . "
-            </td>
-            <td>" . 
-                (isset(($array_filas[$i]["5/24"])) ? $array_filas[$i]["5/24"][0][0] : "" ) . "
-            </td>
-            <td>" . 
-                (isset(($array_filas[$i]["6/24"])) ? $array_filas[$i]["6/24"][0][0] : "" ) . "
-            </td>
-            <td>" . 
-                (isset(($array_filas[$i]["7/24"])) ? $array_filas[$i]["7/24"][0][0] : "" ) . "
-            </td>
-            <td>" . 
-                (isset(($array_filas[$i]["8/24"])) ? $array_filas[$i]["8/24"][0][0] : "" ) . "
-            </td>
-        </tr>";
+                    <td style='width: 60px'>" . 
+                        (isset(($array_filas[$i]["barrio"])) ? $array_filas[$i]["barrio"] : "" ) . "
+                    </td>
+                    <td style='width: 60px'>" . 
+                        (isset(($array_filas[$i]["domicilio"])) ? $array_filas[$i]["domicilio"] : "" ) . "
+                    </td>
+                    <td style='width: 60px'>" . 
+                        (isset(($array_filas[$i]["persona"])) ? $array_filas[$i]["persona"] : "" ) . "
+                    </td>
+                    <td style='width: 60px'>" . 
+                        (isset(($array_filas[$i]["fechanac"])) ? $array_filas[$i]["fechanac"] : "" ) . "
+                    </td>";
+            if (isset(($array_filas[$i]["8/23"]))) {
+              $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+              bloqueMotivos($array_filas[$i]["8/23"]) . "
+                       </td>";
+            } else {
+              $row .=  "<td> </td>";
+            }
+            if (isset(($array_filas[$i]["9/23"]))) {
+                $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                bloqueMotivos($array_filas[$i]["9/23"]) . "
+                         </td>";
+            } else {
+                $row .=  "<td> </td>";
+            }
+            if (isset(($array_filas[$i]["10/23"]))) {
+                $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                bloqueMotivos($array_filas[$i]["10/23"]) . "
+                         </td>";
+            } else {
+                $row .=  "<td> </td>";
+            }
+            if (isset(($array_filas[$i]["11/23"]))) {
+                $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                bloqueMotivos($array_filas[$i]["11/23"]) . "
+                         </td>";
+            } else {
+                $row .=  "<td> </td>";
+            }
+            if (isset(($array_filas[$i]["12/23"]))) {
+                $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                bloqueMotivos($array_filas[$i]["12/23"]) . "
+                         </td>";
+            } else {
+                $row .=  "<td> </td>";
+            }
+            if (isset(($array_filas[$i]["1/24"]))) {
+                $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                bloqueMotivos($array_filas[$i]["1/24"]) . "
+                         </td>";
+            } else {
+                $row .=  "<td> </td>";
+            }
+            if (isset(($array_filas[$i]["2/24"]))) {
+                $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                bloqueMotivos($array_filas[$i]["2/24"]) . "
+                         </td>";
+            } else {
+                $row .=  "<td> </td>";
+            }
+            if (isset(($array_filas[$i]["3/24"]))) {
+                $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                bloqueMotivos($array_filas[$i]["3/24"]) . "
+                         </td>";
+            } else {
+                $row .=  "<td> </td>";
+            }
+            if (isset(($array_filas[$i]["4/24"]))) {
+                $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                bloqueMotivos($array_filas[$i]["4/24"]) . "
+                         </td>";
+            } else {
+                $row .=  "<td> </td>";
+            }
+            if (isset(($array_filas[$i]["5/24"]))) {
+                $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                bloqueMotivos($array_filas[$i]["5/24"]) . "
+                         </td>";
+            } else {
+                $row .=  "<td> </td>";
+            }
+            if (isset(($array_filas[$i]["6/24"]))) {
+                $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                           bloqueMotivos($array_filas[$i]["6/24"]) . "
+                         </td>";
+            } else {
+                $row .=  "<td> </td>";
+            }
+            if (isset(($array_filas[$i]["7/24"]))) {
+                $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                bloqueMotivos($array_filas[$i]["7/24"]) . "
+                         </td>";
+            } else {
+                $row .=  "<td> </td>";
+            }
+            if (isset(($array_filas[$i]["8/24"]))) {
+                $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
+                bloqueMotivos($array_filas[$i]["8/24"]) . "
+                         </td>";
+            } else {
+                $row .=  "<td></td>";
+            }
     }
     $table = "<html>
                 <head>
@@ -70,8 +121,9 @@ try{
                         margin: 15px !important;
                         padding: 15px !important;
                     }
-                    .table{
+                    .table--border-colapsed{
                         border-collapse: collapse;
+                        width: 100%;
                     }
                     .thead-dark{
                         background-color: #ccc;
@@ -122,11 +174,11 @@ try{
                     </head> 
                     <body>".
 
-                    "<table>
+                    "<table class='table--border-colapsed'>
                     <thead>
                     <tr>
-                        <th >Barrio</th>
-                        <th >Direc.</th>
+                        <th>Barrio</th>
+                        <th>Direc.</th>
                         <th>Persona</th>
                         <th>Fecha Nac.</th>
                         <th>8/23</th>
@@ -151,7 +203,7 @@ try{
     </html>";
     $dompdf = new Dompdf();
     $dompdf->loadHtml(mb_convert_encoding($table, 'HTML-ENTITIES', 'UTF-8'));
-    //$dompdf->setPaper('legal', 'landscape');
+    $dompdf->setPaper('legal', 'landscape');
     $dompdf->render();
     $output = $dompdf->output();
     $data = base64_encode($output);
@@ -161,4 +213,28 @@ try{
     header("HTTP/1.1 503 Service Unavailable");
     header('Content-Type: text/plain');
     echo 'Error producido al generar el pdf: ',  $e->getMessage(), "\n";
+}
+
+function concatMotivo($acumulado, $elemento)
+{
+    $acumulado .= "<div style='display:inline-block; width: 15px'> 
+                     <span style='color: ".$elemento[2] . "'>" . 
+                        $elemento[0] . "
+                     </span>" . 
+                     $elemento[1]  . "
+                   </div>";
+    return $acumulado;
+}
+function bloqueMotivos($array_motivos)
+{   $bloque = "<div>";
+    if (count($array_motivos) > 5) {
+       $bloque .= array_reduce(array_slice($array_motivos, 0, 5), "concatMotivo", $bloque);
+       $bloque .= "<div>";
+       $bloque .= array_reduce(array_slice($array_motivos, 6), "concatMotivo", $bloque);
+       $bloque .= "</div></div>";
+    } else {
+        $bloque .= array_reduce($array_motivos, "concatMotivo", $bloque);
+        $bloque .= "<div>";
+    }
+    return $bloque;
 }
