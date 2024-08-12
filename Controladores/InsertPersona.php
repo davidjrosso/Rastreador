@@ -32,7 +32,7 @@ if (empty($_REQUEST["Fecha_Nacimiento"])) {
 }
 
 ///////////////////////////CALCULAR EDAD//////////////////////////////////////////////////
-if (($Edad == 'null' || is_null($Edad)) 
+/*if (($Edad == 'null' || is_null($Edad)) 
 	&& ($Fecha_Nacimiento != 'null' && !is_null($Fecha_Nacimiento))) {
 	list($ano,$mes,$dia) = explode("-", $Fecha_Nacimiento);
 	$ano_diferencia = date("Y") - $ano;
@@ -42,8 +42,31 @@ if (($Edad == 'null' || is_null($Edad))
 		$ano_diferencia--;
 	}
 	$Edad = $ano_diferencia;
+}*/
+if (($Edad == 'null' || is_null($Edad)) 
+	&& ($Fecha_Nacimiento != 'null' && !is_null($Fecha_Nacimiento))) {
+	list($ano,$mes,$dia) = explode("-", $Fecha_Nacimiento);
+	$ano_diferencia = date("Y") - $ano;
+	$mes_diferencia = date("m") - $mes;
+	$dia_diferencia = date("d") - $dia;
+	if ($ano_diferencia > 0) {
+		if ($mes_diferencia == 0) {
+			if ($dia_diferencia < 0) {
+				$ano_diferencia--;
+			}
+		} elseif ($mes_diferencia < 0) {
+			$ano_diferencia--;
+		}
+	} else {
+		if ($mes_diferencia > 0) {
+			if ($dia_diferencia < 0) {
+				$mes_diferencia--;
+			}
+		}
+	}
+	$Edad = $ano_diferencia;
+	$Meses = $mes_diferencia;
 }
-
 
 //PROBAR SI ESTO DA LA DIFERENCIA ENTRE MESES NOMAS O TAMBIEN TOMA LOS AÑOS COMO MESES EN ESE CASO TOMAR LA CANTIDAD DE AÑOS Y MULTIPLICARLO POR 12 Y A ESO RESTARLE AL RESULTADO DEL TOTAL DE MESES DE DIFERENCIA.
 if ($Fecha_Nacimiento != 'null' || !is_null($Fecha_Nacimiento)) {
@@ -51,6 +74,7 @@ if ($Fecha_Nacimiento != 'null' || !is_null($Fecha_Nacimiento)) {
 	$Fecha_Nacimiento_Registrada = new DateTime($Fecha_Nacimiento);
 	$Diferencia = $Fecha_Nacimiento_Registrada->diff($Fecha_Actual);
 	$Meses = $Diferencia->m;
+	$Edad = $Diferencia->y;
 }
 ////////////////////////////////////////////////////////////////////////////////////////	/
 $Nro_Carpeta = $_REQUEST["Nro_Carpeta"];
