@@ -616,7 +616,7 @@ $Con->CloseConexion();
             <div class="form-group row">
                 <label for="inputPassword" class="col-md-2 col-form-label LblForm">Hasta (Meses): </label>
                 <div class="col-md-10">
-                    <input type="number" name="Meses_Hasta" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarEdad(this)">
+                    <input type="number" name="Meses_Hasta" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" max="11" onchange="habilitarEdad(this)">
                 </div>
             </div> 
             <div class="form-group row">
