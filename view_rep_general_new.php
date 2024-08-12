@@ -1109,13 +1109,13 @@ $Con->CloseConexion();
 
             if ($Edad_Desde !== null && $Edad_Desde !== "" && $Edad_Hasta !== null && $Edad_Hasta !== "") {
               // $Consulta .= " and P.edad between $Edad_Desde and $Edad_Hasta";
-              $Consulta .= " and P.edad > $Edad_Desde and P.edad < $Edad_Hasta";
+              $Consulta .= " and P.edad >= $Edad_Desde and P.edad <= $Edad_Hasta";
               $filtros[] = "Edad: Desde " . $Edad_Desde . " hasta " . $Edad_Hasta;
             }
 
             if ($Meses_Desde !== null && $Meses_Desde !== "" && $Meses_Hasta !== null && $Meses_Hasta !== "") {
               // $Consulta .= " and P.edad between $Edad_Desde and $Edad_Hasta";
-              $Consulta .= " and P.meses > $Meses_Desde and P.meses < $Meses_Hasta";
+              $Consulta .= " and P.meses >= $Meses_Desde and P.meses <= $Meses_Hasta";
               $filtros[] = "Meses: Desde " . $Meses_Desde . " hasta " . $Meses_Hasta;
             }
 
@@ -1389,6 +1389,7 @@ $Con->CloseConexion();
                                       P.domicilio DESC, P.apellido DESC, M.fecha DESC, M.id_movimiento DESC";
               //$Consulta .= " group by M.id_persona order by P.domicilio, P.apellido, M.id_movimiento";
             }
+            echo $Consulta;
 
             //$Con->CloseConexion();
 
