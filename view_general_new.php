@@ -597,26 +597,26 @@ $Con->CloseConexion();
             <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Desde (años): </label>
                   <div class="col-md-10">
-                      <input type="number" name="Edad_Desde" id="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarMeses(this)">
+                      <input type="number" name="Edad_Desde" id="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onchange="habilitarMeses(this)">
                       <input type="hidden" name="ID_Persona" id = "ID_Persona" value = "0">
                   </div>
             </div> 
             <div class="form-group row">
                 <label for="inputPassword" class="col-md-2 col-form-label LblForm">Hasta (años): </label>
                 <div class="col-md-10">
-                    <input type="number" name="Edad_Hasta" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarMeses(this)">
+                    <input type="number" name="Edad_Hasta" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onchange="habilitarMeses(this)">
                 </div>
             </div> 
             <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Desde (Meses): </label>
                   <div class="col-md-10">
-                      <input type="number" name="Meses_Desde" id="Meses_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" onchange="habilitarEdad(this)">
+                      <input type="number" name="Meses_Desde" id="Meses_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onchange="habilitarEdad(this)">
                   </div>
             </div> 
             <div class="form-group row">
                 <label for="inputPassword" class="col-md-2 col-form-label LblForm">Hasta (Meses): </label>
                 <div class="col-md-10">
-                    <input type="number" name="Meses_Hasta" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" max="11" onchange="habilitarEdad(this)">
+                    <input type="number" name="Meses_Hasta" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" max="11" onchange="habilitarEdad(this)">
                 </div>
             </div> 
             <div class="form-group row">
