@@ -307,11 +307,11 @@ $Con->CloseConexion();
       headABorrar.removeClass( "showColTablaAnimacionfire");
       headABorrar.removeClass( "hiddenColTablaAnimacion");
       headABorrar.removeClass( "hiddenColTablaAnimacionfire");
-      divABorrar.css("z-index", ((value < columnaIndice)?"300":"-1"));
+      divABorrar.css("z-index", ((value < columnaIndice) ? "300" : "-1"));
       columnaABorrar.css({
         "margin-left": updateMarginLeft,
-        "border-right-width": ((value < columnaIndice)?"1px":"0px"),
-        "border-left-width": ((value < columnaIndice)?"1px":"0px")
+        "border-right-width": ((value < columnaIndice) ? "1px" : "0px"),
+        "border-left-width": ((value < columnaIndice) ? "1px" : "0px")
       });
       headABorrar.css("margin-left", updateMarginLeft);
       if(columnaIndice + 1 <= value){
@@ -342,9 +342,9 @@ $Con->CloseConexion();
                 headABorrar.removeClass( "showColTablaAnimacionfire");
 
                 columnaABorrar.css({
-                  "margin-left": "",
-                  "border-right-width": "",
-                  "border-left-width": ""
+                  "margin-left" : "",
+                  "border-right-width" : "",
+                  "border-left-width" : ""
                 });
                 divABorrar.css("z-index", "");
 
@@ -371,9 +371,9 @@ $Con->CloseConexion();
                 columnaABorrar.removeClass( "hiddenColTablaAnimacionfire");
                 headABorrar.removeClass( "hiddenColTablaAnimacionfire");
                 columnaABorrar.css({
-                  "margin-left": "",
-                  "border-right-width": "",
-                  "border-left-width": ""
+                  "margin-left" : "",
+                  "border-right-width" : "",
+                  "border-left-width" : ""
                 });
                 //divABorrar.css("z-index", "");
                 columnaABorrar.addClass( "showColTablaAnimacion");
@@ -447,9 +447,9 @@ $Con->CloseConexion();
               );
 
               columnaABorrar.css({
-                "margin-left":" -300px",
-                "border-right-width": "0px",
-                "border-left-width": "0px"
+                "margin-left" : " -300px",
+                "border-right-width" : "0px",
+                "border-left-width" : "0px"
               });
               divABorrar.css("z-index", "-1");
               headABorrar.css("margin-left"," -300px");
@@ -955,8 +955,8 @@ $Con->CloseConexion();
             $Meses_Desde = (isset($_REQUEST["Meses_Desde"])) ? $_REQUEST["Meses_Desde"] : null;
             $Meses_Hasta = (isset($_REQUEST["Meses_Hasta"])) ? $_REQUEST["Meses_Hasta"] : null;
             $Domicilio = (isset($_REQUEST["Domicilio"])) ? $_REQUEST["Domicilio"] : null;
-            $Manzana = (isset($_REQUEST["Manzana"])) ? @$_REQUEST["Manzana"] : null;
-            $Lote = (isset($_REQUEST["Lote"])) ? @$_REQUEST["Lote"] : null;
+            $Manzana = (isset($_REQUEST["Manzana"])) ? $_REQUEST["Manzana"] : null;
+            $Lote = (isset($_REQUEST["Lote"])) ? $_REQUEST["Lote"] : null;
             $Familia = (isset($_REQUEST["Familia"])) ? $_REQUEST["Familia"] : null;
             $Barrio = (isset($_REQUEST["ID_Barrio"])) ? $_REQUEST["ID_Barrio"] : null;
 
@@ -994,7 +994,7 @@ $Con->CloseConexion();
             $ID_Responsable = (isset($_REQUEST["ID_Responsable"])) ? $_REQUEST["ID_Responsable"] : null;
 
             $cmb_seleccion = (isset($_REQUEST["cmb_seleccion"])) ? $_REQUEST["cmb_seleccion"] : null;
-            $esPersonaSeleccionada = ($ID_Persona)?", IF(M.id_persona = $ID_Persona, 1, 0) as esPersona" : "";
+            $esPersonaSeleccionada = ($ID_Persona) ? ", IF(M.id_persona = $ID_Persona, 1, 0) as esPersona" : "";
 
             $Consulta = "SELECT M.id_movimiento, M.id_persona, MONTH(M.fecha) as 'Mes',
                                 YEAR(M.fecha) as 'Anio', B.Barrio, P.manzana, P.lote,
@@ -1389,8 +1389,6 @@ $Con->CloseConexion();
                                       P.domicilio DESC, P.apellido DESC, M.fecha DESC, M.id_movimiento DESC";
               //$Consulta .= " group by M.id_persona order by P.domicilio, P.apellido, M.id_movimiento";
             }
-            echo $Consulta;
-
             //$Con->CloseConexion();
 
             // $Consulta .= " group by M.id_persona order by Anio, Mes, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";
@@ -2261,8 +2259,8 @@ $Con->CloseConexion();
                             $nroMotivosEnFecha += 1;
 
                             // echo "DEBUG: ".var_dump($RetMotivo);
-                            if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
-                              $tagsMotivos .= ($nroMotivosEnFecha == 7)?"<div>": "";
+                            if ($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1") {
+                              $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                           <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
                                             <span style='font-size: 30px; color: " . $RetMotivo["color"] . ";'>" . 
@@ -2275,7 +2273,7 @@ $Con->CloseConexion();
                                             </span>
                                           </a>
                                          </div>";
-                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4)?"margin-left:10px":"margin-left:2px";
+                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
                               $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
                                                  <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 7px; color: " . $RetMotivo["color"] . ";'>" . 
                                                    $RetMotivo["Forma_Categoria"] . "
@@ -2318,8 +2316,8 @@ $Con->CloseConexion();
                             $nroMotivosEnFecha += 1;
 
                             // echo "DEBUG: ".var_dump($RetMotivo);
-                            if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
-                              $tagsMotivos .= ($nroMotivosEnFecha == 7)?"<div>": "";
+                            if ($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1") {
+                              $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
                                               <span style='font-size: 30px; color: " . $RetMotivo["color"] . ";'>" . 
@@ -2331,7 +2329,7 @@ $Con->CloseConexion();
                                               </span>
                                             </a>
                                         </div>";
-                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4)?"margin-left:10px":"margin-left:2px";
+                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
                               $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
                                                  <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 7px; color: " . $RetMotivo["color"] . ";'>" . 
                                                    $RetMotivo["Forma_Categoria"] . "
@@ -2374,8 +2372,8 @@ $Con->CloseConexion();
                             $nroMotivosEnFecha += 1;
 
                             // echo "DEBUG: ".var_dump($RetMotivo);
-                            if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
-                                $tagsMotivos .= ($nroMotivosEnFecha == 7)?"<div>": "";
+                            if ($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1") {
+                                $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                                 $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <span style='font-size: 30px; color: " . $RetMotivo["color"] . ";'>" . 
                                               $RetMotivo["Forma_Categoria"] . "
@@ -2386,7 +2384,7 @@ $Con->CloseConexion();
                                               </center>
                                             </span>
                                           </div>";
-                                $marginLeft = (strlen($RetMotivo["codigo"]) >= 4)?"margin-left:10px":"margin-left:2px";
+                                $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
                                 $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
                                                       <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px; color: " . $RetMotivo["color"] . "; '>" . 
                                                         $RetMotivo["Forma_Categoria"] . "
@@ -2428,8 +2426,8 @@ $Con->CloseConexion();
                           $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
                           $nroMotivosEnFecha += 1;
 
-                          if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
-                              $tagsMotivos .= ($nroMotivosEnFecha == 7)?"<div>": "";
+                          if ($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1") {
+                              $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                           <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
                                             <span style='font-size: 30px; padding: 0px; color: " . $RetMotivo["color"] . ";'>" . 
@@ -2440,7 +2438,7 @@ $Con->CloseConexion();
                                             </span>
                                           </a>
                                         </div>";
-                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4)?"margin-left:10px":"margin-left:2px";
+                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
                               $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
                                                   <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 7px; padding: 0px; color: " . $RetMotivo["color"] . ";'>" . 
                                                     $RetMotivo["Forma_Categoria"] . "
@@ -2473,8 +2471,8 @@ $Con->CloseConexion();
                             $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
 
                             $nroMotivosEnFecha += 1;
-                            if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
-                                $tagsMotivos .= ($nroMotivosEnFecha == 7)?"<div>": "";
+                            if ($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1") {
+                                $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                                 $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                               <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
                                                 <span style='font-size: 30px; padding: 0px; color: " . $RetMotivo2["color"] . ";'>" . $RetMotivo2["Forma_Categoria"] . "
@@ -2485,7 +2483,7 @@ $Con->CloseConexion();
                                                 </span>
                                               </a>
                                             </div>";
-                                $marginLeft = (strlen($RetMotivo["codigo"]) >= 4)?"margin-left:10px":"margin-left:2px";
+                                $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
                                 $tagsMotivos .= "<div style = 'padding: 0; $marginLeft;text-align: center; display: inline-block;'>
                                                     <div style='font-family: DejaVu Sans, Noto Sans Symbols 2;font-size: 7px; padding: 0px; color: " . $RetMotivo2["color"] . ";'>" . 
                                                       $RetMotivo2["Forma_Categoria"] . "
@@ -2515,8 +2513,8 @@ $Con->CloseConexion();
                             $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
                             $nroMotivosEnFecha += 1;
 
-                            if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
-                                $tagsMotivos .= ($nroMotivosEnFecha == 7)?"<div>": "";
+                            if ($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1") {
+                                $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                                 $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
                                               <span style='font-size: 30px; color: " . $RetMotivo2["color"] . ";'>" . 
@@ -2529,7 +2527,7 @@ $Con->CloseConexion();
                                               </span>
                                             </a>
                                           </div>";
-                                $marginLeft = (strlen($RetMotivo["codigo"]) >= 4)?"margin-left:10px":"margin-left:2px";
+                                $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
                                 $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
                                                     <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo2["color"] . ";'>" . 
                                                       $RetMotivo2["Forma_Categoria"] . "
@@ -2559,8 +2557,8 @@ $Con->CloseConexion();
                             $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
                             $nroMotivosEnFecha += 1;
 
-                            if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
-                              $tagsMotivos .= ($nroMotivosEnFecha == 7)?"<div>": "";
+                            if ($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1") {
+                              $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
                                               <span style='font-size: 30px; color: " . $RetMotivo2["color"] . ";'>" . 
@@ -2573,7 +2571,7 @@ $Con->CloseConexion();
                                               </span>
                                             </a>
                                           </div>";
-                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4)?"margin-left:10px":"margin-left:2px";
+                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
                               $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
                                                  <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo2["color"] . ";'>" . 
                                                    $RetMotivo2["Forma_Categoria"] . "
@@ -2602,8 +2600,8 @@ $Con->CloseConexion();
                           $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
                           $nroMotivosEnFecha += 1;
 
-                          if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
-                              $tagsMotivos .= ($nroMotivosEnFecha == 7)?"<div>": "";
+                          if ($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1") {
+                              $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
                                               <span style='font-size: 30px; color: " . $RetMotivo2["color"] . "; text-align: center;'>" . 
@@ -2616,7 +2614,7 @@ $Con->CloseConexion();
                                               </span>
                                             </a>
                                           </div>";
-                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4)?"margin-left:10px":"margin-left:2px";
+                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
                               $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center;  display: inline-block;'>
                                                  <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo2["color"] . "; text-align= center;'>" . 
                                                    $RetMotivo2["Forma_Categoria"] . "
@@ -2649,8 +2647,8 @@ $Con->CloseConexion();
                             $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
                             $nroMotivosEnFecha += 1;
 
-                            if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
-                                $tagsMotivos .= ($nroMotivosEnFecha == 7)?"<div>": "";
+                            if ($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1") {
+                                $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                                 $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
                                               <span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" . 
@@ -2663,7 +2661,7 @@ $Con->CloseConexion();
                                                 </span>
                                               </a>
                                             </div>";
-                                $marginLeft = (strlen($RetMotivo["codigo"]) >= 4)?"margin-left:10px":"margin-left:2px";
+                                $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
                                 $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
                                                     <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" . 
                                                       $RetMotivo3["Forma_Categoria"] . "
@@ -2693,8 +2691,8 @@ $Con->CloseConexion();
                             $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
                             $nroMotivosEnFecha += 1;
 
-                            if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
-                              $tagsMotivos .= ($nroMotivosEnFecha == 7)?"<div>": "";
+                            if ($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1") {
+                              $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
                                               <span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" . 
@@ -2707,7 +2705,7 @@ $Con->CloseConexion();
                                               </span>
                                             </a>
                                           </div>";
-                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4)?"margin-left:10px":"margin-left:2px";
+                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
                               $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
                                                  <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" . 
                                                    $RetMotivo3["Forma_Categoria"] . "
@@ -2738,7 +2736,7 @@ $Con->CloseConexion();
                             $nroMotivosEnFecha += 1;
 
                             if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
-                              $tagsMotivos .= ($nroMotivosEnFecha == 7)?"<div>": "";
+                              $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
                                               <span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" . 
@@ -2751,7 +2749,7 @@ $Con->CloseConexion();
                                               </span>
                                             </a>
                                           </div>";
-                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4)?"margin-left:10px":"margin-left:2px";
+                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
                               $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
                                                  <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" . 
                                                     $RetMotivo3["Forma_Categoria"] . "
@@ -2780,7 +2778,7 @@ $Con->CloseConexion();
                           $nroMotivosEnFecha += 1;
 
                           if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
-                              $tagsMotivos .= ($nroMotivosEnFecha == 7)?"<div>": "";
+                              $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
                                               <span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" . 
@@ -2793,7 +2791,7 @@ $Con->CloseConexion();
                                               </span>
                                             </a>
                                           </div>";
-                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4)?"margin-left:10px":"margin-left:2px";
+                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
                               $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block; '>
                                                  <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" . 
                                                    $RetMotivo3["Forma_Categoria"] . "
@@ -2810,7 +2808,7 @@ $Con->CloseConexion();
                         }
                       }
                     }
-                    $tagsMotivos .= ($nroMotivosEnFecha >= 6)?"</div>": "";
+                    $tagsMotivos .= ($nroMotivosEnFecha >= 6) ? "</div>" : "";
                     $tagsTD .= "</div></td>";
                     $tagsTD_imprimir .= $tagsMotivos . "</div></td>";
                     //$jsonTable[$clave]["motivos"] = $jsonMotivos;
@@ -2840,14 +2838,14 @@ $Con->CloseConexion();
                   echo $RetConsultaFlia;
                 }
               }*/
-              if(isset($Table)){
+              if (isset($Table)) {
                 $Table .= "</tbody>";
                 $Table .= "</table>";
               } else {
                 $Table = "";
               }
 
-              if(isset($Table_imprimir)){
+              if (isset($Table_imprimir)) {
                 $Table_imprimir .= "</tbody>";
                 $Table_imprimir .= "</table>";
                 $Table_imprimir ="<html>
