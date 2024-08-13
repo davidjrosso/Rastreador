@@ -410,9 +410,9 @@ $Con->CloseConexion();
             mesesDesde.val("");
             mesesHasta.prop("readonly", false);
             edadHasta.prop("readonly", false);
-            edadHasta.val("");
           } else {
             mesesDesde.prop("readonly", true);
+            edadHasta.prop("readonly", false);
             mesesDesde.val("0");
           }
         }
