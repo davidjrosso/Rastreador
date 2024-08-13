@@ -399,30 +399,37 @@ $Con->CloseConexion();
     }
 
       function habilitarMeses(xElemento){
-        meses_desde = document.getElementById('Meses_Desde');
-        meses_hasta = document.getElementById('Meses_Hasta');
-        elem = xElemento.value;
-
-        if(elem !== ""){
-          meses_desde.removeAttribute('disabled');
-          meses_hasta.removeAttribute('disabled');
-        }else{
-          meses_desde.setAttribute('disabled', true);
-          meses_hasta.setAttribute('disabled', true);
+        let edadHasta = $("#Edad_Hasta");
+        let mesesDesde = $("#Meses_Desde");
+        let mesesHasta = $("#Meses_Hasta");
+        let valueElem = xElemento.value;
+        let idInput = xElemento.id;
+        if (idInput == "Edad_Desde") {
+          if (valueElem === "") {
+            mesesDesde.prop("readonly", false);
+            mesesDesde.val("");
+            mesesHasta.prop("readonly", false);
+            edadHasta.prop("readonly", false);
+            edadHasta.val("");
+          } else {
+            mesesDesde.prop("readonly", true);
+            mesesDesde.val("0");
+          }
         }
       }
-      
-      function habilitarEdad(xElemento){
-        edad_desde = document.getElementById('Edad_Desde');
-        edad_hasta = document.getElementById('Edad_Hasta');
-        elem = xElemento.value;
 
-        if(elem !== ""){
-          edad_desde.removeAttribute('disabled');
-          edad_hasta.removeAttribute('disabled');
-        }else{
-          edad_desde.setAttribute('disabled', true);
-          edad_hasta.setAttribute('disabled', true);
+      function habilitarEdad(xElemento){
+        let edadHasta = $("#Edad_Hasta");
+        let valueElem = xElemento.value;
+        let idInput = xElemento.id;
+        if (idInput == "Meses_Desde") {
+          if (valueElem === "") {
+            edadHasta.prop("readonly", false);
+            edadHasta.val("");
+          } else {
+            edadHasta.prop('readonly', true);
+            edadHasta.val("");
+          }
         }
       }
 
@@ -597,26 +604,26 @@ $Con->CloseConexion();
             <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Desde (años): </label>
                   <div class="col-md-10">
-                      <input type="number" name="Edad_Desde" id="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onchange="habilitarMeses(this)">
+                      <input type="number" name="Edad_Desde" id="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarMeses(this)">
                       <input type="hidden" name="ID_Persona" id = "ID_Persona" value = "0">
                   </div>
             </div> 
             <div class="form-group row">
                 <label for="inputPassword" class="col-md-2 col-form-label LblForm">Hasta (años): </label>
                 <div class="col-md-10">
-                    <input type="number" name="Edad_Hasta" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onchange="habilitarMeses(this)">
+                    <input type="number" name="Edad_Hasta" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarMeses(this)">
                 </div>
             </div> 
             <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Desde (Meses): </label>
                   <div class="col-md-10">
-                      <input type="number" name="Meses_Desde" id="Meses_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onchange="habilitarEdad(this)">
+                      <input type="number" name="Meses_Desde" id="Meses_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarEdad(this)">
                   </div>
             </div> 
             <div class="form-group row">
                 <label for="inputPassword" class="col-md-2 col-form-label LblForm">Hasta (Meses): </label>
                 <div class="col-md-10">
-                    <input type="number" name="Meses_Hasta" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" max="11" onchange="habilitarEdad(this)">
+                    <input type="number" name="Meses_Hasta" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" max="11">
                 </div>
             </div> 
             <div class="form-group row">
