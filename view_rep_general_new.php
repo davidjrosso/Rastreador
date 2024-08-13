@@ -1113,10 +1113,56 @@ $Con->CloseConexion();
               $filtros[] = "Edad: Desde " . $Edad_Desde . " hasta " . $Edad_Hasta;
             }
 
+            /*
             if ($Meses_Desde !== null && $Meses_Desde !== "" && $Meses_Hasta !== null && $Meses_Hasta !== "") {
               // $Consulta .= " and P.edad between $Edad_Desde and $Edad_Hasta";
-              $Consulta .= " and P.meses >= $Meses_Desde and P.meses <= $Meses_Hasta";
-              $filtros[] = "Meses: Desde " . $Meses_Desde . " hasta " . $Meses_Hasta;
+              $Consulta .= "and P.meses <= $Meses_Hasta";
+              if ($Edad_Desde == null) {
+                $Consulta .= " and P.edad >= $Edad_Desde";
+                $filtros[] = "Meses: Desde " . $Meses_Desde . " hasta " . $Meses_Hasta;
+              } else {
+                $filtros[] = "Meses: Desde 0 hasta " . $Meses_Hasta;
+              }
+            }
+            */
+            /*
+            if ($Meses_Desde !== null && $Meses_Desde !== "" && $Meses_Hasta !== null && $Meses_Hasta !== "") {
+              // $Consulta .= " and P.edad between $Edad_Desde and $Edad_Hasta";
+              $Consulta .= "and P.meses <= $Meses_Hasta";
+              if ($Edad_Desde == null) {
+                $Consulta .= " and P.edad >= $Edad_Desde";
+                $filtros[] = "Meses: Desde " . $Meses_Desde . " hasta " . $Meses_Hasta;
+              } else {
+                $filtros[] = "Meses: Desde 0 hasta " . $Meses_Hasta;
+              }
+            }
+            */
+
+            if ($Edad_Desde !== null && $Edad_Desde !== "" && $Edad_Hasta !== null && $Edad_Hasta !== "") {
+              // $Consulta .= " and P.edad between $Edad_Desde and $Edad_Hasta";
+              $Consulta .= " and P.edad >= $Edad_Desde and P.edad <= $Edad_Hasta";
+              $filtros[] = "Edad: Desde " . $Edad_Desde . " hasta " . $Edad_Hasta;
+              if ($Meses_Hasta !== null && $Meses_Hasta !== "") {
+                // $Consulta .= " and P.edad between $Edad_Desde and $Edad_Hasta";
+                $Consulta .= " and (P.edad < $Edad_Hasta or P.meses <= $Meses_Hasta)";
+                if ($Meses_Desde != null) {
+                  $Consulta .= " and P.meses >= $Meses_Desde ";
+                  $filtros[] = "Meses: Desde " . $Meses_Desde . " hasta " . $Meses_Hasta;
+                } else {
+                  $filtros[] = "Meses: Desde 0 hasta " . $Meses_Hasta;
+                }
+              }
+            } else {
+              if ($Meses_Desde !== null && $Meses_Desde !== "" && $Meses_Hasta !== null && $Meses_Hasta !== "") {
+                // $Consulta .= " and P.edad between $Edad_Desde and $Edad_Hasta";
+                $Consulta .= " and P.meses <= $Meses_Hasta";
+                if ($Meses_Desde != null) {
+                  $Consulta .= " and P.meses >= $Meses_Desde";
+                  $filtros[] = "Meses: Desde " . $Meses_Desde . " hasta " . $Meses_Hasta;
+                } else {
+                  $filtros[] = "Meses: Desde 0 hasta " . $Meses_Hasta;
+                }
+              }
             }
 
             if ($Domicilio != null && $Domicilio != "") {
@@ -1392,8 +1438,6 @@ $Con->CloseConexion();
             //$Con->CloseConexion();
 
             // $Consulta .= " group by M.id_persona order by Anio, Mes, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";
-          
-
 
             $MensajeError = "No se pudieron consultar los Datos";
 

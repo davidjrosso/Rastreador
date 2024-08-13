@@ -1371,6 +1371,7 @@ public function getMenuSeguridad($ID){
     return $Select;
   }
 
+  ///////////////////////////////////////////// CATEGORIAS ///////////////////////////////////////////////////////
   public function CBFormas_Categoria(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
@@ -1433,6 +1434,7 @@ public function getMenuSeguridad($ID){
     $Con3->CloseConexion();
     return $Select;
   }
+  ////////////////////////////////////////// CALLES ///////////////////////////////////////////////////
   public function CBCalles(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
@@ -1482,6 +1484,7 @@ public function getMenuSeguridad($ID){
     return $Select;
   }
 
+  /////////////////////////////////////// MENU DE NAVEGACION /////////////////////////////////////////
   public function CBSessionNombre($idAccount){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
@@ -1502,6 +1505,92 @@ public function getMenuSeguridad($ID){
     echo $cardSession;
   }
 
+  public function menuDeNavegacion($TipoUsuario, $ID_Usuario) 
+  {
+    if ($TipoUsuario == 1) {
+      $menu = "<div class='col-md-3'>
+                  <div class=nav-side-menu>" . self::CBSessionNombre($ID_Usuario) . 
+                      "<div class='brand'>General</div>
+                      <i class='fa fa-bars fa-2x toggle-btn' data-toggle='collapse' data-target='#menu-content'></i>
+                    
+                          <div class='menu-list'>" . 
+                    
+                              self::getMenuGeneral(0) . 
+                          "</div>
+                          <div class='brand'>Actualizaciones</div>
+                          <div class='menu-list'>" . self::getMenuActualizaciones(0) . 
+                          "</div>
+                          <div class='brand'>Reportes</div>
+                          <div class='menu-list'>" .
+                            self::getMenuReportes(2) . 
+                          "</div>
+                          <div class='brand'>Unificación</div>
+                          <div class='menu-list'>" . 
+                    
+                            self::getMenuUnificacion(0) . 
+                          "</div>
+                          <div class='brand'>Seguridad</div>
+                          <div class='menu-list'>" .
+                    
+                              self::getMenuSeguridad(0) . 
+                          "</div>
+                          <div class='brand'>El Proyecto</div>
+                          <div class='menu-list'>" . 
+                              self::getMenuHistorial(0) . 
+                          "</div>
+                          <div class='brand btn-Salir' onClick=\"location.href = 'Controladores/CtrLogout.php'\">Salir</div>
+                      </div>
+                    </div>";
+    } elseif($TipoUsuario == 2 || $TipoUsuario > 3) {
+          $menu = "<div class = 'col-md-3'>
+                      <div class='nav-side-menu'>" . self::CBSessionNombre($ID_Usuario) . 
+                          "<div class='brand'>General</div>
+                          <i class='fa fa-bars fa-2x toggle-btn' data-toggle='collapse' data-target='#menu-content'></i>
+                              <div class='menu-list'>" . 
+                                self::getMenuGeneral(0) . 
+                              "</div>
+                              <div class='brand'>Actualizaciones</div>
+                              <div class='menu-list'>" . self::getMenuActualizaciones(0) .
+                              "</div>
+                              <div class='brand'>Reportes</div>
+                              <div class='menu-list'>" . self::getMenuReportes(0) . 
+                              "</div>
+                              <div class='brand'>El Proyecto</div>
+                              <div class='menu-list'>" . self::getMenuHistorial(0) . 
+                              "</div>
+                              <div class='brand btn-Salir' onClick=\"location.href='Controladores/CtrLogout.php'\">Salir</div>
+                          </div>
+                        </div>";
+    } elseif ($TipoUsuario == 3) {
+      $menu = "<div class = 'col-md-3'>
+                <div class='nav-side-menu'>" . 
+                      self::CBSessionNombre($ID_Usuario) . 
+                    "<div class='brand'>General</div>
+                    <i class='fa fa-bars fa-2x toggle-btn' data-toggle='collapse' data-target='#menu-content'></i>
+                  
+                        <div class='menu-list'>" . 
+                            self::getMenuGeneral(0) . 
+                        "</div>
+                        <div class='brand'>Actualizaciones</div>
+                        <div class='menu-list'>" . self::getMenuActualizaciones(0) . 
+                        "</div>
+                        <div class='brand'>Reportes</div>
+                        <div class='menu-list'>" . 
+                  
+                            self::getMenuReportes(2) . 
+                        "</div>
+                        <div class='brand'>Unificación</div>
+                        <div class='menu-list'>" . self::getMenuUnificacion(0) . 
+                        "</div>
+                        <div class='brand'>El Proyecto</div>
+                        <div class='menu-list'>" . 
+                            self::getMenuHistorial(0) .
+                        "</div>
+                        <div class='brand btn-Salir' onClick = \"location.href = 'Controladores/CtrLogout.php'\">Salir</div>
+                    </div>
+                  </div>";
+    } 
+  }
 
   /*
  *
@@ -1523,4 +1612,3 @@ public function getMenuSeguridad($ID){
  */
 
 }
-?>
