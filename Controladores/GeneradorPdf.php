@@ -219,7 +219,7 @@ try{
                 </body>
             </html>";
     } elseif ($from_reporte_listado) {
-        for ($i = 0; $i < count($array_filas); $i++) {
+        for ($i = 0; $i < (count($array_filas) - 5); $i++) {
             $row .= "<tr>";
             for ($h = 0; $h < count($header_mov_general); $h++) {
                 if (isset($array_filas[$i][$header_mov_general[$h]])) {
