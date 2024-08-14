@@ -70,7 +70,8 @@ $Con->CloseConexion();
               nroColumnasTabla = $("thead > tr > th").length - 2;
               let nroPag = (nroFilasTabla + 2) / 16;
               let floorPag = Math.floor((nroFilasTabla + 2) / 16);
-              nroPaginaPdf = (nroPag > floorPag) ? (floorPag + 1) : floorPag;
+              //nroPaginaPdf = (nroPag > floorPag) ? (floorPag + 1) : floorPag;
+              nroPaginaPdf = 0;
               thTable = $("thead > tr > th");
           });
 
@@ -146,12 +147,14 @@ $Con->CloseConexion();
           let filas = objectJsonTabla["movimientos_persona"].forEach((element, index, array) => {envioDeFilasMultiplesEnBloques(element, index, array);});
         }
         if (rowsRequest != {} && idRequestField >= 1) {
+          console.log(rowsRequest);
           let request = new XMLHttpRequest();
           listaDeRequest[idRequestField] = request;
           request.open("POST", "Controladores/GeneradorPdf.php", true);
           request.setRequestHeader("x-request-id", idRequestField);
           request.onreadystatechange = addPdf;
           request.send(JSON.stringify(rowsRequest));
+          nroPaginaPdf++;
           rowsRequest = {};
         } else if ((rowsRequest != {} && idRequestField == 0)) {
           rowsRequest["head_det_persona"] = objectJsonTabla["head_det_persona"];
@@ -165,6 +168,7 @@ $Con->CloseConexion();
           request.setRequestHeader("x-request-id", idRequestField);
           request.onreadystatechange = addPdf;
           request.send(JSON.stringify(rowsRequest));
+          nroPaginaPdf++;
           rowsRequest = {};
         }
           idRequestField = 0;
