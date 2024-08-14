@@ -155,6 +155,8 @@ $Con->CloseConexion();
         } else if ((rowsRequest != {} && idRequestField == 0)) {
           rowsRequest["head_det_persona"] = objectJsonTabla["head_det_persona"];
           rowsRequest["det_persona"] = objectJsonTabla["det_persona"];
+          rowsRequest["fecha_desde"] = fechaDesde;
+          rowsRequest["fecha_hasta"] = fechaHasta;
           let request = new XMLHttpRequest();
           listaDeRequest[idRequestField] = request;
           request.open("POST", "Controladores/GeneradorPdf.php", true);
