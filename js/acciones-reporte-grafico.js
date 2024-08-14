@@ -151,8 +151,8 @@ function configResultados() {
         let requestIdRequest = this.getResponseHeader("x-request-id");
         listaDePdf[requestIdRequest] = arrBuffer;
         listaDeRequest.splice(requestIdRequest, 1);
-        nroPaginaGeneradas++;
-        if (listaDeRequest.length === 0) {
+        nroPaginaPdf--;
+        if (listaDeRequest.length === 0 || nroPaginaPdf == 0) {
             nroPaginaGeneradas = 0;
             documentoPdf = await mergePdfs();
             listaDePdf = new Array();
@@ -281,6 +281,7 @@ function envioDeFilasMultiplesEnBloques(elemento, index, array){
         request.onreadystatechange = addPdf;
         request.send(JSON.stringify(rowsRequest));
         listaDeRequest[idRequestField] = request;
+        nroPaginaPdf++;
         rowsRequest = {};
         idRequestField++;
     } else if ((index == 13 && idRequestField == 0)) {
@@ -295,6 +296,7 @@ function envioDeFilasMultiplesEnBloques(elemento, index, array){
         request.onreadystatechange = addPdf;
         request.send(JSON.stringify(rowsRequest));
         listaDeRequest[idRequestField] = request;
+        nroPaginaPdf++;
         rowsRequest = {};
         idRequestField++;
     }

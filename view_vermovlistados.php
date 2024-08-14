@@ -147,7 +147,6 @@ $Con->CloseConexion();
           let filas = objectJsonTabla["movimientos_persona"].forEach((element, index, array) => {envioDeFilasMultiplesEnBloques(element, index, array);});
         }
         if (rowsRequest != {} && idRequestField >= 1) {
-          console.log(rowsRequest);
           let request = new XMLHttpRequest();
           listaDeRequest[idRequestField] = request;
           request.open("POST", "Controladores/GeneradorPdf.php", true);
