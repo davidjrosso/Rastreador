@@ -236,69 +236,71 @@ try{
         if ($nro_paquete == 0) {
             $Etiqueta_Fecha_Inicio = $array_filas["fecha_desde"];
             $Etiqueta_Fecha_Fin = $array_filas["fecha_hasta"];
-            $det_persona = $array_filas["det_persona"];
-            $tabla_detalle_persona = "  <p id='InformacionDeCentro'>
-                                          DESDE : ". $Etiqueta_Fecha_Inicio . " HASTA : " . $Etiqueta_Fecha_Fin ." </p>
-                                        <p id='encabezado'> <span id='frase'> Programa Rastreador </span><br>
-                                          Filtro : <br>
-                                        </p>
-                                        <p id='InformacionDeCiudad'>
-                                          Municipialidad de Rio Tercero
-                                        </p>
-
-                                       <table id='detalle-persona' class='table--border-colapsed'>
-                                        <thead>
-                                            <tr>
-                                                <th>Id</th>
-                                                <th>Apellido</th>
-                                                <th>Nombre</th>
-                                                <th>Dni</th>
-                                                <th>Fecha Nac</th>
-                                                <th>Edad</th>
-                                                <th>Meses</th>
-                                                <th>Localidad</th>
-                                                <th>Barrio</th>
-                                                <th>Domicilio</th>
-                                                <th>Mnz</th>
-                                                <th>Lote</th>
-                                                <th>Sub-lote</th>
-                                                <th>Telefono</th>
-                                                <th>E-Mail</th>
-                                                <th>Obra Social</th>
-                                                <th>Escuela</th>
-                                                <th>Nro. Legajo</th>
-                                                <th>Nro. Carpeta</th>
-                                                <th>Observación</th>
-                                                <th>Cambio de Domicilio	</th>
-                                            </tr>
-                                        </thead>
-                                            <tbody> 
-                                            <tr>
-                                                <td>" . $det_persona["id"] . "</td>
-                                                <td>" . $det_persona["apellido"] . "</td>
-                                                <td>" . $det_persona["nombre"] . "</td>
-                                                <td>" . $det_persona["documento"] . "</td>
-                                                <td>" . $det_persona["fecha_nacimiento"] . "o</td>
-                                                <td>" . $det_persona["edad"] . "</td>
-                                                <td>" . $det_persona["meses"] . "</td>
-                                                <td>" . $det_persona["localidad"] . "</td>
-                                                <td>" . $det_persona["barrio"] . "</td>
-                                                <td>" . $det_persona["domicilio"] . "</td>
-                                                <td>" . $det_persona["manzana"] . "</td>
-                                                <td>" . $det_persona["lote"] . "</td>
-                                                <td>" . $det_persona["sub_lote"] . "</td>
-                                                <td>" . $det_persona["telefono"] . "</td>
-                                                <td>" . $det_persona["mail"] . "</td>
-                                                <td>" . $det_persona["obra_social"] . "</td>
-                                                <td>" . $det_persona["escuela"] . "</td>
-                                                <td>" . $det_persona["nro_legajo"] . "</td>
-                                                <td>" . $det_persona["nro_carpeta"] . "</td>
-                                                <td>" . $det_persona["observacion"] . "</td>
-                                                <td>" . $det_persona["cmb_domicilio"] . "</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>";
-
+            $det_persona = (isset($array_filas["det_persona"]) ? $array_filas["det_persona"] : null);
+            $inicio = "<p id='InformacionDeCentro'>
+                            DESDE : ". $Etiqueta_Fecha_Inicio . " HASTA : " . $Etiqueta_Fecha_Fin ."
+                        </p>
+                        <p id='encabezado'> <span id='frase'> Programa Rastreador </span><br>
+                            Filtro : <br>
+                        </p>
+                        <p id='InformacionDeCiudad'>
+                            Municipialidad de Rio Tercero
+                        </p>";
+            $tabla_detalle_persona = "";
+            if ($det_persona) {
+                $tabla_detalle_persona = "<table id='detalle-persona' class='table--border-colapsed'>
+                                            <thead>
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th>Apellido</th>
+                                                    <th>Nombre</th>
+                                                    <th>Dni</th>
+                                                    <th>Fecha Nac</th>
+                                                    <th>Edad</th>
+                                                    <th>Meses</th>
+                                                    <th>Localidad</th>
+                                                    <th>Barrio</th>
+                                                    <th>Domicilio</th>
+                                                    <th>Mnz</th>
+                                                    <th>Lote</th>
+                                                    <th>Sub-lote</th>
+                                                    <th>Telefono</th>
+                                                    <th>E-Mail</th>
+                                                    <th>Obra Social</th>
+                                                    <th>Escuela</th>
+                                                    <th>Nro. Legajo</th>
+                                                    <th>Nro. Carpeta</th>
+                                                    <th>Observación</th>
+                                                    <th>Cambio de Domicilio	</th>
+                                                </tr>
+                                            </thead>
+                                                <tbody> 
+                                                <tr>
+                                                    <td>" . $det_persona["id"] . "</td>
+                                                    <td>" . $det_persona["apellido"] . "</td>
+                                                    <td>" . $det_persona["nombre"] . "</td>
+                                                    <td>" . $det_persona["documento"] . "</td>
+                                                    <td>" . $det_persona["fecha_nacimiento"] . "o</td>
+                                                    <td>" . $det_persona["edad"] . "</td>
+                                                    <td>" . $det_persona["meses"] . "</td>
+                                                    <td>" . $det_persona["localidad"] . "</td>
+                                                    <td>" . $det_persona["barrio"] . "</td>
+                                                    <td>" . $det_persona["domicilio"] . "</td>
+                                                    <td>" . $det_persona["manzana"] . "</td>
+                                                    <td>" . $det_persona["lote"] . "</td>
+                                                    <td>" . $det_persona["sub_lote"] . "</td>
+                                                    <td>" . $det_persona["telefono"] . "</td>
+                                                    <td>" . $det_persona["mail"] . "</td>
+                                                    <td>" . $det_persona["obra_social"] . "</td>
+                                                    <td>" . $det_persona["escuela"] . "</td>
+                                                    <td>" . $det_persona["nro_legajo"] . "</td>
+                                                    <td>" . $det_persona["nro_carpeta"] . "</td>
+                                                    <td>" . $det_persona["observacion"] . "</td>
+                                                    <td>" . $det_persona["cmb_domicilio"] . "</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>";
+            }
 
     
         }
@@ -372,7 +374,7 @@ try{
                         }
                     </style>
                     </head> 
-                    <body> " . $tabla_detalle_persona . "
+                    <body> " . $inicio . $tabla_detalle_persona . "
                         <table class='table--border-colapsed'>
                                 <thead>
                                     <tr>
