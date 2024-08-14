@@ -288,6 +288,7 @@ function envioDeFilasMultiplesEnBloques(elemento, index, array){
         rowsRequest["det_persona"] = objectJsonTabla["det_persona"];
         rowsRequest["fecha_desde"] = fechaDesde;
         rowsRequest["fecha_hasta"] = fechaHasta;
+        rowsRequest["fitros"] = filtroSeleccionados;
         let request = new XMLHttpRequest();
         request.open("POST", "Controladores/GeneradorPdf.php", true);
         request.setRequestHeader("x-request-id", idRequestField);
