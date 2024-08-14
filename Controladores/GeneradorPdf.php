@@ -220,7 +220,7 @@ try{
             </html>";
     } elseif ($from_reporte_listado) {
         $count = count($array_filas);
-        $count += (isset($array_filas["det_persona"]) ? 2 : 0);
+        $count -= (isset($array_filas["det_persona"]) ? 5 : 3);
         for ($i = 0; $i < (count($array_filas) - 5); $i++) {
             $row .= "<tr>";
             for ($h = 0; $h < count($header_mov_general); $h++) {
