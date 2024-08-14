@@ -223,7 +223,7 @@ try{
         if ($nro_paquete == 0) {
             $count -= (isset($array_filas["det_persona"]) ? 5 : 3);
         }
-        for ($i = 0; $i < count($array_filas); $i++) {
+        for ($i = 0; $i < $count; $i++) {
             $row .= "<tr>";
             for ($h = 0; $h < count($header_mov_general); $h++) {
                 if (isset($array_filas[$i][$header_mov_general[$h]])) {
