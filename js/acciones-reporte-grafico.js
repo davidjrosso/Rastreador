@@ -125,8 +125,6 @@ function configResultados() {
         const pdf = await PDFDocument.load(pdfBuffer);
         const copiedPages = await documentoPdf.copyPages(pdf, pdf.getPageIndices());
         copiedPages.forEach((page) => {
-            // console.log('page', page.getWidth(), page.getHeight());
-            // page.setWidth(210);
             documentoPdf.addPage(page);
         });
     });
@@ -150,9 +148,11 @@ function configResultados() {
     if ((this.readyState == 4) && (this.status == 200)) {
         let response = element.currentTarget.response;
         let arrBuffer = base64ToArrayBuffer(response);
-        listaDePdf.push(arrBuffer);
-        nroPaginaGeneradas++
-        if (nroPaginaGeneradas == nroPaginaPdf) {
+        let requestIdRequest = this.getResponseHeader("x-request-id");
+        listaDePdf[requestIdRequest] = arrBuffer;
+        listaDeRequest.splice(requestIdRequest, 1);
+        nroPaginaGeneradas++;
+        if (listaDeRequest.length === 0) {
             nroPaginaGeneradas = 0;
             documentoPdf = await mergePdfs();
             listaDePdf = new Array();
@@ -227,6 +227,77 @@ function configResultados() {
         rowsRequest = {};
     }
   }*/
+
+function envioDeFilasMultiplesEnBloques(elemento, index, array){
+    let objectJson = elemento;
+    let fila = (index - 14) % 20;
+    var chkPersona = $('#chkPersona');
+    var chkFechaNac = $('#chkFechaNac');
+    var chkDomicilio = $('#chkDomicilio');
+    var chkBarrio = $('#chkBarrio');
+    var chkManzana = $('#chk-manzana');
+    var chkLote = $('#chk-lote');
+    var chkSublote = $('#chk-sublote');
+    var chkAnios = $('#chkEdad');
+    var chkMeses = $('#chkMeses');
+
+    if (!chkPersona.is(":checked")) {
+        delete objectJson.persona;
+    }
+
+    if (!chkFechaNac.is(":checked")) {
+        delete objectJson.fechanac;
+    }
+
+    if (!chkDomicilio.is(":checked")) {
+        delete objectJson.domicilio;
+    }
+
+    if (!chkBarrio.is(":checked")) {
+        delete objectJson.barrio;
+    }
+
+    if (!chkManzana.is(":checked")) {
+        delete objectJson.manzana;
+    }
+
+    if (!chkLote.is(":checked")) {
+        delete objectJson.lote;
+    }
+
+    if (!chkSublote.is(":checked")) {
+        delete objectJson.sublote;
+    }
+    if (fila >= 0) {
+        rowsRequest[fila] = objectJson;
+    } else {
+        rowsRequest[index] = objectJson;
+    }
+
+    if (fila == 19 && idRequestField >= 1) {
+        let request = new XMLHttpRequest();
+        request.open("POST", "Controladores/GeneradorPdf.php", true);
+        request.setRequestHeader("x-request-id", idRequestField);
+        request.onreadystatechange = addPdf;
+        request.send(JSON.stringify(rowsRequest));
+        listaDeRequest[idRequestField] = request;
+        rowsRequest = {};
+        idRequestField++;
+    } else if ((index == 13 && idRequestField == 0)) {
+        rowsRequest["head_det_persona"] = objectJsonTabla["head_det_persona"];
+        rowsRequest["det_persona"] = objectJsonTabla["det_persona"];
+        rowsRequest["fecha_desde"] = fechaDesde;
+        rowsRequest["fecha_hasta"] = fechaHasta;
+        let request = new XMLHttpRequest();
+        request.open("POST", "Controladores/GeneradorPdf.php", true);
+        request.setRequestHeader("x-request-id", idRequestField);
+        request.onreadystatechange = addPdf;
+        request.send(JSON.stringify(rowsRequest));
+        listaDeRequest[idRequestField] = request;
+        rowsRequest = {};
+        idRequestField++;
+    }
+}
 
   function envioDeFilasEnBloques(elemento, index, array) {
     let objectJson = elemento;
