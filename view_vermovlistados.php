@@ -55,6 +55,7 @@ $Con->CloseConexion();
         let idRequestField = 0;
         let fechaDesde = null;
         let fechaHasta = null;
+        let filtroSeleccionados = null;
        $(document).ready(function(){
               var date_input=$('input[name="date"]'); //our date input has the name "date"
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
@@ -157,6 +158,7 @@ $Con->CloseConexion();
           rowsRequest["det_persona"] = objectJsonTabla["det_persona"];
           rowsRequest["fecha_desde"] = fechaDesde;
           rowsRequest["fecha_hasta"] = fechaHasta;
+          rowsRequest["fitros"] = filtroSeleccionados;
           let request = new XMLHttpRequest();
           listaDeRequest[idRequestField] = request;
           request.open("POST", "Controladores/GeneradorPdf.php", true);
@@ -2654,6 +2656,7 @@ $Con->CloseConexion();
   objectJsonTabla = <?php echo json_encode($jsonTable);?>;
   fechaDesde = "<?php echo $Fecha_Inicio;?>";
   fechaHasta = "<?php echo $Fecha_Fin;?>";
+  filtroSeleccionados = <?php echo json_encode($filtros); ?>;
   function configResultados() {
     var chkFecha = document.getElementById('chkFecha').checked;
     var chkMotivos = document.getElementById('chkMotivos').checked;

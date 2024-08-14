@@ -233,15 +233,21 @@ try{
             $row .= "</tr>";
         }
         $tabla_detalle_persona = "";
+        $inicio = "";
         if ($nro_paquete == 0) {
-            $Etiqueta_Fecha_Inicio = $array_filas["fecha_desde"];
-            $Etiqueta_Fecha_Fin = $array_filas["fecha_hasta"];
+            $etiqueta_Fecha_Inicio = $array_filas["fecha_desde"];
+            $etiqueta_Fecha_Fin = $array_filas["fecha_hasta"];
+            $filtros = $array_filas["fitros"];
+            $filtro = "";
+            foreach ($filtros as $value) {
+                $filtro .= $value . "<br>";
+            }
             $det_persona = (isset($array_filas["det_persona"]) ? $array_filas["det_persona"] : null);
             $inicio = "<p id='InformacionDeCentro'>
-                            DESDE : ". $Etiqueta_Fecha_Inicio . " HASTA : " . $Etiqueta_Fecha_Fin ."
+                            DESDE : ". $etiqueta_Fecha_Inicio . " HASTA : " . $etiqueta_Fecha_Fin ."
                         </p>
                         <p id='encabezado'> <span id='frase'> Programa Rastreador </span><br>
-                            Filtro : <br>
+                            Filtro : " . $filtro .  "
                         </p>
                         <p id='InformacionDeCiudad'>
                             Municipialidad de Rio Tercero
