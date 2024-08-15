@@ -1024,7 +1024,7 @@ $Con->CloseConexion();
                            and MT.estado = 1 
                            and C.estado = 1 
                            and M.fecha between '$Fecha_Inicio' and '$Fecha_Fin'";
-
+            $json_filtro = [];
             $filtros = [];
             $Con = new Conexion();
             $Con->OpenConexion();
@@ -1097,6 +1097,7 @@ $Con->CloseConexion();
                 $Consulta .= " and P.id_persona = $ID_Persona";
               }
               $filtros[] = "Persona: " . $RetConsultarPersona["apellido"] . ", " . $RetConsultarPersona["nombre"];
+              $json_filtro[] = "Persona " . $RetConsultarPersona["apellido"] . " " . $RetConsultarPersona["nombre"];
 
               // TODO:
               // $ConsultaFlia .= " and P.domicilio like '%".$RetConsultarPersona["domicilio"]."%'";
@@ -1111,6 +1112,7 @@ $Con->CloseConexion();
               // $Consulta .= " and P.edad between $Edad_Desde and $Edad_Hasta";
               $Consulta .= " and P.edad >= $Edad_Desde and P.edad <= $Edad_Hasta";
               $filtros[] = "Edad: Desde " . $Edad_Desde . " hasta " . $Edad_Hasta;
+              $json_filtro[] = "Edad Desde " . $Edad_Desde . " hasta " . $Edad_Hasta;
             }
 
             /*
@@ -1142,14 +1144,17 @@ $Con->CloseConexion();
               // $Consulta .= " and P.edad between $Edad_Desde and $Edad_Hasta";
               $Consulta .= " and P.edad >= $Edad_Desde and P.edad <= $Edad_Hasta";
               $filtros[] = "Edad: Desde " . $Edad_Desde . " hasta " . $Edad_Hasta;
+              $json_filtro[] = "Edad Desde " . $Edad_Desde . " hasta " . $Edad_Hasta;
               if ($Meses_Hasta !== null && $Meses_Hasta !== "") {
                 // $Consulta .= " and P.edad between $Edad_Desde and $Edad_Hasta";
                 $Consulta .= " and (P.edad < $Edad_Hasta or P.meses <= $Meses_Hasta)";
                 if ($Meses_Desde != null) {
                   $Consulta .= " and P.meses >= $Meses_Desde ";
                   $filtros[] = "Meses: Desde " . $Meses_Desde . " hasta " . $Meses_Hasta;
+                  $json_filtro[] = "Meses Desde " . $Meses_Desde . " hasta " . $Meses_Hasta;
                 } else {
                   $filtros[] = "Meses: Desde 0 hasta " . $Meses_Hasta;
+                  $json_filtro[] = "Meses Desde 0 hasta " . $Meses_Hasta;
                 }
               }
             } else {
@@ -1159,8 +1164,10 @@ $Con->CloseConexion();
                 if ($Meses_Desde != null) {
                   $Consulta .= " and P.meses >= $Meses_Desde";
                   $filtros[] = "Meses: Desde " . $Meses_Desde . " hasta " . $Meses_Hasta;
+                  $json_filtro[] = "Meses Desde " . $Meses_Desde . " hasta " . $Meses_Hasta;
                 } else {
                   $filtros[] = "Meses: Desde 0 hasta " . $Meses_Hasta;
+                  $json_filtro[] = "Meses Desde 0 hasta " . $Meses_Hasta;
                 }
               }
             }
@@ -1168,6 +1175,7 @@ $Con->CloseConexion();
             if ($Domicilio != null && $Domicilio != "") {
               $Consulta .= " and P.domicilio like '%$Domicilio%'";
               $filtros[] = "Domicilio: " . $Domicilio;
+              $json_filtro[] = "Domicilio " . $Domicilio;
             }
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // if($cmb_seleccion!= null && $cmb_seleccion != ""){
@@ -1178,26 +1186,31 @@ $Con->CloseConexion();
             if ($Manzana != null && $Manzana != "") {
               $Consulta .= " and P.manzana = '$Manzana'";
               $filtros[] = "Manzana: " . $Manzana;
+              $json_filtro[] = "Manzana " . $Manzana;
             }
 
             if ($Lote != null && $Lote != "") {
               $Consulta .= " and P.lote = $Lote";
               $filtros[] = "Lote: " . $Lote;
+              $json_filtro[] = "Lote " . $Lote;
             }
 
             if ($Familia != null && $Familia != "") {
               $Consulta .= " and P.familia = $Familia";
               $filtros[] = "Sublote: " . $Familia;
+              $json_filtro[] = "Sublote " . $Familia;
             }
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             if ($Nro_Carpeta != null && $Nro_Carpeta != "") {
               $Consulta .= " and P.nro_carpeta = '$Nro_Carpeta'";
               $filtros[] = "Nro_carpeta: " . $Nro_Carpeta;
+              $json_filtro[] = "Nro_carpeta " . $Nro_Carpeta;
             }
 
             if ($Nro_Legajo != null && $Nro_Legajo != "") {
               $Consulta .= " and P.nro_legajo = '$Nro_Legajo'";
               $filtros[] = " Nro_legajo : " . $Nro_Legajo;
+              $json_filtro[] = " Nro_legajo : " . $Nro_Legajo;
             }
 
             // ECHO "ACA ".$Consulta."<BR><BR>";
@@ -1247,11 +1260,13 @@ $Con->CloseConexion();
               $EjecutarConsultarEscuela = mysqli_query($Con->Conexion, $ConsultarEscuela) or die("Problemas al consultar filtro Escuela");
               $RetConsultarEscuela = mysqli_fetch_assoc($EjecutarConsultarEscuela);
               $filtros[] = "Escuela: " . $RetConsultarEscuela['Escuela'];
+              $json_filtro[] = "Escuela " . $RetConsultarEscuela['Escuela'];
             }
 
             if ($Trabajo != null && $Trabajo != "") {
               $Consulta .= " and P.Trabajo like '%$Trabajo%'";
               $filtros[] = "Trabajo: " . $Trabajo;
+              $json_filtro[] = "Trabajo " . $Trabajo;
             }
             //////////////////////////////////////////////////////////////////////////// MOTIVOS ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1273,7 +1288,8 @@ $Con->CloseConexion();
 
                 $EjecutarConsultarMotivo = mysqli_query($Con->Conexion,$ConsultarMotivo) or die("Problemas al consultar filtro Motivo");
                 $RetConsultarMotivo = mysqli_fetch_assoc($EjecutarConsultarMotivo);  
-                $filtros[] = "Motivo 1: ".$RetConsultarMotivo['motivo'];                
+                $filtros[] = "Motivo 1: ". $RetConsultarMotivo['motivo'];
+                $json_filtro[] = "Motivo 1 ". $RetConsultarMotivo['motivo'];
                 //$filtrosSeleccionados["ID_Motivo1"] = $ID_Motivo;
               }
               if($ID_Motivo2 > 1){
@@ -1284,11 +1300,12 @@ $Con->CloseConexion();
 
                 $ConsultarMotivo = "select motivo 
                                     from motivo 
-                                    where id_motivo = ".$ID_Motivo2." limit 1";
+                                    where id_motivo = " . $ID_Motivo2." limit 1";
 
                 $EjecutarConsultarMotivo = mysqli_query($Con->Conexion,$ConsultarMotivo) or die("Problemas al consultar filtro Motivo");
                 $RetConsultarMotivo = mysqli_fetch_assoc($EjecutarConsultarMotivo);
-                $filtros[] = "Motivo 2: ".$RetConsultarMotivo['motivo'];
+                $filtros[] = "Motivo 2: " . $RetConsultarMotivo['motivo'];
+                $json_filtro[] = "Motivo 2 " . $RetConsultarMotivo['motivo'];
                 //$filtrosSeleccionados["ID_Motivo2"] = $ID_Motivo2;
               }
 
@@ -1308,6 +1325,7 @@ $Con->CloseConexion();
                 $EjecutarConsultarMotivo = mysqli_query($Con->Conexion,$ConsultarMotivo) or die("Problemas al consultar filtro Motivo");
                 $RetConsultarMotivo = mysqli_fetch_assoc($EjecutarConsultarMotivo);  
                 $filtros[] = "Motivo 3: ".$RetConsultarMotivo['motivo'];
+                $json_filtro[] = "Motivo 3 " . $RetConsultarMotivo['motivo'];
                 //$filtrosSeleccionados["ID_Motivo3"] = $ID_Motivo3;
               }
 
@@ -1327,6 +1345,7 @@ $Con->CloseConexion();
                 $EjecutarConsultarMotivo = mysqli_query($Con->Conexion,$ConsultarMotivo) or die("Problemas al consultar filtro Motivo");
                 $RetConsultarMotivo = mysqli_fetch_assoc($EjecutarConsultarMotivo);  
                 $filtros[] = "Motivo 4: ".$RetConsultarMotivo['motivo'];
+                $json_filtro[] = "Motivo 4 " . $RetConsultarMotivo['motivo'];
               }
 
               if($ID_Motivo5 > 1){
@@ -1344,6 +1363,7 @@ $Con->CloseConexion();
                 $EjecutarConsultarMotivo = mysqli_query($Con->Conexion,$ConsultarMotivo) or die("Problemas al consultar filtro Motivo");
                 $RetConsultarMotivo = mysqli_fetch_assoc($EjecutarConsultarMotivo);  
                 $filtros[] = "Motivo 5: ".$RetConsultarMotivo['motivo'];
+                $json_filtro[] = "Motivo 5 " . $RetConsultarMotivo['motivo'];
               }
 
               if($CantOpMotivos > 1){
@@ -1394,6 +1414,7 @@ $Con->CloseConexion();
               $EjecutarConsultarCategoria = mysqli_query($Con->Conexion, $ConsultarCategoria) or die("Problemas al consultar filtro Categoria");
               $RetConsultarCategoria = mysqli_fetch_assoc($EjecutarConsultarCategoria);
               $filtros[] = "Categoria: " . $RetConsultarCategoria['categoria'];
+              $json_filtro[] = "Categoria " . $RetConsultarCategoria['categoria'];
             }
 
             if ($ID_CentroSalud > 0) {
@@ -1402,6 +1423,7 @@ $Con->CloseConexion();
               $EjecutarConsultarCentroSalud = mysqli_query($Con->Conexion, $ConsultarCentroSalud) or die("Problemas al consultar filtro Categoria");
               $RetConsultarCentroSalud = mysqli_fetch_assoc($EjecutarConsultarCentroSalud);
               $filtros[] = "Centro Salud: " . $RetConsultarCentroSalud['centro_salud'];
+              $json_filtro[] = "Centro Salud " . $RetConsultarCentroSalud['centro_salud'];
             }
 
             if ($ID_OtraInstitucion > 0) {
@@ -1410,6 +1432,7 @@ $Con->CloseConexion();
               $EjecutarConsultarOtraInstitucion = mysqli_query($Con->Conexion, $ConsultarOtraInstitucion) or die("Problemas al consultar filtro Categoria");
               $RetConsultarOtraInstitucion = mysqli_fetch_assoc($EjecutarConsultarOtraInstitucion);
               $filtros[] = "Otra Institucion: " . $RetConsultarOtraInstitucion['Nombre'];
+              $json_filtro[] = "Otra Institucion " . $RetConsultarOtraInstitucion['Nombre'];
             }
 
             if ($ID_Responsable > 0) {
@@ -1418,6 +1441,7 @@ $Con->CloseConexion();
               $EjecutarConsultarResponsable = mysqli_query($Con->Conexion, $ConsultarResponsable) or die("Problemas al consultar filtro Responsable");
               $RetConsultarResponsable = mysqli_fetch_assoc($EjecutarConsultarResponsable);
               $filtros[] = "Responsable: " . $RetConsultarResponsable['responsable'];
+              $json_filtro[] = "Responsable " . $RetConsultarResponsable['responsable'];
             }
 
             if ($ID_Persona > 0) {
@@ -1759,6 +1783,7 @@ $Con->CloseConexion();
                     $EjecutarConsultarBarrio = mysqli_query($Con->Conexion, $ConsultarBarrio) or die("Problemas al consultar filtro Barrios");
                     $RetConsultarBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);
                     $filtros[] = "Barrio: " . $RetConsultarBarrio['Barrio'];
+                    $json_filtro[] = "Barrio " . $RetConsultarBarrio['Barrio'];
                   }
                 }
 

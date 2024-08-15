@@ -4,17 +4,16 @@ require_once '../dompdf/autoload.inc.php';
 use Dompdf\Dompdf;
 
 $mesesHeader = (isset($_SESSION["meses"])) ? $_SESSION["meses"] : null;
-$from_reporte_listado = (isset($_SESSION["reporte_listado"])) ? $_SESSION["reporte_listado"] : false;
-$from_reporte_grafico = (isset($_SESSION["reporte_grafico"])) ? $_SESSION["reporte_grafico"] : false;
-$header_mov_general = (isset($_SESSION["header_movimientos_general"])) ? $_SESSION["header_movimientos_general"] : null;
 session_write_close();
+$from_reporte_listado = (preg_match("~view_vermovlistados~", $_SERVER["HTTP_REFERER"])) ? true : false;
+$from_reporte_grafico = (preg_match("~view_rep_general_new~", $_SERVER["HTTP_REFERER"])) ? true : false;
 $nro_paquete = getallheaders()["x-request-id"];
 
 try{
     $json_filas = file_get_contents('php://input');
     $array_filas = json_decode($json_filas, true);
     $row = "";
-    if ($from_reporte_grafico){
+    if ($from_reporte_grafico) {
         for ($i = 0; $i < count($array_filas); $i++) {
             $row .= "<tr>
                         <td style='width: 60px'>" . 
@@ -219,9 +218,10 @@ try{
                 </body>
             </html>";
     } elseif ($from_reporte_listado) {
+        $header_mov_general = (isset($array_filas["header_movimientos_general"])) ? $array_filas["header_movimientos_general"] : $array_filas["head_movimientos_persona"];
         $count = count($array_filas);
         if ($nro_paquete == 0) {
-            $count -= (isset($array_filas["det_persona"]) ? 5 : 3);
+            $count -= (isset($array_filas["det_persona"]) ? 6 : 4);
         }
         for ($i = 0; $i < $count; $i++) {
             $row .= "<tr>";
@@ -403,8 +403,8 @@ try{
                                         <th>" . $header_mov_general[12] . "</th>
                                         <th>" . $header_mov_general[13] . "</th>
                                         <th>" . $header_mov_general[14] . "</th>
-                                        <th>" . $header_mov_general[15] . "</th>
-                                        <th>" . $header_mov_general[16] . "</th>
+                                        <th>" . $header_mov_general[15] . "</th>" .
+                                        ((isset($header_mov_general[16])) ? "<th>" . $header_mov_general[16] . "</th>" : "") . "
                                     </tr>
                                 </thead>
                                     <tbody>" . 

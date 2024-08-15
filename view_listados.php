@@ -21,7 +21,7 @@ $Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
 $TipoUsuario = $Ret["ID_TipoUsuario"];
 $Con->CloseConexion();
 
-$datosNav = $_SESSION["datosNav"];
+$datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
 
 // DEBUG
 // echo var_dump($datosNav);
@@ -393,7 +393,7 @@ $datosNav = $_SESSION["datosNav"];
   <div class = "col-md-3">
     <div class="nav-side-menu">
       <?php $Element = new Elements();
-        echo $Element->CBSessionNombre($ID_Usuario);
+        $Element->CBSessionNombre($ID_Usuario);
       ?>
       <div class="brand">Reporte por listados</div>
       <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
@@ -440,7 +440,7 @@ $datosNav = $_SESSION["datosNav"];
   <div class = "col-md-3">
 <div class="nav-side-menu">
       <?php $Element = new Elements();
-            echo $Element->CBSessionNombre($ID_Usuario);
+            $Element->CBSessionNombre($ID_Usuario);
       ?>
     <div class="brand">General</div>
     <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
@@ -477,7 +477,7 @@ $datosNav = $_SESSION["datosNav"];
   <div class = "col-md-3">
     <div class="nav-side-menu">
       <?php $Element = new Elements();
-        echo $Element->CBSessionNombre($ID_Usuario);
+        $Element->CBSessionNombre($ID_Usuario);
       ?>
       <div class="brand">General</div>
       <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>

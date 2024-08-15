@@ -147,6 +147,8 @@ $Con->CloseConexion();
           let filas = objectJsonTabla["movimientos_persona"].forEach((element, index, array) => {envioDeFilasMultiplesEnBloques(element, index, array);});
         }
         if (rowsRequest != {} && idRequestField >= 1) {
+          rowsRequest["header_movimientos_general"] = objectJsonTabla["header_movimientos_general"];
+          rowsRequest["head_movimientos_persona"] = objectJsonTabla["head_movimientos_persona"]
           let request = new XMLHttpRequest();
           listaDeRequest[idRequestField] = request;
           request.open("POST", "Controladores/GeneradorPdf.php", true);
@@ -158,6 +160,8 @@ $Con->CloseConexion();
         } else if ((rowsRequest != {} && idRequestField == 0)) {
           rowsRequest["head_det_persona"] = objectJsonTabla["head_det_persona"];
           rowsRequest["det_persona"] = objectJsonTabla["det_persona"];
+          rowsRequest["header_movimientos_general"] = objectJsonTabla["header_movimientos_general"];
+          rowsRequest["head_movimientos_persona"] = objectJsonTabla["head_movimientos_persona"]
           rowsRequest["fecha_desde"] = fechaDesde;
           rowsRequest["fecha_hasta"] = fechaHasta;
           rowsRequest["fitros"] = filtroSeleccionados;
@@ -1307,22 +1311,23 @@ $Con->CloseConexion();
                 $TableMovPrint = $TableMov;
               }
               $head_movimientos = [
-                "Fecha",
-                "Motivo 1",
-                "Motivo 2",
-                "Motivo 3",
-                "Persona",
-                "DNI",
-                "Fecha Nac",
                 "Edad",
-                "Obra Social",
+                "Fecha Nac",
+                "centro_salud",
+                "dni",
+                "fecha",
+                "localidad",
+                "meses",
+                "motivo 1",
+                "motivo 2",
+                "motivo 3",
+                "Persona",
                 "Domicilio",
-                "Barrio",
-                "Localidad",
-                "Observaciones",
-                "Responsable",
-                "Centro de Salud",
-                "Otras Instituciones"
+                "barrio",
+                "obra_social",
+                "observaciones",
+                "otra_institucion",
+                "responsable"
               ];
               $jsonTable["head_movimientos_persona"] = $head_movimientos;
               $json_row = [];
@@ -1752,7 +1757,6 @@ $Con->CloseConexion();
                                   <th scope='col' class='trMeses' style='text-align: center;border-top: 0px solid #dee2e6;'>Meses</th>
                                 </tr>";
                 $jsonTable["header_movimientos_general"] = $header_movimientos_general;
-                $_SESSION["header_movimientos_general"] = $header_movimientos_general;
                 $TableMovPrint = $TableMov;
               }
               $json_row = [];
