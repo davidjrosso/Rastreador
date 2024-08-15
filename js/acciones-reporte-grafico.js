@@ -283,6 +283,8 @@ function envioDeFilasMultiplesEnBloques(elemento, index, array) {
     }
 
     if (fila == 19 && idRequestField >= 1) {
+        rowsRequest["header_movimientos_general"] = objectJsonTabla["header_movimientos_general"];
+        rowsRequest["head_movimientos_persona"] = objectJsonTabla["head_movimientos_persona"]
         let request = new XMLHttpRequest();
         request.open("POST", "Controladores/GeneradorPdf.php", true);
         request.setRequestHeader("x-request-id", idRequestField);
@@ -295,6 +297,8 @@ function envioDeFilasMultiplesEnBloques(elemento, index, array) {
     } else if ((index == 13 && idRequestField == 0)) {
         rowsRequest["head_det_persona"] = objectJsonTabla["head_det_persona"];
         rowsRequest["det_persona"] = objectJsonTabla["det_persona"];
+        rowsRequest["header_movimientos_general"] = objectJsonTabla["header_movimientos_general"];
+        rowsRequest["head_movimientos_persona"] = objectJsonTabla["head_movimientos_persona"]
         rowsRequest["fecha_desde"] = fechaDesde;
         rowsRequest["fecha_hasta"] = fechaHasta;
         rowsRequest["fitros"] = filtroSeleccionados;
