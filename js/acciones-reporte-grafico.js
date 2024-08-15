@@ -119,16 +119,23 @@ function configResultados() {
     return bytes;
   }
 
+  async function copiadoDePaginas(pdfBinary){
+    const pdf = await PDFDocument.load(pdfBinary);
+    const copiedPages = await documentoPdf.copyPages(pdf, pdf.getPageIndices());
+    copiedPages.forEach((page) => {
+        documentoPdf.addPage(page);
+    });
+  }
+
   async function mergePdfs() {
     const documentoPdf = await PDFDocument.create();
-    const actions = listaDePdf.map(async pdfBuffer => {
-        const pdf = await PDFDocument.load(pdfBuffer);
+    for (i = 0; i < listaDePdf.length; i++) {
+        const pdf = await PDFDocument.load(listaDePdf[i]);
         const copiedPages = await documentoPdf.copyPages(pdf, pdf.getPageIndices());
         copiedPages.forEach((page) => {
             documentoPdf.addPage(page);
         });
-    });
-    await Promise.all(actions);
+    }
     const mergedPdfFile = await documentoPdf.save();
     return mergedPdfFile;
   }
@@ -228,7 +235,7 @@ function configResultados() {
     }
   }*/
 
-function envioDeFilasMultiplesEnBloques(elemento, index, array){
+function envioDeFilasMultiplesEnBloques(elemento, index, array) {
     let objectJson = elemento;
     let fila = (index - 14) % 20;
     var chkPersona = $('#chkPersona');
@@ -268,6 +275,7 @@ function envioDeFilasMultiplesEnBloques(elemento, index, array){
     if (!chkSublote.is(":checked")) {
         delete objectJson.sublote;
     }
+
     if (fila >= 0) {
         rowsRequest[fila] = objectJson;
     } else {
