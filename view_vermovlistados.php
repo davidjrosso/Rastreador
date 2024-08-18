@@ -542,7 +542,7 @@ $Con->CloseConexion();
             } else {
               if ($Meses_Desde !== null && $Meses_Desde !== "" && $Meses_Hasta !== null && $Meses_Hasta !== "") {
                 // $Consulta .= " and P.edad between $Edad_Desde and $Edad_Hasta";
-                $Consulta .= " and P.meses <= $Meses_Hasta";
+                $Consulta .= " and P.meses <= $Meses_Hasta and P.edad = 0 ";
                 if ($Meses_Desde != null) {
                   $Consulta .= " and P.meses >= $Meses_Desde";
                   $filtros[] = "Meses: Desde " . $Meses_Desde . " hasta " . $Meses_Hasta;
