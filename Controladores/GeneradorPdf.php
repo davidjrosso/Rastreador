@@ -1,10 +1,10 @@
 <?php
-session_start();
+//session_start();
 require_once '../dompdf/autoload.inc.php';
 use Dompdf\Dompdf;
 
-$mesesHeader = (isset($_SESSION["meses"])) ? $_SESSION["meses"] : null;
-session_write_close();
+//$mesesHeader = (isset($_SESSION["meses"])) ? $_SESSION["meses"] : null;
+//session_write_close();
 $from_reporte_listado = (preg_match("~view_vermovlistados~", $_SERVER["HTTP_REFERER"])) ? true : false;
 $from_reporte_grafico = (preg_match("~view_rep_general_new~", $_SERVER["HTTP_REFERER"])) ? true : false;
 $nro_paquete = getallheaders()["x-request-id"];
@@ -219,7 +219,7 @@ try{
             </html>";
     } elseif ($from_reporte_listado) {
         $header_mov_general = (isset($array_filas["header_movimientos_general"])) ? $array_filas["header_movimientos_general"] : $array_filas["head_movimientos_persona"];
-        $count = count($array_filas);
+        $count = count($array_filas) - 1;
         if ($nro_paquete == 0) {
             $count -= (isset($array_filas["det_persona"]) ? 6 : 4);
         }
