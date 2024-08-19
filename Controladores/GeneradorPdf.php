@@ -301,17 +301,17 @@ try{
                                                     <td>" . $det_persona["nombre"] . "</td>
                                                     <td>" . $det_persona["documento"] . "</td>
                                                     <td>" . $det_persona["fecha_nacimiento"] . "o</td>
-                                                    <td>" . $det_persona["edad"] . "</td>
-                                                    <td>" . $det_persona["meses"] . "</td>
-                                                    <td>" . $det_persona["localidad"] . "</td>
-                                                    <td>" . $det_persona["barrio"] . "</td>
-                                                    <td>" . $det_persona["domicilio"] . "</td>
+                                                    <td>" . $det_persona["Años"] . "</td>
+                                                    <td>" . $det_persona["Meses"] . "</td>
+                                                    <td>" . $det_persona["Localidad"] . "</td>
+                                                    <td>" . $det_persona["Barrio"] . "</td>
+                                                    <td>" . $det_persona["Domicilio"] . "</td>
                                                     <td>" . $det_persona["manzana"] . "</td>
                                                     <td>" . $det_persona["lote"] . "</td>
                                                     <td>" . $det_persona["sub_lote"] . "</td>
                                                     <td>" . $det_persona["telefono"] . "</td>
                                                     <td>" . $det_persona["mail"] . "</td>
-                                                    <td>" . $det_persona["obra_social"] . "</td>
+                                                    <td>" . $det_persona["Obra Social"] . "</td>
                                                     <td>" . $det_persona["escuela"] . "</td>
                                                     <td>" . $det_persona["nro_legajo"] . "</td>
                                                     <td>" . $det_persona["nro_carpeta"] . "</td>
