@@ -833,8 +833,16 @@ $Con->CloseConexion();
     }
     if($TipoUsuario == 2 || $TipoUsuario > 3){
       ?>
+      <div class="col-md-2" id="expandir" hidden>
+        <a id="abrir" class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="mostrar()">
+          <i class="fa fa-arrows-alt fa-lg" color="tomato"></i>
+        </a>
+      </div>
       <div class="col-md-2" id="ContenidoMenu">
         <div class="nav-side-menu" id="sidebar" style="padding-left: 5px;">
+          <a id="cerrar" class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="ocultar()">
+            <i class="fa fa-arrow-left fa-lg"></i>
+          </a>
           <div style="display:inline-block">
             <?php $Element = new Elements();
               echo $Element->CBSessionNombre($ID_Usuario);
@@ -872,8 +880,16 @@ $Con->CloseConexion();
     }
     if ($TipoUsuario == 3) {
       ?>
+      <div class="col-md-2" id="expandir" hidden>
+        <a id="abrir" class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="mostrar()">
+          <i class="fa fa-arrows-alt fa-lg" color="tomato"></i>
+        </a>
+      </div>
       <div class="col-md-2" id="ContenidoMenu">
         <div class="nav-side-menu" id="sidebar" style="padding-left: 5px;">
+          <a id="cerrar" class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="ocultar()">
+            <i class="fa fa-arrow-left fa-lg"></i>
+          </a>
           <div style="display:inline-block">
             <?php $Element = new Elements();
               echo $Element->CBSessionNombre($ID_Usuario);

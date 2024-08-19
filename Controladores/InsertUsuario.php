@@ -48,7 +48,7 @@ try {
 		$Mensaje = "Ya existe un usuario con ese Nombre";
 		header('Location: ../view_newusuarios.php?MensajeError='.$Mensaje);
 	}else{
-		$Consulta = "insert into accounts(firstname,lastname,initials,username,password,email,estado,ID_TipoUsuario) values('".$Usuario->getFirstName()."','".$Usuario->getLastName()."','".$Usuario->getInitials()."','".$Usuario->getUserName()."','".$Usuario->getUserPass()."','".$Usuario->getEmail()."',".$Usuario->getEstado().",".$Usuario->getID_TipoUsuario().")";
+		$Consulta = "insert into accounts(firstname,lastname,initials,username,password,email,estado,ID_TipoUsuario) values('".$Usuario->getFirstName()."','".$Usuario->getLastName()."','".$Usuario->getInitials()."','".$Usuario->getUserName()."','".$Usuario->getUserPass()."','".$Usuario->getEmail()."', 1,".$Usuario->getID_TipoUsuario().")";
 		if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
 			throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 1);		
 		}	
