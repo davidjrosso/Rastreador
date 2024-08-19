@@ -142,6 +142,7 @@ $Con->CloseConexion();
         }*/
 
       function enviarImprimirPdf() {
+        configColumnasTabla();
         if (objectJsonTabla["movimientos_general"] !== undefined) {
           let filas = objectJsonTabla["movimientos_general"].forEach((element, index, array) => {envioDeFilasMultiplesEnBloques(element, index, array);});
         } else if (objectJsonTabla["movimientos_persona"] !== undefined) {
@@ -1082,13 +1083,13 @@ $Con->CloseConexion();
                 if($Persona->getEdad() == 2020){
                   $Table .= "<tr><td>Edad</td><td>No se cargo fecha de nacimiento</td></tr>";
                   $tablePrint .= "<tr><td>Edad</td><td>No se cargo fecha de nacimiento</td></tr>";
-                  $jsonTable["det_persona"]["edad"] = "sin datos";
-                  $head_det_persona[] = "edad";
+                  $jsonTable["det_persona"]["Años"] = "sin datos";
+                  $head_det_persona[] = "Años";
                 }else{
                   $Table .= "<tr><td>Edad</td><td>" . $Persona->getEdad() . "</td></tr>";
                   $tablePrint .= "<tr><td>Edad</td><td>" . $Persona->getEdad() . "</td></tr>";
-                  $jsonTable["det_persona"]["edad"] = $Persona->getEdad();
-                  $head_det_persona[] = "edad";
+                  $jsonTable["det_persona"]["Años"] = $Persona->getEdad();
+                  $head_det_persona[] = "Años";
                 }
                 $Table .= "<tr><td>Meses</td><td>" . $Persona->getMeses() . "</td></tr>";              
                 $tablePrint .= "<tr><td>Meses</td><td>" . $Persona->getMeses() . "</td></tr>";
@@ -1178,13 +1179,13 @@ $Con->CloseConexion();
                 if($Persona->getEdad() == 2020){
                   $Table .= "<tr><td>Edad</td><td>No se cargo fecha de nacimiento</td></tr>";
                   $tablePrint .= "<tr><td>Edad</td><td>No se cargo fecha de nacimiento</td></tr>";
-                  $jsonTable["det_persona"]["edad"] = "sin datos";
-                  $head_det_persona[] = "edad";
+                  $jsonTable["det_persona"]["Años"] = "sin datos";
+                  $head_det_persona[] = "Años";
                 }else{
                   $Table .= "<tr><td>Edad</td><td>" . $Persona->getEdad() . "</td></tr>";
                   $tablePrint .= "<tr><td>Edad</td><td>" . $Persona->getEdad() . "</td></tr>";
-                  $jsonTable["det_persona"]["edad"] = $Persona->getEdad();
-                  $head_det_persona[] = "edad";
+                  $jsonTable["det_persona"]["Años"] = $Persona->getEdad();
+                  $head_det_persona[] = "Años";
                 }                            
                 $Table .= "<tr><td>Meses</td><td>" . $Persona->getMeses() . "</td></tr>";
                 $tablePrint .= "<tr><td>Meses</td><td>" . $Persona->getMeses() . "</td></tr>";
@@ -1309,7 +1310,7 @@ $Con->CloseConexion();
                 $TableMovPrint = $TableMov;
               }
               $head_movimientos = [
-                "Edad",
+                "Años",
                 "Fecha Nac",
                 "Centro Salud",
                 "DNI",
@@ -2656,7 +2657,7 @@ $Con->CloseConexion();
         // <input type="checkbox" id="chkBarrio"> Barrio 
         // <input type="checkbox" id="chkLocalidad"> Localidad 
 
-  <?php 
+  <?php
   //$_SESSION["meses"] = $mesesHeader; ?>
   objectJsonTabla = <?php echo json_encode($jsonTable);?>;
   jsonTabla = <?php echo json_encode($jsonTable);?>;

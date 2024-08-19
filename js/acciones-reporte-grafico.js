@@ -235,10 +235,7 @@ function configResultados() {
     }
   }*/
 
-function envioDeFilasMultiplesEnBloques(elemento, index, array) {
-
-    let objectJson = elemento;
-    let fila = (index - 14) % 20;
+function configColumnasTabla() {
     /*
     let chkPersona = $('#chkPersona');
     let chkFechaNac = $('#chkFechaNac');
@@ -258,13 +255,26 @@ function envioDeFilasMultiplesEnBloques(elemento, index, array) {
     let chkManzana = $('#chk-manzana');
     let chkLote = $('#chk-lote');
     let chkSublote = $('#chk-sublote');
+    let chkMotivo = $('#chkMotivos');
+    let chkDni = $('#chkDNI');
     let chkAnios = $('#chkEdad');
     let chkMeses = $('#chkMeses');
+    let chkObraSocial = $('#chkObraSocial');
+    let chkLocalidad = $('#chkLocalidad');
+    let chkObservaciones = $('#chkObservaciones');
+    let chkResponsable = $('#chkResponsable');
+    let chkCentroSalud = $('#chkCentrosSalud');
+    let chkOtraInstitucion = $('#chkOtrasInstituciones');
+    let chkFecha = $('#chkFecha');
+
     let indiceHead = 0;  
 
     if (!chkPersona.is(":checked")) {
-        //delete objectJson.Persona;
-        indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Persona");
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Persona");
+        } else {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Persona");
+        }
         if (indiceHead >= 0) {
             if (objectJsonTabla["header_movimientos_general"]) {
                 objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
@@ -274,18 +284,26 @@ function envioDeFilasMultiplesEnBloques(elemento, index, array) {
             }
         }
     } else {
-        //objectJson["Persona"] = jsonTabla["movimientos_general"][index]["Persona"];
         if (objectJsonTabla["header_movimientos_general"]) {
-            objectJsonTabla["header_movimientos_general"].push("Persona");
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Persona");
+            if (indiceHead < 0) {
+                objectJsonTabla["header_movimientos_general"].push("Persona");
+            }
         }
         if (objectJsonTabla["head_movimientos_persona"]) {
-            objectJsonTabla["head_movimientos_persona"].push("Persona");
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Persona");
+            if (indiceHead < 0) {
+                objectJsonTabla["head_movimientos_persona"].push("Persona");
+            }
         }
     }
 
     if (!chkFechaNac.is(":checked")) {
-        //delete objectJson.fechanac;
-        indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Fecha Nac");
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Fecha Nac");
+        } else {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Fecha Nac");
+        }
         if (indiceHead >= 0) {
             if (objectJsonTabla["header_movimientos_general"]) {
                 objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
@@ -295,18 +313,26 @@ function envioDeFilasMultiplesEnBloques(elemento, index, array) {
             }
         }
     } else {
-        //objectJson["Fecha Nac"] = jsonTabla["movimientos_general"][index]["Fecha Nac"];
         if (objectJsonTabla["header_movimientos_general"]) {
-            objectJsonTabla["header_movimientos_general"].push("");
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Fecha Nac");
+            if (indiceHead < 0) {
+                objectJsonTabla["header_movimientos_general"].push("Fecha Nac");
+            }
         }
         if (objectJsonTabla["head_movimientos_persona"]) {
-            objectJsonTabla["head_movimientos_persona"].push("");
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Fecha Nac");
+            if (indiceHead < 0) {
+                objectJsonTabla["head_movimientos_persona"].push("Fecha Nac");
+            }
         }
     }
 
     if (!chkDomicilio.is(":checked")) {
-        //delete objectJson.domicilio;
-        indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Domicilio");
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Domicilio");
+        } else {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Domicilio");
+        }
         if (indiceHead >= 0) {
             if (objectJsonTabla["header_movimientos_general"]) {
                 objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
@@ -316,18 +342,336 @@ function envioDeFilasMultiplesEnBloques(elemento, index, array) {
             }
         }
     } else {
-        //objectJson["Domicilio"] = jsonTabla["movimientos_general"][index]["Domicilio"];
         if (objectJsonTabla["header_movimientos_general"]) {
-            objectJsonTabla["header_movimientos_general"].push("Domicilio");
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Domicilio");
+            if (indiceHead < 0) {
+                objectJsonTabla["header_movimientos_general"].push("Domicilio");
+            }
         }
         if (objectJsonTabla["head_movimientos_persona"]) {
-            objectJsonTabla["head_movimientos_persona"].push("Domicilio");
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Domicilio");
+            if (indiceHead < 0) {
+                objectJsonTabla["head_movimientos_persona"].push("Domicilio");
+            }
+        }
+    }
+
+    if (!chkMotivo.is(":checked")) {
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Motivo 1");
+        } else {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Motivo 1");
+        }
+        if (indiceHead >= 0) {
+            if (objectJsonTabla["header_movimientos_general"]) {
+                objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
+            }
+            if (objectJsonTabla["head_movimientos_persona"]) {
+                objectJsonTabla["head_movimientos_persona"].splice(indiceHead, 1);
+            }
+        }
+    } else {
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Motivo 1");
+            if (indiceHead < 0) {
+                objectJsonTabla["header_movimientos_general"].push("Motivo 1");
+            }
+        }
+        if (objectJsonTabla["head_movimientos_persona"]) {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Motivo 1");
+            if (indiceHead < 0) {
+                objectJsonTabla["head_movimientos_persona"].push("Motivo 1");
+            }
+        }
+    }
+
+    if (!chkDni.is(":checked")) {
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("DNI");
+        } else {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("DNI");
+        }
+        if (indiceHead >= 0) {
+            if (objectJsonTabla["header_movimientos_general"]) {
+                objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
+            }
+            if (objectJsonTabla["head_movimientos_persona"]) {
+                objectJsonTabla["head_movimientos_persona"].splice(indiceHead, 1);
+            }
+        }
+    } else {
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("DNI");
+            if (indiceHead < 0) {
+                objectJsonTabla["header_movimientos_general"].push("DNI");
+            }
+        }
+        if (objectJsonTabla["head_movimientos_persona"]) {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("DNI");
+            if (indiceHead < 0) {
+                objectJsonTabla["head_movimientos_persona"].push("DNI");
+            }
+        }
+    }
+    if (!chkFecha.is(":checked")) {
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Fecha");
+        } else {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Fecha");
+        }
+        if (indiceHead >= 0) {
+            if (objectJsonTabla["header_movimientos_general"]) {
+                objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
+            }
+            if (objectJsonTabla["head_movimientos_persona"]) {
+                objectJsonTabla["head_movimientos_persona"].splice(indiceHead, 1);
+            }
+        }
+    } else {
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Fecha");
+            if (indiceHead < 0) {
+                objectJsonTabla["header_movimientos_general"].push("Fecha");
+            }
+        }
+        if (objectJsonTabla["head_movimientos_persona"]) {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Fecha");
+            if (indiceHead < 0) {
+                objectJsonTabla["head_movimientos_persona"].push("Fecha");
+            }
+        }
+    }
+    if (!chkAnios.is(":checked")) {
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Años");
+        } else {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Años");
+        }
+        if (indiceHead >= 0) {
+            if (objectJsonTabla["header_movimientos_general"]) {
+                objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
+            }
+            if (objectJsonTabla["head_movimientos_persona"]) {
+                objectJsonTabla["head_movimientos_persona"].splice(indiceHead, 1);
+            }
+        }
+    } else {
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Años");
+            if (indiceHead < 0) {
+                objectJsonTabla["header_movimientos_general"].push("Años");
+            }
+        }
+        if (objectJsonTabla["head_movimientos_persona"]) {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Años");
+            if (indiceHead < 0) {
+                objectJsonTabla["head_movimientos_persona"].push("Años");
+            }
+        }
+    }
+    if (!chkMeses.is(":checked")) {
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Meses");
+        } else {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Meses");
+        }
+        if (indiceHead >= 0) {
+            if (objectJsonTabla["header_movimientos_general"]) {
+                objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
+            }
+            if (objectJsonTabla["head_movimientos_persona"]) {
+                objectJsonTabla["head_movimientos_persona"].splice(indiceHead, 1);
+            }
+        }
+    } else {
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Meses");
+            if (indiceHead < 0) {
+                objectJsonTabla["header_movimientos_general"].push("Meses");
+            }
+        }
+        if (objectJsonTabla["head_movimientos_persona"]) {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Meses");
+            if (indiceHead < 0) {
+                objectJsonTabla["head_movimientos_persona"].push("Meses");
+            }
+        }
+    }
+    if (!chkObraSocial.is(":checked")) {
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Obra Social");
+        } else {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Obra Social");
+        }
+        if (indiceHead >= 0) {
+            if (objectJsonTabla["header_movimientos_general"]) {
+                objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
+            }
+            if (objectJsonTabla["head_movimientos_persona"]) {
+                objectJsonTabla["head_movimientos_persona"].splice(indiceHead, 1);
+            }
+        }
+    } else {
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Obra Social");
+            if (indiceHead < 0) {
+                objectJsonTabla["header_movimientos_general"].push("Obra Social");
+            }
+        }
+        if (objectJsonTabla["head_movimientos_persona"]) {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Obra Social");
+            if (indiceHead < 0) {
+                objectJsonTabla["head_movimientos_persona"].push("Obra Social");
+            }
+        }
+    }
+    if (!chkLocalidad.is(":checked")) {
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Localidad");
+        } else {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Localidad");
+        }
+        if (indiceHead >= 0) {
+            if (objectJsonTabla["header_movimientos_general"]) {
+                objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
+            }
+            if (objectJsonTabla["head_movimientos_persona"]) {
+                objectJsonTabla["head_movimientos_persona"].splice(indiceHead, 1);
+            }
+        }
+    } else {
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Localidad");
+            if (indiceHead < 0) {
+                objectJsonTabla["header_movimientos_general"].push("Localidad");
+            }
+        }
+        if (objectJsonTabla["head_movimientos_persona"]) {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Localidad");
+            if (indiceHead < 0) {
+                objectJsonTabla["head_movimientos_persona"].push("Localidad");
+            }
+        }
+    }
+    if (!chkObservaciones.is(":checked")) {
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Observaciones");
+        } else {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Observaciones");
+        }
+        if (indiceHead >= 0) {
+            if (objectJsonTabla["header_movimientos_general"]) {
+                objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
+            }
+            if (objectJsonTabla["head_movimientos_persona"]) {
+                objectJsonTabla["head_movimientos_persona"].splice(indiceHead, 1);
+            }
+        }
+    } else {
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Observaciones");
+            if (indiceHead < 0) {
+                objectJsonTabla["header_movimientos_general"].push("Observaciones");
+            }
+        }
+        if (objectJsonTabla["head_movimientos_persona"]) {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Observaciones");
+            if (indiceHead < 0) {
+                objectJsonTabla["head_movimientos_persona"].push("Observaciones");
+            }
+        }
+    }
+    if (!chkResponsable.is(":checked")) {
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Responsable");
+        } else {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Responsable");
+        }
+        if (indiceHead >= 0) {
+            if (objectJsonTabla["header_movimientos_general"]) {
+                objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
+            }
+            if (objectJsonTabla["head_movimientos_persona"]) {
+                objectJsonTabla["head_movimientos_persona"].splice(indiceHead, 1);
+            }
+        }
+    } else {
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Responsable");
+            if (indiceHead < 0) {
+                objectJsonTabla["header_movimientos_general"].push("Responsable");
+            }
+        }
+        if (objectJsonTabla["head_movimientos_persona"]) {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Responsable");
+            if (indiceHead < 0) {
+                objectJsonTabla["head_movimientos_persona"].push("Responsable");
+            }
+        }
+    }
+    if (!chkCentroSalud.is(":checked")) {
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Centro Salud");
+        } else {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Centro Salud");
+        }
+        if (indiceHead >= 0) {
+            if (objectJsonTabla["header_movimientos_general"]) {
+                objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
+            }
+            if (objectJsonTabla["head_movimientos_persona"]) {
+                objectJsonTabla["head_movimientos_persona"].splice(indiceHead, 1);
+            }
+        }
+    } else {
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Centro Salud");
+            if (indiceHead < 0) {
+                objectJsonTabla["header_movimientos_general"].push("Centro Salud");
+            }
+        }
+        if (objectJsonTabla["head_movimientos_persona"]) {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Centro Salud");
+            if (indiceHead < 0) {
+                objectJsonTabla["head_movimientos_persona"].push("Centro Salud");
+            }
+        }
+    }
+    if (!chkOtraInstitucion.is(":checked")) {
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Otra Institucion");
+        } else {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Otra Institucion");
+        }
+        if (indiceHead >= 0) {
+            if (objectJsonTabla["header_movimientos_general"]) {
+                objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
+            }
+            if (objectJsonTabla["head_movimientos_persona"]) {
+                objectJsonTabla["head_movimientos_persona"].splice(indiceHead, 1);
+            }
+        }
+    } else {
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Otra Institucion");
+            if (indiceHead < 0) {
+                objectJsonTabla["header_movimientos_general"].push("Otra Institucion");
+            }
+        }
+        if (objectJsonTabla["head_movimientos_persona"]) {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Otra Institucion");
+            if (indiceHead < 0) {
+                objectJsonTabla["head_movimientos_persona"].push("Otra Institucion");
+            }
         }
     }
 
     if (!chkBarrio.is(":checked")) {
-        //delete objectJson.barrio;
-        indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Barrio");
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Barrio");
+        } else {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Barrio");
+        }
         if (indiceHead >= 0) {
             if (objectJsonTabla["header_movimientos_general"]) {
                 objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
@@ -337,18 +681,26 @@ function envioDeFilasMultiplesEnBloques(elemento, index, array) {
             }
         }
     } else {
-        //objectJson["Barrio"] = jsonTabla["movimientos_general"][index]["Barrio"];
         if (objectJsonTabla["header_movimientos_general"]) {
-            objectJsonTabla["header_movimientos_general"].push("Barrio");
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Barrio");
+            if (indiceHead < 0) {
+                objectJsonTabla["header_movimientos_general"].push("Barrio");
+            }
         }
         if (objectJsonTabla["head_movimientos_persona"]) {
-            objectJsonTabla["head_movimientos_persona"].push("Barrio");
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Barrio");
+            if (indiceHead < 0) {
+                objectJsonTabla["head_movimientos_persona"].push("Barrio");
+            }
         }
     }
 
     if (!chkManzana.is(":checked")) {
-        //delete objectJson.manzana;
-        indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Mza");
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Mza");
+        } else {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Mza");
+        }
         if (indiceHead >= 0) {
             if (objectJsonTabla["header_movimientos_general"]) {
                 objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
@@ -358,18 +710,26 @@ function envioDeFilasMultiplesEnBloques(elemento, index, array) {
             }
         }
     } else {
-        //objectJson["Mza"] = jsonTabla["movimientos_general"][index]["Mza"];
         if (objectJsonTabla["header_movimientos_general"]) {
-            objectJsonTabla["header_movimientos_general"].push("Mza");
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Mza");
+            if (indiceHead < 0) {
+                objectJsonTabla["header_movimientos_general"].push("Mza");
+            }
         }
         if (objectJsonTabla["head_movimientos_persona"]) {
-            objectJsonTabla["head_movimientos_persona"].push("Mza");
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Mza");
+            if (indiceHead < 0) {
+                objectJsonTabla["head_movimientos_persona"].push("Mza");
+            }
         }
     }
 
     if (!chkLote.is(":checked")) {
-        delete objectJson.lote;
-        indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Lote");
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Lote");
+        } else {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Lote");
+        }
         if (indiceHead >= 0) {
             if (objectJsonTabla["header_movimientos_general"]) {
                 objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
@@ -379,18 +739,26 @@ function envioDeFilasMultiplesEnBloques(elemento, index, array) {
             }
         }
     } else {
-        //objectJson["Lote"] = jsonTabla["movimientos_general"][index]["Lote"];
         if (objectJsonTabla["header_movimientos_general"]) {
-            objectJsonTabla["header_movimientos_general"].push("Lote");
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Lote");
+            if (indiceHead < 0) {
+                objectJsonTabla["header_movimientos_general"].push("Lote");
+            }
         }
         if (objectJsonTabla["head_movimientos_persona"]) {
-            objectJsonTabla["head_movimientos_persona"].push("Lote");
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Lote");
+            if (indiceHead < 0) {
+                objectJsonTabla["head_movimientos_persona"].push("Lote");
+            }
         }
     }
 
     if (!chkSublote.is(":checked")) {
-        delete objectJson.sublote;
-        indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("SubLote");
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("SubLote");
+        } else {
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("SubLote");
+        }
         if (indiceHead >= 0) {
             if (objectJsonTabla["header_movimientos_general"]) {
                 objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
@@ -400,14 +768,24 @@ function envioDeFilasMultiplesEnBloques(elemento, index, array) {
             }
         }
     } else {
-        //objectJson["SubLote"] = jsonTabla["movimientos_general"][index]["SubLote"];
         if (objectJsonTabla["header_movimientos_general"]) {
-            objectJsonTabla["header_movimientos_general"].push("SubLote");
+            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("SubLote");
+            if (indiceHead < 0) {
+                objectJsonTabla["header_movimientos_general"].push("SubLote");
+            }
         }
         if (objectJsonTabla["head_movimientos_persona"]) {
-            objectJsonTabla["head_movimientos_persona"].push("SubLote");
+            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("SubLote");
+            if (indiceHead < 0) {
+                objectJsonTabla["head_movimientos_persona"].push("SubLote");
+            }
         }
     }
+}
+
+function envioDeFilasMultiplesEnBloques(elemento, index, array) {
+    let objectJson = elemento;
+    let fila = (index - 14) % 20;
 
     if (fila >= 0) {
         rowsRequest[fila] = objectJson;
