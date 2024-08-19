@@ -320,13 +320,13 @@ $Con->CloseConexion();
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Años: </label>
                   <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Edad" id="Edad" autocomplete="off" value = "<?php echo $Persona->getEdad(); ?>">
+                    <input type="text" class="form-control" name = "Edad" id="Edad" autocomplete="off" readonly value = "<?php echo $Persona->getEdad(); ?>">
                   </div>
                 </div>
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Meses: </label>
                   <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Meses" id="Meses" autocomplete="off" value = "<?php echo $Persona->getMeses(); ?>">
+                    <input type="text" class="form-control" name = "Meses" id="Meses" autocomplete="off" readonly value = "<?php echo $Persona->getMeses(); ?>">
                   </div>
                 </div>
                 <div class="form-group row">
