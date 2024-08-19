@@ -65,28 +65,33 @@ $Con->CloseConexion();
           });
 
         function calcularEdad(){
-          var Fecha_Nac = document.getElementById("Fecha_Nacimiento").value;
-          var Fecha = Fecha_Nac.split('/').reverse().join('-');
-          var hoy = new Date();
-          var cumpleanos = new Date(Fecha);
-          var edad = hoy.getFullYear() - cumpleanos.getFullYear();
-          var m = hoy.getMonth() - cumpleanos.getMonth();
-          if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+          let Fecha_Nac = document.getElementById("Fecha_Nacimiento").value;
+          let Fecha = Fecha_Nac.split('/').reverse().join('-');
+          let hoy = new Date();
+          let cumpleanos = new Date(Fecha);
+          let edad = hoy.getFullYear() - cumpleanos.getFullYear();
+          let m = hoy.getMonth() - cumpleanos.getMonth();
+          if (m < 0 || (m === 0 && hoy.getDay() < cumpleanos.getDay())) {
               edad--;
           }
-
-          var Anios = document.getElementById("Edad");
+          let Anios = document.getElementById("Edad");
           Anios.value = edad;
 
-          var CalcMeses = 0;
-          if(m<0){
+          let CalcMeses = 0;
+          if (m < 0) {
             CalcMeses = (12 + m);
-          }else{
+          } else if (m == 0) {
+            if (hoy.getDay() < cumpleanos.getDay()) {
+              m = 11;
+            }
+            CalcMeses = m;
+          } else {
             CalcMeses = m;
           }
-          
-          var Meses = document.getElementById("Meses");
-          Meses.value = edad*12 + CalcMeses;		    
+
+          let Meses = document.getElementById("Meses");
+          //Meses.value = edad*12 + CalcMeses;
+          Meses.value = CalcMeses;		    
         }      
   </script>
 
