@@ -1506,7 +1506,7 @@ $Con->CloseConexion();
           <div class="col">
             <button type="button" class="btn btn-danger" style="margin-left: 35%;"  onclick="location.href = 'view_general_new.php'">Atras</button>
             <!--<button type="button" class="btn btn-secondary" onclick="enviarImprimir()">**Imprimir</button>-->
-            <button type="button" class="btn btn-secondary" onclick="enviarImprimirPdf();"> Imprimir</button>
+            <!--button type="button" class="btn btn-secondary" onclick="enviarImprimirPdf();"> Imprimir</button>-->
             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#configModal">Config</button>
           </div>
 
