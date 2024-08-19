@@ -236,44 +236,177 @@ function configResultados() {
   }*/
 
 function envioDeFilasMultiplesEnBloques(elemento, index, array) {
+
     let objectJson = elemento;
     let fila = (index - 14) % 20;
-    var chkPersona = $('#chkPersona');
-    var chkFechaNac = $('#chkFechaNac');
-    var chkDomicilio = $('#chkDomicilio');
-    var chkBarrio = $('#chkBarrio');
-    var chkManzana = $('#chk-manzana');
-    var chkLote = $('#chk-lote');
-    var chkSublote = $('#chk-sublote');
-    var chkAnios = $('#chkEdad');
-    var chkMeses = $('#chkMeses');
+    /*
+    let chkPersona = $('#chkPersona');
+    let chkFechaNac = $('#chkFechaNac');
+    let chkDomicilio = $('#chkDomicilio');
+    let chkBarrio = $('#chkBarrio');
+    let chkManzana = $('#chk-manzana');
+    let chkLote = $('#chk-lote');
+    let chkSublote = $('#chk-sublote');
+    let chkAnios = $('#chkEdad');
+    let chkMeses = $('#chkMeses');
+    let indiceHead = 0;
+    */
+    let chkPersona = $('#chkPersona');
+    let chkFechaNac = $('#chkFechaNac');
+    let chkDomicilio = $('#chkDomicilio');
+    let chkBarrio = $('#chkBarrio');
+    let chkManzana = $('#chk-manzana');
+    let chkLote = $('#chk-lote');
+    let chkSublote = $('#chk-sublote');
+    let chkAnios = $('#chkEdad');
+    let chkMeses = $('#chkMeses');
+    let indiceHead = 0;  
 
     if (!chkPersona.is(":checked")) {
-        delete objectJson.persona;
+        //delete objectJson.Persona;
+        indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Persona");
+        if (indiceHead >= 0) {
+            if (objectJsonTabla["header_movimientos_general"]) {
+                objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
+            }
+            if (objectJsonTabla["head_movimientos_persona"]) {
+                objectJsonTabla["head_movimientos_persona"].splice(indiceHead, 1);
+            }
+        }
+    } else {
+        //objectJson["Persona"] = jsonTabla["movimientos_general"][index]["Persona"];
+        if (objectJsonTabla["header_movimientos_general"]) {
+            objectJsonTabla["header_movimientos_general"].push("Persona");
+        }
+        if (objectJsonTabla["head_movimientos_persona"]) {
+            objectJsonTabla["head_movimientos_persona"].push("Persona");
+        }
     }
 
     if (!chkFechaNac.is(":checked")) {
-        delete objectJson.fechanac;
+        //delete objectJson.fechanac;
+        indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Fecha Nac");
+        if (indiceHead >= 0) {
+            if (objectJsonTabla["header_movimientos_general"]) {
+                objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
+            }
+            if (objectJsonTabla["head_movimientos_persona"]) {
+                objectJsonTabla["head_movimientos_persona"].splice(indiceHead, 1);
+            }
+        }
+    } else {
+        //objectJson["Fecha Nac"] = jsonTabla["movimientos_general"][index]["Fecha Nac"];
+        if (objectJsonTabla["header_movimientos_general"]) {
+            objectJsonTabla["header_movimientos_general"].push("");
+        }
+        if (objectJsonTabla["head_movimientos_persona"]) {
+            objectJsonTabla["head_movimientos_persona"].push("");
+        }
     }
 
     if (!chkDomicilio.is(":checked")) {
-        delete objectJson.domicilio;
+        //delete objectJson.domicilio;
+        indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Domicilio");
+        if (indiceHead >= 0) {
+            if (objectJsonTabla["header_movimientos_general"]) {
+                objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
+            }
+            if (objectJsonTabla["head_movimientos_persona"]) {
+                objectJsonTabla["head_movimientos_persona"].splice(indiceHead, 1);
+            }
+        }
+    } else {
+        //objectJson["Domicilio"] = jsonTabla["movimientos_general"][index]["Domicilio"];
+        if (objectJsonTabla["header_movimientos_general"]) {
+            objectJsonTabla["header_movimientos_general"].push("Domicilio");
+        }
+        if (objectJsonTabla["head_movimientos_persona"]) {
+            objectJsonTabla["head_movimientos_persona"].push("Domicilio");
+        }
     }
 
     if (!chkBarrio.is(":checked")) {
-        delete objectJson.barrio;
+        //delete objectJson.barrio;
+        indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Barrio");
+        if (indiceHead >= 0) {
+            if (objectJsonTabla["header_movimientos_general"]) {
+                objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
+            }
+            if (objectJsonTabla["head_movimientos_persona"]) {
+                objectJsonTabla["head_movimientos_persona"].splice(indiceHead, 1);
+            }
+        }
+    } else {
+        //objectJson["Barrio"] = jsonTabla["movimientos_general"][index]["Barrio"];
+        if (objectJsonTabla["header_movimientos_general"]) {
+            objectJsonTabla["header_movimientos_general"].push("Barrio");
+        }
+        if (objectJsonTabla["head_movimientos_persona"]) {
+            objectJsonTabla["head_movimientos_persona"].push("Barrio");
+        }
     }
 
     if (!chkManzana.is(":checked")) {
-        delete objectJson.manzana;
+        //delete objectJson.manzana;
+        indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Mza");
+        if (indiceHead >= 0) {
+            if (objectJsonTabla["header_movimientos_general"]) {
+                objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
+            }
+            if (objectJsonTabla["head_movimientos_persona"]) {
+                objectJsonTabla["head_movimientos_persona"].splice(indiceHead, 1);
+            }
+        }
+    } else {
+        //objectJson["Mza"] = jsonTabla["movimientos_general"][index]["Mza"];
+        if (objectJsonTabla["header_movimientos_general"]) {
+            objectJsonTabla["header_movimientos_general"].push("Mza");
+        }
+        if (objectJsonTabla["head_movimientos_persona"]) {
+            objectJsonTabla["head_movimientos_persona"].push("Mza");
+        }
     }
 
     if (!chkLote.is(":checked")) {
         delete objectJson.lote;
+        indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Lote");
+        if (indiceHead >= 0) {
+            if (objectJsonTabla["header_movimientos_general"]) {
+                objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
+            }
+            if (objectJsonTabla["head_movimientos_persona"]) {
+                objectJsonTabla["head_movimientos_persona"].splice(indiceHead, 1);
+            }
+        }
+    } else {
+        //objectJson["Lote"] = jsonTabla["movimientos_general"][index]["Lote"];
+        if (objectJsonTabla["header_movimientos_general"]) {
+            objectJsonTabla["header_movimientos_general"].push("Lote");
+        }
+        if (objectJsonTabla["head_movimientos_persona"]) {
+            objectJsonTabla["head_movimientos_persona"].push("Lote");
+        }
     }
 
     if (!chkSublote.is(":checked")) {
         delete objectJson.sublote;
+        indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("SubLote");
+        if (indiceHead >= 0) {
+            if (objectJsonTabla["header_movimientos_general"]) {
+                objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
+            }
+            if (objectJsonTabla["head_movimientos_persona"]) {
+                objectJsonTabla["head_movimientos_persona"].splice(indiceHead, 1);
+            }
+        }
+    } else {
+        //objectJson["SubLote"] = jsonTabla["movimientos_general"][index]["SubLote"];
+        if (objectJsonTabla["header_movimientos_general"]) {
+            objectJsonTabla["header_movimientos_general"].push("SubLote");
+        }
+        if (objectJsonTabla["head_movimientos_persona"]) {
+            objectJsonTabla["head_movimientos_persona"].push("SubLote");
+        }
     }
 
     if (fila >= 0) {
@@ -284,7 +417,7 @@ function envioDeFilasMultiplesEnBloques(elemento, index, array) {
 
     if (fila == 19 && idRequestField >= 1) {
         rowsRequest["header_movimientos_general"] = objectJsonTabla["header_movimientos_general"];
-        rowsRequest["head_movimientos_persona"] = objectJsonTabla["head_movimientos_persona"]
+        rowsRequest["head_movimientos_persona"] = objectJsonTabla["head_movimientos_persona"];
         let request = new XMLHttpRequest();
         request.open("POST", "Controladores/GeneradorPdf.php", true);
         request.setRequestHeader("x-request-id", idRequestField);
@@ -298,7 +431,7 @@ function envioDeFilasMultiplesEnBloques(elemento, index, array) {
         rowsRequest["head_det_persona"] = objectJsonTabla["head_det_persona"];
         rowsRequest["det_persona"] = objectJsonTabla["det_persona"];
         rowsRequest["header_movimientos_general"] = objectJsonTabla["header_movimientos_general"];
-        rowsRequest["head_movimientos_persona"] = objectJsonTabla["head_movimientos_persona"]
+        rowsRequest["head_movimientos_persona"] = objectJsonTabla["head_movimientos_persona"];
         rowsRequest["fecha_desde"] = fechaDesde;
         rowsRequest["fecha_hasta"] = fechaHasta;
         rowsRequest["fitros"] = filtroSeleccionados;

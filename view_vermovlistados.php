@@ -46,6 +46,7 @@ $Con->CloseConexion();
 <script>
         const { PDFDocument, StandardFonts, rgb } = PDFLib
         var objectJsonTabla = {};
+        let jsonTabla = {};
         var rowsRequest = {};
         let listaDeRequest = new Array();
         let listaDePdf = new Array();
@@ -526,11 +527,9 @@ $Con->CloseConexion();
               */
 
             if ($Edad_Desde !== null && $Edad_Desde !== "" && $Edad_Hasta !== null && $Edad_Hasta !== "") {
-              // $Consulta .= " and P.edad between $Edad_Desde and $Edad_Hasta";
               $Consulta .= " and P.edad >= $Edad_Desde and P.edad <= $Edad_Hasta";
               $filtros[] = "Edad: Desde " . $Edad_Desde . " hasta " . $Edad_Hasta;
               if ($Meses_Hasta !== null && $Meses_Hasta !== "") {
-                // $Consulta .= " and P.edad between $Edad_Desde and $Edad_Hasta";
                 $Consulta .= " and (P.edad < $Edad_Hasta or P.meses <= $Meses_Hasta)";
                 if ($Meses_Desde != null) {
                   $Consulta .= " and P.meses >= $Meses_Desde ";
@@ -541,7 +540,6 @@ $Con->CloseConexion();
               }
             } else {
               if ($Meses_Desde !== null && $Meses_Desde !== "" && $Meses_Hasta !== null && $Meses_Hasta !== "") {
-                // $Consulta .= " and P.edad between $Edad_Desde and $Edad_Hasta";
                 $Consulta .= " and P.meses <= $Meses_Hasta and P.edad = 0 ";
                 if ($Meses_Desde != null) {
                   $Consulta .= " and P.meses >= $Meses_Desde";
@@ -596,7 +594,7 @@ $Con->CloseConexion();
               }
               
               // if(count($Barrio) > 1){
-              if(count((Array)$Barrio) > 1){                
+              if(count((Array)$Barrio) > 1){
                 $filtroBarrios = 'Barrios:';
                 foreach($Barrio as $key => $valueBarrio){
                   if($key == $Barrio->array_key_first){
@@ -631,7 +629,7 @@ $Con->CloseConexion();
                   $RetConsultarBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);
                   $filtros[] = "Barrio: " . $RetConsultarBarrio['Barrio'];
                   $filtrosSeleccionados["ID_Barrio"] = $Barrio[0];
-                }                
+                }
               }
               
               // $Consulta.= ")";
@@ -1094,20 +1092,20 @@ $Con->CloseConexion();
                 }
                 $Table .= "<tr><td>Meses</td><td>" . $Persona->getMeses() . "</td></tr>";              
                 $tablePrint .= "<tr><td>Meses</td><td>" . $Persona->getMeses() . "</td></tr>";
-                $jsonTable["det_persona"]["meses"] = $Persona->getMeses();
-                $head_det_persona[] = "meses";
+                $jsonTable["det_persona"]["Meses"] = $Persona->getMeses();
+                $head_det_persona[] = "Meses";
                 $Table .= "<tr><td>Localidad</td><td>" . $Persona->getLocalidad() . "</td></tr>";
                 $tablePrint .= "<tr><td>Localidad</td><td>" . $Persona->getLocalidad() . "</td></tr>";
-                $jsonTable["det_persona"]["localidad"] = $Persona->getLocalidad();
-                $head_det_persona[] = "localidad";
+                $jsonTable["det_persona"]["Localidad"] = $Persona->getLocalidad();
+                $head_det_persona[] = "Localidad";
                 $Table .= "<tr><td>Barrio</td><td>" . $Persona->getBarrio() . "</td></tr>";      
                 $tablePrint .= "<tr><td>Barrio</td><td>" . $Persona->getBarrio() . "</td></tr>";      
-                $jsonTable["det_persona"]["barrio"] = $Persona->getBarrio();
-                $head_det_persona[] = "barrio";
+                $jsonTable["det_persona"]["Barrio"] = $Persona->getBarrio();
+                $head_det_persona[] = "Barrio";
                 $Table .= "<tr><td>Domicilio</td><td>" . $Persona->getDomicilio() . "</td></tr>";
                 $tablePrint .= "<tr><td>Domicilio</td><td>" . $Persona->getDomicilio() . "</td></tr>";
-                $jsonTable["det_persona"]["domicilio"] = $Persona->getDomicilio();
-                $head_det_persona[] = "domicilio";
+                $jsonTable["det_persona"]["Domicilio"] = $Persona->getDomicilio();
+                $head_det_persona[] = "Domicilio";
                 $Table .= "<tr><td>Manzana</td><td>" . $Persona->getManzana() . "</td></tr>";
                 $tablePrint .= "<tr><td>Manzana</td><td>" . $Persona->getManzana() . "</td></tr>";
                 $jsonTable["det_persona"]["manzana"] = $Persona->getManzana();
@@ -1130,8 +1128,8 @@ $Con->CloseConexion();
                 $head_det_persona[] = "mail";
                 $Table .= "<tr><td>Obra Social</td><td>" . $Persona->getObra_Social() . "</td></tr>";
                 $tablePrint .= "<tr><td>Obra Social</td><td>" . $Persona->getObra_Social() . "</td></tr>";
-                $jsonTable["det_persona"]["obra_social"] = $Persona->getObra_Social();
-                $head_det_persona[] = "obra_social";
+                $jsonTable["det_persona"]["Obra Social"] = $Persona->getObra_Social();
+                $head_det_persona[] = "Obra Social";
                 $Table .= "<tr><td>Escuela</td><td>" . $Persona->getEscuela() . "</td></tr>";
                 $tablePrint .= "<tr><td>Escuela</td><td>" . $Persona->getEscuela() . "</td></tr>";
                 $jsonTable["det_persona"]["escuela"] = $Persona->getEscuela();
@@ -1190,20 +1188,20 @@ $Con->CloseConexion();
                 }                            
                 $Table .= "<tr><td>Meses</td><td>" . $Persona->getMeses() . "</td></tr>";
                 $tablePrint .= "<tr><td>Meses</td><td>" . $Persona->getMeses() . "</td></tr>";
-                $jsonTable["det_persona"]["meses"] = $Persona->getMeses();
-                $head_det_persona[] = "meses";
+                $jsonTable["det_persona"]["Meses"] = $Persona->getMeses();
+                $head_det_persona[] = "Meses";
                 $Table .= "<tr><td>Localidad</td><td>" . $Persona->getLocalidad() . "</td></tr>";
                 $tablePrint .= "<tr><td>Localidad</td><td>" . $Persona->getLocalidad() . "</td></tr>";
-                $jsonTable["det_persona"]["localidad"] = $Persona->getLocalidad();
-                $head_det_persona[] = "localidad";
+                $jsonTable["det_persona"]["Localidad"] = $Persona->getLocalidad();
+                $head_det_persona[] = "Localidad";
                 $Table .= "<tr><td>Barrio</td><td>" . $Persona->getBarrio() . "</td></tr>";
                 $tablePrint .= "<tr><td>Barrio</td><td>" . $Persona->getBarrio() . "</td></tr>";
-                $jsonTable["det_persona"]["barrio"] = $Persona->getBarrio();
-                $head_det_persona[] = "barrio";
+                $jsonTable["det_persona"]["Barrio"] = $Persona->getBarrio();
+                $head_det_persona[] = "Barrio";
                 $Table .= "<tr><td>Domicilio</td><td>" . $Persona->getDomicilio() . "</td></tr>";
                 $tablePrint .= "<tr><td>Domicilio</td><td>" . $Persona->getDomicilio() . "</td></tr>";
-                $jsonTable["det_persona"]["domicilio"] = $Persona->getDomicilio();
-                $head_det_persona[] = "domicilio";
+                $jsonTable["det_persona"]["Domicilio"] = $Persona->getDomicilio();
+                $head_det_persona[] = "Domicilio";
                 $Table .= "<tr><td>Manzana</td><td>" . $Persona->getManzana() . "</td></tr>";
                 $tablePrint .= "<tr><td>Manzana</td><td>" . $Persona->getManzana() . "</td></tr>";
                 $jsonTable["det_persona"]["manzana"] = $Persona->getManzana();
@@ -1226,8 +1224,8 @@ $Con->CloseConexion();
                 $head_det_persona[] = "email";
                 $Table .= "<tr><td>Obra Social</td><td>" . $Persona->getObra_Social() . "</td></tr>";
                 $tablePrint .= "<tr><td>Obra Social</td><td>" . $Persona->getObra_Social() . "</td></tr>";
-                $jsonTable["det_persona"]["obra_social"] = $Persona->getObra_Social();
-                $head_det_persona[] = "obra_social";
+                $jsonTable["det_persona"]["Obra Social"] = $Persona->getObra_Social();
+                $head_det_persona[] = "Obra Social";
                 $Table .= "<tr><td>Escuela</td><td>" . $Persona->getEscuela() . "</td></tr>";
                 $tablePrint .= "<tr><td>Escuela</td><td>" . $Persona->getEscuela() . "</td></tr>";
                 $jsonTable["det_persona"]["escuela"] = $Persona->getEscuela();
@@ -1313,21 +1311,21 @@ $Con->CloseConexion();
               $head_movimientos = [
                 "Edad",
                 "Fecha Nac",
-                "centro_salud",
-                "dni",
-                "fecha",
-                "localidad",
-                "meses",
-                "motivo 1",
-                "motivo 2",
-                "motivo 3",
+                "Centro Salud",
+                "DNI",
+                "Fecha",
+                "Localidad",
+                "Meses",
+                "Motivo 1",
+                "Motivo 2",
+                "Motivo 3",
                 "Persona",
                 "Domicilio",
-                "barrio",
-                "obra_social",
-                "observaciones",
-                "otra_institucion",
-                "responsable"
+                "Barrio",
+                "Obra Social",
+                "Observaciones",
+                "Otra Institucion",
+                "Responsable"
               ];
               $jsonTable["head_movimientos_persona"] = $head_movimientos;
               $json_row = [];
@@ -1486,76 +1484,76 @@ $Con->CloseConexion();
                 if($ID_Config == 'grid'){
                   $TableMov = "<table class='table table-dark'>";                
                   $TableMov .= "<tr class='trFecha'><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>" . $DtoMovimiento->getFecha() . "</td></tr>";
-                  $json_row["fecha"] = $DtoMovimiento->getFecha();
+                  $json_row["Fecha"] = $DtoMovimiento->getFecha();
                   if($ID_Motivo > 0 || $ID_Motivo2 > 0 || $ID_Motivo3 > 0){                                          
                     if($ID_Motivo == $ID_Motivo_1){
 
                       $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
-                      $json_row["motivo 1"] = $DtoMovimiento->getMotivo_1();
+                      $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                     }
                     if($ID_Motivo2 == $ID_Motivo_2){
                       $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
-                      $json_row["motivo 2"] = $DtoMovimiento->getMotivo_2();
+                      $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
                     }
                     if($ID_Motivo3 == $ID_Motivo_3){
                       $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";                      
-                      $json_row["motivo 3"] = $DtoMovimiento->getMotivo_3();
+                      $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
                     }
 
                   }else{                    
                     $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
-                    $json_row["motivo 1"] = $DtoMovimiento->getMotivo_1();
+                    $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                     $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
-                    $json_row["motivo 2"] = $DtoMovimiento->getMotivo_2();
+                    $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
                     $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";
-                    $json_row["motivo 3"] = $DtoMovimiento->getMotivo_3();
+                    $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
                   }
                   $TableMov .= "<tr class='trObservaciones'><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>" . $DtoMovimiento->getObservaciones() . "</td></tr>";
                   $json_row["obseravciones"] = $DtoMovimiento->getObservaciones();
                   $TableMov .= "<tr class='trResponsable'><td style = 'width: 30%;'>Responsable</td><td style = 'width: 70%;'>" . $DtoMovimiento->getResponsable() . "</td></tr>";
-                  $json_row["responsable"] = $DtoMovimiento->getResponsable();
+                  $json_row["Responsable"] = $DtoMovimiento->getResponsable();
                   $TableMov .= "<tr class='trCentrosSalud'><td style = 'width: 30%;'>Centro de salud</td><td style = 'width: 70%;'>" . $DtoMovimiento->getCentroSalud() . "</td></tr>";
-                  $json_row["centro_salud"] = $DtoMovimiento->getCentroSalud();
+                  $json_row["Centro Salud"] = $DtoMovimiento->getCentroSalud();
                   $TableMov .= "<tr class='trOtrasInstituciones'><td style = 'width: 30%;'>Otras instituciones</td><td style = 'width: 70%;'>" . $DtoMovimiento->getOtraInstitucion() . "</td></tr>";
-                  $json_row["otra_institucion"] = $DtoMovimiento->getOtraInstitucion();
+                  $json_row["Otra Institucion"] = $DtoMovimiento->getOtraInstitucion();
                   $TableMov .= "</table>";
                   echo $TableMov;
                 }else{
                   $TableMov .= "<tr>";              
                   $TableMov .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td>";
-                  $json_row["fecha"] = $DtoMovimiento->getFecha();
+                  $json_row["Fecha"] = $DtoMovimiento->getFecha();
                   $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
-                  $json_row["motivo 1"] = $DtoMovimiento->getMotivo_1();
+                  $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                   $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td>";
-                  $json_row["motivo 2"] = $DtoMovimiento->getMotivo_2();
+                  $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
                   $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_3() . "</td>";
-                  $json_row["motivo 3"] = $DtoMovimiento->getMotivo_3();
+                  $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
                   $TableMov .= "<td class='trPersona' style = 'width: auto;'>" . $Apellido.", " . $Nombre."</td>";
-                  $json_row["persona"] = $Apellido." " . $Nombre;
+                  $json_row["Persona"] = $Apellido." " . $Nombre;
                   $TableMov .= "<td class='trDNI' style = 'width: auto;'>" . $DNI."</td>";
-                  $json_row["dni"] = $DNI;
+                  $json_row["DNI"] = $DNI;
                   $TableMov .= "<td class='trFechaNac' style = 'width: auto;'>" . $Fecha_Nacimiento."</td>";
                   $json_row["Fecha Nac"] = $Fecha_Nacimiento;
                   $TableMov .= "<td class='trEdad' style = 'width: auto;'>" . $Edad."</td>";
                   $json_row["Años"] = $Edad;
                   $TableMov .= "<td class='trMeses' style = 'width: auto;'>" . $Meses."</td>";
-                  $json_row["meses"] = $Meses;
+                  $json_row["Meses"] = $Meses;
                   $TableMov .= "<td class='trObraSocial' style = 'width: auto;'>" . $Obra_Social."</td>";
-                  $json_row["obra_social"] = $Obra_Social;
+                  $json_row["Obra Social"] = $Obra_Social;
                   $TableMov .= "<td class='trDomicilio' style = 'width: auto;'>" . $Domicilio."</td>";
-                  $json_row["domicilio"] = $Domicilio;
+                  $json_row["Domicilio"] = $Domicilio;
                   $TableMov .= "<td class='trBarrio' style = 'width: auto;'>" . $Barrio."</td>";
-                  $json_row["barrio"] = $Barrio;
+                  $json_row["Barrio"] = $Barrio;
                   $TableMov .= "<td class='trLocalidad' style = 'width: auto;'>" . $Localidad."</td>";
-                  $json_row["localidad"] = $Localidad;
+                  $json_row["Localidad"] = $Localidad;
                   $TableMov .= "<td class='trObservaciones' style = 'width: auto;'>" . $DtoMovimiento->getObservaciones() . "</td>";
-                  $json_row["observaciones"] = $DtoMovimiento->getObservaciones();
+                  $json_row["Observaciones"] = $DtoMovimiento->getObservaciones();
                   $TableMov .= "<td class='trResponsable' style = 'width: auto;'>" . $DtoMovimiento->getResponsable() . "</td>";
-                  $json_row["responsable"] = $DtoMovimiento->getResponsable();
+                  $json_row["Responsable"] = $DtoMovimiento->getResponsable();
                   $TableMov .= "<td class='trCentrosSalud' style = 'width: auto;'>" . $DtoMovimiento->getCentroSalud() . "</td>";
-                  $json_row["centro_salud"] = $DtoMovimiento->getCentroSalud();
+                  $json_row["Centro Salud"] = $DtoMovimiento->getCentroSalud();
                   $TableMov .= "<td class='trOtrasInstituciones' style = 'width: auto;'>" . $DtoMovimiento->getOtraInstitucion() . "</td>";
-                  $json_row["otra_institucion"] = $DtoMovimiento->getOtraInstitucion();
+                  $json_row["Otra Institucion"] = $DtoMovimiento->getOtraInstitucion();
                   $TableMov .= "</tr>"; 
                 }
                 // Fin de Ciclo de creacion de tabla o grid de un determinado movimiento.
@@ -1706,18 +1704,18 @@ $Con->CloseConexion();
               $header_movimientos_general = [];
               if($ID_Config == 'table'){
                 $MotivosTh = "";
-                $header_movimientos_general[] = "fecha";
-                $header_movimientos_general[] = "persona";
+                $header_movimientos_general[] = "Fecha";
+                $header_movimientos_general[] = "Persona";
                 if($ID_Motivo > 0 || $ID_Motivo2 > 0 || $ID_Motivo3 > 0){
                   $MotivosTh .= "<th rowspan='2' class='trMotivos'>Motivo</th>";
                   $header_movimientos_general[] = "Motivo";
                 }else{
                   $MotivosTh .= "<th rowspan='2' class='trMotivos'>Motivo 1</th>";
-                  $header_movimientos_general[] = "motivo 1";
+                  $header_movimientos_general[] = "Motivo 1";
                   $MotivosTh .= "<th rowspan='2' class='trMotivos'>Motivo 2</th>";
-                  $header_movimientos_general[] = "motivo 2";
+                  $header_movimientos_general[] = "Motivo 2";
                   $MotivosTh .= "<th rowspan='2' class='trMotivos'>Motivo 3</th>";
-                  $header_movimientos_general[] = "motivo 3";
+                  $header_movimientos_general[] = "Motivo 3";
                 }
 
 
@@ -1739,19 +1737,19 @@ $Con->CloseConexion();
                                 <th rowspan='2' class='trCentrosSalud'>Centro de salud</th>
                                 <th rowspan='2' class='trOtrasInstituciones'>Otras Instituciones</th>
                               </tr>";
-                $header_movimientos_general[] = "dni";
+                $header_movimientos_general[] = "DNI";
                 $header_movimientos_general[] = "Fecha Nac";
                 //$header_movimientos_general[] = "Edad";
                 $header_movimientos_general[] = "Años";
-                $header_movimientos_general[] = "meses";
+                $header_movimientos_general[] = "Meses";
                 $header_movimientos_general[] = "obra social";
-                $header_movimientos_general[] = "domicilio";
-                $header_movimientos_general[] = "barrio";
-                $header_movimientos_general[] = "localidad";
-                $header_movimientos_general[] = "observaciones";
-                $header_movimientos_general[] = "responsable";
-                $header_movimientos_general[] = "centro de salud";
-                $header_movimientos_general[] = "otras instituciones";
+                $header_movimientos_general[] = "Domicilio";
+                $header_movimientos_general[] = "Barrio";
+                $header_movimientos_general[] = "Localidad";
+                $header_movimientos_general[] = "Observaciones";
+                $header_movimientos_general[] = "Responsable";
+                $header_movimientos_general[] = "Centro Salud";
+                $header_movimientos_general[] = "Otra Institucion";
                 $TableMov .= " <tr class='thead-dark'>
                                   <th scope='col' class='trEdad' style='text-align: center;border-top: 0px solid #dee2e6;'>Años</th>
                                   <th scope='col' class='trMeses' style='text-align: center;border-top: 0px solid #dee2e6;'>Meses</th>
@@ -1777,7 +1775,7 @@ $Con->CloseConexion();
 
                       $TableMov = "<table class='table text-white' style='background-color: #AEB6BF;'>";                
                       $TableMov .= "<tr><td style = 'width: 30%;'>Nombre</td><td style = 'width: 70%;'>" . $Apellido.", " . $Nombre."</td></tr>";
-                      $json_row["persona"] = $Apellido." " . $Nombre;
+                      $json_row["Persona"] = $Apellido." " . $Nombre;
                       $TableMov .= "<tr><td style = 'width: 30%;'>Estado</td><td style = 'width: 70%;'>SIN MOVIMIENTOS</td></tr>";
                       $json_row["estado"] = "sin movimientos";
                       $TableMov .= "</table>";
@@ -1949,7 +1947,7 @@ $Con->CloseConexion();
                                         $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "
                                     </td>
                                   </tr>";
-                    $json_row["persona"] = $DtoMovimiento->getApellido() . " " . $DtoMovimiento->getNombre();
+                    $json_row["Persona"] = $DtoMovimiento->getApellido() . " " . $DtoMovimiento->getNombre();
                     if($ID_Motivo > 0){    
                       switch ($ID_Motivo) {
                         case $ID_Motivo_1: 
@@ -1969,7 +1967,7 @@ $Con->CloseConexion();
                                         $DtoMovimiento->getMotivo_1() . "
                                       </td>
                                     </tr>";
-                             $json_row["motivo 1"] = $DtoMovimiento->getMotivo_1();
+                             $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                             break;
                         case $ID_Motivo_2:
                             $TableMov .= "<tr class='trMotivos'>
@@ -1988,18 +1986,18 @@ $Con->CloseConexion();
                                               $DtoMovimiento->getMotivo_2() . "
                                             </td>
                                           </tr>";
-                             $json_row["motivo 2"] = $DtoMovimiento->getMotivo_2();
+                             $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
                             break;
                         case $ID_Motivo_3: 
                             $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";
                             $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";
-                             $json_row["motivo 3"] = $DtoMovimiento->getMotivo_3();
+                             $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
                             break;
                         
                         default: 
                             $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>"; 
                             $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>"; 
-                             $json_row["motivo 1"] = $DtoMovimiento->getMotivo_1();
+                             $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                             break;
                       }                  
   
@@ -2009,23 +2007,23 @@ $Con->CloseConexion();
                         case $ID_Motivo_1: 
                             $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
                             $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
-                             $json_row["motivo 1"] = $DtoMovimiento->getMotivo_1();
+                             $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                             break;
                         case $ID_Motivo_2:
                             $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
                             $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
-                             $json_row["motivo 2"] = $DtoMovimiento->getMotivo_2();
+                             $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
                             break;
                         case $ID_Motivo_3:
                             $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";
                             $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
-                             $json_row["motivo 3"] = $DtoMovimiento->getMotivo_3();
+                             $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
                             break;
                         
                         default: 
                             $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
                             $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
-                             $json_row["motivo 1"] = $DtoMovimiento->getMotivo_1();
+                             $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                             break;
                       }
 
@@ -2035,49 +2033,49 @@ $Con->CloseConexion();
                         case $ID_Motivo_1:
                             $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
                             $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
-                             $json_row["motivo 1"] = $DtoMovimiento->getMotivo_1();
+                             $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                             break;
                         case $ID_Motivo_2: 
                             $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
                             $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
-                             $json_row["motivo 2"] = $DtoMovimiento->getMotivo_2();
+                             $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
                             break;
                         case $ID_Motivo_3:
                             $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";
                             $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";
-                             $json_row["motivo 3"] = $DtoMovimiento->getMotivo_3();
+                             $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
                             break;
                         
                         default:
                             $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
                             $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
-                             $json_row["motivo 1"] = $DtoMovimiento->getMotivo_1();
+                             $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                             break;
                       }
 
                     } else {
                       $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
                       $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
-                       $json_row["motivo 1"] = $DtoMovimiento->getMotivo_1();
+                       $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                       $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
                       $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
-                       $json_row["motivo 2"] = $DtoMovimiento->getMotivo_2();
+                       $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
                       $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";
                       $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";
-                       $json_row["motivo 3"] = $DtoMovimiento->getMotivo_3();
+                       $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
                     }
                     $TableMov .= "<tr class='trObservaciones'><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>" . $DtoMovimiento->getObservaciones() . "</td></tr>";
                     $TableMovPrint .= "<tr class='trObservaciones'><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>" . $DtoMovimiento->getObservaciones() . "</td></tr>";
-                     $json_row["observaciones"] = $DtoMovimiento->getObservaciones();
+                     $json_row["Observaciones"] = $DtoMovimiento->getObservaciones();
                     $TableMov .= "<tr class='trResponsable'><td style = 'width: 30%;'>Responsable</td><td style = 'width: 70%;'>" . $DtoMovimiento->getResponsable() . "</td></tr>";
                     $TableMovPrint .= "<tr class='trResponsable'><td style = 'width: 30%;'>Responsable</td><td style = 'width: 70%;'>" . $DtoMovimiento->getResponsable() . "</td></tr>";
-                     $json_row["responsable"] = $DtoMovimiento->getResponsable();
+                     $json_row["Responsable"] = $DtoMovimiento->getResponsable();
                     $TableMov .= "<tr class='trCentrosSalud'><td style = 'width: 30%;'>Centro de salud</td><td style = 'width: 70%;'>" . $DtoMovimiento->getCentroSalud() . "</td></tr>";
                     $TableMovPrint .= "<tr class='trCentrosSalud'><td style = 'width: 30%;'>Centro de salud</td><td style = 'width: 70%;'>" . $DtoMovimiento->getCentroSalud() . "</td></tr>";
-                     $json_row["centro_salud"] = $DtoMovimiento->getCentroSalud();
+                     $json_row["Centro Salud"] = $DtoMovimiento->getCentroSalud();
                     $TableMov .= "<tr class='trOtrasInstituciones'><td style = 'width: 30%;'>Otras instituciones</td><td style = 'width: 70%;'>" . $DtoMovimiento->getOtraInstitucion() . "</td></tr>";
                     $TableMovPrint .= "<tr class='trOtrasInstituciones'><td style = 'width: 30%;'>Otras instituciones</td><td style = 'width: 70%;'>" . $DtoMovimiento->getOtraInstitucion() . "</td></tr>";
-                     $json_row["otra_institucion"] = $DtoMovimiento->getOtraInstitucion();
+                     $json_row["Otra Institucion"] = $DtoMovimiento->getOtraInstitucion();
                     $TableMov .= "</table>";
                     $TableMovPrint .= "</table>";
                     echo $TableMov;
@@ -2086,35 +2084,35 @@ $Con->CloseConexion();
                     $TableMovPrint .= "<tr>";
                     $TableMov .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td>";
                     $TableMovPrint .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td>";
-                    $json_row["fecha"] = $DtoMovimiento->getFecha();
+                    $json_row["Fecha"] = $DtoMovimiento->getFecha();
                     $TableMov .= "<td class='trPersona' style = 'width: auto;'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $RetTodos["id_persona"]."\",\"Ventana" . $RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" . $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "</a></td>";
                     $TableMovPrint .= "<td class='trPersona' style = 'width: auto;'>".
                                           $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "
                                       </td>";
-                    $json_row["persona"] = $DtoMovimiento->getApellido() . " " . $DtoMovimiento->getNombre();
+                    $json_row["Persona"] = $DtoMovimiento->getApellido() . " " . $DtoMovimiento->getNombre();
 
                     if($ID_Motivo > 0){    
                       switch ($ID_Motivo) {
                         case $ID_Motivo_1:
                             $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
                             $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
-                             $json_row["motivo 1"] = $DtoMovimiento->getMotivo_1();
+                             $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                             break;
                         case $ID_Motivo_2:
                             $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td>";
                             $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td>";
-                             $json_row["motivo 2"] = $DtoMovimiento->getMotivo_2();
+                             $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
                             break;
                         case $ID_Motivo_3:
                             $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_3() . "</td>";
                             $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_3() . "</td>";
-                             $json_row["motivo 3"] = $DtoMovimiento->getMotivo_3();
+                             $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
                             break;
                         
                         default:
                             $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
                             $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
-                             $json_row["motivo 1"] = $DtoMovimiento->getMotivo_1();
+                             $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                             break;
                       }                  
   
@@ -2124,23 +2122,23 @@ $Con->CloseConexion();
                         case $ID_Motivo_1:
                             $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
                             $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
-                             $json_row["motivo 1"] = $DtoMovimiento->getMotivo_1();
+                             $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                             break;
                         case $ID_Motivo_2:
                             $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td>";
                             $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td>";
-                             $json_row["motivo 2"] = $DtoMovimiento->getMotivo_2();
+                             $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
                             break;
                         case $ID_Motivo_3:
                             $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_3() . "</td>";
                             $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_3() . "</td>";
-                             $json_row["motivo 3"] = $DtoMovimiento->getMotivo_3();
+                             $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
                             break;
                         
                         default:
                             $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
                             $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
-                             $json_row["motivo 1"] = $DtoMovimiento->getMotivo_1();
+                             $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                             break;
                       }
 
@@ -2150,41 +2148,41 @@ $Con->CloseConexion();
                         case $ID_Motivo_1:
                             $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
                             $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
-                             $json_row["motivo 1"] = $DtoMovimiento->getMotivo_1();
+                             $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                             break;
                         case $ID_Motivo_2:
                             $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td>";
                             $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td>";
-                             $json_row["motivo 2"] = $DtoMovimiento->getMotivo_2();
+                             $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
                             break;
                         case $ID_Motivo_3:
                             $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_3() . "</td>";
                             $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_3() . "</td>";
-                             $json_row["motivo 3"] = $DtoMovimiento->getMotivo_3();
+                             $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
                             break;
                         
                         default:
                             $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
                             $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
-                             $json_row["motivo 1"] = $DtoMovimiento->getMotivo_1();
+                             $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                             break;
                       }
 
                     }else{
                       $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
                       $TableMovPrint .=  "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
-                       $json_row["motivo 1"] = $DtoMovimiento->getMotivo_1();
+                       $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                       $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td>";
                       $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td>";
-                       $json_row["motivo 2"] = $DtoMovimiento->getMotivo_2();
+                       $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
                       $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_3() . "</td>";  
                       $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_3() . "</td>";  
-                       $json_row["motivo 3"] = $DtoMovimiento->getMotivo_3();
+                       $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
                     }
                                       
                     $TableMov .= "<td class='trDNI' style = 'width: auto;'>" . $DNI."</td>";
                     $TableMovPrint .= "<td class='trDNI' style = 'width: auto;'>" . $DNI."</td>";
-                    $json_row["dni"] = $DNI;
+                    $json_row["DNI"] = $DNI;
                     $TableMov .= "<td class='trFechaNac' style = 'width: auto;'>" . $Fecha_Nacimiento."</td>";
                     $TableMovPrint .= "<td class='trFechaNac' style = 'width: auto;'>" . $Fecha_Nacimiento."</td>";
                     $json_row["Fecha Nac"] = $Fecha_Nacimiento;
@@ -2193,31 +2191,31 @@ $Con->CloseConexion();
                     $json_row["Años"] = $Edad;
                     $TableMov .= "<td class='trMeses' style = 'width: auto;'>" . $Meses."</td>";
                     $TableMovPrint .= "<td class='trMeses' style = 'width: auto;'>" . $Meses."</td>";
-                    $json_row["meses"] = $Meses;
+                    $json_row["Meses"] = $Meses;
                     $TableMov .= "<td class='trObraSocial' style = 'width: auto;'>" . $Obra_Social."</td>";
                     $TableMovPrint .= "<td class='trObraSocial' style = 'width: auto;'>" . $Obra_Social."</td>";
                     $json_row["obra social"] = $Obra_Social;
                     $TableMov .= "<td class='trDomicilio' style = 'width: auto;'>" . $Domicilio."</td>";
                     $TableMovPrint .= "<td class='trDomicilio' style = 'width: auto;'>" . $Domicilio."</td>";
-                    $json_row["domicilio"] = $Domicilio;
+                    $json_row["Domicilio"] = $Domicilio;
                     $TableMov .= "<td class='trBarrio' style = 'width: auto;'>" . $Barrio."</td>";
                     $TableMovPrint .= "<td class='trBarrio' style = 'width: auto;'>" . $Barrio."</td>";
-                    $json_row["barrio"] = $Barrio;
+                    $json_row["Barrio"] = $Barrio;
                     $TableMov .= "<td class='trLocalidad' style = 'width: auto;'>" . $Localidad."</td>";
                     $TableMovPrint .= "<td class='trLocalidad' style = 'width: auto;'>" . $Localidad."</td>";
-                    $json_row["localidad"] = $Localidad;
+                    $json_row["Localidad"] = $Localidad;
                     $TableMov .= "<td class='trObservaciones' style = 'width: auto;'>" . $DtoMovimiento->getObservaciones() . "</td>";
                     $TableMovPrint .= "<td class='trObservaciones' style = 'width: auto;'>" . $DtoMovimiento->getObservaciones() . "</td>";
-                    $json_row["observaciones"] = $DtoMovimiento->getObservaciones();
+                    $json_row["Observaciones"] = $DtoMovimiento->getObservaciones();
                     $TableMov .= "<td class='trResponsable' style = 'width: auto;'>" . $DtoMovimiento->getResponsable() . "</td>";
                     $TableMovPrint .= "<td class='trResponsable' style = 'width: auto;'>" . $DtoMovimiento->getResponsable() . "</td>";
-                    $json_row["responsable"] = $DtoMovimiento->getResponsable();
+                    $json_row["Responsable"] = $DtoMovimiento->getResponsable();
                     $TableMov .= "<td class='trCentrosSalud' style = 'width: auto;'>" . $DtoMovimiento->getCentroSalud() . "</td>";
                     $TableMovPrint .= "<td class='trCentrosSalud' style = 'width: auto;'>" . $DtoMovimiento->getCentroSalud() . "</td>";
-                    $json_row["centro_salud"] = $DtoMovimiento->getCentroSalud();
+                    $json_row["Centro Salud"] = $DtoMovimiento->getCentroSalud();
                     $TableMov .= "<td class='trOtrasInstituciones' style = 'width: auto;'>" . $DtoMovimiento->getOtraInstitucion() . "</td>";
                     $TableMovPrint .= "<td class='trOtrasInstituciones' style = 'width: auto;'>" . $DtoMovimiento->getOtraInstitucion() . "</td>";
-                    $json_row["otra_institucion"] = $DtoMovimiento->getOtraInstitucion();
+                    $json_row["Otra Institucion"] = $DtoMovimiento->getOtraInstitucion();
                     $TableMov .= "</tr>";
                     $TableMovPrint .= "</tr>";
                   }
@@ -2369,23 +2367,23 @@ $Con->CloseConexion();
                 if($ID_Config == 'grid'){
                   $TableMov = "<table class='table table-dark'>";
                   $TableMov .= "<tr class='trFecha'><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>" . $DtoMovimiento->getFecha() . "</td></tr>";
-                  $json_row["fecha"] = $DtoMovimiento->getFecha();
+                  $json_row["Fecha"] = $DtoMovimiento->getFecha();
                   $TableMov .= "<tr><td style = 'width: 30%;'>Persona</td><td style = 'width: 70%;'>" . $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "</td></tr>";
-                  $json_row["persona"] = $DtoMovimiento->getApellido() . " " . $DtoMovimiento->getNombre();
+                  $json_row["Persona"] = $DtoMovimiento->getApellido() . " " . $DtoMovimiento->getNombre();
                   $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
-                  $json_row["motivo 1"] = $DtoMovimiento->getMotivo_1();
+                  $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                   $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
-                  $json_row["motivo 2"] = $DtoMovimiento->getMotivo_2();
+                  $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
                   $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";
-                  $json_row["motivo 3"] = $DtoMovimiento->getMotivo_3();
+                  $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
                   $TableMov .= "<tr class='trObservaciones'><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>" . $DtoMovimiento->getObservaciones() . "</td></tr>";
-                  $json_row["observaciones"] = $DtoMovimiento->getObservaciones();
+                  $json_row["Observaciones"] = $DtoMovimiento->getObservaciones();
                   $TableMov .= "<tr class='trResponsable'><td style = 'width: 30%;'>Responsable</td><td style = 'width: 70%;'>" . $DtoMovimiento->getResponsable() . "</td></tr>";
-                  $json_row["responsable"] = $DtoMovimiento->getResponsable();
+                  $json_row["Responsable"] = $DtoMovimiento->getResponsable();
                   $TableMov .= "<tr class='trCentrosSalud'><td style = 'width: 30%;'>Centro de salud</td><td style = 'width: 70%;'>" . $DtoMovimiento->getCentroSalud() . "</td></tr>";
-                  $json_row["centro_salud"] = $DtoMovimiento->getCentroSalud();
+                  $json_row["Centro Salud"] = $DtoMovimiento->getCentroSalud();
                   $TableMov .= "<tr class='trOtrasInstituciones'><td style = 'width: 30%;'>Otras instituciones</td><td style = 'width: 70%;'>" . $DtoMovimiento->getOtraInstitucion() . "</td></tr>";
-                  $json_row["otra_institucion"] = $DtoMovimiento->getOtraInstitucion();
+                  $json_row["Otra Institucion"] = $DtoMovimiento->getOtraInstitucion();
                   $TableMov .= "</table>";
 
                   $jsonTable["movimientos_general_grid"][] = $json_row;
@@ -2401,25 +2399,25 @@ $Con->CloseConexion();
                 }else{
                   $TableMov .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td></tr>";
                   $TableMovPrint .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td></tr>";
-                  $json_row["fecha"] = $DtoMovimiento->getFecha();
+                  $json_row["Fecha"] = $DtoMovimiento->getFecha();
                   $TableMov .= "<td class='trPersona' style = 'width: auto;'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $RetTodos["id_persona"]."\",\"Ventana" . $RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" . $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "</a></td></tr>";
                   $TableMovPrint .= "<td class='trPersona' style = 'width: auto;'>".
                                       $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "
                                     </td>
                                   </tr>";
-                  $json_row["persona"] = $DtoMovimiento->getApellido() . " " . $DtoMovimiento->getNombre();
+                  $json_row["Persona"] = $DtoMovimiento->getApellido() . " " . $DtoMovimiento->getNombre();
                   $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
                   $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
-                  $json_row["motivo 1"] = $DtoMovimiento->getMotivo_1();
+                  $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                   $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
                   $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
-                  $json_row["motivo 2"] = $DtoMovimiento->getMotivo_2();
+                  $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
                   $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";
                   $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";
-                  $json_row["motivo 3"] = $DtoMovimiento->getMotivo_3();
+                  $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
                   $TableMov .= "<td class='trDNI' style = 'width: auto;'>" . $DNI."</td>";
                   $TableMovPrint .= "<td class='trDNI' style = 'width: auto;'>" . $DNI."</td>";
-                  $json_row["dni"] = $DNI;
+                  $json_row["DNI"] = $DNI;
                   $TableMov .= "<td class='trFechaNac' style = 'width: auto;'>" . $Fecha_Nacimiento."</td>";
                   $TableMovPrint .= "<td class='trFechaNac' style = 'width: auto;'>" . $Fecha_Nacimiento."</td>";
                   $json_row["Fecha Nac"] = $Fecha_Nacimiento;
@@ -2428,28 +2426,28 @@ $Con->CloseConexion();
                   $json_row["Años"] = $Edad;
                   $TableMov .= "<td class='trMeses' style = 'width: auto;'>" . $Meses."</td>";
                   $TableMovPrint .= "<td class='trMeses' style = 'width: auto;'>" . $Meses."</td>";
-                  $json_row["meses"] = $Meses;
+                  $json_row["Meses"] = $Meses;
                   $TableMov .= "<td class='trObraSocial' style = 'width: auto;'>" . $Obra_Social."</td>";
                   $TableMovPrint .= "<td class='trObraSocial' style = 'width: auto;'>" . $Obra_Social."</td>";
-                  $json_row["obra_social"] = $Obra_Social;
+                  $json_row["Obra Social"] = $Obra_Social;
                   $TableMov .= "<td class='trDomicilio' style = 'width: auto;'>" . $Domicilio."</td>";
                   $TableMovPrint .= "<td class='trDomicilio' style = 'width: auto;'>" . $Domicilio."</td>";
-                  $json_row["domicilio"] = $Domicilio;
+                  $json_row["Domicilio"] = $Domicilio;
                   $TableMov .= "<td class='trBarrio' style = 'width: auto;'>" . $Barrio."</td>";
                   $TableMovPrint .= "<td class='trBarrio' style = 'width: auto;'>" . $Barrio."</td>";
-                  $json_row["barrio"] = $Barrio;
+                  $json_row["Barrio"] = $Barrio;
                   $TableMov .= "<td class='trLocalidad' style = 'width: auto;'>" . $Localidad."</td>";
                   $TableMovPrint .= "<td class='trLocalidad' style = 'width: auto;'>" . $Localidad."</td>";
-                  $json_row["localidad"] = $Localidad;
+                  $json_row["Localidad"] = $Localidad;
                   $TableMov .= "<td class='trObservaciones' style = 'width: auto;'>" . $DtoMovimiento->getObservaciones() . "</td></tr>";
                   $TableMovPrint .= "<td class='trObservaciones' style = 'width: auto;'>" . $DtoMovimiento->getObservaciones() . "</td></tr>";
                   $json_row["observacion"] = $DtoMovimiento->getObservaciones();
                   $TableMov .= "<td class='trResponsable' style = 'width: auto;'>" . $DtoMovimiento->getResponsable() . "</td></tr>";
                   $TableMovPrint .= "<td class='trResponsable' style = 'width: auto;'>" . $DtoMovimiento->getResponsable() . "</td></tr>";
-                  $json_row["responsable"] = $DtoMovimiento->getResponsable();
+                  $json_row["Responsable"] = $DtoMovimiento->getResponsable();
                   $TableMov .= "<td class='trCentrosSalud' style = 'width: auto;'>" . $DtoMovimiento->getCentroSalud() . "</td></tr>";
                   $TableMovPrint .= "<td class='trCentrosSalud' style = 'width: auto;'>" . $DtoMovimiento->getCentroSalud() . "</td></tr>";
-                  $json_row["centro_salud"] = $DtoMovimiento->getCentroSalud();
+                  $json_row["Centro Salud"] = $DtoMovimiento->getCentroSalud();
                   $TableMov .= "<td class='trOtrasInstituciones' style = 'width: auto;'>" . $DtoMovimiento->getOtraInstitucion() . "</td></tr>";
                   $TableMovPrint .= "<td class='trOtrasInstituciones' style = 'width: auto;'>" . $DtoMovimiento->getOtraInstitucion() . "</td></tr>";
                   $json_row["otra_institucional"] = $DtoMovimiento->getOtraInstitucion();
@@ -2661,6 +2659,7 @@ $Con->CloseConexion();
   <?php 
   //$_SESSION["meses"] = $mesesHeader; ?>
   objectJsonTabla = <?php echo json_encode($jsonTable);?>;
+  jsonTabla = <?php echo json_encode($jsonTable);?>;
   fechaDesde = "<?php echo $Fecha_Inicio;?>";
   fechaHasta = "<?php echo $Fecha_Fin;?>";
   filtroSeleccionados = <?php echo json_encode($filtros); ?>;
