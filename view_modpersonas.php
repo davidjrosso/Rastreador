@@ -90,7 +90,6 @@ $Con->CloseConexion();
           }
 
           let Meses = document.getElementById("Meses");
-          //Meses.value = edad*12 + CalcMeses;
           Meses.value = CalcMeses;		    
         }      
   </script>

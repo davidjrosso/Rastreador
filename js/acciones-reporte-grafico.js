@@ -357,17 +357,51 @@ function configColumnasTabla() {
     }
 
     if (!chkMotivo.is(":checked")) {
+        let indiceHead1 = 0;
+        let indiceHead2 = 0;
+        let indiceHead3 = 0;
         if (objectJsonTabla["header_movimientos_general"]) {
-            indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Motivo 1");
+            indiceHead1 = objectJsonTabla["header_movimientos_general"].indexOf("Motivo 1");
         } else {
-            indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Motivo 1");
+            indiceHead1 = objectJsonTabla["head_movimientos_persona"].indexOf("Motivo 1");
         }
-        if (indiceHead >= 0) {
+
+        if (indiceHead1 >= 0) {
             if (objectJsonTabla["header_movimientos_general"]) {
-                objectJsonTabla["header_movimientos_general"].splice(indiceHead, 1);
+                objectJsonTabla["header_movimientos_general"].splice(indiceHead1, 1);
             }
             if (objectJsonTabla["head_movimientos_persona"]) {
-                objectJsonTabla["head_movimientos_persona"].splice(indiceHead, 1);
+                objectJsonTabla["head_movimientos_persona"].splice(indiceHead1, 1);
+            }
+        }
+
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead2 = objectJsonTabla["header_movimientos_general"].indexOf("Motivo 2");
+        } else {
+            indiceHead2 = objectJsonTabla["head_movimientos_persona"].indexOf("Motivo 2");
+        }
+
+        if (indiceHead2 >= 0) {
+            if (objectJsonTabla["header_movimientos_general"]) {
+                objectJsonTabla["header_movimientos_general"].splice(indiceHead2, 1);
+            }
+            if (objectJsonTabla["head_movimientos_persona"]) {
+                objectJsonTabla["head_movimientos_persona"].splice(indiceHead2, 1);
+            }
+        }
+
+        if (objectJsonTabla["header_movimientos_general"]) {
+            indiceHead3 = objectJsonTabla["header_movimientos_general"].indexOf("Motivo 3");
+        } else {
+            indiceHead3 = objectJsonTabla["head_movimientos_persona"].indexOf("Motivo 3");
+        }
+
+        if (indiceHead3 >= 0) {
+            if (objectJsonTabla["header_movimientos_general"]) {
+                objectJsonTabla["header_movimientos_general"].splice(indiceHead3, 1);
+            }
+            if (objectJsonTabla["head_movimientos_persona"]) {
+                objectJsonTabla["head_movimientos_persona"].splice(indiceHead3, 1);
             }
         }
     } else {
@@ -375,12 +409,16 @@ function configColumnasTabla() {
             indiceHead = objectJsonTabla["header_movimientos_general"].indexOf("Motivo 1");
             if (indiceHead < 0) {
                 objectJsonTabla["header_movimientos_general"].push("Motivo 1");
+                objectJsonTabla["header_movimientos_general"].push("Motivo 2");
+                objectJsonTabla["header_movimientos_general"].push("Motivo 3");
             }
         }
         if (objectJsonTabla["head_movimientos_persona"]) {
             indiceHead = objectJsonTabla["head_movimientos_persona"].indexOf("Motivo 1");
             if (indiceHead < 0) {
                 objectJsonTabla["head_movimientos_persona"].push("Motivo 1");
+                objectJsonTabla["head_movimientos_persona"].push("Motivo 2");
+                objectJsonTabla["head_movimientos_persona"].push("Motivo 3");
             }
         }
     }

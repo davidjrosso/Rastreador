@@ -232,7 +232,7 @@ try{
                               </th>";
             }
         }
-        $row_head .= "</th>";
+        $row_head .= "</tr>";
         for ($i = 0; $i < $count; $i++) {
             $row .= "<tr>";
             for ($h = 0; $h < count($header_mov_general); $h++) {
@@ -260,7 +260,7 @@ try{
             $inicio = "<p id='InformacionDeCentro'>
                             DESDE : ". $etiqueta_Fecha_Inicio . " HASTA : " . $etiqueta_Fecha_Fin ."
                         </p>
-                        <p id='encabezado'> <span id='frase'> Programa Rastreador </span><br>
+                        <p id='encabezado'> <span id='frase'> Rastreador </span><br>
                             Filtro : " . $filtro .  "
                         </p>
                         <p id='InformacionDeCiudad'>
@@ -478,7 +478,7 @@ try{
                         #encabezado {
                             text-align: center;
                             float: right;
-                            padding-right: 25rem;
+                            padding-right: 20rem;
                         }
 
                         #detalle-persona {
@@ -496,17 +496,19 @@ try{
                         }
                     </style>
                     </head> 
-                    <body> " . $inicio . $tabla_detalle_persona . "
-                        <table class='table--border-colapsed'>
-                                <thead>
-                                    " . $row_head . "
-                                </thead>
-                                    <tbody>" . 
-                                        $row . "
-                                    </tbody>
-                        </table>
-                    </body>
-                </html>";
+                    <body> " . $inicio . $tabla_detalle_persona;
+                    if (count($header_mov_general) > 0) {
+                        $table .= "<table class='table--border-colapsed'>
+                                     <thead>
+                                        " . $row_head . "
+                                     </thead>
+                                         <tbody>" . 
+                                            $row . "
+                                         </tbody>
+                                     </table>";
+                    }
+                    $table .= "</body>
+                            </html>";
     }
     $dompdf = new Dompdf();
     $dompdf->loadHtml(mb_convert_encoding($table, 'HTML-ENTITIES', 'UTF-8'));
