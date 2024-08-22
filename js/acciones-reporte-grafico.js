@@ -1,36 +1,38 @@
 function configResultados() {
-    var chkPersona = $('#chk-persona');
-    var chkFechaNac = $('#chk-fechaNac');
-    var chkDomicilio = $('#chk-domicilio');
-    var chkBarrio = $('#chk-barrio');
-    var chkManzana = $('#chk-manzana');
-    var chkLote = $('#chk-lote');
-    var chkSublote = $('#chk-sublote');
-    var chkAnios = $('#chk-anios');
-    var chkMeses = $('#chk-meses');
+    let chkPersona = $('#chk-persona');
+    let chkFechaNac = $('#chk-fechaNac');
+    let chkDomicilio = $('#chk-domicilio');
+    let chkBarrio = $('#chk-barrio');
+    let chkManzana = $('#chk-manzana');
+    let chkLote = $('#chk-lote');
+    let chkSublote = $('#chk-sublote');
+    let chkEdad = $('#chk-anios');
+    let chkMeses = $('#chk-meses');
 
-    var thBarrio = $('#Contenido-Titulo-1');
-    var thDomicilio = $('#Contenido-Titulo-2');
-    var thPersona = $('#Contenido-Titulo-3');
-    var thFechaNac = $('#Contenido-Titulo-4');
-    var thManzana = $('#Contenido-Titulo-5');
-    var thLote = $('#Contenido-Titulo-6');
-    var thSublote = $('#Contenido-Titulo-7');
-    //var thFechaNac = $('#Contenido-Titulo-8');
+    let thBarrio = $('#Contenido-Titulo-1');
+    let thDomicilio = $('#Contenido-Titulo-2');
+    let thPersona = $('#Contenido-Titulo-3');
+    let thFechaNac = $('#Contenido-Titulo-4');
+    let thManzana = $('#Contenido-Titulo-5');
+    let thLote = $('#Contenido-Titulo-6');
+    let thSublote = $('#Contenido-Titulo-7');
+    let thEdad = $('#Contenido-Titulo-8');
+    let thMeses = $('#Contenido-Titulo-9');
 
-    var trBarrio = $('tr #Contenido-1');
-    var trDomicilio = $('tr #Contenido-2');
-    var trPersona = $('tr #Contenido-3');
-    var trFechaNac= $('tr #Contenido-4');
-    var trManzana = $('tr #Contenido-5');
-    var trLote = $('tr #Contenido-6');
-    var trSublote = $('tr #Contenido-7');
-    //var trFechaNac= $('tr #Contenido-8');
+    let trBarrio = $('tr #Contenido-1');
+    let trDomicilio = $('tr #Contenido-2');
+    let trPersona = $('tr #Contenido-3');
+    let trFechaNac= $('tr #Contenido-4');
+    let trManzana = $('tr #Contenido-5');
+    let trLote = $('tr #Contenido-6');
+    let trSublote = $('tr #Contenido-7');
+    let trEdad = $('tr #Contenido-8');
+    let trMeses = $('tr #Contenido-9');
 
     var tieneCheck = chkPersona.is(":checked") || chkFechaNac.is(":checked") ||
         chkDomicilio.is(":checked") || chkBarrio.is(":checked") ||
         chkManzana.is(":checked")  || chkLote.is(":checked") ||
-        chkSublote.is(":checked");
+        chkSublote.is(":checked") || chkEdad.is(":checked") || chkMeses.is(":checked");
 
     if (tieneCheck) {
         if (!chkPersona.is(":checked")) {
@@ -88,24 +90,24 @@ function configResultados() {
             trSublote.show();
             thSublote.show();
         }
-    }
-    /*
-    if (!chkAnio.is(":checked")) {
-        trAnio.hide();
-        thAnio.hide();
-    } else {
-        trAnio.show();
-        thAnio.show();
+
+        if (!chkEdad.is(":checked")) {
+            thEdad.hide();
+            trEdad.hide();
+        } else {
+            thEdad.show();
+            trEdad.show();
+        }
+    
+        if (!chkMeses.is(":checked")) {
+            trMeses.hide();
+            thMeses.hide();
+        } else {
+            trMeses.show();
+            thMeses.show();
+        }
     }
 
-    if (!chkMeses.is(":checked")) {
-        trMeses.hide();
-        thMeses.hide();
-    } else {
-        trMeses.show();
-        thMeses.show();
-    }
-    */
   }
 
   function base64ToArrayBuffer(data) {

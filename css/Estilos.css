@@ -420,7 +420,7 @@ a.disabled {
   z-index: 300 !important;
 }
 
-#tabla-responsive tbody tr > *:nth-child(-n + 4) {
+#tabla-responsive tbody tr > *:nth-child(-n + 7) {
   z-index: 300;
   background-color: white !important;
 }

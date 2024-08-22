@@ -105,7 +105,8 @@ $Con->CloseConexion();
     var currCell = null;
     var editing = false;
     //var columnaIndice = 5;
-    var columnaIndice = 8;
+    //var columnaIndice = 8;
+    var columnaIndice = 10;
     var filaIndice = 1;
     var valInputRangePrev = columnaIndice;
     var focusBarraNavegacionH = false;
@@ -765,6 +766,19 @@ $Con->CloseConexion();
       width: 150px;
     }
 
+    #Contenido-Titulo-8 {
+      position: sticky;
+      z-index: 200;*/
+      /*left: 600px;*/
+      width: 150px;
+    }
+  
+    #Contenido-Titulo-9 {
+      position: sticky;
+      z-index: 200;*/
+      /*left: 600px;*/
+      width: 150px;
+    }
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -1014,7 +1028,8 @@ $Con->CloseConexion();
 
             $Consulta = "SELECT M.id_movimiento, M.id_persona, MONTH(M.fecha) as 'Mes',
                                 YEAR(M.fecha) as 'Anio', B.Barrio, P.manzana, P.lote,
-                                P.familia, P.apellido, P.nombre, P.fecha_nac, P.domicilio
+                                P.familia, P.apellido, P.nombre, P.fecha_nac, P.domicilio,
+                                P.edad, P.meses
                                 $esPersonaSeleccionada
                          FROM movimiento M, 
                               persona P, 
@@ -1620,6 +1635,10 @@ $Con->CloseConexion();
                 $nroColumnas += 1;
                 $Table .= "<th id='Contenido-Titulo-7' name='datosflia' style='max-width: 70px; display: none'>Sublote</th>";
                 $Table_imprimir .= "<th id='Contenido-Titulo-7' name='datosflia'>Sublote</th>";
+                $nroColumnas += 1;
+                $Table .= "<th id='Contenido-Titulo-8' name='datosflia' style='max-width: 70px; display: none'>edad</th>";
+                $nroColumnas += 1;
+                $Table .= "<th id='Contenido-Titulo-9' name='datosflia' style='max-width: 70px; display: none'>meses</th>";
                 $nroColumnas += 1;
                 // if ($cmb_seleccion=="todos"){
                 //   $Table.="<th id='Contenido-Titulo-3' name='datosflia' style='max-width: 50px;'>Mz.</th>
@@ -2244,6 +2263,12 @@ $Con->CloseConexion();
                   $tagsTD .= "<td id='Contenido-7' name='datosflia' style='max-width: 70px; display: none'>" . $RetTodos["familia"] . "</td>";
                   $tagsTD_imprimir .= "<td id='Contenido-7' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["familia"] . "</td>";
                   $jsonTable[$clave]["familia"] = $RetTodos["familia"];
+                  $tagsTD .= "<td id='Contenido-8' name='datosflia' style='max-width: 70px; display: none; text-align: center;'>" . $RetTodos["edad"] . "</td>";
+                  $tagsTD_imprimir .= "<td id='Contenido-8' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" .  $RetTodos["edad"] . "</td>";
+                  $jsonTable[$clave]["edad"] = $RetTodos["edad"];
+                  $tagsTD .= "<td id='Contenido-9' name='datosflia' style='max-width: 70px; display: none; text-align: center;'>" . $RetTodos["meses"] . "</td>";
+                  $tagsTD_imprimir .= "<td id='Contenido-9' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["meses"] . "</td>";
+                  $jsonTable[$clave]["meses"] = $RetTodos["meses"];
                   $tagsTD .= "
                   <td id='Contenido-3' style='overflow: hidden;'>
                     <div style='position: relative;z-index: 1000;'>
@@ -3031,7 +3056,7 @@ $Con->CloseConexion();
         </div>
       </div>
     </div>
-    <input type="range" class="fixed-bottom form-range input--transform-rotate180" step="0.01" value="8" min="8" id="BarraDeNavHTabla">
+    <input type="range" class="fixed-bottom form-range input--transform-rotate180" step="0.01" value="10" min="10" id="BarraDeNavHTabla">
     <!--<input type="range" class="fixed-bottom form-range" step="1" value="1" min="1" id="BarraDeNavVTabla">-->
 
     <div class="modal fade modal--show-overall" id="configModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 2001;">
@@ -3052,8 +3077,8 @@ $Con->CloseConexion();
               <li><input type="checkbox" id="chk-manzana"> Manzana </li>
               <li><input type="checkbox" id="chk-lote"> Lote </li>
               <li><input type="checkbox" id="chk-sublote"> Sublote </li>
-              <!--<li><input type="checkbox" id="chk-anios"> Años (edad) </li>
-              <li><input type="checkbox" id="chk-meses"> Meses (edad) </li>-->
+              <li><input type="checkbox" id="chk-anios"> Años (edad) </li>
+              <li><input type="checkbox" id="chk-meses"> Meses (edad) </li>
             </ul>
           </div>
           <div class="modal-footer modal-footer-flex-center">
