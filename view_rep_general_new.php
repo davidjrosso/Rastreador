@@ -1636,7 +1636,7 @@ $Con->CloseConexion();
                 $Table .= "<th id='Contenido-Titulo-7' name='datosflia' style='max-width: 70px; display: none'>Sublote</th>";
                 $Table_imprimir .= "<th id='Contenido-Titulo-7' name='datosflia'>Sublote</th>";
                 $nroColumnas += 1;
-                $Table .= "<th id='Contenido-Titulo-8' name='datosflia' style='max-width: 70px; display: none'>edad</th>";
+                $Table .= "<th id='Contenido-Titulo-8' name='datosflia' style='max-width: 70px; display: none'>edad en años</th>";
                 $nroColumnas += 1;
                 $Table .= "<th id='Contenido-Titulo-9' name='datosflia' style='max-width: 70px; display: none'>meses</th>";
                 $nroColumnas += 1;
