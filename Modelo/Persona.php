@@ -70,14 +70,14 @@ public function setObra_Social($xObra_Social){
 }
 
 public function setDomicilio($xDomicilio){
-	if (!$xDomicilio) {
+	if ($xDomicilio) {
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, "https://nominatim.openstreetmap.org/search?addressdetails=1&q=rio+tercero+" . str_replace(" ", "+", $xDomicilio) . "&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		$response = curl_exec($ch);
 		$arr_obj_json = json_decode($response);
 		curl_close($ch);
-		if (!$arr_obj_json) {
+		if ($arr_obj_json) {
 			if (!is_null($arr_obj_json[0]->lat) || !is_null($arr_obj_json[0]->lon)) {
 				$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
 				$this->Georeferencia = $point;
