@@ -58,6 +58,15 @@ $Con->CloseConexion();
   <script src="js/jquery.wordexport.js"></script>
   <script src="html2pdf.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.js"></script>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/ol@v10.1.0/dist/ol.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.1.0/ol.css">
+
+  <script src="js/OpenLayers.js"></script>
+
   <script>
     const { PDFDocument, StandardFonts, rgb } = PDFLib
 
@@ -100,6 +109,32 @@ $Con->CloseConexion();
       $("#BarraDeNavHTabla").attr("style","width: 95%; margin-left: 2%;");
     }
 
+    function init() {
+      map = new OpenLayers.Map("basicMap");
+      let mapnik = new OpenLayers.Layer.OSM();
+      var fromProjection =  new OpenLayers.Projection("EPSG:3857");
+      var toProjection = new OpenLayers.Projection("EPSG:4326");
+      let position = new OpenLayers.LonLat(-64.11844, -32.17022).transform(toProjection, fromProjection);
+      let zoom = 15;
+
+      map.addLayer(mapnik);
+
+      var markers = new OpenLayers.Layer.Markers( "Markers" );
+      map.addLayer(markers);
+      let size = new OpenLayers.Size(21,25);
+      let offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+      let icon = new OpenLayers.Icon('./images/icons/ModDatos.png', size, offset);
+      //let icon2 = new OpenLayers.Icon('./images/icons/VerDatos.png', size, offset);
+
+      objectJsonTabla.forEach(function (elemento, indice, array) {
+          pos = new OpenLayers.LonLat(elemento.lon, elemento.lat).transform(toProjection, fromProjection);
+          markers.addMarker(new OpenLayers.Marker(pos,icon.clone()));
+          //markers.addMarker(new OpenLayers.Marker(pos,icon2.clone()));
+      });
+      map.setCenter(position, zoom);
+    }
+
+    var map = null;
     var nroFilasTabla = 0;
     var nroColumnasTabla = 0;
     var currCell = null;
@@ -188,6 +223,9 @@ $Con->CloseConexion();
         columnaRemoverClass.removeClass( "showColTablaAnimacionfire");
         columnaRemoverClass.removeClass( "showColTablaAnimacion");
       });
+      $("#map-modal").on("transitionend", function(e){
+        if (!map) init();
+      })
     });
 
     function fireKey(el) {
@@ -481,7 +519,11 @@ $Con->CloseConexion();
     }
   </script>
   <style>
-
+    #basicMap {
+          width: 100%;
+          height: 100%;
+          margin: 0;
+    }
     body {
       overflow-x: hidden;
     }
@@ -1029,7 +1071,9 @@ $Con->CloseConexion();
             $Consulta = "SELECT M.id_movimiento, M.id_persona, MONTH(M.fecha) as 'Mes',
                                 YEAR(M.fecha) as 'Anio', B.Barrio, P.manzana, P.lote,
                                 P.familia, P.apellido, P.nombre, P.fecha_nac, P.domicilio,
-                                P.edad, P.meses
+                                ST_X(P.georeferencia) as lat, 
+                                ST_Y(P.georeferencia) as lon, 
+                                P.edad, P.meses 
                                 $esPersonaSeleccionada
                          FROM movimiento M, 
                               persona P, 
@@ -1311,7 +1355,11 @@ $Con->CloseConexion();
               }
 
               if($ID_Motivo > 1){
-                $Consulta .= " (M.motivo_1 = $ID_Motivo or M.motivo_2 = $ID_Motivo or M.motivo_3 = $ID_Motivo)";
+                $Consulta .= " (M.motivo_1 = $ID_Motivo 
+                             or M.motivo_2 = $ID_Motivo 
+                             or M.motivo_3 = $ID_Motivo
+                             or M.motivo_4 = $ID_Motivo 
+                             or M.motivo_5 = $ID_Motivo) ";
 
                 $ConsultarMotivo = "select motivo 
                                     from motivo 
@@ -1327,7 +1375,11 @@ $Con->CloseConexion();
                 if($ID_Motivo > 1 ){
                   $Consulta .= " or ";
                 }
-                $Consulta .= "(M.motivo_1 = $ID_Motivo2 or M.motivo_2 = $ID_Motivo2 or M.motivo_3 = $ID_Motivo2)";
+                $Consulta .= " (M.motivo_1 = $ID_Motivo2 
+                            or M.motivo_2 = $ID_Motivo2 
+                            or M.motivo_3 = $ID_Motivo2 
+                            or M.motivo_4 = $ID_Motivo2 
+                            or M.motivo_5 = $ID_Motivo2) ";
 
                 $ConsultarMotivo = "select motivo 
                                     from motivo 
@@ -1345,9 +1397,11 @@ $Con->CloseConexion();
                   $Consulta .= " or ";
                 }
 
-                $Consulta .= "(M.motivo_1 = $ID_Motivo3 
+                $Consulta .= " (M.motivo_1 = $ID_Motivo3 
                             or M.motivo_2 = $ID_Motivo3 
-                            or M.motivo_3 = $ID_Motivo3)";
+                            or M.motivo_3 = $ID_Motivo3
+                            or M.motivo_4 = $ID_Motivo3 
+                            or M.motivo_5 = $ID_Motivo3) ";
 
                 $ConsultarMotivo = "select motivo 
                                     from motivo 
@@ -1365,9 +1419,11 @@ $Con->CloseConexion();
                   $Consulta .= " or ";
                 }
 
-                $Consulta .= "(M.motivo_1 = $ID_Motivo4 
+                $Consulta .= " (M.motivo_1 = $ID_Motivo4 
                             or M.motivo_2 = $ID_Motivo4 
-                            or M.motivo_3 = $ID_Motivo4)";
+                            or M.motivo_3 = $ID_Motivo4
+                            or M.motivo_4 = $ID_Motivo4 
+                            or M.motivo_5 = $ID_Motivo4) ";
 
                 $ConsultarMotivo = "select motivo 
                                     from motivo 
@@ -1386,7 +1442,9 @@ $Con->CloseConexion();
 
                 $Consulta .= "(M.motivo_1 = $ID_Motivo5
                             or M.motivo_2 = $ID_Motivo5
-                            or M.motivo_3 = $ID_Motivo5)";
+                            or M.motivo_3 = $ID_Motivo5
+                            or M.motivo_4 = $ID_Motivo5 
+                            or M.motivo_5 = $ID_Motivo5)";
 
                 $ConsultarMotivo = "select motivo 
                                     from motivo 
@@ -1514,7 +1572,6 @@ $Con->CloseConexion();
 
             }
 
-
             ?>
 
           </div>
@@ -1522,6 +1579,7 @@ $Con->CloseConexion();
             <button type="button" class="btn btn-danger" style="margin-left: 35%;"  onclick="location.href = 'view_general_new.php'">Atras</button>
             <!--<button type="button" class="btn btn-secondary" onclick="enviarImprimir()">**Imprimir</button>-->
             <!--button type="button" class="btn btn-secondary" onclick="enviarImprimirPdf();"> Imprimir</button>-->
+            <button type="button" class="btn btn-secondary" data-toggle="modal" style="background-color: #ffc6b1; color: black; border-color: white; " data-target="#map-modal">SIG</button>
             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#configModal">Config</button>
           </div>
 
@@ -1532,7 +1590,6 @@ $Con->CloseConexion();
             <?php echo NOMBRE_ENTIDAD ?>
           </div>
         </div>
-        <div class="row">
           <div class="col-md-12">
             <!-- <
         ?php echo "DEBUG: ".$Consulta; ?> -->
@@ -2237,6 +2294,8 @@ $Con->CloseConexion();
                                        <td id='Contenido-2' style='text-align:center;font-size: 10px;max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;'>" . $RetTodos["domicilio"] . "</td>";
                   $jsonTable[$clave]["barrio"] = $RetTodos["Barrio"];
                   $jsonTable[$clave]["domicilio"] = $RetTodos["domicilio"];
+                  $jsonTable[$clave]["lat"] = $RetTodos["lat"];
+                  $jsonTable[$clave]["lon"] = $RetTodos["lon"];
 
                   /*
                   if ($Manzana == "manzana") {
@@ -2302,7 +2361,9 @@ $Con->CloseConexion();
                                                         and YEAR(fecha) like '%" . $Anio . "'
                                                         and (motivo_1 <> 1
                                                          or motivo_2 <> 1
-                                                         or motivo_3 <> 1) 
+                                                         or motivo_3 <> 1
+                                                         or motivo_4 <> 1
+                                                         or motivo_5 <> 1) 
                                                         and estado = 1
                                                       order by fecha";            
 
@@ -2330,7 +2391,9 @@ $Con->CloseConexion();
                                                            categoria C 
                                                       where (M.motivo_1 = MT.id_motivo 
                                                              or M.motivo_2 = MT.id_motivo
-                                                             or M.motivo_3 = MT.id_motivo) 
+                                                             or M.motivo_3 = MT.id_motivo
+                                                             or M.motivo_4 = MT.id_motivo
+                                                             or M.motivo_5 = MT.id_motivo) 
                                                             and MT.cod_categoria = C.cod_categoria 
                                                             and M.id_movimiento = " . $Ret_Movimientos_Persona['id_movimiento'] . " 
                                                             and M.id_persona = " . $Ret_Movimientos_Persona['id_persona'] . " 
@@ -2405,10 +2468,10 @@ $Con->CloseConexion();
                                                                           FROM INN) as ConPermisoParaUsr,
                                                           M.id_motivo IN (SELECT *
                                                                           FROM GIN) as ConPermisoGeneral,
-                                                          M.cod_categoria, F.Forma_Categoria, C.color, M.codigo  M.cod_categoria, 
+                                                          M.cod_categoria, 
                                                           F.Forma_Categoria, 
                                                           C.color, 
-                                                          M.codigo 
+                                                          M.codigo
                                                     from motivo M, 
                                                          categoria C, 
                                                          formas_categorias F 
@@ -2932,7 +2995,6 @@ $Con->CloseConexion();
                   }
 
                   $Table = $Table . $tagsTD . "</tr>";
-                  $Table_imprimir = $Table_imprimir . $tagsTD_imprimir . "</tr>";
 
                 }
 
@@ -2955,92 +3017,6 @@ $Con->CloseConexion();
                 $Table = "";
               }
 
-              if (isset($Table_imprimir)) {
-                $Table_imprimir .= "</tbody>";
-                $Table_imprimir .= "</table>";
-                $Table_imprimir ="<html>
-                                    <head>
-                                    <link href='https://fonts.cdnfonts.com/css/symbol' rel='stylesheet'>
-                                    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-                
-                                      <style>
-                                      @page {
-                                        margin: 15px !important;
-                                        padding: 15px !important;
-                                      } 
-                                      .table_pdf {
-                                        width: 100%;
-                                      }
-
-                                      table thead tr th {
-                                        background-color: #ccc;
-                                      }
-
-                                      h5, h2{
-                                        text-align: center;
-                                        margin-bottom: 0px
-                                      }
-
-                                      #InformacionDeCentro {
-                                        float: right; 
-                                        text-align: left;
-                                      }
-
-                                      #frase {
-                                        font-weight: bold;
-                                      }
-
-                                      #encabezado {
-                                        text-align: center;
-                                        float: right;
-                                        padding-right: 13rem;
-                                      }
-
-                                      #InformacionDeCiudad {
-                                        text-align: left;
-                                        margin-bottom: 2rem;
-                                        margin-top: 2rem;
-                                      }
-
-                                      table, th, td {
-                                        border: 1px solid;
-                                      }
-                                      </style>
-                                      </head> 
-                                      <body>
-                                        <p id='InformacionDeCentro'> Centro de Atencion Primaria en Salud<br>
-                                          Direccion de Accion Social<br>
-                                          DESDE : ". $Etiqueta_Fecha_Inicio . " HASTA : " . $Etiqueta_Fecha_Fin ." </p>
-                                        <p id='encabezado'> Plan para el fortalecimiento del bienestar Comunitario<br>
-                                          <span id='frase'> GRAFICO DE SEGUIMIENTO</span><br>
-                                          (Con Reporte Georeferenciado)
-                                        </p>
-                                        <p id='InformacionDeCiudad'>
-                                          Municipialidad de Rio Tercero
-                                        </p>"
-                                      .$Table_imprimir ."
-                                    </body>
-                                  </html>";
-                $ColummaBarrioEliminada = "~<th id='Contenido-Titulo-1'>Barrio</th>~";
-                $ColummaDirecEliminada = "~<th id='Contenido-Titulo-2'>Direc.</th>~";
-                $EstilosTablaEliminadas = "~page-break-after:always;~";
-                //putenv("LANG=es_ES");
-                //setlocale(LC_ALL, "es_ES");
-                //bindtextdomain("messages", "locale");
-                //textdomain("messages");
-                $DTGeneral = new CtrGeneral();
-                for ($i = 12; $i >= 1; $i--) {
-                  $dateObj   = DateTime::createFromFormat('!m', $i);
-                  $monthName = $DTGeneral->getMes(gettext($dateObj->format('F')));
-                  $Table_imprimir = preg_replace( "~".$i."/[0-2][0-9]~" ,$monthName ,$Table_imprimir);
-                }
-
-                //$Table_imprimir = preg_replace( $ColummaBarrioEliminada, "", $Table_imprimir);
-                //$Table_imprimir = preg_replace( $ColummaDirecEliminada, "", $Table_imprimir);
-                $Table_imprimir = preg_replace( $EstilosTablaEliminadas, "page-break-after: always; width: 100%;", $Table_imprimir);
-
-              }
-
               if ($Con->ResultSet->num_rows > 0) {
                 echo $Table;
               }
@@ -3052,7 +3028,8 @@ $Con->CloseConexion();
           ?>
           <input type="hidden" name="tabla_1" id = "tabla_1" value = "<?php echo json_encode($jsonTable);?>">
           </div>
-
+          <!--<div id="basicMap" style="height:250px"></div>-->
+          </div>
         </div>
       </div>
     </div>
@@ -3084,6 +3061,22 @@ $Con->CloseConexion();
           <div class="modal-footer modal-footer-flex-center">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
             <button type="button" class="btn btn-primary" onClick="configResultados()" data-dismiss="modal">Aceptar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade modal--show-overall" id="map-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 2001;">
+      <div class="class_modal-dialog modal-dialog" role="document"  id="id_modal-dialog" style="min-width: 80%; height: 1000px;">
+        <div class="modal-content" style="height: 60%;">
+          <div>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" style="padding-top: 0px">
+          <div id="basicMap"></div>
           </div>
         </div>
       </div>

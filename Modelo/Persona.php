@@ -20,6 +20,7 @@ class Persona{
 	private $Manzana;
 	private $Lote;
 	private $Familia;
+	private $Georeferencia;
 	private $Observaciones;
 	private $Cambio_Domicilio;
 	private $Telefono;
@@ -69,6 +70,24 @@ public function setObra_Social($xObra_Social){
 }
 
 public function setDomicilio($xDomicilio){
+	if ($xDomicilio) {
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, "https://nominatim.openstreetmap.org/search?addressdetails=1&q=rio+tercero+" . str_replace(" ", "+", $xDomicilio) . "&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		$response = curl_exec($ch);
+		$arr_obj_json = json_decode($response);
+		curl_close($ch);
+		if (!$arr_obj_json) {
+			if (!is_null($arr_obj_json[0]->lat) || !is_null($arr_obj_json[0]->lon)) {
+				$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
+				$this->Georeferencia = $point;
+			} else {
+				$this->Georeferencia = null;
+			}
+	    } else {
+			$this->Georeferencia = null;
+		}
+	}
 	$this->Domicilio = $xDomicilio;
 }
 
@@ -98,6 +117,10 @@ public function setLote($xLote){
 
 public function setFamilia($xFamilia){
 	$this->Familia = $xFamilia;
+}
+
+public function setGeoreferencia($xGeoreferencia){
+	$this->Georeferencia = $xGeoreferencia;
 }
 
 public function setObservaciones($xObservaciones){
@@ -266,6 +289,11 @@ public function getFamilia()
 	return $this->Familia;
 }
 
+public function getGeoreferencia()
+{
+	return $this->Georeferencia;
+}
+
 public function getObservaciones()
 {
 	return $this->Observaciones;
@@ -334,35 +362,50 @@ public static function is_registered($documento)
 	return $is_multiple;
 }
 
+public function update_geo()
+{
+	$Con = new Conexion();
+	$Con->OpenConexion();
+	$Consulta = "update persona 
+				 set georeferencia = " . ((!is_null($this->getGeoreferencia())) ? $this->getGeoreferencia() : "null") . " 
+				 where id_persona = " . $this->getID_Persona();
+				 $MensajeErrorConsultar = "No se pudo actualizar la Persona ";
+				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+					throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+				}
+				 $Con->CloseConexion();
+}
+
 public function update()
 {
 	$Con = new Conexion();
 	$Con->OpenConexion();
 	$Consulta = "update persona 
-				 set apellido = " . ((!is_null($this->getApellido())) ? "'" . $this->getApellido()."'" : "null").", 
-				 	 nombre = " . ((!is_null($this->getNombre())) ? "'" . $this->getNombre()."'" : "null").", 
-					 documento = " . ((!is_null($this->getDNI())) ? "'" . $this->getDNI()."'" : "null").", 
-					 nro_legajo = " . ((!is_null($this->getNro_Legajo())) ? "'" . $this->getNro_Legajo()."'" : "null").", 
-					 edad = " . ((!is_null($this->getEdad())) ? "'" . $this->getEdad()."'" : "null").", 
-					 fecha_nac = " . ((!is_null($this->getFecha_Nacimiento())) ? "'" . $this->getFecha_Nacimiento()."'" : "null").", 
-					 telefono = " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono()."'" : "null").", 
-					 mail = " . ((!is_null($this->getMail())) ? "'" . $this->getMail()."'" : "null").", 
-					 nro_carpeta = " . ((!is_null($this->getNro_Carpeta())) ? "'" . $this->getNro_Carpeta()."'" : "null").", 
-					 obra_social = " . ((!is_null($this->getObra_Social())) ? "'" . $this->getObra_Social()."'" : "null").", 
-					 domicilio = " . ((!is_null($this->getDomicilio())) ? "'" . $this->getDomicilio()."'" : "null").", 
-					 ID_Barrio = " . ((!is_null($this->getId_Barrio())) ? "'" . $this->getId_Barrio()."'" : "null").", 
-					 localidad = " . ((!is_null($this->getLocalidad())) ? "'" . $this->getLocalidad()."'" : "null").", 
-					 circunscripcion = " . ((!is_null($this->getCircunscripcion())) ? "'" . $this->getCircunscripcion()."'" : "null").", 
-					 seccion = " . ((!is_null($this->getSeccion())) ? "'" . $this->getSeccion()."'" : "null").", 
-					 manzana = " . ((!is_null($this->getManzana())) ? "'" . $this->getManzana()."'" : "null").", 
-					 lote = " . ((!is_null($this->getLote())) ? $this->getLote() : "null").", 
-					 familia = " . ((!is_null($this->getFamilia())) ? $this->getFamilia() : "null").", 
-					 observacion = " . ((!is_null($this->getObservaciones())) ? "'" . $this->getObservaciones()."'" : "null").", 
-					 cambio_domicilio = " . ((!is_null($this->getCambio_Domicilio())) ? "'" . $this->getCambio_Domicilio()."'" : "null").", 
-					 telefono = " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono()."'" : "null").", 
-					 ID_Escuela = " . ((!is_null($this->getID_Escuela())) ? "'" . $this->getID_Escuela()."'" : "null").", 
-					 meses = " . ((!is_null($this->getMeses())) ? "'" . $this->getMeses()."'" : "null").", 
-					 Trabajo = " . ((!is_null($this->getTrabajo())) ? "'" . $this->getTrabajo()."'" : "null")." 
+				 set apellido = " . ((!is_null($this->getApellido())) ? "'" . $this->getApellido() . "'" : "null") . ", 
+				 	 nombre = " . ((!is_null($this->getNombre())) ? "'" . $this->getNombre() . "'" : "null") . ", 
+					 documento = " . ((!is_null($this->getDNI())) ? "'" . $this->getDNI() . "'" : "null") . ", 
+					 nro_legajo = " . ((!is_null($this->getNro_Legajo())) ? "'" . $this->getNro_Legajo() . "'" : "null") . ", 
+					 edad = " . ((!is_null($this->getEdad())) ? "'" . $this->getEdad() . "'" : "null") . ", 
+					 fecha_nac = " . ((!is_null($this->getFecha_Nacimiento())) ? "'" . $this->getFecha_Nacimiento() . "'" : "null") . ", 
+					 telefono = " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono() . "'" : "null") . ", 
+					 mail = " . ((!is_null($this->getMail())) ? "'" . $this->getMail() . "'" : "null") . ", 
+					 nro_carpeta = " . ((!is_null($this->getNro_Carpeta())) ? "'" . $this->getNro_Carpeta() . "'" : "null") . ", 
+					 obra_social = " . ((!is_null($this->getObra_Social())) ? "'" . $this->getObra_Social() . "'" : "null") . ", 
+					 domicilio = " . ((!is_null($this->getDomicilio())) ? "'" . $this->getDomicilio() . "'" : "null") . ", 
+					 ID_Barrio = " . ((!is_null($this->getId_Barrio())) ? "'" . $this->getId_Barrio() . "'" : "null") . ", 
+					 localidad = " . ((!is_null($this->getLocalidad())) ? "'" . $this->getLocalidad() . "'" : "null") . ", 
+					 circunscripcion = " . ((!is_null($this->getCircunscripcion())) ? "'" . $this->getCircunscripcion() . "'" : "null") . ", 
+					 seccion = " . ((!is_null($this->getSeccion())) ? "'" . $this->getSeccion() . "'" : "null") . ", 
+					 manzana = " . ((!is_null($this->getManzana())) ? "'" . $this->getManzana() . "'" : "null") . ", 
+					 lote = " . ((!is_null($this->getLote())) ? $this->getLote() : "null") . ", 
+					 familia = " . ((!is_null($this->getFamilia())) ? $this->getFamilia() : "null") . ", 
+					 observacion = " . ((!is_null($this->getObservaciones())) ? "'" . $this->getObservaciones() . "'" : "null") . ", 
+					 cambio_domicilio = " . ((!is_null($this->getCambio_Domicilio())) ? "'" . $this->getCambio_Domicilio() . "'" : "null") . ", 
+					 telefono = " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono() . "'" : "null") . ", 
+					 ID_Escuela = " . ((!is_null($this->getID_Escuela())) ? "'" . $this->getID_Escuela() . "'" : "null") . ", 
+					 meses = " . ((!is_null($this->getMeses())) ? "'" . $this->getMeses() . "'" : "null") . ", 
+					 Trabajo = " . ((!is_null($this->getTrabajo())) ? "'" . $this->getTrabajo() . "'" : "null") . ",
+					 georeferencia = " . ((!is_null($this->getGeoreferencia())) ? $this->getGeoreferencia() : "null") . " 
 				 where id_persona = " . $this->getID_Persona();
 				 $MensajeErrorConsultar = "No se pudo actualizar la Persona";
 				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
@@ -374,7 +417,7 @@ public function update()
 public function save(){
 	$Con = new Conexion();
 	$Con->OpenConexion();
-	$Consulta = "INSERT INTO persona (
+	$consulta = "INSERT INTO persona (
 									  apellido, 
 									  nombre, 
 									  documento, 
@@ -398,36 +441,38 @@ public function save(){
 									  ID_Escuela, 
 									  meses, 
 									  Trabajo, 
+									  georeferencia, 
 									  estado 
 				 )
-				 VALUES ( " . ((!is_null($this->getApellido())) ? "'" . $this->getApellido()."'" : "null").", 
-						 " . ((!is_null($this->getNombre())) ? "'" . $this->getNombre()."'" : "null").", 
-						 " . ((!is_null($this->getDNI())) ? "'" . $this->getDNI()."'" : "null").", 
-						 " . ((!is_null($this->getNro_Legajo())) ? "'" . $this->getNro_Legajo()."'" : "null").", 
-						 " . ((!is_null($this->getEdad())) ? $this->getEdad() : "null").", 
-						 " . ((!is_null($this->getFecha_Nacimiento())) ? "'" . $this->getFecha_Nacimiento()."'" : "null").", 
-						 " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono()."'" : "null").", 
-						 " . ((!is_null($this->getMail())) ? "'" . $this->getMail()."'" : "null").", 
-						 " . ((!is_null($this->getNro_Carpeta())) ? "'" . $this->getNro_Carpeta()."'" : "null").", 
-						 " . ((!is_null($this->getObra_Social())) ? "'" . $this->getObra_Social()."'" : "null").", 
-						 " . ((!is_null($this->getDomicilio())) ? "'" . $this->getDomicilio()."'" : "null").", 
-						 " . ((!is_null($this->getId_Barrio())) ? $this->getId_Barrio() : "null").", 
-						 " . ((!is_null($this->getLocalidad())) ? "'" . $this->getLocalidad()."'" : "null").", 
-						 " . ((!is_null($this->getCircunscripcion())) ? $this->getCircunscripcion() : "null").", 
-						 " . ((!is_null($this->getSeccion())) ? $this->getSeccion() : "null").", 
-						 " . ((!is_null($this->getManzana())) ? "'" . $this->getManzana()."'" : "null").", 
-						 " . ((!is_null($this->getLote())) ? $this->getLote() : "null").", 
-						 " . ((!is_null($this->getFamilia())) ? $this->getFamilia() : "null").", 
-						 " . ((!is_null($this->getObservaciones())) ? "'" . $this->getObservaciones()."'" : "null").", 
-						 " . ((!is_null($this->getCambio_Domicilio())) ? "'" . $this->getCambio_Domicilio()."'" : "null").", 
-						 " . ((!is_null($this->getID_Escuela())) ? "'" . $this->getID_Escuela()."'" : "null").", 
-						 " . ((!is_null($this->getMeses())) ? "'" . $this->getMeses()."'" : "null").", 
-						 " . ((!is_null($this->getTrabajo())) ? "'" . $this->getTrabajo()."'" : "null").",
+				 VALUES ( " . ((!is_null($this->getApellido())) ? "'" . $this->getApellido() . "'" : "null") . ", 
+						 " . ((!is_null($this->getNombre())) ? "'" . $this->getNombre() . "'" : "null") . ", 
+						 " . ((!is_null($this->getDNI())) ? "'" . $this->getDNI() . "'" : "null") . ", 
+						 " . ((!is_null($this->getNro_Legajo())) ? "'" . $this->getNro_Legajo() . "'" : "null") . ", 
+						 " . ((!is_null($this->getEdad())) ? $this->getEdad() : "null") . ", 
+						 " . ((!is_null($this->getFecha_Nacimiento())) ? "'" . $this->getFecha_Nacimiento() . "'" : "null") . ", 
+						 " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono() . "'" : "null") . ", 
+						 " . ((!is_null($this->getMail())) ? "'" . $this->getMail() . "'" : "null") . ", 
+						 " . ((!is_null($this->getNro_Carpeta())) ? "'" . $this->getNro_Carpeta() . "'" : "null") . ", 
+						 " . ((!is_null($this->getObra_Social())) ? "'" . $this->getObra_Social() . "'" : "null") . ", 
+						 " . ((!is_null($this->getDomicilio())) ? "'" . $this->getDomicilio() . "'" : "null") . ", 
+						 " . ((!is_null($this->getId_Barrio())) ? $this->getId_Barrio() : "null") . ", 
+						 " . ((!is_null($this->getLocalidad())) ? "'" . $this->getLocalidad() . "'" : "null") . ", 
+						 " . ((!is_null($this->getCircunscripcion())) ? $this->getCircunscripcion() : "null") . ", 
+						 " . ((!is_null($this->getSeccion())) ? $this->getSeccion() : "null") . ", 
+						 " . ((!is_null($this->getManzana())) ? "'" . $this->getManzana() . "'" : "null") . ", 
+						 " . ((!is_null($this->getLote())) ? $this->getLote() : "null") . ", 
+						 " . ((!is_null($this->getFamilia())) ? $this->getFamilia() : "null") . ", 
+						 " . ((!is_null($this->getObservaciones())) ? "'" . $this->getObservaciones() . "'" : "null") . ", 
+						 " . ((!is_null($this->getCambio_Domicilio())) ? "'" . $this->getCambio_Domicilio() . "'" : "null") . ", 
+						 " . ((!is_null($this->getID_Escuela())) ? "'" . $this->getID_Escuela() . "'" : "null") . ", 
+						 " . ((!is_null($this->getMeses())) ? "'" . $this->getMeses() . "'" : "null") . ", 
+						 " . ((!is_null($this->getTrabajo())) ? "'" . $this->getTrabajo() . "'" : "null") . ",
+						 " . ((!is_null($this->getGeoreferencia())) ? $this->getGeoreferencia() : "null") . ",
 						 1
 				 )";
 				 $MensajeErrorConsultar = "No se pudo insertar la Persona";
-				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
-					throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+				 if (!$Ret = mysqli_query($Con->Conexion, $consulta)) {
+					throw new Exception($MensajeErrorConsultar . $consulta, 2);
 				 }
 				 $Con->CloseConexion();
 }
@@ -457,7 +502,8 @@ public function __construct(
 	$xMail = null,
 	$xID_Escuela = null,
 	$xEstado = null,
-	$xTrabajo = null
+	$xTrabajo = null,
+	$xGeoreferencia = null
 ){
 	if (!$ID_Persona) {
 		$this->Apellido = $xApellido;
@@ -485,6 +531,18 @@ public function __construct(
 		$this->Seccion = $xSeccion;
 		$this->Telefono = $xTelefono;
 		$this->Trabajo = $xTrabajo;
+		if ((!$xGeoreferencia) || $this->Domicilio) {
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, "https://nominatim.openstreetmap.org/search?addressdetails=1&q=rio+tercero+" . str_replace(" ", "+", $this->Domicilio) . "&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			$response = curl_exec($ch);
+			$arr_obj_json = json_decode($response);
+			curl_close($ch);
+			$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
+			$this->Georeferencia = $point;
+		} else {
+		    $this->Georeferencia = $xGeoreferencia;
+		}
 	} else {
 		$Con = new Conexion();
         $Con->OpenConexion();
@@ -526,6 +584,7 @@ public function __construct(
 		$ID_Escuela = $ret["ID_Escuela"];
 		$estado = $ret["estado"];
 		$trabajo = $ret["Trabajo"];
+		$georefencia = (isset($ret["georefencia"])) ? $ret["georefencia"] : null;
 		$this->ID_Persona = $ID_Persona;
 		$this->Apellido = $apellido;
 		$this->Nombre = $nombre;
@@ -551,6 +610,7 @@ public function __construct(
 		$this->ID_Escuela = $ID_Escuela;	
 		$this->Estado = $estado;
 		$this->Trabajo = $trabajo;
+		$this->Georeferencia = $georefencia;
 		$Con->CloseConexion();
 	}
 }
