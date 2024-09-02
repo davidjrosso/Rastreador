@@ -70,7 +70,7 @@ public function setObra_Social($xObra_Social){
 }
 
 public function setDomicilio($xDomicilio){
-	if ($xDomicilio) {
+	if (!$xDomicilio) {
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, "https://nominatim.openstreetmap.org/search?addressdetails=1&q=rio+tercero+" . str_replace(" ", "+", $xDomicilio) . "&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
