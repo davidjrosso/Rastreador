@@ -72,7 +72,7 @@ public function setObra_Social($xObra_Social){
 public function setDomicilio($xDomicilio){
 	if ($xDomicilio) {
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, "https://nominatim.openstreetmap.org/search?addressdetails=1&q=rio+tercero+" . str_replace(" ", "+", $xDomicilio) . "&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
+		curl_setopt($ch, CURLOPT_URL,"https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", $xDomicilio) . "&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		$response = curl_exec($ch);
 		$arr_obj_json = json_decode($response);
@@ -533,7 +533,7 @@ public function __construct(
 		$this->Trabajo = $xTrabajo;
 		if ((!$xGeoreferencia) || $this->Domicilio) {
 			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, "https://nominatim.openstreetmap.org/search?addressdetails=1&q=rio+tercero+" . str_replace(" ", "+", $this->Domicilio) . "&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
+			curl_setopt($ch, CURLOPT_URL, "https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", $this->Domicilio) . "&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			$response = curl_exec($ch);
 			$arr_obj_json = json_decode($response);
