@@ -538,8 +538,16 @@ public function __construct(
 			$response = curl_exec($ch);
 			$arr_obj_json = json_decode($response);
 			curl_close($ch);
-			$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
-			$this->Georeferencia = $point;
+			if ($arr_obj_json) {
+				if (!is_null($arr_obj_json[0]->lat) || !is_null($arr_obj_json[0]->lon)) {
+					$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
+					$this->Georeferencia = $point;
+				} else {
+					$this->Georeferencia = null;
+				}
+			} else {
+				$this->Georeferencia = null;
+			}
 		} else {
 		    $this->Georeferencia = $xGeoreferencia;
 		}
