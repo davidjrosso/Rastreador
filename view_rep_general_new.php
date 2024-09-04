@@ -1597,9 +1597,6 @@ $Con->CloseConexion();
           </div>
         </div>
           <div class="col-md-12">
-            <!-- <
-        ?php echo "DEBUG: ".$Consulta; ?> -->
-            <!-- Search -->
 
             <div class="table-responsive" id="tabla-responsive">
               <?php
@@ -1739,9 +1736,7 @@ $Con->CloseConexion();
                 $Mes_Actual_Bandera++;
               }
               //$arr = array_reverse($arr);
-              $nroColumnas += $MesesDiferencia;
-              // echo "DEBUG:".var_dump($arr);
-            
+              $nroColumnas += $MesesDiferencia;            
 
               /*             FIN TOMAR MESES */
 
@@ -1779,8 +1774,6 @@ $Con->CloseConexion();
 
               }
 
-
-              // echo "DEBUG:".var_dump($arr);
               // ob_start();   
             
               $Table .= "</tr>
@@ -1901,10 +1894,7 @@ $Con->CloseConexion();
                                        order by B.Barrio DESC, P.domicilio DESC, P.apellido DESC, P.nombre DESC";
                 }
 
-                // $ConsultarTodos .= " group by P.id_persona order by P.apellido, P.nombre";
-                // var_dump($ConsultarTodos);
-            
-
+                // $ConsultarTodos .= " group by P.id_persona order by P.apellido, P.nombre";            
 
                 $MensajeErrorTodos = "No se pudieron consultar los datos de todas las personas";
 
@@ -1933,8 +1923,6 @@ $Con->CloseConexion();
 
                 }
               }
-              echo $Consulta;
-              echo $_REQUEST["ID_Motivo4"];
               $EjecutarConsulta2 = mysqli_query($Con->Conexion, $Consulta) or die("Error al consultar datos");
               // while ($Ret = mysqli_fetch_array($Con->ResultSet)) {                     
             
@@ -2355,7 +2343,6 @@ $Con->CloseConexion();
                                        </td>";
                   $jsonTable[$clave]["persona"] = $RetTodos["apellido"] . ", " . $RetTodos["nombre"];
                   $jsonTable[$clave]["fechanac"] = $Fecha_Nacimiento;
-                  //$jsonMotivos = [];
                   foreach ($arr as $key => $value) {
                     $Separar = explode("/", $value);
                     $Mes = $Separar[0]; 
@@ -2432,13 +2419,10 @@ $Con->CloseConexion();
                                                       C.estado = 1";
                             $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
 
-                            // echo $ConsultarCodyColor;               
-
                             $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor . " - " . $ConsultarCodyColor . " valor:" . $Ret_Datos_Movimiento["motivo_1"]);
                             $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
                             $nroMotivosEnFecha += 1;
 
-                            // echo "DEBUG: ".var_dump($RetMotivo);
                             if ($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1") {
                               $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
@@ -2494,14 +2478,11 @@ $Con->CloseConexion();
                                                       and M.estado = 1 
                                                       and C.estado = 1";
                             $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
-
-                            // echo $ConsultarCodyColor;               
             
                             $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor . " - " . $ConsultarCodyColor . " valor:" . $Ret_Datos_Movimiento["motivo_1"]);
                             $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
                             $nroMotivosEnFecha += 1;
 
-                            // echo "DEBUG: ".var_dump($RetMotivo);
                             if ($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1") {
                               $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
@@ -2557,13 +2538,10 @@ $Con->CloseConexion();
                                                           and C.estado = 1";
                             $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
 
-                            // echo $ConsultarCodyColor;               
-
                             $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor . " - " . $ConsultarCodyColor . " valor:" . $Ret_Datos_Movimiento["motivo_1"]);
                             $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
                             $nroMotivosEnFecha += 1;
 
-                            // echo "DEBUG: ".var_dump($RetMotivo);
                             if ($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1") {
                                 $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                                 $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
@@ -2617,8 +2595,6 @@ $Con->CloseConexion();
                                                    and C.estado = 1";
 
                           $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
-
-                          //echo $ConsultarCodyColor;               
             
                           $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor . " - " . $ConsultarCodyColor . " valor:" . $Ret_Datos_Movimiento["motivo_1"]);
                           $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
@@ -2867,8 +2843,6 @@ $Con->CloseConexion();
                                                            M.id_motivo IN (SELECT *
                                                                           FROM GIN) as ConPermisoGeneral, M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
                             $MensajeErrorConsultarCodyColor3 = "No se pudieron consultar los motivos de los Movimientos";
-
-                            // echo $ConsultarCodyColor;               
             
                             $TomarCodyColor3 = mysqli_query($Con->Conexion, $ConsultarCodyColor3) or die($MensajeErrorConsultarCodyColor3 . " - " . $ConsultarCodyColor3 . " valor:" . $Ret_Datos_Movimiento["motivo_3"]);
 
@@ -2918,8 +2892,6 @@ $Con->CloseConexion();
                                                            M.id_motivo IN (SELECT *
                                                                           FROM GIN) as ConPermisoGeneral, M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
                             $MensajeErrorConsultarCodyColor3 = "No se pudieron consultar los motivos de los Movimientos";
-
-                            // echo $ConsultarCodyColor;               
             
                             $TomarCodyColor3 = mysqli_query($Con->Conexion, $ConsultarCodyColor3) or die($MensajeErrorConsultarCodyColor3 . " - " . $ConsultarCodyColor3 . " valor:" . $Ret_Datos_Movimiento["motivo_3"]);
                             $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
@@ -2968,8 +2940,6 @@ $Con->CloseConexion();
                                                            M.id_motivo IN (SELECT *
                                                                           FROM GIN) as ConPermisoGeneral, M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
                             $MensajeErrorConsultarCodyColor3 = "No se pudieron consultar los motivos de los Movimientos";
-
-                            // echo $ConsultarCodyColor;               
             
                             $TomarCodyColor3 = mysqli_query($Con->Conexion, $ConsultarCodyColor3) or die($MensajeErrorConsultarCodyColor3 . " - " . $ConsultarCodyColor3 . " valor:" . $Ret_Datos_Movimiento["motivo_3"]);
                             $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
@@ -3063,7 +3033,6 @@ $Con->CloseConexion();
                     $tagsMotivos .= ($nroMotivosEnFecha >= 6) ? "</div>" : "";
                     $tagsTD .= "</div></td>";
                     $tagsTD_imprimir .= $tagsMotivos . "</div></td>";
-                    //$jsonTable[$clave]["motivos"] = $jsonMotivos;
                     $ID_Persona_Bandera = $RetTodos["id_persona"];
                   }
 
@@ -3083,12 +3052,6 @@ $Con->CloseConexion();
             
               }
 
-              // BUSCARLE LA VUELTA TODO:
-              /*if ($ID_Persona > 0) {
-                while ($RetConsultaFlia = mysqli_fetch_assoc($EjecutarConsultaFlia)) {
-                  echo $RetConsultaFlia;
-                }
-              }*/
               if (isset($Table)) {
                 $Table .= "</tbody>";
                 $Table .= "</table>";
@@ -3161,7 +3124,6 @@ $Con->CloseConexion();
     <script>
       (function () {
         var tabla = document.getElementById("tabla-responsive");
-        //tabla.scrollLeft = '9999';
       })();
 
       <?php $_SESSION["meses"] = $mesesHeader; ?>
@@ -3173,7 +3135,6 @@ $Con->CloseConexion();
       }
 
       function toggleZoomScreen() {
-        //document.body.style.zoom = "55%";
         var Tabla = document.getElementById("cuerpo-tabla");
         Tabla.style.height = "1800px";
 
@@ -3207,23 +3168,16 @@ $Con->CloseConexion();
 
         var DatosResultados = document.getElementsByName("DatosResultados");
         for (var i = 0; i < DatosResultados.length; i++) {
-          // DatosResultados[i].removeAttribute("min-width");         
           DatosResultados[i].setAttribute("style", "min-width: 250px; font-size: 28px;");
         }
 
         var DatosSinResultados = document.getElementsByName("DatosSinResultados");
         for (var i = 0; i < DatosSinResultados.length; i++) {
-          // DatosResultados[i].removeAttribute("min-width");         
           DatosSinResultados[i].setAttribute("style", "min-width: 82%;");
         }
-
-
-        // DTR.setAttribute("width","400px");
-
       }
 
       function toggleZoomScreenNormal() {
-        //document.body.style.zoom = "normal";
         var Tabla = document.getElementById("cuerpo-tabla");
         Tabla.style.height = "480px";
 
@@ -3256,13 +3210,11 @@ $Con->CloseConexion();
 
         var DatosResultados = document.getElementsByName("DatosResultados");
         for (var i = 0; i < DatosResultados.length; i++) {
-          // DatosResultados[i].removeAttribute("min-width");         
           DatosResultados[i].setAttribute("style", "min-width: 190px;");
         }
 
         var DatosSinResultados = document.getElementsByName("DatosSinResultados");
         for (var i = 0; i < DatosSinResultados.length; i++) {
-          // DatosResultados[i].removeAttribute("min-width");         
           DatosSinResultados[i].setAttribute("style", "min-width: 82%;");
         }
       }
@@ -3325,56 +3277,7 @@ $Con->CloseConexion();
         console.log(arrTabla);
 
         location.href = 'pruebas_PDF.php?consulta=' + consulta + '&fechaInicio=' + fechaInicio + '&fechaFin=' + fechaFin;
-
-        //location.href='Controladores/export_excel.php?consulta='+consulta+'&fechaInicio='+fechaInicio+'&fechaFin='+fechaFin;
-
       }
-
-      /*
-      function enviarImprimirPdf() {
-        var tabla1 = document.getElementById("tabla_1");
-        var dataString = "tabla=" + tabla1.value;
-        console.log(dataString);
-        $.ajax({
-          type: "POST",
-          dataType: "html",
-          contentType: "application/x-www-form-urlencoded",
-          cache: false,
-          url: "Controladores/GeneradorPdf.php",
-          data: dataString,
-          async: true,
-          success: function (res) {
-            var arrBuffer = base64ToArrayBuffer(res);
-            var blob = new Blob([arrBuffer], { type: "application/pdf" });
-            //location.href = res;
-            var link=document.createElement('a');
-            var url1 = window.URL.createObjectURL(blob);
-            window.open(url1);
-            //link.href=window.URL.createObjectURL(blob);
-            //link.download="<FILENAME_TO_SAVE_WITH_EXTENSION>.pdf";
-            //link.click();
-          },
-          error: function (e) {
-            var errorJsonString = JSON.stringify(e);
-            console.log(errorJsonString);
-            var error = JSON.parse(errorJsonString);
-            console.log(error);
-            alert("error " + atob(error.responseText));
-          }
-        });
-      }*/
-
-      /* function enviarImprimirPdf() {
-        let filas = $("tbody > tr").each(envioDeFilasEnBloques);
-        if (rowsRequest != {}) {
-          let request = new XMLHttpRequest();
-          listaDeRequest.push(request);
-          request.open("POST", "Controladores/GeneradorPdf.php", true);
-          request.onreadystatechange = addPdf;
-          request.send(JSON.stringify(rowsRequest));
-          rowsRequest = {};
-        }
-      } */
 
       function enviarImprimirPdf() {
         let filas = objectJsonTabla.forEach((element, index, array) => {envioDeFilasEnBloques(element, index, array);});
