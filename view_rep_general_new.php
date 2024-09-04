@@ -116,20 +116,26 @@ $Con->CloseConexion();
       var toProjection = new OpenLayers.Projection("EPSG:4326");
       let position = new OpenLayers.LonLat(-64.11844, -32.17022).transform(toProjection, fromProjection);
       let zoom = 15;
-
+      let positionFormas = null;
+      let icon = null;
+      let charCodeLetter = null;
       map.addLayer(mapnik);
-
       var markers = new OpenLayers.Layer.Markers( "Markers" );
       map.addLayer(markers);
       let size = new OpenLayers.Size(21,25);
       let offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-      let icon = new OpenLayers.Icon('./images/icons/ModDatos.png', size, offset);
-      //let icon2 = new OpenLayers.Icon('./images/icons/VerDatos.png', size, offset);
 
       objectJsonTabla.forEach(function (elemento, indice, array) {
-          pos = new OpenLayers.LonLat(elemento.lon, elemento.lat).transform(toProjection, fromProjection);
-          markers.addMarker(new OpenLayers.Marker(pos,icon.clone()));
-          //markers.addMarker(new OpenLayers.Marker(pos,icon2.clone()));
+        pos = new OpenLayers.LonLat(elemento.lon, elemento.lat).transform(toProjection, fromProjection);
+        positionFormas = pos;
+        if (elemento.lista_formas_categorias) {
+          Object.keys(elemento.lista_formas_categorias).forEach(function (elemento, indice, array) {
+                charCodeLetter = (elemento.length == 1) ? elemento.charCodeAt(0) : elemento;
+                icon = new OpenLayers.Icon('./images/icons/motivos/' + charCodeLetter + '.png', size, offset);
+                markers.addMarker(new OpenLayers.Marker(positionFormas, icon.clone()));
+                positionFormas = positionFormas.add(10, 0);
+            });
+          }
       });
       map.setCenter(position, zoom);
     }
@@ -2459,6 +2465,12 @@ $Con->CloseConexion();
                                 $RetMotivo["codigo"],
                                 $RetMotivo["color"]
                               ];
+                              $forma_motivo = $RetMotivo["Forma_Categoria"];
+                              if (strlen($forma_motivo) > 1) {
+                                $forma_motivo = substr($forma_motivo, 2);
+                                $forma_motivo = substr($forma_motivo, 0, -1);
+                              }
+                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
                             }
                           }
                         }
@@ -2515,6 +2527,12 @@ $Con->CloseConexion();
                                 $RetMotivo["codigo"],
                                 $RetMotivo["color"]
                               ];
+                              $forma_motivo = $RetMotivo["Forma_Categoria"];
+                              if (strlen($forma_motivo) > 1) {
+                                $forma_motivo = substr($forma_motivo, 2);
+                                $forma_motivo = substr($forma_motivo, 0, -1);
+                              }
+                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
                             }
                           }
                         }
@@ -2570,6 +2588,12 @@ $Con->CloseConexion();
                                   $RetMotivo["codigo"],
                                   $RetMotivo["color"]
                                 ];
+                                $forma_motivo = $RetMotivo["Forma_Categoria"];
+                                if (strlen($forma_motivo) > 1) {
+                                  $forma_motivo = substr($forma_motivo, 2);
+                                  $forma_motivo = substr($forma_motivo, 0, -1);
+                                }
+                                $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
                             }
                           }
                         }
@@ -2624,6 +2648,12 @@ $Con->CloseConexion();
                                   $RetMotivo["codigo"],
                                   $RetMotivo["color"]
                               ];
+                              $forma_motivo = $RetMotivo["Forma_Categoria"];
+                              if (strlen($forma_motivo) > 1) {
+                                $forma_motivo = substr($forma_motivo, 2);
+                                $forma_motivo = substr($forma_motivo, 0, -1);
+                              }
+                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
                           }
                         }
                       }
@@ -2670,6 +2700,12 @@ $Con->CloseConexion();
                                     $RetMotivo["codigo"],
                                     $RetMotivo["color"]
                                 ];
+                              $forma_motivo = $RetMotivo["Forma_Categoria"];
+                              if (strlen($forma_motivo) > 1) {
+                                $forma_motivo = substr($forma_motivo, 2);
+                                $forma_motivo = substr($forma_motivo, 0, -1);
+                              }
+                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
                             }
                           }
                         }
@@ -2713,6 +2749,12 @@ $Con->CloseConexion();
                                     $RetMotivo["codigo"],
                                     $RetMotivo["color"]
                                 ];
+                              $forma_motivo = $RetMotivo["Forma_Categoria"];
+                              if (strlen($forma_motivo) > 1) {
+                                $forma_motivo = substr($forma_motivo, 2);
+                                $forma_motivo = substr($forma_motivo, 0, -1);
+                              }
+                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
                             }
                           }
                         }
@@ -2757,6 +2799,12 @@ $Con->CloseConexion();
                                   $RetMotivo["codigo"],
                                   $RetMotivo["color"]
                               ];
+                              $forma_motivo = $RetMotivo["Forma_Categoria"];
+                              if (strlen($forma_motivo) > 1) {
+                                $forma_motivo = substr($forma_motivo, 2);
+                                $forma_motivo = substr($forma_motivo, 0, -1);
+                              }
+                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
                             }
                           }
                         }
@@ -2800,6 +2848,12 @@ $Con->CloseConexion();
                                   $RetMotivo["codigo"],
                                   $RetMotivo["color"]
                               ];
+                              $forma_motivo = $RetMotivo["Forma_Categoria"];
+                              if (strlen($forma_motivo) > 1) {
+                                $forma_motivo = substr($forma_motivo, 2);
+                                $forma_motivo = substr($forma_motivo, 0, -1);
+                              }
+                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
                           }
                         }
                       }
@@ -2847,6 +2901,12 @@ $Con->CloseConexion();
                                     $RetMotivo["codigo"],
                                     $RetMotivo["color"]
                                 ];
+                              $forma_motivo = $RetMotivo["Forma_Categoria"];
+                              if (strlen($forma_motivo) > 1) {
+                                $forma_motivo = substr($forma_motivo, 2);
+                                $forma_motivo = substr($forma_motivo, 0, -1);
+                              }
+                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
                             }
                           }
                         }
@@ -2891,6 +2951,12 @@ $Con->CloseConexion();
                                   $RetMotivo["codigo"],
                                   $RetMotivo["color"]
                               ];
+                              $forma_motivo = $RetMotivo["Forma_Categoria"];
+                              if (strlen($forma_motivo) > 1) {
+                                $forma_motivo = substr($forma_motivo, 2);
+                                $forma_motivo = substr($forma_motivo, 0, -1);
+                              }
+                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
                             }
                           }
                         }
@@ -2935,6 +3001,12 @@ $Con->CloseConexion();
                                   $RetMotivo["codigo"],
                                   $RetMotivo["color"]
                               ];
+                              $forma_motivo = $RetMotivo["Forma_Categoria"];
+                              if (strlen($forma_motivo) > 1) {
+                                $forma_motivo = substr($forma_motivo, 2);
+                                $forma_motivo = substr($forma_motivo, 0, -1);
+                              }
+                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
                             }    
                           }
                         }
@@ -2977,6 +3049,12 @@ $Con->CloseConexion();
                                   $RetMotivo["codigo"],
                                   $RetMotivo["color"]
                               ];
+                              $forma_motivo = $RetMotivo["Forma_Categoria"];
+                              if (strlen($forma_motivo) > 1) {
+                                $forma_motivo = substr($forma_motivo, 2);
+                                $forma_motivo = substr($forma_motivo, 0, -1);
+                              }
+                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
                           }
                         }
                       }
@@ -3026,9 +3104,7 @@ $Con->CloseConexion();
             echo "No se pudo obtener el año";
           }
           ?>
-          <input type="hidden" name="tabla_1" id = "tabla_1" value = "<?php echo json_encode($jsonTable);?>">
           </div>
-          <!--<div id="basicMap" style="height:250px"></div>-->
           </div>
         </div>
       </div>
@@ -3067,7 +3143,7 @@ $Con->CloseConexion();
     </div>
 
 
-    <div class="modal fade modal--show-overall" id="map-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 2001;">
+    <div class="modal fade modal--show-overall" id="map-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 2001; overflow: hidden">
       <div class="class_modal-dialog modal-dialog" role="document"  id="id_modal-dialog" style="min-width: 80%; height: 1000px;">
         <div class="modal-content" style="height: 60%;">
           <div>

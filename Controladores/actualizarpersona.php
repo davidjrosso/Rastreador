@@ -10,6 +10,7 @@ try {
 				  from persona 
 				  where georeferencia is null 
 				    and domicilio is not null 
+					and domicilio <> ''
 				    and estado = 1";
 	if(!$ejecutar_consultar = mysqli_query($Con->Conexion, $consultar)){
 		throw new Exception("Problemas al intentar Consultar Registros de Personas", 0);
