@@ -167,9 +167,22 @@ $Con->CloseConexion();
       xmlhttp.send();
     }
 
+    function buscarMotivos4(motivoNumero){
+      var xMotivo = document.getElementById('SearchMotivos' + motivoNumero).value;
+      var textoBusqueda = xMotivo;
+      xmlhttp=new XMLHttpRequest();
+      xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+          contenidosRecibidos = xmlhttp.responseText;
+          document.getElementById("ResultadosMotivos" + motivoNumero).innerHTML=contenidosRecibidos;
+          }
+      }
+      xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda='+textoBusqueda+'&number=' + motivoNumero, true); // Método post y url invocada
+      xmlhttp.send();
+    }
+
     function buscarCategorias(){
       var xCategoria = document.getElementById('SearchCategorias').value;
-      console.log(xCategoria);
       var textoBusqueda = xCategoria;
       xmlhttp=new XMLHttpRequest();
       xmlhttp.onreadystatechange = function() {
@@ -694,24 +707,35 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 1: </label>
+              <label for="btn-Motivo1" class="col-md-2 col-form-label LblForm">Motivo 1: </label>
               <div class="col-md-10" id = "Motivo">
-                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo">Seleccione un Motivo</button>   
+                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo" id="btn-Motivo1">Seleccione un Motivo</button>   
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 2: </label>
+              <label for="btn-Motivo2" class="col-md-2 col-form-label LblForm">Motivo 2: </label>
               <div class="col-md-10" id = "Motivo2">
-                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo2">Seleccione un Motivo</button>   
+                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo2" id="btn-Motivo2">Seleccione un Motivo</button>   
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 3: </label>
+              <label for="btn-Motivo3" class="col-md-2 col-form-label LblForm">Motivo 3: </label>
               <div class="col-md-10" id = "Motivo3">
-                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo3">Seleccione un Motivo</button>
+                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo3" id="btn-Motivo3">Seleccione un Motivo</button>
               </div>
             </div>
-
+            <div class="form-group row">
+              <label for="btn-Motivo4" class="col-md-2 col-form-label LblForm">Motivo 4: </label>
+              <div class="col-md-10" id = "Motivo4">
+                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo4" id="btn-Motivo4">Seleccione un Motivo</button>   
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="btn-Motivo5" class="col-md-2 col-form-label LblForm">Motivo 5: </label>
+              <div class="col-md-10" id = "Motivo5">
+                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo5" id="btn-Motivo5">Seleccione un Motivo</button>   
+              </div>
+            </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Centro Salud: </label>
               <div class="col-md-10">
@@ -775,6 +799,8 @@ $Con->CloseConexion();
                 <input type="hidden" name="ID_Motivo" id = "ID_Motivo" value = "0">
                 <input type="hidden" name="ID_Motivo2" id = "ID_Motivo2" value = "0">
                 <input type="hidden" name="ID_Motivo3" id = "ID_Motivo3" value = "0">
+                <input type="hidden" name="ID_Motivo4" id = "ID_Motivo4" value = "0">
+                <input type="hidden" name="ID_Motivo5" id = "ID_Motivo5" value = "0">
                 <input type="hidden" name="ID_Categoria" id = "ID_Categoria" value = "0">
                 <button type="submit" class="btn btn-outline-success">Aceptar</button>
                 <button type="button" class="btn btn-outline-secondary" onClick="resetearForm()">Cancel</button>
@@ -938,6 +964,86 @@ $Con->CloseConexion();
                 <div class="row">
                   <div class="col"></div>
                   <div class="col-10" id = "ResultadosMotivos3">
+                    
+                  </div>
+                  <div class="col"></div>
+                </div>                
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- FIN MODAL SELECCION MOTIVO -->
+      <!-- Modal SELECCION MOTIVO 4 -->
+      <div class="modal fade bd-example-modal-lg" id="ModalMotivo4" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Selección de Motivo</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="row">
+                  <div class="col"></div>
+                  <div class="col-8">
+                    <div class="input-group mb-3">
+                      <input class = "form-control" type="text" name="BuscarMotivos4" id = "SearchMotivos4" onKeyUp="buscarMotivos4(4)" autocomplete="off">
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">Buscar</span>
+                      </div>  
+                    </div>                    
+                  </div>
+                  <div class="col"></div>
+                </div>
+                <div class="row">
+                  <div class="col"></div>
+                  <div class="col-10" id = "ResultadosMotivos4">
+                    
+                  </div>
+                  <div class="col"></div>
+                </div>                
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- FIN MODAL SELECCION MOTIVO -->
+      <!-- Modal SELECCION MOTIVO 5 -->
+      <div class="modal fade bd-example-modal-lg" id="ModalMotivo5" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Selección de Motivo</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="row">
+                  <div class="col"></div>
+                  <div class="col-8">
+                    <div class="input-group mb-3">
+                      <input class = "form-control" type="text" name="BuscarMotivos5" id = "SearchMotivos5" onKeyUp="buscarMotivos4(5)" autocomplete="off">
+                      <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">Buscar</span>
+                      </div>  
+                    </div>                    
+                  </div>
+                  <div class="col"></div>
+                </div>
+                <div class="row">
+                  <div class="col"></div>
+                  <div class="col-10" id = "ResultadosMotivos5">
                     
                   </div>
                   <div class="col"></div>

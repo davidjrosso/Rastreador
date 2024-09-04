@@ -1933,7 +1933,8 @@ $Con->CloseConexion();
 
                 }
               }
-
+              echo $Consulta;
+              echo $_REQUEST["ID_Motivo4"];
               $EjecutarConsulta2 = mysqli_query($Con->Conexion, $Consulta) or die("Error al consultar datos");
               // while ($Ret = mysqli_fetch_array($Con->ResultSet)) {                     
             
@@ -3141,7 +3142,6 @@ $Con->CloseConexion();
         </div>
       </div>
     </div>
-
 
     <div class="modal fade modal--show-overall" id="map-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 2001; overflow: hidden">
       <div class="class_modal-dialog modal-dialog" role="document"  id="id_modal-dialog" style="min-width: 80%; height: 1000px;">
