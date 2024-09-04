@@ -122,7 +122,7 @@ $Con->CloseConexion();
       map.addLayer(mapnik);
       var markers = new OpenLayers.Layer.Markers( "Markers" );
       map.addLayer(markers);
-      let size = new OpenLayers.Size(21,25);
+      let size = new OpenLayers.Size(13,15);
       let offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
 
       objectJsonTabla.forEach(function (elemento, indice, array) {
