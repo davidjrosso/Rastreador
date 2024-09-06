@@ -2622,21 +2622,21 @@ $Con->CloseConexion();
       </div>
       <div class="modal-body">
         <ul type=none>
-          <li><input type="checkbox" id="chkFecha"> Fecha </li>
-          <li><input type="checkbox" id="chkMotivos"> Motivos</li>
-          <li><input type="checkbox" id="chkPersona"> Persona</li> 
-          <li><input type="checkbox" id="chkDNI"> DNI </li>
-          <li><input type="checkbox" id="chkFechaNac"> Fecha Nac. </li>
-          <li><input type="checkbox" id="chkEdad"> Edad </li>
-          <li><input type="checkbox" id="chkMeses"> Meses </li>
-          <li><input type="checkbox" id="chkObraSocial"> Obra Social </li>
-          <li><input type="checkbox" id="chkDomicilio"> Domicilio </li>
-          <li><input type="checkbox" id="chkBarrio"> Barrio </li>
-          <li><input type="checkbox" id="chkLocalidad"> Localidad </li>
-          <li><input type="checkbox" id="chkObservaciones"> Observaciones</li>
-          <li><input type="checkbox" id="chkResponsable"> Responsable</li>
-          <li><input type="checkbox" id="chkCentrosSalud"> Centro de salud </li>
-          <li><input type="checkbox" id="chkOtrasInstituciones"> Otras instituciones</li>
+          <li><input type="checkbox" id="chkFecha" checked> Fecha </li>
+          <li><input type="checkbox" id="chkMotivos" checked> Motivos</li>
+          <li><input type="checkbox" id="chkPersona" checked> Persona</li> 
+          <li><input type="checkbox" id="chkDNI" checked> DNI </li>
+          <li><input type="checkbox" id="chkFechaNac" checked> Fecha Nac. </li>
+          <li><input type="checkbox" id="chkEdad" checked> Edad </li>
+          <li><input type="checkbox" id="chkMeses" checked> Meses </li>
+          <li><input type="checkbox" id="chkObraSocial" checked> Obra Social </li>
+          <li><input type="checkbox" id="chkDomicilio" checked> Domicilio </li>
+          <li><input type="checkbox" id="chkBarrio" checked> Barrio </li>
+          <li><input type="checkbox" id="chkLocalidad" checked> Localidad </li>
+          <li><input type="checkbox" id="chkObservaciones" checked> Observaciones</li>
+          <li><input type="checkbox" id="chkResponsable" checked> Responsable</li>
+          <li><input type="checkbox" id="chkCentrosSalud" checked> Centro de salud </li>
+          <li><input type="checkbox" id="chkOtrasInstituciones" checked> Otras instituciones</li>
         </ul>
       </div>
       <div class="modal-footer modal-footer-flex-center">
