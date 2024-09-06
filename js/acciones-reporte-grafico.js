@@ -937,7 +937,7 @@ function envioDeFilasMultiplesEnBloques(elemento, index, array) {
     OpenLayers.Event.stop(evt);
   }
 
-  function onClickOcultarPopup(this){
-    this.parentNode.parentNode.parentNode.style.display = 'none'
+  function onClickOcultarPopup(element){
+    element.parentNode.parentNode.parentNode.style.display = 'none'
   }
 
