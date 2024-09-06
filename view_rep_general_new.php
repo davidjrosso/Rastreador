@@ -135,14 +135,6 @@ $Con->CloseConexion();
           }
           OpenLayers.Event.stop(evt);
       };
-      let markerOutMouse = function(evt) {
-          if (this.popup != null) {
-            if (!this.popup.hidden) {
-              this.popup.hide();
-            }
-          }
-          OpenLayers.Event.stop(evt);
-      };
       objectJsonTabla.forEach(function (elemento, indice, array) {
         pos = new OpenLayers.LonLat(elemento.lon, elemento.lat).transform(toProjection, fromProjection);
         positionFormas = pos;
@@ -157,37 +149,45 @@ $Con->CloseConexion();
                 let feature = new OpenLayers.Feature(markers, positionFormas);
                 feature.closeBox = true;
                 feature.data.overflow = "hidden";
-                feature.data.popupContentHTML = `<div style='margin: 2%; height: 100%'>
-                                                  <table style='text-align: center; color: black;  table-layout: fixed; width: 100%; height: 97%'>
-                                                    <thead>
-                                                      <tr style='color: black; background-color: white'>
-                                                        <th style='background-color: white'></th>
-                                                        <th style='background-color: white'></th>
-                                                      </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                      <tr style='color: black;'>
-                                                        <td>Persona</td>
-                                                        <td>${elemento.persona}</td>
-                                                      </tr>
-                                                      <tr style='color: black;'>
-                                                        <td>Años</td>
-                                                        <td>${elemento.edad}</td>
-                                                      </tr>
-                                                      <tr style='color: black;'>
-                                                        <td>Meses</td>
-                                                        <td>${elemento.meses}</td>
-                                                      </tr>
-                                                      <tr style='color: black;'>
-                                                        <td>Fech. Nac.</td>
-                                                        <td>${elemento.fechanac}</td>
-                                                      </tr>
-                                                    </tbody>
-                                                  </table>
-                                                </div>`;
+                feature.data.popupContentHTML = ` <div style="display: inline-block; width: 80%; text-align: center;">
+                                                    Detalles 
+                                                  </div>
+                                                  <button type="button" class="btn-close" aria-label="Close" style="border-radius: 25px; background-color: #2e353d; color: white; margin: 2% 2% 0 4%"  onclick="onClickOcultarPopup(this);"></button>
+                                                  <div style='margin: 0 2% 1% 2%; height: 84%'>
+                                                    <table style='text-align: center; color: black;  table-layout: fixed; width: 100%; height: 97%'>
+                                                      <thead>
+                                                        <tr style='color: black; background-color: white'>
+                                                          <th style='background-color: white'></th>
+                                                          <th style='background-color: white'></th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <tr style='color: black;'>
+                                                          <td>
+                                                            Persona
+                                                          </td>
+                                                          <td>
+                                                            <a href='javascript:window.open("view_modpersonas.php?ID=${elemento.id_persona}","Ventana${elemento.id_persona}" ,"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no")' target='_top' rel='noopener noreferrer'>
+                                                              ${elemento.persona}
+                                                          </td>
+                                                        </tr>
+                                                        <tr style='color: black;'>
+                                                          <td>Años</td>
+                                                          <td>${elemento.edad}</td>
+                                                        </tr>
+                                                        <tr style='color: black;'>
+                                                          <td>Meses</td>
+                                                          <td>${elemento.meses}</td>
+                                                        </tr>
+                                                        <tr style='color: black;'>
+                                                          <td>Fech. Nac.</td>
+                                                          <td>${elemento.fechanac}</td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </div>`;
                 marker.feature = feature;
                 marker.events.register("mousedown", feature, markerClick);
-                marker.events.register("mouseout", feature, markerOutMouse);
                 markers.addMarker(marker);
 
             });
@@ -2315,6 +2315,7 @@ $Con->CloseConexion();
                   $Table_imprimir .= " <td id='Contenido-3'>" . $RetTodos["apellido"] . ", " . $RetTodos["nombre"] . "</td>
                                        <td id='Contenido-4' style='max-width: 100px;'>" . $Fecha_Nacimiento . "</td>";
                   $jsonTable[$clave]["persona"] = $RetTodos["apellido"] . ", " . $RetTodos["nombre"];
+                  $jsonTable[$clave]["id_persona"] = $RetTodos["id_persona"];
                   $jsonTable[$clave]["fechanac"] = $Fecha_Nacimiento;
                   $ColSpans = $MesesDiferencia * 270;
                   $Table .= "<td name='DatosSinResultados' style='width:" . $ColSpans . "px'></td>";
@@ -2404,6 +2405,7 @@ $Con->CloseConexion();
                                          $Fecha_Nacimiento . "
                                        </td>";
                   $jsonTable[$clave]["persona"] = $RetTodos["apellido"] . ", " . $RetTodos["nombre"];
+                  $jsonTable[$clave]["id_persona"] = $RetTodos["id_persona"];
                   $jsonTable[$clave]["fechanac"] = $Fecha_Nacimiento;
                   foreach ($arr as $key => $value) {
                     $Separar = explode("/", $value);
