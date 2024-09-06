@@ -189,7 +189,6 @@ $Con->CloseConexion();
                 marker.feature = feature;
                 marker.events.register("mousedown", feature, markerClick);
                 markers.addMarker(marker);
-
             });
           }
       });
@@ -1645,7 +1644,7 @@ $Con->CloseConexion();
             <button type="button" class="btn btn-danger" style="margin-left: 35%;"  onclick="location.href = 'view_general_new.php'">Atras</button>
             <!--<button type="button" class="btn btn-secondary" onclick="enviarImprimir()">**Imprimir</button>-->
             <!--button type="button" class="btn btn-secondary" onclick="enviarImprimirPdf();"> Imprimir</button>-->
-            <button type="button" class="btn btn-secondary" data-toggle="modal" style="background-color: #ffc6b1; color: black; border-color: white; " data-target="#map-modal">SIG</button>
+            <button type="button" class="btn btn-secondary" data-toggle="modal" style="background-color: #ffc6b1; color: black; border-color: white; " data-target="#map-modal">S. I. G.</button>
             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#configModal">Config</button>
           </div>
 
