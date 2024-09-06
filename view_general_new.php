@@ -72,6 +72,7 @@ $Con->CloseConexion();
 -->
   <script>
     var cantBarrios = 1;
+    var cantMotivos = 3;
     $(document).ready(function(){
               var date_input=$('input[name="Fecha_Desde"]'); //our date input has the name "date"
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
@@ -446,6 +447,32 @@ $Con->CloseConexion();
         }
       }
 
+      function agregarMotivo(){
+      if (cantMotivos <= 4) {
+        cantMotivos++;
+        var divContenedor = document.getElementById('contenedorMotivos');
+        var divMotivo = document.createElement("div");
+        divMotivo.setAttribute('class','form-group row');
+        var labelMotivo = document.createElement("label");
+        labelMotivo.setAttribute('class','col-md-2 col-form-label LblForm');
+        labelMotivo.innerText = 'Motivo '+ cantMotivos +':';
+        var divBotonMotivo = document.createElement("div");
+        divBotonMotivo.setAttribute("id", "Motivo" + cantMotivos);
+        divBotonMotivo.setAttribute('class','col-md-10');
+        var boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo" + cantMotivos + "'>Seleccione un Motivo</button>";
+        divBotonMotivo.innerHTML = boton;      
+        divMotivo.appendChild(labelMotivo);
+        divMotivo.appendChild(divBotonMotivo);
+        divContenedor.appendChild(divMotivo);
+        var divInputsGenerales = document.getElementById('InputsGenerales');
+        var divInput = document.createElement("input");
+        divInput.setAttribute("id", "ID_Motivo" + cantMotivos);
+        divInput.setAttribute("name", "ID_Motivo" + cantMotivos);
+        divInput.setAttribute("type", "hidden");
+        divInputsGenerales.appendChild(divInput);
+      }
+    }
+
   </script>
 </head>
 <body>
@@ -706,36 +733,31 @@ $Con->CloseConexion();
                 <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalCategoria">Seleccione una Categoria</button>  
               </div>
             </div>
+
             <div class="form-group row">
-              <label for="btn-Motivo1" class="col-md-2 col-form-label LblForm">Motivo 1: </label>
-              <div class="col-md-10" id = "Motivo">
-                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo" id="btn-Motivo1">Seleccione un Motivo</button>   
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 1: </label>
+              <div class="col-md-9" id = "Motivo">
+                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo">Seleccione un Motivo</button>   
+              </div>
+                <div class="col-md-1">
+                  <button type="button" class="btn btn-primary" onClick="agregarMotivo()" id="agregarMotivoID">+</button>
               </div>
             </div>
             <div class="form-group row">
-              <label for="btn-Motivo2" class="col-md-2 col-form-label LblForm">Motivo 2: </label>
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 2: </label>
               <div class="col-md-10" id = "Motivo2">
-                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo2" id="btn-Motivo2">Seleccione un Motivo</button>   
+                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo2">Seleccione un Motivo</button>   
               </div>
             </div>
             <div class="form-group row">
-              <label for="btn-Motivo3" class="col-md-2 col-form-label LblForm">Motivo 3: </label>
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 3: </label>
               <div class="col-md-10" id = "Motivo3">
-                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo3" id="btn-Motivo3">Seleccione un Motivo</button>
+                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo3">Seleccione un Motivo</button>   
               </div>
             </div>
-            <div class="form-group row">
-              <label for="btn-Motivo4" class="col-md-2 col-form-label LblForm">Motivo 4: </label>
-              <div class="col-md-10" id = "Motivo4">
-                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo4" id="btn-Motivo4">Seleccione un Motivo</button>   
-              </div>
+            <div id="contenedorMotivos">              
             </div>
-            <div class="form-group row">
-              <label for="btn-Motivo5" class="col-md-2 col-form-label LblForm">Motivo 5: </label>
-              <div class="col-md-10" id = "Motivo5">
-                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo5" id="btn-Motivo5">Seleccione un Motivo</button>   
-              </div>
-            </div>
+
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Centro Salud: </label>
               <div class="col-md-10">
@@ -796,15 +818,15 @@ $Con->CloseConexion();
             </div>
             <div class="form-group row">
               <div class="offset-md-2 col-md-10">
-                <input type="hidden" name="ID_Motivo" id = "ID_Motivo" value = "0">
-                <input type="hidden" name="ID_Motivo2" id = "ID_Motivo2" value = "0">
-                <input type="hidden" name="ID_Motivo3" id = "ID_Motivo3" value = "0">
-                <input type="hidden" name="ID_Motivo4" id = "ID_Motivo4" value = "0">
-                <input type="hidden" name="ID_Motivo5" id = "ID_Motivo5" value = "0">
-                <input type="hidden" name="ID_Categoria" id = "ID_Categoria" value = "0">
-                <button type="submit" class="btn btn-outline-success">Aceptar</button>
-                <button type="button" class="btn btn-outline-secondary" onClick="resetearForm()">Cancel</button>
-                <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = 'view_inicio.php'">Volver</button>
+                <div class="offset-md-2 col-md-10" id = "InputsGenerales">
+                    <input type="hidden" name="ID_Motivo" id = "ID_Motivo" value = "0">
+                    <input type="hidden" name="ID_Motivo2" id = "ID_Motivo2" value = "0">
+                    <input type="hidden" name="ID_Motivo3" id = "ID_Motivo3" value = "0">
+                    <input type="hidden" name="ID_Categoria" id = "ID_Categoria" value = "0">
+                    <button type="submit" class="btn btn-outline-success">Aceptar</button>
+                    <button type="button" class="btn btn-outline-secondary" onClick="resetearForm()">Cancel</button>
+                    <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = 'view_inicio.php'">Volver</button>
+                  </div>
               </div>
             </div>
           </form>
