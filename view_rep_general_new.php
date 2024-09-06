@@ -170,8 +170,8 @@ $Con->CloseConexion();
                                                         <td>Persona</td>
                                                         <td>${elemento.persona}</td>
                                                       </tr>
-                                                      <tr>
-                                                        <td style='color: black;'>Años</td>
+                                                      <tr style='color: black;'>
+                                                        <td>Años</td>
                                                         <td>${elemento.edad}</td>
                                                       </tr>
                                                       <tr style='color: black;'>
