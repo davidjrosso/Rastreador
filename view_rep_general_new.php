@@ -1113,13 +1113,13 @@ $Con->CloseConexion();
               $ID_Motivo4 = $_REQUEST["ID_Motivo4"];
               $MotivosOpciones["ID_Motivo4"] = $ID_Motivo4;
             } else {
-              $ID_Motivo4 = 1;
+              $ID_Motivo4 = 0;
             }
             if (isset($_REQUEST["ID_Motivo5"])) {
               $ID_Motivo5 = $_REQUEST["ID_Motivo5"];
               $MotivosOpciones["ID_Motivo5"] = $ID_Motivo5;
             } else {
-              $ID_Motivo5 = 1;
+              $ID_Motivo5 = 0;
             }
 
             $ID_Categoria = (isset($_REQUEST["ID_Categoria"])) ? $_REQUEST["ID_Categoria"] : null;
@@ -1419,7 +1419,7 @@ $Con->CloseConexion();
                 }
               }
 
-              if($ID_Motivo > 1){
+              if($ID_Motivo > 0){
                 $Consulta .= " (M.motivo_1 = $ID_Motivo 
                              or M.motivo_2 = $ID_Motivo 
                              or M.motivo_3 = $ID_Motivo
@@ -1436,8 +1436,8 @@ $Con->CloseConexion();
                 $json_filtro[] = "Motivo 1 ". $RetConsultarMotivo['motivo'];
                 //$filtrosSeleccionados["ID_Motivo1"] = $ID_Motivo;
               }
-              if($ID_Motivo2 > 1){
-                if($ID_Motivo > 1 ){
+              if($ID_Motivo2 > 0){
+                if($ID_Motivo > 0 ){
                   $Consulta .= " or ";
                 }
                 $Consulta .= " (M.motivo_1 = $ID_Motivo2 
@@ -1457,8 +1457,8 @@ $Con->CloseConexion();
                 //$filtrosSeleccionados["ID_Motivo2"] = $ID_Motivo2;
               }
 
-              if($ID_Motivo3 > 1){
-                if($ID_Motivo > 1 || $ID_Motivo2 > 1){
+              if($ID_Motivo3 > 0){
+                if($ID_Motivo > 0 || $ID_Motivo2 > 0){
                   $Consulta .= " or ";
                 }
 
@@ -1479,8 +1479,8 @@ $Con->CloseConexion();
                 //$filtrosSeleccionados["ID_Motivo3"] = $ID_Motivo3;
               }
 
-              if($ID_Motivo4 > 1){
-                if($ID_Motivo > 1 || $ID_Motivo2 > 1 || $ID_Motivo3 > 1){
+              if($ID_Motivo4 > 0){
+                if($ID_Motivo > 0 || $ID_Motivo2 > 0 || $ID_Motivo3 > 0){
                   $Consulta .= " or ";
                 }
 
@@ -1500,8 +1500,8 @@ $Con->CloseConexion();
                 $json_filtro[] = "Motivo 4 " . $RetConsultarMotivo['motivo'];
               }
 
-              if($ID_Motivo5 > 1){
-                if($ID_Motivo > 1 || $ID_Motivo2 > 1 || $ID_Motivo3 > 1 || $ID_Motivo4 > 1){
+              if($ID_Motivo5 > 0){
+                if($ID_Motivo > 0 || $ID_Motivo2 > 0 || $ID_Motivo3 > 0 || $ID_Motivo4 > 0){
                   $Consulta .= " or ";
                 }
 
