@@ -2879,7 +2879,7 @@ $Con->CloseConexion();
                             $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
                             $nroMotivosEnFecha += 1;
 
-                            if ($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1") {
+                            if ($RetMotivo2["ConPermisoParaUsr"] == "1" || $RetMotivo2["ConPermisoGeneral"] == "1") {
                                 $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                                 $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
@@ -2893,7 +2893,7 @@ $Con->CloseConexion();
                                               </span>
                                             </a>
                                           </div>";
-                                $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
+                                $marginLeft = (strlen($RetMotivo2["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
                                 $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
                                                     <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo2["color"] . ";'>" . 
                                                       $RetMotivo2["Forma_Categoria"] . "
@@ -2902,16 +2902,16 @@ $Con->CloseConexion();
                                                       $RetMotivo2["codigo"] . "
                                                    </div>
                                                  </div>";
-                                $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo["Forma_Categoria"], 
-                                    $RetMotivo["codigo"],
-                                    $RetMotivo["color"]
+                                $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo2["Forma_Categoria"], 
+                                    $RetMotivo2["codigo"],
+                                    $RetMotivo2["color"]
                                 ];
-                              $forma_motivo = $RetMotivo["Forma_Categoria"];
+                              $forma_motivo = $RetMotivo2["Forma_Categoria"];
                               if (strlen($forma_motivo) > 1) {
                                 $forma_motivo = substr($forma_motivo, 2);
                                 $forma_motivo = substr($forma_motivo, 0, -1);
                               }
-                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
+                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo2["color"]] = true;
                             }
                           }
                         }
@@ -2929,7 +2929,7 @@ $Con->CloseConexion();
                             $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
                             $nroMotivosEnFecha += 1;
 
-                            if ($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1") {
+                            if ($RetMotivo2["ConPermisoParaUsr"] == "1" || $RetMotivo2["ConPermisoGeneral"] == "1") {
                               $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
@@ -2943,7 +2943,7 @@ $Con->CloseConexion();
                                               </span>
                                             </a>
                                           </div>";
-                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
+                              $marginLeft = (strlen($RetMotivo2["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
                               $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
                                                  <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo2["color"] . ";'>" . 
                                                    $RetMotivo2["Forma_Categoria"] . "
@@ -2952,16 +2952,16 @@ $Con->CloseConexion();
                                                    $RetMotivo2["codigo"] . "
                                                  </div>
                                                </div>";
-                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo["Forma_Categoria"], 
-                                  $RetMotivo["codigo"],
-                                  $RetMotivo["color"]
+                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo2["Forma_Categoria"], 
+                                  $RetMotivo2["codigo"],
+                                  $RetMotivo2["color"]
                               ];
-                              $forma_motivo = $RetMotivo["Forma_Categoria"];
+                              $forma_motivo = $RetMotivo2["Forma_Categoria"];
                               if (strlen($forma_motivo) > 1) {
                                 $forma_motivo = substr($forma_motivo, 2);
                                 $forma_motivo = substr($forma_motivo, 0, -1);
                               }
-                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
+                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo2["color"]] = true;
                             }
                           }
                         }
@@ -2979,7 +2979,7 @@ $Con->CloseConexion();
                             $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
                             $nroMotivosEnFecha += 1;
 
-                            if ($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1") {
+                            if ($RetMotivo2["ConPermisoParaUsr"] == "1" || $RetMotivo2["ConPermisoGeneral"] == "1") {
                               $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
@@ -2993,7 +2993,7 @@ $Con->CloseConexion();
                                               </span>
                                             </a>
                                           </div>";
-                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
+                              $marginLeft = (strlen($RetMotivo2["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
                               $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
                                                  <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo2["color"] . ";'>" . 
                                                    $RetMotivo2["Forma_Categoria"] . "
@@ -3002,16 +3002,16 @@ $Con->CloseConexion();
                                                    $RetMotivo2["codigo"] . "
                                                  </div>
                                                </div>";
-                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo["Forma_Categoria"], 
-                                  $RetMotivo["codigo"],
-                                  $RetMotivo["color"]
+                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo2["Forma_Categoria"], 
+                                  $RetMotivo2["codigo"],
+                                  $RetMotivo2["color"]
                               ];
-                              $forma_motivo = $RetMotivo["Forma_Categoria"];
+                              $forma_motivo = $RetMotivo2["Forma_Categoria"];
                               if (strlen($forma_motivo) > 1) {
                                 $forma_motivo = substr($forma_motivo, 2);
                                 $forma_motivo = substr($forma_motivo, 0, -1);
                               }
-                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
+                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo2["color"]] = true;
                             }
                           }
                         }
@@ -3029,7 +3029,7 @@ $Con->CloseConexion();
                             $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
                             $nroMotivosEnFecha += 1;
 
-                            if ($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1") {
+                            if ($RetMotivo2["ConPermisoParaUsr"] == "1" || $RetMotivo2["ConPermisoGeneral"] == "1") {
                               $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
@@ -3043,7 +3043,7 @@ $Con->CloseConexion();
                                               </span>
                                             </a>
                                           </div>";
-                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
+                              $marginLeft = (strlen($RetMotivo2["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
                               $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
                                                  <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo2["color"] . ";'>" . 
                                                    $RetMotivo2["Forma_Categoria"] . "
@@ -3052,16 +3052,16 @@ $Con->CloseConexion();
                                                    $RetMotivo2["codigo"] . "
                                                  </div>
                                                </div>";
-                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo["Forma_Categoria"], 
-                                  $RetMotivo["codigo"],
-                                  $RetMotivo["color"]
+                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo2["Forma_Categoria"], 
+                                  $RetMotivo2["codigo"],
+                                  $RetMotivo2["color"]
                               ];
-                              $forma_motivo = $RetMotivo["Forma_Categoria"];
+                              $forma_motivo = $RetMotivo2["Forma_Categoria"];
                               if (strlen($forma_motivo) > 1) {
                                 $forma_motivo = substr($forma_motivo, 2);
                                 $forma_motivo = substr($forma_motivo, 0, -1);
                               }
-                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
+                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo2["color"]] = true;
                             }
                           }
                         }
@@ -3078,7 +3078,7 @@ $Con->CloseConexion();
                           $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
                           $nroMotivosEnFecha += 1;
 
-                          if ($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1") {
+                          if ($RetMotivo2["ConPermisoParaUsr"] == "1" || $RetMotivo2["ConPermisoGeneral"] == "1") {
                               $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
@@ -3092,7 +3092,7 @@ $Con->CloseConexion();
                                               </span>
                                             </a>
                                           </div>";
-                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
+                              $marginLeft = (strlen($RetMotivo2["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
                               $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center;  display: inline-block;'>
                                                  <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo2["color"] . "; text-align= center;'>" . 
                                                    $RetMotivo2["Forma_Categoria"] . "
@@ -3101,16 +3101,16 @@ $Con->CloseConexion();
                                                    $RetMotivo2["codigo"] . "
                                                  </div>
                                                </div>";
-                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo["Forma_Categoria"], 
-                                  $RetMotivo["codigo"],
-                                  $RetMotivo["color"]
+                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo2["Forma_Categoria"], 
+                                  $RetMotivo2["codigo"],
+                                  $RetMotivo2["color"]
                               ];
-                              $forma_motivo = $RetMotivo["Forma_Categoria"];
+                              $forma_motivo = $RetMotivo2["Forma_Categoria"];
                               if (strlen($forma_motivo) > 1) {
                                 $forma_motivo = substr($forma_motivo, 2);
                                 $forma_motivo = substr($forma_motivo, 0, -1);
                               }
-                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
+                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo2["color"]] = true;
                           }
                         }
                       }
@@ -3129,7 +3129,7 @@ $Con->CloseConexion();
                             $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
                             $nroMotivosEnFecha += 1;
 
-                            if ($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1") {
+                            if ($RetMotivo3["ConPermisoParaUsr"] == "1" || $RetMotivo3["ConPermisoGeneral"] == "1") {
                                 $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                                 $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
@@ -3143,7 +3143,7 @@ $Con->CloseConexion();
                                                 </span>
                                               </a>
                                             </div>";
-                                $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
+                                $marginLeft = (strlen($RetMotivo3["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
                                 $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
                                                     <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" . 
                                                       $RetMotivo3["Forma_Categoria"] . "
@@ -3152,16 +3152,16 @@ $Con->CloseConexion();
                                                       $RetMotivo3["codigo"] . "
                                                     </div>
                                                  </div>";
-                                $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo["Forma_Categoria"], 
-                                    $RetMotivo["codigo"],
-                                    $RetMotivo["color"]
+                                $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo3["Forma_Categoria"], 
+                                    $RetMotivo3["codigo"],
+                                    $RetMotivo3["color"]
                                 ];
-                              $forma_motivo = $RetMotivo["Forma_Categoria"];
+                              $forma_motivo = $RetMotivo3["Forma_Categoria"];
                               if (strlen($forma_motivo) > 1) {
                                 $forma_motivo = substr($forma_motivo, 2);
                                 $forma_motivo = substr($forma_motivo, 0, -1);
                               }
-                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
+                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo3["color"]] = true;
                             }
                           }
                         }
@@ -3177,7 +3177,7 @@ $Con->CloseConexion();
                             $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
                             $nroMotivosEnFecha += 1;
 
-                            if ($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1") {
+                            if ($RetMotivo3["ConPermisoParaUsr"] == "1" || $RetMotivo3["ConPermisoGeneral"] == "1") {
                               $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
@@ -3191,7 +3191,7 @@ $Con->CloseConexion();
                                               </span>
                                             </a>
                                           </div>";
-                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
+                              $marginLeft = (strlen($RetMotivo3["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
                               $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
                                                  <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" . 
                                                    $RetMotivo3["Forma_Categoria"] . "
@@ -3200,16 +3200,16 @@ $Con->CloseConexion();
                                                    $RetMotivo3["codigo"] . "
                                                  </div>
                                                </div>";
-                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo["Forma_Categoria"], 
-                                  $RetMotivo["codigo"],
-                                  $RetMotivo["color"]
+                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo3["Forma_Categoria"], 
+                                  $RetMotivo3["codigo"],
+                                  $RetMotivo3["color"]
                               ];
-                              $forma_motivo = $RetMotivo["Forma_Categoria"];
+                              $forma_motivo = $RetMotivo3["Forma_Categoria"];
                               if (strlen($forma_motivo) > 1) {
                                 $forma_motivo = substr($forma_motivo, 2);
                                 $forma_motivo = substr($forma_motivo, 0, -1);
                               }
-                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
+                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo3["color"]] = true;
                             }
                           }
                         }
@@ -3225,7 +3225,7 @@ $Con->CloseConexion();
                             $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
                             $nroMotivosEnFecha += 1;
 
-                            if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                            if($RetMotivo3["ConPermisoParaUsr"] == "1" || $RetMotivo3["ConPermisoGeneral"] == "1"){
                               $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
@@ -3239,7 +3239,7 @@ $Con->CloseConexion();
                                               </span>
                                             </a>
                                           </div>";
-                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
+                              $marginLeft = (strlen($RetMotivo3["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
                               $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
                                                  <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" . 
                                                     $RetMotivo3["Forma_Categoria"] . "
@@ -3248,16 +3248,16 @@ $Con->CloseConexion();
                                                     $RetMotivo3["codigo"] . "
                                                  </div>
                                                </div>";
-                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo["Forma_Categoria"], 
-                                  $RetMotivo["codigo"],
-                                  $RetMotivo["color"]
+                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo3["Forma_Categoria"], 
+                                  $RetMotivo3["codigo"],
+                                  $RetMotivo3["color"]
                               ];
-                              $forma_motivo = $RetMotivo["Forma_Categoria"];
+                              $forma_motivo = $RetMotivo3["Forma_Categoria"];
                               if (strlen($forma_motivo) > 1) {
                                 $forma_motivo = substr($forma_motivo, 2);
                                 $forma_motivo = substr($forma_motivo, 0, -1);
                               }
-                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
+                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo3["color"]] = true;
                             }    
                           }
                         }
@@ -3273,7 +3273,7 @@ $Con->CloseConexion();
                             $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
                             $nroMotivosEnFecha += 1;
 
-                            if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                            if($RetMotivo3["ConPermisoParaUsr"] == "1" || $RetMotivo3["ConPermisoGeneral"] == "1"){
                               $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
@@ -3287,7 +3287,7 @@ $Con->CloseConexion();
                                               </span>
                                             </a>
                                           </div>";
-                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
+                              $marginLeft = (strlen($RetMotivo3["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
                               $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
                                                  <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" . 
                                                     $RetMotivo3["Forma_Categoria"] . "
@@ -3296,16 +3296,16 @@ $Con->CloseConexion();
                                                     $RetMotivo3["codigo"] . "
                                                  </div>
                                                </div>";
-                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo["Forma_Categoria"], 
-                                  $RetMotivo["codigo"],
-                                  $RetMotivo["color"]
+                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo3["Forma_Categoria"], 
+                                  $RetMotivo3["codigo"],
+                                  $RetMotivo3["color"]
                               ];
-                              $forma_motivo = $RetMotivo["Forma_Categoria"];
+                              $forma_motivo = $RetMotivo3["Forma_Categoria"];
                               if (strlen($forma_motivo) > 1) {
                                 $forma_motivo = substr($forma_motivo, 2);
                                 $forma_motivo = substr($forma_motivo, 0, -1);
                               }
-                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
+                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo3["color"]] = true;
                             }    
                           }
                         }
@@ -3321,7 +3321,7 @@ $Con->CloseConexion();
                             $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
                             $nroMotivosEnFecha += 1;
 
-                            if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                            if($RetMotivo3["ConPermisoParaUsr"] == "1" || $RetMotivo3["ConPermisoGeneral"] == "1"){
                               $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
@@ -3335,7 +3335,7 @@ $Con->CloseConexion();
                                               </span>
                                             </a>
                                           </div>";
-                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
+                              $marginLeft = (strlen($RetMotivo3["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
                               $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
                                                  <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" . 
                                                     $RetMotivo3["Forma_Categoria"] . "
@@ -3344,16 +3344,16 @@ $Con->CloseConexion();
                                                     $RetMotivo3["codigo"] . "
                                                  </div>
                                                </div>";
-                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo["Forma_Categoria"], 
-                                  $RetMotivo["codigo"],
-                                  $RetMotivo["color"]
+                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo3["Forma_Categoria"], 
+                                  $RetMotivo3["codigo"],
+                                  $RetMotivo3["color"]
                               ];
-                              $forma_motivo = $RetMotivo["Forma_Categoria"];
+                              $forma_motivo = $RetMotivo3["Forma_Categoria"];
                               if (strlen($forma_motivo) > 1) {
                                 $forma_motivo = substr($forma_motivo, 2);
                                 $forma_motivo = substr($forma_motivo, 0, -1);
                               }
-                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
+                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo3["color"]] = true;
                             }    
                           }
                         }
@@ -3369,7 +3369,7 @@ $Con->CloseConexion();
                           $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
                           $nroMotivosEnFecha += 1;
 
-                          if($RetMotivo["ConPermisoParaUsr"] == "1" || $RetMotivo["ConPermisoGeneral"] == "1"){
+                          if($RetMotivo3["ConPermisoParaUsr"] == "1" || $RetMotivo3["ConPermisoGeneral"] == "1"){
                               $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                               $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
                                             <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
@@ -3383,7 +3383,7 @@ $Con->CloseConexion();
                                               </span>
                                             </a>
                                           </div>";
-                              $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
+                              $marginLeft = (strlen($RetMotivo3["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
                               $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block; '>
                                                  <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" . 
                                                    $RetMotivo3["Forma_Categoria"] . "
@@ -3392,16 +3392,16 @@ $Con->CloseConexion();
                                                    $RetMotivo3["codigo"] . "
                                                  </div>
                                                </div>";
-                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo["Forma_Categoria"], 
-                                  $RetMotivo["codigo"],
-                                  $RetMotivo["color"]
+                              $jsonTable[$clave]["$Mes/$Anio"][] = [$RetMotivo3["Forma_Categoria"], 
+                                  $RetMotivo3["codigo"],
+                                  $RetMotivo3["color"]
                               ];
-                              $forma_motivo = $RetMotivo["Forma_Categoria"];
+                              $forma_motivo = $RetMotivo3["Forma_Categoria"];
                               if (strlen($forma_motivo) > 1) {
                                 $forma_motivo = substr($forma_motivo, 2);
                                 $forma_motivo = substr($forma_motivo, 0, -1);
                               }
-                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
+                              $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo3["color"]] = true;
                           }
                         }
                       }
