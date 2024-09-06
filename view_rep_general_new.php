@@ -883,7 +883,8 @@ $Con->CloseConexion();
       /*left: 600px;*/
       width: 150px;
     }
-    #OpenLayers_Feature_69_popup_contentDiv {
+    
+    div[id$="_popup_contentDiv"] {
       width: auto !important;
     }
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
