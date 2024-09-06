@@ -122,18 +122,74 @@ $Con->CloseConexion();
       map.addLayer(mapnik);
       var markers = new OpenLayers.Layer.Markers( "Markers" );
       map.addLayer(markers);
-      let size = new OpenLayers.Size(13,15);
+      let popup = null;
+      let size = new OpenLayers.Size(10,12);
       let offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-
+      let markerClick = function(evt) {
+          if (this.popup == null) {
+              this.popup = this.createPopup(this.closeBox);
+              map.addPopup(this.popup);
+              this.popup.show();
+          } else {
+              this.popup.toggle();
+          }
+          OpenLayers.Event.stop(evt);
+      };
+      let markerOutMouse = function(evt) {
+          if (this.popup != null) {
+            if (!this.popup.hidden) {
+              this.popup.hide();
+            }
+          }
+          OpenLayers.Event.stop(evt);
+      };
       objectJsonTabla.forEach(function (elemento, indice, array) {
         pos = new OpenLayers.LonLat(elemento.lon, elemento.lat).transform(toProjection, fromProjection);
         positionFormas = pos;
         if (elemento.lista_formas_categorias) {
-          Object.keys(elemento.lista_formas_categorias).forEach(function (elemento, indice, array) {
-                charCodeLetter = (elemento.length == 1) ? elemento.charCodeAt(0) : elemento;
+          Object.keys(elemento.lista_formas_categorias).forEach(function (categoria, indice, array) {
+                charCodeLetter = (categoria.length == 1) ? categoria.charCodeAt(0) : categoria;
                 icon = new OpenLayers.Icon('./images/icons/motivos/' + charCodeLetter + '.png', size, offset);
-                markers.addMarker(new OpenLayers.Marker(positionFormas, icon.clone()));
+                let marker = new OpenLayers.Marker(positionFormas, icon.clone());
+                markers.addMarker(marker);
                 positionFormas = positionFormas.add(10, 0);
+
+                let feature = new OpenLayers.Feature(markers, positionFormas);
+                feature.closeBox = true;
+                feature.data.overflow = "hidden";
+                feature.data.popupContentHTML = `<div style='margin: 2%; height: 100%'>
+                                                  <table style='text-align: center; color: black;  table-layout: fixed; width: 100%; height: 97%'>
+                                                    <thead>
+                                                      <tr style='color: black; background-color: white'>
+                                                        <th style='background-color: white'></th>
+                                                        <th style='background-color: white'></th>
+                                                      </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                      <tr style='color: black;'>
+                                                        <td>Persona</td>
+                                                        <td>${elemento.persona}</td>
+                                                      </tr>
+                                                      <tr>
+                                                        <td style='color: black;'>Años</td>
+                                                        <td>${elemento.edad}</td>
+                                                      </tr>
+                                                      <tr style='color: black;'>
+                                                        <td>Meses</td>
+                                                        <td>${elemento.meses}</td>
+                                                      </tr>
+                                                      <tr style='color: black;'>
+                                                        <td>Fech. Nac.</td>
+                                                        <td>${elemento.fechanac}</td>
+                                                      </tr>
+                                                    </tbody>
+                                                  </table>
+                                                </div>`;
+                marker.feature = feature;
+                marker.events.register("mousedown", feature, markerClick);
+                marker.events.register("mouseout", feature, markerOutMouse);
+                markers.addMarker(marker);
+
             });
           }
       });
@@ -826,6 +882,9 @@ $Con->CloseConexion();
       z-index: 200;*/
       /*left: 600px;*/
       width: 150px;
+    }
+    #OpenLayers_Feature_69_popup_contentDiv {
+      width: auto !important;
     }
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/

@@ -917,3 +917,23 @@ function envioDeFilasMultiplesEnBloques(elemento, index, array) {
     }
   }
 
+  function ocultarPopup(evt) {
+    if (this.popup != null) {
+      if (!this.popup.hidden) {
+        this.popup.hide();
+      }
+    }
+    OpenLayers.Event.stop(evt);
+  }
+
+  function mostrarPoup(evt) {
+    if (this.popup == null) {
+        this.popup = this.createPopup(this.closeBox);
+        map.addPopup(this.popup);
+        this.popup.show();
+    } else {
+        this.popup.toggle();
+    }
+    OpenLayers.Event.stop(evt);
+  }
+
