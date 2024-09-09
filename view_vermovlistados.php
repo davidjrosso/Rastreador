@@ -2636,7 +2636,7 @@ $Con->CloseConexion();
           <li><input type="checkbox" id="chkObservaciones" checked> Observaciones</li>
           <li><input type="checkbox" id="chkResponsable" checked> Responsable</li>
           <li><input type="checkbox" id="chkCentrosSalud" checked> Centro de salud </li>
-          <li><input type="checkbox" id="chkOtrasInstituciones" checked> Otras instituciones</li>
+          <li><input type="checkbox" id="chkOtrasInstituciones" checked > Otras instituciones</li>
         </ul>
       </div>
       <div class="modal-footer modal-footer-flex-center">

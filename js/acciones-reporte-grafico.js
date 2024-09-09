@@ -238,18 +238,6 @@ function configResultados() {
   }*/
 
 function configColumnasTabla() {
-    /*
-    let chkPersona = $('#chkPersona');
-    let chkFechaNac = $('#chkFechaNac');
-    let chkDomicilio = $('#chkDomicilio');
-    let chkBarrio = $('#chkBarrio');
-    let chkManzana = $('#chk-manzana');
-    let chkLote = $('#chk-lote');
-    let chkSublote = $('#chk-sublote');
-    let chkAnios = $('#chkEdad');
-    let chkMeses = $('#chkMeses');
-    let indiceHead = 0;
-    */
     let chkPersona = $('#chkPersona');
     let chkFechaNac = $('#chkFechaNac');
     let chkDomicilio = $('#chkDomicilio');
