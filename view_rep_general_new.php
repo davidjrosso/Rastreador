@@ -2414,7 +2414,6 @@ $Con->CloseConexion();
                     $Separar = explode("/", $value);
                     $Mes = $Separar[0]; 
                     $Anio = $Separar[1];
-
                     $Consultar_Movimientos_Persona = "select M.id_movimiento,
                                                              M.motivo_1, 
                                                              max(M.motivo_1 = MI.id_motivo) as permiso_1,
@@ -2432,7 +2431,7 @@ $Con->CloseConexion();
                                                            PERMISOS MI
                                                       where M.id_persona = " . $RetTodos["id_persona"] . " 
                                                         and MONTH(M.fecha) = " . $Mes . " 
-                                                        and YEAR(M.fecha) like '%" . $Anio . "'
+                                                        and YEAR(M.fecha) = 20". $Anio . "
                                                         and (M.motivo_1 = MT.id_motivo 
                                                           or M.motivo_2 = MT.id_motivo
                                                           or M.motivo_3 = MT.id_motivo
@@ -2446,7 +2445,6 @@ $Con->CloseConexion();
                                                         group by M.id_movimiento, M.motivo_1, M.motivo_2, M.motivo_3, M.motivo_4, M.motivo_5";
 
                     $Tomar_Movimientos_Persona = mysqli_query($Con->Conexion, $Consultar_Movimientos_Persona) or die($MensajeErrorConsultar_Mov_Persona . " - " . $Consultar_Movimientos_Persona);
-
                     $IndexCelda += 1;
                     $nroMotivosEnFecha = 0;
                     if(mysqli_num_rows($Tomar_Movimientos_Persona) > 6){
