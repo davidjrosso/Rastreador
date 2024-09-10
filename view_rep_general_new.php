@@ -1704,9 +1704,10 @@ $Con->CloseConexion();
               /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               ////////////////////////////////////////////   TABLA HEAD    ////////////////////////////////////////////////////////
               /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            
+              $IndexCelda = 0;
+              $nroColumnas = 0;
               //if ($Con->ResultSet->num_rows == 0) {
-                if ($Ejecutar_Consulta_general->num_rows == 0) {
+              if ($Ejecutar_Consulta_general->num_rows == 0) {
                 // echo "<div class = 'col'></div>";
                 echo "<div class = 'col-6'>";
                 echo "<p class = 'TextoSinResultados'>No se encontraron Resultados</p>";
@@ -1719,8 +1720,6 @@ $Con->CloseConexion();
                 // $Lote_sel=true;
                 // $Familia_sel=true;
                 
-                $IndexCelda = 0;
-                $nroColumnas = 0;
                 $Table = "<table class='table table-fixeder table-bordered table-sm' cellspacing='0' id='tablaMovimientos' style='page-break-after:always;'>
                              <thead class='thead-dark'>
                               <tr align='center' valign='middle'>
@@ -1753,31 +1752,18 @@ $Con->CloseConexion();
                 }
                 */
                 $Table .= "<th id='Contenido-Titulo-5' name='datosflia' style='max-width: 50px; display: none'>Mz.</th>";
-                $Table_imprimir .= "<th id='Contenido-Titulo-5' name='datosflia'>Mz.</th>";
                 $nroColumnas += 1;
                 $Table .= "<th id='Contenido-Titulo-6' name='datosflia' style='max-width: 50px; display: none'>Lote</th>";
-                $Table_imprimir .= "<th id='Contenido-Titulo-6' name='datosflia'>Lote</th>";
                 $nroColumnas += 1;
                 $Table .= "<th id='Contenido-Titulo-7' name='datosflia' style='max-width: 70px; display: none'>Sublote</th>";
-                $Table_imprimir .= "<th id='Contenido-Titulo-7' name='datosflia'>Sublote</th>";
                 $nroColumnas += 1;
+                $Table .= "<th id='Contenido-Titulo-3'>Persona</th>
+                <th id='Contenido-Titulo-4' style='min-width: 120px;'>Fecha Nac.</th>";
+                $nroColumnas += 2;           
                 $Table .= "<th id='Contenido-Titulo-8' name='datosflia' style='max-width: 70px; display: none'>edad en años</th>";
                 $nroColumnas += 1;
                 $Table .= "<th id='Contenido-Titulo-9' name='datosflia' style='max-width: 70px; display: none'>meses</th>";
                 $nroColumnas += 1;
-                // if ($cmb_seleccion=="todos"){
-                //   $Table.="<th id='Contenido-Titulo-3' name='datosflia' style='max-width: 50px;'>Mz.</th>
-                //   <th id='Contenido-Titulo-4' name='datosflia' style='max-width: 50px;'>Lote</th>
-                //   <th id='Contenido-Titulo-5' name='datosflia' style='max-width: 50px;'>Sublote</th>";
-          
-                // }
-
-
-                $Table .= "<th id='Contenido-Titulo-3'>Persona</th>
-                           <th id='Contenido-Titulo-4' style='min-width: 120px;'>Fecha Nac.</th>";
-                $Table_imprimir .= "<th id='Contenido-Titulo-3'>Persona</th>
-                                    <th id='Contenido-Titulo-4'>Fecha Nac.</th>";
-                $nroColumnas += 2;           
               }
 
               $Tomar_Meses = mysqli_query($Con->Conexion, $Consulta) or die($MensajeError . " Consulta: " . $Consulta);
@@ -2383,12 +2369,6 @@ $Con->CloseConexion();
                   $tagsTD .= "<td id='Contenido-7' name='datosflia' style='max-width: 70px; display: none'>" . $RetTodos["familia"] . "</td>";
                   $tagsTD_imprimir .= "<td id='Contenido-7' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["familia"] . "</td>";
                   $jsonTable[$clave]["familia"] = $RetTodos["familia"];
-                  $tagsTD .= "<td id='Contenido-8' name='datosflia' style='max-width: 70px; display: none; text-align: center;'>" . $RetTodos["edad"] . "</td>";
-                  $tagsTD_imprimir .= "<td id='Contenido-8' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" .  $RetTodos["edad"] . "</td>";
-                  $jsonTable[$clave]["edad"] = $RetTodos["edad"];
-                  $tagsTD .= "<td id='Contenido-9' name='datosflia' style='max-width: 70px; display: none; text-align: center;'>" . $RetTodos["meses"] . "</td>";
-                  $tagsTD_imprimir .= "<td id='Contenido-9' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["meses"] . "</td>";
-                  $jsonTable[$clave]["meses"] = $RetTodos["meses"];
                   $tagsTD .= "
                   <td id='Contenido-3' style='overflow: hidden;'>
                     <div style='position: relative;z-index: 1000;'>
@@ -2410,6 +2390,12 @@ $Con->CloseConexion();
                   $jsonTable[$clave]["persona"] = $RetTodos["apellido"] . ", " . $RetTodos["nombre"];
                   $jsonTable[$clave]["id_persona"] = $RetTodos["id_persona"];
                   $jsonTable[$clave]["fechanac"] = $Fecha_Nacimiento;
+                  $tagsTD .= "<td id='Contenido-8' name='datosflia' style='max-width: 70px; display: none; text-align: center; background-color: white;'>" . $RetTodos["edad"] . "</td>";
+                  $tagsTD_imprimir .= "<td id='Contenido-8' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" .  $RetTodos["edad"] . "</td>";
+                  $jsonTable[$clave]["edad"] = $RetTodos["edad"];
+                  $tagsTD .= "<td id='Contenido-9' name='datosflia' style='max-width: 70px; display: none; text-align: center;  background-color: white;'>" . $RetTodos["meses"] . "</td>";
+                  $tagsTD_imprimir .= "<td id='Contenido-9' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["meses"] . "</td>";
+                  $jsonTable[$clave]["meses"] = $RetTodos["meses"];
                   foreach ($arr as $key => $value) {
                     $Separar = explode("/", $value);
                     $Mes = $Separar[0]; 
