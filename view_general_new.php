@@ -736,11 +736,8 @@ $Con->CloseConexion();
 
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 1: </label>
-              <div class="col-md-9" id = "Motivo">
+              <div class="col-md-10" id = "Motivo">
                 <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo">Seleccione un Motivo</button>   
-              </div>
-                <div class="col-md-1">
-                  <button type="button" class="btn btn-primary" onClick="agregarMotivo()" id="agregarMotivoID">+</button>
               </div>
             </div>
             <div class="form-group row">
@@ -751,8 +748,11 @@ $Con->CloseConexion();
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 3: </label>
-              <div class="col-md-10" id = "Motivo3">
+              <div class="col-md-9" id = "Motivo3">
                 <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo3">Seleccione un Motivo</button>   
+              </div>
+              <div class="col-md-1">
+                  <button type="button" class="btn btn-primary" onClick="agregarMotivo()" id="agregarMotivoID">+</button>
               </div>
             </div>
             <div id="contenedorMotivos">              
