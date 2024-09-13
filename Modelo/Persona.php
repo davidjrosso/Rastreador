@@ -546,9 +546,26 @@ public function __construct(
 					$this->Georeferencia = null;
 				}
 			} else {
-				$this->Georeferencia = null;
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, "https://maps.googleapis.com/maps/api/geocode/json?address=Rio+Tercero,+" . str_replace(" ", "+", $this->Domicilio) . "&key=AIzaSyAdiF1F7NoZbmAzBWfV6rxjJrGsr1Yvb1g");
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				$response = curl_exec($ch);
+				$arr_obj_json = json_decode($response);
+				curl_close($ch);
+				if ($arr_obj_json) {
+					if (!is_null($arr_obj_json->results[0]->geometry->location->lat) 
+								 || !is_null($arr_obj_json->results[0]->geometry->location->lng)) {
+						$point = "POINT(" . $arr_obj_json->results[0]->geometry->location->lat . ", " . $arr_obj_json->results[0]->geometry->location->lng . ")";
+						$this->Georeferencia = $point;
+					} else {
+						$this->Georeferencia = null;
+					}
+				} else {
+					$this->Georeferencia = null;
+				}
 			}
 		} else {
+
 		    $this->Georeferencia = $xGeoreferencia;
 		}
 	} else {

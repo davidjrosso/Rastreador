@@ -813,15 +813,14 @@ function configColumnasTabla() {
 
 function envioDeFilasMultiplesEnBloques(elemento, index, array) {
     let objectJson = elemento;
-    let fila = (index - 14) % 20;
+    countList++;
+    indexList++;
+    let height = ((elemento.height > 23) ? 0.7 : 0);
+    countList += height;
+    delete objectJson.height;
+    rowsRequest[indexList] = objectJson;
 
-    if (fila >= 0) {
-        rowsRequest[fila] = objectJson;
-    } else {
-        rowsRequest[index] = objectJson;
-    }
-
-    if (fila == 19 && idRequestField >= 1) {
+    if (countList >= 19 && idRequestField >= 1) {
         rowsRequest["header_movimientos_general"] = objectJsonTabla["header_movimientos_general"];
         rowsRequest["head_movimientos_persona"] = objectJsonTabla["head_movimientos_persona"];
         let request = new XMLHttpRequest();
@@ -833,7 +832,9 @@ function envioDeFilasMultiplesEnBloques(elemento, index, array) {
         nroPaginaPdf++;
         rowsRequest = {};
         idRequestField++;
-    } else if ((index == 13 && idRequestField == 0)) {
+        countList = 0;
+        indexList = 0;
+    } else if ((countList >= 15 && idRequestField == 0)) {
         rowsRequest["head_det_persona"] = objectJsonTabla["head_det_persona"];
         rowsRequest["det_persona"] = objectJsonTabla["det_persona"];
         rowsRequest["header_movimientos_general"] = objectJsonTabla["header_movimientos_general"];
@@ -850,6 +851,8 @@ function envioDeFilasMultiplesEnBloques(elemento, index, array) {
         nroPaginaPdf++;
         rowsRequest = {};
         idRequestField++;
+        countList = 0;
+        indexList = 0;
     }
 }
 
@@ -928,4 +931,3 @@ function envioDeFilasMultiplesEnBloques(elemento, index, array) {
   function onClickOcultarPopup(element){
     element.parentNode.parentNode.parentNode.style.display = 'none'
   }
-

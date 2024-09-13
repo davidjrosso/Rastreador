@@ -237,11 +237,11 @@ try{
             $row .= "<tr>";
             for ($h = 0; $h < count($header_mov_general); $h++) {
                 if (isset($array_filas[$i][$header_mov_general[$h]])) {
-                    $row .= "<td>" . 
+                    $row .= "<td style='height: 31px'>" . 
                               $array_filas[$i][$header_mov_general[$h]] . "
                             </td>";
                 } else {
-                    $row .=  "<td>" . $header_mov_general[$h] . "</td>";
+                    $row .=  "<td style='height: 31px'>" . $header_mov_general[$h] . "</td>";
                 }
             }
             $row .= "</tr>";
@@ -324,107 +324,6 @@ try{
 
     
         }
-        /*
-        $table = "<html>
-                    <head>
-                    <link href='https://fonts.cdnfonts.com/css/symbol' rel='stylesheet'>
-                    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-
-                    <style>
-                        @page {
-                        margin: 15px !important;
-                        padding: 15px !important;
-                        }
-                        .table--border-colapsed{
-                            border-collapse: collapse;
-                            width: 100%;
-                        }
-                        .thead-dark{
-                            background-color: #ccc;
-                            font-size: 12px;
-                        }
-                        .table_pdf {
-                            width: 100%;
-                        }
-                        tr td {
-                            text-align: center;
-                            font-size: 12px;
-                        }
-                        tr th {
-                        text-align: center;
-                            font-size: 15px;
-                        }
-
-                        table thead tr th {
-                            background-color: #ccc;
-                        }
-
-                        h5, h2{
-                            text-align: center;
-                            margin-bottom: 0px
-                        }
-
-                        #InformacionDeCentro {
-                            float: right;
-                            text-align: left;
-                            padding-top: 11px;
-                        }
-
-                        #frase {
-                            font-weight: bold;
-                        }
-
-                        #encabezado {
-                            text-align: center;
-                            float: right;
-                            padding-right: 25rem;
-                        }
-
-                        #detalle-persona {
-                            margin-bottom: 30px;                        
-                        }
-
-                        #InformacionDeCiudad {
-                            text-align: left;
-                            margin-bottom: 2rem;
-                            margin-top: 2rem;
-                        }
-
-                        table, th, td {
-                            border: 1px solid;
-                        }
-                    </style>
-                    </head> 
-                    <body> " . $inicio . $tabla_detalle_persona . "
-                        <table class='table--border-colapsed'>
-                                <thead>
-                                    <tr>
-                                        <th>" . $header_mov_general[0]  . "</th>" .
-                                        ((isset($header_mov_general[1])) ? "<th>" . $header_mov_general[1] . "</th>" : "") .
-                                        ((isset($header_mov_general[2])) ? "<th>" . $header_mov_general[2] . "</th>" : "") .
-                                        ((isset($header_mov_general[3])) ? "<th>" . $header_mov_general[3] . "</th>" : "") .
-                                        ((isset($header_mov_general[4])) ? "<th>" . $header_mov_general[4] . "</th>" : "") .
-                                        ((isset($header_mov_general[5])) ? "<th>" . $header_mov_general[5] . "</th>" : "") .
-                                        ((isset($header_mov_general[6])) ? "<th>" . $header_mov_general[6] . "</th>" : "") .
-                                        ((isset($header_mov_general[7])) ? "<th>" . $header_mov_general[7] . "</th>" : "") .
-                                        ((isset($header_mov_general[8])) ? "<th>" . $header_mov_general[8] . "</th>" : "") .
-                                        ((isset($header_mov_general[9])) ? "<th>" . $header_mov_general[9] . "</th>" : "") .
-                                        ((isset($header_mov_general[10])) ? "<th>" . $header_mov_general[10] . "</th>" : "") .
-                                        ((isset($header_mov_general[11])) ? "<th>" . $header_mov_general[11] . "</th>" : "") .
-                                        ((isset($header_mov_general[12])) ? "<th>" . $header_mov_general[12] . "</th>" : "") .
-                                        ((isset($header_mov_general[13])) ? "<th>" . $header_mov_general[13] . "</th>" : "") .
-                                        ((isset($header_mov_general[14])) ? "<th>" . $header_mov_general[14] . "</th>" : "") .
-                                        ((isset($header_mov_general[15])) ? "<th>" . $header_mov_general[15] . "</th>" : "") .
-                                        ((isset($header_mov_general[16])) ? "<th>" . $header_mov_general[16] . "</th>" : "") . "
-                                    </tr>
-                                </thead>
-                                    <tbody>" . 
-                                        $row . "
-                                    </tbody>
-                        </table>
-                    </body>
-                </html>";
-        */
 
         $table = "<html>
                     <head>
