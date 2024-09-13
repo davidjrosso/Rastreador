@@ -126,6 +126,21 @@ $Con->CloseConexion();
         let popup = null;
         let size = new OpenLayers.Size(10,12);
         let offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+        let control = new OpenLayers.Control();
+        OpenLayers.Util.extend(control, {
+          draw: function () {
+              this.box = new OpenLayers.Handler.Box( control,
+                  {"done": this.notice},
+                  {keyMask: OpenLayers.Handler.MOD_SHIFT});
+              this.box.activate();
+          },
+          notice: function (bounds) {
+              OpenLayers.Console.userError(bounds);
+          }
+        });
+        map.addControl(control);
+        map.addControl(new OpenLayers.Control.PanZoomBar());
+
         let markerClick = function(evt) {
             if (this.popup == null) {
                 this.popup = this.createPopup(this.closeBox);
@@ -136,6 +151,7 @@ $Con->CloseConexion();
             }
             OpenLayers.Event.stop(evt);
         };
+
         objectJsonTabla.forEach(function (elemento, indice, array) {
           pos = new OpenLayers.LonLat(elemento.lon, elemento.lat).transform(toProjection, fromProjection);
           positionFormas = pos;
@@ -190,7 +206,7 @@ $Con->CloseConexion();
                   marker.feature = feature;
                   //marker.events.register("mousedown", feature, markerClick);
                   marker.events.register("mousedown", feature, function() {
-                      window.open("view_modpersonas.php?ID=" + elemento.id_persona,"Ventana${elemento.id_persona}" ,"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no")
+                      window.open("view_modpersonas.php?ID=" + elemento.id_persona,"Ventana" + elemento.id_persona ,"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no")
                   });
                   markers.addMarker(marker);
               });
@@ -412,7 +428,7 @@ $Con->CloseConexion();
       headABorrar.removeClass( "showColTablaAnimacionfire");
       headABorrar.removeClass( "hiddenColTablaAnimacion");
       headABorrar.removeClass( "hiddenColTablaAnimacionfire");
-      divABorrar.css("z-index", ((value < columnaIndice) ? "300" : "-1"));
+      divABorrar.css("z-index", ((value <= columnaIndice) ? "300" : "-1"));
       columnaABorrar.css({
         "margin-left": updateMarginLeft,
         "border-right-width": ((value < columnaIndice) ? "1px" : "0px"),
