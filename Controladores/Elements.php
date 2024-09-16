@@ -7,7 +7,7 @@ class Elements{
   const PAGINA_INICIO = 0;
   const PAGINA_PERSONA = 1;
   const PAGINA_MOVIMIENTO = 10;
-  const PAGINA_USUARIO = 19;
+  const PAGINA_USUARIO = 20;
   const PAGINA_CATEGORIA = 3;
   const PAGINA_MOTIVO = 2;
   const PAGINA_RESPONSABLE = 4;
@@ -1004,7 +1004,7 @@ public function getMenuSeguridad($ID){
 
 public function getMenuSeguridadUsuario($ID){
     switch ($ID) {
-      case 1: 
+      case self::PAGINA_USUARIO: 
           $menu = '<div class="menu-list">
   
             <ul id="menu-content" class="menu-content collapse out">
