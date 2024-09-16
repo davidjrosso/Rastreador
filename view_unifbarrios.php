@@ -91,7 +91,7 @@ $Con->CloseConexion();
 <div class = "row">
 <?php
   $Element = new Elements();
-  echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario);
+  echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_UNIFICACION_BARRIO);
   ?>
   <div class = "col-md-9">
     <div class="row">

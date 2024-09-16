@@ -19,7 +19,7 @@ require_once "Controladores/Elements.php";
 <div class = "row">
 <?php
   $Element = new Elements();
-  echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario);
+  echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $pagina);
   ?>
   </div>
 	<div class = "col-9">

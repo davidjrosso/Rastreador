@@ -389,7 +389,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
 <div class = "row">
 <?php
   $Element = new Elements();
-  echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario);
+  echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_REPORTE_LISTADO);
   ?>
   <div class = "col-md-9">
     <div class="row">

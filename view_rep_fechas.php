@@ -54,7 +54,7 @@ require_once "Controladores/Conexion.php";
 <div class = "row">
 <?php
   $Element = new Elements();
-  echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario);
+  echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $pagina);
   ?>  
   <div class = "col-md-9">
     <div class="row">
