@@ -1037,7 +1037,7 @@ public function getMenuSeguridadUsuario($ID){
 
   public function getMenuHistorialUsuario($ID){
     switch ($ID) {
-      case 1: 
+      case 21: 
           $menu = '<div class="menu-list">  
             <ul id="menu-content" class="menu-content collapse out">
                 <li class="collapsed active" onClick = "location.href = \'para_que_sirve.pdf\'">
@@ -1053,7 +1053,7 @@ public function getMenuSeguridadUsuario($ID){
             </ul>
         </div>';
         break;
-	   case 2: 
+	   case 22: 
           $menu = '<div class="menu-list">
                   <ul id="menu-content" class="menu-content collapse out">
                       <li class="collapsed" onClick = "location.href = \'para_que_sirve.pdf\'">
@@ -1069,7 +1069,7 @@ public function getMenuSeguridadUsuario($ID){
                   </ul>
               </div>';
           break;
-      case 3: 
+      case 23: 
           $menu = '<div class="menu-list">
                     <ul id="menu-content" class="menu-content collapse out">
                         <li class="collapsed" onClick = "location.href = \'para_que_sirve.pdf\'">
