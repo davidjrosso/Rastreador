@@ -2424,7 +2424,7 @@ $Con->CloseConexion();
                   $jsonTable[$clave]["meses"] = $RetTodos["meses"];
                   foreach ($arr as $key => $value) {
                     $Separar = explode("/", $value);
-                    $Mes = $Separar[0]; 
+                    $Mes = $Separar[0];
                     $Anio = $Separar[1];
                     $Consultar_Movimientos_Persona = "select M.id_movimiento,
                                                              M.motivo_1, 
@@ -2760,7 +2760,7 @@ $Con->CloseConexion();
                           }
                         }
 
-                        if ($ID_Motivo == 0 && $ID_Motivo2 == 0 && $ID_Motivo3 == 0 && $ID_Motivo4 == 0 && $ID_Motivo5 == 0) {
+                        if ($CantOpMotivos == 0) {
                           $ConsultarCodyColor = "select M.cod_categoria,
                                                         F.Forma_Categoria,
                                                         C.color,
@@ -3071,7 +3071,7 @@ $Con->CloseConexion();
                             $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo2["color"]] = true;
                           }
                         }
-                        if ($ID_Motivo == 0 && $ID_Motivo2 == 0 && $ID_Motivo3 == 0 && $ID_Motivo4 == 0 && $ID_Motivo5 == 0) {
+                        if ($CantOpMotivos == 0) {
                           $ConsultarCodyColor2 = "select  M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_2"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
                           $MensajeErrorConsultarCodyColor2 = "No se pudieron consultar los motivos de los Movimientos";
 
@@ -3333,7 +3333,7 @@ $Con->CloseConexion();
                             $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo3["color"]] = true;   
                           }
                         }
-                        if ($ID_Motivo == 0 && $ID_Motivo2 == 0 && $ID_Motivo3 == 0 && $ID_Motivo4 == 0 && $ID_Motivo5 == 0) {
+                        if ($CantOpMotivos == 0) {
                           $ConsultarCodyColor3 = "select  M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
                           $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
 
