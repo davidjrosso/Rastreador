@@ -1593,8 +1593,12 @@ $Con->CloseConexion();
               $ConsultarCategoria = "select categoria from categoria where id_categoria = " . $ID_Categoria . " limit 1";
               $EjecutarConsultarCategoria = mysqli_query($Con->Conexion, $ConsultarCategoria) or die("Problemas al consultar filtro Categoria");
               $RetConsultarCategoria = mysqli_fetch_assoc($EjecutarConsultarCategoria);
+
+              $consulta_categoria = "and C.id_categoria = " . $ID_Categoria;
               $filtros[] = "Categoria: " . $RetConsultarCategoria['categoria'];
               $json_filtro[] = "Categoria " . $RetConsultarCategoria['categoria'];
+            } else {
+              $consulta_categoria = "";
             }
 
             if ($ID_CentroSalud > 0) {
@@ -2433,8 +2437,8 @@ $Con->CloseConexion();
                                                              max(M.motivo_4 = MI.id_motivo) as permiso_4,
                                                              M.motivo_5,
                                                              max(M.motivo_5 = MI.id_motivo) as permiso_5
-                                                      from movimiento M, 
-                                                           motivo MT, 
+                                                      from movimiento M,
+                                                           motivo MT,
                                                            categoria C,
                                                            PERMISOS MI
                                                       where M.id_persona = " . $RetTodos["id_persona"] . " 
@@ -2447,7 +2451,8 @@ $Con->CloseConexion();
                                                           or M.motivo_5 = MT.id_motivo)
                                                         $consulta_motivos
                                                         and MT.id_motivo <> 1 
-                                                        and MT.cod_categoria = C.cod_categoria 
+                                                        and MT.cod_categoria = C.cod_categoria
+                                                        $consulta_categoria
                                                         and M.estado = 1 
                                                         and MI.id_motivo = MT.id_motivo 
                                                         group by M.id_movimiento, M.motivo_1, M.motivo_2, M.motivo_3, M.motivo_4, M.motivo_5";
