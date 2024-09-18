@@ -220,10 +220,16 @@ try{
             </html>";
     } elseif ($from_reporte_listado) {
         $header_mov_general = (isset($array_filas["header_movimientos_general"])) ? $array_filas["header_movimientos_general"] : $array_filas["head_movimientos_persona"];
-        $count = count($array_filas) - 1;
+        $count = count($array_filas) - 1; 
         if ($nro_paquete == 0) {
-            $count -= (isset($array_filas["det_persona"]) ? 6 : 4);
+            //$count -= (isset($array_filas["det_persona"]) ? 6 : 4);
+            $count -= (isset($array_filas["det_persona"]) ? 5 : 3);
+            $page_widht = 563;
+        } else {
+            $page_widht = 650;
         }
+
+        $cell_widht = round($page_widht/$count, 2);
         $row_head .= "<tr>";
         for ($h = 0; $h < count($header_mov_general); $h++) {
             if (isset($header_mov_general[$h])) {
@@ -233,15 +239,15 @@ try{
             }
         }
         $row_head .= "</tr>";
-        for ($i = 0; $i < $count; $i++) {
+        for ($i = 1; $i <= $count; $i++) {
             $row .= "<tr>";
             for ($h = 0; $h < count($header_mov_general); $h++) {
                 if (isset($array_filas[$i][$header_mov_general[$h]])) {
-                    $row .= "<td style='height: 31px'>" . 
+                    $row .= "<td style='height: " . $cell_widht . "px'>" . 
                               $array_filas[$i][$header_mov_general[$h]] . "
                             </td>";
                 } else {
-                    $row .=  "<td style='height: 31px'>" . $header_mov_general[$h] . "</td>";
+                    $row .=  "<td></td>";
                 }
             }
             $row .= "</tr>";
@@ -348,11 +354,11 @@ try{
                         }
                         tr td {
                             text-align: center;
-                            font-size: 12px;
+                            font-size: 11px;
                         }
                         tr th {
                         text-align: center;
-                            font-size: 15px;
+                            font-size: 14px;
                         }
 
                         table thead tr th {
@@ -397,7 +403,7 @@ try{
                     </head> 
                     <body> " . $inicio . $tabla_detalle_persona;
                     if (count($header_mov_general) > 0) {
-                        $table .= "<table class='table--border-colapsed'>
+                        $table .= "<table class='table--border-colapsed' style='height:200px'>
                                      <thead>
                                         " . $row_head . "
                                      </thead>
