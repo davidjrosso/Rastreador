@@ -150,7 +150,7 @@ $Con->CloseConexion();
         } else if (objectJsonTabla["movimientos_persona"] !== undefined) {
           let filas = objectJsonTabla["movimientos_persona"].forEach((element, index, array) => {envioDeFilasMultiplesEnBloques(element, index, array);});
         }
-        if (rowsRequest != {} && idRequestField >= 1) {
+        if (rowsRequest != {} && idRequestField >= 1 && countList >= 1) {
           rowsRequest["header_movimientos_general"] = objectJsonTabla["header_movimientos_general"];
           rowsRequest["head_movimientos_persona"] = objectJsonTabla["head_movimientos_persona"]
           let request = new XMLHttpRequest();
@@ -161,7 +161,7 @@ $Con->CloseConexion();
           request.send(JSON.stringify(rowsRequest));
           nroPaginaPdf++;
           rowsRequest = {};
-        } else if ((rowsRequest != {} && idRequestField == 0)) {
+        } else if ((rowsRequest != {} && idRequestField == 0) && countList >= 1) {
           rowsRequest["head_det_persona"] = objectJsonTabla["head_det_persona"];
           rowsRequest["det_persona"] = objectJsonTabla["det_persona"];
           rowsRequest["header_movimientos_general"] = objectJsonTabla["header_movimientos_general"];
