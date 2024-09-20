@@ -67,6 +67,8 @@ $Con->CloseConexion();
 
   <script src="js/OpenLayers.js"></script>
 
+  <script src="https://www.lactame.com/lib/image-js/0.21.2/image.min.js"></script>
+
   <script>
     const { PDFDocument, StandardFonts, rgb } = PDFLib
 
@@ -160,7 +162,8 @@ $Con->CloseConexion();
             let puntos = angulo / Object.keys(elemento.lista_formas_categorias).length;
             Object.keys(elemento.lista_formas_categorias).forEach(function (categoria, indice, array) {
                   charCodeLetter = (categoria.length == 1) ? categoria.charCodeAt(0) : categoria;
-                  icon = new OpenLayers.Icon('./images/icons/motivos/' + charCodeLetter + '.png', size, offset);
+                  let color_categ = elemento.lista_formas_categorias[categoria].substring(1);
+                  icon = new OpenLayers.Icon('./images/icons/motivos/' + charCodeLetter + '_' + color_categ + '.png', size, offset);
                   let marker = new OpenLayers.Marker(positionFormas, icon.clone());
                   markers.addMarker(marker);
                   positionFormas = positionFormas.add(Math.sin((indice + 1) * puntos) * 10, Math.cos((indice + 1) * puntos) * 10);
@@ -391,9 +394,6 @@ $Con->CloseConexion();
 
     function navegacionConBarHNav(e){
       var value = $("#BarraDeNavHTabla").val();
-      console.log("input " + value);
-      console.log( "previo valor " + valInputRangePrev);
-      console.log( "columna actual " + columnaIndice);
       var movDecrec = (value < valInputRangePrev);
       var columnaActual = columnaIndice;
       if(columnaIndice + 1 <= value && (Math.floor(valInputRangePrev) == columnaIndice)){
@@ -2547,7 +2547,7 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo["color"];
 
                           }
                         }
@@ -2601,7 +2601,7 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo["color"];
                           }
                         }
                         if ($ID_Motivo3 > 0) {
@@ -2653,7 +2653,7 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo["color"];
                           }
                         }
                         if ($ID_Motivo4 > 0) {
@@ -2705,7 +2705,7 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo["color"];
                         }
                         }
                         if ($ID_Motivo5 > 0) {
@@ -2757,7 +2757,7 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo["color"];
                           }
                         }
 
@@ -2810,7 +2810,7 @@ $Con->CloseConexion();
                             $forma_motivo = substr($forma_motivo, 2);
                             $forma_motivo = substr($forma_motivo, 0, -1);
                           }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
+                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo["color"];
                         }
                       }
 
@@ -2868,7 +2868,7 @@ $Con->CloseConexion();
                             $forma_motivo = substr($forma_motivo, 2);
                             $forma_motivo = substr($forma_motivo, 0, -1);
                           }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo2["color"]] = true;
+                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo2["color"];
                           }
                         }
                         if ($ID_Motivo2 > 0) {
@@ -2923,7 +2923,7 @@ $Con->CloseConexion();
                             $forma_motivo = substr($forma_motivo, 2);
                             $forma_motivo = substr($forma_motivo, 0, -1);
                           }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo2["color"]] = true;
+                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo2["color"];
                           }
                         }
                         if ($ID_Motivo3 > 0) {
@@ -2979,7 +2979,7 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo2["color"]] = true;
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo2["color"];
                           }
                         }
                         if ($ID_Motivo4 > 0) {
@@ -3024,7 +3024,7 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo2["color"]] = true;
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo2["color"];
                           }
                         }
                         if ($ID_Motivo5 > 0) {
@@ -3069,7 +3069,7 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo2["color"]] = true;
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo2["color"];
                           }
                         }
                         if ($CantOpMotivos == 0) {
@@ -3113,7 +3113,7 @@ $Con->CloseConexion();
                             $forma_motivo = substr($forma_motivo, 2);
                             $forma_motivo = substr($forma_motivo, 0, -1);
                           }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo2["color"]] = true;
+                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo2["color"];
                         }
                       }
 
@@ -3159,7 +3159,7 @@ $Con->CloseConexion();
                             $forma_motivo = substr($forma_motivo, 2);
                             $forma_motivo = substr($forma_motivo, 0, -1);
                           }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo3["color"]] = true;
+                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo3["color"];
                           }
                         }
                         if ($ID_Motivo2 > 0) {
@@ -3202,7 +3202,7 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo3["color"]] = true;
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo3["color"];
                           }
                         }
                         if ($ID_Motivo3 > 0) {
@@ -3245,7 +3245,7 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo3["color"]] = true;   
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo3["color"];   
                           }
                         }
                         if ($ID_Motivo4 > 0) {
@@ -3288,7 +3288,7 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo3["color"]] = true;   
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo3["color"];   
                           }
                         }
                         if ($ID_Motivo5 > 0) {
@@ -3331,7 +3331,7 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo3["color"]] = true;   
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo3["color"];   
                           }
                         }
                         if ($CantOpMotivos == 0) {
@@ -3374,7 +3374,7 @@ $Con->CloseConexion();
                             $forma_motivo = substr($forma_motivo, 2);
                             $forma_motivo = substr($forma_motivo, 0, -1);
                           }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo3["color"]] = true;
+                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo3["color"];
                         }
                       }
                     }
