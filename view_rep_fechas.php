@@ -52,46 +52,10 @@ require_once "Controladores/Conexion.php";
 </head>
 <body>
 <div class = "row">
-  <div class = "col-md-3">
-<div class="nav-side-menu">
-      <?php $Element = new Elements();
-            echo $Element->CBSessionNombre($ID_Usuario);
-      ?>
-    <div class="brand">General</div>
-    <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
-  
-        <div class="menu-list">
-  
-            <?php $Element = new Elements();
-            $Element->getMenuGeneral(0);?>
-        </div>
-        <div class="brand">Actualizaciones</div>
-        <div class="menu-list">
-  
-            <?php $Element = new Elements();
-            $Element->getMenuActualizaciones(0);?>
-        </div>
-        <div class="brand">Reportes</div>
-        <div class="menu-list">
-  
-            <?php $Element = new Elements();
-            $Element->getMenuReportes(3);?>
-        </div>
-        <div class="brand">Unificación</div>
-        <div class="menu-list">
-  
-            <?php $Element = new Elements();
-            $Element->getMenuUnificacion(0);?>
-        </div>
-        <div class="brand">Seguridad</div>
-        <div class="menu-list">
-  
-            <?php $Element = new Elements();
-            $Element->getMenuSeguridad(0);?>
-        </div>
-        <div class="brand">Salir</div>
-    </div>
-  </div>
+<?php
+  $Element = new Elements();
+  echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $pagina);
+  ?>  
   <div class = "col-md-9">
     <div class="row">
       <div class="col"></div>

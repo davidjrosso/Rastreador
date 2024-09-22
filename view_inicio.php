@@ -327,7 +327,7 @@ $Con->CloseConexion();
 </head>
 <body>
 <div class = "row">
-  <?php  
+<?php  
   if($TipoUsuario == 1){  
   ?>
   <div class = "col-md-2">

@@ -1,4 +1,4 @@
-<?php 
+<div?php 
 require_once "Controladores/CtrProveedor.php";
 require_once "Controladores/Elements.php";
 ?>
@@ -17,24 +17,11 @@ require_once "Controladores/Elements.php";
 </head>
 <body>
 <div class = "row">
-	<div class = "col-3">
-		<div class="nav-side-menu">
-    <div class="brand">Secciones</div>
-    <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
-  
-        <div class="menu-list">
-          <?php $Element = new Elements();
-            $Element->getMenu(4);?>
-           
-        </div>
-        <div class="brand">Informes</div>
-        <div class="menu-list">
-  
-            <?php $Element = new Elements();
-            $Element->getMenuInformes(0);?>
-        </div>
-</div>
-	</div>
+<?php
+  $Element = new Elements();
+  echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $pagina);
+  ?>
+  </div>
 	<div class = "col-9">
 	   <div class = "container">
       <div class = "col-7">

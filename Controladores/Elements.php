@@ -4,6 +4,28 @@ require_once("Conexion.php");
 header("Content-Type: text/html;charset=utf-8");
 
 class Elements{
+  const PAGINA_INICIO = 0;
+  const PAGINA_PERSONA = 1;
+  const PAGINA_MOVIMIENTO = 10;
+  const PAGINA_USUARIO = 20;
+  const PAGINA_CATEGORIA = 3;
+  const PAGINA_MOTIVO = 2;
+  const PAGINA_RESPONSABLE = 4;
+  const PAGINA_CENTRO_SALUD = 5;
+  const PAGINA_ESCUELA = 6;
+  const PAGINA_OTRAS_INSTITUCIONES = 7;
+  const PAGINA_BARRIO = 8;
+  const PAGINA_CALLE = 9;
+  const PAGINA_REPORTE_GRAFICO = 11;
+  const PAGINA_REPORTE_LISTADO = 12;
+  const PAGINA_UNIFICACION_PERSONA = 13;
+  const PAGINA_UNIFICACION_MOTIVO = 14;
+  const PAGINA_UNIFICACION_CENTRO_SALUD = 15;
+  const PAGINA_UNIFICACION_ESCUELA = 16;
+  const PAGINA_UNIFICACION_BARRIO = 17;
+  const PAGINA_UNIFICACION_OTRA_INSTITUCION = 18;
+  const PAGINA_UNIFICACION_CALLE = 19;
+
 	//Instanciando la Conexion
 	public function __construct(){
 
@@ -31,10 +53,34 @@ class Elements{
     }
 }
 
+public function getMenuGeneralUsuario($ID)
+{
+  switch ($ID) {
+    case self::PAGINA_MOVIMIENTO : 
+        $menu = '<div class="menu-list">
+                    <ul id="menu-content" class="menu-content collapse out">
+                        <li class="collapsed active" onClick = "location.href = \'view_movimientos.php\'">
+                          <a href="view_movimientos.php"><i class="fa fa-file-text fa-lg"></i> Movimientos</a>
+                        </li>
+                    </ul>
+                  </div>';
+        break;
+    default: 
+        $menu = '<div class="menu-list">
+                    <ul id="menu-content" class="menu-content collapse out">
+                        <li class="collapsed" onClick = "location.href = \'view_movimientos.php\'">
+                          <a href="view_movimientos.php"><i class="fa fa-file-text fa-lg"></i> Movimientos</a>
+                        </li>
+                    </ul>
+                   </div>';
+        break;   
+  }
+  return $menu;
+}
 
 	public function getMenuActualizaciones($ID){
 		switch ($ID) {
-			case 1:
+			case  self::PAGINA_PERSONA:
             echo '<div class="menu-list">
                     <ul id="menu-content" class="menu-content collapse out">
                         <li class="collapsed active" onClick = "location.href = \'view_personas.php\'">
@@ -67,71 +113,75 @@ class Elements{
                     </ul>
                    </div>';
             break;
-			case 2:echo '<div class="menu-list">
-  
-            <ul id="menu-content" class="menu-content collapse out">
-                <li onClick = "location.href = \'view_personas.php\'">
-                  <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
-                </li>
-                <li class="collapsed active" onClick = "location.href = \'view_motivos.php\'">
-                  <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_categorias.php\'">
-                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
-                </li>  
-                <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
-                  <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_centros.php\'">
-                  <a href="view_centros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_escuelas.php\'">
-                  <a href="view_escuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_otrasinstituciones.php\'">
-                  <a href="view_otrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_barrios.php\'">
-                  <a href="view_barrios.php"><i class="fa fa-file-text fa-lg"></i> Barrio</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_calles.php\'">
-                <a href="view_calles.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
-                </li>
-            </ul>
-     		</div>';break;
-			case 3:echo '<div class="menu-list">
-  
-            <ul id="menu-content" class="menu-content collapse out">
-                <li onClick = "location.href = \'view_personas.php\'">
-                  <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_motivos.php\'">
-                  <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
-                </li>
-                <li class="collapsed active" onClick = "location.href = \'view_categorias.php\'">
-                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
-                </li>  
-                <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
-                  <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_centros.php\'">
-                  <a href="view_centros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_escuelas.php\'">
-                  <a href="view_escuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_otrasinstituciones.php\'">
-                  <a href="view_otrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_barrios.php\'">
-                  <a href="view_barrios.php"><i class="fa fa-file-text fa-lg"></i> Barrio</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_calles.php\'">
-                <a href="view_calles.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
-                </li>
-            </ul>
-     		</div>';break;
-     		case 4:echo '<div class="menu-list">
+			case self::PAGINA_MOTIVO:
+           echo '<div class="menu-list">
+              <ul id="menu-content" class="menu-content collapse out">
+                  <li onClick = "location.href = \'view_personas.php\'">
+                    <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
+                  </li>
+                  <li class="collapsed active" onClick = "location.href = \'view_motivos.php\'">
+                    <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
+                  </li>
+                  <li class="collapsed" onClick = "location.href = \'view_categorias.php\'">
+                    <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
+                  </li>  
+                  <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
+                    <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
+                  </li>
+                  <li class="collapsed" onClick = "location.href = \'view_centros.php\'">
+                    <a href="view_centros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                  </li>
+                  <li class="collapsed" onClick = "location.href = \'view_escuelas.php\'">
+                    <a href="view_escuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
+                  </li>
+                  <li class="collapsed" onClick = "location.href = \'view_otrasinstituciones.php\'">
+                    <a href="view_otrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                  </li>
+                  <li class="collapsed" onClick = "location.href = \'view_barrios.php\'">
+                    <a href="view_barrios.php"><i class="fa fa-file-text fa-lg"></i> Barrio</a>
+                  </li>
+                  <li class="collapsed" onClick = "location.href = \'view_calles.php\'">
+                  <a href="view_calles.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+                  </li>
+              </ul>
+          </div>';
+          break;
+			case self::PAGINA_CATEGORIA:
+           echo '<div class="menu-list">
+    
+              <ul id="menu-content" class="menu-content collapse out">
+                  <li onClick = "location.href = \'view_personas.php\'">
+                    <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
+                  </li>
+                  <li class="collapsed" onClick = "location.href = \'view_motivos.php\'">
+                    <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
+                  </li>
+                  <li class="collapsed active" onClick = "location.href = \'view_categorias.php\'">
+                    <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
+                  </li>  
+                  <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
+                    <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
+                  </li>
+                  <li class="collapsed" onClick = "location.href = \'view_centros.php\'">
+                    <a href="view_centros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                  </li>
+                  <li class="collapsed" onClick = "location.href = \'view_escuelas.php\'">
+                    <a href="view_escuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
+                  </li>
+                  <li class="collapsed" onClick = "location.href = \'view_otrasinstituciones.php\'">
+                    <a href="view_otrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                  </li>
+                  <li class="collapsed" onClick = "location.href = \'view_barrios.php\'">
+                    <a href="view_barrios.php"><i class="fa fa-file-text fa-lg"></i> Barrio</a>
+                  </li>
+                  <li class="collapsed" onClick = "location.href = \'view_calles.php\'">
+                  <a href="view_calles.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+                  </li>
+              </ul>
+          </div>';
+          break;
+     		case self::PAGINA_RESPONSABLE:
+            echo '<div class="menu-list">
   
             <ul id="menu-content" class="menu-content collapse out">
                 <li onClick = "location.href = \'view_personas.php\'">
@@ -162,8 +212,10 @@ class Elements{
                 <a href="view_calles.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
                 </li>
             </ul>
-     		</div>';break;
-     		case 5:echo '<div class="menu-list">
+     		</div>';
+        break;
+     		case self::PAGINA_CENTRO_SALUD:
+            echo '<div class="menu-list">
   
             <ul id="menu-content" class="menu-content collapse out">
                 <li onClick = "location.href = \'view_personas.php\'">
@@ -194,8 +246,10 @@ class Elements{
                 <a href="view_calles.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
                 </li>
             </ul>
-     		</div>';break;  
-        	case 6:echo '<div class="menu-list">
+     		</div>';
+        break;  
+        	case self::PAGINA_ESCUELA:
+            echo '<div class="menu-list">
   
             <ul id="menu-content" class="menu-content collapse out">
                 <li onClick = "location.href = \'view_personas.php\'">
@@ -226,41 +280,10 @@ class Elements{
                 <a href="view_calles.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
                 </li>
             </ul>
-        	</div>';break; 
-          case 7:echo '<div class="menu-list">
-  
-            <ul id="menu-content" class="menu-content collapse out">
-                <li onClick = "location.href = \'view_personas.php\'">
-                  <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_motivos.php\'">
-                  <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_categorias.php\'">
-                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
-                </li>  
-                <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
-                  <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_centros.php\'">
-                  <a href="view_centros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_escuelas.php\'">
-                  <a href="view_escuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_otrasinstituciones.php\'">
-                  <a href="view_otrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
-                </li>
-                <li class="collapsed active" onClick = "location.href = \'view_barrios.php\'">
-                  <a href="view_barrios.php"><i class="fa fa-file-text fa-lg"></i> Barrio</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_calles.php\'">
-                <a href="view_calles.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
-                </li>
-            </ul>
-          </div>';break;        
-          case 8:echo '<div class="menu-list">
-  
+        	</div>';
+          break; 
+          case self::PAGINA_OTRAS_INSTITUCIONES:
+            echo '<div class="menu-list">
             <ul id="menu-content" class="menu-content collapse out">
                 <li onClick = "location.href = \'view_personas.php\'">
                   <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
@@ -290,41 +313,73 @@ class Elements{
                 <a href="view_calles.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
                 </li>
             </ul>
+          </div>';break;        
+          case self::PAGINA_BARRIO:
+              echo '<div class="menu-list">
+            <ul id="menu-content" class="menu-content collapse out">
+                <li onClick = "location.href = \'view_personas.php\'">
+                  <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_motivos.php\'">
+                  <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_categorias.php\'">
+                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
+                </li>  
+                <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
+                  <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_centros.php\'">
+                  <a href="view_centros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_escuelas.php\'">
+                  <a href="view_escuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_otrasinstituciones.php\'">
+                  <a href="view_otrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                </li>
+                <li class="collapsed active" onClick = "location.href = \'view_barrios.php\'">
+                  <a href="view_barrios.php"><i class="fa fa-file-text fa-lg"></i> Barrio</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_calles.php\'">
+                <a href="view_calles.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+                </li>
+            </ul>
           </div>';break;
-          case 9:echo '<div class="menu-list">
-  
-          <ul id="menu-content" class="menu-content collapse out">
-              <li onClick = "location.href = \'view_personas.php\'">
-                <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
+          case self::PAGINA_CALLE:
+            echo '<div class="menu-list">
+            <ul id="menu-content" class="menu-content collapse out">
+                <li onClick = "location.href = \'view_personas.php\'">
+                  <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_motivos.php\'">
+                  <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_categorias.php\'">
+                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
+                </li>  
+                <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
+                  <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_centros.php\'">
+                  <a href="view_centros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_escuelas.php\'">
+                  <a href="view_escuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_otrasinstituciones.php\'">
+                  <a href="view_otrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_barrios.php\'">
+                  <a href="view_barrios.php"><i class="fa fa-file-text fa-lg"></i> Barrio</a>
+                </li>
+                <li class="collapsed active" onClick = "location.href = \'view_calles.php\'">
+                <a href="view_calles.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
               </li>
-              <li class="collapsed" onClick = "location.href = \'view_motivos.php\'">
-                <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
-              </li>
-              <li class="collapsed" onClick = "location.href = \'view_categorias.php\'">
-                <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
-              </li>  
-              <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
-                <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
-              </li>
-              <li class="collapsed" onClick = "location.href = \'view_centros.php\'">
-                <a href="view_centros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
-              </li>
-              <li class="collapsed" onClick = "location.href = \'view_escuelas.php\'">
-                <a href="view_escuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
-              </li>
-              <li class="collapsed" onClick = "location.href = \'view_otrasinstituciones.php\'">
-                <a href="view_otrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
-              </li>
-              <li class="collapsed" onClick = "location.href = \'view_barrios.php\'">
-                <a href="view_barrios.php"><i class="fa fa-file-text fa-lg"></i> Barrio</a>
-              </li>
-              <li class="collapsed active" onClick = "location.href = \'view_calles.php\'">
-              <a href="view_calles.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
-            </li>
-          </ul>
-        </div>';break;
-			default:echo '<div class="menu-list">
-  
+            </ul>
+          </div>';break;
+			default:
+        echo '<div class="menu-list">
             <ul id="menu-content" class="menu-content collapse out">
                 <li onClick = "location.href = \'view_personas.php\'">
                   <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
@@ -682,7 +737,709 @@ public function getMenuSeguridad($ID){
     
   }
 
+  public function getMenuReportesUsuario($ID){
+    switch ($ID) {
+      case 11:
+          $menu = '<div class="menu-list">
+                    <ul id="menu-content" class="menu-content collapse out">
+                        <li class="collapsed active" onClick = "location.href = \'view_general_new.php\'">
+                          <a href="view_general_new.php"><i class="fa fa-file-text fa-lg"></i> Gráfico</a>
+                        </li>
+                        <li class="collapsed" onClick = "location.href = \'view_listados.php\'">
+                          <a href="view_listados.php"><i class="fa fa-file-text fa-lg"></i> Listados</a>
+                        </li>
+                    </ul>
+                  </div>';
+                  break;
+      case 12:
+          $menu = '<div class="menu-list">
+                    <ul id="menu-content" class="menu-content collapse out">
+                        <li class="collapsed" onClick = "location.href = \'view_general_new.php\'">
+                          <a href="view_general_new.php"><i class="fa fa-file-text fa-lg"></i> Gráfico</a>
+                        </li>
+                        <li class="collapsed active" onClick = "location.href = \'view_listados.php\'">
+                          <a href="view_listados.php"><i class="fa fa-file-text fa-lg"></i> Listados</a>
+                        </li>
+                    </ul>
+                   </div>';
+          break;
+      default:
+          $menu = '<div class="menu-list">
+                    <ul id="menu-content" class="menu-content collapse out">
+                        <li class="collapsed" onClick = "location.href = \'view_general_new.php\'">
+                          <a href="view_general_new.php"><i class="fa fa-file-text fa-lg"></i> Gráfico</a>
+                        </li>
+                        <li class="collapsed" onClick = "location.href = \'view_listados.php\'">
+                          <a href="view_listados.php"><i class="fa fa-file-text fa-lg"></i> Listados</a>
+                        </li>
+                    </ul>
+                    </div>';
+          break;
+    }
+    return $menu;
+  }
 
+  public function getMenuUnificacionUsuario($ID){
+    switch ($ID) {
+      case 13:
+          $menu = '<div class="menu-list">
+  
+            <ul id="menu-content" class="menu-content collapse out">
+                <li class="collapsed active" onClick = "location.href = \'view_unifpersonas.php\'">
+                  <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
+                  <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifcentros.php\'">
+                  <a href="view_unifcentros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
+                  <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
+                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
+                  <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
+                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+                </li>
+            </ul>
+        </div>';break;
+      case 14:
+          $menu = '<div class="menu-list">
+  
+            <ul id="menu-content" class="menu-content collapse out">
+                <li onClick = "location.href = \'view_unifpersonas.php\'">
+                  <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
+                </li>
+                <li class="collapsed active" onClick = "location.href = \'view_unifmotivos.php\'">
+                  <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifcentros.php\'">
+                  <a href="view_unifcentros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
+                  <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
+                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
+                  <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
+                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+                </li>
+            </ul>
+        </div>';break;
+        case 15:
+            $menu = '<div class="menu-list">
+  
+            <ul id="menu-content" class="menu-content collapse out">
+                <li onClick = "location.href = \'view_unifpersonas.php\'">
+                  <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
+                  <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
+                </li>
+                <li class="collapsed active" onClick = "location.href = \'view_unifcentros.php\'">
+                  <a href="view_unifcentros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
+                  <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
+                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
+                  <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
+                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+                </li>
+            </ul>
+        </div>';break;
+        case 16:
+            $menu = '<div class="menu-list">
+  
+            <ul id="menu-content" class="menu-content collapse out">
+                <li onClick = "location.href = \'view_unifpersonas.php\'">
+                  <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
+                  <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifcentros.php\'">
+                  <a href="view_unifcentros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                </li>
+                <li class="collapsed active" onClick = "location.href = \'view_unifescuelas.php\'">
+                  <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
+                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
+                  <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
+                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+                </li>
+            </ul>
+        </div>';break;
+        case 17:
+            $menu =  '<div class="menu-list">
+  
+            <ul id="menu-content" class="menu-content collapse out">
+                <li onClick = "location.href = \'view_unifpersonas.php\'">
+                  <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
+                  <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifcentros.php\'">
+                  <a href="view_unifcentros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
+                  <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
+                </li>
+                <li class="collapsed active" onClick = "location.href = \'view_unifbarrios.php\'">
+                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
+                  <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
+                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+                </li>
+            </ul>
+        </div>';break;
+        case 18:
+            $menu =  '<div class="menu-list">
+  
+            <ul id="menu-content" class="menu-content collapse out">
+                <li onClick = "location.href = \'view_unifpersonas.php\'">
+                  <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
+                  <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifcentros.php\'">
+                  <a href="view_unifcentros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
+                  <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
+                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                </li>
+                <li class="collapsed active" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
+                  <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
+                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+                </li>
+            </ul>
+        </div>';break;
+        case 19:
+            $menu =  '<div class="menu-list">
+  
+            <ul id="menu-content" class="menu-content collapse out">
+                <li onClick = "location.href = \'view_unifpersonas.php\'">
+                  <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
+                  <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifcentros.php\'">
+                  <a href="view_unifcentros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
+                  <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
+                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
+                  <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                </li>
+                <li class="collapsed active" onClick = "location.href = \'view_unifdirecciones.php\'">
+                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+                </li>
+            </ul>
+        </div>';
+        break;
+      default:
+          $menu =  '<div class="menu-list">
+  
+            <ul id="menu-content" class="menu-content collapse out">
+                <li onClick = "location.href = \'view_unifpersonas.php\'">
+                  <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
+                  <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifcentros.php\'">
+                  <a href="view_unifcentros.php"><i class="fa  fa-file-text fa-lg"></i> Centros Salud</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
+                  <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
+                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
+                  <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
+                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+                </li>
+            </ul>
+        </div>';break;
+    }
+    return $menu;
+  }
+
+public function getMenuSeguridadUsuario($ID){
+    switch ($ID) {
+      case self::PAGINA_USUARIO: 
+          $menu = '<div class="menu-list">
+  
+            <ul id="menu-content" class="menu-content collapse out">
+                <li class="collapsed active" onClick = "location.href = \'view_usuarios.php\'">
+                  <a href="view_usuarios.php"><i class="fa fa-file-text fa-lg"></i> Usuarios</a>
+                </li>
+            </ul>
+        </div>';break;
+      case 2:
+          $menu =  '<div class="menu-list">            
+                      <ul id="menu-content" class="menu-content collapse out">
+                          <li onClick = "location.href = \'view_usuarios.php\'">
+                            <a href="view_usuarios.php"><i class="fa fa-file-text fa-lg"></i> Usuarios</a>
+                          </li>
+                      </ul>
+                  </div>';
+          break;
+      default:
+          $menu =  '<div class="menu-list">
+                      <ul id="menu-content" class="menu-content collapse out">
+                          <li onClick = "location.href = \'view_usuarios.php\'">
+                            <a href="view_usuarios.php"><i class="fa fa-file-text fa-lg"></i> Usuarios</a>
+                          </li>
+                      </ul>
+                  </div>';
+          break;
+    }
+    return $menu;
+  }
+
+  public function getMenuHistorialUsuario($ID){
+    switch ($ID) {
+      case 21: 
+          $menu = '<div class="menu-list">  
+            <ul id="menu-content" class="menu-content collapse out">
+                <li class="collapsed active" onClick = "location.href = \'para_que_sirve.pdf\'">
+                  <a href="para_que_sirve.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Para qué sirve?</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'como_funciona.pdf\'">
+                  <a href="como_funciona.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Cómo funciona?</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'licencia.pdf\'">
+                  <a href="licencia.pdf"><i class="fa fa-file-text fa-lg"></i> Licencia</a>
+                </li>
+               
+            </ul>
+        </div>';
+        break;
+	   case 22: 
+          $menu = '<div class="menu-list">
+                  <ul id="menu-content" class="menu-content collapse out">
+                      <li class="collapsed" onClick = "location.href = \'para_que_sirve.pdf\'">
+                        <a href="para_que_sirve.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Para qué sirve?</a>
+                      </li>
+                      <li class="collapsed active" onClick = "location.href = \'como_funciona.pdf\'">
+                          <a href="como_funciona.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Cómo funciona?</a>
+                      </li>
+                      <li class="collapsed" onClick = "location.href = \'licencia.pdf\'">
+                          <a href="licencia.pdf"><i class="fa fa-file-text fa-lg"></i> Licencia</a>
+                      </li>
+                    
+                  </ul>
+              </div>';
+          break;
+      case 23: 
+          $menu = '<div class="menu-list">
+                    <ul id="menu-content" class="menu-content collapse out">
+                        <li class="collapsed" onClick = "location.href = \'para_que_sirve.pdf\'">
+                          <a href="para_que_sirve.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Para qué sirve?</a>
+                        </li>
+                        <li class="collapsed" onClick = "location.href = \'como_funciona.pdf\'">
+                            <a href="como_funciona.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Cómo funciona?</a>
+                        </li>
+                        <li class="collapsed active" onClick = "location.href = \'licencia.pdf\'">
+                            <a href="licencia.pdf"><i class="fa fa-file-text fa-lg"></i> Licencia</a>
+                        </li>
+                      
+                    </ul>
+                </div>';
+          break;
+      default: 
+          $menu = '<div class="menu-list">
+                    <ul id="menu-content" class="menu-content collapse out">
+                        <li onClick = "location.href = \'para_que_sirve.pdf\'">
+                          <a href="para_que_sirve.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Para qué sirve?</a>
+                        </li>
+                        <li class="collapsed" onClick = "location.href = \'como_funciona.pdf\'">
+                          <a href="como_funciona.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Cómo funciona?</a>
+                        </li>
+                        <li class="collapsed" onClick = "location.href = \'licencia.pdf\'">
+                          <a href="licencia.pdf"><i class="fa fa-file-text fa-lg"></i> Licencia</a>
+                        </li>                
+                    </ul>
+                </div>';
+          break;
+    }
+    return $menu;
+  }
+
+  public function getMenuActualizacionesUsuario($ID){
+		switch ($ID) {
+			case self::PAGINA_PERSONA:
+          $menu =  '<div class="menu-list">
+                    <ul id="menu-content" class="menu-content collapse out">
+                        <li class="collapsed active" onClick = "location.href = \'view_personas.php\'">
+                          <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
+                        </li>
+                        <li class="collapsed" onClick = "location.href = \'view_motivos.php\'">
+                          <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
+                        </li>
+                        <li class="collapsed" onClick = "location.href = \'view_categorias.php\'">
+                          <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
+                        </li>  
+                        <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
+                          <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
+                        </li>
+                        <li class="collapsed" onClick = "location.href = \'view_centros.php\'">
+                          <a href="view_centros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                        </li>
+                        <li class="collapsed" onClick = "location.href = \'view_escuelas.php\'">
+                          <a href="view_escuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
+                        </li>
+                        <li class="collapsed" onClick = "location.href = \'view_otrasinstituciones.php\'">
+                          <a href="view_otrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                        </li>
+                        <li class="collapsed" onClick = "location.href = \'view_barrios.php\'">
+                          <a href="view_barrios.php"><i class="fa fa-file-text fa-lg"></i> Barrio</a>
+                        </li>
+                        <li class="collapsed" onClick = "location.href = \'view_calles.php\'">
+                        <a href="view_calles.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+                        </li>
+                    </ul>
+                   </div>';
+            break;
+			case self::PAGINA_MOTIVO:
+          $menu =  '<div class="menu-list">
+  
+            <ul id="menu-content" class="menu-content collapse out">
+                <li onClick = "location.href = \'view_personas.php\'">
+                  <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
+                </li>
+                <li class="collapsed active" onClick = "location.href = \'view_motivos.php\'">
+                  <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_categorias.php\'">
+                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
+                </li>  
+                <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
+                  <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_centros.php\'">
+                  <a href="view_centros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_escuelas.php\'">
+                  <a href="view_escuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_otrasinstituciones.php\'">
+                  <a href="view_otrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_barrios.php\'">
+                  <a href="view_barrios.php"><i class="fa fa-file-text fa-lg"></i> Barrio</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_calles.php\'">
+                <a href="view_calles.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+                </li>
+            </ul>
+     		</div>';break;
+			case self::PAGINA_CATEGORIA:
+          $menu =  '<div class="menu-list">
+  
+            <ul id="menu-content" class="menu-content collapse out">
+                <li onClick = "location.href = \'view_personas.php\'">
+                  <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_motivos.php\'">
+                  <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
+                </li>
+                <li class="collapsed active" onClick = "location.href = \'view_categorias.php\'">
+                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
+                </li>  
+                <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
+                  <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_centros.php\'">
+                  <a href="view_centros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_escuelas.php\'">
+                  <a href="view_escuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_otrasinstituciones.php\'">
+                  <a href="view_otrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_barrios.php\'">
+                  <a href="view_barrios.php"><i class="fa fa-file-text fa-lg"></i> Barrio</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_calles.php\'">
+                <a href="view_calles.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+                </li>
+            </ul>
+     		</div>';break;
+     		case self::PAGINA_RESPONSABLE:
+            $menu =  '<div class="menu-list">
+  
+            <ul id="menu-content" class="menu-content collapse out">
+                <li onClick = "location.href = \'view_personas.php\'">
+                  <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_motivos.php\'">
+                  <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_categorias.php\'">
+                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
+                </li>  
+                <li class="collapsed active" onClick = "location.href = \'view_responsables.php\'">
+                  <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_centros.php\'">
+                  <a href="view_centros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_escuelas.php\'">
+                  <a href="view_escuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_otrasinstituciones.php\'">
+                  <a href="view_otrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_barrios.php\'">
+                  <a href="view_barrios.php"><i class="fa fa-file-text fa-lg"></i> Barrio</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_calles.php\'">
+                <a href="view_calles.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+                </li>
+            </ul>
+     		</div>';break;
+     		case self::PAGINA_CENTRO_SALUD:
+            $menu =  '<div class="menu-list">
+  
+            <ul id="menu-content" class="menu-content collapse out">
+                <li onClick = "location.href = \'view_personas.php\'">
+                  <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_motivos.php\'">
+                  <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_categorias.php\'">
+                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
+                </li>  
+                <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
+                  <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
+                </li>
+                <li class="collapsed active" onClick = "location.href = \'view_centros.php\'">
+                  <a href="view_centros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_escuelas.php\'">
+                  <a href="view_escuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_otrasinstituciones.php\'">
+                  <a href="view_otrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_barrios.php\'">
+                  <a href="view_barrios.php"><i class="fa fa-file-text fa-lg"></i> Barrio</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_calles.php\'">
+                <a href="view_calles.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+                </li>
+            </ul>
+     		</div>';break;  
+        	case self::PAGINA_ESCUELA:
+              $menu =  '<div class="menu-list">
+  
+            <ul id="menu-content" class="menu-content collapse out">
+                <li onClick = "location.href = \'view_personas.php\'">
+                  <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_motivos.php\'">
+                  <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_categorias.php\'">
+                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
+                </li>  
+                <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
+                  <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_centros.php\'">
+                  <a href="view_centros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                </li>
+                <li class="collapsed active" onClick = "location.href = \'view_escuelas.php\'">
+                  <a href="view_escuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_otrasinstituciones.php\'">
+                  <a href="view_otrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_barrios.php\'">
+                  <a href="view_barrios.php"><i class="fa fa-file-text fa-lg"></i> Barrio</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_calles.php\'">
+                <a href="view_calles.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+                </li>
+            </ul>
+        	</div>';break; 
+          case self::PAGINA_OTRAS_INSTITUCIONES:
+              $menu =  '<div class="menu-list">
+  
+            <ul id="menu-content" class="menu-content collapse out">
+                <li onClick = "location.href = \'view_personas.php\'">
+                  <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_motivos.php\'">
+                  <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_categorias.php\'">
+                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
+                </li>  
+                <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
+                  <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_centros.php\'">
+                  <a href="view_centros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_escuelas.php\'">
+                  <a href="view_escuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
+                </li>
+                <li class="collapsed active" onClick = "location.href = \'view_otrasinstituciones.php\'">
+                  <a href="view_otrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_barrios.php\'">
+                  <a href="view_barrios.php"><i class="fa fa-file-text fa-lg"></i> Barrio</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_calles.php\'">
+                <a href="view_calles.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+                </li>
+            </ul>
+          </div>';break;        
+          case self::PAGINA_BARRIO:
+              $menu =  '<div class="menu-list">
+  
+            <ul id="menu-content" class="menu-content collapse out">
+                <li onClick = "location.href = \'view_personas.php\'">
+                  <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_motivos.php\'">
+                  <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_categorias.php\'">
+                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
+                </li>  
+                <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
+                  <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_centros.php\'">
+                  <a href="view_centros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_escuelas.php\'">
+                  <a href="view_escuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_otrasinstituciones.php\'">
+                  <a href="view_otrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                </li>
+                <li class="collapsed active" onClick = "location.href = \'view_barrios.php\'">
+                  <a href="view_barrios.php"><i class="fa fa-file-text fa-lg"></i> Barrio</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_calles.php\'">
+                <a href="view_calles.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+                </li>
+            </ul>
+          </div>';break;
+          case self::PAGINA_CALLE:
+              $menu =  '<div class="menu-list">
+  
+          <ul id="menu-content" class="menu-content collapse out">
+              <li onClick = "location.href = \'view_personas.php\'">
+                <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
+              </li>
+              <li class="collapsed" onClick = "location.href = \'view_motivos.php\'">
+                <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
+              </li>
+              <li class="collapsed" onClick = "location.href = \'view_categorias.php\'">
+                <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
+              </li>  
+              <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
+                <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
+              </li>
+              <li class="collapsed" onClick = "location.href = \'view_centros.php\'">
+                <a href="view_centros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+              </li>
+              <li class="collapsed" onClick = "location.href = \'view_escuelas.php\'">
+                <a href="view_escuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
+              </li>
+              <li class="collapsed" onClick = "location.href = \'view_otrasinstituciones.php\'">
+                <a href="view_otrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+              </li>
+              <li class="collapsed" onClick = "location.href = \'view_barrios.php\'">
+                <a href="view_barrios.php"><i class="fa fa-file-text fa-lg"></i> Barrio</a>
+              </li>
+              <li class="collapsed active" onClick = "location.href = \'view_calles.php\'">
+              <a href="view_calles.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+            </li>
+          </ul>
+        </div>';break;
+			default:
+          $menu = '<div class="menu-list">
+  
+            <ul id="menu-content" class="menu-content collapse out">
+                <li onClick = "location.href = \'view_personas.php\'">
+                  <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_motivos.php\'">
+                  <a href="view_motivos.php"><i class="fa fa-file-text fa-lg"></i> Motivo</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_categorias.php\'">
+                  <a href="view_categorias.php"><i class="fa fa-file-text fa-lg"></i> Categoría</a>
+                </li>  
+                <li class="collapsed" onClick = "location.href = \'view_responsables.php\'">
+                  <a href="view_responsables.php"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_centros.php\'">
+                  <a href="view_centros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_escuelas.php\'">
+                  <a href="view_escuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_otrasinstituciones.php\'">
+                  <a href="view_otrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_barrios.php\'">
+                  <a href="view_barrios.php"><i class="fa fa-file-text fa-lg"></i> Barrio</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_calles.php\'">
+                <a href="view_calles.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+                </li>
+            </ul>
+     		</div>';
+        break;
+		}
+		return $menu;
+	}
 
 //Metodos Get Agentes
   public function CBPersonas(){
@@ -1507,58 +2264,80 @@ public function getMenuSeguridad($ID){
     echo $cardSession;
   }
 
-  public function menuDeNavegacion($TipoUsuario, $ID_Usuario) 
+  public function CBSessionNombreUsuario($idAccount){
+    $Con3 = new Conexion();
+    $Con3->OpenConexion();
+    $ConsultaNombre = "select *
+                       from accounts 
+                       where estado = 1
+                         and accountid = $idAccount";
+    $ConsultaResult = mysqli_query($Con3->Conexion,$ConsultaNombre)or die("Problemas al mostrar Personas");
+    if(mysqli_num_rows($ConsultaResult) > 0){
+      $Resultado = mysqli_fetch_array($ConsultaResult);
+      $cardSession = "<div class='title-session'>".
+                        $Resultado["username"] . "
+                      </div>";
+    } else {
+      $cardSession = "<div class='letras-circle'> Login </div>";
+    }
+    $Con3->CloseConexion();
+    return $cardSession;
+  }
+
+  public function menuDeNavegacion($TipoUsuario, $ID_Usuario, $pagina) 
   {
     if ($TipoUsuario == 1) {
       $menu = "<div class='col-md-3'>
-                  <div class='nav-side-menu'>" . self::CBSessionNombre($ID_Usuario) . 
-                      "<div class='brand'>General</div>
-                      <i class='fa fa-bars fa-2x toggle-btn' data-toggle='collapse' data-target='#menu-content'></i>
-                    
-                          <div class='menu-list'>" . 
-                    
-                              self::getMenuGeneral(0) . 
+                  <div class='nav-side-menu'>" . 
+                    self::CBSessionNombreUsuario($ID_Usuario) . 
+                    "<div class='brand'>General</div>
+                       <i class='fa fa-bars fa-2x toggle-btn' data-toggle='collapse' data-target='#menu-content'></i>
+                          <div class='menu-list'>" .        
+                            self::getMenuGeneralUsuario($pagina) . 
                           "</div>
                           <div class='brand'>Actualizaciones</div>
-                          <div class='menu-list'>" . self::getMenuActualizaciones(0) . 
+                          <div class='menu-list'>" . 
+                            self::getMenuActualizacionesUsuario($pagina) . 
                           "</div>
                           <div class='brand'>Reportes</div>
                           <div class='menu-list'>" .
-                            self::getMenuReportes(2) . 
+                            self::getMenuReportesUsuario($pagina) . 
                           "</div>
                           <div class='brand'>Unificación</div>
                           <div class='menu-list'>" . 
-                    
-                            self::getMenuUnificacion(0) . 
+                            self::getMenuUnificacionUsuario($pagina) . 
                           "</div>
                           <div class='brand'>Seguridad</div>
                           <div class='menu-list'>" .
-                    
-                              self::getMenuSeguridad(0) . 
+                              self::getMenuSeguridadUsuario($pagina) . 
                           "</div>
                           <div class='brand'>El Proyecto</div>
                           <div class='menu-list'>" . 
-                              self::getMenuHistorial(0) . 
+                              self::getMenuHistorialUsuario($pagina) . 
                           "</div>
                           <div class='brand btn-Salir' onClick=\"location.href = 'Controladores/CtrLogout.php'\">Salir</div>
                       </div>
                     </div>";
-    } elseif($TipoUsuario == 2 || $TipoUsuario > 3) {
+    } elseif ($TipoUsuario == 2 || $TipoUsuario > 3) {
           $menu = "<div class = 'col-md-3'>
-                      <div class='nav-side-menu'>" . self::CBSessionNombre($ID_Usuario) . 
-                          "<div class='brand'>General</div>
+                      <div class='nav-side-menu'>" . 
+                        self::CBSessionNombreUsuario($ID_Usuario) . 
+                        "<div class='brand'>General</div>
                           <i class='fa fa-bars fa-2x toggle-btn' data-toggle='collapse' data-target='#menu-content'></i>
                               <div class='menu-list'>" . 
-                                self::getMenuGeneral(0) . 
+                                self::getMenuGeneral($pagina) . 
                               "</div>
                               <div class='brand'>Actualizaciones</div>
-                              <div class='menu-list'>" . self::getMenuActualizaciones(0) .
+                              <div class='menu-list'>" . 
+                                self::getMenuActualizacionesUsuario($pagina) .
                               "</div>
                               <div class='brand'>Reportes</div>
-                              <div class='menu-list'>" . self::getMenuReportes(0) . 
+                              <div class='menu-list'>" . 
+                                self::getMenuReportesUsuario($pagina) . 
                               "</div>
                               <div class='brand'>El Proyecto</div>
-                              <div class='menu-list'>" . self::getMenuHistorial(0) . 
+                              <div class='menu-list'>" . 
+                                self::getMenuHistorialUsuario($pagina) . 
                               "</div>
                               <div class='brand btn-Salir' onClick=\"location.href='Controladores/CtrLogout.php'\">Salir</div>
                           </div>
@@ -1566,33 +2345,33 @@ public function getMenuSeguridad($ID){
     } elseif ($TipoUsuario == 3) {
       $menu = "<div class = 'col-md-3'>
                 <div class='nav-side-menu'>" . 
-                      self::CBSessionNombre($ID_Usuario) . 
+                      self::CBSessionNombreUsuario($ID_Usuario) . 
                     "<div class='brand'>General</div>
                     <i class='fa fa-bars fa-2x toggle-btn' data-toggle='collapse' data-target='#menu-content'></i>
-                  
                         <div class='menu-list'>" . 
-                            self::getMenuGeneral(0) . 
+                            self::getMenuGeneralUsuario($pagina) . 
                         "</div>
                         <div class='brand'>Actualizaciones</div>
-                        <div class='menu-list'>" . self::getMenuActualizaciones(0) . 
+                        <div class='menu-list'>" . 
+                          self::getMenuActualizacionesUsuario($pagina) . 
                         "</div>
                         <div class='brand'>Reportes</div>
                         <div class='menu-list'>" . 
-                  
-                            self::getMenuReportes(2) . 
+                            self::getMenuReportes($pagina) . 
                         "</div>
                         <div class='brand'>Unificación</div>
-                        <div class='menu-list'>" . self::getMenuUnificacion(0) . 
+                        <div class='menu-list'>" . 
+                          self::getMenuUnificacionUsuario($pagina) . 
                         "</div>
                         <div class='brand'>El Proyecto</div>
                         <div class='menu-list'>" . 
-                            self::getMenuHistorial(0) .
+                            self::getMenuHistorialUsuario($pagina) .
                         "</div>
                         <div class='brand btn-Salir' onClick = \"location.href = 'Controladores/CtrLogout.php'\">Salir</div>
                     </div>
                   </div>";
     }
-    echo $menu;
+    return $menu;
   }
 
   /*

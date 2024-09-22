@@ -67,6 +67,8 @@ $Con->CloseConexion();
 
   <script src="js/OpenLayers.js"></script>
 
+  <script src="https://www.lactame.com/lib/image-js/0.21.2/image.min.js"></script>
+
   <script>
     const { PDFDocument, StandardFonts, rgb } = PDFLib
 
@@ -156,13 +158,15 @@ $Con->CloseConexion();
           pos = new OpenLayers.LonLat(elemento.lon, elemento.lat).transform(toProjection, fromProjection);
           positionFormas = pos;
           if (elemento.lista_formas_categorias) {
+            let angulo = 360;
+            let puntos = angulo / Object.keys(elemento.lista_formas_categorias).length;
             Object.keys(elemento.lista_formas_categorias).forEach(function (categoria, indice, array) {
                   charCodeLetter = (categoria.length == 1) ? categoria.charCodeAt(0) : categoria;
-                  icon = new OpenLayers.Icon('./images/icons/motivos/' + charCodeLetter + '.png', size, offset);
+                  let color_categ = elemento.lista_formas_categorias[categoria].substring(1);
+                  icon = new OpenLayers.Icon('./images/icons/motivos/' + charCodeLetter + '_' + color_categ + '.png', size, offset);
                   let marker = new OpenLayers.Marker(positionFormas, icon.clone());
                   markers.addMarker(marker);
-                  positionFormas = positionFormas.add(10, 0);
-
+                  positionFormas = positionFormas.add(Math.sin((indice + 1) * puntos) * 10, Math.cos((indice + 1) * puntos) * 10);
                   let feature = new OpenLayers.Feature(markers, positionFormas);
                   feature.closeBox = true;
                   feature.data.overflow = "hidden";
@@ -915,7 +919,7 @@ $Con->CloseConexion();
 
 <body>
   <div id="ContenerdorPrincipal" class="row">
-    <?php
+  <?php
     if ($TipoUsuario == 1) {
       ?>
       <div class="col-md-2" id="expandir" hidden>
@@ -1590,8 +1594,12 @@ $Con->CloseConexion();
               $ConsultarCategoria = "select categoria from categoria where id_categoria = " . $ID_Categoria . " limit 1";
               $EjecutarConsultarCategoria = mysqli_query($Con->Conexion, $ConsultarCategoria) or die("Problemas al consultar filtro Categoria");
               $RetConsultarCategoria = mysqli_fetch_assoc($EjecutarConsultarCategoria);
+
+              $consulta_categoria = "and C.id_categoria = " . $ID_Categoria;
               $filtros[] = "Categoria: " . $RetConsultarCategoria['categoria'];
               $json_filtro[] = "Categoria " . $RetConsultarCategoria['categoria'];
+            } else {
+              $consulta_categoria = "";
             }
 
             if ($ID_CentroSalud > 0) {
@@ -2417,7 +2425,7 @@ $Con->CloseConexion();
                   $jsonTable[$clave]["meses"] = $RetTodos["meses"];
                   foreach ($arr as $key => $value) {
                     $Separar = explode("/", $value);
-                    $Mes = $Separar[0]; 
+                    $Mes = $Separar[0];
                     $Anio = $Separar[1];
                     $Consultar_Movimientos_Persona = "select M.id_movimiento,
                                                              M.motivo_1, 
@@ -2430,8 +2438,8 @@ $Con->CloseConexion();
                                                              max(M.motivo_4 = MI.id_motivo) as permiso_4,
                                                              M.motivo_5,
                                                              max(M.motivo_5 = MI.id_motivo) as permiso_5
-                                                      from movimiento M, 
-                                                           motivo MT, 
+                                                      from movimiento M,
+                                                           motivo MT,
                                                            categoria C,
                                                            PERMISOS MI
                                                       where M.id_persona = " . $RetTodos["id_persona"] . " 
@@ -2444,7 +2452,8 @@ $Con->CloseConexion();
                                                           or M.motivo_5 = MT.id_motivo)
                                                         $consulta_motivos
                                                         and MT.id_motivo <> 1 
-                                                        and MT.cod_categoria = C.cod_categoria 
+                                                        and MT.cod_categoria = C.cod_categoria
+                                                        $consulta_categoria
                                                         and M.estado = 1 
                                                         and MI.id_motivo = MT.id_motivo 
                                                         group by M.id_movimiento, M.motivo_1, M.motivo_2, M.motivo_3, M.motivo_4, M.motivo_5";
@@ -2538,7 +2547,7 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo["color"];
 
                           }
                         }
@@ -2592,7 +2601,7 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo["color"];
                           }
                         }
                         if ($ID_Motivo3 > 0) {
@@ -2644,7 +2653,7 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo["color"];
                           }
                         }
                         if ($ID_Motivo4 > 0) {
@@ -2696,7 +2705,7 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo["color"];
                         }
                         }
                         if ($ID_Motivo5 > 0) {
@@ -2748,11 +2757,11 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo["color"];
                           }
                         }
 
-                        if ($ID_Motivo == 0 && $ID_Motivo2 == 0 && $ID_Motivo3 == 0 && $ID_Motivo4 == 0 && $ID_Motivo5 == 0) {
+                        if ($CantOpMotivos == 0) {
                           $ConsultarCodyColor = "select M.cod_categoria,
                                                         F.Forma_Categoria,
                                                         C.color,
@@ -2801,7 +2810,7 @@ $Con->CloseConexion();
                             $forma_motivo = substr($forma_motivo, 2);
                             $forma_motivo = substr($forma_motivo, 0, -1);
                           }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo["color"]] = true;
+                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo["color"];
                         }
                       }
 
@@ -2859,7 +2868,7 @@ $Con->CloseConexion();
                             $forma_motivo = substr($forma_motivo, 2);
                             $forma_motivo = substr($forma_motivo, 0, -1);
                           }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo2["color"]] = true;
+                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo2["color"];
                           }
                         }
                         if ($ID_Motivo2 > 0) {
@@ -2914,7 +2923,7 @@ $Con->CloseConexion();
                             $forma_motivo = substr($forma_motivo, 2);
                             $forma_motivo = substr($forma_motivo, 0, -1);
                           }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo2["color"]] = true;
+                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo2["color"];
                           }
                         }
                         if ($ID_Motivo3 > 0) {
@@ -2970,7 +2979,7 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo2["color"]] = true;
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo2["color"];
                           }
                         }
                         if ($ID_Motivo4 > 0) {
@@ -3015,7 +3024,7 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo2["color"]] = true;
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo2["color"];
                           }
                         }
                         if ($ID_Motivo5 > 0) {
@@ -3060,10 +3069,10 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo2["color"]] = true;
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo2["color"];
                           }
                         }
-                        if ($ID_Motivo == 0 && $ID_Motivo2 == 0 && $ID_Motivo3 == 0 && $ID_Motivo4 == 0 && $ID_Motivo5 == 0) {
+                        if ($CantOpMotivos == 0) {
                           $ConsultarCodyColor2 = "select  M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_2"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
                           $MensajeErrorConsultarCodyColor2 = "No se pudieron consultar los motivos de los Movimientos";
 
@@ -3104,7 +3113,7 @@ $Con->CloseConexion();
                             $forma_motivo = substr($forma_motivo, 2);
                             $forma_motivo = substr($forma_motivo, 0, -1);
                           }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo2["color"]] = true;
+                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo2["color"];
                         }
                       }
 
@@ -3150,7 +3159,7 @@ $Con->CloseConexion();
                             $forma_motivo = substr($forma_motivo, 2);
                             $forma_motivo = substr($forma_motivo, 0, -1);
                           }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo3["color"]] = true;
+                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo3["color"];
                           }
                         }
                         if ($ID_Motivo2 > 0) {
@@ -3193,7 +3202,7 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo3["color"]] = true;
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo3["color"];
                           }
                         }
                         if ($ID_Motivo3 > 0) {
@@ -3236,7 +3245,7 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo3["color"]] = true;   
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo3["color"];   
                           }
                         }
                         if ($ID_Motivo4 > 0) {
@@ -3279,7 +3288,7 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo3["color"]] = true;   
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo3["color"];   
                           }
                         }
                         if ($ID_Motivo5 > 0) {
@@ -3322,10 +3331,10 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo3["color"]] = true;   
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo3["color"];   
                           }
                         }
-                        if ($ID_Motivo == 0 && $ID_Motivo2 == 0 && $ID_Motivo3 == 0 && $ID_Motivo4 == 0 && $ID_Motivo5 == 0) {
+                        if ($CantOpMotivos == 0) {
                           $ConsultarCodyColor3 = "select  M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
                           $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
 
@@ -3365,7 +3374,7 @@ $Con->CloseConexion();
                             $forma_motivo = substr($forma_motivo, 2);
                             $forma_motivo = substr($forma_motivo, 0, -1);
                           }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo][$RetMotivo3["color"]] = true;
+                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo3["color"];
                         }
                       }
                     }
