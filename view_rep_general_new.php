@@ -159,14 +159,14 @@ $Con->CloseConexion();
           positionFormas = pos;
           if (elemento.lista_formas_categorias) {
             let angulo = 360;
-            let puntos = angulo / Object.keys(elemento.lista_formas_categorias).length;
+            let puntos = angulo / (Object.keys(elemento.lista_formas_categorias).length + 1);
             Object.keys(elemento.lista_formas_categorias).forEach(function (categoria, indice, array) {
                   charCodeLetter = (categoria.length == 1) ? categoria.charCodeAt(0) : categoria;
                   let color_categ = elemento.lista_formas_categorias[categoria].substring(1);
                   icon = new OpenLayers.Icon('./images/icons/motivos/' + charCodeLetter + '_' + color_categ + '.png', size, offset);
                   let marker = new OpenLayers.Marker(positionFormas, icon.clone());
                   markers.addMarker(marker);
-                  positionFormas = positionFormas.add(Math.sin((indice + 1) * puntos) * 10, Math.cos((indice + 1) * puntos) * 10);
+                  positionFormas = positionFormas.add(Math.sin((indice + 1) * puntos) * 22, Math.cos((indice + 1) * puntos) * 22);
                   let feature = new OpenLayers.Feature(markers, positionFormas);
                   feature.closeBox = true;
                   feature.data.overflow = "hidden";
