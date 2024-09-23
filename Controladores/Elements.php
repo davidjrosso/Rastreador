@@ -2357,7 +2357,7 @@ public function getMenuSeguridadUsuario($ID){
                         "</div>
                         <div class='brand'>Reportes</div>
                         <div class='menu-list'>" . 
-                            self::getMenuReportes($pagina) . 
+                            self::getMenuReportesUsuario($pagina) . 
                         "</div>
                         <div class='brand'>Unificación</div>
                         <div class='menu-list'>" . 

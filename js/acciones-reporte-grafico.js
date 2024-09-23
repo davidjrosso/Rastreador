@@ -814,11 +814,11 @@ function configColumnasTabla() {
 function envioDeFilasMultiplesEnBloques(elemento, index, array) {
     let objectJson = elemento;
     countList++;
-    indexList++;
     let height = ((elemento.height > 23) ? 0.7 : 0);
     countList += height;
     delete objectJson.height;
     rowsRequest[indexList] = objectJson;
+    indexList++;
 
     if (countList >= 19 && idRequestField >= 1) {
         rowsRequest["header_movimientos_general"] = objectJsonTabla["header_movimientos_general"];
