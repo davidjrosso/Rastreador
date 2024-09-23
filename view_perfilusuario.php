@@ -134,7 +134,7 @@ $Con->CloseConexion();
             <div class="form-group row">
               <div class="offset-md-2 col-md-10">
                 <button type="submit" class="btn btn-outline-success">Guardar</button>
-                <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_usuarios.php'">Atras</button>
+                <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_inicio.php'">Atras</button>
               </div>
             </div>
             <input type="number" hidden id="account_id" name="account_id" value="<?php echo $AccountID;?>"> 
