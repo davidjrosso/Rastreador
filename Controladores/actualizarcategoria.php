@@ -24,7 +24,7 @@ try {
 		list($r, $g, $b) = sscanf($forma_categoria_row["color"], "#%02x%02x%02x");
 		$file_path = "../images/icons/motivos/" . $forma_categoria . "_" . $color_icono . ".png";
 		$file_path_common = "../images/icons/motivos/" . $forma_categoria . ".png";
-	
+
 		if (!file_exists($file_path)) {
 			$imagen = imagecreatefrompng($file_path_common);
 			$is_filter = imagefilter($imagen, IMG_FILTER_COLORIZE, $r, $g, $b);

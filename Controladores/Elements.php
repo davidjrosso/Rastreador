@@ -2274,8 +2274,10 @@ public function getMenuSeguridadUsuario($ID){
     $ConsultaResult = mysqli_query($Con3->Conexion,$ConsultaNombre)or die("Problemas al mostrar Personas");
     if(mysqli_num_rows($ConsultaResult) > 0){
       $Resultado = mysqli_fetch_array($ConsultaResult);
-      $cardSession = "<div class='title-session'>".
-                        $Resultado["username"] . "
+      $cardSession = "<div class='title-session'>
+                        <a id='perfil' style='color: #e1ffff' href='view_perfilusuario.php?account_id=" . $idAccount . "'>".
+                          $Resultado["username"] . "
+                        </a>
                       </div>";
     } else {
       $cardSession = "<div class='letras-circle'> Login </div>";
@@ -2357,7 +2359,7 @@ public function getMenuSeguridadUsuario($ID){
                         "</div>
                         <div class='brand'>Reportes</div>
                         <div class='menu-list'>" . 
-                            self::getMenuReportesUsuario($pagina) . 
+                            self::getMenuReportes($pagina) . 
                         "</div>
                         <div class='brand'>Unificación</div>
                         <div class='menu-list'>" . 

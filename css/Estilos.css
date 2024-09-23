@@ -223,6 +223,10 @@ body {
   text-decoration: underline;
 }
 
+#perfil:visited {
+  color: #e1ffff;
+}
+
 .TextoSinResultados {
   color: #000;
   font-size: 18px;
