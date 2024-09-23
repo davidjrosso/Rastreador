@@ -333,7 +333,7 @@ $Con->CloseConexion();
   <div class = "col-md-2">
     <div class="nav-side-menu">
       <?php $Element = new Elements();
-            echo $Element->CBSessionNombre($ID_Usuario);
+            echo $Element->CBSessionNombreUsuario($ID_Usuario);
       ?>
       <div class="brand">General</div>
         <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
@@ -381,7 +381,7 @@ $Con->CloseConexion();
   <div class = "col-md-2">
 <div class="nav-side-menu">
       <?php $Element = new Elements();
-            echo $Element->CBSessionNombre($ID_Usuario);
+            echo $Element->CBSessionNombreUsuario($ID_Usuario);
       ?>
     <div class="brand">General</div>
     <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
@@ -418,7 +418,7 @@ $Con->CloseConexion();
   <div class = "col-md-2">
 <div class="nav-side-menu">
       <?php $Element = new Elements();
-            echo $Element->CBSessionNombre($ID_Usuario);
+            echo $Element->CBSessionNombreUsuario($ID_Usuario);
       ?>
     <div class="brand">General</div>
     <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
