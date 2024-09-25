@@ -66,11 +66,11 @@ $Con->CloseConexion();
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.1.0/ol.css">
 
   <script src="js/OpenLayers.js"></script>
-
+  <script src="js/leaflet-providers.js"></script>
   <script src="https://www.lactame.com/lib/image-js/0.21.2/image.min.js"></script>
 
   <script>
-    const { PDFDocument, StandardFonts, rgb } = PDFLib
+    const { PDFDocument, StandardFonts, rgb } = PDFLib;
 
     function mostrar() {
 
@@ -113,8 +113,25 @@ $Con->CloseConexion();
 
     function init() {
       if (map === null) {
-        map = new OpenLayers.Map("basicMap");
+        map = new OpenLayers.Map("basicMap", {
+            zoomDuration: 5, 
+            projection: 'EPSG:3857', 
+            controls: []
+          });
         let mapnik = new OpenLayers.Layer.OSM();
+        /*let mapnik = new OpenLayers.Layer.OSM("OpenCycleMap",
+              ["http://a.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png",
+              "http://b.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png",
+              "http://c.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png"]);*/
+
+        //L.tileLayer.provider('Stadia.StamenWatercolor').addTo(map);
+        /*
+        let Jawg_Terrain = L.tileLayer('https://tile.jawg.io/jawg-terrain/{z}/{x}/{y}{r}.png?access-token={accessToken}', {
+            attribution: '<a href="https://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            minZoom: 0,
+            maxZoom: 22,
+            accessToken: '<your accessToken>'
+        }); */
         var fromProjection =  new OpenLayers.Projection("EPSG:3857");
         var toProjection = new OpenLayers.Projection("EPSG:4326");
         let position = new OpenLayers.LonLat(-64.11844, -32.17022).transform(toProjection, fromProjection);
@@ -128,21 +145,18 @@ $Con->CloseConexion();
         let popup = null;
         let size = new OpenLayers.Size(10,12);
         let offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-        let control = new OpenLayers.Control();
-        OpenLayers.Util.extend(control, {
-          draw: function () {
-              this.box = new OpenLayers.Handler.Box( control,
-                  {"done": this.notice},
-                  {keyMask: OpenLayers.Handler.MOD_SHIFT});
-              this.box.activate();
-          },
-          notice: function (bounds) {
-              OpenLayers.Console.userError(bounds);
-          }
-        });
-        map.addControl(control);
-        map.addControl(new OpenLayers.Control.PanZoomBar());
 
+        map.addControl(new OpenLayers.Control.PanZoomBar());
+        map.addControl(new OpenLayers.Control.Navigation());
+        map.addControl(new OpenLayers.Control.ArgParser());
+        /*map.addControl(new OpenLayers.Control.Attribution({
+            className: 'ol-attribution',
+            label: 'a',
+            collapsible: true,
+            collapsed: true,
+            target: document.getElementById('map-attribution'),
+            text: '<a href="https://www.w3schools.com">Visit W3Schools</a>'
+        }));*/
         let markerClick = function(evt) {
             if (this.popup == null) {
                 this.popup = this.createPopup(this.closeBox);
@@ -159,14 +173,19 @@ $Con->CloseConexion();
           positionFormas = pos;
           if (elemento.lista_formas_categorias) {
             let angulo = 360;
-            let puntos = angulo / (Object.keys(elemento.lista_formas_categorias).length + 1);
+            let longuitud = Object.keys(elemento.lista_formas_categorias).length + 1;
+            let puntos = angulo / longuitud;
             Object.keys(elemento.lista_formas_categorias).forEach(function (categoria, indice, array) {
                   charCodeLetter = (categoria.length == 1) ? categoria.charCodeAt(0) : categoria;
                   let color_categ = elemento.lista_formas_categorias[categoria].substring(1);
                   icon = new OpenLayers.Icon('./images/icons/motivos/' + charCodeLetter + '_' + color_categ + '.png', size, offset);
                   let marker = new OpenLayers.Marker(positionFormas, icon.clone());
                   markers.addMarker(marker);
-                  positionFormas = positionFormas.add(Math.sin((indice + 1) * puntos) * 22, Math.cos((indice + 1) * puntos) * 22);
+                  if (indice > 0) {
+                    positionFormas = positionFormas.add(Math.sin(indice * puntos) * (longuitud * 2.5), Math.cos(indice * puntos) * (longuitud * 2.5));
+                  } else {
+                    positionFormas = positionFormas.add(-8.3, 4.5);
+                  }
                   let feature = new OpenLayers.Feature(markers, positionFormas);
                   feature.closeBox = true;
                   feature.data.overflow = "hidden";
@@ -911,6 +930,7 @@ $Con->CloseConexion();
     div[id$="_popup_contentDiv"] {
       width: auto !important;
     }
+
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -1675,7 +1695,7 @@ $Con->CloseConexion();
             <button type="button" class="btn btn-danger" style="margin-left: 35%;"  onclick="location.href = 'view_general_new.php'">Atrás</button>
             <!--<button type="button" class="btn btn-secondary" onclick="enviarImprimir()">**Imprimir</button>-->
             <!--button type="button" class="btn btn-secondary" onclick="enviarImprimirPdf();"> Imprimir</button>-->
-            <!--<button type="button" class="btn btn-secondary" data-toggle="modal" style="background-color: #ffc6b1; color: black; border-color: white; " data-target="#map-modal">S. I. G.</button>-->
+            <button type="button" class="btn btn-secondary" data-toggle="modal" style="background-color: #ffc6b1; color: black; border-color: white; " data-target="#map-modal">S. I. G.</button>
             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#configModal">Config</button>
           </div>
 
@@ -3464,6 +3484,12 @@ $Con->CloseConexion();
           </div>
           <div class="modal-body" style="padding-top: 0px">
           <div id="basicMap"></div>
+          <div style="pointer-events: none; position: absolute; top: 30px; left: 70px; z-index: 1000">
+            <?php
+              foreach ($filtros as $value) {
+                  echo "<span class='etFiltros'>" . $value . "</span> ";
+              }
+          ?></div>
           </div>
         </div>
       </div>
