@@ -1215,7 +1215,8 @@ $Con->CloseConexion();
                                                  and MT.estado = 1
                                                  and C.estado = 1               
                                                  and C.id_categoria NOT IN (SELECT id_categoria
-                                                                            FROM categorias_roles CS)";
+                                                                            FROM categorias_roles CS
+                                                                            where estado = 1)";
 
             $motivosVisibles = $consultaPermisos . $motivosVisiblesParaUsuario . " UNION DISTINCT " . $motivosVisiblesParaTodoUsuario;
 
