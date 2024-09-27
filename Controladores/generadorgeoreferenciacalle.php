@@ -4,10 +4,11 @@ require_once '../Modelo/Calle.php';
 try {
 	$Con = new Conexion();
 	$Con->OpenConexion();	
-	$consultar = "select calle_nombre,
+	$consultar = "select lower(calle_nombre) as calle_nombre,
 						 id_calle
 				  from calle 
 				  where estado = 1
+				  and calle_open is null
 				  order by calle_nombre ASC";
 	if(!$ejecutar_consultar = mysqli_query($Con->Conexion, $consultar)){
 		throw new Exception("Problemas al intentar Consultar Registros de Calles", 0);
@@ -16,7 +17,7 @@ try {
 	$mensaje = "";
 
 	while ($ret = mysqli_fetch_assoc($ejecutar_consultar)) {
-		$url = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=+" . str_replace(" ", "+", $ret["calle_nombre"]) . ",%20Río%20Tercero,%20Cordoba&radius=500&location=-32.170177%20-64.117238&types=address&key=clave_cuenta_de_municipalidad_google";
+		$url = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" . str_replace(" ", "+", $ret["calle_nombre"]) . ",%20Río%20Tercero,%20Cordoba&radius=500&location=-32.170177%20-64.117238&types=address&key=AIzaSyAdiF1F7NoZbmAzBWfV6rxjJrGsr1Yvb1g";
 		$direccion_mapa = 0;
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
