@@ -229,7 +229,8 @@ $Con->CloseConexion();
                                           and C.estado = 1
                                           and MT.id_motivo <> 1   
                                           and C.id_categoria NOT IN (SELECT id_categoria
-                                                                      FROM categorias_roles CS)";
+                                                                      FROM categorias_roles CS
+                                                                      where id_estado = 1)";
         $motivosVisiblesParaUsuario = $consultaUsuarioPermisos . $motivosVisiblesParaUsuario;
         $motivosVisiblesParaTodoUsuario = $consultaGeneralPermisos . $motivosVisiblesParaTodoUsuario;
         $MessageError = "Problemas al crear la tabla temporaria de usuarios";
