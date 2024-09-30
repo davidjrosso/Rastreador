@@ -118,8 +118,8 @@ $Con->CloseConexion();
             projection: 'EPSG:3857', 
             controls: []
           });
-        let mapnik = new OpenLayers.Layer.OSM();
-        /*let mapnik = new OpenLayers.Layer.OSM("OpenCycleMap",
+        //let mapnik = new OpenLayers.Layer.OSM();
+        /*let mapnik = new OpenLayers.Layer.OSM("TransportMap",
               ["http://a.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png",
               "http://b.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png",
               "http://c.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png"]);*/
@@ -132,6 +132,12 @@ $Con->CloseConexion();
             maxZoom: 22,
             accessToken: '<your accessToken>'
         }); */
+
+        let mapnik = new OpenLayers.Layer.OSM("OpenCycleMap",
+              ["http://a.tile.thunderforest.com/transport/${z}/${x}/${y}.png?apikey=d03b42dcdc084e7cbab176997685b1ce",
+              "http://b.tile.thunderforest.com/transport/${z}/${x}/${y}.png?apikey=d03b42dcdc084e7cbab176997685b1ce",
+              "http://c.tile.thunderforest.com/transport/${z}/${x}/${y}.png?apikey=d03b42dcdc084e7cbab176997685b1ce"]);
+
         var fromProjection =  new OpenLayers.Projection("EPSG:3857");
         var toProjection = new OpenLayers.Projection("EPSG:4326");
         let position = new OpenLayers.LonLat(-64.11844, -32.17022).transform(toProjection, fromProjection);
@@ -143,7 +149,7 @@ $Con->CloseConexion();
         var markers = new OpenLayers.Layer.Markers( "Markers" );
         map.addLayer(markers);
         let popup = null;
-        let size = new OpenLayers.Size(10,12);
+        let size = new OpenLayers.Size(9,10);
         let offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
 
         map.addControl(new OpenLayers.Control.PanZoomBar());
@@ -244,8 +250,6 @@ $Con->CloseConexion();
     var nroColumnasTabla = 0;
     var currCell = null;
     var editing = false;
-    //var columnaIndice = 5;
-    //var columnaIndice = 8;
     var columnaIndice = 10;
     var filaIndice = 1;
     var valInputRangePrev = columnaIndice;
