@@ -149,7 +149,7 @@ $Con->CloseConexion();
         var markers = new OpenLayers.Layer.Markers( "Markers" );
         map.addLayer(markers);
         let popup = null;
-        let size = new OpenLayers.Size(9,10);
+        let size = new OpenLayers.Size(6,6);
         let offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
 
         map.addControl(new OpenLayers.Control.PanZoomBar());
