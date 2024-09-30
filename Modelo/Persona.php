@@ -69,26 +69,72 @@ public function setObra_Social($xObra_Social){
 	$this->Obra_Social = $xObra_Social;
 }
 
-public function setDomicilio($xDomicilio){
-	if ($xDomicilio) {
+public function setDomicilio($xDomicilio = null){
+	$nombre_calle = (!$xDomicilio) ? strtoupper(trim($this->getCalle())) : null;
+	$numero_calle = (!$xDomicilio) ? trim($this->getNroCalle()) : null;
+	$domicilio = ($xDomicilio) ? $xDomicilio : null;
+	if ($nombre_calle) {
+		$con = new Conexion();
+		$con->OpenConexion();
+		$consulta = "select calle_open 
+					 from calle	
+					 where upper(calle_nombre) = '". $nombre_calle . "'";
+		$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
+		$ret = mysqli_fetch_assoc($query_object);
+		$nombre_calle = $ret["calle_open"];
+		$domicilio = "$nombre_calle $numero_calle";
+		$con->CloseConexion();
+	}
+	if ($domicilio) {
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL,"https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", $xDomicilio) . "&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
+		curl_setopt($ch, CURLOPT_URL, "https://maps.googleapis.com/maps/api/geocode/json?address=Rio+Tercero,+" . str_replace(" ", "+", $domicilio) . "&key=AIzaSyAdiF1F7NoZbmAzBWfV6rxjJrGsr1Yvb1g");
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		$response = curl_exec($ch);
 		$arr_obj_json = json_decode($response);
 		curl_close($ch);
 		if ($arr_obj_json) {
-			if (!is_null($arr_obj_json[0]->lat) || !is_null($arr_obj_json[0]->lon)) {
-				$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
+			if (!is_null($arr_obj_json->results[0]->geometry->location->lat) 
+						 || !is_null($arr_obj_json->results[0]->geometry->location->lng)) {
+				$point = "POINT(" . $arr_obj_json->results[0]->geometry->location->lat . ", " . $arr_obj_json->results[0]->geometry->location->lng . ")";
 				$this->Georeferencia = $point;
+			} else {
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL,"https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", $domicilio) . "&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				$response = curl_exec($ch);
+				$arr_obj_json = json_decode($response);
+				curl_close($ch);
+				if ($arr_obj_json) {
+					if (!is_null($arr_obj_json[0]->lat) || !is_null($arr_obj_json[0]->lon)) {
+						$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
+						$this->Georeferencia = $point;
+					} else {
+						$this->Georeferencia = null;
+					}
+				} else {
+					$this->Georeferencia = null;
+				}
+			}
+		} else {
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL,"https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", $domicilio) . "&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			$response = curl_exec($ch);
+			$arr_obj_json = json_decode($response);
+			curl_close($ch);
+			if ($arr_obj_json) {
+				if (!is_null($arr_obj_json[0]->lat) || !is_null($arr_obj_json[0]->lon)) {
+					$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
+					$this->Georeferencia = $point;
+				} else {
+					$this->Georeferencia = null;
+				}
 			} else {
 				$this->Georeferencia = null;
 			}
-	    } else {
-			$this->Georeferencia = null;
 		}
 	}
-	$this->Domicilio = $xDomicilio;
+	$this->Domicilio = $domicilio;
 }
 
 public function setBarrio($xBarrio){
