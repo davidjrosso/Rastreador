@@ -72,21 +72,13 @@ public function setObra_Social($xObra_Social){
 }
 
 public function setDomicilio($xDomicilio = null){
-	$id_calle = (!$xDomicilio) ? $this->getIdCalle() : null;
+	$id_calle = (!$xDomicilio) ? $this->getId_Calle() : null;
 	$numero_calle = (!$xDomicilio) ? trim($this->getNro()) : null;
 	$domicilio = ($xDomicilio) ? $xDomicilio : null;
 	$nombre_calle = null;
 	if (!is_null($id_calle)) {
-		$con = new Conexion();
-		$con->OpenConexion();
-		$consulta = "select calle_open 
-					 from calle	
-					 where id_calle = ". $id_calle;
-		$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
-		$ret = mysqli_fetch_assoc($query_object);
-		$nombre_calle = $ret["calle_open"];
+		$nombre_calle = $this->getNombre_Calle();
 		$domicilio = "$nombre_calle $numero_calle";
-		$con->CloseConexion();
 	} else {
 		$con = new Conexion();
 		$con->OpenConexion();
@@ -271,13 +263,30 @@ public function getDomicilio(){
 	return $this->Domicilio;
 }
 
-public function getIdCalle(){
+public function getId_Calle(){
 	return $this->Calle;
+}
+
+public function getNombre_Calle(){
+	$con = new Conexion();
+	$con->OpenConexion();
+	$consulta_calle = "select *
+					   from calle 
+					   where id_calle = " . $this->getId_Calle() . " 
+					     and estado = 1";
+	$result = mysqli_query($con->Conexion, $consulta_calle);
+	if (!$result) {
+		$mensaje_error_consultar = "No se pudo consultar la tabla calle";
+		throw new Exception($mensaje_error_consultar . $consulta_calle, 2);
+	}
+	$result_row = mysqli_fetch_assoc($result);
+	return $result_row["calle_open"];
 }
 
 public function getNro(){
 	return $this->Nro;
 }
+
 public function getCalle(){
 	$LongString = strlen($this->Domicilio); 
 	if($LongString > 1){
@@ -461,16 +470,16 @@ public function update_geo()
 
 public function update_calle()
 {
-	$Con = new Conexion();
-	$Con->OpenConexion();
-	$Consulta = "update persona 
-				 set calle = " . ((!is_null($this->getIdCalle())) ? $this->getIdCalle() : "null") . " 
+	$con = new Conexion();
+	$con->OpenConexion();
+	$consulta = "update persona 
+				 set calle = " . ((!is_null($this->getId_Calle())) ? $this->getId_Calle() : "null") . " 
 				 where id_persona = " . $this->getID_Persona();
-				 $MensajeErrorConsultar = "No se pudo actualizar la Persona ";
-				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
-					throw new Exception($MensajeErrorConsultar . $Consulta, 2);
-				}
-				 $Con->CloseConexion();
+	$mensaje_error_consultar = "No se pudo actualizar la Persona ";
+	if (!$Ret = mysqli_query($con->Conexion, $consulta)) {
+		throw new Exception($mensaje_error_consultar . $consulta, 2);
+	}
+	$con->CloseConexion();
 }
 
 public function update_nro()

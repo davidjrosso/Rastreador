@@ -23,7 +23,8 @@ try {
 											  lower(domicilio), 
 											  '([0-9]+)$'
 											  ) as nro,
-							   estado
+							   estado,
+							   georeferencia
 						from persona
 						where estado = 1) p inner join calle c on  (calle = lower(calle_nombre))
 				  where p.estado = 1
