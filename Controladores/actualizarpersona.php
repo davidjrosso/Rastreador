@@ -1,22 +1,43 @@
-<?php 
+<?php
 require_once 'Conexion.php';
 require_once '../Modelo/Persona.php';
 header("Content-Type: text/html;charset=utf-8");
 
 try {
 	$Con = new Conexion();
-	$Con->OpenConexion();	
-	$consultar = "select id_persona
-				  from persona 
-				  where (domicilio <> ''
-				  	  or domicilio is not null)
-				    and estado = 1";
+	$Con->OpenConexion();
+	$consultar = "SELECT p.*, c.*
+				  FROM (select id_persona,
+				  			   nombre,
+							   apellido,
+                        	   domicilio,
+							   REGEXP_REPLACE(
+											  REGEXP_SUBSTR(
+											     			lower(domicilio), 
+															'([1-9]+( )+[a-zA-Z]+( )+[a-zA-Z]+)|([a-zA-Z]+( )+[a-zA-Z]+( )+[a-zA-Z]+)|([a-zA-Z]+( )+[a-zA-Z]+)|([a-zA-Z]+)'
+															),
+											  '( )+',
+											  ' '
+											  ) as calle,
+							    REGEXP_SUBSTR(
+											  lower(domicilio), 
+											  '([0-9]+)$'
+											  ) as nro,
+							   estado
+						from persona
+						where estado = 1) p inner join calle c on  (calle = lower(calle_nombre))
+				  where p.estado = 1
+				  and c.estado = 1;";
 	if(!$ejecutar_consultar = mysqli_query($Con->Conexion, $consultar)){
 		throw new Exception("Problemas al intentar Consultar Registros de Personas", 0);
 	}
 	while ($ret = mysqli_fetch_assoc($ejecutar_consultar)) {
 		$Persona = new Persona(ID_Persona  : $ret["id_persona"]);
+		$Persona->setCalle($ret["id_calle"]);
+		$Persona->setNro($ret["nro"]);
 		$Persona->setDomicilio();
+		$Persona->update_calle();
+		$Persona->update_nro();
 		$Persona->update_geo();
 	}
 	$mensaje = "Se actualizarion las direcciones correctamente";
