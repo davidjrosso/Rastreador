@@ -2,31 +2,33 @@
 
 class Persona{
 	//DECLARACION DE VARIABLES
-	private $ID_Persona;
 	private $Apellido;
-	private $Nombre;
-	private $DNI;
-	private $Nro_Legajo;
-	private $Edad;
-	private $Meses;
-	private $Fecha_Nacimiento;	
-	private $Nro_Carpeta;
-	private $Obra_Social;
-	private $Domicilio;
 	private $Barrio;
-	private $Localidad;
-	private $Circunscripcion;
-	private $Seccion;
-	private $Manzana;
-	private $Lote;
-	private $Familia;
-	private $Georeferencia;
-	private $Observaciones;
 	private $Cambio_Domicilio;
-	private $Telefono;
-	private $Mail;
+	private $Calle;
+	private $Circunscripcion;
+	private $DNI;
+	private $Domicilio;
+	private $Edad;
 	private $Estado;
-	private $ID_Escuela;	
+	private $Familia;
+	private $Fecha_Nacimiento;
+	private $Georeferencia;
+	private $ID_Escuela;
+	private $ID_Persona;
+	private $Localidad;
+	private $Lote;
+	private $Mail;
+	private $Manzana;
+	private $Meses;
+	private $Nombre;
+	private $Nro_Legajo;
+	private $Nro_Carpeta;
+	private $Nro;
+	private $Obra_Social;
+	private $Observaciones;
+	private $Seccion;
+	private $Telefono;
 	private $Trabajo;
 
 //METODOS SET
@@ -70,15 +72,34 @@ public function setObra_Social($xObra_Social){
 }
 
 public function setDomicilio($xDomicilio = null){
-	$nombre_calle = (!$xDomicilio) ? strtoupper(trim($this->getCalle())) : null;
-	$numero_calle = (!$xDomicilio) ? trim($this->getNroCalle()) : null;
+	$id_calle = (!$xDomicilio) ? $this->getIdCalle() : null;
+	$numero_calle = (!$xDomicilio) ? trim($this->getNro()) : null;
 	$domicilio = ($xDomicilio) ? $xDomicilio : null;
-	if ($nombre_calle) {
+	$nombre_calle = null;
+	if (!is_null($id_calle)) {
 		$con = new Conexion();
 		$con->OpenConexion();
 		$consulta = "select calle_open 
 					 from calle	
-					 where upper(calle_nombre) = '". $nombre_calle . "'";
+					 where id_calle = ". $id_calle;
+		$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
+		$ret = mysqli_fetch_assoc($query_object);
+		$nombre_calle = $ret["calle_open"];
+		$domicilio = "$nombre_calle $numero_calle";
+		$con->CloseConexion();
+	} else {
+		$con = new Conexion();
+		$con->OpenConexion();
+		$consulta = "select calle_open
+					 from calle
+					 where upper(calle_nombre) = REGEXP_REPLACE(
+					 										    REGEXP_SUBSTR(
+											     			    			  lower('". $nombre_calle . "'), 
+															    			  '([1-9]+( )+[a-zA-Z]+( )+[a-zA-Z]+)|([a-zA-Z]+( )+[a-zA-Z]+( )+[a-zA-Z]+)|([a-zA-Z]+( )+[a-zA-Z]+)|([a-zA-Z]+)'
+															    			  ),
+											  				    			  '( )+',
+											  				    			  ' '
+											  				    )";
 		$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
 		$ret = mysqli_fetch_assoc($query_object);
 		$nombre_calle = $ret["calle_open"];
@@ -87,19 +108,19 @@ public function setDomicilio($xDomicilio = null){
 	}
 	if ($domicilio) {
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, "https://maps.googleapis.com/maps/api/geocode/json?address=Rio+Tercero,+" . str_replace(" ", "+", $domicilio) . "&key=AIzaSyAdiF1F7NoZbmAzBWfV6rxjJrGsr1Yvb1g");
+		curl_setopt($ch, CURLOPT_URL, "https://maps.googleapis.com/maps/api/geocode/json?address=Rio+Tercero,+" . str_replace(" ", "+", trim($domicilio)) . "&key=AIzaSyAdiF1F7NoZbmAzBWfV6rxjJrGsr1Yvb1g");
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		$response = curl_exec($ch);
 		$arr_obj_json = json_decode($response);
 		curl_close($ch);
-		if ($arr_obj_json) {
+		if ($arr_obj_json->results) {
 			if (!is_null($arr_obj_json->results[0]->geometry->location->lat) 
 						 || !is_null($arr_obj_json->results[0]->geometry->location->lng)) {
 				$point = "POINT(" . $arr_obj_json->results[0]->geometry->location->lat . ", " . $arr_obj_json->results[0]->geometry->location->lng . ")";
 				$this->Georeferencia = $point;
 			} else {
 				$ch = curl_init();
-				curl_setopt($ch, CURLOPT_URL,"https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", $domicilio) . "&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
+				curl_setopt($ch, CURLOPT_URL,"https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", trim($domicilio)) . "&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 				$response = curl_exec($ch);
 				$arr_obj_json = json_decode($response);
@@ -117,7 +138,7 @@ public function setDomicilio($xDomicilio = null){
 			}
 		} else {
 			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL,"https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", $domicilio) . "&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
+			curl_setopt($ch, CURLOPT_URL,"https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", trim($domicilio)) . "&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			$response = curl_exec($ch);
 			$arr_obj_json = json_decode($response);
@@ -135,6 +156,15 @@ public function setDomicilio($xDomicilio = null){
 		}
 	}
 	$this->Domicilio = $domicilio;
+}
+
+
+public function setCalle($xCalle){
+	$this->Calle = $xCalle;
+}
+
+public function setNro($xNro){
+	$this->Nro = ($xNro) ? $xNro : null;
 }
 
 public function setBarrio($xBarrio){
@@ -241,6 +271,13 @@ public function getDomicilio(){
 	return $this->Domicilio;
 }
 
+public function getIdCalle(){
+	return $this->Calle;
+}
+
+public function getNro(){
+	return $this->Nro;
+}
 public function getCalle(){
 	$LongString = strlen($this->Domicilio); 
 	if($LongString > 1){
@@ -414,6 +451,34 @@ public function update_geo()
 	$Con->OpenConexion();
 	$Consulta = "update persona 
 				 set georeferencia = " . ((!is_null($this->getGeoreferencia())) ? $this->getGeoreferencia() : "null") . " 
+				 where id_persona = " . $this->getID_Persona();
+				 $MensajeErrorConsultar = "No se pudo actualizar la Persona ";
+				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+					throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+				}
+				 $Con->CloseConexion();
+}
+
+public function update_calle()
+{
+	$Con = new Conexion();
+	$Con->OpenConexion();
+	$Consulta = "update persona 
+				 set calle = " . ((!is_null($this->getIdCalle())) ? $this->getIdCalle() : "null") . " 
+				 where id_persona = " . $this->getID_Persona();
+				 $MensajeErrorConsultar = "No se pudo actualizar la Persona ";
+				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+					throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+				}
+				 $Con->CloseConexion();
+}
+
+public function update_nro()
+{
+	$Con = new Conexion();
+	$Con->OpenConexion();
+	$Consulta = "update persona 
+				 set nro = " . ((!is_null($this->getNro())) ? $this->getNro() : "null") . " 
 				 where id_persona = " . $this->getID_Persona();
 				 $MensajeErrorConsultar = "No se pudo actualizar la Persona ";
 				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
