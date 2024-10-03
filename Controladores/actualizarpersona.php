@@ -4,6 +4,7 @@ require_once '../Modelo/Persona.php';
 header("Content-Type: text/html;charset=utf-8");
 
 try {
+	$flag = set_time_limit(1000);
 	$Con = new Conexion();
 	$Con->OpenConexion();
 	$consultar = "SELECT p.*, c.*
