@@ -87,7 +87,7 @@ public function setDomicilio($xDomicilio = null){
 					 where upper(calle_nombre) = REGEXP_REPLACE(
 					 										    REGEXP_SUBSTR(
 											     			    			  lower('". $nombre_calle . "'), 
-															    			  '([1-9]+( )+[a-zA-Z]+( )+[a-zA-Z]+)|([a-zA-Z]+( )+[a-zA-Z]+( )+[a-zA-Z]+)|([a-zA-Z]+( )+[a-zA-Z]+)|([a-zA-Z]+)'
+															    			  '([1-9]+( )+[a-zA-Z]+( )+[a-zA-Z]+)|([a-zA-Z]+( )+[a-zA-Z]+( )+[a-zA-Z]+)|([a-zA-Z]+( )+[a-zA-Z]+( )+[a-zA-Z]+( )+[a-zA-Z]+)|([a-zA-Z]+( )+[a-zA-Z]+)|([a-zA-Z]+)'
 															    			  ),
 											  				    			  '( )+',
 											  				    			  ' '
