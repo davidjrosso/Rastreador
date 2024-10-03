@@ -28,7 +28,8 @@ try {
 						from persona
 						where estado = 1) p inner join calle c on  (calle = lower(calle_nombre))
 				  where p.estado = 1
-				  and c.estado = 1;";
+				  and c.estado = 1
+				  and domicilio <> '';";
 	if(!$ejecutar_consultar = mysqli_query($Con->Conexion, $consultar)){
 		throw new Exception("Problemas al intentar Consultar Registros de Personas", 0);
 	}
