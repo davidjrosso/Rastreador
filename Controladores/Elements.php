@@ -2327,7 +2327,7 @@ public function getMenuSeguridadUsuario($ID){
                         "<div class='brand'>General</div>
                           <i class='fa fa-bars fa-2x toggle-btn' data-toggle='collapse' data-target='#menu-content'></i>
                               <div class='menu-list'>" . 
-                                self::getMenuGeneral($pagina) . 
+                                self::getMenuGeneralUsuario($pagina) . 
                               "</div>
                               <div class='brand'>Actualizaciones</div>
                               <div class='menu-list'>" . 
@@ -2359,7 +2359,7 @@ public function getMenuSeguridadUsuario($ID){
                         "</div>
                         <div class='brand'>Reportes</div>
                         <div class='menu-list'>" . 
-                            self::getMenuReportes($pagina) . 
+                            self::getMenuReportesUsuario($pagina) . 
                         "</div>
                         <div class='brand'>Unificación</div>
                         <div class='menu-list'>" . 
