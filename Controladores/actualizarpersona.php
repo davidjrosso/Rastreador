@@ -60,7 +60,6 @@ try {
 		throw new Exception("Problemas al intentar Consultar Registros de Personas", 0);
 	}
 	$lista_personas = [];
-	$lista_personas["consulta"] = $consultar;
 	$lista_personas["cantidad"] = mysqli_num_rows($ejecutar_consultar);
 	while ($ret = mysqli_fetch_assoc($ejecutar_consultar)) {
 		$Persona = new Persona(ID_Persona  : $ret["id_persona"]);
@@ -68,7 +67,6 @@ try {
 		$Persona->setCalle($ret["id_calle"]);
 		$lista_personas[]["id_calle"] = $ret["id_calle"];
 		$Persona->setNro($ret["nro"]);
-		$lista_personas[]["id_calle"] = $ret["id_calle"];
 		$lista_personas[]["calle"] = $ret["calle"];
 		$Persona->setDomicilio();
 		$Persona->update_calle();
