@@ -15,7 +15,7 @@ try {
 							   REGEXP_REPLACE(
 											  REGEXP_SUBSTR(
 											     			lower(domicilio), 
-															'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\.)*( )+[a-zA-Zá-úÁ-Ú]+(\.)*)|([a-zA-Zá-úÁ-Ú]+(\.)*( )+[a-zA-Zá-úÁ-Ú]+(\.)*( )+[a-zA-Zá-úÁ-Ú]+(\.)*)|([a-zA-Zá-úÁ-Ú]+(\.)*( )+[a-zA-Zá-úÁ-Ú]+(\.)*( )+[a-zA-Zá-úÁ-Ú]+(\.)*( )+[a-zA-Zá-úÁ-Ú]+(\.)*)|([a-zA-Zá-úÁ-Ú]+(\.)*( )+[a-zA-Zá-úÁ-Ú]+(\.)*)|([a-zA-Zá-úÁ-Ú]+(\.)*)'
+															'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\.)*)'
 															),
 											  '( )+',
 											  ' '
@@ -27,7 +27,18 @@ try {
 							   estado,
 							   georeferencia
 						from persona
-						where estado = 1) p inner join calle c on  (calle = lower(calle_nombre))
+						where estado = 1) p inner join calle c on  (lower(calle_nombre) like REGEXP_REPLACE( 
+																											REGEXP_REPLACE(
+																												REGEXP_SUBSTR(
+																														lower(domicilio), 
+																														'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\.)*)'
+																														),
+																														'( )+',
+																														'%'
+																											),
+																														'(\\.)',
+																														''
+																											))
 				  where p.estado = 1
 				  and c.estado = 1
 				  and domicilio <> '';";
