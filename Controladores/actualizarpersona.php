@@ -11,14 +11,22 @@ try {
 				  			   nombre,
 							   apellido,
                         	   domicilio,
-							   REGEXP_REPLACE(
-											  REGEXP_SUBSTR(
-											     			lower(domicilio),
-															'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
-															),
-											  '( )+',
-											  ' '
-											  ) as calle,
+							   CONCAT(
+																									'%',
+																									REGEXP_REPLACE( 
+																											REGEXP_REPLACE(
+																												           REGEXP_SUBSTR(
+																														         lower(domicilio), 
+																														         '([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
+																														    ),
+																														    '( )+',
+																														    '%'
+																											               ),
+																													'(\\\\.)',
+																													''
+																												   ),
+																									'%'
+																									) as calle,
 							    REGEXP_SUBSTR(
 											  lower(domicilio), 
 											  '([0-9]+)$'
@@ -26,18 +34,24 @@ try {
 							   estado,
 							   georeferencia
 						from persona
-						where estado = 1) p left join calle c on  (lower(calle_nombre) like REGEXP_REPLACE( 
+						where estado = 1) p left join calle c on  (lower(calle_nombre) like CONCAT(
+																									'%',
+																									REGEXP_REPLACE( 
 																											REGEXP_REPLACE(
-																												REGEXP_SUBSTR(
-																														lower(domicilio), 
-																														'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
-																														),
-																														'( )+',
-																														'%'
-																											),
-																														'(\\\\.)',
-																														''
-																											))
+																												           REGEXP_SUBSTR(
+																														         lower(domicilio), 
+																														         '([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
+																														    ),
+																														    '( )+',
+																														    '%'
+																											               ),
+																													'(\\\\.)',
+																													''
+																												   ),
+																									'%'
+																									)
+
+																  )
 				  where p.estado = 1
 				  and c.estado = 1
 				  and domicilio <> ''
