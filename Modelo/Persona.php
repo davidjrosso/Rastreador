@@ -87,7 +87,7 @@ public function setDomicilio($xDomicilio = null){
 					 where upper(REGEXP_REPLACE(calle_nombre, '.+', ' ') = REGEXP_REPLACE(
 																		REGEXP_SUBSTR(
 																					lower('". $nombre_calle . "'), 
-																					'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\.)*( )+[a-zA-Zá-úÁ-Ú]+(\.)*)|([a-zA-Zá-úÁ-Ú]+(\.)*( )+[a-zA-Zá-úÁ-Ú]+(\.)*( )+[a-zA-Zá-úÁ-Ú]+(\.)*)|([a-zA-Zá-úÁ-Ú]+(\.)*( )+[a-zA-Zá-úÁ-Ú]+(\.)*( )+[a-zA-Zá-úÁ-Ú]+(\.)*( )+[a-zA-Zá-úÁ-Ú]+(\.)*)|([a-zA-Zá-úÁ-Ú]+(\.)*( )+[a-zA-Zá-úÁ-Ú]+(\.)*)|([a-zA-Zá-úÁ-Ú]+(\.)*)'
+																					'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\.)*)'
 																					),
 																					'( )+',
 																					' '
@@ -105,7 +105,7 @@ public function setDomicilio($xDomicilio = null){
 		$response = curl_exec($ch);
 		$arr_obj_json = json_decode($response);
 		curl_close($ch);
-		if ($arr_obj_json->results) {
+		if ($arr_obj_json && $arr_obj_json->results) {
 			if (!is_null($arr_obj_json->results[0]->geometry->location->lat) 
 						 || !is_null($arr_obj_json->results[0]->geometry->location->lng)) {
 				$point = "POINT(" . $arr_obj_json->results[0]->geometry->location->lat . ", " . $arr_obj_json->results[0]->geometry->location->lng . ")";
@@ -623,7 +623,9 @@ public function __construct(
 	$xID_Escuela = null,
 	$xEstado = null,
 	$xTrabajo = null,
-	$xGeoreferencia = null
+	$xGeoreferencia = null,
+	$xCalle = null,
+	$xNro = null
 ){
 	if (!$ID_Persona) {
 		$this->Apellido = $xApellido;
@@ -651,6 +653,8 @@ public function __construct(
 		$this->Seccion = $xSeccion;
 		$this->Telefono = $xTelefono;
 		$this->Trabajo = $xTrabajo;
+		$this->nro = $xNro;
+		$this->calle = $xCalle;
 		if ((!$xGeoreferencia) || $this->Domicilio) {
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, "https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", $this->Domicilio) . "&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
@@ -729,6 +733,8 @@ public function __construct(
 		$ID_Escuela = $ret["ID_Escuela"];
 		$estado = $ret["estado"];
 		$trabajo = $ret["Trabajo"];
+		$calle = $ret["calle"];
+		$nro = $ret["nro"];
 		$georefencia = (isset($ret["georefencia"])) ? $ret["georefencia"] : null;
 		$this->ID_Persona = $ID_Persona;
 		$this->Apellido = $apellido;
@@ -756,6 +762,8 @@ public function __construct(
 		$this->Estado = $estado;
 		$this->Trabajo = $trabajo;
 		$this->Georeferencia = $georefencia;
+		$this->nro = $nro;
+		$this->calle = $calle;
 		$Con->CloseConexion();
 	}
 }
