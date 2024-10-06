@@ -4,9 +4,9 @@ require_once '../Modelo/Persona.php';
 
 try {
 	$flag = set_time_limit(1000);
-	$id_calle = ($_REQUEST["id_calle"]) ? $_REQUEST["id_calle"] : null;
-	$id_barrio = ($_REQUEST["id_barrio"]) ? $_REQUEST["id_barrio"] : null;
-	$georeferencia = ($_REQUEST["georeferencia"]) ? $_REQUEST["georeferencia"] : null;
+	$id_calle = (isset($_REQUEST["id_calle"])) ? $_REQUEST["id_calle"] : null;
+	$id_barrio = (isset($_REQUEST["id_barrio"])) ? $_REQUEST["id_barrio"] : null;
+	$georeferencia = (isset($_REQUEST["georeferencia"])) ? $_REQUEST["georeferencia"] : null;
 
 	$Con = new Conexion();
 	$Con->OpenConexion();
