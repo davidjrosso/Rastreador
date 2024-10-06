@@ -62,7 +62,7 @@ try {
 				  and (domicilio <> '' or domicilio is not null)".
 				  (($id_calle) ? "and id_calle = $id_calle " : "") .
 				  (($id_barrio) ? "and ID_Barrio = $id_barrio " : "" ) .
-				  (($georeferencia) ? "and georeferencia <> null " : "and georeferencia = null " );
+				  (($georeferencia) ? "and georeferencia is not null " : "and georeferencia is null " );
 
 	if(!$ejecutar_consultar = mysqli_query($Con->Conexion, $consultar)){
 		throw new Exception("Problemas al intentar Consultar Registros de Personas", 0);
