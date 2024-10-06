@@ -82,7 +82,7 @@ try {
 		$Persona->update_geo();
 		$lista_personas[]["georeferencia"] = is_null($Persona->getGeoreferencia());
 	}
-
+	$lista_personas["consulta"] = $consultar;
 	$mensaje = "Se actualizarion las direcciones correctamente";
 	$Con->CloseConexion();
 	$lista_personas["mensaje"] = $mensaje;
