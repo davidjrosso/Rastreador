@@ -4,6 +4,10 @@ require_once '../Modelo/Persona.php';
 
 try {
 	$flag = set_time_limit(1000);
+	$id_calle = ($_REQUEST["id_calle"]) ? $_REQUEST["id_calle"] : null;
+	$id_barrio = ($_REQUEST["id_barrio"]) ? $_REQUEST["id_barrio"] : null;
+	$georeferencia = ($_REQUEST["georeferencia"]) ? $_REQUEST["georeferencia"] : null;
+
 	$Con = new Conexion();
 	$Con->OpenConexion();
 	$consultar = "SELECT p.*, c.*
@@ -11,6 +15,7 @@ try {
 				  			   nombre,
 							   apellido,
                         	   domicilio,
+							   ID_Barrio,
 							   CONCAT(
 									 '%',
 									 REGEXP_REPLACE( 
@@ -54,8 +59,11 @@ try {
 																  )
 				  where p.estado = 1
 				  and c.estado = 1
-				  and domicilio <> ''
-				  and georeferencia is null";
+				  and (domicilio <> '' or domicilio is not null)".
+				  (($id_calle) ? "and id_calle = $id_calle " : "") .
+				  (($id_barrio) ? "and ID_Barrio = $id_barrio " : "" ) .
+				  (($georeferencia) ? "and georeferencia <> null " : "and georeferencia = null " );
+
 	if(!$ejecutar_consultar = mysqli_query($Con->Conexion, $consultar)){
 		throw new Exception("Problemas al intentar Consultar Registros de Personas", 0);
 	}
