@@ -39,7 +39,11 @@ try {
 							   estado,
 							   georeferencia
 						from persona
-						where estado = 1) p left join calle c on  (lower(calle_nombre) like CONCAT(
+						where estado = 1
+						and (domicilio <> '' and domicilio is not null)".
+						(($id_calle) ? "and calle = $id_calle " : "") .
+						(($id_barrio) ? "and ID_Barrio = $id_barrio " : "" ) .
+						(($georeferencia) ? "and georeferencia is not null " : "and georeferencia is null " ) . ") p left join calle c on  (lower(calle_nombre) like CONCAT(
 																									'%',
 																									REGEXP_REPLACE( 
 																											REGEXP_REPLACE(
@@ -59,7 +63,7 @@ try {
 																  )
 				  where p.estado = 1
 				  and c.estado = 1
-				  and (domicilio <> '' or domicilio is not null)".
+				  and (domicilio <> '' and domicilio is not null)".
 				  (($id_calle) ? "and id_calle = $id_calle " : "") .
 				  (($id_barrio) ? "and ID_Barrio = $id_barrio " : "" ) .
 				  (($georeferencia) ? "and georeferencia is not null " : "and georeferencia is null " );
@@ -76,6 +80,7 @@ try {
 		$lista_personas[]["id_calle"] = $ret["id_calle"];
 		$Persona->setNro($ret["nro"]);
 		$lista_personas[]["calle"] = $ret["calle"];
+		$lista_personas[]["nro"] = $ret["nro"];
 		$Persona->setDomicilio();
 		$Persona->update_calle();
 		$Persona->update_nro();
