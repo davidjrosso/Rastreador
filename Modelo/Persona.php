@@ -92,7 +92,6 @@ public function setDomicilio($xDomicilio = null){
 																					'( )+',
 																					' '
 																		)";
-		echo $consulta;
 		$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
 		$ret = mysqli_fetch_assoc($query_object);
 		$nombre_calle = $ret["calle_open"];
