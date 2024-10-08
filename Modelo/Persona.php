@@ -555,7 +555,6 @@ public function update()
 					 calle = " . ((!is_null($this->getId_Calle())) ? $this->getId_Calle() : "null") . ", 
 					 nro = " . ((!is_null($this->getNro())) ? $this->getNro() : "null") . " 
 				 where id_persona = " . $this->getID_Persona();
-				 echo $Consulta;
 				 $MensajeErrorConsultar = "No se pudo actualizar la Persona";
 				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
 					throw new Exception($MensajeErrorConsultar . $Consulta, 2);
