@@ -555,7 +555,7 @@ $Con->CloseConexion();
       </div>
     </div>
   </div>
-  <div class="modal fade modal--show-overall" id="map-modal" tabindex="-1" role="dialog"
+  <!--<div class="modal fade modal--show-overall" id="map-modal" tabindex="-1" role="dialog"
     aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 2001; overflow: hidden">
     <div class="class_modal-dialog modal-dialog" role="document" id="id_modal-dialog"
       style="min-width: 80%; height: 1000px;">
@@ -570,7 +570,7 @@ $Con->CloseConexion();
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <?php
   if (isset($_REQUEST["Mensaje"])) {
     echo "<script type='text/javascript'>
