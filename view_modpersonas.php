@@ -339,8 +339,8 @@ $Con->CloseConexion();
               $Trabajo = $Ret["Trabajo"];
 
 
-              $Persona = new Persona($ID_Persona, $Apellido, $Nombre, $DNI, $Nro_Legajo, $Edad, $Meses, $Fecha_Nacimiento, $Nro_Carpeta, $Obra_Social, $Domicilio, $Barrio, $Localidad, $Circunscripcion, $Seccion, $Manzana, $Lote, $Familia, $Observaciones, $Cambio_Domicilio, $Telefono, $Mail, $ID_Escuela, $Estado, $Trabajo);
-
+              $Persona = new Persona($ID_Persona);
+              var_dump($Persona);
               $Con->CloseConexion();
 
               ?>
@@ -438,13 +438,14 @@ $Con->CloseConexion();
                     <label for="inputPassword" class="col-md-2 col-form-label LblForm">Domicilio: </label>
                     <div class="col-md-6">
                       <?php
-                      echo $Element->CBCallesNombre($Persona->getCalle());
+                      echo $Element->CBCallesNombre($Persona->getId_Calle());
                       ?>
 
                     </div>
                     <div class="col-md-2">
                       <input type="number" class="form-control" name="NumeroDeCalle" id="NumeroDeCalle" placeholder="Nro"
-                        min="1" autocomplete="off" <?php $NroCalle = $Persona->getNro();
+                        min="1" autocomplete="off" <?php 
+                        $NroCalle = $Persona->getNro();
                         if ($NroCalle != null) {
                           echo "value = '$NroCalle'";
                         } ?>>
