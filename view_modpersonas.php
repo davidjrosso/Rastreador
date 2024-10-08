@@ -1,13 +1,13 @@
-<?php 
-session_start(); 
+<?php
+session_start();
 require_once "Controladores/Elements.php";
 require_once "Controladores/CtrGeneral.php";
 require_once "Modelo/Persona.php";
 header("Content-Type: text/html;charset=utf-8");
 
 /*     CONTROL DE USUARIOS                    */
-if(!isset($_SESSION["Usuario"])){
-    header("Location: Error_Session.php");
+if (!isset($_SESSION["Usuario"])) {
+  header("Location: Error_Session.php");
 }
 
 $Con = new Conexion();
@@ -15,116 +15,300 @@ $Con->OpenConexion();
 $ID_Usuario = $_SESSION["Usuario"];
 $ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
 $MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
-$EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
+$EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion, $ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
 $Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
 $TipoUsuario = $Ret["ID_TipoUsuario"];
 $Con->CloseConexion();
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Rastreador III</title>
   <meta charset="utf-8">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <!--<link href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   <!--<script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
   <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script> -->
-  <link rel="stylesheet" type="text/css" href="css/Estilos.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
 
   <!--<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>-->
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.0.0.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+  <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
   <script src="js/bootstrap-datepicker.min.js"></script> <!-- ESTO ES NECESARIO PARA QUE ANDE EN ESPAÑOL -->
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+    integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+    crossorigin="anonymous"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/ol@v10.1.0/dist/ol.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.1.0/ol.css">
+
+  <script src="js/OpenLayers.js"></script>
+  <script src="js/leaflet-providers.js"></script>
+
   <script>
-       $(document).ready(function(){
-              var date_input=$('input[name="Fecha_Nacimiento"]'); //our date input has the name "date"
-              var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-              date_input.datepicker({
-                  format: 'dd/mm/yyyy',
-                  container: container,
-                  todayHighlight: true,
-                  autoclose: true,
-                  closeText: 'Cerrar',
-                  days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
-                  daysShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
-                  daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
-                  months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-                  monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
-                  today: "Hoy",
-                  monthsTitle: "Meses",
-                  clear: "Borrar",
-                  weekStart: 1
-              }).on('changeDate', calcularEdad);
-          });
+    var map = null;
+    let objectJsonPersona = {};
 
-        function calcularEdad(){
-          let Fecha_Nac = document.getElementById("Fecha_Nacimiento").value;
-          let Fecha = Fecha_Nac.split('/').reverse().join('-');
-          let hoy = new Date();
-          let cumpleanos = new Date(Fecha);
-          let edad = hoy.getFullYear() - cumpleanos.getFullYear();
-          let m = hoy.getMonth() - cumpleanos.getMonth();
-          if (m < 0 || (m === 0 && hoy.getDay() < cumpleanos.getDay())) {
-              edad--;
-          }
-          let Anios = document.getElementById("Edad");
-          Anios.value = edad;
+    $(document).ready(function () {
+      var date_input = $('input[name="Fecha_Nacimiento"]'); //our date input has the name "date"
+      var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
+      date_input.datepicker({
+        format: 'dd/mm/yyyy',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+        closeText: 'Cerrar',
+        days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
+        daysShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
+        daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+        months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+        monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+        today: "Hoy",
+        monthsTitle: "Meses",
+        clear: "Borrar",
+        weekStart: 1
+      }).on('changeDate', calcularEdad);
+      $("#map-modal").on("transitionend", function (e) {
+        if (!map) init();
+      })
+    });
 
-          let CalcMeses = 0;
-          if (m < 0) {
-            CalcMeses = (12 + m);
-          } else if (m == 0) {
-            if (hoy.getDay() < cumpleanos.getDay()) {
-              m = 11;
-            }
-            CalcMeses = m;
+    function calcularEdad() {
+      let Fecha_Nac = document.getElementById("Fecha_Nacimiento").value;
+      let Fecha = Fecha_Nac.split('/').reverse().join('-');
+      let hoy = new Date();
+      let cumpleanos = new Date(Fecha);
+      let edad = hoy.getFullYear() - cumpleanos.getFullYear();
+      let m = hoy.getMonth() - cumpleanos.getMonth();
+      if (m < 0 || (m === 0 && hoy.getDay() < cumpleanos.getDay())) {
+        edad--;
+      }
+      let Anios = document.getElementById("Edad");
+      Anios.value = edad;
+
+      let CalcMeses = 0;
+      if (m < 0) {
+        CalcMeses = (12 + m);
+      } else if (m == 0) {
+        if (hoy.getDay() < cumpleanos.getDay()) {
+          m = 11;
+        }
+        CalcMeses = m;
+      } else {
+        CalcMeses = m;
+      }
+
+      let Meses = document.getElementById("Meses");
+      Meses.value = CalcMeses;
+    }
+
+    function init() {
+      if (map === null) {
+        map = new OpenLayers.Map("basicMap", {
+           zoomDuration: 5, 
+           projection: 'EPSG:3857', 
+           controls: []
+         });
+         let position = null;
+         let pos = null;
+      //map = new OpenLayers.Map("basicMap");
+      //let mapnik = new OpenLayers.Layer.OSM();
+      /*let mapnik = new OpenLayers.Layer.OSM("TransportMap",
+            ["http://a.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png",
+            "http://b.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png",
+            "http://c.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png"]);*/
+
+      //L.tileLayer.provider('Stadia.StamenWatercolor').addTo(map);
+      /*
+      let Jawg_Terrain = L.tileLayer('https://tile.jawg.io/jawg-terrain/{z}/{x}/{y}{r}.png?access-token={accessToken}', {
+          attribution: '<a href="https://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          minZoom: 0,
+          maxZoom: 22,
+          accessToken: '<your accessToken>'
+      }); */
+
+      let mapnik = new OpenLayers.Layer.OSM("OpenCycleMap",
+            ["http://a.tile.thunderforest.com/transport/${z}/${x}/${y}.png?apikey=d03b42dcdc084e7cbab176997685b1ce",
+            "http://b.tile.thunderforest.com/transport/${z}/${x}/${y}.png?apikey=d03b42dcdc084e7cbab176997685b1ce",
+            "http://c.tile.thunderforest.com/transport/${z}/${x}/${y}.png?apikey=d03b42dcdc084e7cbab176997685b1ce"]);
+
+      var fromProjection = new OpenLayers.Projection("EPSG:3857");
+      var toProjection = new OpenLayers.Projection("EPSG:4326");
+      if (objectJsonPersona.lon && objectJsonPersona.lat) {
+        pos = new OpenLayers.LonLat(objectJsonPersona.lon, objectJsonPersona.lat).transform(toProjection, fromProjection);
+      } else {
+        pos = new OpenLayers.LonLat(-64.11844, -32.17022).transform(toProjection, fromProjection);
+      }
+      position = pos;
+
+      let zoom = 15;
+      let positionFormas = null;
+      let icon = null;
+      let charCodeLetter = null;
+      map.addLayer(mapnik);
+      let markers = new OpenLayers.Layer.Markers( "Markers" );
+      map.addLayer(markers);
+      let popup = null;
+      let size = new OpenLayers.Size(8,8);
+      let offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+
+      map.addControl(new OpenLayers.Control.PanZoomBar());
+      map.addControl(new OpenLayers.Control.Navigation());
+      map.addControl(new OpenLayers.Control.ArgParser());
+
+      /*
+      let markerClick = function(evt) {
+          if (this.popup == null) {
+              this.popup = this.createPopup(this.closeBox);
+              map.addPopup(this.popup);
+              this.popup.show();
           } else {
-            CalcMeses = m;
+              this.popup.toggle();
           }
+          OpenLayers.Event.stop(evt);
+      };
+    */
+    let getCoordenadaClick = function(e) {
+      console.log(e);
+      alert("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng)
+    };
 
-          let Meses = document.getElementById("Meses");
-          Meses.value = CalcMeses;		    
-        }      
+      /*map.addControl(new OpenLayers.Control.Attribution({
+          className: 'ol-attribution',
+          label: 'a',
+          collapsible: true,
+          collapsed: true,
+          target: document.getElementById('map-attribution'),
+          text: '<a href="https://www.w3schools.com">Visit W3Schools</a>'
+      }));*/
+      let markerClick = function(evt) {
+          if (this.popup == null) {
+              this.popup = this.createPopup(this.closeBox);
+              map.addPopup(this.popup);
+              this.popup.show();
+          } else {
+              this.popup.toggle();
+          }
+          OpenLayers.Event.stop(evt);
+      };
+
+      positionFormas = pos;
+      if (objectJsonPersona.lon && objectJsonPersona.lat) {
+        icon = new OpenLayers.Icon('./images/icons/location.png');
+        let marker = new OpenLayers.Marker(positionFormas, icon.clone());
+        markers.addMarker(marker);
+      }
+
+      let feature = new OpenLayers.Feature(markers, positionFormas);
+      //marker.events.register("mousedown", feature, getCoordenadaClick);
+      //marker.events.register("mousedown", null, getCoordenadaClick);
+      map.events.on({"click": getCoordenadaClick});
+
+      /*feature.closeBox = true;
+      feature.data.overflow = "hidden";
+      feature.data.popupContentHTML = ` <div style="display: inline-block; width: 80%; text-align: center;">
+                                          Detalles 
+                                        </div>
+                                        <button type="button" class="btn-close" aria-label="Close" style="border-radius: 25px; background-color: #2e353d; color: white; margin: 2% 2% 0 4%"  onclick="onClickOcultarPopup(this);"></button>
+                                        <div style='margin: 0 2% 1% 2%; height: 84%'>
+                                          <table style='text-align: center; color: black;  table-layout: fixed; width: 100%; height: 97%'>
+                                            <thead>
+                                              <tr style='color: black; background-color: white'>
+                                                <th style='background-color: white'></th>
+                                                <th style='background-color: white'></th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              <tr style='color: black;'>
+                                                <td>
+                                                  Persona
+                                                </td>
+                                                <td>
+                                                  <a href='javascript:window.open("view_modpersonas.php?ID=${elemento.id_persona}","Ventana${elemento.id_persona}" ,"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no")' target='_top' rel='noopener noreferrer'>
+                                                    ${elemento.persona}
+                                                </td>
+                                              </tr>
+                                              <tr style='color: black;'>
+                                                <td>Años</td>
+                                                <td>${elemento.edad}</td>
+                                              </tr>
+                                              <tr style='color: black;'>
+                                                <td>Meses</td>
+                                                <td>${elemento.meses}</td>
+                                              </tr>
+                                              <tr style='color: black;'>
+                                                <td>Fech. Nac.</td>
+                                                <td>${elemento.fechanac}</td>
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                        </div>`;
+      marker.feature = feature;*/
+      //marker.events.register("mousedown", feature, markerClick);
+      /*marker.events.register("mousedown", feature, function() {
+          window.open("view_modpersonas.php?ID=" + elemento.id_persona,"Ventana" + elemento.id_persona ,"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no")
+      });*/
+      //marker.events.register("mousedown", null, function() {
+      //window.open("view_modpersonas.php?ID=" + elemento.id_persona,"Ventana" + elemento.id_persona ,"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no")
+      //});
+      //marker.feature = feature;
+      //markers.addMarker(marker);
+        map.setCenter(position, zoom);
+      }
+    }
+
   </script>
 
 </head>
+
 <body>
-<div class = "row">
-<?php
-  $Element = new Elements();
-  echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_PERSONA);
-  ?>
-  <div class = "col-md-9">
-    <div class="row">
-      <div class="col"></div>
-      <div class="col-10 Titulo">
-        <p>Persona</p>
-      </div>
-      <div class="col"></div>
-    </div><br>
-    <br>
-     <div class = "row">
-      <div class = "col-10">
+  <div class="row">
+    <?php
+    $Element = new Elements();
+    echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_PERSONA);
+    ?>
+    <div class="col-md-9">
+      <div class="row">
+        <div class="col"></div>
+        <div class="col-10 Titulo">
+          <p>Persona</p>
+        </div>
+        <div class="col"></div>
+      </div><br>
+      <br>
+      <div class="row">
+        <div class="col-10">
           <!-- Search -->
-        <div class = "row">
-          <?php  
-            if(isset($_REQUEST["ID"]) && $_REQUEST["ID"]!=null){
+          <div class="row">
+            <?php
+            if (isset($_REQUEST["ID"]) && $_REQUEST["ID"] != null) {
               $ID = $_REQUEST["ID"];
 
               $Con = new Conexion();
               $Con->OpenConexion();
 
-              $ConsultarDatos = "select * from persona where id_persona = $ID";
+              $ConsultarDatos = "select p.*, 
+                                        ST_X(P.georeferencia) as lat, 
+                                        ST_Y(P.georeferencia) as lon
+                                 from persona p
+                                 where id_persona = $ID";
               $MensajeErrorDatos = "No se pudo consultar los Datos de la Persona";
 
-              $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
+              $EjecutarConsultarDatos = mysqli_query($Con->Conexion, $ConsultarDatos) or die($MensajeErrorDatos);
 
               $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
 
@@ -132,10 +316,10 @@ $Con->CloseConexion();
               $Apellido = $Ret["apellido"];
               $Nombre = $Ret["nombre"];
               $DNI = $Ret["documento"];
-              $Nro_Legajo= $Ret["nro_legajo"];
+              $Nro_Legajo = $Ret["nro_legajo"];
               $Edad = $Ret["edad"];
               $Meses = $Ret["meses"];
-              $Fecha_Nacimiento = implode("/", array_reverse(explode("-",$Ret["fecha_nac"])));              
+              $Fecha_Nacimiento = implode("/", array_reverse(explode("-", $Ret["fecha_nac"])));
               $Nro_Carpeta = $Ret["nro_carpeta"];
               $Obra_Social = $Ret["obra_social"];
               $Domicilio = $Ret["domicilio"];
@@ -155,195 +339,255 @@ $Con->CloseConexion();
               $Trabajo = $Ret["Trabajo"];
 
 
-              $Persona = new Persona($ID_Persona,$Apellido,$Nombre,$DNI,$Nro_Legajo, $Edad,$Meses,$Fecha_Nacimiento,$Nro_Carpeta,$Obra_Social,$Domicilio,$Barrio,$Localidad,$Circunscripcion,$Seccion,$Manzana,$Lote,$Familia,$Observaciones,$Cambio_Domicilio,$Telefono,$Mail,$ID_Escuela,$Estado,$Trabajo);
+              $Persona = new Persona($ID_Persona, $Apellido, $Nombre, $DNI, $Nro_Legajo, $Edad, $Meses, $Fecha_Nacimiento, $Nro_Carpeta, $Obra_Social, $Domicilio, $Barrio, $Localidad, $Circunscripcion, $Seccion, $Manzana, $Lote, $Familia, $Observaciones, $Cambio_Domicilio, $Telefono, $Mail, $ID_Escuela, $Estado, $Trabajo);
 
               $Con->CloseConexion();
-              
+
               ?>
-            <div class = "col-10">
-            <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/ModificarPersona.php">
-                <!-- <div class="form-group row">
+              <div class="col-10">
+                <form method="post" onKeydown="return event.key != 'Enter';" action="Controladores/ModificarPersona.php">
+                  <!-- <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Id: </label>
                   <div class="col-md-10">
                     <label for="inputPassword" class="col-md-2 col-form-label LblForm"><?php echo $Persona->getID_Persona(); ?></label>
                   </div>
                 </div> -->
-                <input type="hidden" name="ID" value = "<?php echo $Persona->getID_Persona(); ?>">
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Apellido: </label>
-                  <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Apellido" id="inputPassword" autocomplete="off" value = "<?php echo $Persona->getApellido(); ?>">
+                  <input type="hidden" name="ID" value="<?php echo $Persona->getID_Persona(); ?>">
+                  <div class="form-group row">
+                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Apellido: </label>
+                    <div class="col-md-10">
+                      <input type="text" class="form-control" name="Apellido" id="inputPassword" autocomplete="off"
+                        value="<?php echo $Persona->getApellido(); ?>">
+                    </div>
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nombre: </label>
-                  <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Nombre" id="inputPassword" autocomplete="off" value = "<?php echo $Persona->getNombre(); ?>">
+                  <div class="form-group row">
+                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nombre: </label>
+                    <div class="col-md-10">
+                      <input type="text" class="form-control" name="Nombre" id="inputPassword" autocomplete="off"
+                        value="<?php echo $Persona->getNombre(); ?>">
+                    </div>
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Documento: </label>
-                  <div class="col-md-10">
-                    <input type="text" class="form-control" name = "DNI" id="inputPassword" autocomplete="off" value = "<?php echo $Persona->getDNI(); ?>">
+                  <div class="form-group row">
+                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Documento: </label>
+                    <div class="col-md-10">
+                      <input type="text" class="form-control" name="DNI" id="inputPassword" autocomplete="off"
+                        value="<?php echo $Persona->getDNI(); ?>">
+                    </div>
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm" style="margin-bottom: -8px;">Fecha de Nacimiento: </label>
-                  <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Fecha_Nacimiento" id="Fecha_Nacimiento" autocomplete="off" <?php if($Fecha_Nacimiento != "null") { echo "value = '".$Persona->getFecha_Nacimiento()."'";}; ?>>
+                  <div class="form-group row">
+                    <label for="inputPassword" class="col-md-2 col-form-label LblForm" style="margin-bottom: -8px;">Fecha
+                      de Nacimiento: </label>
+                    <div class="col-md-10">
+                      <input type="text" class="form-control" name="Fecha_Nacimiento" id="Fecha_Nacimiento"
+                        autocomplete="off" <?php if ($Fecha_Nacimiento != "null") {
+                          echo "value = '" . $Persona->getFecha_Nacimiento() . "'";
+                        }
+                        ; ?>>
+                    </div>
                   </div>
-                </div>
-                <div class="row LblForm col-md-2" style="margin-bottom: 1.04%; font-size: 1.031rem">
-                  Edad <br>
-                </div>
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Años: </label>
-                  <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Edad" id="Edad" autocomplete="off" readonly value = "<?php echo $Persona->getEdad(); ?>">
+                  <div class="row LblForm col-md-2" style="margin-bottom: 1.04%; font-size: 1.031rem">
+                    Edad <br>
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Meses: </label>
-                  <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Meses" id="Meses" autocomplete="off" readonly value = "<?php echo $Persona->getMeses(); ?>">
+                  <div class="form-group row">
+                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Años: </label>
+                    <div class="col-md-10">
+                      <input type="text" class="form-control" name="Edad" id="Edad" autocomplete="off" readonly
+                        value="<?php echo $Persona->getEdad(); ?>">
+                    </div>
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
-                  <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Nro_Carpeta" id="inputPassword" autocomplete="off" value = "<?php echo $Persona->getNro_Carpeta(); ?>">
+                  <div class="form-group row">
+                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Meses: </label>
+                    <div class="col-md-10">
+                      <input type="text" class="form-control" name="Meses" id="Meses" autocomplete="off" readonly
+                        value="<?php echo $Persona->getMeses(); ?>">
+                    </div>
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
-                  <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Nro_Legajo" id="Nro_Legajo" autocomplete="off" <?php if($Nro_Legajo != "null") { echo "value = '". $Persona->getNro_Legajo()."'";}; ?>>
+                  <div class="form-group row">
+                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
+                    <div class="col-md-10">
+                      <input type="text" class="form-control" name="Nro_Carpeta" id="inputPassword" autocomplete="off"
+                        value="<?php echo $Persona->getNro_Carpeta(); ?>">
+                    </div>
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Localidad: </label>
-                  <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Localidad" id="inputPassword" autocomplete="off" value = "<?php echo $Persona->getLocalidad(); ?>">
+                  <div class="form-group row">
+                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
+                    <div class="col-md-10">
+                      <input type="text" class="form-control" name="Nro_Legajo" id="Nro_Legajo" autocomplete="off" <?php if ($Nro_Legajo != "null") {
+                        echo "value = '" . $Persona->getNro_Legajo() . "'";
+                      }
+                      ; ?>>
+                    </div>
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Barrio: </label>
-                  <div class="col-md-10">
-                    <?php 
-                    $Element = new Elements();
-                    echo $Element->CBModBarrios($Persona->getId_Barrio());                    
-                    ?>                    
+                  <div class="form-group row">
+                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Localidad: </label>
+                    <div class="col-md-10">
+                      <input type="text" class="form-control" name="Localidad" id="inputPassword" autocomplete="off"
+                        value="<?php echo $Persona->getLocalidad(); ?>">
+                    </div>
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Domicilio: </label>
-                  <div class="col-md-8">
-                    <?php 
+                  <div class="form-group row">
+                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Barrio: </label>
+                    <div class="col-md-10">
+                      <?php
+                      $Element = new Elements();
+                      echo $Element->CBModBarrios($Persona->getId_Barrio());
+                      ?>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Domicilio: </label>
+                    <div class="col-md-6">
+                      <?php
                       echo $Element->CBCallesNombre($Persona->getCalle());
-                    ?>
-                  </div>  
-                  <div class="col-md-2">
-                    <input type="number" class="form-control" name = "NumeroDeCalle" id="NumeroDeCalle" placeholder="Nro" min="1" autocomplete="off" <?php $NroCalle = $Persona->getNroCalle(); if ($NroCalle != null){ echo "value = '$NroCalle'";} ?>>
+                      ?>
+
+                    </div>
+                    <div class="col-md-2">
+                      <input type="number" class="form-control" name="NumeroDeCalle" id="NumeroDeCalle" placeholder="Nro"
+                        min="1" autocomplete="off" <?php $NroCalle = $Persona->getNro();
+                        if ($NroCalle != null) {
+                          echo "value = '$NroCalle'";
+                        } ?>>
+                    </div>
+                    <div class="col-md-2">
+                      <button type="button" class="btn btn-secondary" data-toggle="modal"
+                        style="background-color: #ffc6b1; color: black; border-color: white; " data-target="#map-modal">S.
+                        I. G.</button>
+                    </div>
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Manzana: </label>
-                  <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Manzana" id="inputPassword" autocomplete="off" <?php if($Manzana != "null") { echo "value = '". $Persona->getManzana()."'";}; ?>>
+                  <div class="form-group row">
+                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Manzana: </label>
+                    <div class="col-md-10">
+                      <input type="text" class="form-control" name="Manzana" id="inputPassword" autocomplete="off" <?php if ($Manzana != "null") {
+                        echo "value = '" . $Persona->getManzana() . "'";
+                      }
+                      ; ?>>
+                    </div>
                   </div>
-                </div> 
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Lote: </label>
-                  <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Lote" id="inputPassword" autocomplete="off" value = "<?php echo $Persona->getLote(); ?>">
+                  <div class="form-group row">
+                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Lote: </label>
+                    <div class="col-md-10">
+                      <input type="text" class="form-control" name="Lote" id="inputPassword" autocomplete="off"
+                        value="<?php echo $Persona->getLote(); ?>">
+                    </div>
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Sub-lote: </label>
-                  <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Familia" id="inputPassword" autocomplete="off" value = "<?php echo $Persona->getFamilia(); ?>">
+                  <div class="form-group row">
+                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Sub-lote: </label>
+                    <div class="col-md-10">
+                      <input type="text" class="form-control" name="Familia" id="inputPassword" autocomplete="off"
+                        value="<?php echo $Persona->getFamilia(); ?>">
+                    </div>
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Telefono: </label>
-                  <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Telefono" id="inputPassword" autocomplete="off" value = "<?php echo $Persona->getTelefono(); ?>">
+                  <div class="form-group row">
+                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Telefono: </label>
+                    <div class="col-md-10">
+                      <input type="text" class="form-control" name="Telefono" id="inputPassword" autocomplete="off"
+                        value="<?php echo $Persona->getTelefono(); ?>">
+                    </div>
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Mail: </label>
-                  <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Mail" id="inputPassword" autocomplete="off" value = "<?php echo $Persona->getMail(); ?>">
+                  <div class="form-group row">
+                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Mail: </label>
+                    <div class="col-md-10">
+                      <input type="text" class="form-control" name="Mail" id="inputPassword" autocomplete="off"
+                        value="<?php echo $Persona->getMail(); ?>">
+                    </div>
                   </div>
-                </div>                
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Obra Social(Si/No): </label>
-                  <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Obra_Social" id="inputPassword" autocomplete="off" value = "<?php echo $Persona->getObra_Social(); ?>">
+                  <div class="form-group row">
+                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Obra Social(Si/No): </label>
+                    <div class="col-md-10">
+                      <input type="text" class="form-control" name="Obra_Social" id="inputPassword" autocomplete="off"
+                        value="<?php echo $Persona->getObra_Social(); ?>">
+                    </div>
                   </div>
-                </div>                               
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Escuela: </label>
-                  <div class="col-md-10">
-                    <?php 
-                    echo $Element->CBModEscuelas($Persona->getID_Escuela());
-                    ?>                    
+                  <div class="form-group row">
+                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Escuela: </label>
+                    <div class="col-md-10">
+                      <?php
+                      echo $Element->CBModEscuelas($Persona->getID_Escuela());
+                      ?>
+                    </div>
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Lugar de Trabajo: </label>
-                  <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Trabajo" id="inputPassword" autocomplete="off" value = "<?php echo $Persona->getTrabajo(); ?>">
+                  <div class="form-group row">
+                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Lugar de Trabajo: </label>
+                    <div class="col-md-10">
+                      <input type="text" class="form-control" name="Trabajo" id="inputPassword" autocomplete="off"
+                        value="<?php echo $Persona->getTrabajo(); ?>">
+                    </div>
                   </div>
-                </div>                                                
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Observación: </label>
-                  <div class="col-md-10">
-                    <textarea class = "form-control" row = "3" name = "Observaciones" value = "<?php echo $Persona->getObservaciones(); ?>"><?php echo $Persona->getObservaciones(); ?></textarea>
+                  <div class="form-group row">
+                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Observación: </label>
+                    <div class="col-md-10">
+                      <textarea class="form-control" row="3" name="Observaciones"
+                        value="<?php echo $Persona->getObservaciones(); ?>"><?php echo $Persona->getObservaciones(); ?></textarea>
+                    </div>
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Cambio de Domicilio: </label>
-                  <div class = "col-md-10">
-                    <textarea class = "form-control" row = "3" name = "Cambio_Domicilio" value = "<?php echo $Persona->getCambio_Domicilio(); ?>"><?php echo $Persona->getCambio_Domicilio(); ?></textarea>
+                  <div class="form-group row">
+                    <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Cambio de Domicilio:
+                    </label>
+                    <div class="col-md-10">
+                      <textarea class="form-control" row="3" name="Cambio_Domicilio"
+                        value="<?php echo $Persona->getCambio_Domicilio(); ?>"><?php echo $Persona->getCambio_Domicilio(); ?></textarea>
+                    </div>
                   </div>
-                </div>
-                <div class="form-group row">
-                  <div class="offset-md-2 col-md-10">
-                    <button type="submit" class="btn btn-outline-success">Guardar</button>
-                    <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_personas.php'">Atras</button>
+                  <div class="form-group row">
+                    <div class="offset-md-2 col-md-10">
+                      <button type="submit" class="btn btn-outline-success">Guardar</button>
+                      <button type="button" class="btn btn-danger"
+                        onClick="location.href = 'view_personas.php'">Atras</button>
+                    </div>
                   </div>
-                </div>
-            </form>
-            </div>
-              <?php  
-            }else{
+                </form>
+              </div>
+              <?php
+            } else {
               $Mensaje = "No se pudo consultar los Datos porque no se pudo obtener el ID de la Persona";
               echo $Mensaje;
             }
-          ?>
-        </div>
-        <div class="row">
+            ?>
+          </div>
+          <div class="row">
             <div class="col-10"></div>
             <div class="col-2">
               <!-- <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = 'view_personas.php'">Volver</button> -->
             </div>
+          </div>
         </div>
+      </div>
+    </div>
   </div>
-</div>
-</div>
-<?php 
-if(isset($_REQUEST["Mensaje"])){
-  echo "<script type='text/javascript'>
-    swal('".$_REQUEST['Mensaje']."','','success');
+  <div class="modal fade modal--show-overall" id="map-modal" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 2001; overflow: hidden">
+    <div class="class_modal-dialog modal-dialog" role="document" id="id_modal-dialog"
+      style="min-width: 80%; height: 1000px;">
+      <div class="modal-content" style="height: 60%;">
+        <div>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="padding-top: 0px">
+          <div id="basicMap"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <?php
+  if (isset($_REQUEST["Mensaje"])) {
+    echo "<script type='text/javascript'>
+    swal('" . $_REQUEST['Mensaje'] . "','','success');
 </script>";
-}
+  }
 
-if(isset($_REQUEST['MensajeError'])){
-  echo "<script type='text/javascript'>
-    swal('".$_REQUEST['MensajeError']."','','warning');
+  if (isset($_REQUEST['MensajeError'])) {
+    echo "<script type='text/javascript'>
+    swal('" . $_REQUEST['MensajeError'] . "','','warning');
 </script>";
-}
-?>
+  }
+  ?>
+  <script>
+    objectJsonPersona.lat = <?php echo $Persona->getLatitud(); ?>;
+    objectJsonPersona.lon = <?php echo $Persona->getLonguitud(); ?>;
+  </script>
 </body>
+
 </html>

@@ -2,6 +2,7 @@
 session_start();
 require_once 'Conexion.php';
 require_once '../Modelo/Persona.php';
+require_once '../Modelo/Calle.php';
 header("Content-Type: text/html;charset=utf-8");
 
 $ID_Usuario = $_SESSION["Usuario"];
@@ -45,10 +46,18 @@ if($Edad == 0){
 
 $Nro_Carpeta = $_REQUEST["Nro_Carpeta"];
 $Obra_Social = $_REQUEST["Obra_Social"];
-$Domicilio = ucwords($_REQUEST["Calle"]);
-if(isset($_REQUEST["NumeroDeCalle"])){
-  $Domicilio .= " ".$_REQUEST["NumeroDeCalle"];
+$Domicilio = "";
+if(isset($_REQUEST["Calle"])){
+	$calle = ucwords($_REQUEST["Calle"]);
+	$nombre_calle = new Calle(id_calle : $calle);
+	$Domicilio = $nombre_calle->get_calle_nombre();
 }
+
+if(isset($_REQUEST["NumeroDeCalle"])){
+  $nro_calle = $_REQUEST["NumeroDeCalle"];
+  $Domicilio .= " ". $nro_calle;
+}
+
 $ID_Barrio = $_REQUEST["ID_Barrio"];
 $Localidad = ucwords($_REQUEST["Localidad"]);
 $Circunscripcion = 0;
@@ -67,8 +76,6 @@ $Trabajo = strtoupper($_REQUEST["Trabajo"]);
 if(empty($ID_Escuela)){
 	$ID_Escuela = 2;
 }
-
-
 
 // PASANDO LOS DATOS NUMERICOS VACIOS A NULL
 /*if(empty($Edad)){
@@ -101,6 +108,7 @@ if(empty($ID_Barrio)){
 }
 
 $Persona = new Persona(
+					   ID_Persona : $ID_Persona,
 					   xApellido : $Apellido,
 					   xNombre : $Nombre,
 					   xDNI : $DNI,
@@ -124,12 +132,12 @@ $Persona = new Persona(
 					   xMail : $Mail,
 					   xID_Escuela : $ID_Escuela,
 					   xEstado : $Estado,
-					   xTrabajo : $Trabajo
+					   xTrabajo : $Trabajo,
+					   xCalle : $calle,
+					   xNro : $nro_calle
 );
-
 $Fecha = date("Y-m-d");
 $ID_TipoAccion = 2;
-
 try {
 	$Con = new Conexion();
 	$Con->OpenConexion();
@@ -177,6 +185,8 @@ try {
 		$Persona_Viejo->setSeccion($Persona->getSeccion());
 		$Persona_Viejo->setTrabajo($Persona->getTrabajo());
 		$Persona_Viejo->setTelefono($Persona->getTelefono());
+		$Persona_Viejo->setNro($Persona->getNro());
+		$Persona_Viejo->setCalle($Persona->getId_Calle());
 		$Persona_Viejo->update();
 
 		$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
