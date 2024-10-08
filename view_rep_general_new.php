@@ -628,11 +628,6 @@ $Con->CloseConexion();
     }
   </script>
   <style>
-    #basicMap {
-          width: 100%;
-          height: 100%;
-          margin: 0;
-    }
     body {
       overflow-x: hidden;
     }
