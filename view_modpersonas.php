@@ -340,7 +340,6 @@ $Con->CloseConexion();
 
 
               $Persona = new Persona($ID_Persona);
-              var_dump($Persona);
               $Con->CloseConexion();
 
               ?>
