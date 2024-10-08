@@ -595,3 +595,9 @@ div .nav-side-menu {
 .input--transform-rotate180 {
   transform: rotate(180deg);
 }
+
+#basicMap {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
