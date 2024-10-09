@@ -1278,7 +1278,9 @@ $Con->CloseConexion();
               $ConsultarPersona = "select apellido, 
                                           nombre, 
                                           domicilio,
-                                          ID_Barrio
+                                          ID_Barrio,
+                                          calle,
+                                          nro
                                    from persona 
                                    where ID_Persona = " . $ID_Persona . " 
                                      and estado = 1";
@@ -1291,7 +1293,9 @@ $Con->CloseConexion();
                   $persona = new Persona(ID_Persona : $ID_Persona);
                   $ConsultarPersdomicilio = "select id_persona
                                             from persona
-                                            where domicilio like '%" . $persona->getCalle() . "%". $persona->getNroCalle()."%'
+                                            where (domicilio like '%" . $persona->getCalle() . "%". $persona->getNroCalle()."%'
+                                              or ( calle = " . (($persona->getId_Calle()) ? $persona->getId_Calle(): "null" ) . "
+                                                  and nro = " . (($persona->getNro()) ? $persona->getNro() : "null" ). "))
                                               and estado = 1";
                   $Consulta .= " and P.id_persona in ($ConsultarPersdomicilio)";
                 } else {
