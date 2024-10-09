@@ -111,6 +111,22 @@ $Con->CloseConexion();
       $("#BarraDeNavHTabla").attr("style","width: 95%; margin-left: 2%;");
     }
 
+    function ordenGeoreferencia(personaObjectA, personaObjectB) {
+      if(personaObjectA.lat < personaObjectB.lat) {
+        return -1;
+      } else if (personaObjectA.lat > personaObjectB.lat) {
+        return 1;
+      } else {
+          if(personaObjectA.lon < personaObjectB.lon) {
+            return -1;
+          } else if (personaObjectA.lon > personaObjectB.lon) {
+            return 1;
+          } else {
+            return 0;
+          } 
+      }
+    }
+
     function init() {
       if (map === null) {
         map = new OpenLayers.Map("basicMap", {
@@ -132,7 +148,6 @@ $Con->CloseConexion();
             maxZoom: 22,
             accessToken: '<your accessToken>'
         }); */
-
         let mapnik = new OpenLayers.Layer.OSM("OpenCycleMap",
               ["http://a.tile.thunderforest.com/transport/${z}/${x}/${y}.png?apikey=d03b42dcdc084e7cbab176997685b1ce",
               "http://b.tile.thunderforest.com/transport/${z}/${x}/${y}.png?apikey=d03b42dcdc084e7cbab176997685b1ce",
@@ -145,6 +160,7 @@ $Con->CloseConexion();
         let positionFormas = null;
         let icon = null;
         let charCodeLetter = null;
+        let posicionAnterior = null;
         map.addLayer(mapnik);
         var markers = new OpenLayers.Layer.Markers( "Markers" );
         map.addLayer(markers);
@@ -174,10 +190,19 @@ $Con->CloseConexion();
             OpenLayers.Event.stop(evt);
         };
 
-        objectJsonTabla.forEach(function (elemento, indice, array) {
+        objectJsonTabla.sort(ordenGeoreferencia).forEach(function (elemento, indice, array) {
           pos = new OpenLayers.LonLat(elemento.lon, elemento.lat).transform(toProjection, fromProjection);
-          positionFormas = pos;
           if (elemento.lista_formas_categorias) {
+            if (indice >= 1) {            
+              if (posicionAnterior.lon === pos.lon  && posicionAnterior.lat === pos.lat) {
+                pos = pos.add(-8.3, 4.5);
+              } else {
+                posicionAnterior = pos;
+              }
+            } else {
+              posicionAnterior = pos;
+            }
+            positionFormas = pos;
             let angulo = 360;
             let longuitud = Object.keys(elemento.lista_formas_categorias).length + 1;
             let puntos = angulo / longuitud;
