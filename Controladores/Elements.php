@@ -1,6 +1,6 @@
 <?php  
 require_once("Conexion.php");
-//require_once("Conexion.example.php");
+
 header("Content-Type: text/html;charset=utf-8");
 
 class Elements{
@@ -2212,31 +2212,39 @@ public function getMenuSeguridadUsuario($ID){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $NombreCalle = rtrim($Nombre);
-    $ConsultaNombre = "select *
-                 from calle 
-                 where estado = 1
-                   and UPPER(calle_nombre) like UPPER('%$NombreCalle%')
-                 order by calle_nombre ASC";
     $Select = "<select class='form-control' id='ID_Cale' name = 'Calle'>";
-    $ConsultaResult = mysqli_query($Con3->Conexion,$ConsultaNombre)or die("Problemas al mostrar Personas");
+
+    if (!is_numeric($Nombre)) {
+      $ConsultaNombre = "select *
+                         from calle 
+                         where estado = 1
+                         and UPPER(calle_nombre) like UPPER('%$NombreCalle%')
+                         order by calle_nombre ASC";               
+  
+      $ConsultaResult = mysqli_query($Con3->Conexion,$ConsultaNombre)or die("Problemas al mostrar Personas");
+    } else {
+      $ConsultaNombre = "select *
+                         from calle 
+                         where estado = 1
+                         and id_calle = $NombreCalle
+                         order by calle_nombre ASC";               
+  
+      $ConsultaResult = mysqli_query($Con3->Conexion,$ConsultaNombre)or die("Problemas al mostrar Personas");
+    }
 
     if(mysqli_num_rows($ConsultaResult) > 0){
       $Resultado = mysqli_fetch_array($ConsultaResult);
-      $Select .= "<option value = '".$Resultado["calle_nombre"]."' selected = 'true'>".$Resultado["calle_nombre"]."</option>";
+      $Select .= "<option value = '" . $Resultado["id_calle"] . "' selected = 'true'>" . $Resultado["calle_nombre"] . "</option>";
     } else {
-      if($Nombre){
-        $Select .= "<option value = '$Nombre' selected = 'true'>$Nombre</option>";
-      } else {
         $Select .= "<option value = '0' disabled = 'disabled' selected = 'true'>- Seleccione una Calle -</option>";
-      }
     }
     $Consulta = "select *
-    from calle 
-    where estado = 1
-    order by calle_nombre ASC";
+                 from calle 
+                 where estado = 1
+                 order by calle_nombre ASC";
     $ConsultaResult = mysqli_query($Con3->Conexion,$Consulta)or die("Problemas al mostrar Personas");
     while ($Ret = mysqli_fetch_array($ConsultaResult)) {
-      $Select .= "<option value = '".$Ret['calle_nombre']."'>".$Ret['calle_nombre']."</option>";
+      $Select .= "<option value = '".$Ret['id_calle']."'>".$Ret['calle_nombre']."</option>";
     }
     $Select .= "</select>";
     $Con3->CloseConexion();
