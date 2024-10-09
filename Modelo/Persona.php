@@ -391,7 +391,7 @@ public function getLonguitud()
 	$con = new Conexion();
 	$con->OpenConexion();
 	$consulta = "select p.*,
-						ST_Y(P.georeferencia) as lon
+						ST_Y(p.georeferencia) as lon
 				 from persona p
 				 where id_persona = " . $this->getID_Persona();
 	$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
@@ -403,7 +403,7 @@ public function getLatitud()
 	$con = new Conexion();
 	$con->OpenConexion();
 	$consulta = "select p.*,
-						ST_X(P.georeferencia) as lat
+						ST_X(p.georeferencia) as lat
 				 from persona p
 				 where id_persona = " . $this->getID_Persona();
 	$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
