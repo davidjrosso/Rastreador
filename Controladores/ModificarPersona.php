@@ -143,7 +143,7 @@ try {
 	$Con->OpenConexion();
 
 
-	$ConsultarRegistrosIguales = "select * from persona where apellido = '{$Persona->getApellido()}' and nombre = '{$Persona->getNombre()}' and id_persona != $ID_Persona and estado = 1";
+	$ConsultarRegistrosIguales = "select * from persona where documento = '{$DNI}' and id_persona != $ID_Persona and estado = 1";
 	if(!$RetIguales = mysqli_query($Con->Conexion,$ConsultarRegistrosIguales)){
 		throw new Exception("Problemas al intentar Consultar Registros Iguales", 0);		
 	}
@@ -154,6 +154,7 @@ try {
 		$Con->CloseConexion();
 		$Mensaje = "Ya existe una Persona con ese Apellido y Nombre por Favor Introduzca Otros Datos";
 		header('Location: ../view_modpersonas.php?ID='.$ID_Persona.'&MensajeError='.$Mensaje);
+		exit();
 	}else{
 		$ConsultarDatosViejos = "select * from persona where id_persona = $ID_Persona and estado = 1";
 		$ErrorDatosViejos = "No se pudieron consultar los datos";
