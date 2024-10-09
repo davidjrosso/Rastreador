@@ -302,8 +302,8 @@ $Con->CloseConexion();
               $Con->OpenConexion();
 
               $ConsultarDatos = "select p.*, 
-                                        ST_X(P.georeferencia) as lat, 
-                                        ST_Y(P.georeferencia) as lon
+                                        ST_X(p.georeferencia) as lat, 
+                                        ST_Y(p.georeferencia) as lon
                                  from persona p
                                  where id_persona = $ID";
               $MensajeErrorDatos = "No se pudo consultar los Datos de la Persona";
@@ -345,12 +345,6 @@ $Con->CloseConexion();
               ?>
               <div class="col-10">
                 <form method="post" onKeydown="return event.key != 'Enter';" action="Controladores/ModificarPersona.php">
-                  <!-- <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Id: </label>
-                  <div class="col-md-10">
-                    <label for="inputPassword" class="col-md-2 col-form-label LblForm"><?php echo $Persona->getID_Persona(); ?></label>
-                  </div>
-                </div> -->
                   <input type="hidden" name="ID" value="<?php echo $Persona->getID_Persona(); ?>">
                   <div class="form-group row">
                     <label for="inputPassword" class="col-md-2 col-form-label LblForm">Apellido: </label>
@@ -555,7 +549,7 @@ $Con->CloseConexion();
       </div>
     </div>
   </div>
-  <!--<div class="modal fade modal--show-overall" id="map-modal" tabindex="-1" role="dialog"
+  <div class="modal fade modal--show-overall" id="map-modal" tabindex="-1" role="dialog"
     aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 2001; overflow: hidden">
     <div class="class_modal-dialog modal-dialog" role="document" id="id_modal-dialog"
       style="min-width: 80%; height: 1000px;">
@@ -570,7 +564,7 @@ $Con->CloseConexion();
         </div>
       </div>
     </div>
-  </div> -->
+  </div>
   <?php
   if (isset($_REQUEST["Mensaje"])) {
     echo "<script type='text/javascript'>
