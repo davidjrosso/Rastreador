@@ -1293,10 +1293,13 @@ $Con->CloseConexion();
                 if (!(empty($RetConsultarPersona["domicilio"]) && (empty($RetConsultarPersona["calle"]) || empty($RetConsultarPersona["nro"])))) {
                   $domicilio = $RetConsultarPersona["domicilio"];
                   $persona = new Persona(ID_Persona : $ID_Persona);
+                  $domicilioPersona = "";
+                  if ($persona->getCalle() && $persona->getNroCalle()) {
+                    $domicilioPersona = "domicilio like '%" . $persona->getCalle() . "%". $persona->getNroCalle()."%' or ";
+                  }
                   $ConsultarPersdomicilio = "select id_persona
                                             from persona
-                                            where (domicilio like '%" . $persona->getCalle() . "%". $persona->getNroCalle()."%'
-                                              or ( calle = " . (($persona->getId_Calle()) ? $persona->getId_Calle(): "null" ) . "
+                                            where ($domicilioPersona (calle = " . (($persona->getId_Calle()) ? $persona->getId_Calle(): "null" ) . "
                                                   and nro = " . (($persona->getNro()) ? $persona->getNro() : "null" ). "))
                                               and estado = 1";
                   $Consulta .= " and P.id_persona in ($ConsultarPersdomicilio)";
