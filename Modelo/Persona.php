@@ -84,18 +84,26 @@ public function setDomicilio($xDomicilio = null){
 		$con->OpenConexion();
 		$consulta = "select calle_open
 					 from calle
-					 where lower(REGEXP_REPLACE(calle_nombre, '.+', ' ')) = REGEXP_REPLACE(
-																		REGEXP_SUBSTR(
-																					lower('". $domicilio . "'), 
-																					'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
+					 where lower(calle_nombre) like CONCAT(
+															'%',
+															REGEXP_REPLACE( 
+																	REGEXP_REPLACE(
+																					REGEXP_SUBSTR(
+																							lower('$domicilio'), 
+																							'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
 																					),
 																					'( )+',
-																					' '
-																		)";
+																					'%'
+																					),
+																			'(\\\\.)',
+																			''
+																			),
+															'%'
+															);";
 		$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
 		$ret = mysqli_fetch_assoc($query_object);
 		$nombre_calle = $ret["calle_open"];
-		$domicilio = "$nombre_calle $numero_calle";
+		$domicilio = "$nombre_calle " . $this->getNro();
 		$con->CloseConexion();
 	}
 	if ($domicilio) {
