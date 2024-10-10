@@ -2340,11 +2340,11 @@ $Con->CloseConexion();
                   $Table_imprimir .= "<tr>";
 
                   $Table_imprimir .= "<td id='Contenido-1'>" . $RetTodos["Barrio"] . "</td>
-                                      <td id='Contenido-2'>" . ((isset($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]  ) . "</td>";
+                                      <td id='Contenido-2'>" . ((empty($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]  ) . "</td>";
                   $jsonTable[$clave]["barrio"] = $RetTodos["Barrio"];
-                  $jsonTable[$clave]["domicilio"] = ((isset($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]  );
+                  $jsonTable[$clave]["domicilio"] = ((empty($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]  );
                   $Table .= "<td id='Contenido-1' style='max-width: 100px;'>" . $RetTodos["Barrio"] . "</td>
-                             <td id='Contenido-2' style='max-width: 100px;'>" . ((isset($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]  ) . "</td>";
+                             <td id='Contenido-2' style='max-width: 100px;'>" . ((empty($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]  ) . "</td>";
                   /*
                   if ($Manzana == "manzana") {
                     $Table .= "<td id='Contenido-5' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>";
@@ -2417,11 +2417,11 @@ $Con->CloseConexion();
                   $Table_imprimir .= "<tr style='text-align:center;'>";
                   $nroColumnas = 70;
                   $tagsTD .= "<td id='Contenido-1'>" . $RetTodos["Barrio"] . "</td>
-                              <td id='Contenido-2'>" . ((isset($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]  ) . "</td>";
+                              <td id='Contenido-2'>" . ((empty($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]  ) . "</td>";
                   $tagsTD_imprimir .= "<td id='Contenido-1' style='text-align:center;font-size: 10px;max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;'>" . $RetTodos["Barrio"] . "</td>
-                                       <td id='Contenido-2' style='text-align:center;font-size: 10px;max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;'>" . ((isset($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]  ) . "</td>";
+                                       <td id='Contenido-2' style='text-align:center;font-size: 10px;max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;'>" . ((empty($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]  ) . "</td>";
                   $jsonTable[$clave]["barrio"] = $RetTodos["Barrio"];
-                  $jsonTable[$clave]["domicilio"] = ((isset($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]  );
+                  $jsonTable[$clave]["domicilio"] = ((empty($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]  );
                   $jsonTable[$clave]["lat"] = $RetTodos["lat"];
                   $jsonTable[$clave]["lon"] = $RetTodos["lon"];
 
