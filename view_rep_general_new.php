@@ -1205,18 +1205,20 @@ $Con->CloseConexion();
             $Consulta = "SELECT M.id_movimiento, M.id_persona, MONTH(M.fecha) as 'Mes',
                                 YEAR(M.fecha) as 'Anio', B.Barrio, P.manzana, P.lote,
                                 P.familia, P.apellido, P.nombre, P.fecha_nac, P.domicilio,
+                                L.calle_nombre, P.nro,  
                                 ST_X(P.georeferencia) as lat, 
                                 ST_Y(P.georeferencia) as lon, 
                                 P.edad, P.meses 
                                 $esPersonaSeleccionada
-                         FROM movimiento M, 
+                         FROM (movimiento M, 
                               persona P, 
                               barrios B, 
                               motivo MT, 
                               categoria C, 
                               centros_salud CS, 
                               otras_instituciones I, 
-                              responsable R
+                              responsable R) left join
+                              calle L on (L.id_calle = P.calle)
                          WHERE M.id_persona = P.id_persona 
                            and B.ID_Barrio = P.ID_Barrio 
                            and M.id_centro = CS.id_centro 
@@ -1288,7 +1290,7 @@ $Con->CloseConexion();
               $RetConsultarPersona = mysqli_fetch_assoc($EjecutarConsultarPersona);
 
               if (($countPostfield - 3) == 1)  {
-                if (!empty($RetConsultarPersona["domicilio"])) {
+                if (!(empty($RetConsultarPersona["domicilio"]) && (empty($RetConsultarPersona["calle"]) || empty($RetConsultarPersona["nro"])))) {
                   $domicilio = $RetConsultarPersona["domicilio"];
                   $persona = new Persona(ID_Persona : $ID_Persona);
                   $ConsultarPersdomicilio = "select id_persona
@@ -2335,11 +2337,11 @@ $Con->CloseConexion();
                   $Table_imprimir .= "<tr>";
 
                   $Table_imprimir .= "<td id='Contenido-1'>" . $RetTodos["Barrio"] . "</td>
-                                      <td id='Contenido-2'>" . $RetTodos["domicilio"] . "</td>";
+                                      <td id='Contenido-2'>" . ((isset($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]  ) . "</td>";
                   $jsonTable[$clave]["barrio"] = $RetTodos["Barrio"];
-                  $jsonTable[$clave]["domicilio"] = $RetTodos["domicilio"];
+                  $jsonTable[$clave]["domicilio"] = ((isset($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]  );
                   $Table .= "<td id='Contenido-1' style='max-width: 100px;'>" . $RetTodos["Barrio"] . "</td>
-                             <td id='Contenido-2' style='max-width: 100px;'>" . $RetTodos["domicilio"] . "</td>";
+                             <td id='Contenido-2' style='max-width: 100px;'>" . ((isset($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]  ) . "</td>";
                   /*
                   if ($Manzana == "manzana") {
                     $Table .= "<td id='Contenido-5' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>";
@@ -2412,11 +2414,11 @@ $Con->CloseConexion();
                   $Table_imprimir .= "<tr style='text-align:center;'>";
                   $nroColumnas = 70;
                   $tagsTD .= "<td id='Contenido-1'>" . $RetTodos["Barrio"] . "</td>
-                              <td id='Contenido-2'>" . $RetTodos["domicilio"] . "</td>";
+                              <td id='Contenido-2'>" . ((isset($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]  ) . "</td>";
                   $tagsTD_imprimir .= "<td id='Contenido-1' style='text-align:center;font-size: 10px;max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;'>" . $RetTodos["Barrio"] . "</td>
-                                       <td id='Contenido-2' style='text-align:center;font-size: 10px;max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;'>" . $RetTodos["domicilio"] . "</td>";
+                                       <td id='Contenido-2' style='text-align:center;font-size: 10px;max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;'>" . ((isset($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]  ) . "</td>";
                   $jsonTable[$clave]["barrio"] = $RetTodos["Barrio"];
-                  $jsonTable[$clave]["domicilio"] = $RetTodos["domicilio"];
+                  $jsonTable[$clave]["domicilio"] = ((isset($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]  );
                   $jsonTable[$clave]["lat"] = $RetTodos["lat"];
                   $jsonTable[$clave]["lon"] = $RetTodos["lon"];
 
