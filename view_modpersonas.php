@@ -431,7 +431,11 @@ $Con->CloseConexion();
                     <label for="inputPassword" class="col-md-2 col-form-label LblForm">Domicilio: </label>
                     <div class="col-md-6">
                       <?php
-                      echo $Element->CBCallesNombre($Persona->getId_Calle());
+                      if (!empty($Persona->getId_Calle())) {
+                        echo $Element->CBCallesNombre($Persona->getId_Calle());
+                      } else {
+                        echo $Element->CBCallesNombre($Persona->getCalle());
+                      }
                       ?>
 
                     </div>
