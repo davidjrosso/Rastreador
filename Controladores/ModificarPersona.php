@@ -57,7 +57,6 @@ if(isset($_REQUEST["NumeroDeCalle"])){
   $nro_calle = $_REQUEST["NumeroDeCalle"];
   $Domicilio .= " ". $nro_calle;
 }
-
 $ID_Barrio = $_REQUEST["ID_Barrio"];
 $Localidad = ucwords($_REQUEST["Localidad"]);
 $Circunscripcion = 0;
@@ -142,7 +141,6 @@ try {
 	$Con = new Conexion();
 	$Con->OpenConexion();
 
-
 	$ConsultarRegistrosIguales = "select * from persona where documento = '{$DNI}' and id_persona != $ID_Persona and estado = 1";
 	if(!$RetIguales = mysqli_query($Con->Conexion,$ConsultarRegistrosIguales)){
 		throw new Exception("Problemas al intentar Consultar Registros Iguales", 0);		
@@ -159,7 +157,8 @@ try {
 		$ErrorDatosViejos = "No se pudieron consultar los datos";
 		if(!$RetDatosViejos = mysqli_query($Con->Conexion,$ConsultarDatosViejos)){
 			throw new Exception("Error al intentar registrar. Consulta: ".$ConsultarDatosViejos, 1);
-		}		
+		}
+
 		$Persona_Viejo = new Persona($ID_Persona);
 		$Detalles = "El usuario con ID: $ID_Usuario ha modificado una Persona. Datos: Dato Anterior: {$Persona_Viejo->getApellido()} , Dato Nuevo: {$Persona->getApellido()} - Dato Anterior: {$Persona_Viejo->getNombre()} , Dato Nuevo: {$Persona->getNombre()} - Dato Anterior: {$Persona_Viejo->getDNI()}, Dato Nuevo: {$Persona->getDNI()} - Dato Anterior: {$Persona_Viejo->getNro_Legajo()}, Dato Nuevo: {$Persona->getNro_Legajo()} - Dato Anterior: {$Persona_Viejo->getEdad()}, Dato Nuevo: {$Persona->getEdad()} - Dato Anterior: {$Persona_Viejo->getFecha_Nacimiento()}, Dato Nuevo: {$Persona->getFecha_Nacimiento()} - Dato Anterior: {$Persona_Viejo->getTelefono()}, Dato Nuevo: {$Persona->getTelefono()} - Dato Anterior: {$Persona_Viejo->getMail()}, Dato Nuevo: {$Persona->getMail()} - Dato Anterior: {$Persona_Viejo->getNro_Carpeta()}, Dato Nuevo: {$Persona->getNro_Carpeta()} - Dato Anterior: {$Persona_Viejo->getObra_Social()}, Dato Nuevo: {$Persona->getObra_Social()} - Dato Anterior: {$Persona_Viejo->getSeccion()}, Dato Nuevo: {$Persona->getSeccion()} - Dato Anterior: {$Persona_Viejo->getManzana()}, Dato Nuevo: {$Persona->getManzana()} - Dato Anterior: {$Persona_Viejo->getLote()}, Dato Nuevo: {$Persona->getLote()} - Dato Anteior: {$Persona_Viejo->getFamilia()}, Dato Nuevo: {$Persona->getFamilia()} - Dato Anterior: {$Persona_Viejo->getObservaciones()}, Dato Nuevo: {$Persona->getObservaciones()} - Dato Anterior: {$Persona_Viejo->getCambio_Domicilio()}, Dato Nuevo: {$Persona->getCambio_Domicilio()} - Dato Anterior: {$Persona_Viejo->getTelefono()}, Dato Nuevo: {$Persona->getTelefono()} - Dato Anterior: {$Persona_Viejo->getMail()}, Dato Nuevo: {$Persona->getMail()} - Dato Anterior: {$Persona_Viejo->getID_Escuela()}, Dato Nuevo: {$Persona->getID_Escuela()} - Dato Anterior: {$Persona_Viejo->getMeses()}, Dato Nuevo: {$Persona->getMeses()}";
 		$Persona_Viejo->setApellido($Persona->getApellido());
@@ -167,7 +166,6 @@ try {
 		$Persona_Viejo->setCamio_Domicilio($Persona->getCambio_Domicilio());
 		$Persona_Viejo->setCircunscripcion($Persona->getCircunscripcion());
 		$Persona_Viejo->setDNI($Persona->getDNI());
-		$Persona_Viejo->setDomicilio($Persona->getDomicilio());
 		$Persona_Viejo->setEdad($Persona->getEdad());
 		$Persona_Viejo->setNombre($Persona->getNombre());
 		$Persona_Viejo->setNro_Legajo($Persona->getNro_Legajo());
@@ -187,6 +185,7 @@ try {
 		$Persona_Viejo->setTelefono($Persona->getTelefono());
 		$Persona_Viejo->setNro($Persona->getNro());
 		$Persona_Viejo->setCalle($Persona->getId_Calle());
+		$Persona_Viejo->setDomicilio($Persona->getDomicilio());
 		$Persona_Viejo->update();
 
 		$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
@@ -212,4 +211,3 @@ try {
 } catch (Exception $e) {
 	echo "Error: ".$e->getMessage();
 }
-?>

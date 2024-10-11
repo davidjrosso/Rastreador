@@ -431,16 +431,22 @@ $Con->CloseConexion();
                     <label for="inputPassword" class="col-md-2 col-form-label LblForm">Domicilio: </label>
                     <div class="col-md-6">
                       <?php
-                      echo $Element->CBCallesNombre($Persona->getId_Calle());
+                      if (!empty($Persona->getId_Calle())) {
+                        echo $Element->CBCallesNombre($Persona->getId_Calle());
+                      } else {
+                        echo $Element->CBCallesNombre($Persona->getCalle());
+                      }
                       ?>
 
                     </div>
                     <div class="col-md-2">
                       <input type="number" class="form-control" name="NumeroDeCalle" id="NumeroDeCalle" placeholder="Nro"
-                        min="1" autocomplete="off" <?php 
+                        min="1" autocomplete="off" <?php
                         $NroCalle = $Persona->getNro();
-                        if ($NroCalle != null) {
+                        if ($NroCalle !== null) {
                           echo "value = '$NroCalle'";
+                        } else {
+                          echo "value =" . (($Persona->getNroCalle()) ? $Persona->getNroCalle() : "");
                         } ?>>
                     </div>
                     <div class="col-md-2">

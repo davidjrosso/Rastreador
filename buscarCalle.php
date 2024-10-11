@@ -99,4 +99,3 @@ if (isset($consultaBusqueda)) {
 
 //Devolvemos el mensaje que tomará jQuery
 echo $mensaje;
-?>

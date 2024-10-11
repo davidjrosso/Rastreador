@@ -152,7 +152,6 @@ $Con->CloseConexion();
 
       function buscarCalles(){
       var xNombre = document.getElementById('SearchCalle').value;
-      console.log(xNombre);
       var textoBusqueda = xNombre;
       xmlhttp=new XMLHttpRequest();
       xmlhttp.onreadystatechange = function() {
@@ -170,7 +169,7 @@ $Con->CloseConexion();
           var Calle = document.getElementById("Calle");
           BotonModalPersona.innerHTML = "";
           BotonModalPersona.innerHTML = xNombre;
-          Calle.setAttribute('value',xNombre);
+          Calle.setAttribute('value',xID);
         }
   </script>
   <!--

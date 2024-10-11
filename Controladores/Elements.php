@@ -2232,7 +2232,7 @@ public function getMenuSeguridadUsuario($ID){
       $ConsultaResult = mysqli_query($Con3->Conexion,$ConsultaNombre)or die("Problemas al mostrar Personas");
     }
 
-    if(mysqli_num_rows($ConsultaResult) > 0){
+    if((mysqli_num_rows($ConsultaResult) > 0) && (!empty($Nombre))){
       $Resultado = mysqli_fetch_array($ConsultaResult);
       $Select .= "<option value = '" . $Resultado["id_calle"] . "' selected = 'true'>" . $Resultado["calle_nombre"] . "</option>";
     } else {

@@ -84,23 +84,32 @@ public function setDomicilio($xDomicilio = null){
 		$con->OpenConexion();
 		$consulta = "select calle_open
 					 from calle
-					 where lower(REGEXP_REPLACE(calle_nombre, '.+', ' ')) = REGEXP_REPLACE(
-																		REGEXP_SUBSTR(
-																					lower('". $domicilio . "'), 
-																					'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
+					 where lower(calle_nombre) like CONCAT(
+															'%',
+															REGEXP_REPLACE( 
+																	REGEXP_REPLACE(
+																					REGEXP_SUBSTR(
+																							lower('$domicilio'), 
+																							'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
 																					),
 																					'( )+',
-																					' '
-																		)";
+																					'%'
+																					),
+																			'(\\\\.)',
+																			''
+																			),
+															'%'
+															);";
 		$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
 		$ret = mysqli_fetch_assoc($query_object);
 		$nombre_calle = $ret["calle_open"];
-		$domicilio = "$nombre_calle $numero_calle";
+		$domicilio = "$nombre_calle " . $this->getNro();
 		$con->CloseConexion();
 	}
+
 	if ($domicilio) {
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, "https://maps.googleapis.com/maps/api/geocode/json?address=" . str_replace(" ", "+", trim($domicilio)) . "+Rio+Tercero,&key=AIzaSyAdiF1F7NoZbmAzBWfV6rxjJrGsr1Yvb1g");
+		curl_setopt($ch, CURLOPT_URL, "https://maps.googleapis.com/maps/api/geocode/json?address=" . str_replace(" ", "+", trim($domicilio)) . "+Rio+Tercero,Cordoba&key=AIzaSyAdiF1F7NoZbmAzBWfV6rxjJrGsr1Yvb1g");
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		$response = curl_exec($ch);
 		$arr_obj_json = json_decode($response);
@@ -617,8 +626,8 @@ public function save(){
 						 " . ((!is_null($this->getMeses())) ? "'" . $this->getMeses() . "'" : "null") . ", 
 						 " . ((!is_null($this->getTrabajo())) ? "'" . $this->getTrabajo() . "'" : "null") . ",
 						 " . ((!is_null($this->getGeoreferencia())) ? $this->getGeoreferencia() : "null") . ",
-						 " . ((!is_null($this->getId_Calle())) ? $this->getId_Calle() : "null") . ",
-						 " . ((!is_null($this->getNro())) ? $this->getNro() : "null") . ",
+						 " . ((!empty($this->getId_Calle())) ? $this->getId_Calle() : "null") . ",
+						 " . ((!empty($this->getNro())) ? $this->getNro() : "null") . ",
 						 1
 				 )";
 				 $MensajeErrorConsultar = "No se pudo insertar la Persona";
@@ -661,6 +670,7 @@ public function __construct(
 	if (!$ID_Persona) {
 		$this->Apellido = $xApellido;
 		$this->Barrio = $xBarrio;
+		$this->Calle = $xCalle;
 		$this->Cambio_Domicilio = $xCambio_Domicilio;
 		$this->Circunscripcion = $xCircunscripcion;
 		$this->DNI = $xDNI;
@@ -677,6 +687,7 @@ public function __construct(
 		$this->Manzana = $xManzana;
 		$this->Meses = $xMeses;
 		$this->Nombre = $xNombre;
+		$this->Nro = $xNro;
 		$this->Nro_Carpeta = $xNro_Carpeta;
 		$this->Nro_Legajo = $xNro_Legajo;
 		$this->Obra_Social = $xObra_Social;
@@ -684,9 +695,7 @@ public function __construct(
 		$this->Seccion = $xSeccion;
 		$this->Telefono = $xTelefono;
 		$this->Trabajo = $xTrabajo;
-		$this->Nro = $xNro;
-		$this->Calle = $xCalle;
-		if ((!$xGeoreferencia) || $this->Domicilio) {
+		if ((!$xGeoreferencia) || $this->Domicilio || ($this->Nro && $this->Calle)) {
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, "https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", $this->Domicilio) . "&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

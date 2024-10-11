@@ -68,45 +68,45 @@ class Calle {
 		$estado = null
 	) {
 
-	if (!$id_calle) {
-		$this->estado = $estado;
-		$this->calle_abreviado = $calle_abreviado;
-		$this->calle_open = $calle_open;
-		$this->id_calle = $id_calle;
-		$this->codigo_calle = $codigo_calle;
-		$this->calle_nombre = $calle_nombre;
-	} else {
-		$Con = new Conexion();
-        $Con->OpenConexion();
-		$consultar = "select *
-					  from calle 
-					  where id_calle = $id_calle
-					  	and estado = 1
-					  order by calle_nombre ASC";
-		$ejecutar_consultar_calle = mysqli_query(
-			$Con->Conexion, 
-			$consultar) or die("Problemas al consultar filtro Calle");
-		if (!$ejecutar_consultar_calle) {
-			throw new Exception("Problemas al intentar Consultar Registros de Calle", 0);
+		if (!$id_calle) {
+			$this->estado = $estado;
+			$this->calle_abreviado = $calle_abreviado;
+			$this->calle_open = $calle_open;
+			$this->id_calle = $id_calle;
+			$this->codigo_calle = $codigo_calle;
+			$this->calle_nombre = $calle_nombre;
+		} else {
+			$Con = new Conexion();
+			$Con->OpenConexion();
+			$consultar = "select *
+						from calle 
+						where id_calle = $id_calle
+							and estado = 1
+						order by calle_nombre ASC";
+			$ejecutar_consultar_calle = mysqli_query(
+				$Con->Conexion, 
+				$consultar) or die("Problemas al consultar filtro Calle");
+			if (!$ejecutar_consultar_calle) {
+				throw new Exception("Problemas al intentar Consultar Registros de Calle", 0);
+			}
+			$ret = mysqli_fetch_assoc($ejecutar_consultar_calle);
+
+			$id_calle = $ret["id_calle"];
+			$codigo_calle = $ret["codigo_calle"];
+			$calle_nombre = $ret["calle_nombre"];
+			$calle_open = $ret["calle_open"];
+			$estado = $ret["estado"];
+			$calle_abreviado = $ret["calle_abreviado"];
+
+			$this->id_calle = $id_calle;
+			$this->codigo_calle = $codigo_calle;
+			$this->calle_open = $calle_open;
+			$this->calle_nombre = $calle_nombre;
+			$this->estado = $estado;
+			$this->calle_abreviado = $calle_abreviado;
+
+			$Con->CloseConexion();
 		}
-		$ret = mysqli_fetch_assoc($ejecutar_consultar_calle);
-
-		$id_calle = $ret["id_calle"];
-		$codigo_calle = $ret["codigo_calle"];
-		$calle_nombre = $ret["calle_nombre"];
-		$calle_open = $ret["calle_open"];
-		$estado = $ret["estado"];
-		$calle_abreviado = $ret["calle_abreviado"];
-
-		$this->id_calle = $id_calle;
-		$this->codigo_calle = $codigo_calle;
-		$this->calle_open = $calle_open;
-		$this->calle_nombre = $calle_nombre;
-		$this->estado = $estado;
-		$this->calle_abreviado = $calle_abreviado;
-
-		$Con->CloseConexion();
-	}
 	}
 
 	public function update(){
