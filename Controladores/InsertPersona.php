@@ -2,6 +2,7 @@
 session_start();
 require_once 'Conexion.php';
 require_once '../Modelo/Persona.php';
+require_once '../Modelo/Calle.php';
 header("Content-Type: text/html;charset=utf-8");
 
 $ID_Usuario = $_SESSION["Usuario"];
@@ -82,8 +83,23 @@ if (empty($Nro_Carpeta)) {
 	$Nro_Carpeta = null;
 }
 $Obra_Social = $_REQUEST["Obra_Social"];
-$Domicilio = ucwords($_REQUEST["Calle"]);
-$Domicilio .= " " . $_REQUEST["NumeroDeCalle"];
+//$Domicilio = ucwords($_REQUEST["Calle"]);
+//$Domicilio .= " " . $_REQUEST["NumeroDeCalle"];
+
+$nombre_calle = null;
+if(isset($_REQUEST["Calle"])){
+	$calle = ucwords($_REQUEST["Calle"]);
+	$nombre_calle = new Calle(id_calle : $calle);
+	$Domicilio = $nombre_calle->get_calle_nombre();
+	$id_nombre_calle = $nombre_calle->get_id_calle();
+}
+$nro_calle = null;
+if(isset($_REQUEST["NumeroDeCalle"])){
+  $nro_calle = $_REQUEST["NumeroDeCalle"];
+  $Domicilio .= " ". $nro_calle;
+}
+
+
 if (!isset($_REQUEST["ID_Barrio"])) {
 	$ID_Barrio = null;
 } else {
@@ -165,7 +181,9 @@ try {
 			xObra_Social: $Obra_Social,
 			xSeccion : $Seccion,
 			xTelefono : $Telefono,
-			xTrabajo : $Trabajo
+			xTrabajo : $Trabajo,
+			xNro: $nro_calle,
+			xCalle: $id_nombre_calle
 		);
 		$Persona->save();
 
@@ -200,4 +218,3 @@ try {
 } catch (Exception $e) {
 	echo $e->getMessage();
 }
-?>
