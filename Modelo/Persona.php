@@ -626,8 +626,8 @@ public function save(){
 						 " . ((!is_null($this->getMeses())) ? "'" . $this->getMeses() . "'" : "null") . ", 
 						 " . ((!is_null($this->getTrabajo())) ? "'" . $this->getTrabajo() . "'" : "null") . ",
 						 " . ((!is_null($this->getGeoreferencia())) ? $this->getGeoreferencia() : "null") . ",
-						 " . ((!is_null($this->getId_Calle())) ? $this->getId_Calle() : "null") . ",
-						 " . ((!is_null($this->getNro())) ? $this->getNro() : "null") . ",
+						 " . ((!empty($this->getId_Calle())) ? $this->getId_Calle() : "null") . ",
+						 " . ((!empty($this->getNro())) ? $this->getNro() : "null") . ",
 						 1
 				 )";
 				 $MensajeErrorConsultar = "No se pudo insertar la Persona";
@@ -670,6 +670,7 @@ public function __construct(
 	if (!$ID_Persona) {
 		$this->Apellido = $xApellido;
 		$this->Barrio = $xBarrio;
+		$this->Calle = $xCalle;
 		$this->Cambio_Domicilio = $xCambio_Domicilio;
 		$this->Circunscripcion = $xCircunscripcion;
 		$this->DNI = $xDNI;
@@ -686,6 +687,7 @@ public function __construct(
 		$this->Manzana = $xManzana;
 		$this->Meses = $xMeses;
 		$this->Nombre = $xNombre;
+		$this->Nro = $xNro;
 		$this->Nro_Carpeta = $xNro_Carpeta;
 		$this->Nro_Legajo = $xNro_Legajo;
 		$this->Obra_Social = $xObra_Social;
@@ -693,9 +695,7 @@ public function __construct(
 		$this->Seccion = $xSeccion;
 		$this->Telefono = $xTelefono;
 		$this->Trabajo = $xTrabajo;
-		$this->Nro = $xNro;
-		$this->Calle = $xCalle;
-		if ((!$xGeoreferencia) || $this->Domicilio) {
+		if ((!$xGeoreferencia) || $this->Domicilio || ($this->Nro && $this->Calle)) {
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, "https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", $this->Domicilio) . "&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

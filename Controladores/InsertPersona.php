@@ -86,7 +86,7 @@ $Obra_Social = $_REQUEST["Obra_Social"];
 //$Domicilio = ucwords($_REQUEST["Calle"]);
 //$Domicilio .= " " . $_REQUEST["NumeroDeCalle"];
 
-$nombre_calle = null;
+$id_nombre_calle = null;
 if(isset($_REQUEST["Calle"])){
 	$calle = ucwords($_REQUEST["Calle"]);
 	$nombre_calle = new Calle(id_calle : $calle);
@@ -161,6 +161,7 @@ try {
 			xApellido : $Apellido,
 			xBarrio : $ID_Barrio,
 			xCambio_Domicilio : $Cambio_Domicilio,
+			xCalle: $id_nombre_calle,
 			xCircunscripcion : $Circunscripcion,
 			xDNI : $DNI,
 			xDomicilio : $Domicilio,
@@ -175,19 +176,17 @@ try {
 			xManzana : $Manzana,
 			xMeses : $Meses,
 			xNombre : $Nombre,
+			xNro: $nro_calle,
 			xNro_Carpeta: $Nro_Carpeta,
 			xNro_Legajo : $Nro_Legajo,
 			xObservaciones : $Observaciones,
 			xObra_Social: $Obra_Social,
 			xSeccion : $Seccion,
 			xTelefono : $Telefono,
-			xTrabajo : $Trabajo,
-			xNro: $nro_calle,
-			xCalle: $id_nombre_calle
+			xTrabajo : $Trabajo
 		);
 		$Persona->save();
 
-		//TOMAR DATOS PARA ACTUALIZAR MESES
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		if ($Persona->getEdad() == 0) {
