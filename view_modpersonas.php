@@ -203,7 +203,7 @@ $Con->CloseConexion();
                     if (markerSelec) markerSelec.display(false);
                     markerSelec = new OpenLayers.Marker(lonlat1, icon.clone());
                     markers.addMarker(markerSelec);
-                    map.setCenter(lonlat1, zoom);
+                    map.setCenter(lonlat1, map.getZoom());
                     $("#lat").val(lonlat.lat);
                     $("#lon").val(lonlat.lon);
                   }
