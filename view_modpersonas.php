@@ -82,9 +82,25 @@ $Con->CloseConexion();
         clear: "Borrar",
         weekStart: 1
       }).on('changeDate', calcularEdad);
-      $("#map-modal").on("transitionend", function (e) {
+      $("#map-modal").on("transitionend", function(e) {
         if (!map) init();
-      })
+      });
+      $("#ID_Calle").on("input", function(e) {
+        let nro = $("#NumeroDeCalle").val();
+        if (nro) {
+          $("#mapa-sig").prop('disabled', false);
+        }
+      });
+      $("#NumeroDeCalle").on("input", function(e) {
+        let calle = $("#ID_Calle").val();
+        let nro = $(this).val();
+        if (calle && nro) {
+          $("#mapa-sig").prop('disabled', false);
+        } else {
+          $("#mapa-sig").prop('disabled', true);
+        }
+      });
+
     });
 
     function calcularEdad() {
@@ -387,7 +403,7 @@ $Con->CloseConexion();
                         } ?>>
                     </div>
                     <div class="col-md-2">
-                      <button type="button" class="btn btn-secondary" data-toggle="modal"
+                      <button id="mapa-sig" type="button" class="btn btn-secondary" disabled data-toggle="modal"
                         style="background-color: #ffc6b1; color: black; border-color: white; " data-target="#map-modal">S.
                         I. G.</button>
                     </div>

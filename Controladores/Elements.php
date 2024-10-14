@@ -2212,7 +2212,7 @@ public function getMenuSeguridadUsuario($ID){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $NombreCalle = rtrim($Nombre);
-    $Select = "<select class='form-control' id='ID_Cale' name = 'Calle'>";
+    $Select = "<select class='form-control' id='ID_Calle' name = 'Calle'>";
 
     if (!is_numeric($Nombre)) {
       $ConsultaNombre = "select *
