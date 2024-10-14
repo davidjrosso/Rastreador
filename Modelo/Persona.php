@@ -695,7 +695,7 @@ public function __construct(
 		$this->Seccion = $xSeccion;
 		$this->Telefono = $xTelefono;
 		$this->Trabajo = $xTrabajo;
-		if ((!$xGeoreferencia) || $this->Domicilio || ($this->Nro && $this->Calle)) {
+		if ((!$xGeoreferencia) && ($this->Domicilio || ($this->Nro && $this->Calle))) {
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, "https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", $this->Domicilio) . "&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
