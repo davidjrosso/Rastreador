@@ -79,7 +79,7 @@ public function setDomicilio($xDomicilio = null){
 	if (!is_null($id_calle)) {
 		$nombre_calle = $this->getNombre_Calle();
 		$domicilio = "$nombre_calle $numero_calle";
-	} else {
+	} else if ($domicilio){
 		$con = new Conexion();
 		$con->OpenConexion();
 		$consulta = "select calle_open
@@ -786,7 +786,7 @@ public function __construct(
 		$this->Fecha_Nacimiento = ($xFecha_Nacimiento) ? $xFecha_Nacimiento : $fecha_nacimiento;
 		$this->Nro_Carpeta = ($xNro_Carpeta) ? $xNro_Carpeta : $nro_Carpeta;
 		$this->Obra_Social = ($xObra_Social) ? $xObra_Social : $obra_Social;
-		$this->Domicilio = ($xDomicilio) ? $xDomicilio : $domicilio;
+		$this->Domicilio = (!empty($xDomicilio)) ? $xDomicilio : $domicilio;
 		$this->Barrio = ($xBarrio) ? $xBarrio : $barrio;
 		$this->Localidad = ($xLocalidad) ? $xLocalidad : $localidad;
 		$this->Circunscripcion = ($xCircunscripcion) ? $xCircunscripcion : $circunscripcion;

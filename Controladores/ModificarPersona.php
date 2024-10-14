@@ -58,6 +58,7 @@ if (!empty($_REQUEST["lon"])) {
 
 $Nro_Carpeta = $_REQUEST["Nro_Carpeta"];
 $Obra_Social = $_REQUEST["Obra_Social"];
+$calle = null;
 $Domicilio = "";
 if (isset($_REQUEST["Calle"])) {
 	$calle = ucwords($_REQUEST["Calle"]);
@@ -67,7 +68,11 @@ if (isset($_REQUEST["Calle"])) {
 
 if (isset($_REQUEST["NumeroDeCalle"])) {
   $nro_calle = $_REQUEST["NumeroDeCalle"];
-  $Domicilio .= " ". $nro_calle;
+  if (!empty($Domicilio)) {
+	  $Domicilio .= " ". $nro_calle;
+  } else {
+	$Domicilio = null;
+  }
 }
 $ID_Barrio = $_REQUEST["ID_Barrio"];
 $Localidad = ucwords($_REQUEST["Localidad"]);
