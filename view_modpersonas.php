@@ -100,7 +100,9 @@ $Con->CloseConexion();
           $("#mapa-sig").prop('disabled', true);
         }
       });
-
+      if($("#NumeroDeCalle").val() && $("#ID_Calle").find(":selected").val()) {
+        $("#mapa-sig").prop('disabled', false);
+      }
     });
 
     function calcularEdad() {
@@ -158,7 +160,7 @@ $Con->CloseConexion();
           let markerSelec = null;
           let zoom = 15;
           let positionFormas = null;
-          let icon = null;
+          let icon = new OpenLayers.Icon('./images/icons/location.png');
           let charCodeLetter = null;
           map.addLayer(mapnik);
           let markers = new OpenLayers.Layer.Markers( "Markers" );
@@ -196,8 +198,8 @@ $Con->CloseConexion();
 
                   trigger: function(e) {
                     let lonlat = map.getLonLatFromPixel(e.xy);
-                    lonlat1= new OpenLayers.LonLat(lonlat.lon, lonlat.lat)
-                    marker.display(false);
+                    lonlat1 = new OpenLayers.LonLat(lonlat.lon, lonlat.lat)
+                    if (marker) marker.display(false);
                     if (markerSelec) markerSelec.display(false);
                     markerSelec = new OpenLayers.Marker(lonlat1, icon.clone());
                     markers.addMarker(markerSelec);
@@ -214,7 +216,6 @@ $Con->CloseConexion();
 
           positionFormas = pos;
           if (objectJsonPersona.lon && objectJsonPersona.lat) {
-            icon = new OpenLayers.Icon('./images/icons/location.png');
             marker = new OpenLayers.Marker(positionFormas, icon.clone());
             markers.addMarker(marker);
           }
