@@ -118,156 +118,93 @@ $Con->CloseConexion();
 
     function init() {
       if (map === null) {
-        map = new OpenLayers.Map("basicMap", {
-           zoomDuration: 5, 
-           projection: 'EPSG:3857', 
-           controls: []
-         });
-         let position = null;
-         let pos = null;
-      //map = new OpenLayers.Map("basicMap");
-      //let mapnik = new OpenLayers.Layer.OSM();
-      /*let mapnik = new OpenLayers.Layer.OSM("TransportMap",
-            ["http://a.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png",
-            "http://b.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png",
-            "http://c.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png"]);*/
+          map = new OpenLayers.Map("basicMap", {
+            zoomDuration: 5, 
+            projection: 'EPSG:3857', 
+            controls: []
+          });
+          let position = null;
+          let pos = null;
+          let mapnik = new OpenLayers.Layer.OSM("OpenCycleMap",
+                ["http://a.tile.thunderforest.com/transport/${z}/${x}/${y}.png?apikey=d03b42dcdc084e7cbab176997685b1ce",
+                "http://b.tile.thunderforest.com/transport/${z}/${x}/${y}.png?apikey=d03b42dcdc084e7cbab176997685b1ce",
+                "http://c.tile.thunderforest.com/transport/${z}/${x}/${y}.png?apikey=d03b42dcdc084e7cbab176997685b1ce"]);
 
-      //L.tileLayer.provider('Stadia.StamenWatercolor').addTo(map);
-      /*
-      let Jawg_Terrain = L.tileLayer('https://tile.jawg.io/jawg-terrain/{z}/{x}/{y}{r}.png?access-token={accessToken}', {
-          attribution: '<a href="https://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-          minZoom: 0,
-          maxZoom: 22,
-          accessToken: '<your accessToken>'
-      }); */
-
-      let mapnik = new OpenLayers.Layer.OSM("OpenCycleMap",
-            ["http://a.tile.thunderforest.com/transport/${z}/${x}/${y}.png?apikey=d03b42dcdc084e7cbab176997685b1ce",
-            "http://b.tile.thunderforest.com/transport/${z}/${x}/${y}.png?apikey=d03b42dcdc084e7cbab176997685b1ce",
-            "http://c.tile.thunderforest.com/transport/${z}/${x}/${y}.png?apikey=d03b42dcdc084e7cbab176997685b1ce"]);
-
-      var fromProjection = new OpenLayers.Projection("EPSG:3857");
-      var toProjection = new OpenLayers.Projection("EPSG:4326");
-      if (objectJsonPersona.lon && objectJsonPersona.lat) {
-        pos = new OpenLayers.LonLat(objectJsonPersona.lon, objectJsonPersona.lat).transform(toProjection, fromProjection);
-      } else {
-        pos = new OpenLayers.LonLat(-64.11844, -32.17022).transform(toProjection, fromProjection);
-      }
-      position = pos;
-
-      let zoom = 15;
-      let positionFormas = null;
-      let icon = null;
-      let charCodeLetter = null;
-      map.addLayer(mapnik);
-      let markers = new OpenLayers.Layer.Markers( "Markers" );
-      map.addLayer(markers);
-      let popup = null;
-      let size = new OpenLayers.Size(8,8);
-      let offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-
-      map.addControl(new OpenLayers.Control.PanZoomBar());
-      map.addControl(new OpenLayers.Control.Navigation());
-      map.addControl(new OpenLayers.Control.ArgParser());
-
-      /*
-      let markerClick = function(evt) {
-          if (this.popup == null) {
-              this.popup = this.createPopup(this.closeBox);
-              map.addPopup(this.popup);
-              this.popup.show();
+          var fromProjection = new OpenLayers.Projection("EPSG:3857");
+          var toProjection = new OpenLayers.Projection("EPSG:4326");
+          if (objectJsonPersona.lon && objectJsonPersona.lat) {
+            pos = new OpenLayers.LonLat(objectJsonPersona.lon, objectJsonPersona.lat).transform(toProjection, fromProjection);
           } else {
-              this.popup.toggle();
+            pos = new OpenLayers.LonLat(-64.11844, -32.17022).transform(toProjection, fromProjection);
           }
-          OpenLayers.Event.stop(evt);
-      };
-    */
-    let getCoordenadaClick = function(e) {
-      console.log(e);
-      alert("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng)
-    };
+          position = pos;
+          let marker = null;
+          let markerSelec = null;
+          let zoom = 15;
+          let positionFormas = null;
+          let icon = null;
+          let charCodeLetter = null;
+          map.addLayer(mapnik);
+          let markers = new OpenLayers.Layer.Markers( "Markers" );
+          map.addLayer(markers);
+          let popup = null;
+          let size = new OpenLayers.Size(8,8);
+          let offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
 
-      /*map.addControl(new OpenLayers.Control.Attribution({
-          className: 'ol-attribution',
-          label: 'a',
-          collapsible: true,
-          collapsed: true,
-          target: document.getElementById('map-attribution'),
-          text: '<a href="https://www.w3schools.com">Visit W3Schools</a>'
-      }));*/
-      let markerClick = function(evt) {
-          if (this.popup == null) {
-              this.popup = this.createPopup(this.closeBox);
-              map.addPopup(this.popup);
-              this.popup.show();
-          } else {
-              this.popup.toggle();
+          map.addControl(new OpenLayers.Control.PanZoomBar());
+          map.addControl(new OpenLayers.Control.Navigation());
+          map.addControl(new OpenLayers.Control.ArgParser());
+
+          OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {               
+                  defaultHandlerOptions: {
+                    'single': true,
+                    'double': false,
+                    'pixelTolerance': 0,
+                    'stopSingle': false,
+                    'stopDouble': false
+                  },
+
+                  initialize: function(options) {
+                    this.handlerOptions = OpenLayers.Util.extend(
+                    {}, this.defaultHandlerOptions
+                    );
+                    OpenLayers.Control.prototype.initialize.apply(
+                    this, arguments
+                    );
+                    this.handler = new OpenLayers.Handler.Click(
+                    this, {
+                      'click': this.trigger
+                    }, this.handlerOptions
+                    );
+                  },
+
+                  trigger: function(e) {
+                    let lonlat = map.getLonLatFromPixel(e.xy);
+                    lonlat1= new OpenLayers.LonLat(lonlat.lon, lonlat.lat)
+                    marker.display(false);
+                    if (markerSelec) markerSelec.display(false);
+                    markerSelec = new OpenLayers.Marker(lonlat1, icon.clone());
+                    markers.addMarker(markerSelec);
+                    map.setCenter(lonlat1, zoom);
+                    $("#lat").val(lonlat.lat);
+                    $("#lon").val(lonlat.lon);
+                  }
+
+          });
+
+          let click = new OpenLayers.Control.Click();
+          map.addControl(click);
+          click.activate();
+
+          positionFormas = pos;
+          if (objectJsonPersona.lon && objectJsonPersona.lat) {
+            icon = new OpenLayers.Icon('./images/icons/location.png');
+            marker = new OpenLayers.Marker(positionFormas, icon.clone());
+            markers.addMarker(marker);
           }
-          OpenLayers.Event.stop(evt);
-      };
 
-      positionFormas = pos;
-      if (objectJsonPersona.lon && objectJsonPersona.lat) {
-        icon = new OpenLayers.Icon('./images/icons/location.png');
-        let marker = new OpenLayers.Marker(positionFormas, icon.clone());
-        markers.addMarker(marker);
-      }
-
-      let feature = new OpenLayers.Feature(markers, positionFormas);
-      //marker.events.register("mousedown", feature, getCoordenadaClick);
-      //marker.events.register("mousedown", null, getCoordenadaClick);
-      map.events.on({"click": getCoordenadaClick});
-
-      /*feature.closeBox = true;
-      feature.data.overflow = "hidden";
-      feature.data.popupContentHTML = ` <div style="display: inline-block; width: 80%; text-align: center;">
-                                          Detalles 
-                                        </div>
-                                        <button type="button" class="btn-close" aria-label="Close" style="border-radius: 25px; background-color: #2e353d; color: white; margin: 2% 2% 0 4%"  onclick="onClickOcultarPopup(this);"></button>
-                                        <div style='margin: 0 2% 1% 2%; height: 84%'>
-                                          <table style='text-align: center; color: black;  table-layout: fixed; width: 100%; height: 97%'>
-                                            <thead>
-                                              <tr style='color: black; background-color: white'>
-                                                <th style='background-color: white'></th>
-                                                <th style='background-color: white'></th>
-                                              </tr>
-                                            </thead>
-                                            <tbody>
-                                              <tr style='color: black;'>
-                                                <td>
-                                                  Persona
-                                                </td>
-                                                <td>
-                                                  <a href='javascript:window.open("view_modpersonas.php?ID=${elemento.id_persona}","Ventana${elemento.id_persona}" ,"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no")' target='_top' rel='noopener noreferrer'>
-                                                    ${elemento.persona}
-                                                </td>
-                                              </tr>
-                                              <tr style='color: black;'>
-                                                <td>Años</td>
-                                                <td>${elemento.edad}</td>
-                                              </tr>
-                                              <tr style='color: black;'>
-                                                <td>Meses</td>
-                                                <td>${elemento.meses}</td>
-                                              </tr>
-                                              <tr style='color: black;'>
-                                                <td>Fech. Nac.</td>
-                                                <td>${elemento.fechanac}</td>
-                                              </tr>
-                                            </tbody>
-                                          </table>
-                                        </div>`;
-      marker.feature = feature;*/
-      //marker.events.register("mousedown", feature, markerClick);
-      /*marker.events.register("mousedown", feature, function() {
-          window.open("view_modpersonas.php?ID=" + elemento.id_persona,"Ventana" + elemento.id_persona ,"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no")
-      });*/
-      //marker.events.register("mousedown", null, function() {
-      //window.open("view_modpersonas.php?ID=" + elemento.id_persona,"Ventana" + elemento.id_persona ,"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no")
-      //});
-      //marker.feature = feature;
-      //markers.addMarker(marker);
-        map.setCenter(position, zoom);
+          let feature = new OpenLayers.Feature(markers, positionFormas);
+          map.setCenter(position, zoom);
       }
     }
 
@@ -529,6 +466,8 @@ $Con->CloseConexion();
                         value="<?php echo $Persona->getCambio_Domicilio(); ?>"><?php echo $Persona->getCambio_Domicilio(); ?></textarea>
                     </div>
                   </div>
+                  <input type="hidden" id="lat" name="lat" value="">
+                  <input type="hidden" id="lon" name="lon" value="">
                   <div class="form-group row">
                     <div class="offset-md-2 col-md-10">
                       <button type="submit" class="btn btn-outline-success">Guardar</button>

@@ -43,17 +43,29 @@ if($Edad == 0){
 }
 /////////////////////////////////////////////////////////////////////////////////////////
 
+$georeferencia_point = null; 
+if (!empty($_REQUEST["lon"])) {
+	$lon_point = $_REQUEST["lon"];
+	$georeferencia_point = "POINT(" . $lon_point;
+
+	if (!empty($_REQUEST["lat"])){
+		$lat_point = $_REQUEST["lat"];
+		$georeferencia_point .= "," . $lat_point . ")";
+	} else {
+		$georeferencia_point = null;
+	}
+}
 
 $Nro_Carpeta = $_REQUEST["Nro_Carpeta"];
 $Obra_Social = $_REQUEST["Obra_Social"];
 $Domicilio = "";
-if(isset($_REQUEST["Calle"])){
+if (isset($_REQUEST["Calle"])) {
 	$calle = ucwords($_REQUEST["Calle"]);
 	$nombre_calle = new Calle(id_calle : $calle);
 	$Domicilio = $nombre_calle->get_calle_nombre();
 }
 
-if(isset($_REQUEST["NumeroDeCalle"])){
+if (isset($_REQUEST["NumeroDeCalle"])) {
   $nro_calle = $_REQUEST["NumeroDeCalle"];
   $Domicilio .= " ". $nro_calle;
 }
@@ -76,13 +88,6 @@ if(empty($ID_Escuela)){
 	$ID_Escuela = 2;
 }
 
-// PASANDO LOS DATOS NUMERICOS VACIOS A NULL
-/*if(empty($Edad)){
-	$Edad = null;
-}
-if(empty($Meses)){
-	$Meses = null;
-}*/
 if(empty($Nro_Carpeta)){
 	$Nro_Carpeta = null;
 }
@@ -133,7 +138,8 @@ $Persona = new Persona(
 					   xEstado : $Estado,
 					   xTrabajo : $Trabajo,
 					   xCalle : $calle,
-					   xNro : $nro_calle
+					   xNro : $nro_calle,
+					   xGeoreferencia: $georeferencia_point
 );
 $Fecha = date("Y-m-d");
 $ID_TipoAccion = 2;
@@ -186,6 +192,9 @@ try {
 		$Persona_Viejo->setNro($Persona->getNro());
 		$Persona_Viejo->setCalle($Persona->getId_Calle());
 		$Persona_Viejo->setDomicilio($Persona->getDomicilio());
+		if ($georeferencia_point) {
+			$Persona_Viejo->setGeoreferencia(xGeoreferencia: $Persona->getGeoreferencia());
+		}
 		$Persona_Viejo->update();
 
 		$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
