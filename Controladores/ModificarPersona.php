@@ -63,7 +63,7 @@ $Domicilio = "";
 if (isset($_REQUEST["Calle"])) {
 	$calle = ucwords($_REQUEST["Calle"]);
 	$nombre_calle = new Calle(id_calle : $calle);
-	$Domicilio = $nombre_calle->get_calle_nombre();
+	$Domicilio = $nombre_calle->get_calle_open();
 }
 
 if (isset($_REQUEST["NumeroDeCalle"])) {
@@ -197,7 +197,7 @@ try {
 		$Persona_Viejo->setNro($Persona->getNro());
 		$Persona_Viejo->setCalle($Persona->getId_Calle());
 		$Persona_Viejo->setDomicilio($Persona->getDomicilio());
-		if ($georeferencia_point) {
+		if (!$georeferencia_point) {
 			$Persona_Viejo->setGeoreferencia(xGeoreferencia: $Persona->getGeoreferencia());
 		}
 		$Persona_Viejo->update();
