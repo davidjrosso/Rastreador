@@ -171,7 +171,6 @@ try {
 		}
 
 		$Persona_Viejo = new Persona($ID_Persona);
-		$Detalles = "El usuario con ID: $ID_Usuario ha modificado una Persona. Datos: Dato Anterior: {$Persona_Viejo->getApellido()} , Dato Nuevo: {$Persona->getApellido()} - Dato Anterior: {$Persona_Viejo->getNombre()} , Dato Nuevo: {$Persona->getNombre()} - Dato Anterior: {$Persona_Viejo->getDNI()}, Dato Nuevo: {$Persona->getDNI()} - Dato Anterior: {$Persona_Viejo->getNro_Legajo()}, Dato Nuevo: {$Persona->getNro_Legajo()} - Dato Anterior: {$Persona_Viejo->getEdad()}, Dato Nuevo: {$Persona->getEdad()} - Dato Anterior: {$Persona_Viejo->getFecha_Nacimiento()}, Dato Nuevo: {$Persona->getFecha_Nacimiento()} - Dato Anterior: {$Persona_Viejo->getTelefono()}, Dato Nuevo: {$Persona->getTelefono()} - Dato Anterior: {$Persona_Viejo->getMail()}, Dato Nuevo: {$Persona->getMail()} - Dato Anterior: {$Persona_Viejo->getNro_Carpeta()}, Dato Nuevo: {$Persona->getNro_Carpeta()} - Dato Anterior: {$Persona_Viejo->getObra_Social()}, Dato Nuevo: {$Persona->getObra_Social()} - Dato Anterior: {$Persona_Viejo->getSeccion()}, Dato Nuevo: {$Persona->getSeccion()} - Dato Anterior: {$Persona_Viejo->getManzana()}, Dato Nuevo: {$Persona->getManzana()} - Dato Anterior: {$Persona_Viejo->getLote()}, Dato Nuevo: {$Persona->getLote()} - Dato Anteior: {$Persona_Viejo->getFamilia()}, Dato Nuevo: {$Persona->getFamilia()} - Dato Anterior: {$Persona_Viejo->getObservaciones()}, Dato Nuevo: {$Persona->getObservaciones()} - Dato Anterior: {$Persona_Viejo->getCambio_Domicilio()}, Dato Nuevo: {$Persona->getCambio_Domicilio()} - Dato Anterior: {$Persona_Viejo->getTelefono()}, Dato Nuevo: {$Persona->getTelefono()} - Dato Anterior: {$Persona_Viejo->getMail()}, Dato Nuevo: {$Persona->getMail()} - Dato Anterior: {$Persona_Viejo->getID_Escuela()}, Dato Nuevo: {$Persona->getID_Escuela()} - Dato Anterior: {$Persona_Viejo->getMeses()}, Dato Nuevo: {$Persona->getMeses()}";
 		$Persona_Viejo->setApellido($Persona->getApellido());
 		$Persona_Viejo->setBarrio($Persona->getId_Barrio());
 		$Persona_Viejo->setCamio_Domicilio($Persona->getCambio_Domicilio());
@@ -201,7 +200,7 @@ try {
 			$Persona_Viejo->setGeoreferencia(xGeoreferencia: $Persona->getGeoreferencia());
 		}
 		$Persona_Viejo->update();
-
+		$Detalles = "El usuario con ID: $ID_Usuario ha modificado una Persona. " . json_encode($Persona_Viejo);
 		$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
 
 		if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
