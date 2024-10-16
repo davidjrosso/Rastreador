@@ -1,6 +1,6 @@
 <?php
 
-class Persona{
+class Persona implements JsonSerializable {
 	//DECLARACION DE VARIABLES
 	private $Apellido;
 	private $Barrio;
@@ -486,6 +486,37 @@ public static function is_registered($documento)
 	$is_multiple = (mysqli_num_rows($Ret) > 1);
 	$Con->CloseConexion();
 	return $is_multiple;
+}
+
+public function jsonSerialize() {
+	return [
+	'ID_Persona' => $this->ID_Persona,
+	'Nombre' => $this->Nombre,
+	'DNI' => $this->DNI,
+	'Nro_Legajo' => $this->Nro_Legajo,
+	'Edad' => $this->Edad,
+	'Meses' => $this->Meses,
+	'Fecha_Nacimiento' => $this->Fecha_Nacimiento,
+	'Nro_Carpeta' => $this->Nro_Carpeta,
+	'Obra_Social' => $this->Obra_Social,
+	'Domicilio' => $this->Domicilio,
+	'Barrio' => $this->Barrio,
+	'Localidad' => $this->Localidad,
+	'Circunscripcion' => $this->Circunscripcion,
+	'Seccion' => $this->Seccion,
+	'Manzana' => $this->Manzana,
+	'Lote' => $this->Lote,
+	'Familia' => $this->Familia,
+	'Observaciones' => $this->Observaciones,
+	'Cambio_Domicilio' => $this->Cambio_Domicilio,
+	'Telefono' => $this->Telefono,
+	'Mail' => $this->Mail,
+	'ID_Escuela' => $this->ID_Escuela,	
+	'Estado' => $this->Estado,
+	'Trabajo' => $this->Trabajo,
+	'Georeferencia' => $this->Georeferencia,
+	'Nro' => $this->Nro,
+	'Calle' => $this->Calle];
 }
 
 public function update_geo()
