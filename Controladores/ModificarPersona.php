@@ -202,7 +202,7 @@ try {
 		}
 		$Persona_Viejo->update();
 
-		$Detalles = "El usuario con ID: $ID_Usuario ha modificado una Persona. Datos modificados : " . mysqli_real_escape_string($Con->Conexion, json_encode($Persona_Viejo));
+		$Detalles = "El usuario con ID: $ID_Usuario ha modificado una Persona. Datos modificados : ";
 		$Detalles .= mysqli_real_escape_string($Con->Conexion, json_encode($Persona_Viejo));
 		$Detalles .= " Datos anteriores : " .  mysqli_real_escape_string($Con->Conexion, json_encode($Persona));
 
