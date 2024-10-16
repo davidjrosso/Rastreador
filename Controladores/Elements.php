@@ -1532,11 +1532,14 @@ public function getMenuSeguridadUsuario($ID){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' name = 'ID_Barrio' id = 'ID_Barrio'>";
+    if (!$xID_Barrio){
+      $Select .= "<option value = '0' disabled = 'disabled' selected = 'true'>- Seleccione un Barrio -</option>";
+    }
     $Consulta = mysqli_query($Con3->Conexion,"select * from barrios where estado = 1 order by Barrio")or die("Problemas al mostrar Barrios");
     while ($Ret = mysqli_fetch_array($Consulta)) {
-      if($Ret['ID_Barrio'] == $xID_Barrio){
+      if ($Ret['ID_Barrio'] == $xID_Barrio) {
         $Select .= "<option value = '".$Ret['ID_Barrio']."' selected>".$Ret['Barrio']."</option>";
-      }else{
+      } else {
         $Select .= "<option value = '".$Ret['ID_Barrio']."'>".$Ret['Barrio']."</option>";
       }      
     }
@@ -1890,7 +1893,7 @@ public function getMenuSeguridadUsuario($ID){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Barrio[]'>";
-    $Select .= "<option value = '0'>-Todos-</option>";
+    $Select .= "<option value ='0' selected ='true' disable='disable'>-Todos-</option>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from barrios where estado = 1 order by Barrio")or die("Problemas al mostrar Barrios");
     while ($Ret = mysqli_fetch_array($Consulta)) {
       $Select .= "<option value = '".$Ret['ID_Barrio']."'>".$Ret['Barrio']."</option>";
