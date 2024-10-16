@@ -146,6 +146,7 @@ $Persona = new Persona(
 					   xNro : $nro_calle,
 					   xGeoreferencia: $georeferencia_point
 );
+
 $Fecha = date("Y-m-d");
 $ID_TipoAccion = 2;
 try {
@@ -200,7 +201,11 @@ try {
 			$Persona_Viejo->setGeoreferencia(xGeoreferencia: $Persona->getGeoreferencia());
 		}
 		$Persona_Viejo->update();
-		$Detalles = "El usuario con ID: $ID_Usuario ha modificado una Persona. " . mysqli_real_escape_string($Con->Conexion, json_encode($Persona_Viejo));
+
+		$Detalles = "El usuario con ID: $ID_Usuario ha modificado una Persona. Datos modificados : " . mysqli_real_escape_string($Con->Conexion, json_encode($Persona_Viejo));
+		$Detalles .= mysqli_real_escape_string($Con->Conexion, json_encode($Persona_Viejo));
+		$Detalles .= " Datos anteriores : " .  mysqli_real_escape_string($Con->Conexion, json_encode($Persona));
+
 		$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
 
 		if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
