@@ -200,7 +200,7 @@ try {
 			$Persona_Viejo->setGeoreferencia(xGeoreferencia: $Persona->getGeoreferencia());
 		}
 		$Persona_Viejo->update();
-		$Detalles = "El usuario con ID: $ID_Usuario ha modificado una Persona. " . json_encode($Persona_Viejo);
+		$Detalles = "El usuario con ID: $ID_Usuario ha modificado una Persona. " . mysqli_real_escape_string($Con->Conexion, json_encode($Persona_Viejo));
 		$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
 
 		if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
