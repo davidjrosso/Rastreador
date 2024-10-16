@@ -205,6 +205,8 @@ try {
 
 		if (!$georeferencia_point) {
 			$Persona_Viejo->setGeoreferencia(xGeoreferencia: $Persona->getGeoreferencia());
+		} else {
+			$Persona_Viejo->setGeoreferencia(xGeoreferencia: $georeferencia_point);
 		}
 		$Persona_Viejo->update();
 

@@ -36,30 +36,53 @@ public function setID_TipoAccion($xID_TipoAccion){
 
 // METODOS GET
 public function getID_Accion(){
-	return $ID_Accion;
+	return $this->ID_Accion;
 }
 
 public function getaccountid(){
-	return $accountid;
+	return $this->accountid;
 }
 
 public function getFecha(){
-	return $Fecha;
+	return $this->Fecha;
 }
 
 public function getip(){
-	return $ip;
+	return $this->ip;
 }
 
 public function getDetalles(){
-	return $Detalles;
+	return $this->Detalles;
 }
 
 public function getID_TipoAccion(){
-	return $ID_TipoAccion;
+	return $this->ID_TipoAccion;
 }
 
-public function __construct($xID_Accion, $xaccountid, $xFecha, $xip, $xDetalles, $xID_TipoAccion){
+public function save() {
+	$con = new Conexion();
+	$con->OpenConexion();
+	$consulta_accion = "insert into Acciones(accountid, 
+											Fecha, 
+											Detalles, 
+											ID_TipoAccion) 
+								 values(" . $this->accountid . "," 
+								 		  . $this->Fecha . "," 
+										  . mysqli_real_escape_string($con->Conexion, $this->Detalles) . ",";
+	
+	if(!$RetAccion = mysqli_query($con->Conexion,$consulta_accion)){
+		throw new Exception("Error al intentar registrar Accion. Consulta: ". $consulta_accion, 3);
+	}
+}
+
+public function __construct(
+							$xID_Accion = null,
+							$xaccountid = null,
+							$xFecha = null,
+							$xip = null,
+							$xDetalles = null,
+							$xID_TipoAccion = null
+							){
 	$this->ID_Accion = $xID_Accion;
 	$this->accountid = $xaccountid;
 	$this->Fecha = $xFecha;
@@ -71,5 +94,3 @@ public function __construct($xID_Accion, $xaccountid, $xFecha, $xip, $xDetalles,
 
 
 }
-
-?>
