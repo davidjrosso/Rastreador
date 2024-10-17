@@ -79,7 +79,7 @@ public function setDomicilio($xDomicilio = null){
 	if (!is_null($id_calle)) {
 		$nombre_calle = $this->getNombre_Calle();
 		$domicilio = "$nombre_calle $numero_calle";
-	} else if ($domicilio){
+	} else if ($domicilio) {
 		$con = new Conexion();
 		$con->OpenConexion();
 		$consulta = "select calle_open
@@ -516,7 +516,8 @@ public function jsonSerialize() {
 	'Trabajo' => $this->Trabajo,
 	'Georeferencia' => $this->Georeferencia,
 	'Nro' => $this->Nro,
-	'Calle' => $this->Calle];
+	'Calle' => $this->Calle
+	];
 }
 
 public function update_geo()
