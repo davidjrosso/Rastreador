@@ -161,6 +161,7 @@ $Con->CloseConexion();
         let icon = null;
         let charCodeLetter = null;
         let posicionAnterior = null;
+        let nroLote = 1;
         map.addLayer(mapnik);
         var markers = new OpenLayers.Layer.Markers( "Markers" );
         map.addLayer(markers);
@@ -195,9 +196,11 @@ $Con->CloseConexion();
           if (elemento.lista_formas_categorias) {
             if (indice >= 1) {            
               if (posicionAnterior.lon === pos.lon  && posicionAnterior.lat === pos.lat) {
-                pos = pos.add(-8.3, 4.5);
+                pos = pos.add((-8.3)*nroLote, (4.5)*nroLote);
+                nroLote++;
               } else {
                 posicionAnterior = pos;
+                nroLote = 1;
               }
             } else {
               posicionAnterior = pos;
