@@ -84,6 +84,7 @@ try {
 		$Persona->setDomicilio();
 		$Persona->update_calle();
 		$Persona->update_nro();
+		$lista_personas[]["persona"] = mysqli_real_escape_string($Con->Conexion, json_encode($Persona));;
 		$Persona->update_geo();
 		$lista_personas[]["georeferencia"] = is_null($Persona->getGeoreferencia());
 	}
