@@ -115,7 +115,7 @@ public function setDomicilio($xDomicilio = null){
 		$response = curl_exec($ch);
 		$arr_obj_json = json_decode($response);
 		curl_close($ch);
-		$detalles = json_encode($url . " " . $response);
+		$detalles = $url . " " . json_encode($arr_obj_json->results[0]);
 		$accion = new Accion(
 			xFecha : $Fecha,
 			xDetalles : $detalles,
@@ -135,7 +135,7 @@ public function setDomicilio($xDomicilio = null){
 				$response = curl_exec($ch);
 				$arr_obj_json = json_decode($response);
 				curl_close($ch);
-				$detalles = json_encode($url . " " . $response);
+				$detalles = $url . " " . json_encode( $arr_obj_json[0]);
 				$accion = new Accion(
 					xFecha : $Fecha,
 					xDetalles : $detalles,
@@ -161,7 +161,7 @@ public function setDomicilio($xDomicilio = null){
 			$response = curl_exec($ch);
 			$arr_obj_json = json_decode($response);
 			curl_close($ch);
-			$detalles = json_encode($url . " " . $response);
+			$detalles = $url . " " . json_encode( $arr_obj_json[0]);
 			$accion = new Accion(
 				xFecha : $Fecha,
 				xDetalles : $detalles,
