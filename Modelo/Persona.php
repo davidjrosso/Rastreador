@@ -1,5 +1,5 @@
 <?php
-
+require('Accion.php');
 class Persona implements JsonSerializable {
 	//DECLARACION DE VARIABLES
 	private $Apellido;
@@ -76,12 +76,12 @@ public function setDomicilio($xDomicilio = null){
 	$numero_calle = (!$xDomicilio) ? trim($this->getNro()) : null;
 	$domicilio = ($xDomicilio) ? $xDomicilio : null;
 	$nombre_calle = null;
+	$con = new Conexion();
+	$con->OpenConexion();
 	if (!is_null($id_calle)) {
 		$nombre_calle = $this->getNombre_Calle();
 		$domicilio = "$nombre_calle $numero_calle";
 	} else if ($domicilio) {
-		$con = new Conexion();
-		$con->OpenConexion();
 		$consulta = "select calle_open
 					 from calle
 					 where lower(calle_nombre) like CONCAT(
@@ -104,16 +104,24 @@ public function setDomicilio($xDomicilio = null){
 		$ret = mysqli_fetch_assoc($query_object);
 		$nombre_calle = $ret["calle_open"];
 		$domicilio = "$nombre_calle " . $this->getNro();
-		$con->CloseConexion();
 	}
 
+	$Fecha = date("Y-m-d");
 	if ($domicilio) {
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, "https://maps.googleapis.com/maps/api/geocode/json?address=" . str_replace(" ", "+", trim($domicilio)) . "+Rio+Tercero,Cordoba&key=AIzaSyAdiF1F7NoZbmAzBWfV6rxjJrGsr1Yvb1g");
+		$url = "https://maps.googleapis.com/maps/api/geocode/json?address=" . str_replace(" ", "+", trim($domicilio)) . "+Rio+Tercero,Cordoba&key=AIzaSyAdiF1F7NoZbmAzBWfV6rxjJrGsr1Yvb1g";
+		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		$response = curl_exec($ch);
 		$arr_obj_json = json_decode($response);
 		curl_close($ch);
+		$detalles = json_encode($url . " " . $response);
+		$accion = new Accion(
+			xFecha : $Fecha,
+			xDetalles : $detalles,
+			xID_TipoAccion : 1
+		);
+		$accion->save();
 		if ($arr_obj_json && $arr_obj_json->results) {
 			if (!is_null($arr_obj_json->results[0]->geometry->location->lat) 
 						 || !is_null($arr_obj_json->results[0]->geometry->location->lng)) {
@@ -121,11 +129,19 @@ public function setDomicilio($xDomicilio = null){
 				$this->Georeferencia = $point;
 			} else {
 				$ch = curl_init();
-				curl_setopt($ch, CURLOPT_URL,"https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", trim($domicilio)) . "&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
+				$url = "https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", trim($domicilio)) . "&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com";
+				curl_setopt($ch, CURLOPT_URL,$url);
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 				$response = curl_exec($ch);
 				$arr_obj_json = json_decode($response);
 				curl_close($ch);
+				$detalles = json_encode($url . " " . $response);
+				$accion = new Accion(
+					xFecha : $Fecha,
+					xDetalles : $detalles,
+					xID_TipoAccion : 1
+				);
+				$accion->save();
 				if ($arr_obj_json) {
 					if (!is_null($arr_obj_json[0]->lat) || !is_null($arr_obj_json[0]->lon)) {
 						$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
@@ -139,11 +155,19 @@ public function setDomicilio($xDomicilio = null){
 			}
 		} else {
 			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL,"https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", trim($domicilio)) . "&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
+			$url = "https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", trim($domicilio)) . "&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com";
+			curl_setopt($ch, CURLOPT_URL, $url);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			$response = curl_exec($ch);
 			$arr_obj_json = json_decode($response);
 			curl_close($ch);
+			$detalles = json_encode($url . " " . $response);
+			$accion = new Accion(
+				xFecha : $Fecha,
+				xDetalles : $detalles,
+				xID_TipoAccion : 1
+			);
+			$accion->save();
 			if ($arr_obj_json) {
 				if (!is_null($arr_obj_json[0]->lat) || !is_null($arr_obj_json[0]->lon)) {
 					$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
@@ -157,6 +181,7 @@ public function setDomicilio($xDomicilio = null){
 		}
 	}
 	$this->Domicilio = $domicilio;
+	$con->CloseConexion();
 }
 
 
