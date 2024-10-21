@@ -125,9 +125,15 @@ public function setDomicilio($xDomicilio = null){
 			xID_TipoAccion : 1
 		);
 		$accion->save();
+
+		$center_rio_tercero_lat = -32.194998;
+		$center_rio_tercero_lon = -64.1684546;
 		if ($arr_obj_json && $arr_obj_json->results) {
-			if (!is_null($arr_obj_json->results[0]->geometry->location->lat) 
-						 || !is_null($arr_obj_json->results[0]->geometry->location->lng)) {
+			if ((!is_null($arr_obj_json->results[0]->geometry->location->lat) 
+				|| !is_null($arr_obj_json->results[0]->geometry->location->lng))
+				&& ($center_rio_tercero_lat == $arr_obj_json->results[0]->geometry->location->lat)
+				&& ($center_rio_tercero_lon == $arr_obj_json->results[0]->geometry->location->lng)
+			) {
 				$point = "POINT(" . $arr_obj_json->results[0]->geometry->location->lat . ", " . $arr_obj_json->results[0]->geometry->location->lng . ")";
 				$this->Georeferencia = $point;
 			} else {
