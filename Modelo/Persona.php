@@ -81,6 +81,7 @@ public function setDomicilio($xDomicilio = null){
 	if (!is_null($id_calle)) {
 		$nombre_calle = $this->getNombre_Calle();
 		$domicilio = "$nombre_calle $numero_calle";
+		$domicilio = str_replace(array('á','é','í','ó','ú','ñ'), array('a','e','i','o','u','n'), $domicilio);
 	} else if ($domicilio) {
 		$consulta = "select calle_open
 					 from calle
@@ -104,6 +105,7 @@ public function setDomicilio($xDomicilio = null){
 		$ret = mysqli_fetch_assoc($query_object);
 		$nombre_calle = $ret["calle_open"];
 		$domicilio = "$nombre_calle " . $this->getNro();
+		$domicilio = str_replace(array('á','é','í','ó','ú','ñ'), array('a','e','i','o','u','n'), $domicilio);
 	}
 
 	$Fecha = date("Y-m-d");
@@ -115,7 +117,8 @@ public function setDomicilio($xDomicilio = null){
 		$response = curl_exec($ch);
 		$arr_obj_json = json_decode($response);
 		curl_close($ch);
-		$detalles = $url . " " . json_encode($arr_obj_json->results[0]);
+		$body_request = (($arr_obj_json) ? " " . json_encode($arr_obj_json->results[0]) : "");
+		$detalles = $url . $body_request;
 		$accion = new Accion(
 			xFecha : $Fecha,
 			xDetalles : $detalles,
@@ -135,7 +138,8 @@ public function setDomicilio($xDomicilio = null){
 				$response = curl_exec($ch);
 				$arr_obj_json = json_decode($response);
 				curl_close($ch);
-				$detalles = $url . " " . json_encode( $arr_obj_json[0]);
+				$body_request = (($arr_obj_json[0]) ? " " . json_encode($arr_obj_json[0]) : "");
+				$detalles = $url . $body_request;
 				$accion = new Accion(
 					xFecha : $Fecha,
 					xDetalles : $detalles,
@@ -161,7 +165,8 @@ public function setDomicilio($xDomicilio = null){
 			$response = curl_exec($ch);
 			$arr_obj_json = json_decode($response);
 			curl_close($ch);
-			$detalles = $url . " " . json_encode( $arr_obj_json[0]);
+			$body_request = (($arr_obj_json[0]) ? " " . json_encode($arr_obj_json[0]) : "");
+			$detalles = $url . $body_request;
 			$accion = new Accion(
 				xFecha : $Fecha,
 				xDetalles : $detalles,
