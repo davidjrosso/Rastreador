@@ -383,7 +383,7 @@ $Con->CloseConexion();
                   </div>
                   <div class="form-group row">
                     <label for="inputPassword" class="col-md-2 col-form-label LblForm">Domicilio: </label>
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                       <?php
                       if (!empty($Persona->getId_Calle())) {
                         echo $Element->CBCallesNombre($Persona->getId_Calle());
@@ -403,11 +403,11 @@ $Con->CloseConexion();
                           echo "value =" . (($Persona->getNroCalle()) ? $Persona->getNroCalle() : "");
                         } ?>>
                     </div>
-                    <!--div class="col-md-2">
+                    <div class="col-md-2">
                       <button id="mapa-sig" type="button" class="btn btn-secondary" disabled data-toggle="modal"
                         style="background-color: #ffc6b1; color: black; border-color: white; " data-target="#map-modal">S.
                         I. G.</button>
-                    </div-->
+                    </div>
                   </div>
                   <div class="form-group row">
                     <label for="inputPassword" class="col-md-2 col-form-label LblForm">Manzana: </label>
