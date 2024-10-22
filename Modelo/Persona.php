@@ -131,8 +131,8 @@ public function setDomicilio($xDomicilio = null){
 		if ($arr_obj_json && $arr_obj_json->results) {
 			if ((!is_null($arr_obj_json->results[0]->geometry->location->lat) 
 				|| !is_null($arr_obj_json->results[0]->geometry->location->lng))
-				&& ($center_rio_tercero_lat == $arr_obj_json->results[0]->geometry->location->lat)
-				&& ($center_rio_tercero_lon == $arr_obj_json->results[0]->geometry->location->lng)
+				&& ($center_rio_tercero_lat != $arr_obj_json->results[0]->geometry->location->lat)
+				&& ($center_rio_tercero_lon != $arr_obj_json->results[0]->geometry->location->lng)
 			) {
 				$point = "POINT(" . $arr_obj_json->results[0]->geometry->location->lat . ", " . $arr_obj_json->results[0]->geometry->location->lng . ")";
 				$this->Georeferencia = $point;
