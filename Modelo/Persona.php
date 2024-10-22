@@ -145,6 +145,7 @@ public function setDomicilio($xDomicilio = null){
 				$arr_obj_json = json_decode($response);
 				curl_close($ch);
 				$body_request = (($arr_obj_json[0]) ? " " . json_encode($arr_obj_json[0]) : "");
+				$body_request = str_replace("'", "", $body_request);
 				$detalles = $url . $body_request;
 				$accion = new Accion(
 					xFecha : $Fecha,
@@ -172,6 +173,7 @@ public function setDomicilio($xDomicilio = null){
 			$arr_obj_json = json_decode($response);
 			curl_close($ch);
 			$body_request = (($arr_obj_json[0]) ? " " . json_encode($arr_obj_json[0]) : "");
+			$body_request = str_replace("'", "", $body_request);
 			$detalles = $url . $body_request;
 			$accion = new Accion(
 				xFecha : $Fecha,
