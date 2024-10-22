@@ -239,7 +239,7 @@ try{
             }
         }
         $row_head .= "</tr>";
-        for ($i = 1; $i <= $count; $i++) {
+        for ($i = 0; $i < $count; $i++) {
             $row .= "<tr>";
             for ($h = 0; $h < count($header_mov_general); $h++) {
                 if (isset($array_filas[$i][$header_mov_general[$h]])) {
