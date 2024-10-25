@@ -44,13 +44,13 @@ if($Edad == 0){
 /////////////////////////////////////////////////////////////////////////////////////////
 
 $georeferencia_point = null; 
-if (!empty($_REQUEST["lon"])) {
-	$lon_point = $_REQUEST["lon"];
-	$georeferencia_point = "POINT(" . $lon_point;
+if (!empty($_REQUEST["lat"])) {
+	$lat_point = $_REQUEST["lat"];
+	$georeferencia_point = "POINT(" . $lat_point;
 
-	if (!empty($_REQUEST["lat"])){
-		$lat_point = $_REQUEST["lat"];
-		$georeferencia_point .= "," . $lat_point . ")";
+	if (!empty($_REQUEST["lon"])){
+		$lon_point = $_REQUEST["lon"];
+		$georeferencia_point .= "," . $lon_point . ")";
 	} else {
 		$georeferencia_point = null;
 	}

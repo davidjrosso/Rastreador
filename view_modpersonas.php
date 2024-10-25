@@ -163,7 +163,7 @@ $Con->CloseConexion();
           let icon = new OpenLayers.Icon('./images/icons/location.png');
           let charCodeLetter = null;
           map.addLayer(mapnik);
-          let markers = new OpenLayers.Layer.Markers( "Markers" );
+          let markers = new OpenLayers.Layer.Markers("Markers");
           map.addLayer(markers);
           let popup = null;
           let size = new OpenLayers.Size(8,8);
@@ -198,12 +198,12 @@ $Con->CloseConexion();
 
                   trigger: function(e) {
                     let lonlat = map.getLonLatFromPixel(e.xy);
-                    lonlat1 = new OpenLayers.LonLat(lonlat.lon, lonlat.lat)
                     if (marker) marker.display(false);
                     if (markerSelec) markerSelec.display(false);
-                    markerSelec = new OpenLayers.Marker(lonlat1, icon.clone());
+                    markerSelec = new OpenLayers.Marker(lonlat, icon.clone());
                     markers.addMarker(markerSelec);
-                    map.setCenter(lonlat1, map.getZoom());
+                    map.setCenter(lonlat, map.getZoom());
+                    lonlat = lonlat.transform(fromProjection, toProjection);
                     $("#lat").val(lonlat.lat);
                     $("#lon").val(lonlat.lon);
                   }
