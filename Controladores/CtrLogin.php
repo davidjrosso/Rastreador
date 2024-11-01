@@ -1,103 +1,47 @@
 <?php  
 session_start();
-
 require_once("Conexion.php");
+require_once("../Modelo/Persona.php");
+require_once("../Modelo/Account.php");
 
-$Con = new Conexion();
-$Con->OpenConexion();
-$ConsultarDatosPersonas = "select * 
+$con = new Conexion();
+$con->OpenConexion();
+$consultar_datos_personas = "select * 
 						   from persona 
 						   where fecha_nac is not null
 						   	 and fecha_nac <> 'null'
 						   	 and estado = 1";
-$MensajeErrorDatosPersonas = "No se pudieron consultar los datos de las personas registradas en el sistema";
-$EjecutarConsultarDatosPersonas = mysqli_query($Con->Conexion,$ConsultarDatosPersonas) or die($MensajeErrorDatosPersonas);
+$mensaje_error_datos_personas = "No se pudieron consultar los datos de las personas registradas en el sistema";
+$ejecutar_consultar_datos_personas = mysqli_query(
+										$con->Conexion,
+										$consultar_datos_personas
+								  ) or die($mensaje_error_datos_personas);
 
-$Fecha_Nacimiento = 'null';
-while($RetDatosPersonas = mysqli_fetch_assoc($EjecutarConsultarDatosPersonas)){
-	$ID = $RetDatosPersonas['id_persona'];
-	$Edad = (isset($RetDatosPersonas['edad'])) ? $RetDatosPersonas['edad'] : null;
-	$Fecha_Nacimiento = $RetDatosPersonas['fecha_nac'];
-	/*if($Fecha_Nacimiento != 'null' && $Fecha_Nacimiento != ''){
-		list($ano,$mes,$dia) = explode("-",$Fecha_Nacimiento);
-		$ano_diferencia = date("Y") - $ano;
-		$mes_diferencia = date("m") - $mes;
-		$dia_diferencia = date("d") - $dia;
-		if($dia_diferencia < 0 || $mes_diferencia > 0){
-			$ano_diferencia--;
-		}
-		$Edad = $ano_diferencia;
-	}
-
-	if($Fecha_Nacimiento != 'null'){
-		$Fecha_Actual = new DateTime();
-		$Fecha_Nacimiento_Registrada = new DateTime($Fecha_Nacimiento);
-		$Diferencia = $Fecha_Nacimiento_Registrada->diff($Fecha_Actual);
-		//$Meses = ($Diferencia->y * 12) + $Diferencia->m + 1;
-		$Meses = $Diferencia->m;
-	}*/
-	if ($Fecha_Nacimiento != 'null' && !empty($Fecha_Nacimiento)) {
-		list($ano,$mes,$dia) = explode("-", $Fecha_Nacimiento);
-		$ano_diferencia = date("Y") - $ano;
-		$mes_diferencia = date("m") - $mes;
-		$dia_diferencia = date("d") - $dia;
-		if ($ano_diferencia > 0) {
-			if ($mes_diferencia == 0) {
-				if ($dia_diferencia < 0) {
-					$ano_diferencia--;
-				}
-			} elseif ($mes_diferencia < 0) {
-				$ano_diferencia--;
-			}
-		} else {
-			if ($mes_diferencia > 0) {
-				if ($dia_diferencia < 0) {
-					$mes_diferencia--;
-				}
-			}
-		}
-		$Edad = $ano_diferencia;
-		$Meses = $mes_diferencia;
-	}
-
-	//PROBAR SI ESTO DA LA DIFERENCIA ENTRE MESES NOMAS O TAMBIEN TOMA LOS AÑOS COMO MESES EN ESE CASO TOMAR LA CANTIDAD DE AÑOS Y MULTIPLICARLO POR 12 Y A ESO RESTARLE AL RESULTADO DEL TOTAL DE MESES DE DIFERENCIA.
-	if ($Fecha_Nacimiento != 'null' || !is_null($Fecha_Nacimiento)) {
-		$Fecha_Actual = new DateTime();
-		$Fecha_Nacimiento_Registrada = new DateTime($Fecha_Nacimiento);
-		$Diferencia = $Fecha_Nacimiento_Registrada->diff($Fecha_Actual);
-		$Meses = $Diferencia->m;
-		$Edad = $Diferencia->y;
-	}
-
-	$ActualizarDatosPersonas = "update persona set edad = $Edad, meses = $Meses where id_persona = $ID";
-	$MensajeErrorActualizar = "No se pudieron actualizar los datos de las personas registradas";
-	mysqli_query($Con->Conexion,$ActualizarDatosPersonas) or die($MensajeErrorActualizar);
+while ($RetDatosPersonas = mysqli_fetch_assoc($ejecutar_consultar_datos_personas)) {
+	$persona = new Persona(ID_Persona: $RetDatosPersonas['id_persona']);
+	$persona->update_edad_meses();
 }
 
-$Con->CloseConexion();
+$con->CloseConexion();
 
-$UserName = $_REQUEST["UserName"];
-$UserPass = md5($_REQUEST["UserPass"]);
-
-if(isset($_SESSION["Usuario"])){
+$user_name = $_REQUEST["UserName"];
+$user_pass = md5($_REQUEST["UserPass"]);
+if (isset($_SESSION["Usuario"])) {
 	header("Location: ../view_inicio.php");
-}else{
-	$Con = new Conexion();
-	$Con->OpenConexion();
- 	$Consulta = "select * 
-				 from accounts 
-				 where username = '$UserName' 
-				 and password = '$UserPass'
-				 and estado = 1";
- 	$RS = mysqli_query($Con->Conexion,$Consulta)or die("Problemas al tomar Sesion. Nombre de usuario o password incorrectos");
- 	$Cont = mysqli_num_rows($RS);
- 	if($Cont > 0){
- 		$Ret = mysqli_fetch_assoc($RS);
-		$_SESSION["Usuario"] = $Ret["accountid"];		
-		header("Location: ../view_inicio.php");
- 	}else{
- 		$MensajeError = "Nombre de Usuario o Password incorrectos";
- 		header("Location: ../index.php?MensajeError=".$MensajeError);
+} else {
+	$control = Account::control_user_password($user_name, $user_pass);
+ 	if ($control > 0) {
+		$user = new Account(account_id: $control);
+		if ($user->is_active()) {
+			$_SESSION["Usuario"] = $control;
+			header("Location: ../view_inicio.php");			
+		} else {
+			$mensaje_error = "Usuario incativo";
+			header("Location: ../index.php?MensajeError=" . $mensaje_error);			
+		}
+ 	} else {
+		$mensaje_error = "Nombre de Usuario o Password incorrectos";
+ 		header("Location: ../index.php?MensajeError=" . $mensaje_error);
  	}
  	
 }

@@ -640,6 +640,72 @@ public function update()
 				 $Con->CloseConexion();
 }
 
+
+public function update_edad_meses()
+{
+	$con = new Conexion();
+	$con->OpenConexion();
+
+	$Edad = (isset($this->Edad)) ? $this->Edad : null;
+	$Meses = (isset($this->Meses)) ? $this->Meses : null;
+	$Fecha_Nacimiento = $this->Fecha_Nacimiento;
+	if ($Fecha_Nacimiento != 'null' && !empty($Fecha_Nacimiento)) {
+		if (substr_count("-", $Fecha_Nacimiento)) {
+			list($ano, $mes, $dia) = explode("-", $Fecha_Nacimiento);
+		} else {
+			list($ano, $mes, $dia) = explode("/", $Fecha_Nacimiento);
+		}
+		$ano_diferencia = date("Y") - $ano;
+		$mes_diferencia = date("m") - $mes;
+		$dia_diferencia = date("d") - $dia;
+		if ($ano_diferencia > 0) {
+			if ($mes_diferencia == 0) {
+				if ($dia_diferencia < 0) {
+					$ano_diferencia--;
+				}
+			} elseif ($mes_diferencia < 0) {
+				$ano_diferencia--;
+			}
+		} else {
+			if ($mes_diferencia > 0) {
+				if ($dia_diferencia < 0) {
+					$mes_diferencia--;
+				}
+			}
+		}
+		$Edad = $ano_diferencia;
+		$Meses = $mes_diferencia;
+	}
+
+	//PROBAR SI ESTO DA LA DIFERENCIA ENTRE MESES NOMAS O TAMBIEN TOMA LOS AÑOS COMO MESES EN ESE CASO TOMAR LA CANTIDAD DE AÑOS Y MULTIPLICARLO POR 12 Y A ESO RESTARLE AL RESULTADO DEL TOTAL DE MESES DE DIFERENCIA.
+	if ($Fecha_Nacimiento != 'null' && !empty($Fecha_Nacimiento)) {
+		$Fecha_Actual = new DateTime();
+		if (substr_count("-", $Fecha_Nacimiento)) {
+			$fecha_activacion_registrada = DateTime::createFromFormat('d-m-Y', 
+																	$Fecha_Nacimiento);
+			$Diferencia = $fecha_activacion_registrada->diff($Fecha_Actual);
+			$Meses = $Diferencia->m;
+			$Edad = $Diferencia->y;
+		} else if (substr_count("/", $Fecha_Nacimiento)){
+			$fecha_activacion_registrada = DateTime::createFromFormat('d/m/Y', 
+																	$Fecha_Nacimiento);
+			$Diferencia = $fecha_activacion_registrada->diff($Fecha_Actual);
+			$Meses = $Diferencia->m;
+			$Edad = $Diferencia->y;
+		}
+	}
+
+	$consulta = "update persona
+				 set edad = " . ((!is_null($Edad)) ? "'" . $Edad . "'" : "null") . ", 
+					 meses = " . ((!is_null($Meses)) ? "'" . $Meses . "'" : "null") . " 
+				 where id_persona = " . $this->getID_Persona();
+	$MensajeErrorConsultar = "No se pudo actualizar la Persona";
+	if (!$Ret = mysqli_query($con->Conexion, $consulta)) {
+		throw new Exception($MensajeErrorConsultar . $consulta, 2);
+	}
+	$con->CloseConexion();
+}
+
 public function save(){
 	$Con = new Conexion();
 	$Con->OpenConexion();
