@@ -202,12 +202,11 @@ public function get_user_name(){
 
 public function is_active() {
 	$control_expiracion = 1;
-	if(empty($this->expired_date)){
-		$fecha_actual = new DateTime();
-		$fecha_expiracion = new DateTime($this->expired_date);
-		$diferencia = $fecha_expiracion->diff($fecha_actual);
+	if(!empty($this->expired_date)){
+		$fecha_actual = DateTime::createFromFormat(format: 'Y-m-d', datetime: date('Y-m-d'));
+		$diferencia = $fecha_actual->diff($this->expired_date, true);
 		$año = $diferencia->y;
-		$control_expiracion = ($año >= 1)? 0 : 1 ;
+		$control_expiracion = ($año >= 1) ? 0 : 1;
 	}
 	return $control_expiracion;
 }
@@ -265,7 +264,7 @@ public function update()
 					 hintquestion = " . ((!is_null($this->get_hint_question())) ? "'" . $this->get_hint_question() . "'" : "null") . ", 
 					 hintanswer = " . ((!is_null($this->get_hint_answer())) ? "'" . $this->get_hint_answer() . "'" : "null") . ", 
 					 expired = " . ((!is_null($this->get_expired())) ? "'" . $this->get_expired() . "'" : "null") . ", 
-					 expireddate = " . ((!is_null($this->get_expired_date())) ? "'" . $this->get_expired_date() . "'" : "null") . ", 
+					 expireddate = " . ((!is_null($this->get_expired_date()->format('Y/m/d'))) ? "'" . $this->get_expired_date()->format('Y/m/d') . "'" : "null") . ", 
 					 tries = " . ((!is_null($this->get_tries())) ? "'" . $this->get_tries() . "'" : "null") . ", 
 					 lasttrieddate = " . ((!is_null($this->get_last_tried_date())) ? "'" . $this->get_last_tried_date() . "'" : "null") . ", 
 					 matricula = " . ((!is_null($this->get_matricula())) ? "'" . $this->get_matricula() . "'" : "null") . ", 
@@ -344,7 +343,7 @@ public function __construct(
 	$tries = null,
 	$user_name = null
 ){
-	$fecha_actual = new DateTime();
+	$fecha_actual = DateTime::createFromFormat(format: 'Y-m-d', datetime: date('Y-m-d'));
 	if (!$account_id) {
 		$this->email = $email;
 		$this->expired = $expired;
@@ -389,7 +388,7 @@ public function __construct(
 			$usr_email = $ret["email"];
 			$usr_tries = $ret["tries"];
 			$usr_expired = $ret["expired"];
-			$usr_expired_date = (empty($ret["expireddate"])) ? $ret["expireddate"] : $expired_date;
+			$usr_expired_date = (!empty($ret["expireddate"])) ? DateTime::createFromFormat('Y-m-d', $ret["expireddate"]) : $expired_date;
 			$usr_hint_answer = $ret["hintanswer"];
 			$usr_hint_question = $ret["hintquestion"];
 			$usr_estado = $ret["estado"];	

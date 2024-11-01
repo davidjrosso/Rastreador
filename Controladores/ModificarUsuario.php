@@ -19,14 +19,14 @@ require_once '../Modelo/Account.php';
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-$AccountID = $_REQUEST["account_id"];
-$lastname = (isset($_REQUEST["lastname"]))?ucfirst($_REQUEST["lastname"]):null;
-$firstname = (isset($_REQUEST["firstname"]))?ucwords($_REQUEST["firstname"]):null;
-$initials = (isset($_REQUEST["initials"]))?strtoupper($_REQUEST["initials"]):null;
-$username = (isset($_REQUEST["username"]))?$_REQUEST["username"]:null;
-$userpass = (isset($_REQUEST["userpass"]))?$_REQUEST["userpass"]:null;
-$email = (isset($_REQUEST["email"]))?$_REQUEST["email"]:null;
-$ID_TipoUsuario = (isset($_REQUEST["ID_TipoUsuario"]))?$_REQUEST["ID_TipoUsuario"]:null;
+$account_id = $_REQUEST["account_id"];
+$lastname = (isset($_REQUEST["lastname"])) ? ucfirst($_REQUEST["lastname"]) : null;
+$firstname = (isset($_REQUEST["firstname"])) ? ucwords($_REQUEST["firstname"]) : null;
+$initials = (isset($_REQUEST["initials"])) ? strtoupper($_REQUEST["initials"]) : null;
+$username = (isset($_REQUEST["username"])) ? $_REQUEST["username"]:null;
+$userpass = (isset($_REQUEST["userpass"])) ? md5($_REQUEST["userpass"]):null;
+$email = (isset($_REQUEST["email"])) ? $_REQUEST["email"] : null;
+$ID_TipoUsuario = (isset($_REQUEST["ID_TipoUsuario"])) ? $_REQUEST["ID_TipoUsuario"] : null;
 
 try {
 	$existe = Account::exist_account($AccountID);
@@ -35,7 +35,7 @@ try {
 		throw new Exception($MensajeError, 0);	
 	}
 	$user = new Account(
-						account_id: $AccountID,
+						account_id: $account_id,
 						 last_name: $lastname,
 						first_name: $firstname,
 						  initials: $initials,

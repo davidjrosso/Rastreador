@@ -25,29 +25,29 @@ $initials = strtoupper($_REQUEST["initials"]);
 $username = $_REQUEST["username"];
 $userpass = $_REQUEST["userpass"];
 $email = $_REQUEST["email"];
-$Estado = 1;
+$estado = 1;
 $ID_TipoUsuario = $_REQUEST["ID_TipoUsuario"];
 $userpass = md5($userpass);
 
 try {
 	$resultado = Account::exist_user($username);
-	if ($Resultado > 0) {
-		$Mensaje = "Ya existe un usuario con ese Nombre";
-		header('Location: ../view_newusuarios.php?MensajeError='.$Mensaje);
+	if ($resultado > 0) {
+		$mensaje = "Ya existe un usuario con ese Nombre";
+		header('Location: ../view_newusuarios.php?MensajeError=' . $mensaje);
 	} else {
 		$usuario = new Account(
-					account_id: $firstname,
+					first_name: $firstname,
 					 last_name: $lastname,
 					  initials: $initials,
 					 user_name: $username,
 					  password: $userpass,
 						 email: $email,
-						estado: $Estado,
+						estado: $estado,
 			   id_tipo_usuario: $ID_TipoUsuario
 	   		   );
 		$usuario->save();
-		$Mensaje = "El Usuario fue registrado Correctamente";
-		header('Location: ../view_newusuarios.php?Mensaje='.$Mensaje);
+		$mensaje = "El Usuario fue registrado Correctamente";
+		header('Location: ../view_newusuarios.php?Mensaje=' . $mensaje);
 	}
 } catch (Exception $e) {
 	echo "Error: ".$e->getMessage();
