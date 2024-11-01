@@ -1,6 +1,5 @@
 <?php 
-require_once 'Conexion.php';
-require_once '../Modelo/Usuario.php';
+require_once '../Modelo/Account.php';
 /*
  *
  * This file is part of Rastreador3.
@@ -30,50 +29,31 @@ $email = (isset($_REQUEST["email"]))?$_REQUEST["email"]:null;
 $ID_TipoUsuario = (isset($_REQUEST["ID_TipoUsuario"]))?$_REQUEST["ID_TipoUsuario"]:null;
 
 try {
-	$Con = new Conexion();
-	$Con->OpenConexion();
-	$ConsultarRegistros = "select * 
-						from accounts 
-						where accountid = '$AccountID' 
-							and estado = 1";
-	if(!$Ret = mysqli_query($Con->Conexion,$ConsultarRegistros)){
-		$MensajeError = "No existe la cuenta indicada. Consulta: ";
-		throw new Exception($MensajeError.$ConsultarRegistros, 0);	
+	$existe = Account::exist_account($AccountID);
+	if (!$existe) {
+		$MensajeError = "No existe la cuenta indicada.";
+		throw new Exception($MensajeError, 0);	
 	}
+	$user = new Account(
+						account_id: $AccountID,
+						 last_name: $lastname,
+						first_name: $firstname,
+						  initials: $initials,
+						 user_name: $username,
+						  password: $userpass,
+						     email: $email,
+				   id_tipo_usuario: $ID_TipoUsuario
+	);
 
-	$ConsultarRegistrosIguales = "select * 
-								  from accounts 
-								  where username = '$username'
-								  	and accountid <> '$AccountID' 
-									and estado = 1";
-	if (!$RetIguales = mysqli_query($Con->Conexion,$ConsultarRegistrosIguales)) {
-		$MensajeError = "Problemas al consultar registros iguales. Consulta: ";
-		throw new Exception($MensajeError.$ConsultarRegistrosIguales, 0);	
-	}
-
-	$Resultado = mysqli_num_rows($RetIguales);
-	if ($Resultado == 1) {
-		mysqli_free_result($RetIguales);
-		$Con->CloseConexion();
+	if (!$user->is_username_disponible($username)) {
 		$Mensaje = "Ya existe un usuario con ese Nombre";
-		header("Location: ../view_modusuario.php?account_id={$AccountID}&MensajeError=".$Mensaje);
+		header("Location: ../view_modusuario.php?account_id={$AccountID}&MensajeError=" . $Mensaje);
 	} else {
-		$Consulta = "update accounts
-					 set firstname = '{$firstname}',
-					 	 lastname = '{$lastname}',
-						 initials = '{$initials}',
-						 username = '{$username}'
-						 ".(($userpass != null)? ", password = '". md5($userpass)."'":"")."
-						 ".(($email != null)? ", email = '". $email."'":"")."
-						 ".(($ID_TipoUsuario != null)? ", ID_TipoUsuario = '". $ID_TipoUsuario."'":"")."
-						 where accountid = $AccountID";
-		if (!$Ret = mysqli_query($Con->Conexion,$Consulta)) {
-			throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 1);		
-		}	
-		$Con->CloseConexion();
-		$Mensaje = "El Usuario fue registrado Correctamente";
-		header("Location: ../view_perfilusuario.php?account_id={$AccountID}&Mensaje=".$Mensaje);
+
+		$user->update();
+		$Mensaje = "El Usuario fue modificado Correctamente";
+		header("Location: ../view_perfilusuario.php?account_id={$AccountID}&Mensaje=" . $Mensaje);
 	}	
 } catch (Exception $e) {
-	echo "Error: ".$e->getMessage();
+	echo "Error: " . $e->getMessage();
 }

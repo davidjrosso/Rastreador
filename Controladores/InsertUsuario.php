@@ -1,6 +1,5 @@
 <?php 
-require_once 'Conexion.php';
-require_once '../Modelo/Usuario.php';
+require_once '../Modelo/Account.php';
 /*
  *
  * This file is part of Rastreador3.
@@ -28,35 +27,28 @@ $userpass = $_REQUEST["userpass"];
 $email = $_REQUEST["email"];
 $Estado = 1;
 $ID_TipoUsuario = $_REQUEST["ID_TipoUsuario"];
-
 $userpass = md5($userpass);
 
-$Usuario = new Usuario(0,$firstname,$lastname,$initials,$username,$userpass,$email,$Estado,$ID_TipoUsuario);
-
 try {
-	$Con = new Conexion();
-	$Con->OpenConexion();
-
-	$ConsultarRegistrosIguales = "select * from accounts where username = '$username' and estado = 1";
-	if(!$RetIguales = mysqli_query($Con->Conexion,$ConsultarRegistrosIguales)){
-		throw new Exception("Problemas al consultar registros iguales. Consulta: ".$ConsultarRegistrosIguales, 0);		
-	}
-	$Resultado = mysqli_num_rows($RetIguales);
-	if($Resultado > 0){
-		mysqli_free_result($RetIguales);
-		$Con->CloseConexion();
+	$resultado = Account::exist_user($username);
+	if ($Resultado > 0) {
 		$Mensaje = "Ya existe un usuario con ese Nombre";
 		header('Location: ../view_newusuarios.php?MensajeError='.$Mensaje);
-	}else{
-		$Consulta = "insert into accounts(firstname,lastname,initials,username,password,email,estado,ID_TipoUsuario) values('".$Usuario->getFirstName()."','".$Usuario->getLastName()."','".$Usuario->getInitials()."','".$Usuario->getUserName()."','".$Usuario->getUserPass()."','".$Usuario->getEmail()."', 1,".$Usuario->getID_TipoUsuario().")";
-		if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
-			throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 1);		
-		}	
-		$Con->CloseConexion();
+	} else {
+		$usuario = new Account(
+					account_id: $firstname,
+					 last_name: $lastname,
+					  initials: $initials,
+					 user_name: $username,
+					  password: $userpass,
+						 email: $email,
+						estado: $Estado,
+			   id_tipo_usuario: $ID_TipoUsuario
+	   		   );
+		$usuario->save();
 		$Mensaje = "El Usuario fue registrado Correctamente";
 		header('Location: ../view_newusuarios.php?Mensaje='.$Mensaje);
-	}	
+	}
 } catch (Exception $e) {
 	echo "Error: ".$e->getMessage();
 }
-?>

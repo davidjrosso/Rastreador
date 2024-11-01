@@ -1,4 +1,6 @@
 <?php
+require_once 'Conexion.php';
+
 class Account implements JsonSerializable {
 	//DECLARACION DE VARIABLES
 	private $account_id;
@@ -101,9 +103,36 @@ public static function control_user_password($user_name, $user_pass){
  	$rs = mysqli_query($con->Conexion,$consulta)or die("Problemas al tomar Sesion. Nombre de usuario o password incorrectos");
  	$cont = mysqli_num_rows($rs);
 	$resultado = mysqli_fetch_assoc($rs);
-	$control = ($cont > 0) ? $resultado['accountid'] : -1  ;
+	$control = ($cont > 0) ? $resultado['accountid'] : -1;
 	return $control;
 }
+
+public static function exist_user($user_name){
+	$con = new Conexion();
+	$con->OpenConexion();
+ 	$consulta = "select * 
+				 from accounts 
+				 where username = '$user_name' 
+				 and estado = 1";
+ 	$rs = mysqli_query($con->Conexion,$consulta)or die("Problemas al crear/modificar un usuario.");
+ 	$cont = mysqli_num_rows($rs);
+	$exist = ($cont > 0) ? 1 : 0;
+	return $exist;
+}
+
+public static function exist_account($account_id){
+	$con = new Conexion();
+	$con->OpenConexion();
+ 	$consulta = "select * 
+				 from accounts 
+				 where accountid = '$account_id' 
+				 and estado = 1";
+ 	$rs = mysqli_query($con->Conexion,$consulta)or die("Problemas al crear/modificar un usuario.");
+ 	$cont = mysqli_num_rows($rs);
+	$exist = ($cont > 0) ? 1 : 0;
+	return $exist;
+}
+
 public function get_account_id(){
 	return $this->account_id;
 }
@@ -112,8 +141,8 @@ public function get_estado(){
     return $this->estado;
 }
 
-public function get_first_name(){
-	return $this->first_name;
+public function get_email(){
+    return $this->email;
 }
 
 public function get_expired(){
@@ -121,6 +150,10 @@ public function get_expired(){
 }
 public function get_expired_date(){
     return $this->expired_date;
+}
+
+public function get_first_name(){
+	return $this->first_name;
 }
 
 public function get_hint_answer(){
@@ -168,12 +201,32 @@ public function get_user_name(){
 }
 
 public function is_active() {
-	$fecha_actual = new DateTime();
-	$fecha_expiracion = new DateTime($this->expired_date);
-	$diferencia = $fecha_expiracion->diff($fecha_actual);
-	$año = $diferencia->y;
-	$control_expiracion = ($año >= 1)? 0 : 1 ;
+	$control_expiracion = 1;
+	if(empty($this->expired_date)){
+		$fecha_actual = new DateTime();
+		$fecha_expiracion = new DateTime($this->expired_date);
+		$diferencia = $fecha_expiracion->diff($fecha_actual);
+		$año = $diferencia->y;
+		$control_expiracion = ($año >= 1)? 0 : 1 ;
+	}
 	return $control_expiracion;
+}
+
+public function is_username_disponible($username) {
+	$con = new Conexion();
+	$con->OpenConexion();
+	$consulta = "select * 
+				 from accounts 
+				 where username = '$username'
+				 and accountid <> '" . $this->account_id . "' 
+				 and estado = 1";
+	$rs = mysqli_query(
+		$con->Conexion,
+		$consulta
+	)or die("Problemas al crear/modificar un usuario.");
+	$cont = mysqli_num_rows($rs);
+	$exist = ($cont > 0) ? 0 : 1;
+	return $exist;
 }
 
 public function jsonSerialize() {
@@ -202,9 +255,8 @@ public function update()
 {
 	$Con = new Conexion();
 	$Con->OpenConexion();
-	$Consulta = "update persona 
-				 set accountid = " . ((!is_null($this->get_account_id())) ? "'" . $this->get_account_id() . "'" : "null") . ", 
-				 	 firstname = " . ((!is_null($this->get_first_name())) ? "'" . $this->get_first_name() . "'" : "null") . ", 
+	$Consulta = "update accounts 
+				 set firstname = " . ((!is_null($this->get_first_name())) ? "'" . $this->get_first_name() . "'" : "null") . ", 
 					 lastname = " . ((!is_null($this->get_last_name())) ? "'" . $this->get_last_name() . "'" : "null") . ", 
 					 initials = " . ((!is_null($this->get_initials())) ? "'" . $this->get_initials() . "'" : "null") . ", 
 					 username = " . ((!is_null($this->get_user_name())) ? "'" . $this->get_user_name() . "'" : "null") . ", 
@@ -322,43 +374,44 @@ public function __construct(
 			$con->Conexion, 
 			$consultar_usuario) or die("Problemas al consultar filtro Usuario");
 		$ret = mysqli_fetch_assoc($ejecutar_consultar_persona);
+		if (!is_null($ret)) {
+			$usr_account_id = $ret["accountid"];
+			$usr_first_name = $ret["firstname"];
+			$usr_last_name = $ret["lastname"];
+			$usr_initials = $ret["initials"];
+			$usr_user_name = $ret["username"];
+			$usr_password = $ret["password"];
+			$usr_iva = $ret["iva"];
+			$usr_matricula = $ret["matricula"];
+			$usr_estado = $ret["estado"];
+			$usr_id_tipo_usuario = $ret["ID_TipoUsuario"];
+			$usr_last_tried_date = $ret["lasttrieddate"];
+			$usr_email = $ret["email"];
+			$usr_tries = $ret["tries"];
+			$usr_expired = $ret["expired"];
+			$usr_expired_date = (empty($ret["expireddate"])) ? $ret["expireddate"] : $expired_date;
+			$usr_hint_answer = $ret["hintanswer"];
+			$usr_hint_question = $ret["hintquestion"];
+			$usr_estado = $ret["estado"];	
 
-		$usr_account_id = $ret["accountid"];
-		$usr_first_name = $ret["firstname"];
-		$usr_last_name = $ret["lastname"];
-		$usr_initials = $ret["initials"];
-		$usr_user_name = $ret["username"];
-		$usr_password = $ret["password"];
-        $usr_iva = $ret["iva"];
-		$usr_matricula = $ret["matricula"];
-		$usr_estado = $ret["estado"];
-        $usr_id_tipo_usuario = $ret["ID_TipoUsuario"];
-        $usr_last_tried_date = $ret["lasttrieddate"];
-		$usr_email = $ret["email"];
-		$usr_tries = $ret["tries"];
-		$usr_expired = $ret["expired"];
-		$usr_expired_date = (empty($ret["expireddate"])) ? $ret["expireddate"] : $fecha_actual;
-		$usr_hint_answer = $ret["hintanswer"];
-		$usr_hint_question = $ret["hintquestion"];
-        $usr_estado = $ret["estado"];
-
-		$this->account_id = $usr_account_id;
-		$this->email = ($email) ? $email : $usr_email;
-		$this->expired = ($expired) ? $expired : $usr_expired;
-		$this->expired_date = ($expired_date) ? $expired_date : $usr_expired_date;
-		$this->first_name = ($first_name) ? $first_name : $usr_first_name;
-		$this->hint_answer = ($hint_answer) ? $hint_answer : $usr_hint_answer;
-		$this->hint_question = ($hint_question) ? $hint_question : $usr_hint_question;
-		$this->id_tipo_usuario = ($id_tipo_usuario) ? $id_tipo_usuario : $usr_id_tipo_usuario;
-		$this->initials = ($initials) ? $initials : $usr_initials;
-		$this->iva = ($iva) ? $iva : $usr_iva;
-		$this->last_name = (!empty($last_name)) ? $last_name : $usr_last_name;
-		$this->last_tried_date = ($last_tried_date) ? $last_tried_date : $usr_last_tried_date;
-		$this->matricula = ($matricula) ? $matricula : $usr_matricula;
-		$this->password = ($password) ? $password : $usr_password;
-		$this->tries = ($tries) ? $tries : $usr_tries;
-		$this->user_name = ($user_name) ? $user_name : $usr_user_name;
-        $this->estado = ($estado) ? $estado : $usr_estado;
+			$this->account_id = $usr_account_id;
+			$this->email = ($email) ? $email : $usr_email;
+			$this->expired = ($expired) ? $expired : $usr_expired;
+			$this->expired_date = ($usr_expired_date) ? $usr_expired_date : $fecha_actual;
+			$this->first_name = ($first_name) ? $first_name : $usr_first_name;
+			$this->hint_answer = ($hint_answer) ? $hint_answer : $usr_hint_answer;
+			$this->hint_question = ($hint_question) ? $hint_question : $usr_hint_question;
+			$this->id_tipo_usuario = ($id_tipo_usuario) ? $id_tipo_usuario : $usr_id_tipo_usuario;
+			$this->initials = ($initials) ? $initials : $usr_initials;
+			$this->iva = ($iva) ? $iva : $usr_iva;
+			$this->last_name = (!empty($last_name)) ? $last_name : $usr_last_name;
+			$this->last_tried_date = ($last_tried_date) ? $last_tried_date : $usr_last_tried_date;
+			$this->matricula = ($matricula) ? $matricula : $usr_matricula;
+			$this->password = ($password) ? $password : $usr_password;
+			$this->tries = ($tries) ? $tries : $usr_tries;
+			$this->user_name = ($user_name) ? $user_name : $usr_user_name;
+			$this->estado = ($estado) ? $estado : $usr_estado;	
+		}
 		$con->CloseConexion();
 	}
 }
