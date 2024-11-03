@@ -27,9 +27,18 @@ $userpass = $_REQUEST["userpass"];
 $email = $_REQUEST["email"];
 $estado = 1;
 $ID_TipoUsuario = $_REQUEST["ID_TipoUsuario"];
-$userpass = md5($userpass);
 
 try {
+	$has8characters = (mb_strlen($userpass) == 8);
+	$hasAlpha = preg_match('~[a-zA-Z]+~', $userpass);
+	$hasNum = preg_match('~[0-9]+~', $userpass);
+	$hasNonAlphaNum = preg_match('~[\!\@#$%\?&\*\(\)_\-\+=]+~', $userpass);
+
+	if (!($has8characters && $hasAlpha && $hasNum && !$hasNonAlphaNum)) {
+		$mensaje = "La contraseña debe contener 8 caracteres, alfabeticos y numericos";
+		header('Location: ../view_newusuarios.php?MensajeError=' . $mensaje);
+	}
+
 	$resultado = Account::exist_user($username);
 	if ($resultado > 0) {
 		$mensaje = "Ya existe un usuario con ese Nombre";

@@ -23,13 +23,24 @@ $account_id = $_REQUEST["account_id"];
 $lastname = (isset($_REQUEST["lastname"])) ? ucfirst($_REQUEST["lastname"]) : null;
 $firstname = (isset($_REQUEST["firstname"])) ? ucwords($_REQUEST["firstname"]) : null;
 $initials = (isset($_REQUEST["initials"])) ? strtoupper($_REQUEST["initials"]) : null;
-$username = (isset($_REQUEST["username"])) ? $_REQUEST["username"]:null;
-$userpass = (isset($_REQUEST["userpass"])) ? md5($_REQUEST["userpass"]):null;
+$username = (isset($_REQUEST["username"])) ? $_REQUEST["username"]: null;
+$userpass = (isset($_REQUEST["userpass"])) ? $_REQUEST["userpass"] : null;
 $email = (isset($_REQUEST["email"])) ? $_REQUEST["email"] : null;
 $ID_TipoUsuario = (isset($_REQUEST["ID_TipoUsuario"])) ? $_REQUEST["ID_TipoUsuario"] : null;
 
 try {
-	$existe = Account::exist_account($AccountID);
+
+	$has8characters = (mb_strlen($userpass) == 8);
+	$hasAlpha = preg_match('~[a-zA-Z]+~', $userpass);
+	$hasNum = preg_match('~[0-9]+~', $userpass);
+	$hasNonAlphaNum = preg_match('~[\!\@#$%\?&\*\(\)_\-\+=]+~', $userpass);
+	echo ($has8characters && $hasAlpha && $hasNum && !$hasNonAlphaNum);
+	if (!($has8characters && $hasAlpha && $hasNum && !$hasNonAlphaNum)) {
+		$mensaje = "La contraseña debe contener 8 caracteres, alfabeticos y numericos";
+		header("Location: ../view_modusuario.php?account_id={$account_id}&MensajeError="  . $mensaje);
+	}
+
+	$existe = Account::exist_account($account_id);
 	if (!$existe) {
 		$MensajeError = "No existe la cuenta indicada.";
 		throw new Exception($MensajeError, 0);	
@@ -47,12 +58,11 @@ try {
 
 	if (!$user->is_username_disponible($username)) {
 		$Mensaje = "Ya existe un usuario con ese Nombre";
-		header("Location: ../view_modusuario.php?account_id={$AccountID}&MensajeError=" . $Mensaje);
+		//header("Location: ../view_modusuario.php?account_id={$account_id}&MensajeError=" . $Mensaje);
 	} else {
-
 		$user->update();
 		$Mensaje = "El Usuario fue modificado Correctamente";
-		header("Location: ../view_perfilusuario.php?account_id={$AccountID}&Mensaje=" . $Mensaje);
+		//header("Location: ../view_modusuario.php?account_id={$account_id}&Mensaje=" . $Mensaje);
 	}	
 } catch (Exception $e) {
 	echo "Error: " . $e->getMessage();

@@ -80,7 +80,7 @@ public function set_matricula($matricula){
 }
 
 public function set_password($password){
-	$this->password = $password;
+	$this->password = md5($password);
 }
 
 public function set_tries($tries){
@@ -304,12 +304,12 @@ public function save(){
 						 " . ((!is_null($this->get_first_name())) ? "'" . $this->get_first_name() . "'" : "null") . ", 
 						 " . ((!is_null($this->get_last_name())) ? "'" . $this->get_last_name() . "'" : "null") . ", 
 						 " . ((!is_null($this->get_initials())) ? "'" . $this->get_initials() . "'" : "null") . ", 
-						 " . ((!is_null($this->get_user_name())) ? $this->get_user_name() : "null") . ", 
+						 " . ((!is_null($this->get_user_name())) ? "'" . $this->get_user_name() . "'" : "null") . ", 
 						 " . ((!is_null($this->get_password())) ? "'" . $this->get_password() . "'" : "null") . ", 
 						 " . ((!is_null($this->get_hint_question())) ? "'" . $this->get_hint_question() . "'" : "null") . ", 
 						 " . ((!is_null($this->get_hint_answer())) ? "'" . $this->get_hint_answer() . "'" : "null") . ", 
 						 " . ((!is_null($this->get_expired())) ? "'" . $this->get_expired() . "'" : "null") . ", 
-						 " . ((!is_null($this->get_expired_date())) ? "'" . $this->get_expired_date() . "'" : "null") . ", 
+						 " . ((!is_null($this->get_expired_date()->format('Y/m/d'))) ? "'" . $this->get_expired_date()->format('Y/m/d') . "'" : "null") . ", 
 						 " . ((!is_null($this->get_tries())) ? "'" . $this->get_tries() . "'" : "null") . ", 
 						 " . ((!is_null($this->get_last_tried_date())) ? $this->get_last_tried_date() : "null") . ", 
 						 " . ((!is_null($this->get_matricula())) ? "'" . $this->get_matricula() . "'" : "null") . ", 
@@ -357,7 +357,7 @@ public function __construct(
 		$this->last_name = $last_name;
 		$this->last_tried_date = $last_tried_date;
 		$this->matricula = $matricula;	
-		$this->password =$password;
+		$this->password = ($password) ? md5($password) : null;
 		$this->tries = $tries;
 		$this->user_name = $user_name;
         $this->estado = $estado;
