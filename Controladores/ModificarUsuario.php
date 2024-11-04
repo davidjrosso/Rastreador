@@ -34,7 +34,6 @@ try {
 	$hasAlpha = preg_match('~[a-zA-Z]+~', $userpass);
 	$hasNum = preg_match('~[0-9]+~', $userpass);
 	$hasNonAlphaNum = preg_match('~[\!\@#$%\?&\*\(\)_\-\+=]+~', $userpass);
-	echo ($has8characters && $hasAlpha && $hasNum && !$hasNonAlphaNum);
 	if (!($has8characters && $hasAlpha && $hasNum && !$hasNonAlphaNum)) {
 		$mensaje = "La contraseña debe contener 8 caracteres, alfabeticos y numericos";
 		header("Location: ../view_modusuario.php?account_id={$account_id}&MensajeError="  . $mensaje);
