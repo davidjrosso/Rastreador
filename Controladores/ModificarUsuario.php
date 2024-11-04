@@ -57,11 +57,11 @@ try {
 
 	if (!$user->is_username_disponible($username)) {
 		$Mensaje = "Ya existe un usuario con ese Nombre";
-		//header("Location: ../view_modusuario.php?account_id={$account_id}&MensajeError=" . $Mensaje);
+		header("Location: ../view_modusuario.php?account_id={$account_id}&MensajeError=" . $Mensaje);
 	} else {
 		$user->update();
 		$Mensaje = "El Usuario fue modificado Correctamente";
-		//header("Location: ../view_modusuario.php?account_id={$account_id}&Mensaje=" . $Mensaje);
+		header("Location: ../view_modusuario.php?account_id={$account_id}&Mensaje=" . $Mensaje);
 	}	
 } catch (Exception $e) {
 	echo "Error: " . $e->getMessage();
