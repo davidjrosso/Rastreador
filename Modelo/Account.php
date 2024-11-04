@@ -406,7 +406,7 @@ public function __construct(
 			$this->last_name = (!empty($last_name)) ? $last_name : $usr_last_name;
 			$this->last_tried_date = ($last_tried_date) ? $last_tried_date : $usr_last_tried_date;
 			$this->matricula = ($matricula) ? $matricula : $usr_matricula;
-			$this->password = ($password) ? $password : $usr_password;
+			$this->password = ($password) ?  md5($password) :  md5($usr_password);
 			$this->tries = ($tries) ? $tries : $usr_tries;
 			$this->user_name = ($user_name) ? $user_name : $usr_user_name;
 			$this->estado = ($estado) ? $estado : $usr_estado;	
