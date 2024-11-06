@@ -198,6 +198,7 @@ $Con->CloseConexion();
 
                   trigger: function(e) {
                     let lonlat = map.getLonLatFromPixel(e.xy);
+                    lonlat = lonlat.add(0, 300)
                     if (marker) marker.display(false);
                     if (markerSelec) markerSelec.display(false);
                     markerSelec = new OpenLayers.Marker(lonlat, icon.clone());
