@@ -197,17 +197,24 @@ $Con->CloseConexion();
                   },
 
                   trigger: function(e) {
+                    //map.zoomTo(map.getZoom());
                     let lonlat = map.getLonLatFromPixel(e.xy);
-                    if (marker) marker.display(false);
-                    if (markerSelec) markerSelec.display(false);
-                    markerSelec = new OpenLayers.Marker(lonlat, icon.clone());
-                    markers.addMarker(markerSelec);
-                    map.setCenter(lonlat, map.getZoom());
-                    lonlat = lonlat.transform(fromProjection, toProjection);
-                    $("#lat").val(lonlat.lat);
-                    $("#lon").val(lonlat.lon);
+                    console.log((300/map.getZoom()));
+                    console.log(("zoom " + map.getZoom()));
+                    console.log("por aca");
+                    //lonlat = lonlat.add(0, 49100*(20/((map.getZoom()**3 + (map.getZoom() - 20)*1000))))
+                    lonlat = lonlat.add(0, 330);
+                    if (marker && lonlat) marker.display(false);
+                    if (markerSelec && lonlat) markerSelec.display(false);
+                    if (lonlat) {
+                      markerSelec = new OpenLayers.Marker(lonlat, icon.clone());
+                      markers.addMarker(markerSelec);
+                      map.setCenter(lonlat, map.getZoom());
+                      lonlat = lonlat.transform(fromProjection, toProjection);
+                      $("#lat").val(lonlat.lat);
+                      $("#lon").val(lonlat.lon);
+                    }
                   }
-
           });
 
           let click = new OpenLayers.Control.Click();

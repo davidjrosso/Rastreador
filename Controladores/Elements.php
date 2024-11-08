@@ -779,6 +779,21 @@ public function getMenuSeguridad($ID){
     return $menu;
   }
 
+
+  public function getMenuNotificacionUsuario($ID){
+    $menu = '<div class="menu-list">
+                <ul id="menu-content" class="menu-content collapse out">
+                    <li class="collapsed" onClick="location.href=\'view_auditoria.php\'">
+                      <a href="view_general_new.php"><i class="fa fa-file-text fa-lg"></i>notificacion</a>
+                    </li>
+                    <li class="collapsed" onClick="location.href=\'view_auditoria.php\'">
+                      <a href="view_listados.php"><i class="fa fa-file-text fa-lg"></i>modificacion</a>
+                    </li>
+                </ul>
+              </div>';
+    return $menu;
+  }
+
   public function getMenuUnificacionUsuario($ID){
     switch ($ID) {
       case 13:
@@ -2320,6 +2335,10 @@ public function getMenuSeguridadUsuario($ID){
                           <div class='menu-list'>" . 
                             self::getMenuUnificacionUsuario($pagina) . 
                           "</div>
+                          <div class='brand'>Notificaciones</div>
+                          <div class='menu-list'>" . 
+                            self::getMenuNotificacionUsuario($pagina) . 
+                          "</div>
                           <div class='brand'>Seguridad</div>
                           <div class='menu-list'>" .
                               self::getMenuSeguridadUsuario($pagina) . 
@@ -2348,6 +2367,10 @@ public function getMenuSeguridadUsuario($ID){
                               <div class='menu-list'>" . 
                                 self::getMenuReportesUsuario($pagina) . 
                               "</div>
+                              <div class='brand'>Notificaciones</div>
+                              <div class='menu-list'>" . 
+                                self::getMenuNotificacionUsuario($pagina) . 
+                              "</div>
                               <div class='brand'>El Proyecto</div>
                               <div class='menu-list'>" . 
                                 self::getMenuHistorialUsuario($pagina) . 
@@ -2375,6 +2398,10 @@ public function getMenuSeguridadUsuario($ID){
                         <div class='brand'>Unificación</div>
                         <div class='menu-list'>" . 
                           self::getMenuUnificacionUsuario($pagina) . 
+                        "</div>
+                        <div class='brand'>Notificaciones</div>
+                        <div class='menu-list'>" . 
+                          self::getMenuNotificacionUsuario($pagina) . 
                         "</div>
                         <div class='brand'>El Proyecto</div>
                         <div class='menu-list'>" . 
