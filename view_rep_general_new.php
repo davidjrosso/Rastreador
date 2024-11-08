@@ -1197,7 +1197,7 @@ $Con->CloseConexion();
             $ID_Categoria = (isset($_REQUEST["ID_Categoria"])) ? $_REQUEST["ID_Categoria"] : null;
             $ID_Escuela = (isset($_REQUEST["ID_Escuela"])) ? $_REQUEST["ID_Escuela"] : null;
             $Trabajo = (isset($_REQUEST["Trabajo"])) ? $_REQUEST["Trabajo"] : null;
-            $Mostrar = (isset($_REQUEST["Mostrar"])) ? $_REQUEST["Mostrar"] : null;
+            $Mostrar = (isset($_REQUEST["Mostrar"])) ? $_REQUEST["Mostrar"] : 0;
             $ID_CentroSalud = (isset($_REQUEST["ID_CentroSalud"])) ? $_REQUEST["ID_CentroSalud"] : null;
             $ID_OtraInstitucion = (isset($_REQUEST["ID_OtraInstitucion"])) ? $_REQUEST["ID_OtraInstitucion"] : null;
             $ID_Responsable = (isset($_REQUEST["ID_Responsable"])) ? $_REQUEST["ID_Responsable"] : null;

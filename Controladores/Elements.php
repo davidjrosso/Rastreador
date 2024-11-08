@@ -779,6 +779,22 @@ public function getMenuSeguridad($ID){
     return $menu;
   }
 
+  public function getMenuNotificacionUsuario($ID){
+    $menu = '<div class="menu-list">
+                <ul id="menu-content" class="menu-content collapse out">
+                    <li class="collapsed" onClick="location.href=\'view_notiifcacion.php\'">
+                      <a href="view_notiifcacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                    </li>
+                    <li class="collapsed" onClick="location.href=\'view_solicitud.php\'">
+                      <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
+                    </li>
+                    <li class="collapsed" onClick="location.href=\'view_auditoria.php\'">
+                      <a href="view_auditoria.php"><i class="fa fa-file-text fa-lg"></i>Acciones</a>
+                    </li>
+                </ul>
+              </div>';
+    return $menu;
+  }
   public function getMenuUnificacionUsuario($ID){
     switch ($ID) {
       case 13:
@@ -2319,6 +2335,10 @@ public function getMenuSeguridadUsuario($ID){
                           <div class='brand'>Unificación</div>
                           <div class='menu-list'>" . 
                             self::getMenuUnificacionUsuario($pagina) . 
+                          "</div>
+                          <div class='brand'>Auditoria</div>
+                          <div class='menu-list'>" . 
+                            self::getMenuNotificacionUsuario($pagina) . 
                           "</div>
                           <div class='brand'>Seguridad</div>
                           <div class='menu-list'>" .

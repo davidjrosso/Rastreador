@@ -682,6 +682,7 @@ $Con->CloseConexion();
                 ?>
               </div>
             </div>
+            <!--
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Mostrar Personas: </label>
               <div class="col-md-10">
@@ -690,7 +691,7 @@ $Con->CloseConexion();
                 	<option value="1">Todos</option>
                 </select>
               </div>
-            </div>
+            </div> -->
             <div class="form-group row">
               <div class="offset-md-2 col-md-10">
                 <div class="offset-md-2 col-md-10" id = "InputsGenerales">

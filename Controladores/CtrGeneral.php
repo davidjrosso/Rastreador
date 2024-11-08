@@ -1,5 +1,6 @@
 <?php  
 require_once("Conexion.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Accion.php");
 
 class CtrGeneral{
 	//Instanciando la Conexion
@@ -730,6 +731,195 @@ class CtrGeneral{
 		$Table .= "</table>";
 
 		return $Table;
+	}
+
+
+
+	////////////////////////////////////////////////-AUDITORIAS-///////////////////////////////////////////////////
+	public function get_acciones($filtro, $value=null){
+		switch ($filtro) {
+			case 'usuario':
+			  $acciones = Accion::get_acciones_user_id($value);
+			  break;
+			case 'tipo_accion':
+			  $acciones = Accion::get_acciones_tipo($value);
+			  break;
+			default:
+			  $acciones = Accion::get_acciones();
+			  break;
+		}
+
+		$table = "<table class='table'>
+					<thead>
+						<tr>
+							<th style='vertical-align: middle;'>Fecha</th>
+							<th style='vertical-align: middle;'>Usuario</th>
+							<th style='vertical-align: middle;'>Descripcion</th>
+							<th style='vertical-align: middle;'>tipo de accion</th>
+						</tr>
+					</thead>
+					<tbody>";
+		foreach ($acciones as $row) {
+			$fecha = (!empty($row["Fecha"])) ? $row["Fecha"] : null;
+			$account_id = (!empty($row["accountid"])) ? $row["accountid"] : null;
+			$detalles = (!empty($row["Detalles"])) ? $row["Detalles"] : null;
+			$id_tipo_accion = (!empty($row["ID_TipoAccion"])) ? $row["ID_TipoAccion"] : null;
+			$table .= "<tr><td>" . $fecha . "</td><td>" . $account_id . "</td><td>" . $detalles . "</td><td>" . $id_tipo_accion ."</td></tr>";
+		}
+		$table .= "</tbody></table>";
+		return $table;
+	}
+
+/*
+	public function get_acciones_fecha($Fecha,$TipoUsuario){
+		$Fecha = implode("-", array_reverse(explode("/",$Fecha)));
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$consultaGeneral = "CREATE TEMPORARY TABLE GIN " ;
+		$consultaUsuario = "CREATE TEMPORARY TABLE INN ";
+
+		$consulta = "SELECT MT.id_motivo
+					 FROM motivo MT,
+					 	  categoria  C,
+						  categorias_roles CS
+					 WHERE C.cod_categoria = MT.cod_categoria
+					   and MT.estado = 1
+					   and C.estado = 1";
+
+		$motivosVisiblesParaUsuario = $consultaUsuario . $consulta . " 
+											and CS.id_categoria = C.id_categoria
+											and CS.id_tipousuario = $TipoUsuario
+											and CS.estado = 1";
+
+		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
+								   and C.id_categoria NOT IN (SELECT id_categoria
+								                              FROM categorias_roles CS)";
+
+		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
+		$Con->ResultSet = mysqli_query(
+									   $Con->Conexion,$motivosVisiblesParaUsuario
+									   ) or die($MessageError);
+
+		$MessageError = "Problemas al crear la tabla temporaria general";
+		$Con->ResultSet = mysqli_query(
+									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
+									   ) or die($MessageError);
+
+		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
+					 from movimiento M, 
+					 	  persona P, 
+						  responsable R,
+						  categoria C,
+						  categorias_roles CS,
+						  motivo MT
+					 where M.id_persona = P.id_persona 
+					   and M.id_resp = R.id_resp 
+					   and M.fecha = '$Fecha'
+					   and CS.id_categoria = C.id_categoria
+					   and C.cod_categoria = MT.cod_categoria
+								and ((M.motivo_1 IN (SELECT * FROM INN) 
+								   OR M.motivo_1 IN (SELECT * FROM GIN))
+								  OR (M.motivo_2 IN (SELECT * FROM INN) 
+								   OR M.motivo_2 IN (SELECT * FROM GIN))
+								  OR (M.motivo_3 IN (SELECT * FROM INN) 
+								   OR M.motivo_3 IN (SELECT * FROM GIN))
+								  OR (M.motivo_4 IN (SELECT * FROM INN) 
+								   OR M.motivo_4 IN (SELECT * FROM GIN))
+								  OR (M.motivo_5 IN (SELECT * FROM INN) 
+								   OR M.motivo_5 IN (SELECT * FROM GIN)))
+					   and CS.id_tipousuario = $TipoUsuario
+					   and M.estado = 1
+					   and P.estado = 1
+					   and CS.estado = 1 
+					group by M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable
+					order M.fecha_creacion desc";
+		$MessageError = "Problemas al intentar mostrar Movimientos";
+		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
+			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
+			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+		}
+		$Con->CloseConexion();
+		$Table .= "</table>";
+
+		return $Table;
+	}
+	*/
+
+
+	public function get_notificaciones($filtro, $value=null){
+		switch ($filtro) {
+			case 'usuario':
+				$acciones = Accion::get_acciones_user_id($value);
+			break;
+			case 'tipo_accion':
+				$acciones = Accion::get_acciones_tipo($value);
+				break;
+			default:
+				$acciones = Accion::get_acciones();
+			break;
+		}
+
+		$table = "<table class='table'>
+					<thead>
+						<tr>
+							<th style='vertical-align: middle;'>Fecha</th>
+							<th style='vertical-align: middle;'>Usuario</th>
+							<th style='vertical-align: middle;'>Descripcion</th>
+							<th style='vertical-align: middle;'>tipo de accion</th>
+						</tr>
+					</thead>
+					<tbody>";
+		foreach ($acciones as $row) {
+			$fecha = (!empty($row["Fecha"])) ? $row["Fecha"] : null;
+			$account_id = (!empty($row["accountid"])) ? $row["accountid"] : null;
+			$detalles = (!empty($row["Detalles"])) ? $row["Detalles"] : null;
+			$id_tipo_accion = (!empty($row["ID_TipoAccion"])) ? $row["ID_TipoAccion"] : null;
+			$table .= "<tr><td>" . $fecha . "</td><td>" . $account_id . "</td><td>" . $detalles . "</td><td>" . $id_tipo_accion ."</td></tr>";
+		}
+		$table .= "</tbody></table>";
+		return $table;
+	}
+
+	public function get_solicitudes($filtro, $value=null){
+		switch ($filtro) {
+			case 'caregoria':
+				$acciones = Accion::get_categoria($value);
+			break;
+			case 'motivo':
+				$acciones = Accion::get_motivo($value);
+				break;
+			case 'permiso':
+				$acciones = Accion::get_permisos($value);
+				break;
+			case 'unificacion':
+				$acciones = Accion::get_unificacion($value);
+				break;
+			default:
+				$acciones = Accion::get_acciones();
+			break;
+		}
+
+		$table = "<table class='table'>
+					<thead>
+						<tr>
+							<th style='vertical-align: middle;'>Fecha</th>
+							<th style='vertical-align: middle;'>Usuario</th>
+							<th style='vertical-align: middle;'>Descripcion</th>
+							<th style='vertical-align: middle;'>tipo de accion</th>
+						</tr>
+					</thead>
+					<tbody>";
+		foreach ($acciones as $row) {
+			$fecha = (!empty($row["Fecha"])) ? $row["Fecha"] : null;
+			$account_id = (!empty($row["accountid"])) ? $row["accountid"] : null;
+			$detalles = (!empty($row["Detalles"])) ? $row["Detalles"] : null;
+			$id_tipo_accion = (!empty($row["ID_TipoAccion"])) ? $row["ID_TipoAccion"] : null;
+			$table .= "<tr><td>" . $fecha . "</td><td>" . $account_id . "</td><td>" . $detalles . "</td><td>" . $id_tipo_accion ."</td></tr>";
+		}
+		$table .= "</tbody></table>";
+		return $table;
 	}
 
 	////////////////////////////////////////////////-PERSONAS-///////////////////////////////////////////////////
