@@ -1,5 +1,5 @@
 <?php
-require('Accion.php');
+require_once('Accion.php');
 class Persona implements JsonSerializable {
 	//DECLARACION DE VARIABLES
 	private $Apellido;
