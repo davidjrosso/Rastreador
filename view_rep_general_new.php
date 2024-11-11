@@ -230,7 +230,7 @@ $Con->CloseConexion();
             let puntos = angulo / longuitud;
             let listaDeClaves = Object.keys(lista_formas);
             let listaConOrden = listaDeClaves.sort(function (categoriaA, categoriaB) {
-                  if( [categoriaA][1] < lista_formas[categoriaB][1]) {
+                  if( lista_formas[categoriaA][1] < lista_formas[categoriaB][1]) {
                     return -1;
                   } else if (lista_formas[categoriaA][1] > lista_formas[categoriaB][1]) {
                     return 1;
