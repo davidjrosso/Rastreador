@@ -1,5 +1,7 @@
 <?php 
+session_start();
 require_once '../Modelo/Account.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . 'Modelo/Solicitud_Usuario.php';
 /*
  *
  * This file is part of Rastreador3.
@@ -19,6 +21,7 @@ require_once '../Modelo/Account.php';
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+$ID_Usuario = $_SESSION["Usuario"];
 $account_id = $_REQUEST["account_id"];
 $lastname = (isset($_REQUEST["lastname"])) ? ucfirst($_REQUEST["lastname"]) : null;
 $firstname = (isset($_REQUEST["firstname"])) ? ucwords($_REQUEST["firstname"]) : null;
@@ -60,7 +63,18 @@ try {
 		header("Location: ../view_modusuario.php?account_id={$account_id}&MensajeError=" . $Mensaje);
 	} else {
 		$user->update();
-		$Mensaje = "El Usuario fue modificado Correctamente";
+		if ($userpass) {
+			$solicitud = new Solicitud_Usuario(
+				usuario: $ID_Usuario,
+				descripcion: "contraseña $user_pass",
+				estado:1,
+				tipo: 1
+			);
+			$solicitud->save();
+			$Mensaje = "La peticion de modificacion de contaseña fue enviada la administrador";
+		} else {
+			$Mensaje = "El Usuario fue modificado Correctamente";
+		}
 		header("Location: ../view_modusuario.php?account_id={$account_id}&Mensaje=" . $Mensaje);
 	}	
 } catch (Exception $e) {

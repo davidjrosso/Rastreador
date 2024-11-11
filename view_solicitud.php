@@ -323,6 +323,10 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
     #solicitudes-unificacion {
       display: table !important;
     }
+
+    #solicitud-usuario {
+      display: table;
+    }
   </style>
 </head>
 
@@ -392,16 +396,16 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
             $CantModCat = $dt_general->getCantSolicitudes_Modificacion_Categoria();
             $CantDel = $dt_general->getCantSolicitudes_EliminacionMotivo();
             $CantDelCat = $dt_general->getCantSolicitudes_EliminacionCategoria();
+            $cant_usuario = $dt_general->get_cant_solicitudes_usuario();
 
-            if ($CantModMot > 0 || $CantUnif > 0 || $CantModCat > 0 || $CantDel > 0 || $CantDelCat > 0 || $CantCrearCat > 0 || $CantCrearMot > 0) {
+            if ($CantModMot > 0 || $CantUnif > 0 || $CantModCat > 0 || $CantDel > 0 || $CantDelCat > 0 || $CantCrearCat > 0 || $CantCrearMot > 0 || $cant_usuario > 0) {
             ?>
             <h3 class="bg-secondary text-light" style="text-align: center; padding: 10px;">Solicitudes por autorizar
             </h3>
             <?php
-              // $CtrGeneral = new CtrGeneral();
               if ($CantUnif > 0) {
             ?>
-                <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Unificar Motivos</h3>
+                <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Unificar</h3>
             <?php
                 echo $dt_general->getSolicitudes_Unificacion();
               }
@@ -417,6 +421,12 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
             <?php
                 echo $dt_general->get_solicitudes_categoria();
               }
+              if ($cant_usuario > 0) {
+                ?>
+                <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Usario</h3>
+                <?php
+                    echo $dt_general->get_solicitudes_usuario();
+                  }
             }
           ?>
           </div>

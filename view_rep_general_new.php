@@ -304,7 +304,6 @@ $Con->CloseConexion();
                                                       </table>
                                                     </div>`;
                   marker.feature = feature;
-                  //marker.events.register("mousedown", feature, markerClick);
                   marker.events.register("mousedown", feature, function() {
                       window.open("view_modpersonas.php?ID=" + elemento.id_persona,"Ventana" + elemento.id_persona ,"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no")
                   });

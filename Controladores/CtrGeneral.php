@@ -2582,6 +2582,65 @@ class CtrGeneral{
 		return $ret;
 	}
 
+	public function get_cant_solicitudes_usuario(){
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "select id_solicitud 
+					 from solicitudes_usuarios 
+					 where estado = 1";
+		$MessageError = "Problemas al intentar consultar cantidad de Solicitudes de usuario";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$Regis = mysqli_num_rows($Con->ResultSet);
+		$Con->CloseConexion();		
+		return $Regis;
+	}
+
+	public function get_solicitudes_usuario(){
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "select U.id_solicitud, 
+							U.descripcion, 
+							U.fecha, 
+							U.tipo, 
+							U.estado 
+					 from solicitudes_usuarios U 
+					 where U.estado = 1 
+					order by U.fecha";
+		$MessageError = "Problemas al intentar mostrar Notificaciones";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$Regis = mysqli_num_rows($Con->ResultSet);
+		if($Regis > 0){
+			$Table = "<table id='solicitud-usuario' class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Detalle</th><th style='min-width:100px;'>tipo</th><th style='min-width:100px;'>Acción</th></tr></thead>";
+			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
+				$ret_fecha = explode(" ", $Ret["fecha"]);
+				$tipo = $Ret["tipo"];
+				$ret_id_solicitud = $Ret["id_solicitud"];
+				$fecha = implode("/", array_reverse(explode("-",$ret_fecha[0])));
+				$descripcion = $Ret["descripcion"];												
+				$Table .= "<tr>
+							 <td>" . $ret_id_solicitud . "</td>
+							 <td>" . $fecha . "</td>
+							 <td>" . $descripcion . "</td>
+							 <td>" . $tipo . "</td>
+							 <td>
+								 <button class='btn btn-success' onClick='VerificarEliminarCategoria(" . $ret_id_solicitud . ")'>
+								   <i class='fa fa-check'></i>
+								 </button>
+								 <button class='btn btn-danger' onClick='CancelarEliminacionCategoria(". $ret_id_solicitud . ")'>
+								   <i class='fa fa-times'></i>
+								 </button>
+							 </td>
+						   </tr>";
+			}			
+			$Table .= "</table>";
+		}else{
+			$Table = "No existen solicitudes de unificación pendientes de aprobación.";
+		}
+		$Con->CloseConexion();
+		
+		return $Table;
+	}
+
 	public function getMes($mes){
 		 
 		switch($mes){
