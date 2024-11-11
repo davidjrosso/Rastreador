@@ -127,6 +127,22 @@ $Con->CloseConexion();
       }
     }
 
+    function ordenCategoria(categoriaA, categoriaB) {
+      if(categoriaA[1] < categoriaB[1]) {
+        return -1;
+      } else if (categoriaA[1] > categoriaB[1]) {
+        return 1;
+      } else {
+          if(categoriaA[2] < categoriaB[2]) {
+            return -1;
+          } else if (categoriaA[2] > categoriaB[2]) {
+            return 1;
+          } else {
+            return 0;
+          } 
+      }
+    }
+
     function init() {
       if (map === null) {
         map = new OpenLayers.Map("basicMap", {
@@ -148,10 +164,12 @@ $Con->CloseConexion();
             maxZoom: 22,
             accessToken: '<your accessToken>'
         }); */
-        let mapnik = new OpenLayers.Layer.OSM("OpenCycleMap",
+        let mapnik = new OpenLayers.Layer.OSM(
+              "OpenCycleMap",
               ["http://a.tile.thunderforest.com/transport/${z}/${x}/${y}.png?apikey=d03b42dcdc084e7cbab176997685b1ce",
               "http://b.tile.thunderforest.com/transport/${z}/${x}/${y}.png?apikey=d03b42dcdc084e7cbab176997685b1ce",
-              "http://c.tile.thunderforest.com/transport/${z}/${x}/${y}.png?apikey=d03b42dcdc084e7cbab176997685b1ce"]);
+              "http://c.tile.thunderforest.com/transport/${z}/${x}/${y}.png?apikey=d03b42dcdc084e7cbab176997685b1ce"]
+            );
 
         var fromProjection =  new OpenLayers.Projection("EPSG:3857");
         var toProjection = new OpenLayers.Projection("EPSG:4326");
@@ -193,7 +211,8 @@ $Con->CloseConexion();
 
         objectJsonTabla.sort(ordenGeoreferencia).forEach(function (elemento, indice, array) {
           pos = new OpenLayers.LonLat(elemento.lon, elemento.lat).transform(toProjection, fromProjection);
-          if (elemento.lista_formas_categorias) {
+          let lista_formas = elemento.lista_formas_categorias;
+          if (lista_formas) {
             if (indice >= 1) {            
               if (posicionAnterior.lon === pos.lon  && posicionAnterior.lat === pos.lat) {
                 pos = pos.add((-8.3)*nroLote, (4.5)*nroLote);
@@ -207,11 +226,35 @@ $Con->CloseConexion();
             }
             positionFormas = pos;
             let angulo = 360;
-            let longuitud = Object.keys(elemento.lista_formas_categorias).length + 1;
+            let longuitud = Object.keys(lista_formas).length + 1;
             let puntos = angulo / longuitud;
-            Object.keys(elemento.lista_formas_categorias).forEach(function (categoria, indice, array) {
+            let listaDeClaves = Object.keys(lista_formas);
+            let listaConOrden = listaDeClaves.sort(function (categoriaA, categoriaB) {
+                  if( [categoriaA][1] < lista_formas[categoriaB][1]) {
+                    return -1;
+                  } else if (lista_formas[categoriaA][1] > lista_formas[categoriaB][1]) {
+                    return 1;
+                  } else {
+                      if(lista_formas[categoriaA][2] < lista_formas[categoriaB][2]) {
+                        return -1;
+                      } else if (lista_formas[categoriaA][2] > lista_formas[categoriaB][2]) {
+                        return 1;
+                      } else {
+                        return 0;
+                      }
+                  }
+              });
+            let tipoCategoriaPrevia = -1;
+            let odenPrevio = 0;
+            listaConOrden.forEach(function (categoria, indice, array) {
+                  if (tipoCategoriaPrevia == lista_formas[categoria][1] 
+                      && odenPrevio < lista_formas[categoria][2]) {
+                    return;
+                  }
+                  tipoCategoriaPrevia = lista_formas[categoria][1];
+                  odenPrevio = lista_formas[categoria][2];
                   charCodeLetter = (categoria.length == 1) ? categoria.charCodeAt(0) : categoria;
-                  let color_categ = elemento.lista_formas_categorias[categoria].substring(1);
+                  let color_categ = lista_formas[categoria][0].substring(1);
                   icon = new OpenLayers.Icon('./images/icons/motivos/' + charCodeLetter + '_' + color_categ + '.png', size, offset);
                   let marker = new OpenLayers.Marker(positionFormas, icon.clone());
                   markers.addMarker(marker);
@@ -2518,7 +2561,7 @@ $Con->CloseConexion();
                     $Tomar_Movimientos_Persona = mysqli_query($Con->Conexion, $Consultar_Movimientos_Persona) or die($MensajeErrorConsultar_Mov_Persona . " - " . $Consultar_Movimientos_Persona);
                     $IndexCelda += 1;
                     $nroMotivosEnFecha = 0;
-                    if(mysqli_num_rows($Tomar_Movimientos_Persona) > 6){
+                    if (mysqli_num_rows($Tomar_Movimientos_Persona) > 6) {
                       $tdExtenso = true;
                     }
                     $tagsTD .= "<td name='DatosResultados' id=$IndexCelda style='min-width:190px'>
@@ -2559,7 +2602,12 @@ $Con->CloseConexion();
                       if ($Ret_Datos_Movimiento["motivo_1"] > 1 && $Ret_Datos_Movimiento["permiso_1"]) {
                         if ($ID_Motivo > 0) {
                           if ($ID_Motivo == $Ret_Datos_Movimiento["motivo_1"]) {
-                            $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color, M.codigo 
+                            $ConsultarCodyColor = "select M.cod_categoria, 
+                                                          F.Forma_Categoria, 
+                                                          C.color, 
+                                                          M.codigo,
+                                                          C.tipo_categoria,
+                                                          C.orden 
                                                    from motivo M, 
                                                         categoria C, 
                                                         formas_categorias F 
@@ -2604,7 +2652,11 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo["color"];
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
+                                                                                            $RetMotivo["color"], 
+                                                                                            $RetMotivo["tipo_categoria"],
+                                                                                            $RetMotivo["orden"]
+                                                                                            ];
 
                           }
                         }
@@ -2613,7 +2665,9 @@ $Con->CloseConexion();
                             $ConsultarCodyColor = "select M.cod_categoria, 
                                                           F.Forma_Categoria, 
                                                           C.color, 
-                                                          M.codigo
+                                                          M.codigo,
+                                                          C.tipo_categoria,
+                                                          C.orden
                                                     from motivo M, 
                                                          categoria C, 
                                                          formas_categorias F 
@@ -2658,7 +2712,11 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo["color"];
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
+                                                                                            $RetMotivo["color"], 
+                                                                                            $RetMotivo["tipo_categoria"],
+                                                                                            $RetMotivo["orden"]
+                            ];
                           }
                         }
                         if ($ID_Motivo3 > 0) {
@@ -2666,15 +2724,17 @@ $Con->CloseConexion();
                             $ConsultarCodyColor = "select M.cod_categoria,
                                                           F.Forma_Categoria,
                                                           C.color, 
-                                                          M.codigo 
+                                                          M.codigo,
+                                                          C.tipo_categoria,
+                                                          C.orden 
                                                    from motivo M,
                                                         categoria C,
                                                         formas_categorias F
-                                                        where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_1"] . " 
-                                                          and M.cod_categoria = C.cod_categoria 
-                                                          and C.ID_Forma = F.ID_Forma 
-                                                          and M.estado = 1 
-                                                          and C.estado = 1";
+                                                    where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_1"] . " 
+                                                      and M.cod_categoria = C.cod_categoria 
+                                                      and C.ID_Forma = F.ID_Forma 
+                                                      and M.estado = 1 
+                                                      and C.estado = 1";
                             $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
 
                             $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor . " - " . $ConsultarCodyColor . " valor:" . $Ret_Datos_Movimiento["motivo_1"]);
@@ -2710,7 +2770,11 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo["color"];
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
+                                                                                            $RetMotivo["color"], 
+                                                                                            $RetMotivo["tipo_categoria"],
+                                                                                            $RetMotivo["orden"]
+                            ];
                           }
                         }
                         if ($ID_Motivo4 > 0) {
@@ -2718,15 +2782,17 @@ $Con->CloseConexion();
                             $ConsultarCodyColor = "select M.cod_categoria,
                                                           F.Forma_Categoria,
                                                           C.color, 
-                                                          M.codigo 
+                                                          M.codigo,
+                                                          C.tipo_categoria,
+                                                          C.orden 
                                                    from motivo M,
                                                         categoria C,
                                                         formas_categorias F
-                                                        where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_1"] . " 
-                                                          and M.cod_categoria = C.cod_categoria 
-                                                          and C.ID_Forma = F.ID_Forma 
-                                                          and M.estado = 1 
-                                                          and C.estado = 1";
+                                                   where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_1"] . " 
+                                                     and M.cod_categoria = C.cod_categoria 
+                                                     and C.ID_Forma = F.ID_Forma 
+                                                     and M.estado = 1 
+                                                     and C.estado = 1";
                             $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
 
                             $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor . " - " . $ConsultarCodyColor . " valor:" . $Ret_Datos_Movimiento["motivo_1"]);
@@ -2762,7 +2828,11 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo["color"];
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
+                                                                                            $RetMotivo["color"], 
+                                                                                            $RetMotivo["tipo_categoria"],
+                                                                                            $RetMotivo["orden"]
+                            ];
                         }
                         }
                         if ($ID_Motivo5 > 0) {
@@ -2770,15 +2840,17 @@ $Con->CloseConexion();
                             $ConsultarCodyColor = "select M.cod_categoria,
                                                           F.Forma_Categoria,
                                                           C.color, 
-                                                          M.codigo 
+                                                          M.codigo,
+                                                          C.tipo_categoria,
+                                                          C.orden 
                                                    from motivo M,
                                                         categoria C,
                                                         formas_categorias F
-                                                        where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_1"] . " 
-                                                          and M.cod_categoria = C.cod_categoria 
-                                                          and C.ID_Forma = F.ID_Forma 
-                                                          and M.estado = 1 
-                                                          and C.estado = 1";
+                                                   where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_1"] . " 
+                                                     and M.cod_categoria = C.cod_categoria 
+                                                     and C.ID_Forma = F.ID_Forma 
+                                                     and M.estado = 1 
+                                                     and C.estado = 1";
                             $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
 
                             $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor . " - " . $ConsultarCodyColor . " valor:" . $Ret_Datos_Movimiento["motivo_1"]);
@@ -2814,7 +2886,11 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo["color"];
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
+                                                                                            $RetMotivo["color"], 
+                                                                                            $RetMotivo["tipo_categoria"],
+                                                                                            $RetMotivo["orden"]
+                            ];
                           }
                         }
 
@@ -2822,7 +2898,9 @@ $Con->CloseConexion();
                           $ConsultarCodyColor = "select M.cod_categoria,
                                                         F.Forma_Categoria,
                                                         C.color,
-                                                        M.codigo
+                                                        M.codigo,
+                                                        C.tipo_categoria,
+                                                        C.orden
                                                  from motivo M, 
                                                       categoria C, 
                                                       formas_categorias F 
@@ -2867,7 +2945,11 @@ $Con->CloseConexion();
                             $forma_motivo = substr($forma_motivo, 2);
                             $forma_motivo = substr($forma_motivo, 0, -1);
                           }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo["color"];
+                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
+                                                                                          $RetMotivo["color"], 
+                                                                                          $RetMotivo["tipo_categoria"],
+                                                                                          $RetMotivo["orden"]
+                          ];
                         }
                       }
 
@@ -2877,7 +2959,9 @@ $Con->CloseConexion();
                             $ConsultarCodyColor2 = "select M.cod_categoria, 
                                                            F.Forma_Categoria, 
                                                            C.color, 
-                                                           M.codigo 
+                                                           M.codigo,
+                                                           C.tipo_categoria,
+                                                           C.orden 
                                                     from motivo M, 
                                                          categoria C, 
                                                          formas_categorias F 
@@ -2925,7 +3009,11 @@ $Con->CloseConexion();
                             $forma_motivo = substr($forma_motivo, 2);
                             $forma_motivo = substr($forma_motivo, 0, -1);
                           }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo2["color"];
+                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
+                                                                                          $RetMotivo2["color"], 
+                                                                                          $RetMotivo2["tipo_categoria"],
+                                                                                          $RetMotivo2["orden"]
+                          ];
                           }
                         }
                         if ($ID_Motivo2 > 0) {
@@ -2933,7 +3021,9 @@ $Con->CloseConexion();
                             $ConsultarCodyColor2 = "select M.cod_categoria, 
                                                            F.Forma_Categoria, 
                                                            C.color, 
-                                                           M.codigo 
+                                                           M.codigo,
+                                                           C.tipo_categoria,
+                                                           C.orden 
                                                     from motivo M, 
                                                          categoria C, 
                                                          formas_categorias F 
@@ -2980,7 +3070,11 @@ $Con->CloseConexion();
                             $forma_motivo = substr($forma_motivo, 2);
                             $forma_motivo = substr($forma_motivo, 0, -1);
                           }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo2["color"];
+                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
+                                                                                          $RetMotivo2["color"], 
+                                                                                          $RetMotivo2["tipo_categoria"],
+                                                                                          $RetMotivo2["orden"]
+                          ];
                           }
                         }
                         if ($ID_Motivo3 > 0) {
@@ -2988,7 +3082,9 @@ $Con->CloseConexion();
                             $ConsultarCodyColor2 = "select M.cod_categoria, 
                                                            F.Forma_Categoria, 
                                                            C.color, 
-                                                           M.codigo 
+                                                           M.codigo,
+                                                           C.tipo_categoria,
+                                                           C.orden 
                                                     from motivo M, 
                                                          categoria C, 
                                                          formas_categorias F 
@@ -3036,12 +3132,29 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo2["color"];
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
+                                                                                            $RetMotivo2["color"], 
+                                                                                            $RetMotivo2["tipo_categoria"],
+                                                                                            $RetMotivo2["orden"]
+                            ];
                           }
                         }
                         if ($ID_Motivo4 > 0) {
                           if ($ID_Motivo4 == $Ret_Datos_Movimiento["motivo_2"]) {
-                            $ConsultarCodyColor2 = "select  M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_2"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
+                            $ConsultarCodyColor2 = "select  M.cod_categoria, 
+                                                            F.Forma_Categoria, 
+                                                            C.color, 
+                                                            M.codigo,
+                                                            C.tipo_categoria,
+                                                            C.orden
+                                                            from motivo M, 
+                                                                 categoria C, 
+                                                                 formas_categorias F 
+                                                            where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_2"] . " 
+                                                              and M.cod_categoria = C.cod_categoria 
+                                                              and C.ID_Forma = F.ID_Forma 
+                                                              and M.estado = 1 
+                                                              and C.estado = 1";
                             $MensajeErrorConsultarCodyColor2 = "No se pudieron consultar los motivos de los Movimientos";
 
 
@@ -3081,12 +3194,29 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo2["color"];
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
+                                                                                            $RetMotivo2["color"], 
+                                                                                            $RetMotivo2["tipo_categoria"],
+                                                                                            $RetMotivo2["orden"]
+                            ];
                           }
                         }
                         if ($ID_Motivo5 > 0) {
                           if ($ID_Motivo5 == $Ret_Datos_Movimiento["motivo_2"]) {
-                            $ConsultarCodyColor2 = "select  M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_2"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
+                            $ConsultarCodyColor2 = "select  M.cod_categoria, 
+                                                            F.Forma_Categoria, 
+                                                            C.color, 
+                                                            M.codigo,
+                                                            C.tipo_categoria,
+                                                            C.orden
+                                                            from motivo M, 
+                                                                 categoria C, 
+                                                                 formas_categorias F 
+                                                            where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_2"] . " 
+                                                              and M.cod_categoria = C.cod_categoria 
+                                                              and C.ID_Forma = F.ID_Forma 
+                                                              and M.estado = 1 
+                                                              and C.estado = 1";
                             $MensajeErrorConsultarCodyColor2 = "No se pudieron consultar los motivos de los Movimientos";
 
 
@@ -3126,11 +3256,28 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo2["color"];
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
+                                                                                            $RetMotivo2["color"], 
+                                                                                            $RetMotivo2["tipo_categoria"],
+                                                                                            $RetMotivo2["orden"]
+                            ];
                           }
                         }
                         if ($CantOpMotivos == 0) {
-                          $ConsultarCodyColor2 = "select  M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_2"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
+                          $ConsultarCodyColor2 = "select  M.cod_categoria, 
+                                                          F.Forma_Categoria, 
+                                                          C.color, 
+                                                          M.codigo,
+                                                          C.tipo_categoria,
+                                                          C.orden
+                                                  from motivo M, 
+                                                       categoria C, 
+                                                       formas_categorias F 
+                                                  where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_2"] . " 
+                                                    and M.cod_categoria = C.cod_categoria 
+                                                    and C.ID_Forma = F.ID_Forma 
+                                                    and M.estado = 1 
+                                                    and C.estado = 1";
                           $MensajeErrorConsultarCodyColor2 = "No se pudieron consultar los motivos de los Movimientos";
 
 
@@ -3170,14 +3317,31 @@ $Con->CloseConexion();
                             $forma_motivo = substr($forma_motivo, 2);
                             $forma_motivo = substr($forma_motivo, 0, -1);
                           }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo2["color"];
+                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
+                                                                                          $RetMotivo2["color"], 
+                                                                                          $RetMotivo2["tipo_categoria"],
+                                                                                          $RetMotivo2["orden"]
+                          ];
                         }
                       }
 
                       if ($Ret_Datos_Movimiento["motivo_3"] > 1 && $Ret_Datos_Movimiento["permiso_3"]) {
                         if ($ID_Motivo > 0) {
                           if ($ID_Motivo == $Ret_Datos_Movimiento["motivo_3"]) {
-                            $ConsultarCodyColor3 = "select  M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
+                            $ConsultarCodyColor3 = "select  M.cod_categoria, 
+                                                            F.Forma_Categoria, 
+                                                            C.color, 
+                                                            M.codigo,
+                                                            C.tipo_categoria,
+                                                            C.orden 
+                                                    from motivo M, 
+                                                         categoria C, 
+                                                         formas_categorias F 
+                                                    where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " 
+                                                      and M.cod_categoria = C.cod_categoria 
+                                                      and C.ID_Forma = F.ID_Forma 
+                                                      and M.estado = 1 
+                                                      and C.estado = 1";
                             $MensajeErrorConsultarCodyColor3 = "No se pudieron consultar los motivos de los Movimientos";
             
                             $TomarCodyColor3 = mysqli_query($Con->Conexion, $ConsultarCodyColor3) or die($MensajeErrorConsultarCodyColor3 . " - " . $ConsultarCodyColor3 . " valor:" . $Ret_Datos_Movimiento["motivo_3"]);
@@ -3216,12 +3380,29 @@ $Con->CloseConexion();
                             $forma_motivo = substr($forma_motivo, 2);
                             $forma_motivo = substr($forma_motivo, 0, -1);
                           }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo3["color"];
+                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
+                                                                                          $RetMotivo3["color"], 
+                                                                                          $RetMotivo3["tipo_categoria"],
+                                                                                          $RetMotivo3["orden"]
+                          ];
                           }
                         }
                         if ($ID_Motivo2 > 0) {
                           if ($ID_Motivo2 == $Ret_Datos_Movimiento["motivo_3"]) {
-                            $ConsultarCodyColor3 = "select  M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
+                            $ConsultarCodyColor3 = "select  M.cod_categoria, 
+                                                            F.Forma_Categoria, 
+                                                            C.color, 
+                                                            M.codigo,
+                                                            C.tipo_categoria,
+                                                            C.orden 
+                                                    from motivo M, 
+                                                         categoria C, 
+                                                         formas_categorias F 
+                                                    where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " 
+                                                      and M.cod_categoria = C.cod_categoria 
+                                                      and C.ID_Forma = F.ID_Forma 
+                                                      and M.estado = 1 
+                                                      and C.estado = 1";
                             $MensajeErrorConsultarCodyColor3 = "No se pudieron consultar los motivos de los Movimientos";
             
                             $TomarCodyColor3 = mysqli_query($Con->Conexion, $ConsultarCodyColor3) or die($MensajeErrorConsultarCodyColor3 . " - " . $ConsultarCodyColor3 . " valor:" . $Ret_Datos_Movimiento["motivo_3"]);
@@ -3259,12 +3440,29 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo3["color"];
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
+                                                                                            $RetMotivo3["color"], 
+                                                                                            $RetMotivo3["tipo_categoria"],
+                                                                                            $RetMotivo3["orden"]
+                            ];
                           }
                         }
                         if ($ID_Motivo3 > 0) {
                           if ($ID_Motivo3 == $Ret_Datos_Movimiento["motivo_3"]) {
-                            $ConsultarCodyColor3 = "select  M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
+                            $ConsultarCodyColor3 = "select  M.cod_categoria, 
+                                                            F.Forma_Categoria, 
+                                                            C.color, 
+                                                            M.codigo,
+                                                            C.tipo_categoria,
+                                                            C.orden 
+                                                    from motivo M, 
+                                                         categoria C, 
+                                                         formas_categorias F 
+                                                    where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " 
+                                                      and M.cod_categoria = C.cod_categoria 
+                                                      and C.ID_Forma = F.ID_Forma 
+                                                      and M.estado = 1 
+                                                      and C.estado = 1";
                             $MensajeErrorConsultarCodyColor3 = "No se pudieron consultar los motivos de los Movimientos";
             
                             $TomarCodyColor3 = mysqli_query($Con->Conexion, $ConsultarCodyColor3) or die($MensajeErrorConsultarCodyColor3 . " - " . $ConsultarCodyColor3 . " valor:" . $Ret_Datos_Movimiento["motivo_3"]);
@@ -3302,12 +3500,29 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo3["color"];   
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
+                                                                                            $RetMotivo3["color"], 
+                                                                                            $RetMotivo3["tipo_categoria"],
+                                                                                            $RetMotivo3["orden"]
+                            ];
                           }
                         }
                         if ($ID_Motivo4 > 0) {
                           if ($ID_Motivo4 == $Ret_Datos_Movimiento["motivo_3"]) {
-                            $ConsultarCodyColor3 = "select  M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
+                            $ConsultarCodyColor3 = "select  M.cod_categoria, 
+                                                            F.Forma_Categoria, 
+                                                            C.color, 
+                                                            M.codigo,
+                                                            C.tipo_categoria,
+                                                            C.orden
+                                                    from motivo M, 
+                                                         categoria C, 
+                                                         formas_categorias F 
+                                                    where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " 
+                                                      and M.cod_categoria = C.cod_categoria 
+                                                      and C.ID_Forma = F.ID_Forma 
+                                                      and M.estado = 1 
+                                                      and C.estado = 1";
                             $MensajeErrorConsultarCodyColor3 = "No se pudieron consultar los motivos de los Movimientos";
             
                             $TomarCodyColor3 = mysqli_query($Con->Conexion, $ConsultarCodyColor3) or die($MensajeErrorConsultarCodyColor3 . " - " . $ConsultarCodyColor3 . " valor:" . $Ret_Datos_Movimiento["motivo_3"]);
@@ -3345,12 +3560,29 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo3["color"];   
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
+                                                                                            $RetMotivo3["color"], 
+                                                                                            $RetMotivo3["tipo_categoria"],
+                                                                                            $RetMotivo3["orden"]
+                            ];
                           }
                         }
                         if ($ID_Motivo5 > 0) {
                           if ($ID_Motivo5 == $Ret_Datos_Movimiento["motivo_3"]) {
-                            $ConsultarCodyColor3 = "select  M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
+                            $ConsultarCodyColor3 = "select  M.cod_categoria, 
+                                                            F.Forma_Categoria, 
+                                                            C.color, 
+                                                            M.codigo,
+                                                            C.tipo_categoria,
+                                                            C.orden 
+                                                    from motivo M, 
+                                                         categoria C, 
+                                                         formas_categorias F 
+                                                    where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " 
+                                                      and M.cod_categoria = C.cod_categoria 
+                                                      and C.ID_Forma = F.ID_Forma 
+                                                      and M.estado = 1 
+                                                      and C.estado = 1";
                             $MensajeErrorConsultarCodyColor3 = "No se pudieron consultar los motivos de los Movimientos";
             
                             $TomarCodyColor3 = mysqli_query($Con->Conexion, $ConsultarCodyColor3) or die($MensajeErrorConsultarCodyColor3 . " - " . $ConsultarCodyColor3 . " valor:" . $Ret_Datos_Movimiento["motivo_3"]);
@@ -3388,11 +3620,28 @@ $Con->CloseConexion();
                               $forma_motivo = substr($forma_motivo, 2);
                               $forma_motivo = substr($forma_motivo, 0, -1);
                             }
-                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo3["color"];   
+                            $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
+                                                                                            $RetMotivo3["color"], 
+                                                                                            $RetMotivo3["tipo_categoria"],
+                                                                                            $RetMotivo3["orden"]
+                            ];
                           }
                         }
                         if ($CantOpMotivos == 0) {
-                          $ConsultarCodyColor3 = "select  M.cod_categoria, F.Forma_Categoria, C.color, M.codigo from motivo M, categoria C, formas_categorias F where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
+                          $ConsultarCodyColor3 = "select  M.cod_categoria, 
+                                                          F.Forma_Categoria, 
+                                                          C.color, 
+                                                          M.codigo,
+                                                          C.tipo_categoria,
+                                                          C.orden 
+                                                  from motivo M, 
+                                                       categoria C, 
+                                                       formas_categorias F 
+                                                  where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " 
+                                                    and M.cod_categoria = C.cod_categoria 
+                                                    and C.ID_Forma = F.ID_Forma 
+                                                    and M.estado = 1 
+                                                    and C.estado = 1";
                           $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
 
 
@@ -3431,7 +3680,11 @@ $Con->CloseConexion();
                             $forma_motivo = substr($forma_motivo, 2);
                             $forma_motivo = substr($forma_motivo, 0, -1);
                           }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = $RetMotivo3["color"];
+                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
+                                                                                          $RetMotivo3["color"], 
+                                                                                          $RetMotivo3["tipo_categoria"],
+                                                                                          $RetMotivo3["orden"]
+                          ];
                         }
                       }
                     }
