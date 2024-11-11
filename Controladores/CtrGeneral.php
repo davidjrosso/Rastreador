@@ -1794,7 +1794,7 @@ class CtrGeneral{
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
 		if($Regis > 0){
-			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:100px;'>Registro 1</th><th style='min-width:100px;'>Registro 2</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Tipo</th><th style='min-width:100px;'>Acción</th></tr></thead>";
+			$Table = "<table id='solicitudes-unificacion' class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:100px;'>Registro 1</th><th style='min-width:100px;'>Registro 2</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Tipo</th><th style='min-width:100px;'>Acción</th></tr></thead>";
 			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 				$Fecha = implode("/", array_reverse(explode("-",$Ret["Fecha"])));
 				$ID_Registro_1 = $Ret["ID_Registro_1"];
@@ -1949,10 +1949,119 @@ class CtrGeneral{
 		return $Table;
 	}
 
+	public function get_solicitudes_motivo(){
+		$Con = new Conexion();
+		$Con->OpenConexion();
+
+		$Table = "<table id='solicitudes-motivo' class='table-responsive table-bordered'>
+		<thead>
+		  <tr>
+			  <th style='min-width:50px;'>Id</th>
+			<th style='min-width:100px;'>Fecha</th>
+			<th style='min-width:300px;'>Motivo</th>
+			<th style='min-width:100px;'>Codigo</th>
+			<th style='min-width:100px;'>Usuario</th>
+			<th style='min-width:100px;'>Acción</th>
+		  </tr>
+		</thead>";
+
+		$Consulta = "select S.ID, 
+							S.Fecha, 
+							S.Motivo, 
+							S.Codigo, 
+							S.Cod_Categoria, 
+							S.Num_Motivo, 
+							U.username 
+					 from solicitudes_crearmotivos S, 
+					 	  accounts U 
+					 where S.ID_Usuario = U.accountid 
+					   and S.Estado = 1 
+					 order by S.Fecha";
+		$MessageError = "Problemas al intentar mostrar Solicitudes";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$regis_crear = mysqli_num_rows($Con->ResultSet);
+		if($regis_crear > 0){
+			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
+				$ID = $Ret["ID"];
+				$Fecha = implode("/", array_reverse(explode("-",$Ret["Fecha"])));
+				$Motivo = $Ret["Motivo"];
+				$Codigo = $Ret["Codigo"];
+				$Num_Motivo = $Ret["Num_Motivo"];
+				$Usuario = $Ret["username"];
+				$Categoria = $Ret["Cod_Categoria"];
+				$Table .= "<tr><td>".$ID."</td><td>".$Fecha."</td><td>".$Motivo."</td><td>".$Codigo."</td><td>".$Usuario."</td><td><button class='btn btn-success' onClick='VerificarCrearMotivo(".$ID.",\"".$Fecha."\",\"".$Motivo."\",\"".$Codigo."\",".$Num_Motivo.",\"".$Categoria."\")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarCrearMotivo(".$Ret["ID"].")'><i class='fa fa-times'></i></button></td></tr>";
+			}			
+		}
+
+		$Consulta = "select S.ID,
+							S.Fecha, 
+							S.Motivo, 
+							S.Codigo, 
+							S.Cod_Categoria, 
+							S.Num_Motivo, 
+							U.username, 
+							S.ID_Motivo 
+					 from solicitudes_modificarmotivos S, 
+					 	  accounts U 
+					 where S.ID_Usuario = U.accountid 
+					   and S.Estado = 1 
+					 order by S.Fecha";
+		$MessageError = "Problemas al intentar mostrar Solicitudes";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$regis_modificar = mysqli_num_rows($Con->ResultSet);
+		if($regis_modificar > 0){
+			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
+				$ID = $Ret["ID"];
+				$Fecha = implode("/", array_reverse(explode("-",$Ret["Fecha"])));
+				$Motivo = $Ret["Motivo"];
+				$Codigo = $Ret["Codigo"];				
+				$Num_Motivo = $Ret["Num_Motivo"];
+				$Usuario = $Ret["username"];	
+				$ID_Motivo = $Ret["ID_Motivo"];			
+				$Table .= "<tr><td>".$ID."</td><td>".$Fecha."</td><td>".$Motivo."</td><td>".$Codigo."</td><td>".$Usuario."</td><td><button class='btn btn-success' onClick='VerificarModificarMotivo(".$ID.",\"".$Fecha."\",\"".$Motivo."\",\"".$Codigo."\",".$Num_Motivo.",".$ID_Motivo.")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarModificacionMotivo(".$Ret["ID"].")'><i class='fa fa-times'></i></button></td></tr>";
+			}
+		}
+
+		$Consulta = "select S.ID, 
+							S.Fecha, 
+							S.Motivo, 
+							S.Cod_Categoria, 
+							S.Num_Motivo, 
+							U.username, 
+							S.ID_Motivo 
+					 from solicitudes_eliminarmotivos S, 
+					 	  accounts U 
+					 where S.ID_Usuario = U.accountid 
+					   and S.Estado = 1 
+					 order by S.Fecha";
+		$MessageError = "Problemas al intentar mostrar Solicitudes eliminar motivos";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$regis_del = mysqli_num_rows($Con->ResultSet);
+		if($regis_del > 0){
+			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
+				$ID = $Ret["ID"];
+				$Fecha = implode("/", array_reverse(explode("-",$Ret["Fecha"])));
+				$Motivo = $Ret["Motivo"];
+				$Cod_Categoria = $Ret["Cod_Categoria"];
+				$Num_Motivo = $Ret["Num_Motivo"];
+				$Usuario = $Ret["username"];	
+				$ID_Motivo = $Ret["ID_Motivo"];			
+				$Table .= "<tr><td>".$ID."</td><td>".$Fecha."</td><td>".$Motivo."</td><td>".$Cod_Categoria."</td><td>".$Usuario."</td><td><button class='btn btn-success' onClick='VerificarEliminarMotivo(".$ID_Motivo.")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarEliminacionMotivo(".$Ret["ID"].")'><i class='fa fa-times'></i></button></td></tr>";
+			}
+		}
+
+		$Table .= "</table>";
+
+		$Con->CloseConexion();
+		return $Table;
+	}
+
 	public function getCantSolicitudes_Crear_Categoria(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select ID from solicitudes_crearcategorias where Estado = 1";
+		$Consulta = "select ID 
+					 from solicitudes_crearcategorias 
+					 where Estado = 1";
 		$MessageError = "Problemas al intentar consultar cantidad de Solicitudes Categorias";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
@@ -2102,6 +2211,182 @@ class CtrGeneral{
 		return $Table;
 	}
 
+	public function get_solicitudes_categoria(){
+		$Con = new Conexion();
+		$Con->OpenConexion();
+
+		$Table = "<table id='solicitudes-categoria' class='table-responsive table-bordered'>
+					<thead>
+						<tr>
+							<th style='min-width:50px;'>Id</th>
+							<th style='min-width:100px;'>Fecha</th>
+							<th style='min-width:100px;'>Código</th>
+							<th style='min-width:130px;'>Denominación</th>
+							<th style='min-width:100px;'>Permisos</th>
+							<th style='min-width:100px;'>Usuario</th>
+							<th style='min-width:100px;'>Acción</th>
+						</tr>
+					</thead>";
+
+		$Consulta = "select S.ID, 
+							S.Fecha, 
+							S.Codigo, 
+							S.Categoria, 
+							S.ID_Forma, 
+							S.Color, 
+							S.Categoria, 
+							U.username 
+					 from solicitudes_crearcategorias S, 
+					 	  accounts U 
+					 where S.ID_Usuario = U.accountid 
+					   and S.Estado = 1 
+					 order by S.Fecha";
+		$MessageError = "Problemas al intentar mostrar Solicitudes Categorias";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$regis_crear = mysqli_num_rows($Con->ResultSet);
+		if($regis_crear > 0){
+			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
+				$ID = $Ret["ID"];
+				$ConsultaPermisos = "select  *
+									 from solicitudes_permisos s inner join Tipo_Usuarios t on t.ID_TipoUsuario = s.ID_TipoUsuario
+									 where ID = {$ID}
+									   and estado = 1";
+				$MessageError = "Problemas al intentar mostrar Solicitudes Permisos";
+				$Resultados = mysqli_query($Con->Conexion,$ConsultaPermisos) or die($MessageError);
+				$Permisos = ""; 
+				while ($RetPermisos = mysqli_fetch_array($Resultados)) {
+					$Permisos .= $RetPermisos["abreviacion"] . " " ;
+				}
+				$Fecha = implode("/", array_reverse(explode("-",$Ret["Fecha"])));
+				$Codigo = $Ret["Codigo"];
+				$Categoria = $Ret["Categoria"];
+				$ID_Forma = $Ret["ID_Forma"];
+				$Color = $Ret["Color"];
+				$Usuario = $Ret["username"];						
+				$Table .= "<tr>
+								<td>".$ID."</td>
+								<td>".$Fecha."</td>
+								<td>".$Codigo."</td>
+								<td>".$Categoria."</td>
+								<td>".(($Permisos !="")?$Permisos:"Ninguno")."</td>
+								<td>".$Usuario."</td>
+								<td>
+									<button class='btn btn-success' onClick='VerificarCrearCategoria(".$ID.",\"".$Fecha."\",\"".$Codigo."\",\"".$Categoria."\",\"".$ID_Forma."\",\"".$Color."\")'>
+										<i class='fa fa-check'></i>
+									</button>
+									<button class='btn btn-danger' onClick='CancelarCrearCategoria(".$Ret["ID"].")'>
+										<i class='fa fa-times'></i>
+									</button>
+								</td>
+							</tr>";
+			}
+		}
+		$Consulta = "select S.ID, 
+							S.Fecha, 
+							S.Codigo, 
+							S.Categoria, 
+							S.ID_Forma, 
+							S.NuevoColor, 
+							S.ID_Categoria, 
+							U.username 
+					 from solicitudes_modificarcategorias S,
+						 accounts U 
+					 where S.ID_Usuario = U.accountid 
+					   and S.Estado = 1
+					 order by S.Fecha";
+
+		$MessageError = "Problemas al intentar mostrar Solicitudes Categorias";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$regis_modificar = mysqli_num_rows($Con->ResultSet);
+
+		if($regis_modificar > 0){
+			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
+				$ID = $Ret["ID"];
+				$ConsultaPermisos = "select  *
+									 from solicitudes_permisos s inner join Tipo_Usuarios t on t.ID_TipoUsuario = s.ID_TipoUsuario
+									 where ID = {$ID}
+									   and estado = 1";
+				$MessageError = "Problemas al intentar mostrar Solicitudes Permisos";
+				$Resultados = mysqli_query($Con->Conexion,$ConsultaPermisos) or die($MessageError);
+				$Permisos = ""; 
+				while ($RetPermisos = mysqli_fetch_array($Resultados)) {
+					$Permisos .= $RetPermisos["abreviacion"] . " " ;
+				}
+
+				$Fecha = implode("/", array_reverse(explode("-",$Ret["Fecha"])));
+				$Codigo = $Ret["Codigo"];
+				$Categoria = $Ret["Categoria"];		
+				$ID_Forma = $Ret["ID_Forma"];
+				$NuevoColor = $Ret["NuevoColor"];	
+				$ID_Categoria = $Ret["ID_Categoria"];	
+				$Usuario = $Ret["username"];							
+				$Table .= "<tr>
+								<td>".$ID."</td>
+								<td>".$Fecha."</td>
+								<td>".$Codigo."</td>
+								<td>".$Categoria."</td>
+								<td>".(($Permisos !="")?$Permisos:"Ninguno")."</td>
+								<td>".$Usuario."</td>
+								<td>
+									<button class='btn btn-success' onClick='VerificarModificarCategoria(".$ID.",\"".$Fecha."\",\"".$Codigo."\",\"".$Categoria."\",\"".$ID_Forma."\",\"".$NuevoColor."\",\"".$ID_Categoria."\")'>
+										<i class='fa fa-check'></i>
+									</button>
+									<button class='btn btn-danger' onClick='CancelarModificacionCategoria(".$Ret["ID"].")'>
+										<i class='fa fa-times'></i>
+									</button>
+								</td>
+							</tr>";
+			}			
+		}
+
+		$Consulta = "select S.ID, S.Fecha, 
+					 S.Categoria, 
+					 S.Cod_Categoria, 
+					 U.username, 
+					 S.ID_Categoria 
+					 from solicitudes_eliminarcategorias S, 
+						  accounts U
+					 where S.ID_Usuario = U.accountid and S.Estado = 1 order by S.Fecha";
+
+		$MessageError = "Problemas al intentar mostrar Solicitudes eliminar categorias";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$regis_eliminar = mysqli_num_rows($Con->ResultSet);
+		if($regis_eliminar > 0){
+			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
+				$ID = $Ret["ID"];
+				$Fecha = implode("/", array_reverse(explode("-",$Ret["Fecha"])));
+				$Categoria = $Ret["Categoria"];
+				$Cod_Categoria = $Ret["Cod_Categoria"];				
+				$Usuario = $Ret["username"];	
+				$ID_Categoria = $Ret["ID_Categoria"];			
+				$Table .= "<tr>
+								<td>" . $ID . "</td>
+								<td>" . $Fecha . "</td>
+								<td>" . $Categoria . "</td>
+								<td>" . $Cod_Categoria . "</td>
+								<td>" . "Sin permisos" . "</td>
+								<td>" . $Usuario . "</td>
+								<td>
+									<button class='btn btn-success' onClick='VerificarEliminarCategoria(".$ID_Categoria.")'>
+										<i class='fa fa-check'></i>
+									</button>
+									<button class='btn btn-danger' onClick='CancelarEliminacionCategoria(".$Ret["ID"].")'>
+										<i class='fa fa-times'></i>
+									</button>
+								</td>
+							</tr>";
+			}
+		}
+		$Table .= "</table>";
+
+		if ($regis_crear > 0 && $regis_modificar > 0) {
+			$Table = "No existen solicitudes de unificación pendientes de aprobación.";
+		}
+		
+		$Con->CloseConexion();
+		return $Table;
+	}
+
 	public function getCategorias_Roles_ID($XID){
 		$Con = new Conexion();
 		$Con->OpenConexion();
@@ -2186,7 +2471,11 @@ class CtrGeneral{
 	public function getSolicitudes_EliminacionCategoria(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select S.ID, S.Fecha, S.Categoria, S.Cod_Categoria, U.username, S.ID_Categoria 
+		$Consulta = "select S.ID, S.Fecha, 
+							S.Categoria, 
+							S.Cod_Categoria, 
+							U.username, 
+							S.ID_Categoria 
 					 from solicitudes_eliminarcategorias S, 
 					 	  accounts U
 					 where S.ID_Usuario = U.accountid and S.Estado = 1 order by S.Fecha";
@@ -2241,7 +2530,15 @@ class CtrGeneral{
 	public function getSolicitudes_Notificaciones(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select N.ID_Notificacion, N.Detalle, N.Fecha, N.Expira, N.Estado from notificaciones N where N.Expira > CURDATE() and N.Estado = 1 order by N.Fecha";
+		$Consulta = "select N.ID_Notificacion, 
+							N.Detalle, 
+							N.Fecha, 
+							N.Expira, 
+							N.Estado 
+					 from notificaciones N 
+					 where N.Expira > CURDATE() 
+					   and N.Estado = 1 
+					order by N.Fecha";
 		$MessageError = "Problemas al intentar mostrar Notificaciones";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
@@ -2269,7 +2566,14 @@ class CtrGeneral{
 	public function getNotificaciones(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select ID_Notificacion, Detalle, Fecha, Expira, Estado from notificaciones where Expira > CURDATE() and Estado = 1";
+		$Consulta = "select ID_Notificacion, 
+							Detalle, 
+							Fecha, 
+							Expira, 
+							Estado 
+					 from notificaciones 
+					 where Expira > CURDATE() 
+					   and Estado = 1";
 		$MessageError = "Problemas al intentar mostrar Notificaciones";
 		$Con->ResultSet = mysqli_query($Con->Conexion, $Consulta) or die($MessageError);
 		$retNot = mysqli_fetch_assoc($Con->ResultSet);
