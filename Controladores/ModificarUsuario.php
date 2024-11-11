@@ -66,7 +66,7 @@ try {
 		if ($userpass) {
 			$solicitud = new Solicitud_Usuario(
 				usuario: $ID_Usuario,
-				descripcion: "contraseña $user_pass",
+				descripcion: "contraseña " . $userpass,
 				estado:1,
 				tipo: 1
 			);
