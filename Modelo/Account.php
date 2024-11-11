@@ -1,6 +1,5 @@
 <?php
-require_once 'Conexion.php';
-
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Controladores/Conexion.php");
 class Account implements JsonSerializable {
 	//DECLARACION DE VARIABLES
 	private $account_id;
