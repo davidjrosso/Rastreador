@@ -310,6 +310,38 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
         });
     }
 
+    function CancelarModificacionUsario(xID) {
+      swal({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer borrar esta petición de modificación?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+        .then((willDelete) => {
+          if (willDelete) {
+            window.location.href = 'Controladores/DeletePeticionModificacionUsuario.php?ID=' + xID;
+            //alert('SI');
+          } else {
+          }
+        });
+    }
+
+    function ConfirmarModificacionUsario(xID) {
+      swal({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer confirmar esta petición de modificación?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+        .then((willDelete) => {
+          if (willDelete) {
+            window.location.href = 'Controladores/ConfirmarPeticionModificacionUsuario.php?ID=' + xID;
+          } else {
+          }
+        });
+    }
   </script>
   <style>
     #solicitudes-categoria {
@@ -423,7 +455,7 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
               }
               if ($cant_usuario > 0) {
                 ?>
-                <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Usario</h3>
+                <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Usuario</h3>
                 <?php
                     echo $dt_general->get_solicitudes_usuario();
                   }

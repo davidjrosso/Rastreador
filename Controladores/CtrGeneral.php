@@ -2623,10 +2623,10 @@ class CtrGeneral{
 							 <td>" . $descripcion . "</td>
 							 <td>" . $tipo . "</td>
 							 <td>
-								 <button class='btn btn-success' onClick='VerificarEliminarCategoria(" . $ret_id_solicitud . ")'>
+								 <button class='btn btn-success' onClick='ConfirmarModificacionUsario(" . $ret_id_solicitud . ")'>
 								   <i class='fa fa-check'></i>
 								 </button>
-								 <button class='btn btn-danger' onClick='CancelarEliminacionCategoria(". $ret_id_solicitud . ")'>
+								 <button class='btn btn-danger' onClick='CancelarModificacionUsario(". $ret_id_solicitud . ")'>
 								   <i class='fa fa-times'></i>
 								 </button>
 							 </td>
