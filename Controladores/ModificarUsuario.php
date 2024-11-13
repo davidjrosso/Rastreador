@@ -22,7 +22,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . 'Modelo/Solicitud_Usuario.php';
  */
 
 $ID_Usuario = $_SESSION["Usuario"];
-$account_id = $_REQUEST["account_id"];
+$account_id = (isset($_REQUEST["account_id"])) ? ucfirst($_REQUEST["account_id"]) : null;
 $lastname = (isset($_REQUEST["lastname"])) ? ucfirst($_REQUEST["lastname"]) : null;
 $firstname = (isset($_REQUEST["firstname"])) ? ucwords($_REQUEST["firstname"]) : null;
 $initials = (isset($_REQUEST["initials"])) ? strtoupper($_REQUEST["initials"]) : null;
@@ -30,10 +30,10 @@ $username = (isset($_REQUEST["username"])) ? $_REQUEST["username"]: null;
 $userpass = (isset($_REQUEST["userpass"])) ? $_REQUEST["userpass"] : null;
 $email = (isset($_REQUEST["email"])) ? $_REQUEST["email"] : null;
 $ID_TipoUsuario = (isset($_REQUEST["ID_TipoUsuario"])) ? $_REQUEST["ID_TipoUsuario"] : null;
-$id_solcitud = (isset($_REQUEST["id_solcitud"])) ? $_REQUEST["id_solcitud"] : null;
+$id_solicitud = (isset($_REQUEST["id_solcitud"])) ? $_REQUEST["id_solcitud"] : null;
 
 try {
-	if (!$id_solcitud) {
+	if (!$id_solicitud) {
 		$has8characters = (mb_strlen($userpass) == 8);
 		$hasAlpha = preg_match('~[a-zA-Z]+~', $userpass);
 		$hasNum = preg_match('~[0-9]+~', $userpass);
@@ -68,10 +68,11 @@ try {
 				$solicitud = new Solicitud_Usuario(
 					usuario: $ID_Usuario,
 					descripcion: "contraseña " . $userpass,
-					estado:1,
+					estado: 1,
 					tipo: 1
 				);
 				$solicitud->save();
+				echo "por aca";
 				$Mensaje = "La peticion de modificacion de contaseña fue enviada la administrador";
 			} else {
 				$Mensaje = "El Usuario fue modificado Correctamente";
@@ -83,11 +84,14 @@ try {
 			id_solicitud: $id_solicitud
 		);
 		$password = $solicitud->get_password();
+		$account_id = $solicitud->get_usuario();
+		$solicitud->delete();
 		$user = new Account(
-			account_id: $account_id
+			account_id: $account_id,
+			password: $password
 		);
 		$user->set_password($password);
-		$user->save();
+		$user->update();
 		$Mensaje = "El Usuario fue modificado Correctamente";
 		header("Location: ../view_solicitud.php?Mensaje=" . $Mensaje);
 

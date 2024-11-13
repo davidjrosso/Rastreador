@@ -271,11 +271,12 @@ public function update()
 					 ID_TipoUsuario = " . ((!is_null($this->get_id_tipo_usuario())) ? "'" . $this->get_id_tipo_usuario() . "'" : "null") . ", 
 					 estado = " . ((!is_null($this->get_estado())) ? $this->get_estado() : "null") . " 
 				 where accountid = " . $this->get_account_id();
-				 $MensajeErrorConsultar = "No se pudo actualizar la Persona";
-				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
-					throw new Exception($MensajeErrorConsultar . $Consulta, 2);
-				}
-				 $Con->CloseConexion();
+	$MensajeErrorConsultar = "No se pudo actualizar la Persona";
+	echo $Consulta;
+	if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+		throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+	}
+	$Con->CloseConexion();
 }
 
 public function save(){
@@ -316,11 +317,12 @@ public function save(){
 						 " . ((!is_null($this->get_id_tipo_usuario())) ? $this->get_id_tipo_usuario() : "null") . ",
 						 1
 				 )";
-				 $MensajeErrorConsultar = "No se pudo insertar el usuario";
-				 if (!$Ret = mysqli_query($Con->Conexion, $consulta)) {
-					throw new Exception($MensajeErrorConsultar . $consulta, 2);
-				 }
-				 $Con->CloseConexion();
+	echo $consulta;
+	$MensajeErrorConsultar = "No se pudo insertar el usuario";
+	if (!$Ret = mysqli_query($Con->Conexion, $consulta)) {
+	throw new Exception($MensajeErrorConsultar . $consulta, 2);
+	}
+	$Con->CloseConexion();
 }
 
 public function __construct(
