@@ -882,7 +882,7 @@ class CtrGeneral{
 		return $table;
 	}
 
-	public function get_solicitudes($filtro, $value=null){
+	/*public function get_solicitudes($filtro, $value=null){
 		switch ($filtro) {
 			case 'caregoria':
 				$acciones = Accion::get_categoria($value);
@@ -920,7 +920,7 @@ class CtrGeneral{
 		}
 		$table .= "</tbody></table>";
 		return $table;
-	}
+	}*/
 
 	////////////////////////////////////////////////-PERSONAS-///////////////////////////////////////////////////
 

@@ -25,6 +25,10 @@ class Elements{
   const PAGINA_UNIFICACION_BARRIO = 17;
   const PAGINA_UNIFICACION_OTRA_INSTITUCION = 18;
   const PAGINA_UNIFICACION_CALLE = 19;
+  const PAGINA_AUDITORIA_ACCION = 24;
+  const PAGINA_AUDITORIA_SOLICITUD = 25;
+  const PAGINA_AUDITORIA_NOTIFICACION = 26;
+  
 
 	//Instanciando la Conexion
 	public function __construct(){
@@ -780,21 +784,137 @@ public function getMenuSeguridad($ID){
   }
 
   public function getMenuNotificacionUsuario($ID){
-    $menu = '<div class="menu-list">
-                <ul id="menu-content" class="menu-content collapse out">
-                    <li class="collapsed" onClick="location.href=\'view_notiifcacion.php\'">
-                      <a href="view_notiifcacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
-                    </li>
-                    <li class="collapsed" onClick="location.href=\'view_solicitud.php\'">
-                      <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
-                    </li>
-                    <li class="collapsed" onClick="location.href=\'view_auditoria.php\'">
-                      <a href="view_auditoria.php"><i class="fa fa-file-text fa-lg"></i>Acciones</a>
-                    </li>
-                </ul>
-              </div>';
+    switch ($ID) {
+        case self::PAGINA_AUDITORIA_NOTIFICACION:
+             $menu = '<div class="menu-list">
+                    <ul id="menu-content" class="menu-content collapse out">
+                        <li class="collapsed active" onClick="location.href=\'view_notiifcacion.php\'">
+                          <a href="view_notiifcacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                        </li>
+                        <li class="collapsed" onClick="location.href=\'view_solicitud.php\'">
+                          <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
+                        </li>
+                        <li class="collapsed" onClick="location.href=\'view_auditoria.php\'">
+                          <a href="view_auditoria.php"><i class="fa fa-file-text fa-lg"></i>Acciones</a>
+                        </li>
+                    </ul>
+                  </div>';
+             break;
+        case self::PAGINA_AUDITORIA_SOLICITUD:
+             $menu = '<div class="menu-list">
+                        <ul id="menu-content" class="menu-content collapse out">
+                            <li class="collapsed" onClick="location.href=\'view_notiifcacion.php\'">
+                              <a href="view_notiifcacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                            </li>
+                            <li class="collapsed active" onClick="location.href=\'view_solicitud.php\'">
+                              <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
+                            </li>
+                            <li class="collapsed" onClick="location.href=\'view_auditoria.php\'">
+                              <a href="view_auditoria.php"><i class="fa fa-file-text fa-lg"></i>Acciones</a>
+                            </li>
+                        </ul>
+                      </div>';
+             break;
+        case self::PAGINA_AUDITORIA_ACCION:
+              $menu = '<div class="menu-list">
+                        <ul id="menu-content" class="menu-content collapse out">
+                            <li class="collapsed" onClick="location.href=\'view_notiifcacion.php\'">
+                              <a href="view_notiifcacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                            </li>
+                            <li class="collapsed" onClick="location.href=\'view_solicitud.php\'">
+                              <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
+                            </li>
+                            <li class="collapsed active" onClick="location.href=\'view_auditoria.php\'">
+                              <a href="view_auditoria.php"><i class="fa fa-file-text fa-lg"></i>Acciones</a>
+                            </li>
+                        </ul>
+                      </div>';
+              break;
+        default:
+              $menu = '<div class="menu-list">
+                        <ul id="menu-content" class="menu-content collapse out">
+                            <li class="collapsed" onClick="location.href=\'view_notiifcacion.php\'">
+                              <a href="view_notiifcacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                            </li>
+                            <li class="collapsed" onClick="location.href=\'view_solicitud.php\'">
+                              <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
+                            </li>
+                            <li class="collapsed" onClick="location.href=\'view_auditoria.php\'">
+                              <a href="view_auditoria.php"><i class="fa fa-file-text fa-lg"></i>Acciones</a>
+                            </li>
+                        </ul>
+                      </div>';
+              break;
+    }
+
     return $menu;
   }
+
+  public function getMenuNotificacion($ID){
+    switch ($ID) {
+        case self::PAGINA_AUDITORIA_NOTIFICACION:
+             echo '<div class="menu-list">
+                    <ul id="menu-content" class="menu-content collapse out">
+                        <li class="collapsed active" onClick="location.href=\'view_notiifcacion.php\'">
+                          <a href="view_notiifcacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                        </li>
+                        <li class="collapsed" onClick="location.href=\'view_solicitud.php\'">
+                          <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
+                        </li>
+                        <li class="collapsed" onClick="location.href=\'view_auditoria.php\'">
+                          <a href="view_auditoria.php"><i class="fa fa-file-text fa-lg"></i>Acciones</a>
+                        </li>
+                    </ul>
+                  </div>';
+             break;
+        case self::PAGINA_AUDITORIA_SOLICITUD:
+             echo '<div class="menu-list">
+                        <ul id="menu-content" class="menu-content collapse out">
+                            <li class="collapsed" onClick="location.href=\'view_notiifcacion.php\'">
+                              <a href="view_notiifcacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                            </li>
+                            <li class="collapsed active" onClick="location.href=\'view_solicitud.php\'">
+                              <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
+                            </li>
+                            <li class="collapsed" onClick="location.href=\'view_auditoria.php\'">
+                              <a href="view_auditoria.php"><i class="fa fa-file-text fa-lg"></i>Acciones</a>
+                            </li>
+                        </ul>
+                      </div>';
+             break;
+        case self::PAGINA_AUDITORIA_ACCION:
+              echo '<div class="menu-list">
+                        <ul id="menu-content" class="menu-content collapse out">
+                            <li class="collapsed" onClick="location.href=\'view_notiifcacion.php\'">
+                              <a href="view_notiifcacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                            </li>
+                            <li class="collapsed" onClick="location.href=\'view_solicitud.php\'">
+                              <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
+                            </li>
+                            <li class="collapsed active" onClick="location.href=\'view_auditoria.php\'">
+                              <a href="view_auditoria.php"><i class="fa fa-file-text fa-lg"></i>Acciones</a>
+                            </li>
+                        </ul>
+                      </div>';
+              break;
+        default:
+              echo '<div class="menu-list">
+                        <ul id="menu-content" class="menu-content collapse out">
+                            <li class="collapsed" onClick="location.href=\'view_notiifcacion.php\'">
+                              <a href="view_notiifcacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                            </li>
+                            <li class="collapsed" onClick="location.href=\'view_solicitud.php\'">
+                              <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
+                            </li>
+                            <li class="collapsed" onClick="location.href=\'view_auditoria.php\'">
+                              <a href="view_auditoria.php"><i class="fa fa-file-text fa-lg"></i>Acciones</a>
+                            </li>
+                        </ul>
+                      </div>';
+              break;
+    }
+  }
+
   public function getMenuUnificacionUsuario($ID){
     switch ($ID) {
       case 13:

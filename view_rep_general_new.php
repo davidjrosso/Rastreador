@@ -1056,6 +1056,11 @@ $Con->CloseConexion();
             <?php
             $Element->getMenuSeguridad(0); ?>
           </div>
+          <div class="brand">Auditoria</div>
+          <div class="menu-list">
+              <?php $Element = new Elements();
+              $Element->getMenuNotificacion(0);?>
+          </div>
           <div class="brand">El Proyecto</div>
           <div class="menu-list">
             <?php
@@ -1102,6 +1107,11 @@ $Con->CloseConexion();
   
             <?php
             $Element->getMenuReportes(0);?>
+          </div>
+          <div class="brand">Auditoria</div>
+          <div class="menu-list">
+              <?php $Element = new Elements();
+              $Element->getMenuNotificacion(0);?>
           </div>
           <div class="brand">El Proyecto</div>
           <div class="menu-list">
@@ -1155,6 +1165,12 @@ $Con->CloseConexion();
 
             <?php
             $Element->getMenuUnificacion(0); ?>
+          </div>
+          <div class="brand">Auditoria</div>
+          <div class="menu-list">
+              <?php $Element = new Elements();
+              $Element->getMenuNotificacion(0);?>
+          </div>
           </div>
           <div class="brand">El Proyecto</div>
           <div class="menu-list">

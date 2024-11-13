@@ -81,7 +81,7 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
     echo $Element->menuDeNavegacion(
       TipoUsuario: $tipo_usuario,
       ID_Usuario: $id_usuario,
-      pagina: $Element::PAGINA_MOVIMIENTO
+      pagina: $Element::PAGINA_AUDITORIA_ACCION
     );
     ?>
     <div class="col-md-9">
