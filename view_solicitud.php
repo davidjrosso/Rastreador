@@ -105,7 +105,7 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
             window.location.href = 'Controladores/ModificarMotivo.php?ID=' + xID + '&Fecha=' + xFecha + '&Motivo=' + xMotivo + '&Codigo=' + xCodigo + '&Num_Motivo=' + xNum_Motivo + '&ID_Motivo=' + xID_Motivo;
             //alert('SI');
           } else {
-          }
+          } 
         });
     }
 
@@ -139,7 +139,6 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
         .then((willDelete) => {
           if (willDelete) {
             window.location.href = 'Controladores/ModificarCategoria.php?ID=' + xID + '&Fecha=' + xFecha + '&Codigo=' + xCodigo + '&Categoria=' + xCategoria + '&ID_Forma=' + xID_Forma + '&ID_Categoria=' + xID_Categoria + '&CodigoColor=' + NuevoColorBase;
-            //alert('SI');
           } else {
           }
         });
@@ -304,7 +303,6 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
         .then((willDelete) => {
           if (willDelete) {
             window.location.href = 'Controladores/DeletePeticionEliminacionCategoria.php?ID=' + xID;
-            //alert('SI');
           } else {
           }
         });

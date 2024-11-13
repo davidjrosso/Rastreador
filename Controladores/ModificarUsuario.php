@@ -72,7 +72,6 @@ try {
 					tipo: 1
 				);
 				$solicitud->save();
-				echo "por aca";
 				$Mensaje = "La peticion de modificacion de contaseña fue enviada la administrador";
 			} else {
 				$Mensaje = "El Usuario fue modificado Correctamente";
