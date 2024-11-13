@@ -2582,6 +2582,64 @@ class CtrGeneral{
 		return $ret;
 	}
 
+	public function get_lista_notificaciones(){
+		$Con = new Conexion();
+		$Con->OpenConexion();
+
+		$Table = "<table id='notificaciones' class='table-responsive table-bordered'>
+					<thead>
+						<tr>
+							<th style='min-width:50px;'>Id</th>
+							<th style='min-width:100px;'>Fecha</th>
+							<th style='min-width:300px;'>Detalle</th>
+							<th style='min-width:100px;'>tipo</th>
+							<th style='min-width:100px;'>Acción</th>
+						</tr>
+					</thead>
+					<tbody>";
+
+		$Consulta = "select ID_Notificacion, 
+							Detalle, 
+							Fecha, 
+							Expira, 
+							Estado 
+					 from notificaciones 
+					 where Expira > CURDATE() 
+					   and Estado = 1";
+		$MessageError = "Problemas al intentar mostrar Notificaciones";
+		$Con->ResultSet = mysqli_query($Con->Conexion, $Consulta) or die($MessageError);
+		$Regis = mysqli_num_rows($Con->ResultSet);
+		if($Regis > 0){
+			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
+				$ret_fecha = explode(" ", $Ret["Fecha"]);
+				$estado = $Ret["Estado"];
+				$ret_id_notificacion = $Ret["ID_Notificacion"];
+				$fecha = implode("/", array_reverse(explode("-",$ret_fecha[0])));
+				$descripcion = $Ret["Detalle"];												
+				$Table .= "<tr>
+							 <td>" . $ret_id_notificacion . "</td>
+							 <td>" . $fecha . "</td>
+							 <td>" . $descripcion . "</td>
+							 <td>" . $estado . "</td>
+							 <td>
+								 <button class='btn btn-success' onClick='ConfirmarModificacionUsario(" . $ret_id_notificacion . ")'>
+								   <i class='fa fa-check'></i>
+								 </button>
+								 <button class='btn btn-danger' onClick='CancelarModificacionUsario(". $ret_id_notificacion . ")'>
+								   <i class='fa fa-times'></i>
+								 </button>
+							 </td>
+						   </tr>";
+			}			
+			$Table .= "</tbody>
+					</table>";
+		}else{
+			$Table = "No existen notificaciones.";
+		}
+		$Con->CloseConexion();
+		return $Table;
+	}
+
 	public function get_cant_solicitudes_usuario(){
 		$Con = new Conexion();
 		$Con->OpenConexion();

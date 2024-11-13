@@ -788,8 +788,8 @@ public function getMenuSeguridad($ID){
         case self::PAGINA_AUDITORIA_NOTIFICACION:
              $menu = '<div class="menu-list">
                     <ul id="menu-content" class="menu-content collapse out">
-                        <li class="collapsed active" onClick="location.href=\'view_notiifcacion.php\'">
-                          <a href="view_notiifcacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                        <li class="collapsed active" onClick="location.href=\'view_notificacion.php\'">
+                          <a href="view_notificacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
                         </li>
                         <li class="collapsed" onClick="location.href=\'view_solicitud.php\'">
                           <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
@@ -803,8 +803,8 @@ public function getMenuSeguridad($ID){
         case self::PAGINA_AUDITORIA_SOLICITUD:
              $menu = '<div class="menu-list">
                         <ul id="menu-content" class="menu-content collapse out">
-                            <li class="collapsed" onClick="location.href=\'view_notiifcacion.php\'">
-                              <a href="view_notiifcacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                            <li class="collapsed" onClick="location.href=\'view_notificacion.php\'">
+                              <a href="view_notificacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
                             </li>
                             <li class="collapsed active" onClick="location.href=\'view_solicitud.php\'">
                               <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
@@ -818,8 +818,8 @@ public function getMenuSeguridad($ID){
         case self::PAGINA_AUDITORIA_ACCION:
               $menu = '<div class="menu-list">
                         <ul id="menu-content" class="menu-content collapse out">
-                            <li class="collapsed" onClick="location.href=\'view_notiifcacion.php\'">
-                              <a href="view_notiifcacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                            <li class="collapsed" onClick="location.href=\'view_notificacion.php\'">
+                              <a href="view_notificacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
                             </li>
                             <li class="collapsed" onClick="location.href=\'view_solicitud.php\'">
                               <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
@@ -833,8 +833,8 @@ public function getMenuSeguridad($ID){
         default:
               $menu = '<div class="menu-list">
                         <ul id="menu-content" class="menu-content collapse out">
-                            <li class="collapsed" onClick="location.href=\'view_notiifcacion.php\'">
-                              <a href="view_notiifcacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                            <li class="collapsed" onClick="location.href=\'view_notificacion.php\'">
+                              <a href="view_notificacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
                             </li>
                             <li class="collapsed" onClick="location.href=\'view_solicitud.php\'">
                               <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
@@ -855,8 +855,8 @@ public function getMenuSeguridad($ID){
         case self::PAGINA_AUDITORIA_NOTIFICACION:
              echo '<div class="menu-list">
                     <ul id="menu-content" class="menu-content collapse out">
-                        <li class="collapsed active" onClick="location.href=\'view_notiifcacion.php\'">
-                          <a href="view_notiifcacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                        <li class="collapsed active" onClick="location.href=\'view_notificacion.php\'">
+                          <a href="view_notificacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
                         </li>
                         <li class="collapsed" onClick="location.href=\'view_solicitud.php\'">
                           <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
@@ -870,8 +870,8 @@ public function getMenuSeguridad($ID){
         case self::PAGINA_AUDITORIA_SOLICITUD:
              echo '<div class="menu-list">
                         <ul id="menu-content" class="menu-content collapse out">
-                            <li class="collapsed" onClick="location.href=\'view_notiifcacion.php\'">
-                              <a href="view_notiifcacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                            <li class="collapsed" onClick="location.href=\'view_notificacion.php\'">
+                              <a href="view_notificacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
                             </li>
                             <li class="collapsed active" onClick="location.href=\'view_solicitud.php\'">
                               <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
@@ -885,8 +885,8 @@ public function getMenuSeguridad($ID){
         case self::PAGINA_AUDITORIA_ACCION:
               echo '<div class="menu-list">
                         <ul id="menu-content" class="menu-content collapse out">
-                            <li class="collapsed" onClick="location.href=\'view_notiifcacion.php\'">
-                              <a href="view_notiifcacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                            <li class="collapsed" onClick="location.href=\'view_notificacion.php\'">
+                              <a href="view_notificacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
                             </li>
                             <li class="collapsed" onClick="location.href=\'view_solicitud.php\'">
                               <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
@@ -900,8 +900,8 @@ public function getMenuSeguridad($ID){
         default:
               echo '<div class="menu-list">
                         <ul id="menu-content" class="menu-content collapse out">
-                            <li class="collapsed" onClick="location.href=\'view_notiifcacion.php\'">
-                              <a href="view_notiifcacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                            <li class="collapsed" onClick="location.href=\'view_notificacion.php\'">
+                              <a href="view_notificacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
                             </li>
                             <li class="collapsed" onClick="location.href=\'view_solicitud.php\'">
                               <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
