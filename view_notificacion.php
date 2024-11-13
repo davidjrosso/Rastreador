@@ -81,15 +81,12 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
-        <p>Movimientos</p>
+        <p>Notificaciones</p>
       </div>
       <div class="col"></div>
     </div><br>
     <div class="row">
       <div class = "col"></div>
-      <div class = "col-4">
-          <center><button class = "btn btn-secondary" onClick = "location.href='view_newmovimientos.php'">Agregar Nuevo Movimiento</button></center>
-      </div>
       <div class="col-2">
                 <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
       </div>
@@ -108,8 +105,8 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
               <label for="inputPassword" class="col-md-1 col-form-label LblForm">En: </label>
               <div class="col-md-3">
                 <select name = "ID_Filtro" class = "form-control">                                        
-                    <option value="usuario" selected>Usuario</option>
-                    <option value="tipo_accion">Tipo de Accion</option>
+                    <option value="usuario" selected>Activos</option>
+                    <option value="tipo_accion">Expirados</option>
                 </select>
               </div>
               <div class = "col-md-1">

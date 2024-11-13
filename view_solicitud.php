@@ -320,7 +320,7 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
       })
         .then((willDelete) => {
           if (willDelete) {
-            window.location.href = 'Controladores/DeletePeticionModificacionUsuario.php?ID=' + xID;
+            window.location.href = 'Controladores/DeletePeticionModificarUsuario.php?ID=' + xID;
             //alert('SI');
           } else {
           }
@@ -337,7 +337,7 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
       })
         .then((willDelete) => {
           if (willDelete) {
-            window.location.href = 'Controladores/ConfirmarPeticionModificacionUsuario.php?ID=' + xID;
+            window.location.href = 'Controladores/ModificarUsuario.php?id_solcitud=' + xID;
           } else {
           }
         });
