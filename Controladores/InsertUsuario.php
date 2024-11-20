@@ -29,7 +29,7 @@ $estado = 1;
 $ID_TipoUsuario = $_REQUEST["ID_TipoUsuario"];
 
 try {
-	$has8characters = (mb_strlen($userpass) == 8);
+	$has8characters = (mb_strlen($userpass) >= 8);
 	$hasAlpha = preg_match('~[a-zA-Z]+~', $userpass);
 	$hasNum = preg_match('~[0-9]+~', $userpass);
 	$hasNonAlphaNum = preg_match('~[\!\@#$%\?&\*\(\)_\-\+=]+~', $userpass);
