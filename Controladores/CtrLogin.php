@@ -6,6 +6,7 @@ require_once("../Modelo/Account.php");
 
 $con = new Conexion();
 $con->OpenConexion();
+/*
 $consultar_datos_personas = "select * 
 						   from persona 
 						   where fecha_nac is not null
@@ -21,15 +22,18 @@ while ($RetDatosPersonas = mysqli_fetch_assoc($ejecutar_consultar_datos_personas
 	$persona = new Persona(ID_Persona: $RetDatosPersonas['id_persona']);
 	$persona->update_edad_meses();
 }
-
-$con->CloseConexion();
-
+*/
 $user_name = $_REQUEST["UserName"];
 $user_pass = md5($_REQUEST["UserPass"]);
 if (isset($_SESSION["Usuario"])) {
 	header("Location: ../view_inicio.php");
 } else {
-	$control = Account::control_user_password($user_name, $user_pass);
+	$control = Account::control_user_password(
+											  con: $con,
+											  user_name: $user_name, 
+											  user_pass: $user_pass
+											);
+	$con->CloseConexion();
  	if ($control > 0) {
 		$user = new Account(account_id: $control);
 		if ($user->is_active()) {
