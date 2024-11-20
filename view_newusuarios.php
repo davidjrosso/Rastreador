@@ -121,12 +121,12 @@ $Con->CloseConexion();
                 <input type="text" class="form-control" name = "firstname" id="Nombre" autocomplete="off">
               </div>
             </div>
-            <div class="form-group row">
+            <!--<div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Iniciales: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "initials" id="inputPassword" autocomplete="off">
               </div>
-            </div>
+            </div>-->
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nombre de Usuario*: </label>
               <div class="col-md-10">
