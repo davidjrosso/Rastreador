@@ -1,6 +1,7 @@
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Controladores/Conexion.php");
-class Account implements JsonSerializable {
+class Account implements JsonSerializable
+{
 	//DECLARACION DE VARIABLES
 	private $account_id;
 	private $email;
@@ -23,90 +24,106 @@ class Account implements JsonSerializable {
 
 
 //METODOS SET
-public function set_account_id($account_id){
+public function set_account_id($account_id)
+{
 	$this->account_id = $account_id;
 }
 
-public function set_email($email){
+public function set_email($email)
+{
     $this->email = $email;
 }
 
-public function set_estado($estado){
+public function set_estado($estado)
+{
     $this->estado = $estado;
 }
 
-public function set_first_name($first_name){
+public function set_first_name($first_name)
+{
 	$this->first_name = $first_name;
 }
 
-public function set_expired($expired){
+public function set_expired($expired)
+{
     $this->expired = $expired;
 }
-public function set_expired_date($expired_date){
+public function set_expired_date($expired_date)
+{
     $this->expired_date = $expired_date;
 }
 
-public function set_hint_answer($hint_answer){
+public function set_hint_answer($hint_answer)
+{
     $this->hint_answer = $hint_answer;
 }
 
-public function set_hint_question($hint_question){
+public function set_hint_question($hint_question)
+{
     $this->hint_question = $hint_question;
 }
 
-public function set_id_tipo_usuario($id_tipo_usuario){
+public function set_id_tipo_usuario($id_tipo_usuario)
+{
     $this->id_tipo_usuario = $id_tipo_usuario;
 }
 
-public function set_initials($initials){
+public function set_initials($initials)
+{
     $this->initials = $initials;
 }
 
-public function set_iva($iva){
+public function set_iva($iva)
+{
     $this->iva = $iva;
 }
 
-public function set_last_tried_date($last_tried_date){
+public function set_last_tried_date($last_tried_date)
+{
     $this->last_tried_date = $last_tried_date;
 }
 
-public function set_last_name($last_name){
+public function set_last_name($last_name)
+{
     $this->last_name = $last_name;
 }
 
-public function set_matricula($matricula){
+public function set_matricula($matricula)
+{
 	$this->matricula = $matricula;
 }
 
-public function set_password($password){
+public function set_password($password)
+{
 	$this->password = md5($password);
 }
 
-public function set_tries($tries){
+public function set_tries($tries)
+{
 	$this->tries = $tries;
 }
-
-public function set_user_name($user_name){
+public function set_user_name($user_name)
+{
 	$this->user_name = $user_name;
 }
 
 //METODOS GET
-public static function control_user_password($user_name, $user_pass){
-	$con = new Conexion();
-	$con->OpenConexion();
+public static function control_user_password($con, $user_name, $user_pass)
+{
  	$consulta = "select * 
 				 from accounts 
 				 where username = '$user_name' 
 				 and password = '$user_pass'
 				 and estado = 1";
- 	$rs = mysqli_query($con->Conexion,$consulta)or die("Problemas al tomar Sesion. Nombre de usuario o password incorrectos");
+ 	$rs = mysqli_query($con->Conexion,$consulta) or die("Problemas al tomar Sesion. Nombre de usuario o password incorrectos");
  	$cont = mysqli_num_rows($rs);
 	$resultado = mysqli_fetch_assoc($rs);
 	$control = ($cont > 0) ? $resultado['accountid'] : -1;
 	return $control;
 }
 
-public static function exist_user($user_name){
+public static function exist_user($user_name)
+{
 	$con = new Conexion();
 	$con->OpenConexion();
  	$consulta = "select * 
@@ -119,7 +136,8 @@ public static function exist_user($user_name){
 	return $exist;
 }
 
-public static function exist_account($account_id){
+public static function exist_account($account_id)
+{
 	$con = new Conexion();
 	$con->OpenConexion();
  	$consulta = "select * 
@@ -132,74 +150,92 @@ public static function exist_account($account_id){
 	return $exist;
 }
 
-public function get_account_id(){
+public function get_account_id()
+{
 	return $this->account_id;
 }
 
-public function get_estado(){
+public function get_estado()
+{
     return $this->estado;
 }
 
-public function get_email(){
+public function get_email()
+{
     return $this->email;
 }
 
-public function get_expired(){
+public function get_expired()
+{
     return $this->expired;
 }
-public function get_expired_date(){
+public function get_expired_date()
+{
     return $this->expired_date;
 }
 
-public function get_first_name(){
+public function get_first_name()
+{
 	return $this->first_name;
 }
 
-public function get_hint_answer(){
+public function get_hint_answer()
+{
     return $this->hint_answer;
 }
 
-public function get_hint_question(){
+public function get_hint_question()
+{
     return $this->hint_question;
 }
 
-public function get_id_tipo_usuario(){
+public function get_id_tipo_usuario()
+{
     return $this->id_tipo_usuario;
 }
 
-public function get_initials(){
+public function get_initials()
+{
     return $this->initials;
 }
 
-public function get_iva(){
+public function get_iva()
+{
     return $this->iva;
 }
 
-public function get_last_tried_date(){
+public function get_last_tried_date()
+{
     return $this->last_tried_date;
 }
 
-public function get_last_name(){
+public function get_last_name()
+{
     return $this->last_name;
 }
 
-public function get_matricula(){
+public function get_matricula()
+{
 	return $this->matricula;
 }
 
-public function get_password(){
+public function get_password()
+{
 	return $this->password;
 }
 
-public function get_tries(){
+public function get_tries()
+{
 	return $this->tries;
 }
 
-public function get_user_name(){
+public function get_user_name()
+{
 	return $this->user_name;
 }
 
-public function is_active() {
+public function is_active() 
+{
 	$control_expiracion = 1;
 	if(!empty($this->expired_date)){
 		$fecha_actual = DateTime::createFromFormat(format: 'Y-m-d', datetime: date('Y-m-d'));
@@ -210,7 +246,8 @@ public function is_active() {
 	return $control_expiracion;
 }
 
-public function is_username_disponible($username) {
+public function is_username_disponible($username) 
+{
 	$con = new Conexion();
 	$con->OpenConexion();
 	$consulta = "select * 
@@ -227,7 +264,8 @@ public function is_username_disponible($username) {
 	return $exist;
 }
 
-public function jsonSerialize() {
+public function jsonSerialize() 
+{
 	return [
         'accountid' => $this->account_id,
         'firstname' => $this->first_name,
@@ -278,7 +316,8 @@ public function update()
 	$Con->CloseConexion();
 }
 
-public function save(){
+public function save()
+{
 	$Con = new Conexion();
 	$Con->OpenConexion();
 	$consulta = "INSERT INTO accounts (
