@@ -2,7 +2,7 @@
 session_start();
 require_once "Controladores/Elements.php";
 require_once "Controladores/CtrGeneral.php";
-require_once "modelo/Account.php";
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Account.php");
 header("Content-Type: text/html;charset=utf-8");
 
 /*     CONTROL DE USUARIOS                    */
