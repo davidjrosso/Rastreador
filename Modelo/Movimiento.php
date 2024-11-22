@@ -1,5 +1,6 @@
 <?php  
-class Movimiento{
+class Movimiento implements JsonSerializable
+{
 	//DECLARACION DE VARIABLES
 	private $ID_Movimiento;
 	private $Fecha;
@@ -241,6 +242,29 @@ class Movimiento{
 
 	public function get_coneccion_base(){
 		return $this->coneccion_base;
+	}
+
+	public function jsonSerialize() 
+	{
+		return [
+			'id_persona' => $this->ID_Persona,
+			'estado' => $this->Estado,
+			'motivo_1' => $this->ID_Motivo_1,
+			'motivo_2' => $this->ID_Motivo_2,
+			'motivo_3' => $this->ID_Motivo_3,
+			'motivo_4' => $this->ID_Motivo_4,
+			'motivo_5' => $this->ID_Motivo_5,
+			'observaciones' => $this->Observaciones,
+			'id_resp' => $this->ID_Responsable,
+			'id_resp_2' => $this->ID_Responsable_2,
+			'id_resp_3' => $this->ID_Responsable_3,
+			'id_resp_4' => $this->ID_Responsable_4,
+			'id_centro' => $this->ID_Centro,
+			'id_otrainstitucion' => $this->ID_OtraInstitucion,
+			'id_movimiento' => $this->ID_Movimiento,
+			'Fecha_Creacion' => $this->Fecha_Creacion,
+			'Fecha' => $this->Fecha
+		];
 	}
 
 	public function udpate(){

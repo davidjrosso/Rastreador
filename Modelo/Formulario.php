@@ -40,7 +40,7 @@ class Formulario implements JsonSerializable
 						  where id_formulario = " . $id_formulario . " 
 							and estado = 1";
 			$ejecutar_consultar = mysqli_query(
-				$this->coneccion_base, 
+				$this->coneccion_base,
 				$consultar) or die("Problemas al consultar filtro Usuario");
 			$ret = mysqli_fetch_assoc($ejecutar_consultar);
 			if (!is_null($ret)) {

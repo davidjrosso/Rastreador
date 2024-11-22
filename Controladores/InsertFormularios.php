@@ -43,7 +43,8 @@
 
 			$Fecha =  date("Y-m-d");
 			$observacion = "";
-
+			$response_json = [];
+			$row_json = [];
 			for ($row = 2; $row <= $highestRow; $row++) {
 				for ($col = 1; $col <= $highestColumnIndex; $col++) {
 					$value = $worksheet->getCell([$col, $row])->getValue();
@@ -133,6 +134,7 @@
 					estado: $estado
 				);
 				$responsable->save();
+				$row_json["responsable"] = $responsable->jsonSerialize();
 				$detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo responsable. Datos: responsable: " . $responsable->get_responsable();
 				$accion = new Accion(
 					xaccountid: $ID_Usuario,
@@ -141,19 +143,23 @@
 					xID_TipoAccion: $ID_TipoAccion
 				);
 				$accion->save();
-
-				$persona = new Persona(
-					xApellido : $apellido_nombre,
-					xBarrio :  $id_barrio,
-					xDNI : $dni,
-					xEstado : $estado,
-					xFecha_Nacimiento: $Fecha_Nacimiento,
-					xTelefono : $telefono,
-					xMail:$email
-				);
-				$persona->setDomicilio($direccion);
-				$persona->save();
-
+				if (!Persona::is_registered($dni)) {
+					$persona = new Persona(
+						xApellido : $apellido_nombre,
+						xBarrio :  $id_barrio,
+						xDNI : $dni,
+						xEstado : $estado,
+						xFecha_Nacimiento: $Fecha_Nacimiento,
+						xTelefono : $telefono,
+						xMail:$email
+					);
+					$persona->setDomicilio($direccion);
+					$persona->save();
+				} else {
+					$id_persona = Persona::get_id_persona_by_dni($dni);
+					$persona = new Persona(ID_Persona: $id_persona);
+				}
+				$row_json["persona"] = $persona->jsonSerialize();
 				$detalles = "El usuario con ID: $ID_Usuario ha registrado un nueva persona. Datos: Persona: " . $persona->getID_Persona();
 				$accion = new Accion(
 					xaccountid: $ID_Usuario,
@@ -176,6 +182,7 @@
 					$movimiento->setID_Motivo_2($ID_Motivo_2);
 				}
 				$movimiento->save();
+				$row_json["movimiento"] = $movimiento->jsonSerialize();
 				$detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Movimiento. Datos: ID: " . $movimiento->getID_Movimiento() . " Fecha: $Fecha_Accion - Persona: " . $persona->getID_Persona() . " - Motivo 1: $ID_Motivo_1 - Motivo 2: $ID_Motivo_2 - Observaciones: $observacion - Responsable: " . $responsable->get_id_responsable();
 				$accion = new Accion(
 					xaccountid: $ID_Usuario,
@@ -186,20 +193,24 @@
 				$accion->save();
 
 				$formulario = new Formulario(
-					coneccion_base: $con,
-							fecha: $Fecha_Accion,
-							email: $email,
-						persona: $persona->getID_Persona(),
-						movimiento: $movimiento->getID_Movimiento(),
-					responsable: $responsable->get_id_responsable(),
-							estado: $estado
+						   coneccion_base: $con,
+									fecha: $Fecha_Accion,
+									email: $email,
+								  persona: $persona->getID_Persona(),
+							   movimiento: $movimiento->getID_Movimiento(),
+							  responsable: $responsable->get_id_responsable(),
+								   estado: $estado
 				);
 				$formulario->save();
+				$row_json["movimiento"] = $formulario->jsonSerialize();
+				$response_json[$row - 1][""] = $row_json;
 			}
 			$con->CloseConexion();
 
 			$Mensaje = "El/Los formularios se ha cargado correctamente";
-			echo $Mensaje;
+			echo json_encode($response_json);
+		} else {
+			header( 'HTTP/1.1 400 BAD REQUEST' );
 		}
 	} catch(Exception $e) {
 		echo "Error Message: " . $e;
