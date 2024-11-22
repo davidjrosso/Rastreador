@@ -110,7 +110,7 @@ $Movimiento = new Movimiento(
 		   xID_OtraInstitucion: $ID_OtraInstitucion,
 					   xEstado: $Estado
 );
-
+$Movimiento->save();
 $detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Movimiento. Datos: Fecha: $Fecha_Accion - Persona: $ID_Persona - Motivo 1: $ID_Motivo_1 - Motivo 2: $ID_Motivo_2 - Motivo 3: $ID_Motivo_3 - Observaciones: $Observaciones - Responsable: $ID_Responsable - Centro Salud: $ID_Centro - Otra Institución: $ID_OtraInstitucion";
 
 try {
