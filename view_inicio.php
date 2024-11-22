@@ -404,7 +404,6 @@ $Con->CloseConexion();
         </div>
         <div class="brand">Reportes</div>
         <div class="menu-list">
-  
             <?php $Element = new Elements();
             $Element->getMenuReportes(0);?>
         </div>
@@ -460,7 +459,6 @@ $Con->CloseConexion();
         <div class="menu-list">
             <?php $Element = new Elements();
           $Element->getMenuNotificacion(0);?>
-        </div>
         </div>
         <div class="brand">Documentación</div>
         <div class="menu-list">
