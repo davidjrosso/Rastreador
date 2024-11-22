@@ -38,14 +38,23 @@
 			$highestColumn = $worksheet->getHighestDataColumn();
 			$highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
 
+			$con = new Conexion();
+			$con->OpenConexion();
+
+			$Fecha =  date("Y-m-d");
 			$observacion = "";
 
-			for ($row = 1; $row <= $highestRow; ++$row) {
-				for ($col = 1; $col <= $highestColumnIndex; ++$col) {
+			for ($row = 2; $row <= $highestRow; $row++) {
+				for ($col = 1; $col <= $highestColumnIndex; $col++) {
 					$value = $worksheet->getCell([$col, $row])->getValue();
 					switch ($col) {
 						case 1:
-							$Fecha_Accion = $value;
+							if (!is_null($value)) {
+								$fecha_excel = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value);
+								$Fecha_Accion = $fecha_excel->format("Y-m-d");
+							} else {
+								$Fecha_Accion = $Fecha;
+							}
 							break;
 						case 2:
 							$email = $value;
@@ -75,6 +84,7 @@
 							$observacion .= " Fecha inicio de los Sintomas : " . $value;
 							break;
 						case 11:
+							$internacion = (($value == "INTERNACION") ? true : false);
 							$observacion .= " INTERNACION/ AMBULATORIO : " . $value;
 							break;
 						case 12:
@@ -100,81 +110,96 @@
 							break;
 						case 19:
 							$barrio = $value;
+							if (!is_null($barrio)) {
+								$id_barrio = Barrio::get_id_by_name($con, $barrio);
+							} else {
+								$id_barrio = null;
+							}
 							break;
 						default :
 							break;
 					}
 				}
+
+				$ID_Usuario = 100;
+				$ID_Motivo_1 = 80;
+				$ID_Motivo_2 = 81;
+				$estado = 1;
+				$ID_TipoAccion = 1;
+
+				$responsable = new Responsable(
+					coneccion_base: $con,
+					responsable: $responsable,
+					estado: $estado
+				);
+				$responsable->save();
+				var_dump($responsable);
+				$detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo responsable. Datos: responsable: " . $responsable->get_responsable();
+				$accion = new Accion(
+					xaccountid: $ID_Usuario,
+					xFecha: $Fecha,
+					xDetalles: $detalles,
+					xID_TipoAccion: $ID_TipoAccion
+				);
+				$accion->save();
+
+				$persona = new Persona(
+					xApellido : $apellido_nombre,
+					xBarrio :  $id_barrio,
+					xDNI : $dni,
+					xEstado : $estado,
+					xFecha_Nacimiento: $Fecha_Nacimiento,
+					xTelefono : $telefono,
+					xMail:$email
+				);
+				$persona->setDomicilio($direccion);
+				$persona->save();
+
+				$detalles = "El usuario con ID: $ID_Usuario ha registrado un nueva persona. Datos: Persona: " . $persona->getID_Persona();
+				$accion = new Accion(
+					xaccountid: $ID_Usuario,
+					xFecha: $Fecha,
+					xDetalles: $detalles,
+					xID_TipoAccion: $ID_TipoAccion
+				);
+				$accion->save();
+				$movimiento = new Movimiento(
+						coneccion_base: $con, 
+								xFecha: $Fecha_Accion,
+						Fecha_Creacion: $Fecha_Accion,
+						xID_Persona: $persona->getID_Persona(),
+						xID_Motivo_1: $ID_Motivo_1,
+						xObservaciones: $observacion,
+					xID_Responsable: $responsable->get_id_responsable(),
+							xEstado: $estado
+						);
+				if ($internacion) {
+					$movimiento->setID_Motivo_2($ID_Motivo_2);
+				}
+				$movimiento->save();
+
+				$detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Movimiento. Datos: ID: " . $movimiento->getID_Movimiento() . "Fecha: $Fecha_Accion - Persona: " . $persona->getID_Persona() . " - Motivo 1: $ID_Motivo_1 - Motivo 2: $ID_Motivo_2 - Observaciones: $observacion - Responsable: " . $responsable->get_id_responsable();
+				$accion = new Accion(
+					xaccountid: $ID_Usuario,
+					xFecha: $Fecha,
+					xDetalles: $detalles,
+					xID_TipoAccion: $ID_TipoAccion
+				);
+				$accion->save();
+
+				$formulario = new Formulario(
+					coneccion_base: $con,
+							fecha: $Fecha_Accion,
+							email: $email,
+						persona: $persona->getID_Persona(),
+						movimiento: $movimiento->getID_Movimiento(),
+					responsable: $responsable->get_id_responsable(),
+							estado: $estado
+				);
+				$formulario->save();
 			}
-
-			$ID_Usuario = 100;
-			$Fecha =  date("Y-m-d");
-			$ID_Motivo_1 = 1;
-			$ID_Motivo_2 = 2;
-			$estado = 1;
-			$ID_TipoAccion = 1;
-
-			$con = new Conexion();
-			$con->OpenConexion();
-
-			$responsable = new Responsable(
-				coneccion_base: $con,
-				responsable: $responsable,
-				estado: $estado
-			);
-
-			$detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo responsable. Datos: responsable: " . $responsable->get_id_responsable();
-			$accion = new Accion(
-				xaccountid: $ID_Usuario,
-				xFecha: $Fecha,
-				xDetalles: $detalles,
-				xID_TipoAccion: $ID_TipoAccion
-			);
-			$accion->save();
-
-			$persona = new Persona(
-				xApellido : $apellido_nombre,
-				xBarrio :  Barrio::get_id_by_name($con, $barrio),
-				xDNI : $dni,
-				xEstado : $estado,
-				xFecha_Nacimiento: $Fecha_Nacimiento,
-				xTelefono : $telefono,
-				xMail:$email
-			);
-			$persona->setDomicilio($direccion);
-			$persona->save();
-
-			$detalles = "El usuario con ID: $ID_Usuario ha registrado un nueva persona. Datos: Persona: " . $persona->getID_Persona();
-			$accion = new Accion(
-				xaccountid: $ID_Usuario,
-				xFecha: $Fecha,
-				xDetalles: $detalles,
-				xID_TipoAccion: $ID_TipoAccion
-			);
-			$accion->save();
-			$movimiento = new Movimiento(
-					coneccion_base: $con, 
-							xFecha: $Fecha_Accion,
-					Fecha_Creacion: $Fecha_Accion,
-					   xID_Persona: $persona->getID_Persona(),
-					  xID_Motivo_1: $ID_Motivo_1,
-					  xID_Motivo_2: $ID_Motivo_2,
-					xObservaciones: $observacion,
-				   xID_Responsable: $responsable->get_id_responsable(),
-						   xEstado: $estado
-					);
-			$movimiento->save();
-
-			$detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Movimiento. Datos: Fecha: $Fecha_Accion - Persona: " . $persona->getID_Persona() . " - Motivo 1: $ID_Motivo_1 - Motivo 2: $ID_Motivo_2 - Observaciones: $observacion - Responsable: " . $responsable->get_id_responsable();
-			$accion = new Accion(
-				xaccountid: $ID_Usuario,
-				xFecha: $Fecha,
-				xDetalles: $detalles,
-				xID_TipoAccion: $ID_TipoAccion
-			);
-			$accion->save();
-
 			$con->CloseConexion();
+
 			$Mensaje = "El/Los formularios se ha cargado correctamente";
 			echo $Mensaje;
 		}

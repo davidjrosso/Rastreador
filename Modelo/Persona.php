@@ -770,6 +770,7 @@ public function save(){
 				 if (!$Ret = mysqli_query($Con->Conexion, $consulta)) {
 					throw new Exception($MensajeErrorConsultar . $consulta, 2);
 				 }
+				 $this->ID_Persona = mysqli_insert_id($Con->Conexion);
 				 $Con->CloseConexion();
 }
 

@@ -128,9 +128,10 @@ class Responsable implements JsonSerializable
 							" . ((!is_null($this->get_estado())) ? "'" . $this->get_estado() . "'" : "null") . "
 					)";
 		$mensaje_error = "No se pudo insertar el responsable";
-		$ret = mysqli_query($this->coneccion_base, $consulta);
+		$ret = mysqli_query($this->coneccion_base->Conexion, $consulta);
 		if (!$ret) {
 			throw new Exception($mensaje_error . $consulta, 2);
 		}
+		$this->id_responsable = mysqli_insert_id($this->coneccion_base->Conexion);
 	}
 }
