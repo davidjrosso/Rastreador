@@ -1054,31 +1054,31 @@ public function getMenuSeguridad($ID){
         </div>';break;
         case 18:
             $menu =  '<div class="menu-list">
-  
-            <ul id="menu-content" class="menu-content collapse out">
-                <li onClick = "location.href = \'view_unifpersonas.php\'">
-                  <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
-                  <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifcentros.php\'">
-                  <a href="view_unifcentros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
-                  <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
-                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
-                </li>
-                <li class="collapsed active" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
-                  <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
-                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
-                </li>
-            </ul>
-        </div>';break;
+                        <ul id="menu-content" class="menu-content collapse out">
+                            <li onClick = "location.href = \'view_unifpersonas.php\'">
+                              <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
+                            </li>
+                            <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
+                              <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
+                            </li>
+                            <li class="collapsed" onClick = "location.href = \'view_unifcentros.php\'">
+                              <a href="view_unifcentros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                            </li>
+                            <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
+                              <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
+                            </li>
+                            <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
+                              <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                            </li>
+                            <li class="collapsed active" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
+                              <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                            </li>
+                            <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
+                              <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+                            </li>
+                        </ul>
+                    </div>';
+            break;
         case 19:
             $menu =  '<div class="menu-list">
   
@@ -1834,8 +1834,9 @@ public function getMenuSeguridadUsuario($ID){
 
   public function BTNModMotivo_1($xID){
     $Con3 = new Conexion();
-    $Con3->OpenConexion();        
-    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $xID order by motivo")or die("Problemas al mostrar Personas");    
+    $Con3->OpenConexion();
+    $id_motivo = ((!is_null($xID)) ? $xID : 1);
+    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $id_motivo order by motivo")or die("Problemas al mostrar Personas");    
     $Ret = mysqli_fetch_assoc($Consulta);    
         
     $Boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_1'>".$Ret['motivo']."</button>";
@@ -1877,11 +1878,22 @@ public function getMenuSeguridadUsuario($ID){
 
   public function BTNModMotivo_2($xID){
     $Con3 = new Conexion();
-    $Con3->OpenConexion();    
-    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $xID order by motivo")or die("Problemas al mostrar Personas");    
-    $Ret = mysqli_fetch_assoc($Consulta);    
-        
-    $Boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_2'>".$Ret['motivo']."</button>";
+    $Con3->OpenConexion();
+    $id_motivo = ((!is_null($xID)) ? $xID : 1);
+    $consulta = "select * 
+                 from motivo 
+                 where estado = 1 
+                   and id_motivo = $id_motivo 
+                 order by motivo";
+    $res = mysqli_query(
+                 $Con3->Conexion,
+                 $consulta
+      ) or die("Problemas al mostrar Personas");
+    $Ret = mysqli_fetch_assoc($res);
+
+    $Boton = "<button type='button' class='btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_2'>" .
+                $Ret['motivo'] . "
+              </button>";
     $Con3->CloseConexion();
     return $Boton;
   }
@@ -1891,7 +1903,7 @@ public function getMenuSeguridadUsuario($ID){
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Motivo_3'>";
     $Select .= "<option selected = 'true' disabled = 'disabled'>Seleccione un Motivo</option>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo > 1 order by motivo")or die("Problemas al mostrar Motivo_3");
+    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo > 1 order by motivo") or die("Problemas al mostrar Motivo_3");
     while ($Ret = mysqli_fetch_array($Consulta)) {
       $Select .= "<option value = '".$Ret['id_motivo']."'>".$Ret['motivo']."</option>";
     }
@@ -1905,7 +1917,7 @@ public function getMenuSeguridadUsuario($ID){
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Motivo_3'>";
     $Select .= "<option selected = 'true' disabled = 'disabled'>Seleccione un Motivo</option>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo > 1 order by motivo")or die("Problemas al mostrar Motivo_3");
+    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo > 1 order by motivo") or die("Problemas al mostrar Motivo_3");
     while ($Ret = mysqli_fetch_array($Consulta)) {
       if($Ret['id_motivo'] == $xID){
         $Select .= "<option value = '".$Ret['id_motivo']."' selected>".$Ret['motivo']."</option>";
@@ -1920,8 +1932,9 @@ public function getMenuSeguridadUsuario($ID){
 
   public function BTNModMotivo_3($xID){
     $Con3 = new Conexion();
-    $Con3->OpenConexion();    
-    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $xID order by motivo")or die("Problemas al mostrar Personas");    
+    $Con3->OpenConexion();
+    $id_motivo = ((!is_null($xID)) ? $xID : 1);
+    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $id_motivo order by motivo") or die("Problemas al mostrar Personas");    
     $Ret = mysqli_fetch_assoc($Consulta);    
         
     $Boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_3'>".$Ret['motivo']."</button>";
@@ -1931,8 +1944,9 @@ public function getMenuSeguridadUsuario($ID){
 
   public function BTNModMotivo_4($xID){
     $Con3 = new Conexion();
-    $Con3->OpenConexion();    
-    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $xID order by motivo")or die("Problemas al mostrar Personas");    
+    $Con3->OpenConexion();
+    $id_motivo = ((!is_null($xID)) ? $xID : 1);
+    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $id_motivo order by motivo") or die("Problemas al mostrar Personas");
     $Ret = mysqli_fetch_assoc($Consulta);    
         
     $Boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_4'>".$Ret['motivo']."</button>";
@@ -1942,8 +1956,9 @@ public function getMenuSeguridadUsuario($ID){
 
   public function BTNModMotivo_5($xID){
     $Con3 = new Conexion();
-    $Con3->OpenConexion();    
-    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $xID order by motivo")or die("Problemas al mostrar Personas");    
+    $Con3->OpenConexion();
+    $id_motivo = ((!is_null($xID)) ? $xID : 1);
+    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $id_motivo order by motivo") or die("Problemas al mostrar Personas");
     $Ret = mysqli_fetch_assoc($Consulta);    
         
     $Boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_5'>".$Ret['motivo']."</button>";
