@@ -266,6 +266,7 @@ class Movimiento{
 		$consulta = "insert into movimiento(
 											fecha,
 											id_persona,
+											fecha_creacion,
 											motivo_1,
 											motivo_2,
 											motivo_3,
@@ -282,6 +283,7 @@ class Movimiento{
 				values(
 						" . (($this->getFecha()) ? "'" . $this->getFecha() . "'" : "null") . ",
 						" . (($this->getID_Persona()) ? $this->getID_Persona() : "null") . ",
+						" . (($this->getFecha_Creacion()) ? "'" . $this->getFecha_Creacion() . "'" : "null") . ",
 						" . (($this->getID_Motivo_1()) ? $this->getID_Motivo_1() : "null") . ",
 						" . (($this->getID_Motivo_2()) ? $this->getID_Motivo_2() : "null") . ",
 						" . (($this->getID_Motivo_3()) ? $this->getID_Motivo_3() : "null") . ",

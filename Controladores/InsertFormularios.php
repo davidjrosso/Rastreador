@@ -122,8 +122,8 @@
 				}
 
 				$ID_Usuario = 100;
-				$ID_Motivo_1 = 80;
-				$ID_Motivo_2 = 81;
+				$ID_Motivo_1 = 100;
+				$ID_Motivo_2 = 101;
 				$estado = 1;
 				$ID_TipoAccion = 1;
 
@@ -133,7 +133,6 @@
 					estado: $estado
 				);
 				$responsable->save();
-				var_dump($responsable);
 				$detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo responsable. Datos: responsable: " . $responsable->get_responsable();
 				$accion = new Accion(
 					xaccountid: $ID_Usuario,
@@ -177,8 +176,7 @@
 					$movimiento->setID_Motivo_2($ID_Motivo_2);
 				}
 				$movimiento->save();
-
-				$detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Movimiento. Datos: ID: " . $movimiento->getID_Movimiento() . "Fecha: $Fecha_Accion - Persona: " . $persona->getID_Persona() . " - Motivo 1: $ID_Motivo_1 - Motivo 2: $ID_Motivo_2 - Observaciones: $observacion - Responsable: " . $responsable->get_id_responsable();
+				$detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Movimiento. Datos: ID: " . $movimiento->getID_Movimiento() . " Fecha: $Fecha_Accion - Persona: " . $persona->getID_Persona() . " - Motivo 1: $ID_Motivo_1 - Motivo 2: $ID_Motivo_2 - Observaciones: $observacion - Responsable: " . $responsable->get_id_responsable();
 				$accion = new Accion(
 					xaccountid: $ID_Usuario,
 					xFecha: $Fecha,
