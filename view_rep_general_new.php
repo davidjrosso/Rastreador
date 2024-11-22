@@ -1171,7 +1171,6 @@ $Con->CloseConexion();
               <?php $Element = new Elements();
               $Element->getMenuNotificacion(0);?>
           </div>
-          </div>
           <div class="brand">El Proyecto</div>
           <div class="menu-list">
             <?php
