@@ -63,9 +63,9 @@ class Movimiento implements JsonSerializable
 			$this->Fecha_Creacion = (($Fecha_Creacion) ? $Fecha_Creacion : $fecha_actual);
 		} else {
 			$consultar_usuario = "select *
-					from movimiento 
-					where id_movimiento = " . $xID_Movimiento . " 
-					and estado = 1";
+									from movimiento 
+									where id_movimiento = " . $xID_Movimiento . " 
+									and estado = 1";
 			$ejecutar_consultar_persona = mysqli_query(
 			$this->coneccion_base, 
 			$consultar_usuario) or die("Problemas al consultar filtro Usuario");
@@ -108,6 +108,23 @@ class Movimiento implements JsonSerializable
 				$this->estado = (($mov_estado) ? $mov_estado : null);
 			}
 		}
+	}
+
+	public static function is_exist($coneccion, $id_movimiento)
+	{
+		$consulta = "select * 
+					 from movimiento 
+					 where id_movimiento = $id_movimiento 
+					   and estado = 1";
+		$mensaje_error = "Hubo un problema al consultar los registros para validar";
+		$Ret = mysqli_query(
+					$coneccion->Conexion,
+					$consulta
+		) or die(
+			$mensaje_error
+		);
+		$is_multiple = (mysqli_num_rows($Ret) >= 1);
+		return $is_multiple;
 	}
 
 	// METODOS SET
@@ -268,23 +285,29 @@ class Movimiento implements JsonSerializable
 	}
 
 	public function udpate(){
-		$Consulta = "udpate movimiento
-					 set fecha = '" . $this->getFecha()."',
-						 id_persona = " . $this->getID_Persona() . ", 
-						 motivo_1 = " . $this->getID_Motivo_1() . ",
-						 motivo_2 = " . $this->getID_Motivo_2().",
-						 motivo_3 = " . $this->getID_Motivo_3() . ",
-						 motivo_4 = '" . $this->getID_Motivo_4() . ",
-						 motivo_5 = '" . $this->getID_Motivo_5() . ",
-						 observaciones = '" . $this->getObservaciones() . "',
-						 id_resp = " . $this->getID_Responsable() . ",
-						 id_resp_2 = " . $this->getID_Responsable_2() . ",
-						 id_resp_3 = " . $this->getID_Responsable_3() . ",
-						 id_resp_4 = " . $this->getID_Responsable_4() . ",
-						 id_centro = " . $this->getID_Centro() . ",
-						 id_otrainstitucion = " . $this->getID_OtraInstitucion() . ",
-						 estado = " . $this->getEstado() . "
+		$consulta = "udpate movimiento
+					 set fecha = " . (($this->getFecha()) ? "'" . $this->getFecha() . "'" : "null") .",
+					 	 fecha_creacion = " . (($this->getID_Persona()) ? $this->getID_Persona() : "null") . ",
+						 id_persona = " . (($this->getID_Persona()) ? $this->getID_Persona() : "null") . ", 
+						 motivo_1 = " . (($this->getID_Motivo_1()) ? $this->getID_Motivo_1() : "null") . ",
+						 motivo_2 = " . (($this->getID_Motivo_2()) ? $this->getID_Motivo_2() : "null") .",
+						 motivo_3 = " . (($this->getID_Motivo_3()) ? $this->getID_Motivo_3() : "null") . ",
+						 motivo_4 = '" . (($this->getID_Motivo_4()) ? $this->getID_Motivo_4() : "null") . ",
+						 motivo_5 = '" . (($this->getID_Motivo_5()) ? $this->getID_Motivo_5() : "null") . ",
+						 observaciones = " . (($this->getObservaciones()) ? "'" . $this->getObservaciones() . "'" : "null") . ",
+						 id_resp = " . (($this->getID_Responsable()) ? $this->getID_Responsable() : "null") . ",
+						 id_resp_2 = " . (($this->getID_Responsable_2()) ? $this->getID_Responsable_2() : "null") . ",
+						 id_resp_3 = " . (($this->getID_Responsable_3()) ? $this->getID_Responsable_3() : "null") . ",
+						 id_resp_4 = " . (($this->getID_Responsable_4()) ? $this->getID_Responsable_4() : "null") . ",
+						 id_centro = " . (($this->getID_Centro()) ? $this->getID_Centro() : "null") . ",
+						 id_otrainstitucion = " . (($this->getID_OtraInstitucion()) ? $this->getID_OtraInstitucion() : "null") . ",
+						 estado = " . (($this->getEstado()) ? $this->getEstado() : "1") . "
 					 where id_movimiento = " . $this->getID_Movimiento();
+		$mensaje_error = "No se pudo modificar el movimiento";
+		$ret = mysqli_query($this->coneccion_base->Conexion, $consulta);
+		if (!$ret) {
+			throw new Exception($mensaje_error . $consulta, 2);
+		}
 	}
 	public function save(){
 		$consulta = "insert into movimiento(

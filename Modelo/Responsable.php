@@ -28,7 +28,7 @@ class Responsable implements JsonSerializable
 						  where id_resp = " . $id_responsable . " 
 							and estado = 1";
 			$ejecutar_consultar = mysqli_query(
-				$this->coneccion_base, 
+				$this->coneccion_base->Conexion, 
 				$consultar) or die("Problemas al consultar filtro pesona");
 			$ret = mysqli_fetch_assoc($ejecutar_consultar);
 			if (!is_null($ret)) {
@@ -46,6 +46,38 @@ class Responsable implements JsonSerializable
 	}
 	
 
+	public static function is_registered($coneccion_base, $nombre)
+	{
+		$consulta = "select id_resp 
+					 from responsable 
+					 where responsable like '%" . $nombre. "%' 
+					   and estado = 1";
+		$mensaje_error = "Hubo un problema al consultar los registros para validar";
+		$ret = mysqli_query($coneccion_base->Conexion,
+			$consulta
+		) or die(
+			$mensaje_error . " Consulta: " . $consulta
+		);
+		$exist = (mysqli_num_rows($ret) >= 1);
+		return $exist;
+	}
+
+	public static function get_id_responsable_by_name($coneccion_base, $responsable)
+	{
+		$consulta = "select id_resp 
+					 from responsable 
+					 where lower(responsable) like lower('%" . $responsable. "%') 
+					   and estado = 1";
+		$mensaje_error = "Hubo un problema al consultar los registros";
+		$ret = mysqli_query($coneccion_base->Conexion,
+			$consulta
+		) or die(
+			$mensaje_error . " Consulta: " . $consulta
+		);
+		$row = mysqli_fetch_assoc($ret);
+		$id = $row["id_resp"];
+		return $id;
+	}
 	//METODOS SET
 	public function set_id_responsable($id_responsable)
 	{

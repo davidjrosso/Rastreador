@@ -25,7 +25,7 @@
 			$file = $service->files->get($fileId, ['alt' => 'media']);
 			$fileContent = $file->getBody()->getContents();
 			$file_name = "archivo_temporal_formulario.xlsx";
-			$fd = fopen($file_name,"w+");
+			$fd = fopen($file_name,mode: "w+");
 			$cont = fwrite($fd, $fileContent);
 			$cont = fclose($fd);
 
@@ -70,7 +70,8 @@
 							$dni = $value;
 							break;
 						case 6:
-							$Fecha_Nacimiento = $value;
+							$fecha_excel = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value);
+							$Fecha_Nacimiento = $fecha_excel->format("Y-m-d");
 							break;
 						case 7:
 							$direccion = $value;
@@ -128,12 +129,29 @@
 				$estado = 1;
 				$ID_TipoAccion = 1;
 
-				$responsable = new Responsable(
-					coneccion_base: $con,
-					responsable: $responsable,
-					estado: $estado
-				);
-				$responsable->save();
+				if (!Responsable::is_registered(coneccion_base: $con, 
+												nombre: $responsable
+					)) {
+					$responsable = new Responsable(
+						coneccion_base: $con,
+						responsable: $responsable,
+						estado: $estado
+					);
+					$responsable->save();
+				} else {
+					$id_responsable = Responsable::get_id_responsable_by_name(
+															   coneccion_base: $con,
+																  responsable: $responsable
+					);
+					if (is_null($id_responsable)) {
+						continue;
+					}
+					$responsable = new Responsable(
+									coneccion_base: $con,
+				 					id_responsable: $id_responsable
+					);
+				}
+
 				$row_json["responsable"] = $responsable->jsonSerialize();
 				$detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo responsable. Datos: responsable: " . $responsable->get_responsable();
 				$accion = new Accion(
@@ -151,12 +169,17 @@
 						xEstado : $estado,
 						xFecha_Nacimiento: $Fecha_Nacimiento,
 						xTelefono : $telefono,
-						xMail:$email
+						xMail:$email,
+						xID_Escuela: 2
 					);
+					$persona->setNro($direccion);
 					$persona->setDomicilio($direccion);
 					$persona->save();
 				} else {
 					$id_persona = Persona::get_id_persona_by_dni($dni);
+					if (is_null($id_persona)) {
+						continue;
+					}
 					$persona = new Persona(ID_Persona: $id_persona);
 				}
 				$row_json["persona"] = $persona->jsonSerialize();
@@ -203,14 +226,18 @@
 				);
 				$formulario->save();
 				$row_json["movimiento"] = $formulario->jsonSerialize();
-				$response_json[$row - 1][""] = $row_json;
+				$response_json[$row - 1]["formulario"] = $row_json;
+				$response_json[$row - 1]["estado"] = 1;
+
 			}
 			$con->CloseConexion();
 
-			$Mensaje = "El/Los formularios se ha cargado correctamente";
+			$mensaje = "El/Los formularios se ha cargado correctamente";
 			echo json_encode($response_json);
 		} else {
+			$mensaje = "El metodo es incorrecto";
 			header( 'HTTP/1.1 400 BAD REQUEST' );
+			echo $mensaje;
 		}
 	} catch(Exception $e) {
 		echo "Error Message: " . $e;
