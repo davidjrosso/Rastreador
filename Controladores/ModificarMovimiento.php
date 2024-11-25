@@ -1,7 +1,9 @@
 <?php 
 session_start();
 require_once 'Conexion.php';
-require_once '../Modelo/Movimiento.php';
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Movimiento.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Persona.php");
+
 /*
  *
  * This file is part of Rastreador3.
