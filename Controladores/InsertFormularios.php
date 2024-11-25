@@ -28,7 +28,7 @@
 			$resultado = mysqli_fetch_assoc($ret);
 			$private_key = $resultado["valor"];
 			if(!$ret){
-				throw new Exception("Problemas al consultar el sercret key. Consulta: ".$ConsultarRegistrosIguales, 0);
+				throw new Exception("Problemas al consultar el sercret key. Consulta: ".$consultar, 0);
 			}
 
 			$client->setAuthConfig(array("type" => TYPE_ACCOUNT,
