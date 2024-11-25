@@ -2,6 +2,7 @@
 	session_start();
 	header('Content-Type: application/json'); 
 	require_once 'Conexion.php';
+	require_once $_SERVER['DOCUMENT_ROOT'] . './sys_config.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Movimiento.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Formulario.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Persona.php';
@@ -16,16 +17,32 @@
     try {
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$client = new Google_Client();
+
+			$private_key = "clave_de_base_de_datos";
+
+			$client->setAuthConfig(array("type" => TYPE_ACCOUNT,
+										 "client_id" => CLIENT_ID,
+										 "client_email" => CLIENT_EMAIL,
+										 "private_key" => $private_key, 
+										 "signing_algorithm" => "HS256"));
+
+			$client->addScope(['https://www.googleapis.com/auth/drive.readonly']);
+			$service = new Google_Service_Drive($client);
+			$driveService = new Drive($client);
+			$file = $service->files->get(FILE_ID, ['alt' => 'media']);
+
+			/*
 			$client->useApplicationDefaultCredentials();
 			$client->addScope(['https://www.googleapis.com/auth/drive.readonly']);
 			$service = new Google_Service_Drive($client);
 			$driveService = new Drive($client);
 			$fileId = "1lUM5ZS8WBuN29IdL09cKoGZPuLoK2Dlh";
-
 			$file = $service->files->get($fileId, ['alt' => 'media']);
+			*/
+
 			$fileContent = $file->getBody()->getContents();
 			$file_name = "archivo_temporal_formulario.xlsx";
-			$fd = fopen($file_name,mode: "w+");
+			$fd = fopen($file_name, mode: "w+");
 			$cont = fwrite($fd, $fileContent);
 			$cont = fclose($fd);
 
