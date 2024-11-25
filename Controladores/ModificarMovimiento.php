@@ -84,7 +84,6 @@ if (Movimiento::is_exist($Con, $ID_Movimiento)) {
 
 	$movimiento = new Movimiento(
 		coneccion_base: $Con, 
-		xID_Movimiento: $ID_Movimiento,
 		xFecha: $Fecha,
 		Fecha_Creacion: $Fecha_Creacion,
 		xID_Persona: $ID_Persona,
@@ -102,6 +101,7 @@ if (Movimiento::is_exist($Con, $ID_Movimiento)) {
 		xID_OtraInstitucion: $ID_OtraInstitucion,
 		xEstado: $Estado
 	);
+	$movimiento->setID_Movimiento($ID_Movimiento);
 	$movimiento->udpate();
 
 	$fecha_accion = date("Y-m-d");
@@ -115,8 +115,6 @@ if (Movimiento::is_exist($Con, $ID_Movimiento)) {
 	);
 	$accion->save();
 
-} else {
-	
 }
 
 $apellido = $persona->getApellido();
@@ -124,12 +122,12 @@ $nombre = $persona->getNombre();
 $dni = $persona->getDNI();
 
 // CREANDO NOTIFICACION PARA EL USUARIO
-$DetalleNot = 'Se modifico el movimiento vinculado a : '. $apellido . ', '. $nombre . ' fecha: '. $fecha_previa;
+$detalle_not = 'Se modifico el movimiento vinculado a : '. $apellido . ', '. $nombre . ' fecha: '. $fecha_previa;
 $expira = date("Y-m-d", strtotime($fecha_accion . " + 15 days"));
 
-$consultaNot = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$DetalleNot','$Fecha', '$Expira',1)";
-if(!$RetNot = mysqli_query($Con->Conexion,$ConsultaNot)){
-	throw new Exception("Error al intentar registrar Notificacion. Consulta: ".$ConsultaNot, 3);
+$consulta_not = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$detalle_not','$Fecha', '$expira',1)";
+if(!$RetNot = mysqli_query($Con->Conexion,$consulta_not)){
+	throw new Exception("Error al intentar registrar Notificacion. Consulta: " . $ConsultaNot, 3);
 }
 
 $Con->CloseConexion();
