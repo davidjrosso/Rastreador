@@ -16,9 +16,20 @@
 
     try {
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-			$client = new Google_Client();
+			$con = new Conexion();
+			$con->OpenConexion();
 
-			$private_key = "clave_de_base_de_datos";
+			$client = new Google_Client();
+			$consulta = "select * 
+						 from parametrias 
+						 where codigo = 'SECRET_KEY' 
+						   and estado = 1";
+			$ret = mysqli_query($con->Conexion,$consulta);
+			$resultado = mysqli_fetch_assoc($ret);
+			$private_key = $resultado["valor"];
+			if(!$ret){
+				throw new Exception("Problemas al consultar el sercret key. Consulta: ".$ConsultarRegistrosIguales, 0);
+			}
 
 			$client->setAuthConfig(array("type" => TYPE_ACCOUNT,
 										 "client_id" => CLIENT_ID,
