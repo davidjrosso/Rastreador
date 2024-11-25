@@ -67,7 +67,7 @@ class Movimiento implements JsonSerializable
 									where id_movimiento = " . $xID_Movimiento . " 
 									and estado = 1";
 			$ejecutar_consultar_persona = mysqli_query(
-			$this->coneccion_base, 
+			$this->coneccion_base->Conexion, 
 			$consultar_usuario) or die("Problemas al consultar filtro Usuario");
 			$ret = mysqli_fetch_assoc($ejecutar_consultar_persona);
 			if (!is_null($ret)) {
@@ -285,15 +285,17 @@ class Movimiento implements JsonSerializable
 	}
 
 	public function udpate(){
-		$consulta = "udpate movimiento
+		$fecha = $this->getFecha_Creacion();
+		$fecha_format = (($fecha) ? $fecha->format("Y-m-d") : "null");
+		$consulta = "update movimiento
 					 set fecha = " . (($this->getFecha()) ? "'" . $this->getFecha() . "'" : "null") .",
-					 	 fecha_creacion = " . (($this->getID_Persona()) ? $this->getID_Persona() : "null") . ",
+					 	 fecha_creacion = " . (($fecha_format) ? "'" . $fecha_format . "'" : "null") . ",
 						 id_persona = " . (($this->getID_Persona()) ? $this->getID_Persona() : "null") . ", 
 						 motivo_1 = " . (($this->getID_Motivo_1()) ? $this->getID_Motivo_1() : "null") . ",
 						 motivo_2 = " . (($this->getID_Motivo_2()) ? $this->getID_Motivo_2() : "null") .",
 						 motivo_3 = " . (($this->getID_Motivo_3()) ? $this->getID_Motivo_3() : "null") . ",
-						 motivo_4 = '" . (($this->getID_Motivo_4()) ? $this->getID_Motivo_4() : "null") . ",
-						 motivo_5 = '" . (($this->getID_Motivo_5()) ? $this->getID_Motivo_5() : "null") . ",
+						 motivo_4 = " . (($this->getID_Motivo_4()) ? $this->getID_Motivo_4() : "null") . ",
+						 motivo_5 = " . (($this->getID_Motivo_5()) ? $this->getID_Motivo_5() : "null") . ",
 						 observaciones = " . (($this->getObservaciones()) ? "'" . $this->getObservaciones() . "'" : "null") . ",
 						 id_resp = " . (($this->getID_Responsable()) ? $this->getID_Responsable() : "null") . ",
 						 id_resp_2 = " . (($this->getID_Responsable_2()) ? $this->getID_Responsable_2() : "null") . ",
