@@ -27,15 +27,6 @@
 			$ret = mysqli_query($con->Conexion,$consulta);
 			$resultado = mysqli_fetch_assoc($ret);
 			$private_key = $resultado["valor"];
-			/*
-			$consulta = "select * 
-						 from parametrias 
-						 where codigo = 'FILE_DRIVE' 
-			  			   and estado = 1";
-			$ret = mysqli_query($con->Conexion,$consulta);
-			$resultado = mysqli_fetch_assoc($ret);
-			$file_name = $resultado["valor"];
-			*/
 
 			if(!$ret){
 				throw new Exception("Problemas al consultar el sercret key. Consulta: " . $consultar, 0);
