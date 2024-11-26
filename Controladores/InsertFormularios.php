@@ -27,8 +27,18 @@
 			$ret = mysqli_query($con->Conexion,$consulta);
 			$resultado = mysqli_fetch_assoc($ret);
 			$private_key = $resultado["valor"];
+			/*
+			$consulta = "select * 
+						 from parametrias 
+						 where codigo = 'FILE_DRIVE' 
+			  			   and estado = 1";
+			$ret = mysqli_query($con->Conexion,$consulta);
+			$resultado = mysqli_fetch_assoc($ret);
+			$file_name = $resultado["valor"];
+			*/
+
 			if(!$ret){
-				throw new Exception("Problemas al consultar el sercret key. Consulta: ".$consultar, 0);
+				throw new Exception("Problemas al consultar el sercret key. Consulta: " . $consultar, 0);
 			}
 
 			$client->setAuthConfig(array("type" => TYPE_ACCOUNT,
@@ -253,7 +263,7 @@
 								   estado: $estado
 				);
 				$formulario->save();
-				$row_json["movimiento"] = $formulario->jsonSerialize();
+				$row_json["form"] = $formulario->jsonSerialize();
 				$response_json[$row - 1]["formulario"] = $row_json;
 				$response_json[$row - 1]["estado"] = 1;
 
