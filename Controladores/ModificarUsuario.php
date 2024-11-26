@@ -1,7 +1,7 @@
 <?php 
 session_start();
 require_once '../Modelo/Account.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . 'Modelo/Solicitud_Usuario.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Solicitud_Usuario.php';
 /*
  *
  * This file is part of Rastreador3.
