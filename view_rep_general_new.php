@@ -1274,13 +1274,15 @@ $Con->CloseConexion();
                               persona P, 
                               barrios B, 
                               motivo MT, 
-                              categoria C,
-                              responsable R)
-                              LEFT JOIN centros_salud CS ON (M.id_centro = CS.id_centro) 
-                              LEFT JOIN otras_instituciones I ON (M.id_otrainstitucion = I.ID_OtraInstitucion) 
-                              LEFT JOIN calle L on (L.id_calle = P.calle)
+                              categoria C, 
+                              centros_salud CS, 
+                              otras_instituciones I, 
+                              responsable R) left join
+                              calle L on (L.id_calle = P.calle)
                          WHERE M.id_persona = P.id_persona 
                            and B.ID_Barrio = P.ID_Barrio 
+                           and M.id_centro = CS.id_centro 
+                           and M.id_otrainstitucion = I.ID_OtraInstitucion 
                            and M.id_resp = R.id_resp
                            and (MT.id_motivo = M.motivo_1
                                or MT.id_motivo = M.motivo_2
