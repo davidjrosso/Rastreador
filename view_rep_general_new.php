@@ -230,14 +230,14 @@ $Con->CloseConexion();
             let puntos = angulo / longuitud;
             let listaDeClaves = Object.keys(lista_formas);
             let listaConOrden = listaDeClaves.sort(function (categoriaA, categoriaB) {
-                  if( lista_formas[categoriaA][1] < lista_formas[categoriaB][1]) {
+                  if(lista_formas[categoriaA][1] < lista_formas[categoriaB][1]) {
                     return -1;
                   } else if (lista_formas[categoriaA][1] > lista_formas[categoriaB][1]) {
                     return 1;
                   } else {
-                      if(lista_formas[categoriaA][2] < lista_formas[categoriaB][2]) {
+                      if(Date.parse(lista_formas[categoriaA][2]) > Date.parse(lista_formas[categoriaB][2])) {
                         return -1;
-                      } else if (lista_formas[categoriaA][2] > lista_formas[categoriaB][2]) {
+                      } else if (Date.parse(lista_formas[categoriaA][2]) < Date.parse(lista_formas[categoriaB][2])) {
                         return 1;
                       } else {
                         return 0;
@@ -245,14 +245,14 @@ $Con->CloseConexion();
                   }
               });
             let tipoCategoriaPrevia = -1;
-            let odenPrevio = 0;
+            let ordenPrevio = Date.parse("2000-01-01");
             listaConOrden.forEach(function (categoria, indice, array) {
                   if (tipoCategoriaPrevia == lista_formas[categoria][1] 
-                      && odenPrevio < lista_formas[categoria][2]) {
+                      && ordenPrevio > Date.parse(lista_formas[categoria][2])) {
                     return;
                   }
                   tipoCategoriaPrevia = lista_formas[categoria][1];
-                  odenPrevio = lista_formas[categoria][2];
+                  ordenPrevio = Date.parse(lista_formas[categoria][2]);
                   charCodeLetter = (categoria.length == 1) ? categoria.charCodeAt(0) : categoria;
                   let color_categ = lista_formas[categoria][0].substring(1);
                   icon = new OpenLayers.Icon('./images/icons/motivos/' + charCodeLetter + '_' + color_categ + '.png', size, offset);
@@ -2542,6 +2542,7 @@ $Con->CloseConexion();
                     $Mes = $Separar[0];
                     $Anio = $Separar[1];
                     $Consultar_Movimientos_Persona = "select M.id_movimiento,
+                                                             M.fecha,
                                                              M.motivo_1, 
                                                              max(M.motivo_1 = MI.id_motivo) as permiso_1,
                                                              M.motivo_2, 
@@ -2669,7 +2670,7 @@ $Con->CloseConexion();
                             $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
                                                                                             $RetMotivo["color"], 
                                                                                             $RetMotivo["tipo_categoria"],
-                                                                                            $RetMotivo["orden"]
+                                                                                            $Ret_Movimientos_Persona["fecha"]
                                                                                             ];
 
                           }
@@ -2729,7 +2730,7 @@ $Con->CloseConexion();
                             $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
                                                                                             $RetMotivo["color"], 
                                                                                             $RetMotivo["tipo_categoria"],
-                                                                                            $RetMotivo["orden"]
+                                                                                            $Ret_Movimientos_Persona["fecha"]
                             ];
                           }
                         }
@@ -2787,7 +2788,7 @@ $Con->CloseConexion();
                             $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
                                                                                             $RetMotivo["color"], 
                                                                                             $RetMotivo["tipo_categoria"],
-                                                                                            $RetMotivo["orden"]
+                                                                                            $Ret_Movimientos_Persona["fecha"]
                             ];
                           }
                         }
@@ -2845,7 +2846,7 @@ $Con->CloseConexion();
                             $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
                                                                                             $RetMotivo["color"], 
                                                                                             $RetMotivo["tipo_categoria"],
-                                                                                            $RetMotivo["orden"]
+                                                                                            $Ret_Movimientos_Persona["fecha"]
                             ];
                         }
                         }
@@ -2903,7 +2904,7 @@ $Con->CloseConexion();
                             $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
                                                                                             $RetMotivo["color"], 
                                                                                             $RetMotivo["tipo_categoria"],
-                                                                                            $RetMotivo["orden"]
+                                                                                            $Ret_Movimientos_Persona["fecha"]
                             ];
                           }
                         }
@@ -2962,7 +2963,7 @@ $Con->CloseConexion();
                           $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
                                                                                           $RetMotivo["color"], 
                                                                                           $RetMotivo["tipo_categoria"],
-                                                                                          $RetMotivo["orden"]
+                                                                                          $Ret_Movimientos_Persona["fecha"]
                           ];
                         }
                       }
@@ -3026,7 +3027,7 @@ $Con->CloseConexion();
                           $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
                                                                                           $RetMotivo2["color"], 
                                                                                           $RetMotivo2["tipo_categoria"],
-                                                                                          $RetMotivo2["orden"]
+                                                                                          $Ret_Movimientos_Persona["fecha"]
                           ];
                           }
                         }
@@ -3087,7 +3088,7 @@ $Con->CloseConexion();
                           $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
                                                                                           $RetMotivo2["color"], 
                                                                                           $RetMotivo2["tipo_categoria"],
-                                                                                          $RetMotivo2["orden"]
+                                                                                          $Ret_Movimientos_Persona["fecha"]
                           ];
                           }
                         }
@@ -3149,7 +3150,7 @@ $Con->CloseConexion();
                             $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
                                                                                             $RetMotivo2["color"], 
                                                                                             $RetMotivo2["tipo_categoria"],
-                                                                                            $RetMotivo2["orden"]
+                                                                                            $Ret_Movimientos_Persona["fecha"]
                             ];
                           }
                         }
@@ -3211,7 +3212,7 @@ $Con->CloseConexion();
                             $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
                                                                                             $RetMotivo2["color"], 
                                                                                             $RetMotivo2["tipo_categoria"],
-                                                                                            $RetMotivo2["orden"]
+                                                                                            $Ret_Movimientos_Persona["fecha"]
                             ];
                           }
                         }
@@ -3273,7 +3274,7 @@ $Con->CloseConexion();
                             $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
                                                                                             $RetMotivo2["color"], 
                                                                                             $RetMotivo2["tipo_categoria"],
-                                                                                            $RetMotivo2["orden"]
+                                                                                            $Ret_Movimientos_Persona["fecha"]
                             ];
                           }
                         }
@@ -3334,7 +3335,7 @@ $Con->CloseConexion();
                           $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
                                                                                           $RetMotivo2["color"], 
                                                                                           $RetMotivo2["tipo_categoria"],
-                                                                                          $RetMotivo2["orden"]
+                                                                                          $Ret_Movimientos_Persona["fecha"]
                           ];
                         }
                       }
@@ -3397,7 +3398,7 @@ $Con->CloseConexion();
                           $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
                                                                                           $RetMotivo3["color"], 
                                                                                           $RetMotivo3["tipo_categoria"],
-                                                                                          $RetMotivo3["orden"]
+                                                                                          $Ret_Movimientos_Persona["fecha"]
                           ];
                           }
                         }
@@ -3457,7 +3458,7 @@ $Con->CloseConexion();
                             $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
                                                                                             $RetMotivo3["color"], 
                                                                                             $RetMotivo3["tipo_categoria"],
-                                                                                            $RetMotivo3["orden"]
+                                                                                            $Ret_Movimientos_Persona["fecha"]
                             ];
                           }
                         }
@@ -3517,7 +3518,7 @@ $Con->CloseConexion();
                             $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
                                                                                             $RetMotivo3["color"], 
                                                                                             $RetMotivo3["tipo_categoria"],
-                                                                                            $RetMotivo3["orden"]
+                                                                                            $Ret_Movimientos_Persona["fecha"]
                             ];
                           }
                         }
@@ -3577,7 +3578,7 @@ $Con->CloseConexion();
                             $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
                                                                                             $RetMotivo3["color"], 
                                                                                             $RetMotivo3["tipo_categoria"],
-                                                                                            $RetMotivo3["orden"]
+                                                                                            $Ret_Movimientos_Persona["fecha"]
                             ];
                           }
                         }
@@ -3637,7 +3638,7 @@ $Con->CloseConexion();
                             $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
                                                                                             $RetMotivo3["color"], 
                                                                                             $RetMotivo3["tipo_categoria"],
-                                                                                            $RetMotivo3["orden"]
+                                                                                            $Ret_Movimientos_Persona["fecha"]
                             ];
                           }
                         }
@@ -3697,7 +3698,7 @@ $Con->CloseConexion();
                           $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
                                                                                           $RetMotivo3["color"], 
                                                                                           $RetMotivo3["tipo_categoria"],
-                                                                                          $RetMotivo3["orden"]
+                                                                                          $Ret_Movimientos_Persona["fecha"]
                           ];
                         }
                       }
