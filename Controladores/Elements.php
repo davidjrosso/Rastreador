@@ -2335,10 +2335,10 @@ public function getMenuSeguridadUsuario($ID){
                           <div class='menu-list'>" . 
                             self::getMenuUnificacionUsuario($pagina) . 
                           "</div>
-                          <div class='brand'>Notificaciones</div>
+                          <!--<div class='brand'>Notificaciones</div>
                           <div class='menu-list'>" . 
                             self::getMenuNotificacionUsuario($pagina) . 
-                          "</div>
+                          "</div>-->
                           <div class='brand'>Seguridad</div>
                           <div class='menu-list'>" .
                               self::getMenuSeguridadUsuario($pagina) . 
@@ -2367,10 +2367,10 @@ public function getMenuSeguridadUsuario($ID){
                               <div class='menu-list'>" . 
                                 self::getMenuReportesUsuario($pagina) . 
                               "</div>
-                              <div class='brand'>Notificaciones</div>
+                              <!--<div class='brand'>Notificaciones</div>
                               <div class='menu-list'>" . 
                                 self::getMenuNotificacionUsuario($pagina) . 
-                              "</div>
+                              "</div>-->
                               <div class='brand'>El Proyecto</div>
                               <div class='menu-list'>" . 
                                 self::getMenuHistorialUsuario($pagina) . 
@@ -2399,10 +2399,10 @@ public function getMenuSeguridadUsuario($ID){
                         <div class='menu-list'>" . 
                           self::getMenuUnificacionUsuario($pagina) . 
                         "</div>
-                        <div class='brand'>Notificaciones</div>
+                        <!--<div class='brand'>Notificaciones</div>
                         <div class='menu-list'>" . 
                           self::getMenuNotificacionUsuario($pagina) . 
-                        "</div>
+                        "</div>-->
                         <div class='brand'>El Proyecto</div>
                         <div class='menu-list'>" . 
                             self::getMenuHistorialUsuario($pagina) .
