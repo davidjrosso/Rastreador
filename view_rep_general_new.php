@@ -251,7 +251,9 @@ $Con->CloseConexion();
                       && ordenPrevio > Date.parse(lista_formas[categoria][2])) {
                     return;
                   }
-                  tipoCategoriaPrevia = lista_formas[categoria][1];
+                  if (lista_formas[categoria][1] != 0) {
+                    tipoCategoriaPrevia = lista_formas[categoria][1];
+                  }
                   ordenPrevio = Date.parse(lista_formas[categoria][2]);
                   charCodeLetter = (categoria.length == 1) ? categoria.charCodeAt(0) : categoria;
                   let color_categ = lista_formas[categoria][0].substring(1);
