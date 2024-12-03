@@ -856,6 +856,7 @@ $Con->CloseConexion();
       background-color: #BBB;
       border-radius: 20px;
       padding: 8px;
+      font-size: 0.84rem;
       display: inline-block;
       margin: 3px;
     }
@@ -3791,7 +3792,7 @@ $Con->CloseConexion();
           </div>
           <div class="modal-body" style="padding-top: 0px">
           <div id="basicMap"></div>
-          <div style="pointer-events: none; position: absolute; top: 30px; left: 70px; z-index: 1000">
+          <div style="pointer-events: none; position: absolute; top: 0px; left: 70px; z-index: 1000">
             <?php
               foreach ($filtros as $value) {
                   echo "<span class='etFiltros'>" . $value . "</span> ";
