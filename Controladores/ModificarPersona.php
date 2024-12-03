@@ -18,7 +18,7 @@ $Meses = $_REQUEST["Meses"];
 
 if(empty($_REQUEST["Fecha_Nacimiento"])){
 	$Fecha_Nacimiento = 'null';
-}else{
+} else {
 	$Fecha_Nacimiento = implode("-", array_reverse(explode("/",$_REQUEST["Fecha_Nacimiento"])));
 }
 
@@ -154,20 +154,21 @@ try {
 	$Con->OpenConexion();
 
 	$ConsultarRegistrosIguales = "select * from persona where documento = '{$DNI}' and id_persona != $ID_Persona and estado = 1";
-	if(!$RetIguales = mysqli_query($Con->Conexion,$ConsultarRegistrosIguales)){
+	$RetIguales = mysqli_query($Con->Conexion,$ConsultarRegistrosIguales);
+	if (!$RetIguales) {
 		throw new Exception("Problemas al intentar Consultar Registros Iguales", 0);		
 	}
 
 	$Registros = mysqli_num_rows($RetIguales);
-	if($Registros > 0){
+	if ($Registros > 0 && !empty($DNI)) {
 		mysqli_free_result($RetIguales);
 		$Con->CloseConexion();
 		$Mensaje = "Ya existe una Persona con ese Apellido y Nombre por Favor Introduzca Otros Datos";
 		header('Location: ../view_modpersonas.php?ID='.$ID_Persona.'&MensajeError='.$Mensaje);
-	}else{
+	} else {
 		$ConsultarDatosViejos = "select * from persona where id_persona = $ID_Persona and estado = 1";
 		$ErrorDatosViejos = "No se pudieron consultar los datos";
-		if(!$RetDatosViejos = mysqli_query($Con->Conexion,$ConsultarDatosViejos)){
+		if (!$RetDatosViejos = mysqli_query($Con->Conexion,$ConsultarDatosViejos)) {
 			throw new Exception("Error al intentar registrar. Consulta: ".$ConsultarDatosViejos, 1);
 		}
 
