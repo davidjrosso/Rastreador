@@ -38,108 +38,89 @@
 										 "private_key" => $private_key, 
 										 "signing_algorithm" => "HS256"));
 
-			$client->addScope(['https://www.googleapis.com/auth/drive.readonly']);
-			$service = new Google_Service_Drive($client);
-			$driveService = new Drive($client);
-			$file = $service->files->get(FILE_ID, ['alt' => 'media']);
-
-			/*
-			$client->useApplicationDefaultCredentials();
-			$client->addScope(['https://www.googleapis.com/auth/drive.readonly']);
-			$service = new Google_Service_Drive($client);
-			$driveService = new Drive($client);
-			$fileId = "1lUM5ZS8WBuN29IdL09cKoGZPuLoK2Dlh";
-			$file = $service->files->get($fileId, ['alt' => 'media']);
-			*/
-
-			$fileContent = $file->getBody()->getContents();
-			$file_name = "archivo_temporal_formulario.xlsx";
-			$fd = fopen($file_name, mode: "w+");
-			$cont = fwrite($fd, $fileContent);
-			$cont = fclose($fd);
-
-			$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-			$reader->setReadDataOnly(true);
-			$spreadsheet = $reader->load($file_name);
-			$worksheet = $spreadsheet->getActiveSheet();
-
-			$highestRow = $worksheet->getHighestDataRow();
-			$highestColumn = $worksheet->getHighestDataColumn();
-			$highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
-
+			$client->addScope([Google_Service_Drive::DRIVE_READONLY]);
+			$client->addScope([Google_Service_Sheets::SPREADSHEETS]);
+			$service_sheets = new Google_Service_Sheets($client);
+			$range = 'A1:S';
+			$result = $service_sheets->spreadsheets_values->get(FILE_ID, $range);
 			$con = new Conexion();
 			$con->OpenConexion();
-
 			$Fecha =  date("Y-m-d");
 			$observacion = "";
 			$response_json = [];
 			$row_json = [];
-			for ($row = 2; $row <= $highestRow; $row++) {
-				for ($col = 1; $col <= $highestColumnIndex; $col++) {
-					$value = $worksheet->getCell([$col, $row])->getValue();
+			$highestColumnIndex = 18;
+			$highestRow = 4;
+			for ($row = 1; $row <= $highestRow; $row++) {
+				for ($col = 0; $col <= $highestColumnIndex; $col++) {
+					$value = $result->values[$row][$col];
 					switch ($col) {
-						case 1:
+						case 0:
 							if (!is_null($value)) {
-								$fecha_excel = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value);
-								$Fecha_Accion = $fecha_excel->format("Y-m-d");
+								//$fecha_excel = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value);
+								//$Fecha_Accion = $fecha_excel->format("Y-m-d");
+								$fecha_excel = strtotime($value);
+								$Fecha_Accion = date(format: 'Y-m-d',timestamp: $fecha_excel);
 							} else {
 								$Fecha_Accion = $Fecha;
 							}
 							break;
-						case 2:
+						case 1:
 							$email = $value;
 							break;
-						case 3:
+						case 2:
 							$responsable = $value;
 							break;
-						case 4:
+						case 3:
 							$apellido_nombre = $value;
 							break;
-						case 5:
+						case 4:
 							$dni = $value;
 							break;
-						case 6:
-							$fecha_excel = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value);
-							$Fecha_Nacimiento = $fecha_excel->format("Y-m-d");
+						case 5:
+							//$fecha_excel = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value);
+							//$Fecha_Nacimiento = $fecha_excel->format("Y-m-d");
+							$fecha_excel = strtotime($value);
+							$Fecha_Accion = date(format: 'Y-m-d',timestamp: $fecha_excel);
 							break;
-						case 7:
+						case 6:
 							$direccion = $value;
 							break;
-						case 8:
+						case 7:
 							$localidad = $value;
 							break;
-						case 9:
+						case 8:
 							$telefono = $value;
 							break;
-						case 10:
+						case 9:
 							$observacion .= " Fecha inicio de los Sintomas : " . $value;
 							break;
-						case 11:
+						case 10:
 							$internacion = (($value == "INTERNACION") ? true : false);
 							$observacion .= " INTERNACION/ AMBULATORIO : " . $value;
 							break;
-						case 12:
+						case 11:
 							$observacion .= " El paciente fue vacunado para dengue? : " . $value;
 							break;
-						case 13:
+						case 12:
 							$observacion .= " Si fue vacunado, indique la fecha 1era Dosis : " . $value;
 							break;
-						case 14:
+						case 13:
 							$observacion .= " Si fue vacunado, indique la fecha 2da Dosis : " . $value;
 							break;
-						case 15:
+						case 14:
 							$observacion .= " Antígeno AgNS1 : " . $value;
 							break;
-						case 16:
+						case 15:
 							$observacion .= " Anticuerpos IgM para Dengue : " . $value;
 							break;
-						case 17:
+						case 16:
 							$observacion .= " Anticuerpos IgG para Dengue : " . $value;
 							break;
-						case 18:
+						case 17:
 							$observacion .= " PCR para dengue : " . $value;
 							break;
-						case 19:
+						case 18:
 							$barrio = $value;
 							if (!is_null($barrio)) {
 								$id_barrio = Barrio::get_id_by_name($con, $barrio);
@@ -224,11 +205,13 @@
 						coneccion_base: $con, 
 								xFecha: $Fecha_Accion,
 						Fecha_Creacion: $Fecha_Accion,
-						xID_Persona: $persona->getID_Persona(),
-						xID_Motivo_1: $ID_Motivo_1,
+						   xID_Persona: $persona->getID_Persona(),
+						  xID_Motivo_1: $ID_Motivo_1,
 						xObservaciones: $observacion,
-					xID_Responsable: $responsable->get_id_responsable(),
-							xEstado: $estado
+					   xID_Responsable: $responsable->get_id_responsable(),
+							xID_Centro: 7,
+				   xID_OtraInstitucion: 1,
+							   xEstado: $estado
 						);
 				if ($internacion) {
 					$movimiento->setID_Motivo_2($ID_Motivo_2);
