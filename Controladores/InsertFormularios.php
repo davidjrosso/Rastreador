@@ -49,11 +49,11 @@
 			$observacion = "";
 			$response_json = [];
 			$row_json = [];
-			$highestColumnIndex = 18;
+			$highestColumnIndex = 19;
 			$highestRow = 4;
 			for ($row = 1; $row <= $highestRow; $row++) {
 				for ($col = 0; $col <= $highestColumnIndex; $col++) {
-					$value = $result->values[$row][$col];
+					$value = (!empty($result->values[$row][$col])) ? $result->values[$row][$col] : null;
 					switch ($col) {
 						case 0:
 							if (!is_null($value)) {
@@ -75,52 +75,55 @@
 							$apellido_nombre = $value;
 							break;
 						case 4:
-							$dni = $value;
+							$apellido_nombre = $value;
 							break;
 						case 5:
+							$dni = $value;
+							break;
+						case 6:
 							//$fecha_excel = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value);
 							//$Fecha_Nacimiento = $fecha_excel->format("Y-m-d");
 							$fecha_excel = strtotime($value);
-							$Fecha_Accion = date(format: 'Y-m-d',timestamp: $fecha_excel);
-							break;
-						case 6:
-							$direccion = $value;
+							$Fecha_Nacimiento = date(format: 'Y-m-d',timestamp: $fecha_excel);
 							break;
 						case 7:
-							$localidad = $value;
+							$direccion = $value;
 							break;
 						case 8:
-							$telefono = $value;
+							$localidad = $value;
 							break;
 						case 9:
-							$observacion .= " Fecha inicio de los Sintomas : " . $value;
+							$telefono = $value;
 							break;
 						case 10:
+							$observacion .= " Fecha inicio de los Sintomas : " . $value;
+							break;
+						case 11:
 							$internacion = (($value == "INTERNACION") ? true : false);
 							$observacion .= " INTERNACION/ AMBULATORIO : " . $value;
 							break;
-						case 11:
+						case 12:
 							$observacion .= " El paciente fue vacunado para dengue? : " . $value;
 							break;
-						case 12:
+						case 13:
 							$observacion .= " Si fue vacunado, indique la fecha 1era Dosis : " . $value;
 							break;
-						case 13:
+						case 14:
 							$observacion .= " Si fue vacunado, indique la fecha 2da Dosis : " . $value;
 							break;
-						case 14:
+						case 15:
 							$observacion .= " Antígeno AgNS1 : " . $value;
 							break;
-						case 15:
+						case 16:
 							$observacion .= " Anticuerpos IgM para Dengue : " . $value;
 							break;
-						case 16:
+						case 17:
 							$observacion .= " Anticuerpos IgG para Dengue : " . $value;
 							break;
-						case 17:
+						case 18:
 							$observacion .= " PCR para dengue : " . $value;
 							break;
-						case 18:
+						case 19:
 							$barrio = $value;
 							if (!is_null($barrio)) {
 								$id_barrio = Barrio::get_id_by_name($con, $barrio);
