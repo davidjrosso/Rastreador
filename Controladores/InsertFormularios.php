@@ -52,6 +52,7 @@
 			$highestColumnIndex = 19;
 			$highestRow = 4;
 			for ($row = 1; $row <= $highestRow; $row++) {
+				$observacion = "";
 				for ($col = 0; $col <= $highestColumnIndex; $col++) {
 					$value = (!empty($result->values[$row][$col])) ? $result->values[$row][$col] : null;
 					switch ($col) {
