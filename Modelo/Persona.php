@@ -747,6 +747,7 @@ public function jsonSerialize() {
 	return [
 	'ID_Persona' => $this->ID_Persona,
 	'Nombre' => $this->Nombre,
+	'Apellido' => $this->Apellido,
 	'DNI' => $this->DNI,
 	'Nro_Legajo' => $this->Nro_Legajo,
 	'Edad' => $this->Edad,

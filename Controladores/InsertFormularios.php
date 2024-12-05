@@ -60,8 +60,6 @@
 					switch ($col) {
 						case 0:
 							if (!is_null($value)) {
-								//$fecha_excel = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value);
-								//$Fecha_Accion = $fecha_excel->format("Y-m-d");
 								$fecha_excel = strtotime($value);
 								$Fecha_Accion = date(format: 'Y-m-d',timestamp: $fecha_excel);
 							} else {
@@ -75,17 +73,15 @@
 							$responsable = $value;
 							break;
 						case 3:
-							$apellido_nombre = $value;
+							$apellido = $value;
 							break;
 						case 4:
-							$apellido_nombre = $value;
+							$nombre = $value;
 							break;
 						case 5:
 							$dni = $value;
 							break;
 						case 6:
-							//$fecha_excel = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value);
-							//$Fecha_Nacimiento = $fecha_excel->format("Y-m-d");
 							$fecha_excel = strtotime($value);
 							$Fecha_Nacimiento = date(format: 'Y-m-d',timestamp: $fecha_excel);
 							break;
@@ -179,7 +175,8 @@
 				$accion->save();
 				if (!Persona::is_registered($dni)) {
 					$persona = new Persona(
-						xApellido : $apellido_nombre,
+						xApellido : $apellido,
+						xNombre : $nombre,
 						xBarrio :  $id_barrio,
 						xDNI : $dni,
 						xEstado : $estado,
