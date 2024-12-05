@@ -41,16 +41,18 @@
 			$client->addScope([Google_Service_Drive::DRIVE_READONLY]);
 			$client->addScope([Google_Service_Sheets::SPREADSHEETS]);
 			$service_sheets = new Google_Service_Sheets($client);
-			$range = 'A1:S';
+			$range = 'A1:T';
 			$result = $service_sheets->spreadsheets_values->get(FILE_ID, $range);
+
 			$con = new Conexion();
 			$con->OpenConexion();
+
 			$Fecha =  date("Y-m-d");
 			$observacion = "";
 			$response_json = [];
 			$row_json = [];
-			$highestColumnIndex = 19;
-			$highestRow = 4;
+			$highestColumnIndex = count($result->values[0]);
+			$highestRow = count($result->values) - 1;
 			for ($row = 1; $row <= $highestRow; $row++) {
 				$observacion = "";
 				for ($col = 0; $col <= $highestColumnIndex; $col++) {
