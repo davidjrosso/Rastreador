@@ -62,9 +62,22 @@ $Con->CloseConexion();
           .then((willDelete) => {
             if (willDelete) {
               window.location.href = 'Controladores/DeleteMovimiento.php?ID='+xID;
-              //alert('SI');
-            } else {        
             }
+          });
+        }
+
+        function cargaMovimientosFormulario(){
+          $.ajax({
+            type: "POST",
+            cache: false,
+            url: "./Controladores/InsertFormularios.php",
+            async: true,
+            success: function(res){   
+              console.log(res);
+            },
+            error:function(){                
+                alert("error ");
+            }   
           });
         }
 
@@ -86,7 +99,9 @@ $Con->CloseConexion();
       <div class="col"></div>
     </div><br>
     <div class="row">
-      <div class = "col"></div>
+      <div class = "col-2">
+          <button class = "btn btn-secondary" onClick = "cargaMovimientosFormulario();">Enlace Driver</button>
+      </div>
       <div class = "col-4">
           <center><button class = "btn btn-secondary" onClick = "location.href='view_newmovimientos.php'">Agregar Nuevo Movimiento</button></center>
       </div>
