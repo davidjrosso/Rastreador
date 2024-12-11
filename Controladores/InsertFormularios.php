@@ -126,6 +126,7 @@
 							$barrio = $value;
 							if (!is_null($barrio)) {
 								$id_barrio = Barrio::get_id_by_name($con, $barrio);
+								
 							} else {
 								$id_barrio = null;
 							}
