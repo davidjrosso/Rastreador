@@ -82,6 +82,7 @@
 							$dni = $value;
 							break;
 						case 6:
+							$value = str_replace("/", "-", $value);
 							$fecha_excel = strtotime($value);
 							$Fecha_Nacimiento = date(format: 'Y-m-d',timestamp: $fecha_excel);
 							break;
@@ -135,10 +136,12 @@
 							break;
 					}
 				}
-
 				$ID_Usuario = 100;
 				$ID_Motivo_1 = 100;
 				$ID_Motivo_2 = 101;
+				$ID_Motivo_3 = 1;
+				$ID_Motivo_4 = 1;
+				$ID_Motivo_5 = 1;
 				$estado = 1;
 				$ID_TipoAccion = 1;
 
@@ -211,6 +214,9 @@
 						Fecha_Creacion: $Fecha_Accion,
 						   xID_Persona: $persona->getID_Persona(),
 						  xID_Motivo_1: $ID_Motivo_1,
+						  xID_Motivo_3: $ID_Motivo_3,
+						  xID_Motivo_4: $ID_Motivo_4,
+						  xID_Motivo_5: $ID_Motivo_5,
 						xObservaciones: $observacion,
 					   xID_Responsable: $responsable->get_id_responsable(),
 							xID_Centro: 7,
