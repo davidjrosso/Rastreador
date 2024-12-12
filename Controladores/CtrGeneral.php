@@ -155,7 +155,8 @@ class CtrGeneral{
 
 		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
 								   and C.id_categoria NOT IN (SELECT id_categoria
-								                              FROM categorias_roles CS)";
+								                              FROM categorias_roles CS
+															  WHERE estado = 1)";
 
 		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
 		$Con->ResultSet = mysqli_query(
@@ -230,7 +231,8 @@ class CtrGeneral{
 
 		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
 								   and C.id_categoria NOT IN (SELECT id_categoria
-								                              FROM categorias_roles CS)";
+								                              FROM categorias_roles CS
+															  WHERE estado = 1)";
 
 		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
 		$Con->ResultSet = mysqli_query(
@@ -304,7 +306,8 @@ class CtrGeneral{
 
 		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
 								   and C.id_categoria NOT IN (SELECT id_categoria
-								                              FROM categorias_roles CS)";
+								                              FROM categorias_roles CS
+															  WHERE estado = 1)";
 
 		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
 		$Con->ResultSet = mysqli_query(
@@ -378,7 +381,8 @@ class CtrGeneral{
 
 		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
 								   and C.id_categoria NOT IN (SELECT id_categoria
-								                              FROM categorias_roles CS)";
+								                              FROM categorias_roles CS
+															  WHERE estado = 1)";
 
 		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
 		$Con->ResultSet = mysqli_query(
@@ -452,7 +456,8 @@ class CtrGeneral{
 
 		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
 								   and C.id_categoria NOT IN (SELECT id_categoria
-								                              FROM categorias_roles CS)";
+								                              FROM categorias_roles CS
+															  WHERE estado = 1)";
 
 		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
 		$Con->ResultSet = mysqli_query(
@@ -526,7 +531,8 @@ class CtrGeneral{
 
 		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
 								   and C.id_categoria NOT IN (SELECT id_categoria
-								                              FROM categorias_roles CS)";
+								                              FROM categorias_roles CS
+															  WHERE estado = 1)";
 
 		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
 		$Con->ResultSet = mysqli_query(
@@ -602,7 +608,8 @@ class CtrGeneral{
 
 		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
 								   and C.id_categoria NOT IN (SELECT id_categoria
-								                              FROM categorias_roles CS)";
+								                              FROM categorias_roles CS
+															  WHERE estado = 1)";
 
 		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
 		$Con->ResultSet = mysqli_query(
@@ -678,7 +685,8 @@ class CtrGeneral{
 
 		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
 								   and C.id_categoria NOT IN (SELECT id_categoria
-								                              FROM categorias_roles CS)";
+								                              FROM categorias_roles CS
+															  WHERE estado = 1)";
 
 		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
 		$Con->ResultSet = mysqli_query(
