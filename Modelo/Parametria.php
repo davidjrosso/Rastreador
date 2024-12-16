@@ -33,7 +33,7 @@ class Parametria implements JsonSerializable {
     {
         $consulta = "select *
                      from parametrias 
-                     where lower(codigo) = " . strtolower($code) . " 
+                     where lower(codigo) = lower('" . $code . "') 
                      and estado = 1";
         $ejecutar_consulta = mysqli_query(
             $coneccion->Conexion, 

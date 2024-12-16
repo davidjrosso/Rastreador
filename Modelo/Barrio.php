@@ -27,7 +27,7 @@ class Barrio
 		$rs = mysqli_query($coneccion->Conexion,
 						   $consulta) or die("Problemas al consultar las acciones.");
 		$ret = mysqli_fetch_assoc($rs);
-		$id = $ret["ID_Barrio"];
+		$id = (!empty($ret["ID_Barrio"])) ? $ret["ID_Barrio"] : null;
 		return $id;
 	}
 

@@ -21,10 +21,7 @@
 			$con->OpenConexion();
 			$private_key = Parametria::get_value_by_code($con, 'SECRET_KEY');
 
-			if(!$ret){
-				throw new Exception("Problemas al consultar el sercret key. Consulta: " . $consultar, 0);
-			}
-
+			$client = new Google_Client();
 			$client->setAuthConfig(array("type" => TYPE_ACCOUNT,
 										 "client_id" => CLIENT_ID,
 										 "client_email" => CLIENT_EMAIL,
