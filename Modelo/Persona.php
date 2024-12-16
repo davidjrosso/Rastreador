@@ -288,10 +288,17 @@ public function setDomicilio($xDomicilio = null)
 		$url = "https://maps.googleapis.com/maps/api/geocode/json?address=" . str_replace(" ", "+", trim($domicilio)) . "+Rio+Tercero,Cordoba&key=AIzaSyAdiF1F7NoZbmAzBWfV6rxjJrGsr1Yvb1g";
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_HEADER  , 1);
 		$response = curl_exec($ch);
+		$response_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		$arr_obj_json = json_decode($response);
 		curl_close($ch);
-		$body_request = (($arr_obj_json) ? " " . json_encode($arr_obj_json->results[0]) : "");
+		if ($response_status == 200) {
+			$body_request = (($arr_obj_json) ? " " . json_encode($arr_obj_json->results[0]) : "");
+		} else {
+			$body_request = "- El estado de la respuesta de google api es : " . $response_status;
+			$arr_obj_json = null;
+		}
 		$detalles = $url . $body_request;
 		$accion = new Accion(
 			xFecha : $Fecha,
