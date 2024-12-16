@@ -180,7 +180,7 @@ class Formulario implements JsonSerializable
 
 	public function save()
 	{
-		$consulta = "INSERT INTO formulario ( 
+		$consulta = "INSERT INTO formularios ( 
 										email, 
 										movimiento, 
 										persona,
