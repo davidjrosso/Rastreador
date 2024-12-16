@@ -41,7 +41,7 @@ class Formulario implements JsonSerializable
 							and estado = 1";
 			$ejecutar_consultar = mysqli_query(
 				$this->coneccion_base,
-				$consultar) or die("Problemas al consultar filtro Usuario");
+				$consultar) or die("Problemas al consultar filtro Formulario");
 			$ret = mysqli_fetch_assoc($ejecutar_consultar);
 			if (!is_null($ret)) {
 				$form_email = $ret["email"];
@@ -63,7 +63,22 @@ class Formulario implements JsonSerializable
 		}
 	}
 	
-
+	public static function exist(
+								 $coneccion, 
+								 $persona, 
+								 $respnsable
+	)	{
+		$consultar = "select *
+					  from formularios 
+					  where responsable = " . $respnsable . " 
+					  		persona = " . $persona . " 
+						and estado = 1";
+		$ejecutar_consultar = mysqli_query(
+		$coneccion->Conexion,
+		$consultar) or die("Problemas al consultar filtro Usuario");
+		$is_multiple = (mysqli_num_rows($ejecutar_consultar) >= 1);
+		return $is_multiple;
+	} 
 	//METODOS SET
 	public function set_id_formulario($id_formulario)
 	{

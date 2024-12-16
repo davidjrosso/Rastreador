@@ -208,6 +208,15 @@
 					xID_TipoAccion: $ID_TipoAccion
 				);
 				$accion->save();
+
+				$formulario_cargado = Formulario::exist(coneccion: $con, 
+														persona: $persona->getID_Persona(),
+														respnsable: $responsable->get_account_id()
+														);
+				if ($formulario_cargado) {
+					continue;
+				}
+
 				$movimiento = new Movimiento(
 						coneccion_base: $con, 
 								xFecha: $Fecha_Accion,
