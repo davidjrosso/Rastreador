@@ -66,12 +66,12 @@ class Formulario implements JsonSerializable
 	public static function exist(
 								 $coneccion, 
 								 $persona, 
-								 $respnsable
+								 $responsable
 	)	{
 		$consultar = "select *
 					  from formularios 
-					  where responsable = " . $respnsable . " 
-					  		persona = " . $persona . " 
+					  where responsable = " . $responsable . " 
+					  	and	persona = " . $persona . " 
 						and estado = 1";
 		$ejecutar_consultar = mysqli_query(
 		$coneccion->Conexion,

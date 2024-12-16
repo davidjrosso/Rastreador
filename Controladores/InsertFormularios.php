@@ -211,7 +211,7 @@
 
 				$formulario_cargado = Formulario::exist(coneccion: $con, 
 														persona: $persona->getID_Persona(),
-														respnsable: $responsable->get_account_id()
+														responsable: $responsable->get_id_responsable()
 														);
 				if ($formulario_cargado) {
 					continue;
