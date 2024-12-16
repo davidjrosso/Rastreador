@@ -5,6 +5,7 @@
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/sys_config.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Movimiento.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Formulario.php';
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Parametria.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Persona.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Responsable.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Barrio.php';
@@ -18,15 +19,7 @@
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$con = new Conexion();
 			$con->OpenConexion();
-
-			$client = new Google_Client();
-			$consulta = "select * 
-						 from parametrias 
-						 where codigo = 'SECRET_KEY' 
-						   and estado = 1";
-			$ret = mysqli_query($con->Conexion,$consulta);
-			$resultado = mysqli_fetch_assoc($ret);
-			$private_key = $resultado["valor"];
+			$private_key = Parametria::get_value_by_code($con, 'SECRET_KEY');
 
 			if(!$ret){
 				throw new Exception("Problemas al consultar el sercret key. Consulta: " . $consultar, 0);
@@ -43,9 +36,6 @@
 			$service_sheets = new Google_Service_Sheets($client);
 			$range = 'A1:T';
 			$result = $service_sheets->spreadsheets_values->get(FILE_ID, $range);
-
-			$con = new Conexion();
-			$con->OpenConexion();
 
 			$Fecha =  date("Y-m-d");
 			$observacion = "";
@@ -272,6 +262,7 @@
 			echo $mensaje;
 		}
 	} catch(Exception $e) {
+		$con->CloseConexion();
 		echo "Error Message: " . $e;
   	}
 
