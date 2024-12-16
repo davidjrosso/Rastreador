@@ -60,6 +60,7 @@
 					switch ($col) {
 						case 0:
 							if (!is_null($value)) {
+								$value = str_replace("/", "-", $value);
 								$fecha_excel = strtotime($value);
 								$Fecha_Accion = date(format: 'Y-m-d',timestamp: $fecha_excel);
 							} else {
