@@ -9,6 +9,7 @@
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Persona.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Responsable.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Barrio.php';
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Motivo.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
 
 	use Google\Client;
@@ -125,11 +126,11 @@
 					}
 				}
 				$ID_Usuario = 100;
-				$ID_Motivo_1 = 100;
-				$ID_Motivo_2 = 101;
-				$ID_Motivo_3 = 1;
-				$ID_Motivo_4 = 1;
-				$ID_Motivo_5 = 1;
+				$ID_Motivo_1 = Motivo::get_id_by_codigo($con, "DEN");
+				$ID_Motivo_2 = Motivo::get_id_by_codigo($con, "DEIN");
+				$ID_Motivo_3 = Motivo::get_id_by_name( $con, "Sin Motivo");
+				$ID_Motivo_4 = Motivo::get_id_by_name($con, "Sin Motivo");
+				$ID_Motivo_5 = Motivo::get_id_by_name($con, "Sin Motivo");
 				$estado = 1;
 				$ID_TipoAccion = 1;
 
@@ -221,6 +222,9 @@
 							   xEstado: $estado
 						);
 				if ($internacion) {
+					$movimiento->setID_Motivo_2($ID_Motivo_2);
+				} else {
+					$ID_Motivo_2 = Motivo::get_id_by_name( $con, "Sin Motivo");
 					$movimiento->setID_Motivo_2($ID_Motivo_2);
 				}
 				$movimiento->save();
