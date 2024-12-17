@@ -67,48 +67,60 @@ class Notificacion implements JsonSerializable
 	}
 
 	// METODOS SET
-	public function set_id_notificacion($id_notificacion){
+	public function set_id_notificacion($id_notificacion)
+    {
 		$this->id_notificacion = $id_notificacion;
 	}
 
-	public function set_detalle($detalle){
+	public function set_detalle($detalle)
+    {
 		$this->detalle = $detalle;
 	}
-	public function set_fecha($fecha){
+	public function set_fecha($fecha)
+    {
 		$this->fecha = $fecha;
 	}
-	public function set_expira($expira){
+	public function set_expira($expira)
+    {
 		$this->expira = $expira;
 	}
 
-	public function set_estado($estado){
+	public function set_estado($estado)
+    {
 		$this->estado = $estado;
 	}
 
-	public function set_coneccion_base($coneccion_base){
+	public function set_coneccion_base($coneccion_base)
+    {
 		$this->coneccion_base = $coneccion_base;
 	}
 
 	//METODOS GET
-	public function get_id_notificacion(){
+	public function get_id_notificacion()
+    {
 		return $this->id_notificacion;
 	}
 
-	public function get_detalle(){
+	
+    public function get_detalle(){
 		return $this->detalle;
 	}
-	public function get_fecha(){
+	public function get_fecha()
+    {
 		return $this->fecha;
 	}
-    public function get_expira(){
+    public function get_expira()
+    {
 		return $this->expira;
 	}
 
-	public function get_estado(){
+	public function get_estado()
+    {
 		return $this->estado;
 	}
 
-	public function get_coneccion_base(){
+	public function get_coneccion_base()
+    {
 		return $this->coneccion_base;
 	}
 
@@ -123,7 +135,8 @@ class Notificacion implements JsonSerializable
 		];
 	}
 
-	public function udpate(){
+	public function udpate()
+    {
 		$consulta = "update notificaciones
 					 set Detalle = " . (($this->get_detalle()) ? "'" . $this->get_detalle() . "'" : "null") . ", 
                          Fecha = " . (($this->get_fecha()) ? "'" . $this->get_fecha() . "'" : "null") . ", 
@@ -136,7 +149,8 @@ class Notificacion implements JsonSerializable
 			throw new Exception($mensaje_error . $consulta, 2);
 		}
 	}
-	public function save(){
+	public function save()
+    {
 		$consulta = "insert into notificaciones (
                                                 ID_Notificacion,
                                                 Detalle,
