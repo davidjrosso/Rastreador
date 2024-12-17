@@ -198,7 +198,8 @@
 				);
 				$accion->save();
 
-				$formulario_cargado = Formulario::exist(coneccion: $con, 
+				$formulario_cargado = Formulario::exist(
+														coneccion: $con, 
 														persona: $persona->getID_Persona(),
 														responsable: $responsable->get_id_responsable()
 														);
