@@ -2582,7 +2582,7 @@ class CtrGeneral{
 		return $ret;
 	}
 
-	public function get_lista_notificaciones(){
+	public function get_lista_notificaciones($valor){
 		$Con = new Conexion();
 		$Con->OpenConexion();
 
@@ -2597,8 +2597,25 @@ class CtrGeneral{
 						</tr>
 					</thead>
 					<tbody>";
-
-		$Consulta = "select ID_Notificacion, 
+		$consulta = "select ID_Notificacion, 
+							Detalle, 
+							Fecha, 
+							Expira, 
+							Estado 
+					 from notificaciones ";
+		switch ($valor) {
+			case "activo" :
+				$consulta .= "where Expira > CURDATE()
+								and Estado = 1";
+				break;
+			case "expirado" :
+				$consulta .= "where Expira <= CURDATE()
+								and Estado = 1";
+				break;
+			default :
+				$consulta .= "where Estado = 1";
+		}
+		$consulta = "select ID_Notificacion, 
 							Detalle, 
 							Fecha, 
 							Expira, 
@@ -2607,7 +2624,7 @@ class CtrGeneral{
 					 where Expira > CURDATE() 
 					   and Estado = 1";
 		$MessageError = "Problemas al intentar mostrar Notificaciones";
-		$Con->ResultSet = mysqli_query($Con->Conexion, $Consulta) or die($MessageError);
+		$Con->ResultSet = mysqli_query($Con->Conexion, $consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
 		if($Regis > 0){
 			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
