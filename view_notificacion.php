@@ -85,45 +85,38 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
       </div>
       <div class="col"></div>
     </div><br>
-    <div class="row">
-      <div class = "col"></div>
-      <div class="col-2">
-                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
-      </div>
-      <div class = "col"></div>
-    </div>
     <br>
      <div class = "row">
       <div class = "col-10">
-           <!-- Carga -->
-          <form method = "post" action = "Controladores/CtrBuscarAuditoria.php">
-            <div class="form-group row">
-              <label for="valor_filtro" class="col-md-2 col-form-label LblForm">Buscar: </label>
-              <div class="col-md-4">
-                <input type="text" class="form-control" name = "Search" id="valor_filtro" width="100%" autocomplete="off">
-              </div>
-              <label for="inputPassword" class="col-md-1 col-form-label LblForm">En: </label>
+          <form method = "post" action = "Controladores/CtrBuscarNotificacion.php">
+            <div class="form-group row" style="justify-content: center">
+              <label for="valor_filtro" class="col-md-1 col-form-label LblForm">Buscar: </label>
               <div class="col-md-3">
                 <select name = "ID_Filtro" class = "form-control">                                        
-                    <option value="usuario" selected>Activos</option>
-                    <option value="tipo_accion">Expirados</option>
+                    <option value="activos" selected>Activos</option>
+                    <option value="expirados">Expirados</option>
                 </select>
               </div>
               <div class = "col-md-1">
                   <button class = "btn btn-secondary">Ir</button>
               </div>
+              <div class="col-md-3">
+              </div>
+              <div class="col-md-3">
+                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
+              </div>
             </div>
           </form>
           <br><br>
-          <!-- Fin Carga -->
-          <!-- Search -->
         <div class = "row">
-          <?php  
-            if(isset($_REQUEST["Filtro"]) && !empty($_REQUEST["Filtro"])){
+          <?php 
+            $dt_general = new CtrGeneral();
+            if(!empty($_REQUEST["ID_Filtro"])){
               $valor = $_REQUEST["Filtro"];
               $id_filtro = $_REQUEST["ID_Filtro"];
-              $dt_general = new CtrGeneral();
-              echo $dt_general->get_lista_notificaciones();
+              echo $dt_general->get_lista_notificaciones( $id_filtro );
+            } else {
+              echo $dt_general->get_lista_notificaciones(null);
             }
           ?>
         </div>
