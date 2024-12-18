@@ -64,10 +64,10 @@ class Accion{
 	public static function get_acciones_tipo($id_tipo_accion){
 		$con = new Conexion();
 		$con->OpenConexion();
+		$filtro = ($id_tipo_accion == 0) ? null : " and ID_TipoAccion = $id_tipo_accion"; 
 		$consulta = "select * 
 					from Acciones 
-					where ID_TipoAccion = '$id_tipo_accion'
-					and accountid is not null";
+					where accountid is not null" . $filtro;
 		$rs = mysqli_query($con->Conexion,$consulta) or die("Problemas al consultar las acciones.");
 		$lista_acciones = [];
 		while ($ret = mysqli_fetch_assoc($rs)) {
