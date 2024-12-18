@@ -51,6 +51,23 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
         todayHighlight: true,
         autoclose: true,
       });
+      $("#ID_Filtro").on("change", function (e){
+        let valor = $("#ID_Filtro").val();
+        switch (valor) {
+          case "unificacion":
+            $("#unificacion_tipo").toggle();
+            $("#valor_filtro").toggle();
+            break;
+          case "todo":
+            $("#unificacion_tipo").hide();
+            $("#valor_filtro").show();
+            break;
+          default :
+            $("#unificacion_tipo").hide();
+            $("#valor_filtro").show();
+            break;
+        }
+      });
     });
 
     function VerificarUnificacion(xID_Registro_1, xID_Registro_2, xID_TipoUnif, xID_Solicitud) {
@@ -392,20 +409,28 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
       <br>
       <div class="row">
         <div class="col-11">
-          <!-- Carga -->
-          <form method="post" action="Controladores/CtrBuscarAuditoria.php">
+          <form method="post" action="Controladores/CtrBuscarSolicitud.php">
             <div class="form-group row">
               <label for="valor_filtro" class="col-md-2 col-form-label LblForm">Buscar: </label>
               <div class="col-md-4">
                 <input type="text" class="form-control" name="Search" id="valor_filtro" width="100%" autocomplete="off">
+                <select name="Search" id="unificacion_tipo" class="form-control" style="display:none;">
+                  <option value="0" selected>Todo</option>
+                  <option value="1">Motivo</option>
+                  <option value="2">Persona</option>
+                  <option value="3">Centro Salud</option>
+                  <option value="4">Escuela</option>
+                  <option value="5">Barrios</option>
+                </select>
               </div>
-              <label for="inputPassword" class="col-md-1 col-form-label LblForm">En: </label>
+              <label for="ID_Filtro" class="col-md-1 col-form-label LblForm">En: </label>
               <div class="col-md-3">
-                <select name="ID_Filtro" class="form-control">
-                  <option value="categoria" selected>Categoria</option>
+                <select name="ID_Filtro" id="ID_Filtro" class="form-control">
+                  <option value="todo" selected>Todo</option>
+                  <option value="categoria">Categoria</option>
                   <option value="motivo">Motivo</option>
-                  <option value="usuario">Permisos</option>
-                  <option value="tipo_accion">Unificacion</option>
+                  <option value="permisos">Permisos</option>
+                  <option value="unificacion">Unificacion</option>
                 </select>
               </div>
               <div class="col-md-1">
@@ -414,12 +439,15 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
             </div>
           </form>
           <br><br>
-          <!-- Fin Carga -->
-          <!-- Search -->
           <div>
             <?php
+            $valor = (empty($_REQUEST["Filtro"])) ? null : $_REQUEST["Filtro"];
+            $tipo = (empty($_REQUEST["ID_Filtro"])) ? null : $_REQUEST["ID_Filtro"];
 
-            $CantUnif = $dt_general->getCantSolicitudes_Unificacion();
+            $CantUnif = $dt_general->get_solicitudes_unificacion_fitro(
+                                                                        $tipo,
+                                                                       $valor
+                                                                      );
             $CantModMot = $dt_general->getCantSolicitudes_Modificacion_Motivo();
             $CantCrearMot = $dt_general->getCantSolicitudes_Crear_Motivo();
             $CantCrearCat = $dt_general->getCantSolicitudes_Crear_Categoria();
@@ -437,7 +465,7 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
             ?>
                 <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Unificar</h3>
             <?php
-                echo $dt_general->getSolicitudes_Unificacion();
+                echo $dt_general->get_solicitudes_unificacion_fitro();
               }
               if ($CantCrearMot > 0 || $CantModMot > 0 || $CantDel > 0) {
             ?>
