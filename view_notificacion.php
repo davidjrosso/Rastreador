@@ -116,7 +116,7 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
               $id_filtro = $_REQUEST["ID_Filtro"];
               echo $dt_general->get_lista_notificaciones( $id_filtro );
             } else {
-              echo $dt_general->get_lista_notificaciones(null);
+              echo $dt_general->get_lista_notificaciones();
             }
           ?>
         </div>

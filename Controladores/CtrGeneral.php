@@ -2858,7 +2858,7 @@ class CtrGeneral{
 			default :
 				$consulta .= "where Estado = 1";
 		}
-		$consulta .= " order by ID_Notificacion desc";
+		$consulta .= " order by Fecha desc";
 		$MessageError = "Problemas al intentar mostrar Notificaciones";
 		$Con->ResultSet = mysqli_query($Con->Conexion, $consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
