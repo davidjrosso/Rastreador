@@ -88,15 +88,12 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
       <div class="row">
         <div class="col"></div>
         <div class="col-10 Titulo">
-          <p>Movimientos</p>
+          <p>Acciones de Usuario</p>
         </div>
         <div class="col"></div>
       </div><br>
       <div class="row">
         <div class="col"></div>
-        <div class="col-4">
-          <center><button class="btn btn-secondary" onClick="location.href='view_newmovimientos.php'">Acciones de Usuario</button></center>
-        </div>
         <div class="col-2">
           <button type="button" class="btn btn-outline-secondary"
             onclick="location.href = 'view_inicio.php'">Volver</button>
