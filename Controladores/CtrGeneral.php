@@ -2825,7 +2825,7 @@ class CtrGeneral{
 		return $ret;
 	}
 
-	public function get_lista_notificaciones($valor){
+	public function get_lista_notificaciones($valor=null){
 		$Con = new Conexion();
 		$Con->OpenConexion();
 
@@ -2847,11 +2847,11 @@ class CtrGeneral{
 							Estado 
 					 from notificaciones ";
 		switch ($valor) {
-			case "activo" :
+			case "activos" :
 				$consulta .= "where Expira > CURDATE()
 								and Estado = 1";
 				break;
-			case "expirado" :
+			case "expirados" :
 				$consulta .= "where Expira <= CURDATE()
 								and Estado = 1";
 				break;
