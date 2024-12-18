@@ -30,7 +30,8 @@ class Accion{
 		$con->OpenConexion();
 		$consulta = "select * 
 					from Acciones
-					where accountid is not null";
+					where accountid is not null
+					order by Fecha desc";
 		$rs = mysqli_query($con->Conexion,$consulta) or die("Problemas al consultar las acciones.");
 		$lista_acciones = [];
 		while ($ret = mysqli_fetch_assoc($rs)) {
@@ -48,7 +49,8 @@ class Accion{
 		$con->OpenConexion();
 		$consulta = "select * 
 					from Acciones 
-					where accountid = '$account_id'";
+					where accountid = '$account_id'
+					order by Fecha desc";
 		$rs = mysqli_query($con->Conexion,$consulta) or die("Problemas al consultar las acciones.");
 		$lista_acciones = [];
 		while ($ret = mysqli_fetch_assoc($rs)) {
@@ -67,7 +69,9 @@ class Accion{
 		$filtro = ($id_tipo_accion == 0) ? null : " and ID_TipoAccion = $id_tipo_accion"; 
 		$consulta = "select * 
 					from Acciones 
-					where accountid is not null" . $filtro;
+					where accountid is not null
+					" . $filtro . "
+					order by Fecha desc";
 		$rs = mysqli_query($con->Conexion,$consulta) or die("Problemas al consultar las acciones.");
 		$lista_acciones = [];
 		while ($ret = mysqli_fetch_assoc($rs)) {
