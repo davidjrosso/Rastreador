@@ -51,6 +51,25 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
         todayHighlight: true,
         autoclose: true,
       });
+
+      $("#ID_Filtro").on("change", function (e){
+        let valor = $("#ID_Filtro").val();
+        switch (valor) {
+          case "tipo_accion":
+            $("#tipo_accion").toggle();
+            $("#valor_filtro").toggle();
+            break;
+          case "todo":
+            $("#tipo_accion").hide();
+            $("#valor_filtro").show();
+            break;
+          default :
+            $("#tipo_accion").hide();
+            $("#valor_filtro").show();
+            break;
+        }
+      });
+
     });
 
     function Verificar(xID) {
@@ -109,10 +128,16 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
               <label for="valor_filtro" class="col-md-2 col-form-label LblForm">Buscar: </label>
               <div class="col-md-4">
                 <input type="text" class="form-control" name="Search" id="valor_filtro" width="100%" autocomplete="off">
+                <select id="tipo_accion" name="Search" class = "form-control" style="display:none">
+                    <option value="0" selected>Todos</option>                                      
+                    <option value="1">Insercion</option>
+                    <option value="2">Modificacion</option>
+                    <option value="3">Eliminacion</option>
+                </select>
               </div>
-              <label for="inputPassword" class="col-md-1 col-form-label LblForm">En: </label>
+              <label for="ID_Filtro" class="col-md-1 col-form-label LblForm">En: </label>
               <div class="col-md-3">
-                <select name="ID_Filtro" class="form-control">
+                <select id="ID_Filtro"  name="ID_Filtro" class="form-control">
                   <option value="usuario" selected>Usuario</option>
                   <option value="tipo_accion">Tipo de Accion</option>
                 </select>
@@ -125,11 +150,13 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
           <br><br>
           <div class="row">
             <?php
-            if (isset($_REQUEST["Filtro"]) && !empty($_REQUEST["Filtro"])) {
+            if (isset($_REQUEST["Filtro"]) && !empty($_REQUEST["ID_Filtro"])) {
               $valor = $_REQUEST["Filtro"];
               $id_filtro = $_REQUEST["ID_Filtro"];
               $dt_general = new CtrGeneral();
               echo $dt_general->get_acciones(filtro: $id_filtro, value: $valor);
+            } else {
+              echo $dt_general->get_acciones();
             }
             ?>
           </div>

@@ -736,7 +736,7 @@ class CtrGeneral{
 
 
 	////////////////////////////////////////////////-AUDITORIAS-///////////////////////////////////////////////////
-	public function get_acciones($filtro, $value=null){
+	public function get_acciones($filtro=null, $value=null){
 		switch ($filtro) {
 			case 'usuario':
 			  $acciones = Accion::get_acciones_user_id($value);
