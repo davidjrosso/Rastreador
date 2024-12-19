@@ -1,9 +1,11 @@
 <?php 
-require_once 'Conexion.php';
-require_once '../Modelo/Calle.php';
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Controladores/Conexion.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Calle.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Parametria.php");
+
 try {
 	$Con = new Conexion();
-	$Con->OpenConexion();	
+	$Con->OpenConexion();
 	$consultar = "select lower(calle_nombre) as calle_nombre,
 						 id_calle
 				  from calle 
@@ -16,8 +18,10 @@ try {
 	$ch = curl_init();
 	$mensaje = "";
 
+	$valor = Parametria::get_value_by_code($Con, "KEY_GOOGLE_MAP");
+
 	while ($ret = mysqli_fetch_assoc($ejecutar_consultar)) {
-		$url = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" . str_replace(" ", "+", $ret["calle_nombre"]) . ",%20Río%20Tercero,%20Cordoba&radius=500&location=-32.170177%20-64.117238&types=address&key=AIzaSyAdiF1F7NoZbmAzBWfV6rxjJrGsr1Yvb1g";
+		$url = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" . str_replace(" ", "+", $ret["calle_nombre"]) . ",%20Río%20Tercero,%20Cordoba&radius=500&location=-32.170177%20-64.117238&types=address&key=" . $valor;
 		$direccion_mapa = 0;
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -37,7 +41,10 @@ try {
 			}
 		}
 		if ($direccion_mapa == 0) {
-			curl_setopt($ch, CURLOPT_URL, "https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", $ret["calle_nombre"]) . "&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
+			$valor = Parametria::get_value_by_code($Con, "EMAIL_OPEN_STREET_MAP");
+			curl_setopt($ch, 
+					CURLOPT_URL, 
+					"https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", $ret["calle_nombre"]) . "&city=rio+tercero&format=jsonv2&limit=1&email=" . $valor);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			$response = curl_exec($ch);
 			$arr_obj_json = json_decode($response);
@@ -54,7 +61,9 @@ try {
 				for($j = 0; $j < $cant; $j++) {
 					$array_aternativo = array_slice($array_palabras, $j, $cant - $j);
 					$direccion_alternativa = implode(" ", $array_aternativo);
-					curl_setopt($ch, CURLOPT_URL, "https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", $direccion_alternativa) . "&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
+					curl_setopt($ch, 
+						CURLOPT_URL, 
+						"https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", $direccion_alternativa) . "&city=rio+tercero&format=jsonv2&limit=1&email=" . $valor);
 					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 					$response = curl_exec($ch);
 					$arr_obj_json = json_decode($response);
