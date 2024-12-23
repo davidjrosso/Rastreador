@@ -1,4 +1,10 @@
 const path = require('path');
+var webpack = require('webpack');
+
+new webpack.ProvidePlugin({
+  $: 'jquery',
+  jQuery: 'jquery'
+});
 
 module.exports = {
   entry: {
@@ -10,4 +16,5 @@ module.exports = {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
   },
+  target: 'web'
 };
