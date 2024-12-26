@@ -1913,7 +1913,6 @@ class CtrGeneral{
 								<th style='min-width:100px;'>Registro 2</th>
 								<th style='min-width:100px;'>Usuario</th>
 								<th style='min-width:100px;'>Tipo</th>
-								<th style='min-width:100px;'>Acción</th>
 							</tr>
 						</thead>";
 			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
@@ -2021,13 +2020,6 @@ class CtrGeneral{
 									 <td>". $RetMotivo_2["Motivo"] . "</td>
 									 <td>". $Ret["username"] . "</td>
 									 <td>". $TipoUnif . "</td>
-									 <td>
-										<button class='btn btn-success' onClick='VerificarUnificacion(" . $ID_Registro_1 . "," . $ID_Registro_2 . ",\"" . $TipoUnif . "\"," . $ID_Solicitud . ")'>
-											<i class='fa fa-check'></i>
-										</button><button class='btn btn-danger' onClick='CancelarUnificacion(" . $Ret["ID_Solicitud_Unificacion"] . ")'>
-											<i class='fa fa-times'></i>
-										</button>
-									 </td>
 								   </tr>";				
 					break;
 					case 2: 
@@ -2038,14 +2030,6 @@ class CtrGeneral{
 									 <td>" . $RetMotivo_2["apellido"] . ", " . $RetMotivo_2["nombre"] . "</td>
 									 <td>" . $Ret["username"] . "</td>
 									 <td>" . $TipoUnif . "</td>
-									 <td>
-									 	<button class='btn btn-success' onClick='VerificarUnificacion(".$ID_Registro_1.",".$ID_Registro_2.",\"".$TipoUnif."\",".$ID_Solicitud.")'>
-											<i class='fa fa-check'></i>
-										</button>
-										<button class='btn btn-danger' onClick='CancelarUnificacion(" . $Ret["ID_Solicitud_Unificacion"] . ")'>
-											<i class='fa fa-times'></i>
-										</button>
-									 </td>
 								   </tr>";
 					break;
 					case 3: 
@@ -2056,14 +2040,6 @@ class CtrGeneral{
 									 <td>" . $RetMotivo_2["centro_salud"] . "</td>
 									 <td>" . $Ret["username"] . "</td>
 									 <td>" . $TipoUnif . "</td>
-									 <td>
-									 	<button class='btn btn-success' onClick='VerificarUnificacion(" . $ID_Registro_1 . "," . $ID_Registro_2 . ",\"" . $TipoUnif . "\"," . $ID_Solicitud . ")'>
-											<i class='fa fa-check'></i>
-										</button>
-										<button class='btn btn-danger' onClick='CancelarUnificacion(" . $Ret["ID_Solicitud_Unificacion"] . ")'>
-											<i class='fa fa-times'></i>
-										</button>
-									 </td>
 								   </tr>";					
 					break;
 					case 4: 
@@ -2074,14 +2050,6 @@ class CtrGeneral{
 									  <td>" . $RetMotivo_2["Escuela"] . "</td>
 									  <td>" . $Ret["username"] . "</td>
 									  <td>" . $TipoUnif . "</td>
-									  <td>
-									  	 <button class='btn btn-success' onClick='VerificarUnificacion(" . $ID_Registro_1 . "," . $ID_Registro_2 . ",\"" . $TipoUnif . "\"," . $ID_Solicitud . ")'>
-										 	<i class='fa fa-check'></i>
-										 </button>
-										 <button class='btn btn-danger' onClick='CancelarUnificacion(" . $Ret["ID_Solicitud_Unificacion"] . ")'>
-										 	<i class='fa fa-times'></i>
-										 </button>
-									  </td>
 								  </tr>";					
 					break;
 					case 5: 
@@ -2092,14 +2060,6 @@ class CtrGeneral{
 									 <td>" . $RetMotivo_2["Barrio"] . "</td>
 									 <td>" . $Ret["username"] . "</td>
 									 <td>" . $TipoUnif . "</td>
-									 <td>
-									 	<button class='btn btn-success' onClick='VerificarUnificacion(" . $ID_Registro_1 . "," . $ID_Registro_2 . ",\"" . $TipoUnif . "\"," . $ID_Solicitud . ")'>
-											<i class='fa fa-check'></i>
-										</button>
-										<button class='btn btn-danger' onClick='CancelarUnificacion(" . $Ret["ID_Solicitud_Unificacion"] . ")'>
-											<i class='fa fa-times'></i>
-										</button>
-									 </td>
 								  </tr>";				
 					break;
 				}
@@ -2139,12 +2099,33 @@ class CtrGeneral{
 	public function getSolicitudes_Crear_Motivo(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select S.ID, S.Fecha, S.Motivo, S.Codigo, S.Cod_Categoria, S.Num_Motivo, U.username from solicitudes_crearmotivos S, accounts U where S.ID_Usuario = U.accountid and S.Estado = 1 order by S.Fecha";
+		$Consulta = "select S.ID, 
+							S.Fecha, 
+							S.Motivo, 
+							S.Codigo, 
+							S.Cod_Categoria, 
+							S.Num_Motivo, 
+							U.username 
+					 from solicitudes_crearmotivos S, 
+					 	  accounts U 
+					 where S.ID_Usuario = U.accountid 
+					   and S.Estado = 1 
+					 order by S.Fecha";
 		$MessageError = "Problemas al intentar mostrar Solicitudes";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
 		if($Regis > 0){
-			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Motivo</th><th style='min-width:100px;'>Codigo</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Acción</th></tr></thead>";
+			$Table = "<table class='table-responsive table-bordered'>
+						<thead>
+							<tr>
+								<th style='min-width:50px;'>Id</th>
+								<th style='min-width:100px;'>Fecha</th>
+								<th style='min-width:300px;'>Motivo</th>
+								<th style='min-width:100px;'>Codigo</th>
+								<th style='min-width:100px;'>Usuario</th>
+								<th style='min-width:100px;'>Acción</th>
+							</tr>
+						</thead>";
 			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 				$ID = $Ret["ID"];
 				$Fecha = implode("/", array_reverse(explode("-",$Ret["Fecha"])));
@@ -2153,7 +2134,23 @@ class CtrGeneral{
 				$Num_Motivo = $Ret["Num_Motivo"];
 				$Usuario = $Ret["username"];
 				$Categoria = $Ret["Cod_Categoria"];
-				$Table .= "<tr><td>".$ID."</td><td>".$Fecha."</td><td>".$Motivo."</td><td>".$Codigo."</td><td>".$Usuario."</td><td><button class='btn btn-success' onClick='VerificarCrearMotivo(".$ID.",\"".$Fecha."\",\"".$Motivo."\",\"".$Codigo."\",".$Num_Motivo.",\"".$Categoria."\")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarCrearMotivo(".$Ret["ID"].")'><i class='fa fa-times'></i></button></td></tr>";
+				$Table .= "<tr>
+								<td>".$ID."</td>
+								<td>".$Fecha."</td>
+								<td>".$Motivo."</td>
+								<td>".$Codigo."</td>
+								<td>".$Usuario."</td>
+								<td>
+									<button class='btn btn-success' 
+											onClick='VerificarCrearMotivo(".$ID.",\"".$Fecha."\",\"".$Motivo."\",\"".$Codigo."\",".$Num_Motivo.",\"".$Categoria."\")'>
+										<i class='fa fa-check'></i>
+									</button>
+									<button class='btn btn-danger' 
+											onClick='CancelarCrearMotivo(".$Ret["ID"].")'>
+										<i class='fa fa-times'></i>
+									</button>
+								</td>
+							</tr>";
 			}			
 			$Table .= "</table>";
 		}else{
@@ -2167,12 +2164,34 @@ class CtrGeneral{
 	public function getSolicitudes_Modificacion_Motivo(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select S.ID, S.Fecha, S.Motivo, S.Codigo, S.Cod_Categoria, S.Num_Motivo, U.username, S.ID_Motivo from solicitudes_modificarmotivos S, accounts U where S.ID_Usuario = U.accountid and S.Estado = 1 order by S.Fecha";
+		$Consulta = "select S.ID, 
+							S.Fecha, 
+							S.Motivo, 
+							S.Codigo, 
+							S.Cod_Categoria, 
+							S.Num_Motivo, 
+							U.username, 
+							S.ID_Motivo 
+					 from solicitudes_modificarmotivos S, 
+					 	  accounts U 
+					 where S.ID_Usuario = U.accountid 
+					   and S.Estado = 1 
+					 order by S.Fecha";
 		$MessageError = "Problemas al intentar mostrar Solicitudes";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
 		if($Regis > 0){
-			$Table = "<table class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Motivo</th><th style='min-width:100px;'>Codigo</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Acción</th></tr></thead>";
+			$Table = "<table class='table-responsive table-bordered'>
+						<thead>
+							<tr>
+								<th style='min-width:50px;'>Id</th>
+								<th style='min-width:100px;'>Fecha</th>
+								<th style='min-width:300px;'>Motivo</th>
+								<th style='min-width:100px;'>Codigo</th>
+								<th style='min-width:100px;'>Usuario</th>
+								<th style='min-width:100px;'>Acción</th>
+							</tr>
+						</thead>";
 			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 				$ID = $Ret["ID"];
 				$Fecha = implode("/", array_reverse(explode("-",$Ret["Fecha"])));
@@ -2467,7 +2486,6 @@ class CtrGeneral{
 							<th style='min-width:130px;'>Denominación</th>
 							<th style='min-width:100px;'>Permisos</th>
 							<th style='min-width:100px;'>Usuario</th>
-							<th style='min-width:100px;'>Acción</th>
 						</tr>
 					</thead>";
 
@@ -2507,21 +2525,13 @@ class CtrGeneral{
 				$Color = $Ret["Color"];
 				$Usuario = $Ret["username"];						
 				$Table .= "<tr>
-								<td>".$ID."</td>
-								<td>".$Fecha."</td>
-								<td>".$Codigo."</td>
-								<td>".$Categoria."</td>
-								<td>".(($Permisos !="")?$Permisos:"Ninguno")."</td>
-								<td>".$Usuario."</td>
-								<td>
-									<button class='btn btn-success' onClick='VerificarCrearCategoria(".$ID.",\"".$Fecha."\",\"".$Codigo."\",\"".$Categoria."\",\"".$ID_Forma."\",\"".$Color."\")'>
-										<i class='fa fa-check'></i>
-									</button>
-									<button class='btn btn-danger' onClick='CancelarCrearCategoria(".$Ret["ID"].")'>
-										<i class='fa fa-times'></i>
-									</button>
-								</td>
-							</tr>";
+								<td>" . $ID . "</td>
+								<td>" . $Fecha . "</td>
+								<td>" . $Codigo . "</td>
+								<td>" . $Categoria. "</td>
+								<td>" . (($Permisos != "") ? $Permisos : "Ninguno") . "</td>
+								<td>" . $Usuario . "</td>
+						   </tr>";
 			}
 		}
 		$Consulta = "select S.ID, 
@@ -2570,14 +2580,6 @@ class CtrGeneral{
 								<td>".$Categoria."</td>
 								<td>".(($Permisos !="")?$Permisos:"Ninguno")."</td>
 								<td>".$Usuario."</td>
-								<td>
-									<button class='btn btn-success' onClick='VerificarModificarCategoria(".$ID.",\"".$Fecha."\",\"".$Codigo."\",\"".$Categoria."\",\"".$ID_Forma."\",\"".$NuevoColor."\",\"".$ID_Categoria."\")'>
-										<i class='fa fa-check'></i>
-									</button>
-									<button class='btn btn-danger' onClick='CancelarModificacionCategoria(".$Ret["ID"].")'>
-										<i class='fa fa-times'></i>
-									</button>
-								</td>
 							</tr>";
 			}			
 		}
@@ -2609,20 +2611,12 @@ class CtrGeneral{
 								<td>" . $Cod_Categoria . "</td>
 								<td>" . "Sin permisos" . "</td>
 								<td>" . $Usuario . "</td>
-								<td>
-									<button class='btn btn-success' onClick='VerificarEliminarCategoria(".$ID_Categoria.")'>
-										<i class='fa fa-check'></i>
-									</button>
-									<button class='btn btn-danger' onClick='CancelarEliminacionCategoria(".$Ret["ID"].")'>
-										<i class='fa fa-times'></i>
-									</button>
-								</td>
 							</tr>";
 			}
 		}
 		$Table .= "</table>";
 
-		if ($regis_crear > 0 && $regis_modificar > 0) {
+		if ($regis_crear < 1 && $regis_modificar < 1 && $regis_eliminar < 0) {
 			$Table = "No existen solicitudes de unificación pendientes de aprobación.";
 		}
 		
