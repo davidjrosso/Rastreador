@@ -2829,14 +2829,12 @@ class CtrGeneral{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 
-		$Table = "<table id='notificaciones' class='table-responsive table-bordered'>
+		$Table = "<table id='notificaciones' class='table-bordered'>
 					<thead>
 						<tr>
 							<th style='min-width:50px;'>Id</th>
 							<th style='min-width:100px;'>Fecha</th>
 							<th style='min-width:300px;'>Detalle</th>
-							<th style='min-width:100px;'>tipo</th>
-							<th style='min-width:100px;'>Acción</th>
 						</tr>
 					</thead>
 					<tbody>";
@@ -2873,15 +2871,6 @@ class CtrGeneral{
 							 <td>" . $ret_id_notificacion . "</td>
 							 <td>" . $fecha . "</td>
 							 <td>" . $descripcion . "</td>
-							 <td>" . $estado . "</td>
-							 <td>
-								 <button class='btn btn-success' onClick='ConfirmarModificacionUsario(" . $ret_id_notificacion . ")'>
-								   <i class='fa fa-check'></i>
-								 </button>
-								 <button class='btn btn-danger' onClick='CancelarModificacionUsario(". $ret_id_notificacion . ")'>
-								   <i class='fa fa-times'></i>
-								 </button>
-							 </td>
 						   </tr>";
 			}			
 			$Table .= "</tbody>
