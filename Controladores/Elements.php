@@ -2503,6 +2503,7 @@ public function getMenuSeguridadUsuario($ID){
                               <div class='menu-list'>" . 
                                 self::getMenuReportesUsuario($pagina) . 
                               "</div>
+                              <div class='brand'>Auditoria</div>
                               <div class='menu-list'>" . 
                                 self::getMenuNotificacionUsuario($pagina) . 
                               "</div>
@@ -2534,6 +2535,7 @@ public function getMenuSeguridadUsuario($ID){
                         <div class='menu-list'>" . 
                           self::getMenuUnificacionUsuario($pagina) . 
                         "</div>
+                        <div class='brand'>Auditoria</div>
                         <div class='menu-list'>" . 
                           self::getMenuNotificacionUsuario($pagina) . 
                         "</div>
