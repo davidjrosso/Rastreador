@@ -1337,7 +1337,8 @@ class CtrGeneral{
 
 	////////////////////////////////////////////////-CENTROS DE SALUD-///////////////////////////////////////////////////
 
-	public function getCentros(){
+	public function getCentros()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select id_centro, centro_salud from centros_salud where estado = 1 and id_centro <> 7 order by id_centro";
@@ -1353,7 +1354,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getCentrosxID($ID){
+	public function getCentrosxID($ID)
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select id_centro, centro_salud from centros_salud where id_centro = $ID and estado = 1 order by id_centro";
@@ -1369,7 +1371,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getCentrosxCentro($Centro){
+	public function getCentrosxCentro($Centro)
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select id_centro, centro_salud from centros_salud where centro_salud like '%$Centro%' and estado = 1 order by id_centro";
@@ -1387,7 +1390,8 @@ class CtrGeneral{
 
 	////////////////////////////////////////////////-ESCUELAS-///////////////////////////////////////////////////
 
-	public function getEscuelas(){
+	public function getEscuelas()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select E.ID_Escuela, E.Escuela, E.Localidad, N.Nivel from escuelas E, nivel_escuelas N where E.ID_Nivel = N.ID_Nivel and E.Estado = 1 order by E.ID_Escuela";
@@ -1403,7 +1407,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getEscuelasxID($ID){
+	public function getEscuelasxID($ID)
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select E.ID_Escuela, E.Escuela, E.Localidad, N.Nivel from escuelas E, nivel_escuelas N where E.ID_Nivel = N.ID_Nivel and E.ID_Escuela = $ID and E.Estado = 1 order by E.ID_Escuela";
@@ -1419,7 +1424,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getEscuelasxEscuela($Escuela){
+	public function getEscuelasxEscuela($Escuela)
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select E.ID_Escuela, E.Escuela, E.Localidad, N.Nivel from escuelas E, nivel_escuelas N where E.ID_Nivel = N.ID_Nivel and E.Escuela like '%$Escuela%' and E.Estado = 1 order by E.ID_Escuela";
@@ -1437,7 +1443,8 @@ class CtrGeneral{
 
 	////////////////////////////////////////////////-USUARIOS-///////////////////////////////////////////////////
 
-	public function getUsuarios(){
+	public function getUsuarios()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select accountid, firstname, lastname, username, email from accounts where estado = 1 order by lastname";
@@ -1478,7 +1485,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getUsuariosxID($ID){
+	public function getUsuariosxID($ID)
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Table = "";
@@ -1524,7 +1532,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getUsuariosxUserName($xUserName){
+	public function getUsuariosxUserName($xUserName)
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select accountid, firstname, lastname, username, email from accounts where username like '%$xUserName%' and estado = 1 order by lastname";
@@ -1569,7 +1578,8 @@ class CtrGeneral{
 
 	////////////////////////////////////////////////-CALLES-///////////////////////////////////////////////////
 
-	public function getCalles(){
+	public function getCalles()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select ID_calle, calle_nombre from calle where estado = 1 order by calle_nombre";
@@ -1603,7 +1613,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getCallesxID($ID){
+	public function getCallesxID($ID)
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select ID_calle, calle_nombre from calle where ID_Calle = $ID and estado = 1 order by calle_nombre";
@@ -1619,7 +1630,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getCallesxCalle_nombre($xCalle_nombre){
+	public function getCallesxCalle_nombre($xCalle_nombre)
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select ID_calle, calle_nombre 
@@ -1642,7 +1654,8 @@ class CtrGeneral{
 
 	////////////////////////////////////////////////-BARRIOS-///////////////////////////////////////////////////
 
-	public function getBarrios(){
+	public function getBarrios()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select ID_Barrio, Barrio from barrios where estado = 1 order by Barrio";
@@ -1658,7 +1671,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getBarriosxID($ID){
+	public function getBarriosxID($ID)
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select ID_Barrio, Barrio from barrios where ID_Barrio = $ID and estado = 1 order by Barrio";
@@ -1674,7 +1688,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getBarriosxBarrio($xBarrio){
+	public function getBarriosxBarrio($xBarrio)
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select ID_Barrio, Barrio from barrios where Barrio like '%$xBarrio%' and estado = 1 order by Barrio";
@@ -1690,7 +1705,8 @@ class CtrGeneral{
 		return $Table;
 	}
 	/////////////////////////////////////// OTRAS INSTITUCIONES ////////////////////////////////////////////////
-	public function getOtrasInstituciones(){
+	public function getOtrasInstituciones()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select ID_OtraInstitucion, Nombre, Telefono, Mail 
@@ -1710,7 +1726,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getOtrasInstitucionesxID($ID){
+	public function getOtrasInstitucionesxID($ID)
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select ID_OtraInstitucion, Nombre, Telefono, Mail from otras_instituciones where ID_OtraInstitucion = $ID and estado = 1 order by Nombre";
@@ -1726,7 +1743,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getOtrasInstitucionesxNombre($Nombre){
+	public function getOtrasInstitucionesxNombre($Nombre)
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select ID_OtraInstitucion, Nombre, Telefono, Mail from otras_instituciones where Nombre like '%$Nombre%' and estado = 1 order by Nombre";
@@ -1742,7 +1760,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getOtrasInstitucionesxTelefono($Telefono){
+	public function getOtrasInstitucionesxTelefono($Telefono)
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select ID_OtraInstitucion, Nombre, Telefono, Mail from otras_instituciones where Telefono like '%$Telefono%' and estado = 1 order by Nombre";
@@ -1758,7 +1777,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getOtrasInstitucionesxMail($Mail){
+	public function getOtrasInstitucionesxMail($Mail)
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select ID_OtraInstitucion, Nombre, Telefono, Mail from otras_instituciones where Mail like '%$Mail%' and estado = 1 order by Nombre";
@@ -1775,7 +1795,8 @@ class CtrGeneral{
 	}
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public function getCantSolicitudes_Unificacion(){
+	public function getCantSolicitudes_Unificacion()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select ID_Solicitud_Unificacion from solicitudes_unificacion where Estado = 1";
@@ -1786,7 +1807,8 @@ class CtrGeneral{
 		return $Regis;
 	}
 
-	public function getSolicitudes_Unificacion(){
+	public function getSolicitudes_Unificacion()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select S.ID_Solicitud_Unificacion, S.Fecha, S.ID_Registro_1, S.ID_Registro_2, T.TipoUnif, U.username, S.ID_TipoUnif from solicitudes_unificacion S, accounts U, tipos_unif T where S.ID_Usuario = U.accountid and S.ID_TipoUnif = T.ID_TipoUnif and S.Estado = 1 order by S.Fecha";
@@ -2073,7 +2095,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getCantSolicitudes_Crear_Motivo(){
+	public function getCantSolicitudes_Crear_Motivo()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select ID from solicitudes_crearmotivos where Estado = 1";
@@ -2084,7 +2107,8 @@ class CtrGeneral{
 		return $Regis;
 	}
 
-	public function getCantSolicitudes_Modificacion_Motivo(){
+	public function getCantSolicitudes_Modificacion_Motivo()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select ID from solicitudes_modificarmotivos where Estado = 1";
@@ -2095,7 +2119,8 @@ class CtrGeneral{
 		return $Regis;
 	}
 
-	public function getSolicitudes_Crear_Motivo(){
+	public function getSolicitudes_Crear_Motivo()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select S.ID, 
@@ -2160,7 +2185,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getSolicitudes_Modificacion_Motivo(){
+	public function getSolicitudes_Modificacion_Motivo()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select S.ID, 
@@ -2210,7 +2236,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function get_solicitudes_motivo(){
+	public function get_solicitudes_motivo()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 
@@ -2334,7 +2361,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getCantSolicitudes_Crear_Categoria(){
+	public function getCantSolicitudes_Crear_Categoria()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select ID 
@@ -2347,7 +2375,8 @@ class CtrGeneral{
 		return $Regis;
 	}
 
-	public function getCantSolicitudes_Modificacion_Categoria(){
+	public function getCantSolicitudes_Modificacion_Categoria()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select ID from solicitudes_modificarcategorias where Estado = 1";
@@ -2359,7 +2388,8 @@ class CtrGeneral{
 	}
 
 
-	public function getSolicitudes_Crear_Categoria(){
+	public function getSolicitudes_Crear_Categoria()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select S.ID, S.Fecha, S.Codigo, S.Categoria, S.ID_Forma, S.Color, S.Categoria, U.username from solicitudes_crearcategorias S, accounts U where S.ID_Usuario = U.accountid and S.Estado = 1 order by S.Fecha";
@@ -2423,7 +2453,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getSolicitudes_Modificacion_Categoria(){
+	public function getSolicitudes_Modificacion_Categoria()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select S.ID, S.Fecha, S.Codigo, S.Categoria, S.ID_Forma, S.NuevoColor, S.ID_Categoria, U.username from solicitudes_modificarcategorias S, accounts U where S.ID_Usuario = U.accountid and S.Estado = 1 order by S.Fecha";
@@ -2489,7 +2520,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function get_solicitudes_categoria(){
+	public function get_solicitudes_categoria()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 
@@ -2640,7 +2672,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getCategorias_Roles_ID($XID){
+	public function getCategorias_Roles_ID($XID)
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select cr.id_categoria, tip.abreviacion from categorias_roles cr inner join Tipo_Usuarios tip on cr.ID_TipoUsuario = tip.ID_TipoUsuario
@@ -2661,7 +2694,8 @@ class CtrGeneral{
 		return $Permisos;
 	}
 
-	public function getCantSolicitudes_EliminacionMotivo(){
+	public function getCantSolicitudes_EliminacionMotivo()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select ID from solicitudes_eliminarmotivos where Estado = 1";
@@ -2672,7 +2706,8 @@ class CtrGeneral{
 		return $Regis;
 	}
 
-	public function getSolicitudes_EliminacionMotivo(){
+	public function getSolicitudes_EliminacionMotivo()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select S.ID, S.Fecha, S.Motivo, S.Cod_Categoria, S.Num_Motivo, U.username, S.ID_Motivo from solicitudes_eliminarmotivos S, accounts U where S.ID_Usuario = U.accountid and S.Estado = 1 order by S.Fecha";
@@ -2710,7 +2745,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getCantSolicitudes_EliminacionCategoria(){
+	public function getCantSolicitudes_EliminacionCategoria()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select ID from solicitudes_eliminarcategorias where Estado = 1";
@@ -2721,7 +2757,8 @@ class CtrGeneral{
 		return $Regis;
 	}
 
-	public function getSolicitudes_EliminacionCategoria(){
+	public function getSolicitudes_EliminacionCategoria()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select S.ID, S.Fecha, 
@@ -2780,7 +2817,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getSolicitudes_Notificaciones(){
+	public function getSolicitudes_Notificaciones()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select N.ID_Notificacion, 
@@ -2816,7 +2854,8 @@ class CtrGeneral{
 	}
 
 	// NOTIFICACIONES DE USUARIOS
-	public function getNotificaciones(){
+	public function getNotificaciones()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select ID_Notificacion, 
@@ -2835,7 +2874,8 @@ class CtrGeneral{
 		return $ret;
 	}
 
-	public function get_lista_notificaciones($valor=null){
+	public function get_lista_notificaciones($valor=null)
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 
@@ -2892,7 +2932,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function get_cant_solicitudes_usuario(){
+	public function get_cant_solicitudes_usuario()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select id_solicitud 
@@ -2905,7 +2946,8 @@ class CtrGeneral{
 		return $Regis;
 	}
 
-	public function get_solicitudes_usuario(){
+	public function get_solicitudes_usuario()
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select U.id_solicitud, 
@@ -2919,8 +2961,17 @@ class CtrGeneral{
 		$MessageError = "Problemas al intentar mostrar Notificaciones";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
-		if($Regis > 0){
-			$Table = "<table id='solicitud-usuario' class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:300px;'>Detalle</th><th style='min-width:100px;'>tipo</th><th style='min-width:100px;'>Acción</th></tr></thead>";
+		if ($Regis > 0) {
+			$Table = "<table id='solicitud-usuario' class='table-responsive table-bordered'>
+						<thead>
+						  <tr>
+						  	<th style='min-width:50px;'>Id</th>
+							<th style='min-width:100px;'>Fecha</th>
+							<th style='min-width:300px;'>Detalle</th>
+							<th style='min-width:100px;'>tipo</th>
+							<th style='min-width:100px;'>Acción</th>
+						  </tr>
+						</thead>";
 			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 				$ret_fecha = explode(" ", $Ret["fecha"]);
 				$tipo = $Ret["tipo"];
@@ -2932,18 +2983,10 @@ class CtrGeneral{
 							 <td>" . $fecha . "</td>
 							 <td>" . $descripcion . "</td>
 							 <td>" . $tipo . "</td>
-							 <td>
-								 <button class='btn btn-success' onClick='ConfirmarModificacionUsario(" . $ret_id_solicitud . ")'>
-								   <i class='fa fa-check'></i>
-								 </button>
-								 <button class='btn btn-danger' onClick='CancelarModificacionUsario(". $ret_id_solicitud . ")'>
-								   <i class='fa fa-times'></i>
-								 </button>
-							 </td>
 						   </tr>";
 			}			
 			$Table .= "</table>";
-		}else{
+		} else {
 			$Table = "No existen solicitudes de unificación pendientes de aprobación.";
 		}
 		$Con->CloseConexion();
