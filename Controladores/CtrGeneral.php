@@ -2063,7 +2063,6 @@ class CtrGeneral{
 								  </tr>";				
 					break;
 				}
-				// $Table .= "<tr><td>".$Ret["ID_Solicitud_Unificacion"]."</td><td>".$Fecha."</td><td>".$RetMotivo_1["Motivo"]."</td><td>".$RetMotivo_2["Motivo"]."</td><td>".$Ret["username"]."</td><td>".$TipoUnif."</td><td><button class='btn btn-success' onClick='VerificarUnificacion(".$ID_Registro_1.",".$ID_Registro_2.",".$TipoUnif.")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarUnificacion(".$Ret["ID_Solicitud_Unificacion"].")'><i class='fa fa-times'></i></button></td></tr>";
 			}			
 			$Table .= "</table>";
 		} else {
@@ -2223,7 +2222,6 @@ class CtrGeneral{
 			<th style='min-width:300px;'>Motivo</th>
 			<th style='min-width:100px;'>Codigo</th>
 			<th style='min-width:100px;'>Usuario</th>
-			<th style='min-width:100px;'>Acción</th>
 		  </tr>
 		</thead>";
 
@@ -2251,7 +2249,13 @@ class CtrGeneral{
 				$Num_Motivo = $Ret["Num_Motivo"];
 				$Usuario = $Ret["username"];
 				$Categoria = $Ret["Cod_Categoria"];
-				$Table .= "<tr><td>".$ID."</td><td>".$Fecha."</td><td>".$Motivo."</td><td>".$Codigo."</td><td>".$Usuario."</td><td><button class='btn btn-success' onClick='VerificarCrearMotivo(".$ID.",\"".$Fecha."\",\"".$Motivo."\",\"".$Codigo."\",".$Num_Motivo.",\"".$Categoria."\")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarCrearMotivo(".$Ret["ID"].")'><i class='fa fa-times'></i></button></td></tr>";
+				$Table .= "<tr>
+								<td>" . $ID . "</td>
+								<td>" . $Fecha . "</td>
+								<td>" . $Motivo . "</td>
+								<td>" . $Codigo . "</td>
+								<td>" . $Usuario . "</td>
+							</tr>";
 			}			
 		}
 
@@ -2280,7 +2284,13 @@ class CtrGeneral{
 				$Num_Motivo = $Ret["Num_Motivo"];
 				$Usuario = $Ret["username"];	
 				$ID_Motivo = $Ret["ID_Motivo"];			
-				$Table .= "<tr><td>".$ID."</td><td>".$Fecha."</td><td>".$Motivo."</td><td>".$Codigo."</td><td>".$Usuario."</td><td><button class='btn btn-success' onClick='VerificarModificarMotivo(".$ID.",\"".$Fecha."\",\"".$Motivo."\",\"".$Codigo."\",".$Num_Motivo.",".$ID_Motivo.")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarModificacionMotivo(".$Ret["ID"].")'><i class='fa fa-times'></i></button></td></tr>";
+				$Table .= "<tr>
+								<td>" . $ID . "</td>
+								<td>" . $Fecha . "</td>
+								<td>" . $Motivo . "</td>
+								<td>" . $Codigo . "</td>
+								<td>" . $Usuario . "</td>
+						   </tr>";
 			}
 		}
 
@@ -2308,7 +2318,13 @@ class CtrGeneral{
 				$Num_Motivo = $Ret["Num_Motivo"];
 				$Usuario = $Ret["username"];	
 				$ID_Motivo = $Ret["ID_Motivo"];			
-				$Table .= "<tr><td>".$ID."</td><td>".$Fecha."</td><td>".$Motivo."</td><td>".$Cod_Categoria."</td><td>".$Usuario."</td><td><button class='btn btn-success' onClick='VerificarEliminarMotivo(".$ID_Motivo.")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarEliminacionMotivo(".$Ret["ID"].")'><i class='fa fa-times'></i></button></td></tr>";
+				$Table .= "<tr>
+								<td>" . $ID . "</td>
+								<td>" . $Fecha . "</td>
+								<td>" . $Motivo . "</td>
+								<td>" . $Cod_Categoria . "</td>
+								<td>" . $Usuario . "</td>
+						   </tr>";
 			}
 		}
 
