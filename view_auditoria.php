@@ -130,7 +130,7 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
                 <input type="text" class="form-control" name="Search" id="valor_filtro" width="100%" autocomplete="off">
                 <select id="tipo_accion" name="Search" class = "form-control" style="display:none">
                     <option value="0" selected>Todos</option>                                      
-                    <option value="1">Insercion</option>
+                    <option value="1">Creacion</option>
                     <option value="2">Modificacion</option>
                     <option value="3">Eliminacion</option>
                 </select>
