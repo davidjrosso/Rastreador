@@ -458,7 +458,7 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
 
             if ($CantModMot > 0 || $CantUnif > 0 || $CantModCat > 0 || $CantDel > 0 || $CantDelCat > 0 || $CantCrearCat > 0 || $CantCrearMot > 0 || $cant_usuario > 0) {
             ?>
-            <h3 class="bg-secondary text-light" style="text-align: center; padding: 10px;">Solicitudes por autorizar
+            <h3 class="bg-secondary text-light" style="text-align: center; padding: 10px;">Historial de Solicitudes
             </h3>
             <?php
               if ($CantUnif > 0) {
