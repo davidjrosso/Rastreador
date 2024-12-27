@@ -52,16 +52,24 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
         let valor = $("#ID_Filtro").val();
         switch (valor) {
           case "tipo_accion":
-            $("#tipo_accion").toggle();
-            $("#valor_filtro").toggle();
+            $("#tipo_accion").show();
+            $("#valor_filtro").hide();
+            $("#usuario").hide();
             break;
           case "todo":
-            $("#tipo_accion").hide();
             $("#valor_filtro").show();
+            $("#tipo_accion").hide();
+            $("#usuario").hide();
+            break;
+          case "usuario":
+            $("#tipo_accion").hide();
+            $("#valor_filtro").hide();
+            $("#usuario").show();
             break;
           default :
-            $("#tipo_accion").hide();
             $("#valor_filtro").show();
+            $("#tipo_accion").hide();
+            $("#usuario").hide();
             break;
         }
       });
@@ -118,23 +126,23 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
       <br>
       <div class="row">
         <div class="col-10">
-          <!-- Carga -->
           <form method="post" action="Controladores/CtrBuscarAuditoria.php">
             <div class="form-group row">
               <label for="valor_filtro" class="col-md-2 col-form-label LblForm">Buscar: </label>
               <div class="col-md-4">
                 <input type="text" class="form-control" name="Search" id="valor_filtro" width="100%" autocomplete="off">
-                <select id="tipo_accion" name="Search" class = "form-control" style="display:none">
-                    <option value="0" selected>Todos</option>                                      
-                    <option value="1">Creacion</option>
-                    <option value="2">Modificacion</option>
-                    <option value="3">Eliminacion</option>
-                </select>
+                <?php
+                   echo $Element->CBTipoAccion();
+                ?>
+                <?php
+                   echo $Element->CBAccounts();
+                ?>
               </div>
               <label for="ID_Filtro" class="col-md-1 col-form-label LblForm">En: </label>
               <div class="col-md-3">
                 <select id="ID_Filtro"  name="ID_Filtro" class="form-control">
-                  <option value="usuario" selected>Usuario</option>
+                <option value="todo" selected>Todo</option>
+                  <option value="usuario">Usuario</option>
                   <option value="tipo_accion">Tipo de Accion</option>
                 </select>
               </div>

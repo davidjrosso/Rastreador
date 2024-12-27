@@ -1,7 +1,8 @@
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Accion.php");
 
-class Accion{
+class Accion 
+{
 	// DECLARACION DE VARIABLES
 	private $ID_Accion;
 	private $accountid;
@@ -17,7 +18,7 @@ class Accion{
 		$xip = null,
 		$xDetalles = null,
 		$xID_TipoAccion = null
-		){
+	) {
 		$this->ID_Accion = $xID_Accion;
 		$this->accountid = $xaccountid;
 		$this->Fecha = $xFecha;
@@ -25,7 +26,8 @@ class Accion{
 		$this->Detalles = $xDetalles;
 		$this->ID_TipoAccion = $xID_TipoAccion;
 	}
-	public static function get_acciones(){
+	public static function get_acciones()
+	{
 		$con = new Conexion();
 		$con->OpenConexion();
 		$consulta = "select * 
@@ -44,7 +46,8 @@ class Accion{
 		return $lista_acciones;
 	}
 
-	public static function get_acciones_user_id($account_id){
+	public static function get_acciones_user_id($account_id)
+	{
 		$con = new Conexion();
 		$con->OpenConexion();
 		$consulta = "select * 
@@ -63,7 +66,8 @@ class Accion{
 		return $lista_acciones;
 	}
 
-	public static function get_acciones_tipo($id_tipo_accion){
+	public static function get_acciones_tipo($id_tipo_accion)
+	{
 		$con = new Conexion();
 		$con->OpenConexion();
 		$filtro = ($id_tipo_accion == 0) ? null : " and ID_TipoAccion = $id_tipo_accion"; 
@@ -86,56 +90,69 @@ class Accion{
 
 
 	// METODOS SET
-	public function setID_Accion($xID_Accion){
+	public function setID_Accion($xID_Accion)
+	{
 		$this->ID_Accion = $xID_Accion;
 	}
 
-	public function setaccountid($xaccountid){
+	public function setaccountid($xaccountid)
+	{
 		$this->accountid = $xaccountid;
 	}
 
-	public function setFecha($xFecha){
+	public function setFecha($xFecha)
+	{
 		$this->Fecha = $xFecha;
 	}
 
-	public function setip($xip){
+	public function setip($xip)
+	{
 		$this->ip = $xip;
 	}
 
-	public function setDetalles($xDetalles){
+	public function setDetalles($xDetalles)
+	{
 		$this->Detalles = $xDetalles;
 	}
 
-	public function setID_TipoAccion($xID_TipoAccion){
+	public function setID_TipoAccion($xID_TipoAccion)
+	{
 		$this->ID_TipoAccion = $xID_TipoAccion;
 	}
 
 	// METODOS GET
-	public function getID_Accion(){
+	public function getID_Accion()
+	{
 		return $this->ID_Accion;
 	}
 
-	public function getaccountid(){
+	public function getaccountid()
+	{
 		return $this->accountid;
 	}
 
-	public function getFecha(){
+	public function getFecha()
+	{
 		return $this->Fecha;
 	}
 
-	public function getip(){
+	public function getip()
+	{
 		return $this->ip;
 	}
 
-	public function getDetalles(){
+	public function getDetalles()
+	{
 		return $this->Detalles;
 	}
 
-	public function getID_TipoAccion(){
+	public function getID_TipoAccion()
+	{
 		return $this->ID_TipoAccion;
 	}
 
-	public function save() {
+	public function save() 
+	{
 		$con = new Conexion();
 		$con->OpenConexion();
 		$consulta_accion = "insert into Acciones(accountid, 
@@ -146,7 +163,7 @@ class Accion{
 											. $this->Fecha . "','" 
 											. $this->Detalles . "',
 												1)";
-		if(!$RetAccion = mysqli_query($con->Conexion,$consulta_accion)){
+		if (!$RetAccion = mysqli_query($con->Conexion,$consulta_accion)) {
 			throw new Exception("Error al intentar registrar Accion. Consulta: ". $consulta_accion, 3);
 		}
 	}

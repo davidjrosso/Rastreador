@@ -3,7 +3,8 @@ require_once("Conexion.php");
 
 header("Content-Type: text/html;charset=utf-8");
 
-class Elements{
+class Elements
+{
   const PAGINA_INICIO = 0;
   const PAGINA_PERSONA = 1;
   const PAGINA_MOVIMIENTO = 10;
@@ -2402,6 +2403,54 @@ public function getMenuSeguridadUsuario($ID){
     }
     $Select .= "</select>";
     $Con3->CloseConexion();
+    return $Select;
+  }
+
+
+  ////////////////////////////////////////// TIPO ACCIONES ///////////////////////////////////////////////////
+
+
+  public function CBTipoAccion()
+  {
+    $con = new Conexion();
+    $con->OpenConexion();
+    $Select = "<select id='tipo_accion' name='Search' class = 'form-control' style='display:none'>";
+    $consulta = "select * 
+                 from TipoAcciones";
+    $obj_query = mysqli_query(
+                      $con->Conexion,
+                      $consulta
+                      ) or die("Problemas al mostrar Personas");
+    $Select .= "<option value = '0' disabled = 'disabled' selected = 'true'>Todos</option>";
+    while ($Ret = mysqli_fetch_array($obj_query)) {
+      $Select .= "<option value = '" . $Ret['ID_TipoAccion'] . "'>" . $Ret['Tipo'] . "</option>";
+    }
+    $Select .= "</select>";
+    $con->CloseConexion();
+    return $Select;
+  }
+
+
+  ////////////////////////////////////////// ACCOUNTS ///////////////////////////////////////////////////
+
+
+  public function CBAccounts()
+  {
+    $con = new Conexion();
+    $con->OpenConexion();
+    $Select = "<select id='usuario' name='Search' class = 'form-control' style='display:none'>";
+    $consulta = "select * 
+                 from accounts";
+    $obj_query = mysqli_query(
+                      $con->Conexion,
+                      $consulta
+                      ) or die("Problemas al mostrar Personas");
+    $Select .= "<option value = '0' disabled = 'disabled' selected = 'true'>Todos</option>";
+    while ($Ret = mysqli_fetch_array($obj_query)) {
+      $Select .= "<option value = '" . $Ret['accountid'] . "'>" . $Ret['username'] . "</option>";
+    }
+    $Select .= "</select>";
+    $con->CloseConexion();
     return $Select;
   }
 
