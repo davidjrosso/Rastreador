@@ -568,16 +568,21 @@ public function getNroCalle()
 
 public function getBarrio()
 {
-	$Con = new Conexion();
-	$Con->OpenConexion();
-	$ConsultarBarrio = "select * 
-						from barrios 
-						where ID_Barrio = {$this->Barrio}";
-	$MensajeErrorBarrio = "No se pudo consultar el Barrio de la persona";
-	$EjecutarConsultarBarrio = mysqli_query($Con->Conexion,$ConsultarBarrio) or die($MensajeErrorBarrio);
-	$RetBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);
-	$Con->CloseConexion();
-	return $RetBarrio["Barrio"];
+	if (!empty($this->Barrio)) {
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$ConsultarBarrio = "select * 
+							from barrios 
+							where ID_Barrio = {$this->Barrio}";
+		$MensajeErrorBarrio = "No se pudo consultar el Barrio de la persona";
+		$EjecutarConsultarBarrio = mysqli_query($Con->Conexion,$ConsultarBarrio) or die($MensajeErrorBarrio);
+		$RetBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);
+		$barrio = $RetBarrio["Barrio"];
+		$Con->CloseConexion();
+	} else {
+		$barrio = null;
+	}
+	return $barrio;
 }
 
 public function getId_Barrio()

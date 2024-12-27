@@ -14,9 +14,21 @@ class Barrio
 								)
 	{
 		$this->coneccion = $coneccion;
-		$this->id_barrio = $id_barrio;
-		$this->barrio = $barrio;
-		$this->estado = $estado;
+		if (!$id_barrio) {
+			$this->id_barrio = $id_barrio;
+			$this->barrio = $barrio;
+			$this->estado = $estado;
+		} else {
+			$consulta = "select * 
+						 from barrios
+						 where ID_Barrio = $id_barrio";
+			$rs = mysqli_query($this->coneccion->Conexion,
+							$consulta) or die("Problemas al consultar las acciones.");
+			$ret = mysqli_fetch_assoc($rs);
+			$this->id_barrio = (!empty($ret["ID_Barrio"])) ? $ret["ID_Barrio"] : null;
+			$this->barrio = (!empty($ret["Barrio"])) ? $ret["Barrio"] : null;
+			$this->estado = (!empty($ret["estado"])) ? $ret["estado"] : null;
+		}
 	}
 
 	public static function get_id_by_name($coneccion, $name)

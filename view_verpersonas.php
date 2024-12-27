@@ -1,9 +1,10 @@
 <?php 
 session_start(); 
-require_once "Controladores/Elements.php";
-require_once "Controladores/CtrGeneral.php";
-require_once "Controladores/Conexion.php";
-require_once "Modelo/Persona.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Elements.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/CtrGeneral.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Conexion.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Persona.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Barrio.php';
 header("Content-Type: text/html;charset=utf-8");
 
 /*     CONTROL DE USUARIOS                    */
@@ -132,13 +133,12 @@ $Con->CloseConexion();
               $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
               $ID_Barrio = $Ret["ID_Barrio"];
 
-              $ConsultarBarrio = "select Barrio from barrios where ID_Barrio = $ID_Barrio limit 1";
-              $MensajeErrorBarrio = "No se pudo consultar el Barrio de la Persona";
-
-              $EjecutarConsultarBarrio = mysqli_query($Con->Conexion,$ConsultarBarrio) or die($MensajeErrorBarrio);
-              $RetBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);
-
-
+              $barrio = new Barrio(
+                                   coneccion: $Con,
+                                   id_barrio: $ID_Barrio
+                                  );
+              $RetBarrio = $barrio->get_barrio();
+              
               $ID_Persona = $Ret["id_persona"];
               $Apellido = $Ret["apellido"];
               $Nombre = $Ret["nombre"];
@@ -155,7 +155,7 @@ $Con->CloseConexion();
               $Nro_Legajo = $Ret["nro_legajo"];
               $Obra_Social = $Ret["obra_social"];
               $Domicilio = $Ret["domicilio"];
-              $Barrio = $RetBarrio["Barrio"];
+              $Barrio = $RetBarrio;
               $Localidad = $Ret["localidad"];
               $Circunscripcion = $Ret["circunscripcion"];
               $Seccion = $Ret["seccion"];
