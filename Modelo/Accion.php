@@ -50,9 +50,10 @@ class Accion
 	{
 		$con = new Conexion();
 		$con->OpenConexion();
+		$filtro = (empty($account_id)) ? null : " where accountid = $account_id"; 
 		$consulta = "select * 
 					from Acciones 
-					where accountid = '$account_id'
+					$filtro
 					order by Fecha desc";
 		$rs = mysqli_query($con->Conexion,$consulta) or die("Problemas al consultar las acciones.");
 		$lista_acciones = [];
@@ -70,7 +71,7 @@ class Accion
 	{
 		$con = new Conexion();
 		$con->OpenConexion();
-		$filtro = ($id_tipo_accion == 0) ? null : " and ID_TipoAccion = $id_tipo_accion"; 
+		$filtro = (empty($id_tipo_accion)) ? null : " and ID_TipoAccion = $id_tipo_accion"; 
 		$consulta = "select * 
 					from Acciones 
 					where accountid is not null
