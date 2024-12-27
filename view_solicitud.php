@@ -444,10 +444,7 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
             $valor = (empty($_REQUEST["Filtro"])) ? null : $_REQUEST["Filtro"];
             $tipo = (empty($_REQUEST["ID_Filtro"])) ? null : $_REQUEST["ID_Filtro"];
 
-            $CantUnif = $dt_general->get_solicitudes_unificacion_fitro(
-                                                                        $tipo,
-                                                                       $valor
-                                                                      );
+            $CantUnif = $dt_general->getCantSolicitudes_Unificacion();
             $CantModMot = $dt_general->getCantSolicitudes_Modificacion_Motivo();
             $CantCrearMot = $dt_general->getCantSolicitudes_Crear_Motivo();
             $CantCrearCat = $dt_general->getCantSolicitudes_Crear_Categoria();
@@ -465,7 +462,10 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
             ?>
                 <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Unificar</h3>
             <?php
-                echo $dt_general->get_solicitudes_unificacion_fitro();
+                echo $dt_general->get_solicitudes_unificacion_fitro(
+                                                              $tipo,
+                                                             $valor
+                                                                  );
               }
               if ($CantCrearMot > 0 || $CantModMot > 0 || $CantDel > 0) {
             ?>
