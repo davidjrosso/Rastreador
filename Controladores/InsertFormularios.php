@@ -115,6 +115,7 @@
 						case 19:
 							$barrio = $value;
 							if (!is_null($barrio)) {
+								$barrio = trim($barrio);
 								$id_barrio = Barrio::get_id_by_name($con, $barrio);
 								
 							} else {
