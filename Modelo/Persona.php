@@ -280,6 +280,7 @@ public function setDomicilio($xDomicilio = null)
 		$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
 		$ret = mysqli_fetch_assoc($query_object);
 		$nombre_calle = $ret["calle_open"];
+		$this->Calle = $ret["calle"];
 		$domicilio = "$nombre_calle " . $this->getNro();
 		$domicilio = str_replace(array('á','é','í','ó','ú','ñ'), array('a','e','i','o','u','n'), $domicilio);
 	}
