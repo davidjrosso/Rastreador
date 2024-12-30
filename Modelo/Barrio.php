@@ -35,7 +35,8 @@ class Barrio
 	{
 		$consulta = "select ID_Barrio 
 					from barrios
-					where lower(Barrio) like lower('%" . $name . "%')";
+					where lower(Barrio) like lower('%" . $name . "%')
+					and estado = 1";
 		$rs = mysqli_query($coneccion->Conexion,
 						   $consulta) or die("Problemas al consultar las acciones.");
 		$ret = mysqli_fetch_assoc($rs);
