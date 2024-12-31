@@ -1,5 +1,5 @@
 <?php
-require('Accion.php');
+require_once('Accion.php');
 class Persona implements JsonSerializable {
 	//DECLARACION DE VARIABLES
 	private $Apellido;
@@ -30,6 +30,179 @@ class Persona implements JsonSerializable {
 	private $Seccion;
 	private $Telefono;
 	private $Trabajo;
+
+
+	public function __construct(
+		$ID_Persona = null,
+		$xApellido = null,
+		$xNombre = null,
+		$xDNI = null,
+		$xNro_Legajo = null,
+		$xEdad = null,
+		$xMeses = null,
+		$xFecha_Nacimiento = null,
+		$xNro_Carpeta = null,
+		$xObra_Social = null,
+		$xDomicilio = null,
+		$xBarrio = null,
+		$xLocalidad = null,
+		$xCircunscripcion = null,
+		$xSeccion = null,
+		$xManzana = null,
+		$xLote = null,
+		$xFamilia = null,
+		$xObservaciones = null,
+		$xCambio_Domicilio  = null,
+		$xTelefono = null,
+		$xMail = null,
+		$xID_Escuela = null,
+		$xEstado = null,
+		$xTrabajo = null,
+		$xGeoreferencia = null,
+		$xCalle = null,
+		$xNro = null
+	){
+		if (!$ID_Persona) {
+			$this->Apellido = $xApellido;
+			$this->Barrio = $xBarrio;
+			$this->Calle = $xCalle;
+			$this->Cambio_Domicilio = $xCambio_Domicilio;
+			$this->Circunscripcion = $xCircunscripcion;
+			$this->DNI = $xDNI;
+			$this->Domicilio = $xDomicilio;
+			$this->Edad = $xEdad;
+			$this->Estado = $xEstado;
+			$this->Familia = $xFamilia;
+			$this->Fecha_Nacimiento = $xFecha_Nacimiento;
+			$this->ID_Escuela = $xID_Escuela;	
+			$this->ID_Persona =$ID_Persona;
+			$this->Localidad = $xLocalidad;
+			$this->Lote = $xLote;
+			$this->Mail = $xMail;
+			$this->Manzana = $xManzana;
+			$this->Meses = $xMeses;
+			$this->Nombre = $xNombre;
+			$this->Nro = $xNro;
+			$this->Nro_Carpeta = $xNro_Carpeta;
+			$this->Nro_Legajo = $xNro_Legajo;
+			$this->Obra_Social = $xObra_Social;
+			$this->Observaciones = $xObservaciones;
+			$this->Seccion = $xSeccion;
+			$this->Telefono = $xTelefono;
+			$this->Trabajo = $xTrabajo;
+			if ((!$xGeoreferencia) && ($this->Domicilio || ($this->Nro && $this->Calle))) {
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, "https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", $this->Domicilio) . "&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				$response = curl_exec($ch);
+				$arr_obj_json = json_decode($response);
+				curl_close($ch);
+				if ($arr_obj_json) {
+					if (!is_null($arr_obj_json[0]->lat) || !is_null($arr_obj_json[0]->lon)) {
+						$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
+						$this->Georeferencia = $point;
+					} else {
+						$this->Georeferencia = null;
+					}
+				} else {
+					$ch = curl_init();
+					curl_setopt($ch, CURLOPT_URL, "https://maps.googleapis.com/maps/api/geocode/json?address=Rio+Tercero,+" . str_replace(" ", "+", $this->Domicilio) . "&key=AIzaSyAdiF1F7NoZbmAzBWfV6rxjJrGsr1Yvb1g");
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+					$response = curl_exec($ch);
+					$arr_obj_json = json_decode($response);
+					curl_close($ch);
+					if ($arr_obj_json) {
+						if (!is_null($arr_obj_json->results[0]->geometry->location->lat) 
+									 || !is_null($arr_obj_json->results[0]->geometry->location->lng)) {
+							$point = "POINT(" . $arr_obj_json->results[0]->geometry->location->lat . ", " . $arr_obj_json->results[0]->geometry->location->lng . ")";
+							$this->Georeferencia = $point;
+						} else {
+							$this->Georeferencia = null;
+						}
+					} else {
+						$this->Georeferencia = null;
+					}
+				}
+			} else {
+	
+				$this->Georeferencia = $xGeoreferencia;
+			}
+		} else {
+			$Con = new Conexion();
+			$Con->OpenConexion();
+			$ConsultarPersona = "select *
+								 from persona 
+								 where ID_Persona = " . $ID_Persona . " 
+								   and estado = 1";
+			$EjecutarConsultarPersona = mysqli_query(
+				$Con->Conexion, 
+				$ConsultarPersona) or die("Problemas al consultar filtro Persona");
+			$ret = mysqli_fetch_assoc($EjecutarConsultarPersona);
+	
+			$ID_Persona = $ret["id_persona"];
+			$apellido = $ret["apellido"];
+			$nombre = $ret["nombre"];
+			$dni = $ret["documento"];
+			$edad = $ret["edad"];
+			$meses = $ret["meses"];
+			if(is_null($ret["fecha_nac"]) || $ret["fecha_nac"] == "null"){
+				$fecha_nacimiento = "No se cargo fecha de nacimiento";
+			} else {
+				$fecha_nacimiento = implode("/", array_reverse(explode("-",$ret["fecha_nac"])));    
+			}
+			$nro_Carpeta = $ret["nro_carpeta"];
+			$nro_Legajo = $ret["nro_legajo"];
+			$obra_Social = $ret["obra_social"];
+			$domicilio = $ret["domicilio"];
+			$barrio = $ret["ID_Barrio"];
+			$localidad = $ret["localidad"];
+			$circunscripcion = $ret["circunscripcion"];
+			$seccion = $ret["seccion"];
+			$manzana = $ret["manzana"];
+			$lote = $ret["lote"];
+			$familia = $ret["familia"];
+			$observacion = $ret["observacion"];
+			$cambio_Domicilio = $ret["cambio_domicilio"];
+			$telefono = $ret["telefono"];
+			$mail = $ret["mail"];
+			$ID_Escuela = $ret["ID_Escuela"];
+			$estado = $ret["estado"];
+			$trabajo = $ret["Trabajo"];
+			$calle = $ret["calle"];
+			$nro = $ret["nro"];
+			$georefencia = (isset($ret["georefencia"])) ? $ret["georefencia"] : null;
+			$this->ID_Persona = $ID_Persona;
+			$this->Apellido = ($xApellido) ? $xApellido : $apellido;
+			$this->Nombre = ($xNombre) ? $xNombre : $nombre;
+			$this->DNI = ($xDNI) ? $xDNI : $dni;
+			$this->Nro_Legajo = ($xNro_Legajo) ? $xNro_Legajo : $nro_Legajo;
+			$this->Edad = ($xEdad) ? $xEdad : $edad;
+			$this->Meses = ($xMeses) ? $xMeses : $meses;
+			$this->Fecha_Nacimiento = ($xFecha_Nacimiento) ? $xFecha_Nacimiento : $fecha_nacimiento;
+			$this->Nro_Carpeta = ($xNro_Carpeta) ? $xNro_Carpeta : $nro_Carpeta;
+			$this->Obra_Social = ($xObra_Social) ? $xObra_Social : $obra_Social;
+			$this->Domicilio = (!empty($xDomicilio)) ? $xDomicilio : $domicilio;
+			$this->Barrio = ($xBarrio) ? $xBarrio : $barrio;
+			$this->Localidad = ($xLocalidad) ? $xLocalidad : $localidad;
+			$this->Circunscripcion = ($xCircunscripcion) ? $xCircunscripcion : $circunscripcion;
+			$this->Seccion = ($xSeccion) ? $xSeccion : $seccion;
+			$this->Manzana = ($xManzana) ? : $manzana;
+			$this->Lote = ($xLote) ? $xLote : $lote;
+			$this->Familia = ($xFamilia) ? $xFamilia : $familia;
+			$this->Observaciones = ($xObservaciones) ? $xObservaciones : $observacion;
+			$this->Cambio_Domicilio = ($xCambio_Domicilio) ? $xCambio_Domicilio : $cambio_Domicilio;
+			$this->Telefono = ($xTelefono) ? $xTelefono : $telefono;
+			$this->Mail = ($xMail) ? $xMail : $mail;
+			$this->ID_Escuela = ($xID_Escuela) ? $xID_Escuela : $ID_Escuela;	
+			$this->Estado = ($xEstado) ? $xEstado : $estado;
+			$this->Trabajo = ($xTrabajo) ? $xTrabajo : $trabajo;
+			$this->Georeferencia = ($xGeoreferencia) ? $xGeoreferencia : $georefencia;
+			$this->Nro = ($xNro) ? $xNro : $nro;
+			$this->Calle = ($xCalle) ? $xCalle : $calle;
+			$Con->CloseConexion();
+		}
+	}
+
 
 //METODOS SET
 public function setID_Persona($xID_Persona){
@@ -71,7 +244,8 @@ public function setObra_Social($xObra_Social){
 	$this->Obra_Social = $xObra_Social;
 }
 
-public function setDomicilio($xDomicilio = null){
+public function setDomicilio($xDomicilio = null)
+{
 	$id_calle = (!$xDomicilio) ? $this->getId_Calle() : null;
 	$numero_calle = (!$xDomicilio) ? trim($this->getNro()) : null;
 	$domicilio = ($xDomicilio) ? $xDomicilio : null;
@@ -83,7 +257,7 @@ public function setDomicilio($xDomicilio = null){
 		$domicilio = "$nombre_calle $numero_calle";
 		$domicilio = str_replace(array('á','é','í','ó','ú','ñ'), array('a','e','i','o','u','n'), $domicilio);
 	} else if ($domicilio) {
-		$consulta = "select calle_open
+		$consulta = "select calle_open, id_calle
 					 from calle
 					 where lower(calle_nombre) like CONCAT(
 															'%',
@@ -100,10 +274,13 @@ public function setDomicilio($xDomicilio = null){
 																			''
 																			),
 															'%'
-															);";
+															)
+					    and estado = 1
+					 order by calle_nombre asc;";
 		$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
 		$ret = mysqli_fetch_assoc($query_object);
 		$nombre_calle = $ret["calle_open"];
+		$this->Calle = $ret["id_calle"];
 		$domicilio = "$nombre_calle " . $this->getNro();
 		$domicilio = str_replace(array('á','é','í','ó','ú','ñ'), array('a','e','i','o','u','n'), $domicilio);
 	}
@@ -114,10 +291,17 @@ public function setDomicilio($xDomicilio = null){
 		$url = "https://maps.googleapis.com/maps/api/geocode/json?address=" . str_replace(" ", "+", trim($domicilio)) . "+Rio+Tercero,Cordoba&key=AIzaSyAdiF1F7NoZbmAzBWfV6rxjJrGsr1Yvb1g";
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_HEADER  , 1);
 		$response = curl_exec($ch);
+		$response_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		$arr_obj_json = json_decode($response);
 		curl_close($ch);
-		$body_request = (($arr_obj_json) ? " " . json_encode($arr_obj_json->results[0]) : "");
+		if ($response_status == 200) {
+			$body_request = (($arr_obj_json) ? " " . json_encode($arr_obj_json->results[0]) : "");
+		} else {
+			$body_request = "- El estado de la respuesta de google api es : " . $response_status;
+			$arr_obj_json = null;
+		}
 		$detalles = $url . $body_request;
 		$accion = new Accion(
 			xFecha : $Fecha,
@@ -198,12 +382,18 @@ public function setDomicilio($xDomicilio = null){
 }
 
 
-public function setCalle($xCalle){
+public function setCalle($xCalle)
+{
 	$this->Calle = $xCalle;
 }
 
-public function setNro($xNro){
-	$this->Nro = ($xNro) ? $xNro : null;
+public function setNro($xNro)
+{
+	$nro_calle = null;
+	if (is_string($xNro) && preg_match('~ [0-9]+$~', $xNro, $out)) {
+		$nro_calle = trim($out[0]);
+	};
+	$this->Nro = ((!is_null($nro_calle)) ? $nro_calle : $xNro);
 }
 
 public function setBarrio($xBarrio){
@@ -381,16 +571,21 @@ public function getNroCalle()
 
 public function getBarrio()
 {
-	$Con = new Conexion();
-	$Con->OpenConexion();
-	$ConsultarBarrio = "select * 
-						from barrios 
-						where ID_Barrio = {$this->Barrio}";
-	$MensajeErrorBarrio = "No se pudo consultar el Barrio de la persona";
-	$EjecutarConsultarBarrio = mysqli_query($Con->Conexion,$ConsultarBarrio) or die($MensajeErrorBarrio);
-	$RetBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);
-	$Con->CloseConexion();
-	return $RetBarrio["Barrio"];
+	if (!empty($this->Barrio)) {
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$ConsultarBarrio = "select * 
+							from barrios 
+							where ID_Barrio = {$this->Barrio}";
+		$MensajeErrorBarrio = "No se pudo consultar el Barrio de la persona";
+		$EjecutarConsultarBarrio = mysqli_query($Con->Conexion,$ConsultarBarrio) or die($MensajeErrorBarrio);
+		$RetBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);
+		$barrio = $RetBarrio["Barrio"];
+		$Con->CloseConexion();
+	} else {
+		$barrio = null;
+	}
+	return $barrio;
 }
 
 public function getId_Barrio()
@@ -510,26 +705,64 @@ public function getTrabajo()
 	return $this->Trabajo;
 }
 
+public static function is_exist($coneccion, $id_persona)
+{
+	$consulta = "select * 
+				 from persona 
+				 where id_persona = $id_persona 
+				   and estado = 1";
+	$mensaje_error = "Hubo un problema al consultar los registros para validar";
+	$ret = mysqli_query(
+				$coneccion->Conexion,
+				$consulta
+	) or die(
+		$mensaje_error
+	);
+	$is_multiple = (mysqli_num_rows($ret) >= 1);
+	return $is_multiple;
+}
+
 public static function is_registered($documento)
 {
 	$Con = new Conexion();
 	$Con->OpenConexion();
-	$ConsRegistrosIguales = "select id_persona from persona where documento like '%" . $documento. "%' and estado = 1";
+	$ConsRegistrosIguales = "select id_persona 
+							 from persona 
+							 where documento like '%" . $documento. "%' 
+							   and estado = 1";
 	$MensajeErrorRegistrosIguales = "Hubo un problema al consultar los registros para validar";
-	$Ret = mysqli_query($Con->Conexion,
+	$ret = mysqli_query($Con->Conexion,
 		$ConsRegistrosIguales
 	) or die(
 		$MensajeErrorRegistrosIguales . " Consulta: " . $ConsRegistrosIguales
 	);
-	$is_multiple = (mysqli_num_rows($Ret) > 1);
+	$is_multiple = (mysqli_num_rows($ret) >= 1);
 	$Con->CloseConexion();
 	return $is_multiple;
+}
+
+public static function get_id_persona_by_dni($documento)
+{
+	$con = new Conexion();
+	$con->OpenConexion();
+	$consulta = "select id_persona from persona where documento like '%" . $documento. "%' and estado = 1";
+	$mensaje_error = "Hubo un problema al consultar el id de la persona";
+	$ret = mysqli_query($con->Conexion,
+	$consulta
+	) or die(
+		$mensaje_error . " Consulta: " . $consulta
+	);
+	$row = mysqli_fetch_assoc($ret);
+	$id = $row["id_persona"];
+	$con->CloseConexion();
+	return $id;
 }
 
 public function jsonSerialize() {
 	return [
 	'ID_Persona' => $this->ID_Persona,
 	'Nombre' => $this->Nombre,
+	'Apellido' => $this->Apellido,
 	'DNI' => $this->DNI,
 	'Nro_Legajo' => $this->Nro_Legajo,
 	'Edad' => $this->Edad,
@@ -640,6 +873,72 @@ public function update()
 				 $Con->CloseConexion();
 }
 
+
+public function update_edad_meses()
+{
+	$con = new Conexion();
+	$con->OpenConexion();
+
+	$Edad = (isset($this->Edad)) ? $this->Edad : null;
+	$Meses = (isset($this->Meses)) ? $this->Meses : null;
+	$Fecha_Nacimiento = $this->Fecha_Nacimiento;
+	if ($Fecha_Nacimiento != 'null' && !empty($Fecha_Nacimiento)) {
+		if (substr_count("-", $Fecha_Nacimiento)) {
+			list($ano, $mes, $dia) = explode("-", $Fecha_Nacimiento);
+		} else {
+			list($ano, $mes, $dia) = explode("/", $Fecha_Nacimiento);
+		}
+		$ano_diferencia = date("Y") - $ano;
+		$mes_diferencia = date("m") - $mes;
+		$dia_diferencia = date("d") - $dia;
+		if ($ano_diferencia > 0) {
+			if ($mes_diferencia == 0) {
+				if ($dia_diferencia < 0) {
+					$ano_diferencia--;
+				}
+			} elseif ($mes_diferencia < 0) {
+				$ano_diferencia--;
+			}
+		} else {
+			if ($mes_diferencia > 0) {
+				if ($dia_diferencia < 0) {
+					$mes_diferencia--;
+				}
+			}
+		}
+		$Edad = $ano_diferencia;
+		$Meses = $mes_diferencia;
+	}
+
+	//PROBAR SI ESTO DA LA DIFERENCIA ENTRE MESES NOMAS O TAMBIEN TOMA LOS AÑOS COMO MESES EN ESE CASO TOMAR LA CANTIDAD DE AÑOS Y MULTIPLICARLO POR 12 Y A ESO RESTARLE AL RESULTADO DEL TOTAL DE MESES DE DIFERENCIA.
+	if ($Fecha_Nacimiento != 'null' && !empty($Fecha_Nacimiento)) {
+		$Fecha_Actual = new DateTime();
+		if (substr_count("-", $Fecha_Nacimiento)) {
+			$fecha_activacion_registrada = DateTime::createFromFormat('d-m-Y', 
+																	$Fecha_Nacimiento);
+			$Diferencia = $fecha_activacion_registrada->diff($Fecha_Actual);
+			$Meses = $Diferencia->m;
+			$Edad = $Diferencia->y;
+		} else if (substr_count("/", $Fecha_Nacimiento)){
+			$fecha_activacion_registrada = DateTime::createFromFormat('d/m/Y', 
+																	$Fecha_Nacimiento);
+			$Diferencia = $fecha_activacion_registrada->diff($Fecha_Actual);
+			$Meses = $Diferencia->m;
+			$Edad = $Diferencia->y;
+		}
+	}
+
+	$consulta = "update persona
+				 set edad = " . ((!is_null($Edad)) ? "'" . $Edad . "'" : "null") . ", 
+					 meses = " . ((!is_null($Meses)) ? "'" . $Meses . "'" : "null") . " 
+				 where id_persona = " . $this->getID_Persona();
+	$MensajeErrorConsultar = "No se pudo actualizar la Persona";
+	if (!$Ret = mysqli_query($con->Conexion, $consulta)) {
+		throw new Exception($MensajeErrorConsultar . $consulta, 2);
+	}
+	$con->CloseConexion();
+}
+
 public function save(){
 	$Con = new Conexion();
 	$Con->OpenConexion();
@@ -692,7 +991,7 @@ public function save(){
 						 " . ((!is_null($this->getFamilia())) ? $this->getFamilia() : "null") . ", 
 						 " . ((!is_null($this->getObservaciones())) ? "'" . $this->getObservaciones() . "'" : "null") . ", 
 						 " . ((!is_null($this->getCambio_Domicilio())) ? "'" . $this->getCambio_Domicilio() . "'" : "null") . ", 
-						 " . ((!is_null($this->getID_Escuela())) ? "'" . $this->getID_Escuela() . "'" : "null") . ", 
+						 " . ((!is_null($this->getID_Escuela())) ? $this->getID_Escuela() : "null") . ", 
 						 " . ((!is_null($this->getMeses())) ? "'" . $this->getMeses() . "'" : "null") . ", 
 						 " . ((!is_null($this->getTrabajo())) ? "'" . $this->getTrabajo() . "'" : "null") . ",
 						 " . ((!is_null($this->getGeoreferencia())) ? $this->getGeoreferencia() : "null") . ",
@@ -701,181 +1000,12 @@ public function save(){
 						 1
 				 )";
 				 $MensajeErrorConsultar = "No se pudo insertar la Persona";
-				 if (!$Ret = mysqli_query($Con->Conexion, $consulta)) {
+				 $ret = mysqli_query($Con->Conexion, $consulta);
+				 if (!$ret) {
 					throw new Exception($MensajeErrorConsultar . $consulta, 2);
 				 }
+				 $this->ID_Persona = mysqli_insert_id($Con->Conexion);
 				 $Con->CloseConexion();
-}
-
-public function __construct(
-	$ID_Persona = null,
-	$xApellido = null,
-	$xNombre = null,
-	$xDNI = null,
-	$xNro_Legajo = null,
-	$xEdad = null,
-	$xMeses = null,
-	$xFecha_Nacimiento = null,
-	$xNro_Carpeta = null,
-	$xObra_Social = null,
-	$xDomicilio = null,
-	$xBarrio = null,
-	$xLocalidad = null,
-	$xCircunscripcion = null,
-	$xSeccion = null,
-	$xManzana = null,
-	$xLote = null,
-	$xFamilia = null,
-	$xObservaciones = null,
-	$xCambio_Domicilio  = null,
-	$xTelefono = null,
-	$xMail = null,
-	$xID_Escuela = null,
-	$xEstado = null,
-	$xTrabajo = null,
-	$xGeoreferencia = null,
-	$xCalle = null,
-	$xNro = null
-){
-	if (!$ID_Persona) {
-		$this->Apellido = $xApellido;
-		$this->Barrio = $xBarrio;
-		$this->Calle = $xCalle;
-		$this->Cambio_Domicilio = $xCambio_Domicilio;
-		$this->Circunscripcion = $xCircunscripcion;
-		$this->DNI = $xDNI;
-		$this->Domicilio = $xDomicilio;
-		$this->Edad = $xEdad;
-		$this->Estado = $xEstado;
-		$this->Familia = $xFamilia;
-		$this->Fecha_Nacimiento = $xFecha_Nacimiento;
-		$this->ID_Escuela = $xID_Escuela;	
-		$this->ID_Persona =$ID_Persona;
-		$this->Localidad = $xLocalidad;
-		$this->Lote = $xLote;
-		$this->Mail = $xMail;
-		$this->Manzana = $xManzana;
-		$this->Meses = $xMeses;
-		$this->Nombre = $xNombre;
-		$this->Nro = $xNro;
-		$this->Nro_Carpeta = $xNro_Carpeta;
-		$this->Nro_Legajo = $xNro_Legajo;
-		$this->Obra_Social = $xObra_Social;
-		$this->Observaciones = $xObservaciones;
-		$this->Seccion = $xSeccion;
-		$this->Telefono = $xTelefono;
-		$this->Trabajo = $xTrabajo;
-		if ((!$xGeoreferencia) && ($this->Domicilio || ($this->Nro && $this->Calle))) {
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, "https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", $this->Domicilio) . "&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com");
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			$response = curl_exec($ch);
-			$arr_obj_json = json_decode($response);
-			curl_close($ch);
-			if ($arr_obj_json) {
-				if (!is_null($arr_obj_json[0]->lat) || !is_null($arr_obj_json[0]->lon)) {
-					$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
-					$this->Georeferencia = $point;
-				} else {
-					$this->Georeferencia = null;
-				}
-			} else {
-				$ch = curl_init();
-				curl_setopt($ch, CURLOPT_URL, "https://maps.googleapis.com/maps/api/geocode/json?address=Rio+Tercero,+" . str_replace(" ", "+", $this->Domicilio) . "&key=AIzaSyAdiF1F7NoZbmAzBWfV6rxjJrGsr1Yvb1g");
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				$response = curl_exec($ch);
-				$arr_obj_json = json_decode($response);
-				curl_close($ch);
-				if ($arr_obj_json) {
-					if (!is_null($arr_obj_json->results[0]->geometry->location->lat) 
-								 || !is_null($arr_obj_json->results[0]->geometry->location->lng)) {
-						$point = "POINT(" . $arr_obj_json->results[0]->geometry->location->lat . ", " . $arr_obj_json->results[0]->geometry->location->lng . ")";
-						$this->Georeferencia = $point;
-					} else {
-						$this->Georeferencia = null;
-					}
-				} else {
-					$this->Georeferencia = null;
-				}
-			}
-		} else {
-
-		    $this->Georeferencia = $xGeoreferencia;
-		}
-	} else {
-		$Con = new Conexion();
-        $Con->OpenConexion();
-		$ConsultarPersona = "select *
-							 from persona 
-							 where ID_Persona = " . $ID_Persona . " 
-							   and estado = 1";
-		$EjecutarConsultarPersona = mysqli_query(
-			$Con->Conexion, 
-			$ConsultarPersona) or die("Problemas al consultar filtro Persona");
-		$ret = mysqli_fetch_assoc($EjecutarConsultarPersona);
-
-		$ID_Persona = $ret["id_persona"];
-		$apellido = $ret["apellido"];
-		$nombre = $ret["nombre"];
-		$dni = $ret["documento"];
-		$edad = $ret["edad"];
-		$meses = $ret["meses"];
-		if(is_null($ret["fecha_nac"]) || $ret["fecha_nac"] == "null"){
-			$fecha_nacimiento = "No se cargo fecha de nacimiento";
-		}else{
-			$fecha_nacimiento = implode("/", array_reverse(explode("-",$ret["fecha_nac"])));    
-		}
-		$nro_Carpeta = $ret["nro_carpeta"];
-		$nro_Legajo = $ret["nro_legajo"];
-		$obra_Social = $ret["obra_social"];
-		$domicilio = $ret["domicilio"];
-		$barrio = $ret["ID_Barrio"];
-		$localidad = $ret["localidad"];
-		$circunscripcion = $ret["circunscripcion"];
-		$seccion = $ret["seccion"];
-		$manzana = $ret["manzana"];
-		$lote = $ret["lote"];
-		$familia = $ret["familia"];
-		$observacion = $ret["observacion"];
-		$cambio_Domicilio = $ret["cambio_domicilio"];
-		$telefono = $ret["telefono"];
-		$mail = $ret["mail"];
-		$ID_Escuela = $ret["ID_Escuela"];
-		$estado = $ret["estado"];
-		$trabajo = $ret["Trabajo"];
-		$calle = $ret["calle"];
-		$nro = $ret["nro"];
-		$georefencia = (isset($ret["georefencia"])) ? $ret["georefencia"] : null;
-		$this->ID_Persona = $ID_Persona;
-		$this->Apellido = ($xApellido) ? $xApellido : $apellido;
-		$this->Nombre = ($xNombre) ? $xNombre : $nombre;
-		$this->DNI = ($xDNI) ? $xDNI : $dni;
-		$this->Nro_Legajo = ($xNro_Legajo) ? $xNro_Legajo : $nro_Legajo;
-		$this->Edad = ($xEdad) ? $xEdad : $edad;
-		$this->Meses = ($xMeses) ? $xMeses : $meses;
-		$this->Fecha_Nacimiento = ($xFecha_Nacimiento) ? $xFecha_Nacimiento : $fecha_nacimiento;
-		$this->Nro_Carpeta = ($xNro_Carpeta) ? $xNro_Carpeta : $nro_Carpeta;
-		$this->Obra_Social = ($xObra_Social) ? $xObra_Social : $obra_Social;
-		$this->Domicilio = (!empty($xDomicilio)) ? $xDomicilio : $domicilio;
-		$this->Barrio = ($xBarrio) ? $xBarrio : $barrio;
-		$this->Localidad = ($xLocalidad) ? $xLocalidad : $localidad;
-		$this->Circunscripcion = ($xCircunscripcion) ? $xCircunscripcion : $circunscripcion;
-		$this->Seccion = ($xSeccion) ? $xSeccion : $seccion;
-		$this->Manzana = ($xManzana) ? : $manzana;
-		$this->Lote = ($xLote) ? $xLote : $lote;
-		$this->Familia = ($xFamilia) ? $xFamilia : $familia;
-		$this->Observaciones = ($xObservaciones) ? $xObservaciones : $observacion;
-		$this->Cambio_Domicilio = ($xCambio_Domicilio) ? $xCambio_Domicilio : $cambio_Domicilio;
-		$this->Telefono = ($xTelefono) ? $xTelefono : $telefono;
-		$this->Mail = ($xMail) ? $xMail : $mail;
-		$this->ID_Escuela = ($xID_Escuela) ? $xID_Escuela : $ID_Escuela;	
-		$this->Estado = ($xEstado) ? $xEstado : $estado;
-		$this->Trabajo = ($xTrabajo) ? $xTrabajo : $trabajo;
-		$this->Georeferencia = ($xGeoreferencia) ? $xGeoreferencia : $georefencia;
-		$this->Nro = ($xNro) ? $xNro : $nro;
-		$this->Calle = ($xCalle) ? $xCalle : $calle;
-		$Con->CloseConexion();
-	}
 }
 
 }

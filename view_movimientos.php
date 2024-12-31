@@ -62,12 +62,47 @@ $Con->CloseConexion();
           .then((willDelete) => {
             if (willDelete) {
               window.location.href = 'Controladores/DeleteMovimiento.php?ID='+xID;
-              //alert('SI');
-            } else {        
             }
           });
         }
 
+        function dialogCargaEnlace() {
+          swal({
+            title: "El proceso de carga de Excel finalizo",
+            text: "Los registros de casos de Dengue han sido cargados al sistema",
+            icon: "success",
+            showCancelButton: false
+          });
+        }
+
+        function dialogErrorCargaEnlace() {
+          swal({
+            title: "Fallo de carga de Excel",
+            text: "Los registros de casos de Dengue no se han cargados al sistema",
+            icon: "error",
+            showCancelButton: false,
+            dangerMode: true
+          });
+        }
+
+        function cargaMovimientosFormulario(){
+          swal({
+            title: "Proceso de carga de Excel",
+            text: "Los registros de casos de Dengue estan siendo cargados al sistema",
+            icon: "warning",
+            showConfirmButton: true,
+            dangerMode: true,
+          });
+
+          $.ajax({
+            type: "POST",
+            cache: false,
+            url: "./Controladores/InsertFormularios.php",
+            async: true,
+            success: dialogCargaEnlace,
+            error: dialogErrorCargaEnlace
+          });
+        }
   </script>
 
 </head>
@@ -86,7 +121,11 @@ $Con->CloseConexion();
       <div class="col"></div>
     </div><br>
     <div class="row">
-      <div class = "col"></div>
+      <div class = "col-2">
+          <button type="button"  
+                  class = "btn btn-secondary" 
+                  onClick = "cargaMovimientosFormulario();">Enlace Driver</button>
+      </div>
       <div class = "col-4">
           <center><button class = "btn btn-secondary" onClick = "location.href='view_newmovimientos.php'">Agregar Nuevo Movimiento</button></center>
       </div>

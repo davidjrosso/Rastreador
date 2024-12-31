@@ -88,6 +88,30 @@ public function __construct($xID,$xFecha,$xMotivo,$xCod_Categoria,$xNum_Motivo,$
     $this->ID_Motivo = $xID_Motivo;
 }
 
+public function save() {
+    $Con = new Conexion();
+    $Con->OpenConexion();
+    $Insert_Solicitud = "insert into solicitudes_eliminarmotivos( 
+                            Fecha,
+                            Motivo,
+                            Cod_Categoria,
+                            Num_Motivo,
+                            Estado,
+                            ID_Usuario,
+                            ID_Motivo
+                            ) values(
+                                '" . $this->getFecha() . "',
+                                '" . $this->getMotivo() . "',
+                                '" . $this->getCod_Categoria() . "',
+                                " . $this->getNum_Motivo() . ",
+                                " . $this->getEstado() . ",
+                                " . $this->getID_Usuario() . ",
+                                " . $this->getID_Motivo() . "
+                            )";
+    $MensajeError = "No se pudo enviar la solicitud";
+    mysqli_query($Con->Conexion,$Insert_Solicitud) or die($MensajeError);
+    $Con->CloseConexion(); 
+}
+
 
 }
-?>

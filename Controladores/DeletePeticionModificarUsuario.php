@@ -1,6 +1,10 @@
 <?php 
 session_start();
 require_once 'Conexion.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . 'Modelo/Accion.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . 'Modelo/Solicitud_Usuario.php';
+
+
 /*
  *
  * This file is part of Rastreador3.
@@ -25,24 +29,24 @@ $ID_Usuario = $_SESSION["Usuario"];
 $ID_Peticion = $_REQUEST["ID"];
 
 $Fecha = date("Y-m-d");
-$ID_TipoAccion = 3;
+$ID_TipoAccion = 2;
 $Detalles = "El usuario con ID: $ID_Usuario ha dado de baja una Peticion. Datos: Peticion: $ID_Peticion";
 
 try {
-	$Con = new Conexion();
-	$Con->OpenConexion();
-
-	$Consulta = "update solicitudes_crearmotivos set Estado = 0 where ID = $ID_Peticion";
-	if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
-		throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 0);		
-	}
-	$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
-	if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
-		throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 1);
-	}	
-	$Con->CloseConexion();
+	$solicitud = new Solicitud_Usuario(
+		id_solicitud: $ID_Peticion
+	);
+	$solicitud->delete();
+	$accion = new Accion(
+		xaccountid: $ID_Usuario,
+		xFecha: $Fecha,
+		xDetalles: $Detalles,
+		xID_TipoAccion: $ID_TipoAccion
+	);
+	$accion->save();
 	$Mensaje = "La solicitud fue eliminada Correctamente";
-	header('Location: ../view_inicio.php?Mensaje='.$Mensaje);
+	header('Location: ../view_solicitud.php?Mensaje='.$Mensaje);
 } catch (Exception $e) {
 	echo "Error: ".$e->getMessage();
 }
+?>

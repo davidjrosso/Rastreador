@@ -3,7 +3,8 @@ require_once("Conexion.php");
 
 header("Content-Type: text/html;charset=utf-8");
 
-class Elements{
+class Elements
+{
   const PAGINA_INICIO = 0;
   const PAGINA_PERSONA = 1;
   const PAGINA_MOVIMIENTO = 10;
@@ -25,6 +26,10 @@ class Elements{
   const PAGINA_UNIFICACION_BARRIO = 17;
   const PAGINA_UNIFICACION_OTRA_INSTITUCION = 18;
   const PAGINA_UNIFICACION_CALLE = 19;
+  const PAGINA_AUDITORIA_ACCION = 24;
+  const PAGINA_AUDITORIA_SOLICITUD = 25;
+  const PAGINA_AUDITORIA_NOTIFICACION = 26;
+  
 
 	//Instanciando la Conexion
 	public function __construct(){
@@ -779,22 +784,141 @@ public function getMenuSeguridad($ID){
     return $menu;
   }
 
+  public function getMenuNotificacionUsuario($ID)
+  {
+    switch ($ID) {
+        case self::PAGINA_AUDITORIA_NOTIFICACION:
+             $menu = '<div class="menu-list">
+                    <ul id="menu-content" class="menu-content collapse out">
+                        <li class="collapsed active" onClick="location.href=\'view_notificacion.php\'">
+                          <a href="view_notificacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                        </li>
+                        <li class="collapsed" onClick="location.href=\'view_solicitud.php\'">
+                          <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
+                        </li>
+                        <li class="collapsed" onClick="location.href=\'view_auditoria.php\'">
+                          <a href="view_auditoria.php"><i class="fa fa-file-text fa-lg"></i>Acciones</a>
+                        </li>
+                    </ul>
+                  </div>';
+             break;
+        case self::PAGINA_AUDITORIA_SOLICITUD:
+             $menu = '<div class="menu-list">
+                        <ul id="menu-content" class="menu-content collapse out">
+                            <li class="collapsed" onClick="location.href=\'view_notificacion.php\'">
+                              <a href="view_notificacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                            </li>
+                            <li class="collapsed active" onClick="location.href=\'view_solicitud.php\'">
+                              <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
+                            </li>
+                            <li class="collapsed" onClick="location.href=\'view_auditoria.php\'">
+                              <a href="view_auditoria.php"><i class="fa fa-file-text fa-lg"></i>Acciones</a>
+                            </li>
+                        </ul>
+                      </div>';
+             break;
+        case self::PAGINA_AUDITORIA_ACCION:
+              $menu = '<div class="menu-list">
+                        <ul id="menu-content" class="menu-content collapse out">
+                            <li class="collapsed" onClick="location.href=\'view_notificacion.php\'">
+                              <a href="view_notificacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                            </li>
+                            <li class="collapsed" onClick="location.href=\'view_solicitud.php\'">
+                              <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
+                            </li>
+                            <li class="collapsed active" onClick="location.href=\'view_auditoria.php\'">
+                              <a href="view_auditoria.php"><i class="fa fa-file-text fa-lg"></i>Acciones</a>
+                            </li>
+                        </ul>
+                      </div>';
+              break;
+        default:
+              $menu = '<div class="menu-list">
+                        <ul id="menu-content" class="menu-content collapse out">
+                            <li class="collapsed" onClick="location.href=\'view_notificacion.php\'">
+                              <a href="view_notificacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                            </li>
+                            <li class="collapsed" onClick="location.href=\'view_solicitud.php\'">
+                              <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
+                            </li>
+                            <li class="collapsed" onClick="location.href=\'view_auditoria.php\'">
+                              <a href="view_auditoria.php"><i class="fa fa-file-text fa-lg"></i>Acciones</a>
+                            </li>
+                        </ul>
+                      </div>';
+              break;
+    }
 
-  public function getMenuNotificacionUsuario($ID){
-    $menu = '<div class="menu-list">
-                <ul id="menu-content" class="menu-content collapse out">
-                    <li class="collapsed" onClick="location.href=\'view_auditoria.php\'">
-                      <a href="view_general_new.php"><i class="fa fa-file-text fa-lg"></i>notificacion</a>
-                    </li>
-                    <li class="collapsed" onClick="location.href=\'view_auditoria.php\'">
-                      <a href="view_listados.php"><i class="fa fa-file-text fa-lg"></i>modificacion</a>
-                    </li>
-                </ul>
-              </div>';
     return $menu;
   }
 
-  public function getMenuUnificacionUsuario($ID){
+  public function getMenuNotificacion($ID){
+    switch ($ID) {
+        case self::PAGINA_AUDITORIA_NOTIFICACION:
+             echo '<div class="menu-list">
+                    <ul id="menu-content" class="menu-content collapse out">
+                        <li class="collapsed active" onClick="location.href=\'view_notificacion.php\'">
+                          <a href="view_notificacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                        </li>
+                        <li class="collapsed" onClick="location.href=\'view_solicitud.php\'">
+                          <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
+                        </li>
+                        <li class="collapsed" onClick="location.href=\'view_auditoria.php\'">
+                          <a href="view_auditoria.php"><i class="fa fa-file-text fa-lg"></i>Acciones</a>
+                        </li>
+                    </ul>
+                  </div>';
+             break;
+        case self::PAGINA_AUDITORIA_SOLICITUD:
+             echo '<div class="menu-list">
+                        <ul id="menu-content" class="menu-content collapse out">
+                            <li class="collapsed" onClick="location.href=\'view_notificacion.php\'">
+                              <a href="view_notificacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                            </li>
+                            <li class="collapsed active" onClick="location.href=\'view_solicitud.php\'">
+                              <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
+                            </li>
+                            <li class="collapsed" onClick="location.href=\'view_auditoria.php\'">
+                              <a href="view_auditoria.php"><i class="fa fa-file-text fa-lg"></i>Acciones</a>
+                            </li>
+                        </ul>
+                      </div>';
+             break;
+        case self::PAGINA_AUDITORIA_ACCION:
+              echo '<div class="menu-list">
+                        <ul id="menu-content" class="menu-content collapse out">
+                            <li class="collapsed" onClick="location.href=\'view_notificacion.php\'">
+                              <a href="view_notificacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                            </li>
+                            <li class="collapsed" onClick="location.href=\'view_solicitud.php\'">
+                              <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
+                            </li>
+                            <li class="collapsed active" onClick="location.href=\'view_auditoria.php\'">
+                              <a href="view_auditoria.php"><i class="fa fa-file-text fa-lg"></i>Acciones</a>
+                            </li>
+                        </ul>
+                      </div>';
+              break;
+        default:
+              echo '<div class="menu-list">
+                        <ul id="menu-content" class="menu-content collapse out">
+                            <li class="collapsed" onClick="location.href=\'view_notificacion.php\'">
+                              <a href="view_notificacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
+                            </li>
+                            <li class="collapsed" onClick="location.href=\'view_solicitud.php\'">
+                              <a href="view_solicitud.php"><i class="fa fa-file-text fa-lg"></i>Solicitudes</a>
+                            </li>
+                            <li class="collapsed" onClick="location.href=\'view_auditoria.php\'">
+                              <a href="view_auditoria.php"><i class="fa fa-file-text fa-lg"></i>Acciones</a>
+                            </li>
+                        </ul>
+                      </div>';
+              break;
+    }
+  }
+
+  public function getMenuUnificacionUsuario($ID)
+  {
     switch ($ID) {
       case 13:
           $menu = '<div class="menu-list">
@@ -933,31 +1057,31 @@ public function getMenuSeguridad($ID){
         </div>';break;
         case 18:
             $menu =  '<div class="menu-list">
-  
-            <ul id="menu-content" class="menu-content collapse out">
-                <li onClick = "location.href = \'view_unifpersonas.php\'">
-                  <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
-                  <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifcentros.php\'">
-                  <a href="view_unifcentros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
-                  <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
-                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
-                </li>
-                <li class="collapsed active" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
-                  <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
-                </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
-                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
-                </li>
-            </ul>
-        </div>';break;
+                        <ul id="menu-content" class="menu-content collapse out">
+                            <li onClick = "location.href = \'view_unifpersonas.php\'">
+                              <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
+                            </li>
+                            <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
+                              <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
+                            </li>
+                            <li class="collapsed" onClick = "location.href = \'view_unifcentros.php\'">
+                              <a href="view_unifcentros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                            </li>
+                            <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
+                              <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
+                            </li>
+                            <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
+                              <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                            </li>
+                            <li class="collapsed active" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
+                              <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                            </li>
+                            <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
+                              <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+                            </li>
+                        </ul>
+                    </div>';
+            break;
         case 19:
             $menu =  '<div class="menu-list">
   
@@ -1713,8 +1837,9 @@ public function getMenuSeguridadUsuario($ID){
 
   public function BTNModMotivo_1($xID){
     $Con3 = new Conexion();
-    $Con3->OpenConexion();        
-    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $xID order by motivo")or die("Problemas al mostrar Personas");    
+    $Con3->OpenConexion();
+    $id_motivo = ((!is_null($xID)) ? $xID : 1);
+    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $id_motivo order by motivo")or die("Problemas al mostrar Personas");    
     $Ret = mysqli_fetch_assoc($Consulta);    
         
     $Boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_1'>".$Ret['motivo']."</button>";
@@ -1756,11 +1881,22 @@ public function getMenuSeguridadUsuario($ID){
 
   public function BTNModMotivo_2($xID){
     $Con3 = new Conexion();
-    $Con3->OpenConexion();    
-    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $xID order by motivo")or die("Problemas al mostrar Personas");    
-    $Ret = mysqli_fetch_assoc($Consulta);    
-        
-    $Boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_2'>".$Ret['motivo']."</button>";
+    $Con3->OpenConexion();
+    $id_motivo = ((!is_null($xID)) ? $xID : 1);
+    $consulta = "select * 
+                 from motivo 
+                 where estado = 1 
+                   and id_motivo = $id_motivo 
+                 order by motivo";
+    $res = mysqli_query(
+                 $Con3->Conexion,
+                 $consulta
+      ) or die("Problemas al mostrar Personas");
+    $Ret = mysqli_fetch_assoc($res);
+
+    $Boton = "<button type='button' class='btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_2'>" .
+                $Ret['motivo'] . "
+              </button>";
     $Con3->CloseConexion();
     return $Boton;
   }
@@ -1770,7 +1906,7 @@ public function getMenuSeguridadUsuario($ID){
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Motivo_3'>";
     $Select .= "<option selected = 'true' disabled = 'disabled'>Seleccione un Motivo</option>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo > 1 order by motivo")or die("Problemas al mostrar Motivo_3");
+    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo > 1 order by motivo") or die("Problemas al mostrar Motivo_3");
     while ($Ret = mysqli_fetch_array($Consulta)) {
       $Select .= "<option value = '".$Ret['id_motivo']."'>".$Ret['motivo']."</option>";
     }
@@ -1784,7 +1920,7 @@ public function getMenuSeguridadUsuario($ID){
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Motivo_3'>";
     $Select .= "<option selected = 'true' disabled = 'disabled'>Seleccione un Motivo</option>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo > 1 order by motivo")or die("Problemas al mostrar Motivo_3");
+    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo > 1 order by motivo") or die("Problemas al mostrar Motivo_3");
     while ($Ret = mysqli_fetch_array($Consulta)) {
       if($Ret['id_motivo'] == $xID){
         $Select .= "<option value = '".$Ret['id_motivo']."' selected>".$Ret['motivo']."</option>";
@@ -1799,8 +1935,9 @@ public function getMenuSeguridadUsuario($ID){
 
   public function BTNModMotivo_3($xID){
     $Con3 = new Conexion();
-    $Con3->OpenConexion();    
-    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $xID order by motivo")or die("Problemas al mostrar Personas");    
+    $Con3->OpenConexion();
+    $id_motivo = ((!is_null($xID)) ? $xID : 1);
+    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $id_motivo order by motivo") or die("Problemas al mostrar Personas");    
     $Ret = mysqli_fetch_assoc($Consulta);    
         
     $Boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_3'>".$Ret['motivo']."</button>";
@@ -1810,8 +1947,9 @@ public function getMenuSeguridadUsuario($ID){
 
   public function BTNModMotivo_4($xID){
     $Con3 = new Conexion();
-    $Con3->OpenConexion();    
-    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $xID order by motivo")or die("Problemas al mostrar Personas");    
+    $Con3->OpenConexion();
+    $id_motivo = ((!is_null($xID)) ? $xID : 1);
+    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $id_motivo order by motivo") or die("Problemas al mostrar Personas");
     $Ret = mysqli_fetch_assoc($Consulta);    
         
     $Boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_4'>".$Ret['motivo']."</button>";
@@ -1821,8 +1959,9 @@ public function getMenuSeguridadUsuario($ID){
 
   public function BTNModMotivo_5($xID){
     $Con3 = new Conexion();
-    $Con3->OpenConexion();    
-    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $xID order by motivo")or die("Problemas al mostrar Personas");    
+    $Con3->OpenConexion();
+    $id_motivo = ((!is_null($xID)) ? $xID : 1);
+    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $id_motivo order by motivo") or die("Problemas al mostrar Personas");
     $Ret = mysqli_fetch_assoc($Consulta);    
         
     $Boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_5'>".$Ret['motivo']."</button>";
@@ -2269,6 +2408,54 @@ public function getMenuSeguridadUsuario($ID){
     return $Select;
   }
 
+
+  ////////////////////////////////////////// TIPO ACCIONES ///////////////////////////////////////////////////
+
+
+  public function CBTipoAccion()
+  {
+    $con = new Conexion();
+    $con->OpenConexion();
+    $Select = "<select id='tipo_accion' name='Search' class = 'form-control' style='display:none'>";
+    $consulta = "select * 
+                 from TipoAcciones";
+    $obj_query = mysqli_query(
+                      $con->Conexion,
+                      $consulta
+                      ) or die("Problemas al mostrar Personas");
+    $Select .= "<option value = '0' disabled = 'disabled' selected = 'true'>Todos</option>";
+    while ($Ret = mysqli_fetch_array($obj_query)) {
+      $Select .= "<option value = '" . $Ret['ID_TipoAccion'] . "'>" . $Ret['Tipo'] . "</option>";
+    }
+    $Select .= "</select>";
+    $con->CloseConexion();
+    return $Select;
+  }
+
+
+  ////////////////////////////////////////// ACCOUNTS ///////////////////////////////////////////////////
+
+
+  public function CBAccounts()
+  {
+    $con = new Conexion();
+    $con->OpenConexion();
+    $Select = "<select id='usuario' name='Search' class = 'form-control' style='display:none'>";
+    $consulta = "select * 
+                 from accounts";
+    $obj_query = mysqli_query(
+                      $con->Conexion,
+                      $consulta
+                      ) or die("Problemas al mostrar Personas");
+    $Select .= "<option value = '0' disabled = 'disabled' selected = 'true'>Todos</option>";
+    while ($Ret = mysqli_fetch_array($obj_query)) {
+      $Select .= "<option value = '" . $Ret['accountid'] . "'>" . $Ret['username'] . "</option>";
+    }
+    $Select .= "</select>";
+    $con->CloseConexion();
+    return $Select;
+  }
+
   /////////////////////////////////////// MENU DE NAVEGACION /////////////////////////////////////////
   public function CBSessionNombre($idAccount){
     $Con3 = new Conexion();
@@ -2335,10 +2522,10 @@ public function getMenuSeguridadUsuario($ID){
                           <div class='menu-list'>" . 
                             self::getMenuUnificacionUsuario($pagina) . 
                           "</div>
-                          <!--<div class='brand'>Notificaciones</div>
+                          <div class='brand'>Auditoria</div>
                           <div class='menu-list'>" . 
                             self::getMenuNotificacionUsuario($pagina) . 
-                          "</div>-->
+                          "</div>
                           <div class='brand'>Seguridad</div>
                           <div class='menu-list'>" .
                               self::getMenuSeguridadUsuario($pagina) . 
@@ -2367,10 +2554,10 @@ public function getMenuSeguridadUsuario($ID){
                               <div class='menu-list'>" . 
                                 self::getMenuReportesUsuario($pagina) . 
                               "</div>
-                              <!--<div class='brand'>Notificaciones</div>
+                              <div class='brand'>Auditoria</div>
                               <div class='menu-list'>" . 
                                 self::getMenuNotificacionUsuario($pagina) . 
-                              "</div>-->
+                              "</div>
                               <div class='brand'>El Proyecto</div>
                               <div class='menu-list'>" . 
                                 self::getMenuHistorialUsuario($pagina) . 
@@ -2399,10 +2586,10 @@ public function getMenuSeguridadUsuario($ID){
                         <div class='menu-list'>" . 
                           self::getMenuUnificacionUsuario($pagina) . 
                         "</div>
-                        <!--<div class='brand'>Notificaciones</div>
+                        <div class='brand'>Auditoria</div>
                         <div class='menu-list'>" . 
                           self::getMenuNotificacionUsuario($pagina) . 
-                        "</div>-->
+                        "</div>
                         <div class='brand'>El Proyecto</div>
                         <div class='menu-list'>" . 
                             self::getMenuHistorialUsuario($pagina) .

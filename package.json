@@ -1,0 +1,19 @@
+{
+  "name": "rastreador",
+  "version": "1.0.0",
+  "description": "<h1 align=\"center\">Rastreador 3</h1>",
+  "private": "true",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jquery": "^3.7.1",
+    "lodash": "^4.17.21",
+    "ol": "^10.3.1",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^5.1.4"
+  }
+}

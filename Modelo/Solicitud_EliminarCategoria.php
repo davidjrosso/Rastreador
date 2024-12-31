@@ -1,4 +1,6 @@
 <?php 
+require_once("Conexion.php");
+
 class Solicitud_EliminarCategoria{
 //DECLARACION DE VARIABLES
 private $ID;
@@ -8,6 +10,24 @@ private $Cod_Categoria;
 private $Estado;
 private $ID_Usuario;
 private $ID_Categoria;
+
+public static function get_categorias(){
+	$con = new Conexion();
+	$con->OpenConexion();
+ 	$consulta = "select * 
+				 from solicitudes_eliminarcategorias
+				 where accountid is not null";
+ 	$rs = mysqli_query($con->Conexion,$consulta) or die("Problemas al consultar las acciones.");
+	$lista_acciones = [];
+	while ($ret = mysqli_fetch_assoc($rs)) {
+		$row["ID"] = ((!empty($ret["ID"])) ? $ret["accountid"] : null);
+		$row["Fecha"] = ((!empty($ret["Fecha"])) ? $ret["Detalles"] : null);
+		$row["Categoria"] = ((!empty($ret["Categoria"])) ? $ret["Fecha"] : null);
+		$row["Cod_Categoria"] = (!empty($ret["Cod_Categoria"])) ? $ret["ID_TipoAccion"] : null;
+		$lista_acciones[] = $row;
+	}
+	return $lista_acciones;
+}
 
 //METODOS SET
 public function setID($xID){

@@ -48,20 +48,10 @@ $Con->CloseConexion();
     crossorigin="anonymous"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/ol@v10.1.0/dist/ol.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.1.0/ol.css">
-
-  <script src="js/OpenLayers.js"></script>
-  <script src="js/leaflet-providers.js"></script>
-
+  <script src="./dist/mapa.js"></script>
   <script>
     var map = null;
-    let objectJsonPersona = {};
+    var objectJsonPersona = {};
 
     $(document).ready(function () {
       var date_input = $('input[name="Fecha_Nacimiento"]'); //our date input has the name "date"
@@ -83,7 +73,9 @@ $Con->CloseConexion();
         weekStart: 1
       }).on('changeDate', calcularEdad);
       $("#map-modal").on("transitionend", function(e) {
-        if (!map) init();
+        if (!map) {
+          init(objectJsonPersona.lat, objectJsonPersona.lon);
+        };
       });
       $("#ID_Calle").on("input", function(e) {
         let nro = $("#NumeroDeCalle").val();
@@ -133,105 +125,6 @@ $Con->CloseConexion();
       let Meses = document.getElementById("Meses");
       Meses.value = CalcMeses;
     }
-
-    function init() {
-      if (map === null) {
-          map = new OpenLayers.Map("basicMap", {
-            zoomDuration: 5, 
-            projection: 'EPSG:3857', 
-            controls: []
-          });
-          let position = null;
-          let pos = null;
-          let mapnik = new OpenLayers.Layer.OSM("OpenCycleMap",
-                ["http://a.tile.thunderforest.com/transport/${z}/${x}/${y}.png?apikey=d03b42dcdc084e7cbab176997685b1ce",
-                "http://b.tile.thunderforest.com/transport/${z}/${x}/${y}.png?apikey=d03b42dcdc084e7cbab176997685b1ce",
-                "http://c.tile.thunderforest.com/transport/${z}/${x}/${y}.png?apikey=d03b42dcdc084e7cbab176997685b1ce"]);
-
-          var fromProjection = new OpenLayers.Projection("EPSG:3857");
-          var toProjection = new OpenLayers.Projection("EPSG:4326");
-          if (objectJsonPersona.lon && objectJsonPersona.lat) {
-            pos = new OpenLayers.LonLat(objectJsonPersona.lon, objectJsonPersona.lat).transform(toProjection, fromProjection);
-          } else {
-            pos = new OpenLayers.LonLat(-64.11844, -32.17022).transform(toProjection, fromProjection);
-          }
-          position = pos;
-          let marker = null;
-          let markerSelec = null;
-          let zoom = 15;
-          let positionFormas = null;
-          let icon = new OpenLayers.Icon('./images/icons/location.png');
-          let charCodeLetter = null;
-          map.addLayer(mapnik);
-          let markers = new OpenLayers.Layer.Markers("Markers");
-          map.addLayer(markers);
-          let popup = null;
-          let size = new OpenLayers.Size(8,8);
-          let offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-
-          map.addControl(new OpenLayers.Control.PanZoomBar());
-          map.addControl(new OpenLayers.Control.Navigation());
-          map.addControl(new OpenLayers.Control.ArgParser());
-
-          OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {               
-                  defaultHandlerOptions: {
-                    'single': true,
-                    'double': false,
-                    'pixelTolerance': 0,
-                    'stopSingle': false,
-                    'stopDouble': false
-                  },
-
-                  initialize: function(options) {
-                    this.handlerOptions = OpenLayers.Util.extend(
-                    {}, this.defaultHandlerOptions
-                    );
-                    OpenLayers.Control.prototype.initialize.apply(
-                    this, arguments
-                    );
-                    this.handler = new OpenLayers.Handler.Click(
-                    this, {
-                      'click': this.trigger
-                    }, this.handlerOptions
-                    );
-                  },
-
-                  trigger: function(e) {
-                    //map.zoomTo(map.getZoom());
-                    let lonlat = map.getLonLatFromPixel(e.xy);
-                    console.log((300/map.getZoom()));
-                    console.log(("zoom " + map.getZoom()));
-                    console.log("por aca");
-                    //lonlat = lonlat.add(0, 49100*(20/((map.getZoom()**3 + (map.getZoom() - 20)*1000))))
-                    lonlat = lonlat.add(0, 330);
-                    if (marker && lonlat) marker.display(false);
-                    if (markerSelec && lonlat) markerSelec.display(false);
-                    if (lonlat) {
-                      markerSelec = new OpenLayers.Marker(lonlat, icon.clone());
-                      markers.addMarker(markerSelec);
-                      map.setCenter(lonlat, map.getZoom());
-                      lonlat = lonlat.transform(fromProjection, toProjection);
-                      $("#lat").val(lonlat.lat);
-                      $("#lon").val(lonlat.lon);
-                    }
-                  }
-          });
-
-          let click = new OpenLayers.Control.Click();
-          map.addControl(click);
-          click.activate();
-
-          positionFormas = pos;
-          if (objectJsonPersona.lon && objectJsonPersona.lat) {
-            marker = new OpenLayers.Marker(positionFormas, icon.clone());
-            markers.addMarker(marker);
-          }
-
-          let feature = new OpenLayers.Feature(markers, positionFormas);
-          map.setCenter(position, zoom);
-      }
-    }
-
   </script>
 
 </head>
@@ -548,8 +441,8 @@ $Con->CloseConexion();
   }
   ?>
   <script>
-    objectJsonPersona.lat = <?php echo $Persona->getLatitud(); ?>;
-    objectJsonPersona.lon = <?php echo $Persona->getLonguitud(); ?>;
+    objectJsonPersona.lat = <?php echo (!empty($Persona->getLatitud())) ? $Persona->getLatitud() : "null" ; ?>;
+    objectJsonPersona.lon = <?php echo (!empty($Persona->getLonguitud())) ? $Persona->getLonguitud() : "null"; ?>;
   </script>
 </body>
 

@@ -252,16 +252,12 @@ $Con->CloseConexion();
                                         P.nombre, M.observaciones, R.id_resp, M.id_resp_2, M.id_resp_3, M.id_resp_4,
                                         R.responsable, C.centro_salud, I.ID_OtraInstitucion,I.Nombre, M.motivo_1,
                                         M.motivo_2, M.motivo_3, M.motivo_4, M.motivo_5 
-                                 from movimiento M, 
-                                      persona P, 
-                                      responsable R, 
-                                      centros_salud C, 
-                                      otras_instituciones I 
-                                 where M.id_persona = P.id_persona
-                                   and M.id_resp = R.id_resp
-                                   and M.id_centro = C.id_centro
-                                   and M.id_otrainstitucion = I.ID_OtraInstitucion
-                                   and M.id_movimiento = $ID_Movimiento";
+                                 from movimiento M 
+                                      INNER JOIN persona P ON (M.id_persona = P.id_persona)
+                                      INNER JOIN responsable R ON (M.id_resp = R.id_resp) 
+                                      LEFT JOIN centros_salud C ON (M.id_centro = C.id_centro)
+                                      LEFT JOIN otras_instituciones I ON (M.id_otrainstitucion = I.ID_OtraInstitucion )
+                                 where M.id_movimiento = $ID_Movimiento";
 
               $MensajeErrorDatos = "No se pudo consultar los Datos del Movimiento";
 
@@ -286,11 +282,25 @@ $Con->CloseConexion();
               $ID_Responsable_3 = $Ret["id_resp_3"];
               $ID_Responsable_4 = $Ret["id_resp_4"];
               $ID_Centro = $Ret["id_centro"];
-              $Centro_Salud = $Ret["centro_salud"];
+              $Centro_Salud = (!empty($Ret["centro_salud"])) ? $Ret["centro_salud"] : null;
               $ID_OtraInstitucion = $Ret["ID_OtraInstitucion"];
-              $OtraInstitucion = $Ret["Nombre"];
+              $OtraInstitucion = (!empty($Ret["Nombre"])) ? $Ret["Nombre"] : null;
 
-              $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$ID_Motivo_1,$ID_Motivo_2,$ID_Motivo_3,$ID_Motivo_4,$ID_Motivo_5,$Observaciones,$Responsable,$Centro_Salud,$OtraInstitucion);
+              $DtoMovimiento = new DtoMovimiento(
+                                                xID_Movimiento: $ID_Movimiento,
+                                                xFecha: $Fecha,
+                                                xApellido: $Apellido,
+                                                xNombre: $Nombre,
+                                                xMotivo_1: $ID_Motivo_1,
+                                                xMotivo_2: $ID_Motivo_2,
+                                                xMotivo_3: $ID_Motivo_3,
+                                                xMotivo_4: $ID_Motivo_4,
+                                                xMotivo_5: $ID_Motivo_5,
+                                                xObservaciones: $Observaciones,
+                                                xResponsable: $Responsable,
+                                                xCentroSalud: $Centro_Salud,
+                                                xOtraInstitucion: $OtraInstitucion
+                );
               $Con->CloseConexion();
               ?>
             <div class = "col-10">

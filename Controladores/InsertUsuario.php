@@ -1,6 +1,5 @@
 <?php 
-require_once 'Conexion.php';
-require_once '../Modelo/Usuario.php';
+require_once '../Modelo/Account.php';
 /*
  *
  * This file is part of Rastreador3.
@@ -26,37 +25,39 @@ $initials = strtoupper($_REQUEST["initials"]);
 $username = $_REQUEST["username"];
 $userpass = $_REQUEST["userpass"];
 $email = $_REQUEST["email"];
-$Estado = 1;
+$estado = 1;
 $ID_TipoUsuario = $_REQUEST["ID_TipoUsuario"];
 
-$userpass = md5($userpass);
-
-$Usuario = new Usuario(0,$firstname,$lastname,$initials,$username,$userpass,$email,$Estado,$ID_TipoUsuario);
-
 try {
-	$Con = new Conexion();
-	$Con->OpenConexion();
+	$has8characters = (mb_strlen($userpass) >= 8);
+	$hasAlpha = preg_match('~[a-zA-Z]+~', $userpass);
+	$hasNum = preg_match('~[0-9]+~', $userpass);
+	$hasNonAlphaNum = preg_match('~[\!\@#$%\?&\*\(\)_\-\+=]+~', $userpass);
 
-	$ConsultarRegistrosIguales = "select * from accounts where username = '$username' and estado = 1";
-	if(!$RetIguales = mysqli_query($Con->Conexion,$ConsultarRegistrosIguales)){
-		throw new Exception("Problemas al consultar registros iguales. Consulta: ".$ConsultarRegistrosIguales, 0);		
+	if (!($has8characters && $hasAlpha && $hasNum && !$hasNonAlphaNum)) {
+		$mensaje = "La contraseña debe contener 8 caracteres, alfabeticos y numericos";
+		header('Location: ../view_newusuarios.php?MensajeError=' . $mensaje);
 	}
-	$Resultado = mysqli_num_rows($RetIguales);
-	if($Resultado > 0){
-		mysqli_free_result($RetIguales);
-		$Con->CloseConexion();
-		$Mensaje = "Ya existe un usuario con ese Nombre";
-		header('Location: ../view_newusuarios.php?MensajeError='.$Mensaje);
-	}else{
-		$Consulta = "insert into accounts(firstname,lastname,initials,username,password,email,estado,ID_TipoUsuario) values('".$Usuario->getFirstName()."','".$Usuario->getLastName()."','".$Usuario->getInitials()."','".$Usuario->getUserName()."','".$Usuario->getUserPass()."','".$Usuario->getEmail()."', 1,".$Usuario->getID_TipoUsuario().")";
-		if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
-			throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 1);		
-		}	
-		$Con->CloseConexion();
-		$Mensaje = "El Usuario fue registrado Correctamente";
-		header('Location: ../view_newusuarios.php?Mensaje='.$Mensaje);
-	}	
+
+	$resultado = Account::exist_user($username);
+	if ($resultado > 0) {
+		$mensaje = "Ya existe un usuario con ese Nombre";
+		header('Location: ../view_newusuarios.php?MensajeError=' . $mensaje);
+	} else {
+		$usuario = new Account(
+					first_name: $firstname,
+					 last_name: $lastname,
+					  initials: $initials,
+					 user_name: $username,
+					  password: $userpass,
+						 email: $email,
+						estado: $estado,
+			   id_tipo_usuario: $ID_TipoUsuario
+	   		   );
+		$usuario->save();
+		$mensaje = "El Usuario fue registrado Correctamente";
+		header('Location: ../view_newusuarios.php?Mensaje=' . $mensaje);
+	}
 } catch (Exception $e) {
 	echo "Error: ".$e->getMessage();
 }
-?>

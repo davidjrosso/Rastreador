@@ -1,6 +1,7 @@
 <?php 
-require_once 'Conexion.php';
-require_once '../Modelo/Usuario.php';
+session_start();
+require_once '../Modelo/Account.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Solicitud_Usuario.php';
 /*
  *
  * This file is part of Rastreador3.
@@ -20,60 +21,80 @@ require_once '../Modelo/Usuario.php';
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-$AccountID = $_REQUEST["account_id"];
-$lastname = (isset($_REQUEST["lastname"]))?ucfirst($_REQUEST["lastname"]):null;
-$firstname = (isset($_REQUEST["firstname"]))?ucwords($_REQUEST["firstname"]):null;
-$initials = (isset($_REQUEST["initials"]))?strtoupper($_REQUEST["initials"]):null;
-$username = (isset($_REQUEST["username"]))?$_REQUEST["username"]:null;
-$userpass = (isset($_REQUEST["userpass"]))?$_REQUEST["userpass"]:null;
-$email = (isset($_REQUEST["email"]))?$_REQUEST["email"]:null;
-$ID_TipoUsuario = (isset($_REQUEST["ID_TipoUsuario"]))?$_REQUEST["ID_TipoUsuario"]:null;
+$ID_Usuario = $_SESSION["Usuario"];
+$account_id = (isset($_REQUEST["account_id"])) ? ucfirst($_REQUEST["account_id"]) : null;
+$lastname = (isset($_REQUEST["lastname"])) ? ucfirst($_REQUEST["lastname"]) : null;
+$firstname = (isset($_REQUEST["firstname"])) ? ucwords($_REQUEST["firstname"]) : null;
+$initials = (isset($_REQUEST["initials"])) ? strtoupper($_REQUEST["initials"]) : null;
+$username = (isset($_REQUEST["username"])) ? $_REQUEST["username"]: null;
+$userpass = (isset($_REQUEST["userpass"])) ? $_REQUEST["userpass"] : null;
+$email = (isset($_REQUEST["email"])) ? $_REQUEST["email"] : null;
+$ID_TipoUsuario = (isset($_REQUEST["ID_TipoUsuario"])) ? $_REQUEST["ID_TipoUsuario"] : null;
+$id_solicitud = (isset($_REQUEST["id_solcitud"])) ? $_REQUEST["id_solcitud"] : null;
 
 try {
-	$Con = new Conexion();
-	$Con->OpenConexion();
-	$ConsultarRegistros = "select * 
-						from accounts 
-						where accountid = '$AccountID' 
-							and estado = 1";
-	if(!$Ret = mysqli_query($Con->Conexion,$ConsultarRegistros)){
-		$MensajeError = "No existe la cuenta indicada. Consulta: ";
-		throw new Exception($MensajeError.$ConsultarRegistros, 0);	
-	}
+	if (!$id_solicitud) {
+		$has8characters = (mb_strlen($userpass) == 8);
+		$hasAlpha = preg_match('~[a-zA-Z]+~', $userpass);
+		$hasNum = preg_match('~[0-9]+~', $userpass);
+		$hasNonAlphaNum = preg_match('~[\!\@#$%\?&\*\(\)_\-\+=]+~', $userpass);
+		if (!($has8characters && $hasAlpha && $hasNum && !$hasNonAlphaNum)) {
+			$mensaje = "La contraseña debe contener 8 caracteres, alfabeticos y numericos";
+			header("Location: ../view_modusuario.php?account_id={$account_id}&MensajeError="  . $mensaje);
+		}
 
-	$ConsultarRegistrosIguales = "select * 
-								  from accounts 
-								  where username = '$username'
-								  	and accountid <> '$AccountID' 
-									and estado = 1";
-	if (!$RetIguales = mysqli_query($Con->Conexion,$ConsultarRegistrosIguales)) {
-		$MensajeError = "Problemas al consultar registros iguales. Consulta: ";
-		throw new Exception($MensajeError.$ConsultarRegistrosIguales, 0);	
-	}
+		$existe = Account::exist_account($account_id);
+		if (!$existe) {
+			$MensajeError = "No existe la cuenta indicada.";
+			throw new Exception($MensajeError, 0);	
+		}
+		$user = new Account(
+							account_id: $account_id,
+							last_name: $lastname,
+							first_name: $firstname,
+							initials: $initials,
+							user_name: $username,
+							password: $userpass,
+								email: $email,
+					id_tipo_usuario: $ID_TipoUsuario
+		);
 
-	$Resultado = mysqli_num_rows($RetIguales);
-	if ($Resultado == 1) {
-		mysqli_free_result($RetIguales);
-		$Con->CloseConexion();
-		$Mensaje = "Ya existe un usuario con ese Nombre";
-		header("Location: ../view_modusuario.php?account_id={$AccountID}&MensajeError=".$Mensaje);
+		if (!$user->is_username_disponible($username)) {
+			$Mensaje = "Ya existe un usuario con ese Nombre";
+			header("Location: ../view_modusuario.php?account_id={$account_id}&MensajeError=" . $Mensaje);
+		} else {
+			$user->update();
+			if ($userpass) {
+				$solicitud = new Solicitud_Usuario(
+					usuario: $ID_Usuario,
+					descripcion: "contraseña " . $userpass,
+					estado: 1,
+					tipo: 1
+				);
+				$solicitud->save();
+				$Mensaje = "La peticion de modificacion de contaseña fue enviada la administrador";
+			} else {
+				$Mensaje = "El Usuario fue modificado Correctamente";
+			}
+			header("Location: ../view_modusuario.php?account_id={$account_id}&Mensaje=" . $Mensaje);
+		}
 	} else {
-		$Consulta = "update accounts
-					 set firstname = '{$firstname}',
-					 	 lastname = '{$lastname}',
-						 initials = '{$initials}',
-						 username = '{$username}'
-						 ".(($userpass != null)? ", password = '". md5($userpass)."'":"")."
-						 ".(($email != null)? ", email = '". $email."'":"")."
-						 ".(($ID_TipoUsuario != null)? ", ID_TipoUsuario = '". $ID_TipoUsuario."'":"")."
-						 where accountid = $AccountID";
-		if (!$Ret = mysqli_query($Con->Conexion,$Consulta)) {
-			throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 1);		
-		}	
-		$Con->CloseConexion();
-		$Mensaje = "El Usuario fue registrado Correctamente";
-		header("Location: ../view_perfilusuario.php?account_id={$AccountID}&Mensaje=".$Mensaje);
-	}	
+		$solicitud = new Solicitud_Usuario(
+			id_solicitud: $id_solicitud
+		);
+		$password = $solicitud->get_password();
+		$account_id = $solicitud->get_usuario();
+		$solicitud->delete();
+		$user = new Account(
+			account_id: $account_id,
+			password: $password
+		);
+		$user->set_password($password);
+		$user->update();
+		$Mensaje = "El Usuario fue modificado Correctamente";
+		header("Location: ../view_solicitud.php?Mensaje=" . $Mensaje);
+
+	}
 } catch (Exception $e) {
-	echo "Error: ".$e->getMessage();
+	echo "Error: " . $e->getMessage();
 }

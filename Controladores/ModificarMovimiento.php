@@ -1,7 +1,9 @@
 <?php 
 session_start();
 require_once 'Conexion.php';
-require_once '../Modelo/Movimiento.php';
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Movimiento.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Persona.php");
+
 /*
  *
  * This file is part of Rastreador3.
@@ -30,10 +32,10 @@ $Fecha = implode("-", array_reverse(explode("/",$_REQUEST["Fecha"])));
 $Fecha_Creacion = null;
 $ID_Persona = $_REQUEST["ID_Persona"];
 $ID_Motivo_1 = $_REQUEST["ID_Motivo_1"];
-$ID_Motivo_2 = $_REQUEST["ID_Motivo_2"];
-$ID_Motivo_3 = $_REQUEST["ID_Motivo_3"];
-$ID_Motivo_4 = $_REQUEST["ID_Motivo_4"];
-$ID_Motivo_5 = $_REQUEST["ID_Motivo_5"];
+$ID_Motivo_2 = (!empty($_REQUEST["ID_Motivo_2"]) ? $_REQUEST["ID_Motivo_2"] : null);
+$ID_Motivo_3 = (!empty($_REQUEST["ID_Motivo_3"]) ? $_REQUEST["ID_Motivo_3"] : null);
+$ID_Motivo_4 = (!empty($_REQUEST["ID_Motivo_4"]) ? $_REQUEST["ID_Motivo_4"] : null);
+$ID_Motivo_5 = (!empty($_REQUEST["ID_Motivo_5"]) ? $_REQUEST["ID_Motivo_5"] : null);
 $Observaciones = $_REQUEST["Observaciones"];
 $ID_Responsable = $Arr_ID_Responsable[0];
 $ID_Centro = $_REQUEST["ID_Centro"];
@@ -64,71 +66,68 @@ if(empty($ID_Centro)){
 	$ID_Centro = 'null';
 }
 
-
-$Movimiento = new Movimiento($ID_Movimiento,$Fecha,$Fecha_Creacion,$ID_Persona,$ID_Motivo_1,$ID_Motivo_2,$ID_Motivo_3,$ID_Motivo_4,$ID_Motivo_5,$Observaciones,$ID_Responsable,$ID_Responsable_2,$ID_Responsable_3,$ID_Responsable_4,$ID_Centro,$ID_OtraInstitucion,$Estado);
 $Con = new Conexion();
 $Con->OpenConexion();
 
-$ConsultarMovimientoViejo = "select * 
-							 from movimiento 
-							 where id_movimiento = $ID_Movimiento 
-							   and estado = 1";
-
-$MensajeErrorConsultarMovimientoViejo = "No se pudieron consultar los datos del movimiento anterior";
-
-$RetMovimientoViejo = mysqli_query($Con->Conexion,$ConsultarMovimientoViejo) or die($MensajeErrorConsultarMovimientoViejo);
-$TomarMovimientoViejo = mysqli_fetch_assoc($RetMovimientoViejo);
-$ID_Movimiento_Viejo = $TomarMovimientoViejo["id_movimiento"];
-$Fecha_Viejo = $TomarMovimientoViejo["fecha"];
-$Fecha_Creacion_Viejo = $TomarMovimientoViejo["fecha_creacion"];
-$ID_Persona_Viejo = $TomarMovimientoViejo["id_persona"];
-$ID_Motivo_1_Viejo = $TomarMovimientoViejo["motivo_1"];
-$ID_Motivo_2_Viejo = $TomarMovimientoViejo["motivo_2"];
-$ID_Motivo_3_Viejo = $TomarMovimientoViejo["motivo_3"];
-$ID_Motivo_4_Viejo = $TomarMovimientoViejo["motivo_4"];
-$ID_Motivo_5_Viejo = $TomarMovimientoViejo["motivo_5"];
-$Observaciones_Viejo = $TomarMovimientoViejo["observaciones"];
-$ID_Responsable_Viejo = $TomarMovimientoViejo["id_resp"];
-$ID_Responsable_2_Viejo = $TomarMovimientoViejo["id_resp_2"];
-$ID_Responsable_3_Viejo = $TomarMovimientoViejo["id_resp_3"];
-$ID_Responsable_4_Viejo = $TomarMovimientoViejo["id_resp_4"];
-$ID_Centro_Viejo = $TomarMovimientoViejo["id_centro"];
-$ID_OtraInstitucion_Viejo = $TomarMovimientoViejo["id_otrainstitucion"];
-
-$Movimiento_Viejo = new Movimiento($ID_Movimiento_Viejo,$Fecha_Viejo,$Fecha_Creacion_Viejo,$ID_Persona_Viejo,$ID_Motivo_1_Viejo,$ID_Motivo_2_Viejo,$ID_Motivo_3_Viejo,$ID_Motivo_4_Viejo,$ID_Motivo_5_Viejo,$Observaciones_Viejo,$ID_Responsable_Viejo,$ID_Responsable_2_Viejo,$ID_Responsable_3_Viejo,$ID_Responsable_4_Viejo,$ID_Centro_Viejo,$ID_OtraInstitucion_Viejo,$Estado);
-
-$Consulta = "update movimiento set fecha = '{$Movimiento->getFecha()}', id_persona = {$Movimiento->getID_Persona()}, motivo_1 = {$Movimiento->getID_Motivo_1()}, motivo_2 = {$Movimiento->getID_Motivo_2()}, motivo_3 = {$Movimiento->getID_Motivo_3()}, motivo_4 = {$Movimiento->getID_Motivo_4()}, motivo_5 = {$Movimiento->getID_Motivo_5()}, observaciones = '{$Movimiento->getObservaciones()}', id_resp = {$Movimiento->getID_Responsable()}, id_resp_2 = {$Movimiento->getID_Responsable_2()}, id_resp_3 = {$Movimiento->getID_Responsable_3()}, id_resp_4 = {$Movimiento->getID_Responsable_4()}, id_centro = {$Movimiento->getID_Centro()}, id_otrainstitucion = {$Movimiento->getID_OtraInstitucion()} where id_movimiento = {$Movimiento->getID_Movimiento()} and estado = 1";
-echo $Consulta;
-echo var_dump($Movimiento);
-mysqli_query($Con->Conexion,$Consulta)or die("Problemas en la consulta. Consulta: ".$Consulta);
-
-$FechaAccion = date("Y-m-d");
-$ID_TipoAccion = 2;
-
-$Detalles = "El usuario con ID: $ID_Usuario ha modificado un Movimiento. Datos: Dato Anterior: {$Movimiento_Viejo->getFecha()} , Dato Nuevo: {$Movimiento->getFecha()} - Dato Anterior: {$Movimiento_Viejo->getID_Persona()}, Dato Nuevo: {$Movimiento->getID_Persona()} - Dato Anterior: {$Movimiento_Viejo->getID_Motivo_1()}, Dato Nuevo: {$Movimiento->getID_Motivo_1()} - Dato Anterior: {$Movimiento_Viejo->getID_Motivo_2()}, Dato Nuevo: {$Movimiento->getID_Motivo_2()} - Dato Anterior: {$Movimiento_Viejo->getID_Motivo_3()}, Dato Nuvo: {$Movimiento->getID_Motivo_3()} - Dato Anterior: {$Movimiento_Viejo->getID_Motivo_4()}, Dato Nuvo: {$Movimiento->getID_Motivo_4()} - Dato Anterior: {$Movimiento_Viejo->getID_Motivo_5()}, Dato Nuvo: {$Movimiento->getID_Motivo_5()} - Dato Anterior: {$Movimiento_Viejo->getObservaciones()}, Dato Nuevo: {$Movimiento->getObservaciones()} - Dato Anterior: {$Movimiento_Viejo->getID_Responsable()}, Dato Nuevo: {$Movimiento->getID_Responsable()} - Dato Anterior: {$Movimiento_Viejo->getID_Centro()}, Dato Nuevo: {$Movimiento->getID_Centro()} - Dato Anterior: {$Movimiento_Viejo->getID_OtraInstitucion()}, Dato Nuevo: {$Movimiento->getID_OtraInstitucion()}";
-$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$FechaAccion','$Detalles',$ID_TipoAccion)";
-if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
-	throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 3);
+if (Persona::is_exist($Con, $ID_Persona)) {
+	$persona = new Persona($ID_Persona);
 }
 
-$ConsultarDatos = "select * from persona where id_persona = $ID_Persona_Viejo";
-$ErrorDatos = "No se pudieron consultar los datos :";
-if(!$RetDatos = mysqli_query($Con->Conexion,$ConsultarDatos)){
-	throw new Exception($ErrorDatos.$ConsultarDatos, 1);
+if (Movimiento::is_exist($Con, $ID_Movimiento)) {
+	$movimiento_sin_modificar = new Movimiento(
+								coneccion_base: $Con, 
+								xID_Movimiento: $ID_Movimiento
+	);
+	$fecha_previa = $movimiento_sin_modificar->getFecha();
+	$id_persona_previa = $movimiento_sin_modificar->getID_Persona();
+	$persona = new Persona(ID_Persona: $id_persona_previa);
+
+	$movimiento = new Movimiento(
+		coneccion_base: $Con, 
+		xFecha: $Fecha,
+		Fecha_Creacion: $Fecha_Creacion,
+		xID_Persona: $ID_Persona,
+		xID_Motivo_1: $ID_Motivo_1,
+		xID_Motivo_2: $ID_Motivo_2,
+		xID_Motivo_3: $ID_Motivo_3,
+		xID_Motivo_4: $ID_Motivo_4,
+		xID_Motivo_5: $ID_Motivo_5,
+		xObservaciones: $Observaciones,
+		xID_Responsable: $ID_Responsable,
+		xID_Responsable_2: $ID_Responsable_2,
+		xID_Responsable_3: $ID_Responsable_3,
+		xID_Responsable_4: $ID_Responsable_4,
+		xID_Centro: $ID_Centro,
+		xID_OtraInstitucion: $ID_OtraInstitucion,
+		xEstado: $Estado
+	);
+	$movimiento->setID_Movimiento($ID_Movimiento);
+	$movimiento->udpate();
+
+	$fecha_accion = date("Y-m-d");
+	$ID_TipoAccion = 2;
+	$detalles = "El usuario con ID: $ID_Usuario ha modificado un Movimiento. Datos: id_movimiento: " . $movimiento->getID_Movimiento();
+	$accion = new Accion(
+		xaccountid: $ID_Usuario,
+		xFecha: $Fecha,
+		xDetalles: $detalles,
+		xID_TipoAccion: $ID_TipoAccion
+	);
+	$accion->save();
+
 }
 
-$TomarDatos = mysqli_fetch_assoc($RetDatos);
-$Apellido = $TomarDatos["apellido"];
-$Nombre = $TomarDatos["nombre"];
-$DNI = $TomarDatos["documento"];
+$apellido = $persona->getApellido();
+$nombre = $persona->getNombre();
+$dni = $persona->getDNI();
 
 // CREANDO NOTIFICACION PARA EL USUARIO
-$DetalleNot = 'Se modifico el movimiento vinculado a : '.$Apellido. ', '.$Nombre. ' fecha: '. $Fecha_Viejo;
-$Expira = date("Y-m-d", strtotime($FechaAccion." + 15 days"));
+$detalle_not = 'Se modifico el movimiento vinculado a : '. $apellido . ', '. $nombre . ' fecha: '. $fecha_previa;
+$expira = date("Y-m-d", strtotime($fecha_accion . " + 15 days"));
 
-$ConsultaNot = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$DetalleNot','$Fecha', '$Expira',1)";
-if(!$RetNot = mysqli_query($Con->Conexion,$ConsultaNot)){
-	throw new Exception("Error al intentar registrar Notificacion. Consulta: ".$ConsultaNot, 3);
+$consulta_not = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$detalle_not','$Fecha', '$expira',1)";
+if(!$RetNot = mysqli_query($Con->Conexion,$consulta_not)){
+	throw new Exception("Error al intentar registrar Notificacion. Consulta: " . $ConsultaNot, 3);
 }
 
 $Con->CloseConexion();
