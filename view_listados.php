@@ -48,6 +48,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
   <script src="js/bootstrap-datepicker.min.js"></script> <!-- ESTO ES NECESARIO PARA QUE ANDE EN ESPAÑOL -->
   <script src="js/ValidarGeneral.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="./js/Enlace-Drive.js"></script>
   <!--
   <script>
        $(document).ready(function(){
@@ -116,6 +117,9 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
                   clear: "Borrar",
                   weekStart: 1,
               });
+              $("#btn-enlace-driver").on("click", function (){
+                cargaMovimientosFormulario();
+              })
           });
     /*
   	$(document).ready(function() {
@@ -400,8 +404,13 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
       <div class="col"></div>
     </div><br>
     <br>
-    <div class="row">
-      <div class="offset-md-10 col-md-2">
+    <div class="row" style="margin-bottom: 0.6rem;">
+      <div class="col">
+        <button id="btn-enlace-driver"
+                    type="button"  
+                    class = "btn btn-secondary">Enlace</button>
+      </div>
+      <div class="offset-md-7 col-md-2">
         <button class="btn btn-md btn-secondary" data-toggle="modal" data-target="#ModalConfig">Config</button>
       </div>
     </div>

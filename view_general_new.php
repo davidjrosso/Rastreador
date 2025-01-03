@@ -42,6 +42,8 @@ $Con->CloseConexion();
   <script src="js/bootstrap-datepicker.min.js"></script> <!-- ESTO ES NECESARIO PARA QUE ANDE EN ESPAÑOL -->
   <script src="js/ValidarGeneral.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="./js/Enlace-Drive.js"></script>
+
   <!--
   <script>
        $(document).ready(function(){
@@ -110,6 +112,9 @@ $Con->CloseConexion();
                   clear: "Borrar",
                   weekStart: 1,
               });
+              $("#btn-enlace-driver").on("click", function (){
+                cargaMovimientosFormulario();
+              })
           });
    
     function buscarPersonas(){
@@ -490,7 +495,14 @@ $Con->CloseConexion();
       <div class="col"></div>
     </div><br>
     <br>
-     <div class = "row">
+    <div class = "row">
+      <div class = "col-10" style="margin-bottom: 0.6rem;">
+          <button id="btn-enlace-driver"
+                  type="button"  
+                  class = "btn btn-md btn-secondary">Enlace</button>
+      </div>
+    </div>
+    <div class = "row">
       <div class = "col-10">
           <!-- Carga -->
           <p class = "Titulos">Parámetros</p>
