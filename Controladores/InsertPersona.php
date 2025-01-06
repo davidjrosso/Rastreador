@@ -1,8 +1,9 @@
 <?php 
 session_start();
-require_once 'Conexion.php';
-require_once '../Modelo/Persona.php';
-require_once '../Modelo/Calle.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Conexion.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Persona.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Calle.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Accion.php';
 header("Content-Type: text/html;charset=utf-8");
 
 $ID_Usuario = $_SESSION["Usuario"];
@@ -32,59 +33,11 @@ if (empty($_REQUEST["Fecha_Nacimiento"])) {
 	$Fecha_Nacimiento = implode("-", array_reverse(explode("/",$_REQUEST["Fecha_Nacimiento"])));
 }
 
-///////////////////////////CALCULAR EDAD//////////////////////////////////////////////////
-/*if (($Edad == 'null' || is_null($Edad)) 
-	&& ($Fecha_Nacimiento != 'null' && !is_null($Fecha_Nacimiento))) {
-	list($ano,$mes,$dia) = explode("-", $Fecha_Nacimiento);
-	$ano_diferencia = date("Y") - $ano;
-	$mes_diferencia = date("m") - $mes;
-	$dia_diferencia = date("d") - $dia;
-	if ($dia_diferencia < 0 || $mes_diferencia < 0) {
-		$ano_diferencia--;
-	}
-	$Edad = $ano_diferencia;
-}*/
-if (($Edad == 'null' || is_null($Edad)) 
-	&& ($Fecha_Nacimiento != 'null' && !is_null($Fecha_Nacimiento))) {
-	list($ano,$mes,$dia) = explode("-", $Fecha_Nacimiento);
-	$ano_diferencia = date("Y") - $ano;
-	$mes_diferencia = date("m") - $mes;
-	$dia_diferencia = date("d") - $dia;
-	if ($ano_diferencia > 0) {
-		if ($mes_diferencia == 0) {
-			if ($dia_diferencia < 0) {
-				$ano_diferencia--;
-			}
-		} elseif ($mes_diferencia < 0) {
-			$ano_diferencia--;
-		}
-	} else {
-		if ($mes_diferencia > 0) {
-			if ($dia_diferencia < 0) {
-				$mes_diferencia--;
-			}
-		}
-	}
-	$Edad = $ano_diferencia;
-	$Meses = $mes_diferencia;
-}
-
-//PROBAR SI ESTO DA LA DIFERENCIA ENTRE MESES NOMAS O TAMBIEN TOMA LOS AÑOS COMO MESES EN ESE CASO TOMAR LA CANTIDAD DE AÑOS Y MULTIPLICARLO POR 12 Y A ESO RESTARLE AL RESULTADO DEL TOTAL DE MESES DE DIFERENCIA.
-if ($Fecha_Nacimiento != 'null' || !is_null($Fecha_Nacimiento)) {
-	$Fecha_Actual = new DateTime();
-	$Fecha_Nacimiento_Registrada = new DateTime($Fecha_Nacimiento);
-	$Diferencia = $Fecha_Nacimiento_Registrada->diff($Fecha_Actual);
-	$Meses = $Diferencia->m;
-	$Edad = $Diferencia->y;
-}
-////////////////////////////////////////////////////////////////////////////////////////	/
 $Nro_Carpeta = $_REQUEST["Nro_Carpeta"];
 if (empty($Nro_Carpeta)) {
 	$Nro_Carpeta = null;
 }
 $Obra_Social = $_REQUEST["Obra_Social"];
-//$Domicilio = ucwords($_REQUEST["Calle"]);
-//$Domicilio .= " " . $_REQUEST["NumeroDeCalle"];
 
 $id_nombre_calle = null;
 if(isset($_REQUEST["Calle"])){
@@ -99,6 +52,18 @@ if(isset($_REQUEST["NumeroDeCalle"])){
   $Domicilio .= " ". $nro_calle;
 }
 
+$georeferencia_point = null;
+if (!empty($_REQUEST["lat"])) {
+	$lat_point = $_REQUEST["lat"];
+	$georeferencia_point = "POINT(" . $lat_point;
+
+	if (!empty($_REQUEST["lon"])){
+		$lon_point = $_REQUEST["lon"];
+		$georeferencia_point .= "," . $lon_point . ")";
+	} else {
+		$georeferencia_point = null;
+	}
+}
 
 if (!isset($_REQUEST["ID_Barrio"])) {
 	$ID_Barrio = null;
@@ -185,31 +150,22 @@ try {
 			xTelefono : $Telefono,
 			xTrabajo : $Trabajo
 		);
+		$Persona->setDomicilio();
+		if (!empty($georeferencia_point)) {
+			$Persona->setGeoreferencia($georeferencia_point);
+		}
 		$Persona->save();
 
-		$Con = new Conexion();
-		$Con->OpenConexion();
 		if ($Persona->getEdad() == 0) {
-			$ConsultarID_Persona = "select id_persona from persona where nombre = '{$Persona->getNombre()}' and apellido = '{$Persona->getApellido()}' and documento = '{$Persona->getDNI()}' limit 1";
-			$MensajeErrorConsultarID_Persona = "No se pudo consultar el ID de la persona";
-			$EjecutarConsultarID_Persona = mysqli_query(
-				$Con->Conexion,
-				$ConsultarID_Persona
-			) or die($MensajeErrorConsultarID_Persona);
-			$TomarID_Persona = mysqli_fetch_assoc($EjecutarConsultarID_Persona);
-			$RetID_PersonaRegistrada = $TomarID_Persona["id_persona"];
-			
-			$RegistrarMeses = "update persona set meses = $Meses where id_persona = $RetID_PersonaRegistrada";
-			$MensajeErrorRegistrarMeses = "No se pudo actualizar los meses";
-			$EjecutarRegistrarMeses = mysqli_query($Con->Conexion,$RegistrarMeses) or die($MensajeErrorRegistrarMeses);
+			$Persona->update_edad_meses();
 		}
-
-		$ConsultaAccion = "INSERT INTO Acciones(accountid, Fecha, Detalles, ID_TipoAccion) 
-						   VALUES($ID_Usuario, '$Fecha', '$Detalles', $ID_TipoAccion)";
-		if (!$RetAccion = mysqli_query($Con->Conexion, $ConsultaAccion)) {
-			throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 1);
-		}
-		$Con->CloseConexion();
+		$accion = new Accion(
+			xaccountid: $ID_Usuario,
+			xFecha : $Fecha,
+			xDetalles: $Detalles,
+			xID_TipoAccion: $ID_TipoAccion	 
+		);
+		$accion->save();
 		$Mensaje = "La persona fue registrada Correctamente";
 		header('Location: ../view_newpersonas.php?Mensaje='.$Mensaje);
 	}

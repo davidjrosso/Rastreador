@@ -116,7 +116,7 @@ $detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Movimiento. D
 try {
 	$accion = new Accion(
 		xaccountid: $ID_Usuario,
-		xFecha: $Fecha,
+		xFecha: $Fecha_Accion,
 		xDetalles: $detalles,
 		xID_TipoAccion: $ID_TipoAccion
 	);

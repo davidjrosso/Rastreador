@@ -39,9 +39,10 @@ $Con->CloseConexion();
   <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="./js/Enlace-Drive.js"></script>
   <script>
        $(document).ready(function(){
-              var date_input=$('input[name="date"]'); //our date input has the name "date"
+              var date_input=$('input[name="date"]');
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
               date_input.datepicker({
                   format: 'dd/mm/yyyy',
@@ -49,6 +50,9 @@ $Con->CloseConexion();
                   todayHighlight: true,
                   autoclose: true,
               });
+              $("#btn-enlace-driver").on("click", function (){
+                cargaMovimientosFormulario();
+              })
           });
 
        function Verificar(xID){
@@ -65,46 +69,7 @@ $Con->CloseConexion();
             }
           });
         }
-
-        function dialogCargaEnlace() {
-          swal({
-            title: "El proceso de carga de Excel finalizo",
-            text: "Los registros de casos de Dengue han sido cargados al sistema",
-            icon: "success",
-            showCancelButton: false
-          });
-        }
-
-        function dialogErrorCargaEnlace() {
-          swal({
-            title: "Fallo de carga de Excel",
-            text: "Los registros de casos de Dengue no se han cargados al sistema",
-            icon: "error",
-            showCancelButton: false,
-            dangerMode: true
-          });
-        }
-
-        function cargaMovimientosFormulario(){
-          swal({
-            title: "Proceso de carga de Excel",
-            text: "Los registros de casos de Dengue estan siendo cargados al sistema",
-            icon: "warning",
-            showConfirmButton: true,
-            dangerMode: true,
-          });
-
-          $.ajax({
-            type: "POST",
-            cache: false,
-            url: "./Controladores/InsertFormularios.php",
-            async: true,
-            success: dialogCargaEnlace,
-            error: dialogErrorCargaEnlace
-          });
-        }
   </script>
-
 </head>
 <body>
 <div class = "row">
@@ -122,9 +87,9 @@ $Con->CloseConexion();
     </div><br>
     <div class="row">
       <div class = "col-2">
-          <button type="button"  
-                  class = "btn btn-secondary" 
-                  onClick = "cargaMovimientosFormulario();">Enlace Driver</button>
+          <button id="btn-enlace-driver"
+                  type="button"  
+                  class = "btn btn-secondary">Enlace</button>
       </div>
       <div class = "col-4">
           <center><button class = "btn btn-secondary" onClick = "location.href='view_newmovimientos.php'">Agregar Nuevo Movimiento</button></center>
