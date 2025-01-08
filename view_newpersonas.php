@@ -42,7 +42,10 @@ $Con->CloseConexion();
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="js/ValidarPersona.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="./dist/mapa.js"></script>
   <script>
+      var map = null;
+      var objectJsonPersona = {};
        $(document).ready(function(){
               var date_input=$('input[name="Fecha_Nacimiento"]'); //our date input has the name "date"
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
@@ -62,6 +65,23 @@ $Con->CloseConexion();
                   clear: "Borrar",
                   weekStart: 1,
               });
+              $("#map-modal").on("transitionend", function(e) {
+                if (!map) {
+                  init(objectJsonPersona.lat, objectJsonPersona.lon);
+                };
+              });
+              $("#NumeroDeCalle").on("input", function(e) {
+                let calle = $("#Calle").val();
+                let nro = $(this).val();
+                if (calle && nro) {
+                  $("#mapa-sig").prop('disabled', false);
+                } else {
+                  $("#mapa-sig").prop('disabled', true);
+                }
+              });
+              if($("#NumeroDeCalle").val() && $("#Calle").val()) {
+                $("#mapa-sig").prop('disabled', false);
+              }
           });
 
         function ValidarDocumento(){
@@ -170,18 +190,12 @@ $Con->CloseConexion();
           BotonModalPersona.innerHTML = "";
           BotonModalPersona.innerHTML = xNombre;
           Calle.setAttribute('value',xID);
+          let nro = $("#NumeroDeCalle").val();
+          if (nro) {
+            $("#mapa-sig").prop('disabled', false);
+          }
         }
   </script>
-  <!--
-  <script type="text/javascript">
-      var getImport = document.quearySelector ('link [rel = import]'); 
-      var getContent = getImport.import.querySelector('body');
-
-      var ContenidoPagina = document.getElementById("ContenidoPagina");
-
-      ContenidoPagina.appendChild(document.importNode(getContent, true));
-  </script>
--->
 </head>
 <body>
 <div class = "row">
@@ -282,13 +296,19 @@ $Con->CloseConexion();
             </div>
             <div class="form-group row" style="margin-bottom: 0.6rem;">
               <label for="BotonModalDireccion_1" class="col-md-2 col-form-label LblForm">Domicilio: </label>
-              <div class="col-md-8" id = "Persona">
+              <div class="col-md-6" id = "Persona">
               	 	<button type = "button" id="BotonModalDireccion_1" class = "btn btn-lg btn-primary btn-block" style="padding-top: 4px;padding-bottom: 4px;" data-toggle="modal" data-target="#ModalCalle">Seleccione una Calle</button>                  
               </div>
               <div class="col-md-2">
                 <input type="number" class="form-control" style="margin-top: 1px;" name = "NumeroDeCalle" id="NumeroDeCalle" placeholder="Número" min="1" autocomplete="off">
               </div>
+              <div class="col-md-2">
+                <button id="mapa-sig" type="button" class="btn btn-secondary" disabled data-toggle="modal"
+                  style="background-color: #ffc6b1; color: black; border-color: white; " data-target="#map-modal">S.
+                  I. G.</button>
+              </div>
             </div>
+
             <div class="form-group row">
               <label for="Manzana" class="col-md-2 col-form-label LblForm">Manzana: </label>
               <div class="col-md-10">
@@ -367,6 +387,8 @@ $Con->CloseConexion();
                 <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_personas.php'">Atras</button>
               </div>
             </div>
+            <input type="hidden" id="lat" name="lat" value="">
+            <input type="hidden" id="lon" name="lon" value="">
             <input type="hidden" name="Calle" id="Calle" value = "">
 
           </form>
@@ -419,6 +441,22 @@ $Con->CloseConexion();
       <!-- Modal de Carga de Calle-->
   </div>
 </div>
+<div class="modal fade modal--show-overall" id="map-modal" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 2001; overflow: hidden">
+    <div class="class_modal-dialog modal-dialog" role="document" id="id_modal-dialog"
+      style="min-width: 80%; height: 1000px;">
+      <div class="modal-content" style="height: 60%;">
+        <div>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="padding-top: 0px">
+          <div id="basicMap"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <?php  
 if(isset($_REQUEST["Mensaje"])){
