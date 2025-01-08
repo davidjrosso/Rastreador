@@ -10,6 +10,7 @@ module.exports = {
   entry: {
     mapa : './js/mapa.js',
     reporte : './js/acciones-reporte-grafico.js',
+    alerta : './js/Enlace-Drive.js'
   },
   output: {
     libraryTarget: 'umd',

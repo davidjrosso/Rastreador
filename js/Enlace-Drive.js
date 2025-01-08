@@ -1,5 +1,7 @@
-  function dialogCargaEnlace() {
-    swal({
+import swal from '../node_modules/sweetalert2';
+
+  export function dialogCargaEnlace() {
+    swal.fire({
       title: "El proceso de carga de Excel finalizo",
       text: "Los registros de casos de Dengue han sido cargados al sistema",
       icon: "success",
@@ -7,8 +9,8 @@
     });
   }
 
-  function dialogErrorCargaEnlace() {
-    swal({
+  export function dialogErrorCargaEnlace(){
+    swal.fire({
       title: "Fallo de carga de Excel",
       text: "Los registros de casos de Dengue no se han cargados al sistema",
       icon: "error",
@@ -17,8 +19,8 @@
     });
   }
 
-  function cargaMovimientosFormulario(){
-    swal({
+  export function cargaMovimientosFormulario(){
+    swal.fire({
       title: "Proceso de carga de Excel",
       text: "Los registros de casos de Dengue estan siendo cargados al sistema",
       icon: "warning",

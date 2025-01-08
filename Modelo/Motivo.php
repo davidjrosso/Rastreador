@@ -87,7 +87,7 @@ class Motivo implements JsonSerializable
     public static function get_id_by_codigo($coneccion, $codigo){
         $consulta = "select * 
 					 from motivo 
-					 where codigo like '%$codigo%' 
+					 where lower(codigo) = lower('$codigo') 
 					   and estado = 1";
 		$mensaje_error = "Hubo un problema al consultar los registros";
 		$ret = mysqli_query(
