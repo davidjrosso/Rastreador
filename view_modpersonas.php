@@ -74,7 +74,11 @@ $Con->CloseConexion();
       }).on('changeDate', calcularEdad);
       $("#map-modal").on("transitionend", function(e) {
         if (!map) {
-          init(objectJsonPersona.lat, objectJsonPersona.lon);
+          map = init(
+                              objectJsonPersona.lat, 
+                              objectJsonPersona.lon,
+                              map
+                  );
         };
       });
       $("#ID_Calle").on("input", function(e) {
