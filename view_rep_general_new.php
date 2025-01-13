@@ -40,10 +40,7 @@ $Con->CloseConexion();
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
     integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-  <!--<link href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-  <!--<script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script> -->
   <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
 
@@ -51,7 +48,6 @@ $Con->CloseConexion();
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript"
     src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-  <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
     integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
     crossorigin="anonymous"></script>
@@ -59,18 +55,8 @@ $Con->CloseConexion();
   <script src="js/jquery.wordexport.js"></script>
   <script src="html2pdf.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.js"></script>
-
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/ol@v10.1.0/dist/ol.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.1.0/ol.css">
-
-  <script src="js/OpenLayers.js"></script>
-  <script src="js/leaflet-providers.js"></script>
   <script src="https://www.lactame.com/lib/image-js/0.21.2/image.min.js"></script>
+  <script src="./dist/mapa.js"></script>
 
   <script>
     const { PDFDocument, StandardFonts, rgb } = PDFLib;
@@ -146,7 +132,7 @@ $Con->CloseConexion();
       }
     }
 
-    function init() {
+    function initA() {
       if (map === null) {
         map = new OpenLayers.Map("basicMap", {
           zoomDuration: 5,
@@ -320,6 +306,162 @@ $Con->CloseConexion();
       }
     }
 
+    /*
+    function init() {
+      if (map === null) {
+        map = new OpenLayers.Map("basicMap", {
+          zoomDuration: 5,
+          projection: 'EPSG:3857',
+          controls: []
+        });
+
+        let mapnik = new OpenLayers.Layer.OSM(
+          "OpenCycleMap",
+          ["http://a.tile.thunderforest.com/transport/${z}/${x}/${y}.png?apikey=d03b42dcdc084e7cbab176997685b1ce",
+            "http://b.tile.thunderforest.com/transport/${z}/${x}/${y}.png?apikey=d03b42dcdc084e7cbab176997685b1ce",
+            "http://c.tile.thunderforest.com/transport/${z}/${x}/${y}.png?apikey=d03b42dcdc084e7cbab176997685b1ce"]
+        );
+
+        var fromProjection = new OpenLayers.Projection("EPSG:3857");
+        var toProjection = new OpenLayers.Projection("EPSG:4326");
+        let position = new OpenLayers.LonLat(-64.11844, -32.17022).transform(toProjection, fromProjection);
+        let zoom = 15;
+        let positionFormas = null;
+        let icon = null;
+        let charCodeLetter = null;
+        let posicionAnterior = null;
+        let nroLote = 1;
+        map.addLayer(mapnik);
+        var markers = new OpenLayers.Layer.Markers("Markers");
+        map.addLayer(markers);
+        let popup = null;
+        let size = new OpenLayers.Size(6, 6);
+        let offset = new OpenLayers.Pixel(-(size.w / 2), -size.h);
+
+        map.addControl(new OpenLayers.Control.PanZoomBar());
+        map.addControl(new OpenLayers.Control.Navigation());
+        map.addControl(new OpenLayers.Control.ArgParser());
+
+        let markerClick = function (evt) {
+          if (this.popup == null) {
+            this.popup = this.createPopup(this.closeBox);
+            map.addPopup(this.popup);
+            this.popup.show();
+          } else {
+            this.popup.toggle();
+          }
+          OpenLayers.Event.stop(evt);
+        };
+
+        objectJsonTabla.sort(ordenGeoreferencia).forEach(function (elemento, indice, array) {
+          pos = new OpenLayers.LonLat(elemento.lon, elemento.lat).transform(toProjection, fromProjection);
+          let lista_formas = elemento.lista_formas_categorias;
+          if (lista_formas) {
+            if (indice >= 1) {
+              if (posicionAnterior.lon === pos.lon && posicionAnterior.lat === pos.lat) {
+                pos = pos.add((-8.3) * nroLote, (4.5) * nroLote);
+                nroLote++;
+              } else {
+                posicionAnterior = pos;
+                nroLote = 1;
+              }
+            } else {
+              posicionAnterior = pos;
+            }
+            positionFormas = pos;
+            let angulo = 360;
+            let longuitud = Object.keys(lista_formas).length + 1;
+            let puntos = angulo / longuitud;
+            let listaDeClaves = Object.keys(lista_formas);
+            let listaConOrden = listaDeClaves.sort(function (categoriaA, categoriaB) {
+              if (lista_formas[categoriaA][1] < lista_formas[categoriaB][1]) {
+                return -1;
+              } else if (lista_formas[categoriaA][1] > lista_formas[categoriaB][1]) {
+                return 1;
+              } else {
+                if (Date.parse(lista_formas[categoriaA][2]) > Date.parse(lista_formas[categoriaB][2])) {
+                  return -1;
+                } else if (Date.parse(lista_formas[categoriaA][2]) < Date.parse(lista_formas[categoriaB][2])) {
+                  return 1;
+                } else {
+                  return 0;
+                }
+              }
+            });
+            let tipoCategoriaPrevia = -1;
+            let ordenPrevio = Date.parse("2000-01-01");
+            listaConOrden.forEach(function (categoria, indice, array) {
+              if (tipoCategoriaPrevia == lista_formas[categoria][1]
+                && ordenPrevio > Date.parse(lista_formas[categoria][2])) {
+                return;
+              }
+              if (lista_formas[categoria][1] != 0) {
+                tipoCategoriaPrevia = lista_formas[categoria][1];
+              }
+              ordenPrevio = Date.parse(lista_formas[categoria][2]);
+              charCodeLetter = (categoria.length == 1) ? categoria.charCodeAt(0) : categoria;
+              let color_categ = lista_formas[categoria][0].substring(1);
+              icon = new OpenLayers.Icon('./images/icons/motivos/' + charCodeLetter + '_' + color_categ + '.png', size, offset);
+              let marker = new OpenLayers.Marker(positionFormas, icon.clone());
+              markers.addMarker(marker);
+              if (indice > 0) {
+                positionFormas = positionFormas.add(Math.sin(indice * puntos) * (longuitud * 2.5), Math.cos(indice * puntos) * (longuitud * 2.5));
+              } else {
+                positionFormas = positionFormas.add(-8.3, 4.5);
+              }
+              let feature = new OpenLayers.Feature(markers, positionFormas);
+              feature.closeBox = true;
+              feature.data.overflow = "hidden";
+              feature.data.popupContentHTML = ` <div style="display: inline-block; width: 80%; text-align: center;">
+                                                      Detalles 
+                                                    </div>
+                                                    <button type="button" class="btn-close" aria-label="Close" style="border-radius: 25px; background-color: #2e353d; color: white; margin: 2% 2% 0 4%"  onclick="onClickOcultarPopup(this);"></button>
+                                                    <div style='margin: 0 2% 1% 2%; height: 84%'>
+                                                      <table style='text-align: center; color: black;  table-layout: fixed; width: 100%; height: 97%'>
+                                                        <thead>
+                                                          <tr style='color: black; background-color: white'>
+                                                            <th style='background-color: white'></th>
+                                                            <th style='background-color: white'></th>
+                                                          </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                          <tr style='color: black;'>
+                                                            <td>
+                                                              Persona
+                                                            </td>
+                                                            <td>
+                                                              <a href='javascript:window.open("view_modpersonas.php?ID=${elemento.id_persona}","Ventana${elemento.id_persona}" ,"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no")' target='_top' rel='noopener noreferrer'>
+                                                                ${elemento.persona}
+                                                            </td>
+                                                          </tr>
+                                                          <tr style='color: black;'>
+                                                            <td>Años</td>
+                                                            <td>${elemento.edad}</td>
+                                                          </tr>
+                                                          <tr style='color: black;'>
+                                                            <td>Meses</td>
+                                                            <td>${elemento.meses}</td>
+                                                          </tr>
+                                                          <tr style='color: black;'>
+                                                            <td>Fech. Nac.</td>
+                                                            <td>${elemento.fechanac}</td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                    </div>`;
+              marker.feature = feature;
+              marker.events.register("mousedown", feature, function () {
+                window.open("view_modpersonas.php?ID=" + elemento.id_persona, "Ventana" + elemento.id_persona, "width=800,height=500,scrollbars=no,top=150,left=250,resizable=no")
+              });
+              markers.addMarker(marker);
+            });
+          }
+        });
+        map.setCenter(position, zoom);
+      }
+    }
+      */
+
     var map = null;
     var nroFilasTabla = 0;
     var nroColumnasTabla = 0;
@@ -408,7 +550,11 @@ $Con->CloseConexion();
         columnaRemoverClass.removeClass("showColTablaAnimacion");
       });
       $("#map-modal").on("transitionend", function (e) {
-        if (!map) init();
+        if (!map) {
+          map = init();
+          console.log(objectJsonTabla);
+          carga(map, objectJsonTabla);
+        };
       })
     });
 

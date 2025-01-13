@@ -1,6 +1,6 @@
 import swal from '../node_modules/sweetalert2';
 
-  export function dialogCargaEnlace() {
+  export function dialogCargaEnlace(){
     swal.fire({
       title: "El proceso de carga de Excel finalizo",
       text: "Los registros de casos de Dengue han sido cargados al sistema",
