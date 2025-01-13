@@ -222,7 +222,6 @@ $Con->CloseConexion();
       $("#map-modal").on("transitionend", function (e) {
         if (!map) {
           map = init();
-          console.log(objectJsonTabla);
           carga(map, objectJsonTabla);
         };
       })
