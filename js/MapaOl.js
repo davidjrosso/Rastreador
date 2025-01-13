@@ -17,7 +17,6 @@ import View from '../node_modules/ol/View.js';
 import * as he from 'he/he.js';
 
 
-
 export class MapaOl {
     #mapa;
     #zoom;
@@ -60,6 +59,18 @@ export class MapaOl {
             }),
         });
         this.#mapa.addControl(new Zoom());
+
+        this.#mapa.on('click', function (evt) {
+          const feature = this.forEachFeatureAtPixel(evt.pixel, function (feature) {
+            return feature;
+          });
+          if (feature) {
+            const coordinates = feature.getGeometry().getCoordinates();
+            window.open("view_modpersonas.php?ID=" + feature.get('description'), "Ventana" + feature.get('description'), "width=800,height=500,scrollbars=no,top=150,left=250,resizable=no");
+            overlay.setPosition(coordinates);
+          }
+        });
+
         let imagen = './images/icons/location.png'
         this.addIcon(lon, lat, imagen);
     }

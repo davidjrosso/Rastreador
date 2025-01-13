@@ -46,7 +46,6 @@ export function carga(map, listReferencias) {
         if (posicionAnterior && (posicionAnterior[0] === pos[0] && posicionAnterior[1] === pos[1])) {
           //pos = pos.add((-8.3) * nroLote, (4.5) * nroLote);
           pos = [pos[0] + ((-0.00006002) * nroLote, pos[1] + (0.000067060) * nroLote)];
-
           nroLote++;
         } else {
           posicionAnterior = pos;
