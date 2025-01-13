@@ -76,6 +76,19 @@ export class MapaOl {
         });
     }
 
+    viewPersonaGeoreferenciada(){
+      this.#mapa.on('click', function (evt) {
+        const feature = this.forEachFeatureAtPixel(evt.pixel, function (feature) {
+          return feature;
+        });
+        if (feature) {
+          const coordinates = feature.getGeometry().getCoordinates();
+          window.open("view_modpersonas.php?ID=" + feature.get('description'), "Ventana" + feature.get('description'), "width=800,height=500,scrollbars=no,top=150,left=250,resizable=no");
+          overlay.setPosition(coordinates);
+        }
+      });
+  }
+
     addIcon(lon, lat, imagen){
         let iconFeatures=[];
         let pos = [lon, lat];
@@ -158,18 +171,6 @@ export class MapaOl {
         source: vectorSourceText
       });
       this.#mapa.addLayer(vectorLayerText);
-
-      this.#mapa.on('click', function (evt) {
-        const feature = this.forEachFeatureAtPixel(evt.pixel, function (feature) {
-          return feature;
-        });
-        if (feature) {
-          const coordinates = feature.getGeometry().getCoordinates();
-          window.open("view_modpersonas.php?ID=" + feature.get('description'), "Ventana" + feature.get('description'), "width=800,height=500,scrollbars=no,top=150,left=250,resizable=no");
-          overlay.setPosition(coordinates);
-        }
-      });
-
   }
 
     addIconLayer(lon, lat) {

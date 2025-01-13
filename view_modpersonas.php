@@ -79,6 +79,7 @@ $Con->CloseConexion();
                               objectJsonPersona.lon,
                               map
                   );
+          map.setGeoreferenciacion();
         };
       });
       $("#ID_Calle").on("input", function(e) {
