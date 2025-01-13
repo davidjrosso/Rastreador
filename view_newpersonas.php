@@ -67,7 +67,10 @@ $Con->CloseConexion();
               });
               $("#map-modal").on("transitionend", function(e) {
                 if (!map) {
-                  init(objectJsonPersona.lat, objectJsonPersona.lon);
+                  map = init(
+                       objectJsonPersona.lat, 
+                       objectJsonPersona.lon,
+                       map);
                 };
               });
               $("#NumeroDeCalle").on("input", function(e) {
