@@ -113,4 +113,5 @@ export function carga(map, listReferencias) {
       });
     }
   });
+  map.viewPersonaGeoreferenciada();
 }
