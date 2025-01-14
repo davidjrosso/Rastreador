@@ -70,7 +70,9 @@ $Con->CloseConexion();
                   map = init(
                        objectJsonPersona.lat, 
                        objectJsonPersona.lon,
-                       map);
+                       map
+                  );
+                  map.setGeoreferenciacion();
                 };
               });
               $("#NumeroDeCalle").on("input", function(e) {

@@ -75,10 +75,11 @@ $Con->CloseConexion();
       $("#map-modal").on("transitionend", function(e) {
         if (!map) {
           map = init(
-               objectJsonPersona.lat, 
-               objectJsonPersona.lon,
-               map
-              );
+                     objectJsonPersona.lat, 
+                     objectJsonPersona.lon,
+                     map
+                  );
+          map.setGeoreferenciacion();
         };
       });
       $("#ID_Calle").on("input", function(e) {
