@@ -162,7 +162,7 @@ export class MapaOl {
               width: 1.25
             }),
             text: new Text({
-              font: '12px Calibri,sans-serif',
+              font: '9px Calibri,sans-serif',
               fill: new Fill({ color: color }),
               stroke: new Stroke({
                 color: '#fff', width: 2
