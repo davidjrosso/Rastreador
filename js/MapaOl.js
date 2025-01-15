@@ -66,7 +66,7 @@ export class MapaOl {
           });
           if (feature) {
             const coordinates = feature.getGeometry().getCoordinates();
-            window.open("view_modpersonas.php?ID=" + feature.get('description'), "Ventana" + feature.get('description'), "width=800,height=500,scrollbars=no,top=150,left=250,resizable=no");
+            window.open("view_modpersonas.php?ID=" + feature.get('description'), "Ventana" + feature.get('description'), "width=1150,height=500,scrollbars=no,top=150,left=250,resizable=no");
             overlay.setPosition(coordinates);
           }
         });
