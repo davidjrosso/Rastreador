@@ -100,38 +100,6 @@ $Con->CloseConexion();
       $("#BarraDeNavHTabla").attr("style", "width: 95%; margin-left: 2%;");
     }
 
-    function ordenGeoreferencia(personaObjectA, personaObjectB) {
-      if (personaObjectA.lat < personaObjectB.lat) {
-        return -1;
-      } else if (personaObjectA.lat > personaObjectB.lat) {
-        return 1;
-      } else {
-        if (personaObjectA.lon < personaObjectB.lon) {
-          return -1;
-        } else if (personaObjectA.lon > personaObjectB.lon) {
-          return 1;
-        } else {
-          return 0;
-        }
-      }
-    }
-
-    function ordenCategoria(categoriaA, categoriaB) {
-      if (categoriaA[1] < categoriaB[1]) {
-        return -1;
-      } else if (categoriaA[1] > categoriaB[1]) {
-        return 1;
-      } else {
-        if (categoriaA[2] < categoriaB[2]) {
-          return -1;
-        } else if (categoriaA[2] > categoriaB[2]) {
-          return 1;
-        } else {
-          return 0;
-        }
-      }
-    }
-
     var map = null;
     var nroFilasTabla = 0;
     var nroColumnasTabla = 0;

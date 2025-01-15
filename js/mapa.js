@@ -115,3 +115,20 @@ export function carga(map, listReferencias) {
   });
   map.viewPersonaGeoreferenciada();
 }
+
+function ordenCategoria(categoriaA, categoriaB) {
+  if (categoriaA[1] < categoriaB[1]) {
+    return -1;
+  } else if (categoriaA[1] > categoriaB[1]) {
+    return 1;
+  } else {
+    if (categoriaA[2] < categoriaB[2]) {
+      return -1;
+    } else if (categoriaA[2] > categoriaB[2]) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+}
+
