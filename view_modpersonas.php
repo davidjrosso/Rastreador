@@ -10,6 +10,12 @@ if (!isset($_SESSION["Usuario"])) {
   header("Location: Error_Session.php");
 }
 
+if (!preg_match("~view_personas~", $_SERVER["HTTP_REFERER"])) {
+  $_SESSION["from_reporte_grafico"] = true;
+} else {
+  $_SESSION["from_reporte_grafico"] = false;
+}
+
 $Con = new Conexion();
 $Con->OpenConexion();
 $ID_Usuario = $_SESSION["Usuario"];

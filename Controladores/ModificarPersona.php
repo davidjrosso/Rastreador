@@ -7,7 +7,7 @@ header("Content-Type: text/html;charset=utf-8");
 
 $ID_Usuario = $_SESSION["Usuario"];
 
-$from_reporte_grafico = (preg_match("~view_rep_general_new~", $_SERVER["HTTP_REFERER"])) ? true : false;
+$from_reporte_grafico = (!empty($_SESSION["from_reporte_grafico"])) ? true : false;
 
 $ID_Persona = $_REQUEST["ID"];
 $Apellido = ucwords($_REQUEST["Apellido"]);
