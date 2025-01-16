@@ -59,17 +59,6 @@ export class MapaOl {
             }),
         });
         this.#mapa.addControl(new Zoom());
-
-        this.#mapa.on('click', function (evt) {
-          const feature = this.forEachFeatureAtPixel(evt.pixel, function (feature) {
-            return feature;
-          });
-          if (feature) {
-            const coordinates = feature.getGeometry().getCoordinates();
-            window.open("view_modpersonas.php?ID=" + feature.get('description'), "Ventana" + feature.get('description'), "width=1150,height=500,scrollbars=no,top=150,left=250,resizable=no");
-          }
-        });
-
         let imagen = './images/icons/location.png'
         this.addIcon(lon, lat, imagen);
     }
