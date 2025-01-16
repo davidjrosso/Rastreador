@@ -7,6 +7,8 @@ header("Content-Type: text/html;charset=utf-8");
 
 $ID_Usuario = $_SESSION["Usuario"];
 
+$from_reporte_grafico = (preg_match("~view_rep_general_new~", $_SERVER["HTTP_REFERER"])) ? true : false;
+
 $ID_Persona = $_REQUEST["ID"];
 $Apellido = ucwords($_REQUEST["Apellido"]);
 $Nombre = ucwords($_REQUEST["Nombre"]);
@@ -229,6 +231,11 @@ try {
 
 	 	$Con->CloseConexion();
 	 	$Mensaje = "La Persona fue modificada Correctamente";
+
+		if ($from_reporte_grafico) {
+			$Mensaje .= ". Actualizar la pantalla del reporte grafico con F5";
+		}
+
 		header('Location: ../view_modpersonas.php?ID='.$ID_Persona.'&Mensaje='.$Mensaje);		
 	}
 
