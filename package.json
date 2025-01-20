@@ -15,6 +15,7 @@
     "lodash": "^4.17.21",
     "npm-watch": "^0.13.0",
     "ol": "^10.3.1",
+    "pdf-lib": "^1.17.1",
     "sweetalert2": "^11.15.10",
     "webpack": "^5.97.1",
     "webpack-cli": "^5.1.4"
