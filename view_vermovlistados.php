@@ -745,8 +745,7 @@ $Con->CloseConexion();
                                           P.lote, P.familia, P.apellido, P.nombre,
                                           P.fecha_nac, P.domicilio
                                    from persona P, 
-                                        barrios B, 
-                                        movimiento M
+                                        barrios B
                                    where not exists(select * 
                                                     from movimiento M2 
                                                     where M2.id_persona = P.id_persona) 
@@ -830,9 +829,9 @@ $Con->CloseConexion();
                 }
 
                 if($ID_Persona > 0){
-                  $ConsultarTodos .= " group by P.id_movimiento, M.fecha order by M.fecha DESC, P.domicilio DESC, P.apellido DESC, P.nombre DESC";
+                  $ConsultarTodos .= " group by P.id_movimiento order by M.fecha DESC, P.domicilio DESC, P.apellido DESC, P.nombre DESC";
                 }else{
-                  $ConsultarTodos .= " group by P.id_persona,P.id_movimiento, M.fecha order by M.fecha DESC, P.domicilio DESC, P.apellido DESC, P.nombre DESC";
+                  $ConsultarTodos .= " group by P.id_persona,P.id_movimiento order by P.domicilio DESC, P.apellido DESC, P.nombre DESC";
                 }
 
                 // $ConsultarTodos .= " group by P.id_persona order by P.apellido, P.nombre";
