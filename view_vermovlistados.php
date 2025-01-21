@@ -1393,7 +1393,7 @@ $Con->CloseConexion();
                     $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
                     $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 3"])) ? strlen($json_row["Motivo 3"]) : $json_row["height"];
                   }
-                  $TableMov .= "<tr class='trObservaciones'><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>" . $DtoMovimiento->getObservaciones() . "</td></tr>";
+                  $TableMov .= "<tr class='trObservaciones'><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'><div style='max-height: 30px;'>" . $DtoMovimiento->getObservaciones() . "</div></td></tr>";
                   $json_row["obseravciones"] = $DtoMovimiento->getObservaciones();
                   $TableMov .= "<tr class='trResponsable'><td style = 'width: 30%;'>Responsable</td><td style = 'width: 70%;'>" . $DtoMovimiento->getResponsable() . "</td></tr>";
                   $json_row["Responsable"] = $DtoMovimiento->getResponsable();
@@ -2125,7 +2125,7 @@ $Con->CloseConexion();
                     $TableMov .= "<td class='trLocalidad' style = 'width: auto;'>" . $Localidad."</td>";
                     $TableMovPrint .= "<td class='trLocalidad' style = 'width: auto;'>" . $Localidad."</td>";
                     $json_row["Localidad"] = $Localidad;
-                    $TableMov .= "<td class='trObservaciones' style = 'width: auto;'>" . $DtoMovimiento->getObservaciones() . "</td>";
+                    $TableMov .= "<td class='trObservaciones' style = 'width: auto;'><div style='max-height: 9em; overflow: hidden'>" . $DtoMovimiento->getObservaciones() . "</div></td>";
                     $TableMovPrint .= "<td class='trObservaciones' style = 'width: auto;'>" . $DtoMovimiento->getObservaciones() . "</td>";
                     $json_row["Observaciones"] = $DtoMovimiento->getObservaciones();
                     $TableMov .= "<td class='trResponsable' style = 'width: auto;'>" . $DtoMovimiento->getResponsable() . "</td>";
