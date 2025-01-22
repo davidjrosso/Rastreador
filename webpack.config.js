@@ -10,7 +10,8 @@ module.exports = {
   entry: {
     mapa : './js/mapa.js',
     reporte : './js/acciones-reporte-grafico.js',
-    alerta : './js/Enlace-Drive.js'
+    alerta : './js/Enlace-Drive.js',
+    control : './js/MensajeControl.js'
   },
   output: {
     libraryTarget: 'umd',

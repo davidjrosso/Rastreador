@@ -36,9 +36,10 @@ $Con->CloseConexion();
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="js/bootstrap-datepicker.min.js"></script>
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script src="js/ValidarGeneral.js"></script>
   <script src="./dist/alerta.js"></script>
+  <script src="./dist/control.js"></script>
+
   <script>
     var cantBarrios = 1;
     var cantMotivos = 3;
@@ -83,21 +84,7 @@ $Con->CloseConexion();
                 cargaMovimientosFormulario();
               });
               $("#inpMostrar").on("change", function (event){
-                if (this.value == "1") {
-                  swal({
-                    title: "Filtro Mostrar Persona",
-                    text: "Al seleccionar la opcion Todos se retoranaran las personas sin movimiento",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true
-                  }).then((selectOption) => {
-                      if (selectOption) {
-                        this.value = "1";
-                      } else {
-                        this.value = "0";
-                      }
-                  });
-                };
+                controlMovimiento(this);
               });
           });
    
