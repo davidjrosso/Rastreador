@@ -180,6 +180,46 @@ $Con->CloseConexion();
         }
           idRequestField = 0;
       }
+
+
+      function htmlExcel(idTabla, nombreArchivo = '') {
+        let linkDescarga;
+        let tipoDatos = 'application/vnd.ms-excel';
+        let tablaDatos = document.getElementById(idTabla);
+        //let tablaHTML = tablaDatos.outerHTML.replace(/ /g, '%20');
+        let tablaHTML = tablaDatos.outerHTML;
+        // Nombre del archivo
+        nombreArchivo = nombreArchivo ? nombreArchivo + '.xlsx' : 'Reporte_Puntos_Canjeados.xlsx';
+
+        // Crear el link de descarga
+        linkDescarga = document.createElement("a");
+        linkDescarga.setAttribute("target", "_blank");
+        document.body.appendChild(linkDescarga);
+        let url = null;
+        let blob = new Blob(['\ufeff', tablaHTML], {
+            type: tipoDatos
+          });
+        url = URL.createObjectURL(blob);
+        var w = window.open(url);
+        /*if (navigator.msSaveOrOpenBlob) {
+          let blob = new Blob(['\ufeff', tablaHTML], {
+            type: tipoDatos
+          });
+          url = URL.createObjectURL(blob);
+          navigator.msSaveOrOpenBlob(blob, nombreArchivo);
+        } else {
+          // Crear el link al archivo
+          linkDescarga.href = 'data:' + tipoDatos + ', ' + tablaHTML;
+          var w = window.open(url);
+          // Setear el nombre de archivo
+          //linkDescarga.download = nombreArchivo;
+
+          //Ejecutar la función
+          linkDescarga.click();
+        }*/
+      }
+
+
   </script>  
 </head>
 <body>
@@ -739,7 +779,7 @@ $Con->CloseConexion();
               //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
               //	CREANDO FILTRO MOSTRAR PERSONAS (SIN MOVIMIENTOS)              
-              if($Mostrar > 0){
+              if ($Mostrar > 0) {
                 //, P.nro_legajo, P.nro_carpeta
               	$ConsultarTodos = "select P.id_persona, B.Barrio, P.manzana, 
                                           P.lote, P.familia, P.apellido, P.nombre,
@@ -810,7 +850,7 @@ $Con->CloseConexion();
                     }
                   }
                   $filtros[] = $filtroBarrios;
-                }else{
+                } else {
                   if($Barrio[0] > 0){
                     $ConsultarTodos .= " and P.ID_Barrio = $Barrio[0]";
                     $ConsultarBarrio = "select Barrio from barrios where ID_Barrio = " . $Barrio[0]." limit 1";
@@ -828,11 +868,7 @@ $Con->CloseConexion();
                   $ConsultarTodos .= " and P.Trabajo like '%$Trabajo%'";
                 }
 
-                if($ID_Persona > 0){
-                  $ConsultarTodos .= " group by P.id_movimiento order by M.fecha DESC, P.domicilio DESC, P.apellido DESC, P.nombre DESC";
-                }else{
-                  $ConsultarTodos .= " group by P.id_persona,P.id_movimiento order by P.domicilio DESC, P.apellido DESC, P.nombre DESC";
-                }
+                $ConsultarTodos .= " group by P.id_persona order by P.domicilio DESC, P.apellido DESC, P.nombre DESC";
 
                 // $ConsultarTodos .= " group by P.id_persona order by P.apellido, P.nombre";
 
@@ -900,10 +936,8 @@ $Con->CloseConexion();
         ?>
         </div>
         <div class="col-md-2">
-          <div class="row">
             <button type = "button" class = "btn btn-secondary" data-toggle="modal" data-target="#configModal">Config</button>
-            <!--<button type="button" class="btn btn-secondary" onClick="enviarImprimir()">Imprimir</button>-->
-          </div>
+            <button type="button" class="btn btn-secondary" onClick="htmlExcel('tabla-movimiento-general', 'excel');">Excel</button>
         </div>
      </div>
      <div class = "row">
@@ -2535,7 +2569,6 @@ $Con->CloseConexion();
                       </html>";
         
         ?>
-        <input type="hidden" name="tabla_1" id = "tabla_1" value = "<?php echo $htmlPrint;?>">
   </div>
 </div>
 </div>
