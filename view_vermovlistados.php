@@ -1696,13 +1696,13 @@ $Con->CloseConexion();
                         //solucionar el error!
                         //  variables inventadas solo para que arme la tabla              
 
-                      $TableMov = "<table class='table text-white' style='background-color: #AEB6BF;'>";                
-                      $TableMov .= "<tr><td style = 'width: 30%;'>Nombre</td><td style = 'width: 70%;'>" . $Apellido.", " . $Nombre."</td></tr>";
+                      $TableSinMov = "<table class='table text-white' style='background-color: #AEB6BF;'>";                
+                      $TableSinMov .= "<tr><td style = 'width: 30%;'>Nombre</td><td style = 'width: 70%;'>" . $Apellido.", " . $Nombre."</td></tr>";
                       $json_row["Persona"] = $Apellido." " . $Nombre;
-                      $TableMov .= "<tr><td style = 'width: 30%;'>Estado</td><td style = 'width: 70%;'>SIN MOVIMIENTOS</td></tr>";
+                      $TableSinMov .= "<tr><td style = 'width: 30%;'>Estado</td><td style = 'width: 70%;'>SIN MOVIMIENTOS</td></tr>";
                       $json_row["estado"] = "sin movimientos";
-                      $TableMov .= "</table>";
-                      echo $TableMov;
+                      $TableSinMov .= "</table>";
+                      echo $TableSinMov;
                 } else {
                   $ID_Movimiento = $RetTodos["id_movimiento"];
                   $Fecha = implode("-", array_reverse(explode("-",$RetTodos["fecha"])));
@@ -2488,87 +2488,6 @@ $Con->CloseConexion();
             //unset($_SESSION["datosNav"]);
           ?>
         </div>
-        <?php
-        $htmlPrint = "<html>
-                        <head>
-                        <link href='https://fonts.cdnfonts.com/css/symbol' rel='stylesheet'>
-                        <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-    
-                          <style>
-                            @page {
-                              margin: 15px !important;
-                              padding: 15px !important;
-                            }
-                            .table{
-                              border-collapse: collapse;
-                            }
-                            .thead-dark{
-                              background-color: #ccc;
-                              font-size: 12px;
-                            }
-                            .table_pdf {
-                              width: 100%;
-                            }
-                            tr td {
-                              text-align: center;
-                              font-size: 12px;
-                            }
-
-                            table thead tr th {
-                              background-color: #ccc;
-                            }
-
-                            h5, h2{
-                              text-align: center;
-                              margin-bottom: 0px
-                            }
-
-                            #InformacionDeCentro {
-                              float: right; 
-                              text-align: left;
-                            }
-
-                            #frase {
-                              font-weight: bold;
-                            }
-
-                            #encabezado {
-                              text-align: center;
-                              float: right;
-                              padding-right: 13rem;
-                            }
-
-                            #InformacionDeCiudad {
-                              text-align: left;
-                              margin-bottom: 2rem;
-                              margin-top: 2rem;
-                            }
-
-                            table, th, td {
-                              border: 1px solid;
-                            }
-                          </style>
-                          </head> 
-                          <body>
-                            <p id='InformacionDeCentro'> Centro de Atencion Primaria en Salud<br>
-                              Direccion de Accion Social<br>
-                              DESDE : ". $Etiqueta_Fecha_Inicio . " HASTA : " . $Etiqueta_Fecha_Fin ." </p>
-                            <p id='encabezado'> Plan para el fortalecimiento del bienestar Comunitario<br>
-                              <span id='frase'> 
-                                Listado de moviminetos
-                              </span>
-                              <br>
-                            </p>
-                            <p id='InformacionDeCiudad'>
-                              Municipialidad de Rio Tercero
-                            </p>" .
-                            ((empty($tablePrint))?"":$tablePrint) ."
-                            <br>".
-                            ((empty($TableMovPrint))?"":$TableMovPrint)."
-                        </body>
-                      </html>";
-        
-        ?>
   </div>
 </div>
 </div>
