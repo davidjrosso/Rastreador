@@ -1681,9 +1681,8 @@ $Con->CloseConexion();
                 $TableMovPrint = $TableMov;
               }
               $json_row = [];
-              foreach($tomarRetTodos as $clave => $RetTodos){                
-                // echo var_dump($RetTodos);
-                // echo "<br>";
+              foreach ($tomarRetTodos as $clave => $RetTodos) {
+
                 if($RetTodos["fecha_nac"] == 'null'){
                   $Fecha_Nacimiento = "Sin Datos";
                 }else{
@@ -1693,8 +1692,6 @@ $Con->CloseConexion();
                 if ($RetTodos["tipo"] == "SM") {                
                       $Apellido = $RetTodos["apellido"];
                       $Nombre = $RetTodos["nombre"];
-                        //solucionar el error!
-                        //  variables inventadas solo para que arme la tabla              
 
                       $TableSinMov = "<table class='table text-white' style='background-color: #AEB6BF;'>";                
                       $TableSinMov .= "<tr><td style = 'width: 30%;'>Nombre</td><td style = 'width: 70%;'>" . $Apellido.", " . $Nombre."</td></tr>";
