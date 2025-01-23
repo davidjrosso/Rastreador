@@ -39,6 +39,7 @@ $Con->CloseConexion();
   <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="./dist/alerta.js"></script>
+  <script src="./dist/control.js"></script>
   <script>
        $(document).ready(function(){
               var date_input=$('input[name="date"]');
@@ -53,21 +54,6 @@ $Con->CloseConexion();
                 cargaMovimientosFormulario();
               })
           });
-
-       function Verificar(xID){
-          swal({
-            title: "¿Está seguro?",
-            text: "¿Seguro de querer eliminar este movimiento?",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-          })
-          .then((willDelete) => {
-            if (willDelete) {
-              window.location.href = 'Controladores/DeleteMovimiento.php?ID='+xID;
-            }
-          });
-        }
   </script>
 </head>
 <body>
@@ -176,8 +162,8 @@ $Con->CloseConexion();
 <?php  
 if(isset($_REQUEST['Mensaje'])){
   echo "<script type='text/javascript'>
-    swal('".$_REQUEST['Mensaje']."','','success');
-</script>";
+          mensajeDeProcesamiento(" . $_REQUEST['Mensaje'] . ");
+        </script>";
 }
 ?>
 <?php

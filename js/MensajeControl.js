@@ -22,3 +22,23 @@ export function controlMovimiento(object) {
         });
     };
 }
+
+export function Verificar(xID){
+    swal.fire({
+      title: "¿Está seguro?",
+      text: "¿Seguro de querer eliminar este movimiento?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: `OK`,
+      cancelButtonText: `Cancel`,
+    })
+    .then((selectOption) => {
+        if (selectOption.isConfirmed) {
+        window.location.href = 'Controladores/DeleteMovimiento.php?ID='+xID;
+      }
+    });
+  }
+
+export function mensajeDeProcesamiento(mensaje){
+    swal.fire(mensaje, '', 'success');
+}
