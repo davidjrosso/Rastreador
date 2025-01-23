@@ -233,7 +233,7 @@ try {
 	 	$Mensaje = "La Persona fue modificada Correctamente";
 
 		if ($from_reporte_grafico) {
-			$Mensaje .= ". Actualizar la pantalla del reporte grafico con F5";
+			$Mensaje .= ". Actualizar la pantalla del reporte gráfico con F5 cerrando primero esta ventana";
 		}
 
 		header('Location: ../view_modpersonas.php?ID='.$ID_Persona.'&Mensaje='.$Mensaje);		
