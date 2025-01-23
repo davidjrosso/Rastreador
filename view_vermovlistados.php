@@ -868,7 +868,7 @@ $Con->CloseConexion();
                   $ConsultarTodos .= " and P.Trabajo like '%$Trabajo%'";
                 }
 
-                $ConsultarTodos .= " group by P.id_persona order by P.domicilio DESC, P.apellido DESC, P.nombre DESC";
+                $ConsultarTodos .= " group by P.id_persona order by P.ID_Barrio, P.domicilio DESC, P.domicilio DESC, P.apellido DESC, P.nombre DESC";
 
                 // $ConsultarTodos .= " group by P.id_persona order by P.apellido, P.nombre";
 
