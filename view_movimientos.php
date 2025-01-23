@@ -162,7 +162,7 @@ $Con->CloseConexion();
 <?php  
 if(isset($_REQUEST['Mensaje'])){
   echo "<script type='text/javascript'>
-          mensajeDeProcesamiento(" . $_REQUEST['Mensaje'] . ");
+          mensajeDeProcesamiento('" . $_REQUEST['Mensaje'] . "');
         </script>";
 }
 ?>
