@@ -1785,16 +1785,17 @@ $Con->CloseConexion();
             //	CREANDO FILTRO MOSTRAR - Mostrar = "0" Con Movimientos,  "1" sin movimientos.
             if ($Mostrar > 0) {
               //, P.nro_legajo, P.nro_carpeta
-              $ConsultarTodos = "select P.id_persona, B.Barrio, P.manzana, P.lote, P.familia, 
-                                          P.apellido, P.nombre, P.fecha_nac, P.domicilio
-                                   from persona P, 
-                                        barrios B, 
-                                        movimiento M
-                                   where not exists(select * 
+              $ConsultarTodos = "SELECT P.id_persona, B.Barrio, P.manzana, P.lote, P.familia, 
+                                          P.apellido, P.nombre, P.fecha_nac, P.domicilio,
+                                          L.calle_nombre, P.nro, P.edad, P.meses
+                                   FROM (persona P, 
+                                        barrios B) LEFT JOIN 
+                                        calle L ON (L.id_calle = P.calle)
+                                   WHERE not exists(select * 
                                                     from movimiento M2 
                                                     where M2.id_persona = P.id_persona) 
-                                      and B.ID_Barrio = P.ID_Barrio 
-                                      and P.estado = 1";
+                                      AND B.ID_Barrio = P.ID_Barrio 
+                                      AND P.estado = 1";
 
               if ($ID_Persona > 0) {
                 $ConsultarTodos .= " and P.id_persona = $ID_Persona";
@@ -1875,13 +1876,8 @@ $Con->CloseConexion();
                 $ConsultarTodos .= " and P.Trabajo like '%$Trabajo%'";
               }
 
-              if ($ID_Persona > 0) {
-                $ConsultarTodos .= " group by P.id_movimiento 
-                                       order by B.Barrio DESC, P.domicilio DESC, P.apellido DESC, P.nombre DESC";
-              } else {
-                $ConsultarTodos .= " group by P.id_persona 
-                                       order by B.Barrio DESC, P.domicilio DESC, P.apellido DESC, P.nombre DESC";
-              }
+              $ConsultarTodos .= " group by P.id_persona 
+                                   order by B.Barrio DESC, P.domicilio DESC, P.apellido DESC, P.nombre DESC";
 
               // $ConsultarTodos .= " group by P.id_persona order by P.apellido, P.nombre";            
           
@@ -2193,15 +2189,15 @@ $Con->CloseConexion();
 
               if ($RetTodos["tipo"] == "SM") {
                 // echo "Entra aca SM";
-                $Table .= "<tr class='SinMovimientos Datos'>";
+                $Table .= "<tr class='Datos'>";
                 $Table_imprimir .= "<tr>";
 
                 $Table_imprimir .= "<td id='Contenido-1'>" . $RetTodos["Barrio"] . "</td>
                                       <td id='Contenido-2'>" . ((empty($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]) . "</td>";
                 $jsonTable[$clave]["barrio"] = $RetTodos["Barrio"];
                 $jsonTable[$clave]["domicilio"] = ((empty($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]);
-                $Table .= "<td id='Contenido-1' style='max-width: 100px;'>" . $RetTodos["Barrio"] . "</td>
-                             <td id='Contenido-2' style='max-width: 100px;'>" . ((empty($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]) . "</td>";
+                $Table .= "<td id='Contenido-1'>" . $RetTodos["Barrio"] . "</td>
+                             <td id='Contenido-2'>" . ((empty($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]) . "</td>";
                 /*
                 if ($Manzana == "manzana") {
                   $Table .= "<td id='Contenido-5' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>";
@@ -2244,9 +2240,20 @@ $Con->CloseConexion();
                 $jsonTable[$clave]["persona"] = $RetTodos["apellido"] . ", " . $RetTodos["nombre"];
                 $jsonTable[$clave]["id_persona"] = $RetTodos["id_persona"];
                 $jsonTable[$clave]["fechanac"] = $Fecha_Nacimiento;
-                $ColSpans = $MesesDiferencia * 270;
-                $Table .= "<td name='DatosSinResultados' style='width:" . $ColSpans . "px'></td>";
-                $Table_imprimir .= "<td name='DatosSinResultados' style='max-width: 100px;'></td>";
+
+                $Table .= "<td id='Contenido-8' name='datosflia' style='max-width: 70px; display: none; text-align: center; background-color: white;'>" . $RetTodos["edad"] . "</td>";
+                $jsonTable[$clave]["edad"] = $RetTodos["edad"];
+                $Table .= "<td id='Contenido-9' name='datosflia' style='max-width: 70px; display: none; text-align: center;  background-color: white;'>" . $RetTodos["meses"] . "</td>";
+                $jsonTable[$clave]["meses"] = $RetTodos["meses"];
+
+                foreach ($arr as $key => $value) {
+                    $Table .= "<td name='DatosResultados' id=$IndexCelda style='min-width:190px'>
+                               </td>";
+                }
+
+                //$ColSpans = $MesesDiferencia * 270;
+                //$Table .= "<td name='DatosSinResultados' style='width:" . $ColSpans . "px'></td>";
+                //$Table_imprimir .= "<td name='DatosSinResultados' style='max-width: 100px;'></td>";
               } else {
                 //En este punto se cominza a procesar los movimientos asociados a una persona persona
           
