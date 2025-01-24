@@ -22,6 +22,8 @@ export class MapaOl {
     #zoom;
     #center;
     #target;
+    #windowsOpened=[];
+
     constructor(
         target,
         zoom = null,
@@ -77,12 +79,17 @@ export class MapaOl {
 
     viewPersonaGeoreferenciada(){
       this.#mapa.on('click', function (evt) {
+        let windowsReference = null;
         const feature = this.forEachFeatureAtPixel(evt.pixel, function (feature) {
           return feature;
         });
         if (feature) {
           const coordinates = feature.getGeometry().getCoordinates();
-          window.open("view_modpersonas.php?ID=" + feature.get('description'), "Ventana" + feature.get('description'), "width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no");
+          windowsReference = window.open(
+                                         "view_modpersonas.php?ID=" + feature.get('description'),
+                                         "Ventana" + feature.get('description'), 
+                                         "width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no"
+                                        );
         }
       });
   }
@@ -180,6 +187,18 @@ export class MapaOl {
       let vectorLayer = this.#mapa.getLayers();
       lonLat = olProj.transform(lonLat, "EPSG:4326", "EPSG:3857");
       vectorLayer.item(1).getSource().getFeatures();
-      
+    }
+
+    addRefWindow(refWindow) {
+      this.#windowsOpened.push(refWindow);
+    }
+
+    isModifyPerson() {
+      let value = null;
+      value = this.#windowsOpened.reduce(
+                               (valor, refWindow) => valor || refWindow.isSave,
+                               false
+      )
+      return value;
     }
 }
