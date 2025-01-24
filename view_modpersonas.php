@@ -438,15 +438,11 @@ $Con->CloseConexion();
   <?php
   if (isset($_REQUEST["Mensaje"])) {
     echo "<script type='text/javascript'>
-          swal('" . $_REQUEST['Mensaje'] . "','','success');
-          window.opener.document.location.reload();
-</script>";
-  }
-
-  if (isset($_REQUEST['MensajeError'])) {
-    echo "<script type='text/javascript'>
-    swal('" . $_REQUEST['MensajeError'] . "','','warning');
-</script>";
+            swal('" . $_REQUEST['Mensaje'] . "','','success');
+            if (" . $_REQUEST['reporte'] . ") {
+              window.opener.document.location.reload();
+            }
+          </script>";
   }
   ?>
   <script>
