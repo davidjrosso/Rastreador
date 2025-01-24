@@ -84,11 +84,6 @@ $Con->CloseConexion();
         };
       });
 
-      $("#form-mod-persona").on('submit', function(e) {
-        isSave = true;
-        window.opener.document.location.reload();
-      });
-
       $("#ID_Calle").on("input", function(e) {
         let nro = $("#NumeroDeCalle").val();
         if (nro) {
@@ -443,7 +438,8 @@ $Con->CloseConexion();
   <?php
   if (isset($_REQUEST["Mensaje"])) {
     echo "<script type='text/javascript'>
-    swal('" . $_REQUEST['Mensaje'] . "','','success');
+          swal('" . $_REQUEST['Mensaje'] . "','','success');
+          window.opener.document.location.reload();
 </script>";
   }
 
