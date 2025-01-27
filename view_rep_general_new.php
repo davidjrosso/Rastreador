@@ -188,13 +188,16 @@ $Con->CloseConexion();
         columnaRemoverClass.removeClass("showColTablaAnimacion");
       });
 
-      $("#map-modal").on("transitionend", function (e) {
+      /*$("#map-modal").on("transitionend", function (e) {
         if (!map) {
-          setTimeout(function(){ map.invalidateSize()}, 500);
           map = init();
           carga(map, objectJsonTabla);
         };
-      });
+      });*/
+      if (!map) {
+          map = init();
+          carga(map, objectJsonTabla);
+        };
     });
 
     function fireKey(el) {
