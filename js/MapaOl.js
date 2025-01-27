@@ -30,7 +30,7 @@ export class MapaOl {
         lat = null,
         lon = null
     ){
-        this.#zoom = (zoom) ? zoom : 15;
+        this.#zoom = (zoom) ? zoom : 11;
         this.#target = target;
         this.#center = [lon, lat];
         if (lon && lat) {
@@ -45,7 +45,7 @@ export class MapaOl {
               ],
               url:
                 'https://{a-c}.tile.thunderforest.com/transport/{z}/{x}/{y}.png' +
-                '?apikey=d03b42dcdc084e7cbab176997685b1ce',
+                '?apikey=d03b42dcdc084e7cbab176997685b1ce'
             }),
         });
 
