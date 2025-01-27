@@ -8,7 +8,7 @@ export function init(
 if (map === null) {
     map = new MapaOl(
                      "basicMap",
-                     11,
+                     15,
                      lat, 
                      lon
                     );

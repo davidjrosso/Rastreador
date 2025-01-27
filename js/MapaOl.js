@@ -30,7 +30,7 @@ export class MapaOl {
         lat = null,
         lon = null
     ){
-        this.#zoom = (zoom) ? zoom : 11;
+        this.#zoom = (zoom) ? zoom : 15;
         this.#target = target;
         this.#center = [lon, lat];
         if (lon && lat) {
