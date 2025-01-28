@@ -39,12 +39,14 @@ export class MapaOl {
           this.#center = [-64.11844, -32.17022];
         }
         const openCycleMapLayer = new TileLayer({
+            preload: Infinity,
             source: new OSM({
+              cacheSize: Infinity,
               attributions: [
                 ATTRIBUTION,
               ],
               url:
-                'https://{a-c}.tile.thunderforest.com/transport/{z}/{x}/{y}.png' +
+                'http://{a-c}.tile.thunderforest.com/transport/{z}/{x}/{y}.png' +
                 '?apikey=d03b42dcdc084e7cbab176997685b1ce'
             }),
         });
@@ -60,9 +62,9 @@ export class MapaOl {
               zoom: this.#zoom,
             }),
         });
-        this.#mapa.addControl(new Zoom());
-        let imagen = './images/icons/location.png'
-        this.addIcon(lon, lat, imagen);
+        //this.#mapa.addControl(new Zoom());
+        //let imagen = './images/icons/location.png'
+        //this.addIcon(lon, lat, imagen);
     }
 
     setGeoreferenciacion(){
