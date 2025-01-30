@@ -1553,8 +1553,16 @@ $Con->CloseConexion();
                   $count++;
 
                   if (empty($RetTodos["id_movimiento"])) {
+
+                    if ($RetTodos["fecha_nac"] == 'null') {
+                      $Fecha_Nacimiento = "Sin Datos";
+                    } else {
+                      $Fecha_Nacimiento = implode("-", array_reverse(explode("-",$RetTodos["fecha_nac"])));
+                    }
+
                     $Apellido = $RetTodos["apellido"];
                     $Nombre = $RetTodos["nombre"];
+                    $id_persona = $RetTodos["id_persona"];
                     $sin_datos = "";
                     $DtoMovimiento = new DtoMovimiento(
                                                        xID_Movimiento: $sin_datos,
@@ -1666,6 +1674,7 @@ $Con->CloseConexion();
                     $imprimir = false;
                     continue;
                   }
+                  $json_row["height"] = 0;
 
                   if($ID_Config == 'grid'){
                     $TableMov = "<table class='table table-dark'>";                
