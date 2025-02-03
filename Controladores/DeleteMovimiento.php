@@ -57,7 +57,7 @@ try {
 
 	// CREANDO NOTIFICACION PARA EL USUARIO
 	$DetalleNot = 'Se elimino el movimiento vinculado a : '.$Apellido. ', '.$Nombre. (($Fecha == null)?'':' fecha: '. $Fecha);
-	$Expira = date("Y-m-d", strtotime($FechaAccion." + 15 days"));
+	$Expira = date("Y-m-d", strtotime($Fecha . " + 15 days"));
 
 	$ConsultaNot = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$DetalleNot','$Fecha', '$Expira',1)";
 	if(!$RetNot = mysqli_query($Con->Conexion,$ConsultaNot)){

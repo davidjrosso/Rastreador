@@ -39,7 +39,6 @@ export function carga(map, listReferencias) {
   let pos = null;
   let posicionAnterior = null;
   let positionFormas = null;
-  let charCodeLetter = null;
   listReferencias.sort(ordenGeoreferencia).forEach(function (elemento, indice, array) {
     pos = [parseFloat(elemento.lon), parseFloat(elemento.lat)];
     let lista_formas = elemento.lista_formas_categorias;
@@ -88,8 +87,6 @@ export function carga(map, listReferencias) {
           tipoCategoriaPrevia = lista_formas[categoria][1];
         }
         ordenPrevio = Date.parse(lista_formas[categoria][2]);
-        charCodeLetter = (categoria.length == 1) ? categoria.charCodeAt(0) : categoria;
-        let color_categ = lista_formas[categoria][0].substring(1);
 
         let offsetX = 0;
         let offsetY = 0;
@@ -117,3 +114,20 @@ export function carga(map, listReferencias) {
   });
   map.viewPersonaGeoreferenciada();
 }
+
+function ordenCategoria(categoriaA, categoriaB) {
+  if (categoriaA[1] < categoriaB[1]) {
+    return -1;
+  } else if (categoriaA[1] > categoriaB[1]) {
+    return 1;
+  } else {
+    if (categoriaA[2] < categoriaB[2]) {
+      return -1;
+    } else if (categoriaA[2] > categoriaB[2]) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+}
+

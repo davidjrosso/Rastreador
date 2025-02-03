@@ -22,6 +22,8 @@ export class MapaOl {
     #zoom;
     #center;
     #target;
+    #windowsOpened=[];
+
     constructor(
         target,
         zoom = null,
@@ -37,13 +39,15 @@ export class MapaOl {
           this.#center = [-64.11844, -32.17022];
         }
         const openCycleMapLayer = new TileLayer({
+            preload: Infinity,
             source: new OSM({
+              cacheSize: Infinity,
               attributions: [
                 ATTRIBUTION,
               ],
               url:
-                'https://{a-c}.tile.thunderforest.com/transport/{z}/{x}/{y}.png' +
-                '?apikey=d03b42dcdc084e7cbab176997685b1ce',
+                'http://{a-c}.tile.thunderforest.com/transport/{z}/{x}/{y}.png' +
+                '?apikey=d03b42dcdc084e7cbab176997685b1ce'
             }),
         });
 
@@ -58,21 +62,9 @@ export class MapaOl {
               zoom: this.#zoom,
             }),
         });
-        this.#mapa.addControl(new Zoom());
-
-        this.#mapa.on('click', function (evt) {
-          const feature = this.forEachFeatureAtPixel(evt.pixel, function (feature) {
-            return feature;
-          });
-          if (feature) {
-            const coordinates = feature.getGeometry().getCoordinates();
-            window.open("view_modpersonas.php?ID=" + feature.get('description'), "Ventana" + feature.get('description'), "width=800,height=500,scrollbars=no,top=150,left=250,resizable=no");
-            overlay.setPosition(coordinates);
-          }
-        });
-
-        let imagen = './images/icons/location.png'
-        this.addIcon(lon, lat, imagen);
+        //this.#mapa.addControl(new Zoom());
+        //let imagen = './images/icons/location.png'
+        //this.addIcon(lon, lat, imagen);
     }
 
     setGeoreferenciacion(){
@@ -89,13 +81,17 @@ export class MapaOl {
 
     viewPersonaGeoreferenciada(){
       this.#mapa.on('click', function (evt) {
+        let windowsReference = null;
         const feature = this.forEachFeatureAtPixel(evt.pixel, function (feature) {
           return feature;
         });
         if (feature) {
           const coordinates = feature.getGeometry().getCoordinates();
-          window.open("view_modpersonas.php?ID=" + feature.get('description'), "Ventana" + feature.get('description'), "width=800,height=500,scrollbars=no,top=150,left=250,resizable=no");
-          overlay.setPosition(coordinates);
+          windowsReference = window.open(
+                                         "view_modpersonas.php?ID=" + feature.get('description'),
+                                         "Ventana" + feature.get('description'), 
+                                         "width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no"
+                                        );
         }
       });
   }
@@ -162,7 +158,7 @@ export class MapaOl {
               width: 1.25
             }),
             text: new Text({
-              font: '6px Calibri,sans-serif',
+              font: (simbolo.length == 1) ? '19px Calibri,sans-serif' : '12px Calibri,sans-serif',
               fill: new Fill({ color: color }),
               stroke: new Stroke({
                 color: '#fff', width: 2
@@ -193,6 +189,18 @@ export class MapaOl {
       let vectorLayer = this.#mapa.getLayers();
       lonLat = olProj.transform(lonLat, "EPSG:4326", "EPSG:3857");
       vectorLayer.item(1).getSource().getFeatures();
-      
+    }
+
+    addRefWindow(refWindow) {
+      this.#windowsOpened.push(refWindow);
+    }
+
+    isModifyPerson() {
+      let value = null;
+      value = this.#windowsOpened.reduce(
+                               (valor, refWindow) => valor || refWindow.isSave,
+                               false
+      )
+      return value;
     }
 }

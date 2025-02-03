@@ -10,6 +10,7 @@ class DtoMovimiento{
 	private $Motivo_3;
 	private $Motivo_4;
 	private $Motivo_5;
+	private $id_persona;
 
 	private $Observaciones;
 	private $Responsable;
@@ -46,6 +47,12 @@ public function setMotivo_3($xMotivo_3){
 	$this->Motivo_3 = $xMotivo_3;
 }
 
+public function setMotivo_4($xMotivo_3){
+	$this->Motivo_3 = $xMotivo_3;
+}
+public function setMotivo_5($xMotivo_3){
+	$this->Motivo_3 = $xMotivo_3;
+}
 public function setObservaciones($xObservaciones){
 	$this->Observaciones = $xObservaciones;
 }
@@ -62,6 +69,9 @@ public function setOtraInstitucion($xOtraInstitucion){
 	$this->OtraInstitucion = $xOtraInstitucion;
 }
 
+public function setId_Persona($id_persona){
+	$this->id_persona = $id_persona;
+}
 //METODOS GET
 public function getID_Movimiento(){
 	return $this->ID_Movimiento;
@@ -113,6 +123,9 @@ public function getCentroSalud(){
 
 public function getOtraInstitucion(){
 	return $this->OtraInstitucion;
+}
+public function getId_Persona(){
+	return $this->id_persona;
 }
 
 public function __construct($xID_Movimiento,$xFecha,$xApellido,$xNombre,$xMotivo_1,$xMotivo_2,$xMotivo_3,$xMotivo_4,$xMotivo_5,$xObservaciones,$xResponsable,$xCentroSalud,$xOtraInstitucion){

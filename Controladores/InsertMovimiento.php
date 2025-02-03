@@ -2,6 +2,7 @@
 session_start();
 require_once 'Conexion.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Movimiento.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/MovimientoMotivo.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Accion.php';
 
 /*
@@ -85,13 +86,12 @@ if(empty($ID_OtraInstitucion)){
 	$_SESSION["UltOtraInstitucion"] = $ID_OtraInstitucion;
 }
 
-
 $Fecha_Accion = date("Y-m-d");
 $ID_TipoAccion = 1;
 
 $Con = new Conexion();
 $Con->OpenConexion();
-$Movimiento = new Movimiento(
+$movimiento = new Movimiento(
 				coneccion_base: $Con,
 						xFecha: $Fecha,
 				Fecha_Creacion: $Fecha_Accion,
@@ -110,7 +110,99 @@ $Movimiento = new Movimiento(
 		   xID_OtraInstitucion: $ID_OtraInstitucion,
 					   xEstado: $Estado
 );
-$Movimiento->save();
+$movimiento->save();
+$id_movimiento = $movimiento->getID_Movimiento();
+
+if ($ID_Motivo_1 > 1) {
+	$motivo = MovimientoMotivo::exist_movimiento_motivo(
+		connection: $Con,
+		movimiento: $id_movimiento,
+		motivo: $ID_Motivo_1
+	);
+	if (!$motivo) {
+		$movimiento_motivo = new MovimientoMotivo(
+													  connection: $Con,
+												   id_movimiento: $id_movimiento,
+													   id_motivo: $ID_Motivo_1,
+													  nro_motivo: 1,
+														  estado: 1
+		);
+		$movimiento_motivo->save();
+	}
+}
+
+if ($ID_Motivo_2 > 1) {
+	$motivo = MovimientoMotivo::exist_movimiento_motivo(
+		connection: $Con,
+		movimiento: $id_movimiento,
+		motivo: $ID_Motivo_2
+	);
+	if (!$motivo) {
+		$movimiento_motivo = new MovimientoMotivo(
+													connection: $Con,
+												id_movimiento: $id_movimiento,
+													id_motivo: $ID_Motivo_2,
+													nro_motivo: 2,
+														estado: 1
+		);
+		$movimiento_motivo->save();
+	}
+}
+
+if ($ID_Motivo_3 > 1) {
+	$motivo = MovimientoMotivo::exist_movimiento_motivo(
+		connection: $Con,
+		movimiento: $id_movimiento,
+		motivo: $ID_Motivo_3
+	);
+	if (!$motivo) {
+		$movimiento_motivo = new MovimientoMotivo(
+													connection: $Con,
+												id_movimiento: $id_movimiento,
+													id_motivo: $ID_Motivo_3,
+													nro_motivo: 3,
+														estado: 1
+		);
+		$movimiento_motivo->save();
+	}
+}
+
+if ($ID_Motivo_4 > 1) {
+	$motivo = MovimientoMotivo::exist_movimiento_motivo(
+		connection: $Con,
+		movimiento: $id_movimiento,
+		motivo: $ID_Motivo_4
+	);
+	if (!$motivo) {
+		$movimiento_motivo = new MovimientoMotivo(
+													connection: $Con,
+												id_movimiento: $id_movimiento,
+													id_motivo: $ID_Motivo_4,
+													nro_motivo: 4,
+														estado: 1
+		);
+		$movimiento_motivo->save();
+	}
+}
+
+if ($ID_Motivo_5 > 1) {
+	$motivo = MovimientoMotivo::exist_movimiento_motivo(
+		connection: $Con,
+		movimiento: $id_movimiento,
+		motivo: $ID_Motivo_5
+	);
+	if (!$motivo) {
+		$movimiento_motivo = new MovimientoMotivo(
+													connection: $Con,
+												id_movimiento: $id_movimiento,
+													id_motivo: $ID_Motivo_5,
+													nro_motivo: 5,
+														estado: 1
+		);
+		$movimiento_motivo->save();
+	}
+}
+
 $detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Movimiento. Datos: Fecha: $Fecha_Accion - Persona: $ID_Persona - Motivo 1: $ID_Motivo_1 - Motivo 2: $ID_Motivo_2 - Motivo 3: $ID_Motivo_3 - Observaciones: $Observaciones - Responsable: $ID_Responsable - Centro Salud: $ID_Centro - Otra Institución: $ID_OtraInstitucion";
 
 try {
@@ -131,4 +223,3 @@ $Con->CloseConexion();
 $Mensaje = "El Movimiento se ha cargado correctamente";
 
 header('Location: ../view_newmovimientos.php?Mensaje='.$Mensaje);
-?>

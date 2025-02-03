@@ -31,15 +31,11 @@ $Con->CloseConexion();
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-  <!--<link href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-  <!--<script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script> -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-  <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="js/acciones-reporte-grafico.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.js"></script>
@@ -180,6 +176,46 @@ $Con->CloseConexion();
         }
           idRequestField = 0;
       }
+
+
+      function htmlExcel(idTabla, nombreArchivo = '') {
+        let linkDescarga;
+        let tipoDatos = 'application/vnd.ms-excel';
+        let tablaDatos = document.getElementById(idTabla);
+        //let tablaHTML = tablaDatos.outerHTML.replace(/ /g, '%20');
+        let tablaHTML = tablaDatos.outerHTML;
+        // Nombre del archivo
+        nombreArchivo = nombreArchivo ? nombreArchivo + '.xlsx' : 'Reporte_Puntos_Canjeados.xlsx';
+
+        // Crear el link de descarga
+        linkDescarga = document.createElement("a");
+        linkDescarga.setAttribute("target", "_blank");
+        document.body.appendChild(linkDescarga);
+        let url = null;
+        let blob = new Blob(['\ufeff', tablaHTML], {
+            type: tipoDatos
+          });
+        url = URL.createObjectURL(blob);
+        var w = window.open(url);
+        /*if (navigator.msSaveOrOpenBlob) {
+          let blob = new Blob(['\ufeff', tablaHTML], {
+            type: tipoDatos
+          });
+          url = URL.createObjectURL(blob);
+          navigator.msSaveOrOpenBlob(blob, nombreArchivo);
+        } else {
+          // Crear el link al archivo
+          linkDescarga.href = 'data:' + tipoDatos + ', ' + tablaHTML;
+          var w = window.open(url);
+          // Setear el nombre de archivo
+          //linkDescarga.download = nombreArchivo;
+
+          //Ejecutar la función
+          linkDescarga.click();
+        }*/
+      }
+
+
   </script>  
 </head>
 <body>
@@ -294,61 +330,15 @@ $Con->CloseConexion();
 
               $listaDeMotivos = "(".implode(",",array_filter($MotivosOpciones)).")";
 
-              // Las dos querys siguientes son iguales salvo que en la primer query se filtra por persona,
-              // ya que el foco es considerar a una sola persona
-              // pero en la segunda query se traen todos los registros de todas las personas, no solo una persona.
-              $ConsultarMovimientosPersona = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, P.domicilio,
-                                                P.fecha_nac, P.documento, P.obra_social, P.localidad, P.edad, P.meses,
-                                                B.Barrio, M.motivo_1, M.motivo_2, M.motivo_3, M.motivo_4,M.motivo_5,
-                                                M.observaciones, R.responsable, CS.centro_salud, I.Nombre as 'NombreInst' 
-                                              from movimiento M,
-                                                   persona P,
-                                                   barrios B,
-                                                   motivo MT,
-                                                   categoria C,
-                                                   centros_salud CS,
-                                                   otras_instituciones I,
-                                                   responsable R
-                                              where M.id_persona = P.id_persona 
-                                                    and B.ID_Barrio = P.ID_Barrio
-                                                    and M.id_centro = CS.id_centro
-                                                    and M.id_otrainstitucion = I.ID_OtraInstitucion
-                                                    and R.id_resp = M.id_resp
-                                                    and M.estado = 1
-                                                    and P.estado = 1
-                                                    and MT.estado = 1
-                                                    and C.estado = 1
-                                                    and M.fecha between '$Fecha_Inicio' and '$Fecha_Fin'
-                                                    and P.ID_Persona = $ID_Persona";
-
-          	  $Consulta = "select M.id_movimiento, M.fecha, M.id_persona, MONTH(M.fecha) as 'Mes',
+          	  $Consulta = "SELECT M.id_movimiento, M.fecha, M.id_persona, MONTH(M.fecha) as 'Mes',
                                   YEAR(M.fecha) as 'Anio', B.Barrio, P.manzana, P.documento, P.obra_social,
-                                  P.localidad, P.edad, P.meses, P.lote, P.familia, P.apellido,
+                                  P.localidad, P.edad, P.meses, P.lote, P.familia, P.apellido, P.fecha_nac,
                                   P.nombre, P.fecha_nac, P.domicilio, M.motivo_1, M.motivo_2, M.motivo_3,
-                                  M.motivo_4,M.motivo_5,R.responsable, M.observaciones, CS.centro_salud,
-                                  I.Nombre as 'NombreInst' 
-                            from movimiento M,
-                                 persona P,
-                                 barrios B,
-                                 motivo MT,
-                                 categoria C,
-                                 centros_salud CS,
-                                 otras_instituciones I,
-                                 responsable R
-                            where M.id_persona = P.id_persona
-                                  and B.ID_Barrio = P.ID_Barrio
-                                  and M.id_centro = CS.id_centro
-                                  and M.id_otrainstitucion = I.ID_OtraInstitucion
-                                  and R.id_resp = M.id_resp
-                                  and M.estado = 1
-                                  and P.estado = 1
-                                  and MT.estado = 1
-                                  and C.estado = 1
-                                  and M.fecha between '$Fecha_Inicio' and '$Fecha_Fin'"; 
+                                  M.motivo_4,M.motivo_5, MT.motivo, R.responsable, M.observaciones, CS.centro_salud,
+                                  I.Nombre as 'NombreInst', MST.id_motivo, MST.nro_motivo";
 
               $filtros = [];
               $filtrosSeleccionados = [];
-              $tomarRetTodos = array();
 
               $filtrosSeleccionados["Fecha_Desde"] = $_REQUEST["Fecha_Desde"];
               $filtrosSeleccionados["Fecha_Hasta"] = $_REQUEST["Fecha_Hasta"];
@@ -362,14 +352,7 @@ $Con->CloseConexion();
                                             or M.motivo_4 IN $listaDeMotivos
                                             or M.motivo_5 IN $listaDeMotivos )";
 
-              if(count(array_filter($MotivosOpciones)) > 0){
-                $Consulta .= $filtMovimientoPorMotivo;
-                $ConsultarMovimientosPersona .= $filtMovimientoPorMotivo;
-              }
-
               if($ID_Persona > 0){
-                $Consulta .= " and P.id_persona = $ID_Persona";
-
                 $ConsultarPersona = "select apellido, nombre
                                      from persona
                                      where ID_Persona = " . $ID_Persona." limit 1";
@@ -405,13 +388,27 @@ $Con->CloseConexion();
               }
               */
 
+            $persona_query = "SELECT *
+                              FROM persona 
+                              WHERE estado = 1";
+
+            $motivo_query = "SELECT *
+                              FROM motivo
+                              WHERE ";
+            $categoria_query = "SELECT *
+                                FROM categoria ";
+            $movimiento_query = "SELECT *
+                                  FROM movimiento 
+                                  WHERE fecha between '$Fecha_Inicio' and '$Fecha_Fin'
+                                    AND estado = 1";
+
             if ($Edad_Desde !== null && $Edad_Desde !== "" && $Edad_Hasta !== null && $Edad_Hasta !== "") {
-              $Consulta .= " and P.edad >= $Edad_Desde and P.edad <= $Edad_Hasta";
+              $persona_query .= " edad >= $Edad_Desde and edad <= $Edad_Hasta";
               $filtros[] = "Edad: Desde " . $Edad_Desde . " hasta " . $Edad_Hasta;
               if ($Meses_Hasta !== null && $Meses_Hasta !== "") {
-                $Consulta .= " and (P.edad < $Edad_Hasta or P.meses <= $Meses_Hasta)";
+                $Consulta .= " and (edad < $Edad_Hasta or meses <= $Meses_Hasta)";
                 if ($Meses_Desde != null) {
-                  $Consulta .= " and P.meses >= $Meses_Desde ";
+                  $Consulta .= " and meses >= $Meses_Desde ";
                   $filtros[] = "Meses: Desde " . $Meses_Desde . " hasta " . $Meses_Hasta;
                 } else {
                   $filtros[] = "Meses: Desde 0 hasta " . $Meses_Hasta;
@@ -419,9 +416,9 @@ $Con->CloseConexion();
               }
             } else {
               if ($Meses_Desde !== null && $Meses_Desde !== "" && $Meses_Hasta !== null && $Meses_Hasta !== "") {
-                $Consulta .= " and P.meses <= $Meses_Hasta and P.edad = 0 ";
+                $persona_query .= " meses <= $Meses_Hasta and edad = 0 ";
                 if ($Meses_Desde != null) {
-                  $Consulta .= " and P.meses >= $Meses_Desde";
+                  $Consulta .= " and meses >= $Meses_Desde";
                   $filtros[] = "Meses: Desde " . $Meses_Desde . " hasta " . $Meses_Hasta;
                 } else {
                   $filtros[] = "Meses: Desde 0 hasta " . $Meses_Hasta;
@@ -429,324 +426,226 @@ $Con->CloseConexion();
               }
             }
 
-              if($Domicilio != null && $Domicilio != ""){
-                $ConsultarMovimientosPersona .= " and P.domicilio like '%$Domicilio%'";
-                $Consulta .= " and P.domicilio like '%$Domicilio%'";
-                $filtros[] = "Domicilio: " . $Domicilio;
-                $filtrosSeleccionados["Domicilio"] = $Domicilio;
-              }
+            if($Domicilio != null && $Domicilio != ""){
+              $persona_query .= " and domicilio like '%$Domicilio%'";
+              $filtros[] = "Domicilio: " . $Domicilio;
+              $filtrosSeleccionados["Domicilio"] = $Domicilio;
+            }
 
-              if($Manzana != null && $Manzana != ""){
-                $ConsultarMovimientosPersona .= " and P.manzana = '$Manzana'";
-                $Consulta .= " and P.manzana = '$Manzana'";
-                $filtros[] = "Manzana: " . $Manzana;
-                $filtrosSeleccionados["Manzana"] = $Manzana;
-              }
+            if($Manzana != null && $Manzana != ""){
+              $persona_query .= " and manzana = '$Manzana'";
+              $filtros[] = "Manzana: " . $Manzana;
+              $filtrosSeleccionados["Manzana"] = $Manzana;
+            }
 
-              if($Lote != null && $Lote != ""){
-                $ConsultarMovimientosPersona .= " and P.lote = $Lote";
-                $Consulta .= " and P.lote = $Lote";
-                $filtros[] = "Lote: " . $Lote;
-                $filtrosSeleccionados["Lote"] = $Lote;
-              }
+            if($Lote != null && $Lote != ""){
+              $persona_query .= " and lote = $Lote";
+              $filtros[] = "Lote: " . $Lote;
+              $filtrosSeleccionados["Lote"] = $Lote;
+            }
 
-              if($Familia != null && $Familia != ""){
-                $ConsultarMovimientosPersona .= " and P.familia = $Familia";
-                $Consulta .= " and P.familia = $Familia";
-                $filtros[] = "Sublote: " . $Familia;
-                $filtrosSeleccionados["Familia"] = $Familia;
-              }
+            if($Familia != null && $Familia != ""){
+              $persona_query .= " and familia = $Familia";
+              $filtros[] = "Sublote: " . $Familia;
+              $filtrosSeleccionados["Familia"] = $Familia;
+            }
 
-              if($Nro_Carpeta != null && $Nro_Carpeta != ""){
-                $ConsultarMovimientosPersona .= " and P.nro_carpeta = '$Nro_Carpeta'";
-                $Consulta.= " and P.nro_carpeta = '$Nro_Carpeta'";
-                $filtros[] = "Nro_carpeta: " . $Nro_Carpeta;
-                // $filtrosSeleccionados["Nro_Carpeta"] = $Nro_Carpeta;
-              }
-              $filtrosSeleccionados["Nro_Carpeta"] = $Nro_Carpeta;
+            if($Nro_Carpeta != null && $Nro_Carpeta != ""){
+              $persona_query .= " and nro_carpeta = '$Nro_Carpeta'";
+              $filtros[] = "Nro_carpeta: " . $Nro_Carpeta;
+              // $filtrosSeleccionados["Nro_Carpeta"] = $Nro_Carpeta;
+            }
+            $filtrosSeleccionados["Nro_Carpeta"] = $Nro_Carpeta;
 
-              if($Nro_Legajo != null && $Nro_Legajo != ""){
-                $ConsultarMovimientosPersona .= " and P.nro_legajo = '$Nro_Legajo'";
-                $Consulta.= " and P.nro_legajo = '$Nro_Legajo'";
-                $filtros[] =  " Nro_legajo : " . $Nro_Legajo;
-                $filtrosSeleccionados["Nro_Legajo"] = $Nro_Legajo;
-              }
-              
-              // if(count($Barrio) > 1){
-              if(count((Array)$Barrio) > 1){
-                $filtroBarrios = 'Barrios:';
-                foreach($Barrio as $key => $valueBarrio){
-                  if($key == $Barrio->array_key_first){
-                    $Consulta .= " and (";
-                  }
-                  if($valueBarrio > 0){
-                    if($key === count($Barrio) - 1){
-                      $Consulta .= " P.ID_Barrio = $valueBarrio )";
-                    }else{
-                      $Consulta .= " P.ID_Barrio = $valueBarrio or";
-                    }
-
-                    $ConsultarBarrio = "select Barrio 
-                                        from barrios 
-                                        where ID_Barrio = " . $valueBarrio." limit 1";
-
-                    $EjecutarConsultarBarrio = mysqli_query($Con->Conexion,$ConsultarBarrio) or die("Problemas al consultar filtro Barrios");
-                    $RetConsultarBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);
-                    if($key == $Barrio->array_key_first){
-                      $filtroBarrios .= " " . $RetConsultarBarrio['Barrio'];
-                    }else{
-                      $filtroBarrios .= " - " . $RetConsultarBarrio['Barrio'];
-                    }
-                  }
+            if($Nro_Legajo != null && $Nro_Legajo != ""){
+              $persona_query .= " and nro_legajo = '$Nro_Legajo'";
+              $filtros[] =  " Nro_legajo : " . $Nro_Legajo;
+              $filtrosSeleccionados["Nro_Legajo"] = $Nro_Legajo;
+            }
+            
+            // if(count($Barrio) > 1){
+            if(count((Array)$Barrio) > 1){
+              $filtroBarrios = 'Barrios:';
+              foreach($Barrio as $key => $valueBarrio){
+                if($key == $Barrio->array_key_first){
+                  $persona_query .= " and (";
                 }
-                $filtros[] = $filtroBarrios;
-              }else{
-                if($Barrio[0] > 0){
-                  $Consulta .= " and P.ID_Barrio = $Barrio[0]";
-                  $ConsultarBarrio = "select Barrio from barrios where ID_Barrio = " . $Barrio[0]." limit 1";
+                if($valueBarrio > 0){
+                  if($key === count($Barrio) - 1){
+                    $persona_query .= " ID_Barrio = $valueBarrio )";
+                  }else{
+                    $persona_query .= " ID_Barrio = $valueBarrio or";
+                  }
+
+                  $ConsultarBarrio = "select Barrio 
+                                      from barrios 
+                                      where ID_Barrio = " . $valueBarrio." limit 1";
+
                   $EjecutarConsultarBarrio = mysqli_query($Con->Conexion,$ConsultarBarrio) or die("Problemas al consultar filtro Barrios");
                   $RetConsultarBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);
-                  $filtros[] = "Barrio: " . $RetConsultarBarrio['Barrio'];
-                  $filtrosSeleccionados["ID_Barrio"] = $Barrio[0];
+                  if($key == $Barrio->array_key_first){
+                    $filtroBarrios .= " " . $RetConsultarBarrio['Barrio'];
+                  }else{
+                    $filtroBarrios .= " - " . $RetConsultarBarrio['Barrio'];
+                  }
                 }
               }
-              
-              // $Consulta.= ")";
-
-              // if($Barrio > 0){
-              //   $Consulta .= " and P.ID_Barrio = $Barrio";
-              // }
-
-              if($ID_Escuela > 0){                
-                $ConsultarMovimientosPersona .= " and P.ID_Escuela = $ID_Escuela";
-                $Consulta .= " and P.ID_Escuela = $ID_Escuela";
-                $ConsultarEscuela = "select Escuela from escuelas where ID_Escuela = " . $ID_Escuela." limit 1";
-                $EjecutarConsultarEscuela = mysqli_query($Con->Conexion,$ConsultarEscuela) or die("Problemas al consultar filtro Escuela");
-                $RetConsultarEscuela = mysqli_fetch_assoc($EjecutarConsultarEscuela);  
-                $filtros[] = "Escuela: " . $RetConsultarEscuela['Escuela'];
-                $filtrosSeleccionados["ID_Escuela"] = $ID_Escuela;
+              $filtros[] = $filtroBarrios;
+            } else {
+              if ($Barrio[0] > 0) {
+                $persona_query .= " and ID_Barrio = $Barrio[0]";
+                $ConsultarBarrio = "select Barrio 
+                                    from barrios 
+                                    where ID_Barrio = " . $Barrio[0]." limit 1";
+                $EjecutarConsultarBarrio = mysqli_query($Con->Conexion,$ConsultarBarrio) or die("Problemas al consultar filtro Barrios");
+                $RetConsultarBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);
+                $filtros[] = "Barrio: " . $RetConsultarBarrio['Barrio'];
+                $filtrosSeleccionados["ID_Barrio"] = $Barrio[0];
               }
+            }
+            
+            // $Consulta.= ")";
 
-              if($Trabajo != null && $Trabajo != ""){
-                $ConsultarMovimientosPersona .= " and P.Trabajo like '%$Trabajo%'";
-                $Consulta .= " and P.Trabajo like '%$Trabajo%'";
-                $filtros[] = "Trabajo: " . $Trabajo;
-                $filtrosSeleccionados["Trabajo"] = $Trabajo;                
-              }
-              /*
-              if($ID_Motivo > 0){
-                if($ID_Motivo2 > 0 || $ID_Motivo3 > 0){
-                  $ConsultarMovimientosPersona .= " and (";
-                  $Consulta .= " and (";
-                }else{
-                  $ConsultarMovimientosPersona .= " and ";
-                  $Consulta .= " and ";
-                }
-                $ConsultarMovimientosPersona .= " (M.motivo_1 = $ID_Motivo or M.motivo_2 = $ID_Motivo or M.motivo_3 = $ID_Motivo)";
-                $Consulta .= " (M.motivo_1 = $ID_Motivo or M.motivo_2 = $ID_Motivo or M.motivo_3 = $ID_Motivo)";
+            // if($Barrio > 0){
+            //   $Consulta .= " and P.ID_Barrio = $Barrio";
+            // }
 
-                $ConsultarMotivo = "select motivo 
-                                    from motivo 
-                                    where id_motivo = " . $ID_Motivo." limit 1";
+            if($ID_Escuela > 0){                
+              $persona_query .= " and ID_Escuela = $ID_Escuela";
+              $ConsultarEscuela = "select Escuela 
+                                    from escuelas 
+                                    where ID_Escuela = " . $ID_Escuela." limit 1";
+              $EjecutarConsultarEscuela = mysqli_query($Con->Conexion,$ConsultarEscuela) or die("Problemas al consultar filtro Escuela");
+              $RetConsultarEscuela = mysqli_fetch_assoc($EjecutarConsultarEscuela);  
+              $filtros[] = "Escuela: " . $RetConsultarEscuela['Escuela'];
+              $filtrosSeleccionados["ID_Escuela"] = $ID_Escuela;
+            }
 
-                $EjecutarConsultarMotivo = mysqli_query($Con->Conexion,$ConsultarMotivo) or die("Problemas al consultar filtro Motivo");
-                $RetConsultarMotivo = mysqli_fetch_assoc($EjecutarConsultarMotivo);  
-                $filtros[] = "Motivo 1: " . $RetConsultarMotivo['motivo'];                
-                //$filtrosSeleccionados["ID_Motivo1"] = $ID_Motivo;
-              }
-              *//*
-              $CantOpMotivos = count(array_filter($MotivosOpciones, function($x) { return !empty($x); }));
+            if($Trabajo != null && $Trabajo != ""){
+              $persona_query .= " and Trabajo like '%$Trabajo%'";
+              $filtros[] = "Trabajo: " . $Trabajo;
+              $filtrosSeleccionados["Trabajo"] = $Trabajo;                
+            }
 
-              if($CantOpMotivos > 0){
-                $ConsultarMovimientosPersona .= " and ";
-                $Consulta .= " and ";
-                if($CantOpMotivos > 1){
-                  $ConsultarMovimientosPersona .= " (";
-                  $Consulta .= " (";
-                }
-              }
+            if($ID_Categoria > 0){
+              $categoria_query .= " WHERE id_categoria = $ID_Categoria";
 
-              if($ID_Motivo > 1){
-                $ConsultarMovimientosPersona .= " (M.motivo_1 = $ID_Motivo or M.motivo_2 = $ID_Motivo or M.motivo_3 = $ID_Motivo)";
-                $Consulta .= " (M.motivo_1 = $ID_Motivo or M.motivo_2 = $ID_Motivo or M.motivo_3 = $ID_Motivo)";
+              $ConsultarCategoria = "select categoria
+                                    from categoria
+                                    where id_categoria = " . $ID_Categoria." limit 1";
 
-                $ConsultarMotivo = "select motivo 
-                                    from motivo 
-                                    where id_motivo = " . $ID_Motivo." limit 1";
+              $EjecutarConsultarCategoria = mysqli_query($Con->Conexion,$ConsultarCategoria) or die("Problemas al consultar filtro Categoria");
+              $RetConsultarCategoria = mysqli_fetch_assoc($EjecutarConsultarCategoria);
+              $filtros[] = "Categoria: " . $RetConsultarCategoria['categoria'];
+              $filtrosSeleccionados["ID_Categoria"] = $ID_Categoria;
+            }
 
-                $EjecutarConsultarMotivo = mysqli_query($Con->Conexion,$ConsultarMotivo) or die("Problemas al consultar filtro Motivo");
-                $RetConsultarMotivo = mysqli_fetch_assoc($EjecutarConsultarMotivo);  
-                $filtros[] = "Motivo 1: " . $RetConsultarMotivo['motivo'];                
-                //$filtrosSeleccionados["ID_Motivo1"] = $ID_Motivo;
-              }
-              if($ID_Motivo2 > 1){
-                if($ID_Motivo > 1 ){
-                  $ConsultarMovimientosPersona .= " or ";
-                  $Consulta .= " or ";
-                }
-                $ConsultarMovimientosPersona .= "(M.motivo_1 = $ID_Motivo2 or M.motivo_2 = $ID_Motivo2 or M.motivo_3 = $ID_Motivo2)";
-                $Consulta .= "(M.motivo_1 = $ID_Motivo2 or M.motivo_2 = $ID_Motivo2 or M.motivo_3 = $ID_Motivo2)";
+            if($ID_CentroSalud > 0){
+              $movimiento_query  .= " AND id_centro = $ID_CentroSalud";
+              $ConsultarCentroSalud = "select centro_salud 
+                                        from centros_salud 
+                                        where id_centro = " . $ID_CentroSalud." limit 1";
+              $EjecutarConsultarCentroSalud = mysqli_query($Con->Conexion,$ConsultarCentroSalud) or die("Problemas al consultar filtro Categoria");
+              $RetConsultarCentroSalud = mysqli_fetch_assoc($EjecutarConsultarCentroSalud);                  
+              $filtros[] = "Centro Salud: " . $RetConsultarCentroSalud['centro_salud'];
+              $filtrosSeleccionados["ID_CentroSalud"] = $ID_CentroSalud;
+            }
 
-                $ConsultarMotivo = "select motivo 
-                                    from motivo 
-                                    where id_motivo = " . $ID_Motivo2." limit 1";
+            if($ID_OtraInstitucion > 0){
+              $movimiento_query  .= " and ID_OtraInstitucion = $ID_OtraInstitucion";
+              $ConsultarOtraInstitucion = "select Nombre 
+                                            from otras_instituciones 
+                                            where ID_OtraInstitucion = " . $ID_OtraInstitucion." limit 1";
+              $EjecutarConsultarOtraInstitucion = mysqli_query($Con->Conexion,$ConsultarOtraInstitucion) or die("Problemas al consultar filtro Categoria");
+              $RetConsultarOtraInstitucion = mysqli_fetch_assoc($EjecutarConsultarOtraInstitucion);   
+              $filtros[] = "Otra Institucion: " . $RetConsultarOtraInstitucion['Nombre'];
+              $filtrosSeleccionados["ID_OtraInstitucion"] = $ID_OtraInstitucion;
+            }
 
-                $EjecutarConsultarMotivo = mysqli_query($Con->Conexion,$ConsultarMotivo) or die("Problemas al consultar filtro Motivo");
-                $RetConsultarMotivo = mysqli_fetch_assoc($EjecutarConsultarMotivo);
-                $filtros[] = "Motivo 2: " . $RetConsultarMotivo['motivo'];
-                //$filtrosSeleccionados["ID_Motivo2"] = $ID_Motivo2;
-              }
+            if($ID_Responsable > 0){
+              $movimiento_query  .= " and id_resp = $ID_Responsable";
+              $ConsultarResponsable = "select responsable 
+                                        from responsable 
+                                        where id_resp = " . $ID_Responsable." limit 1";
+              $EjecutarConsultarResponsable = mysqli_query($Con->Conexion,$ConsultarResponsable) or die("Problemas al consultar filtro Responsable");
+              $RetConsultarResponsable = mysqli_fetch_assoc($EjecutarConsultarResponsable);   
+              $filtros[] = "Responsable: " . $RetConsultarResponsable['responsable'];
+              $filtrosSeleccionados["ID_Responsable"] = $ID_Responsable;
+            }
 
-              if($ID_Motivo3 > 1){
-                if($ID_Motivo > 1 || $ID_Motivo2 > 1){
-                  $ConsultarMovimientosPersona .= " or ";
-                  $Consulta .= " or ";
-                }
-                $ConsultarMovimientosPersona .= "(M.motivo_1 = $ID_Motivo3 
-                                               or M.motivo_2 = $ID_Motivo3 
-                                               or M.motivo_3 = $ID_Motivo3)";
+            if (count(array_filter($MotivosOpciones))) {
+              $motivo_query = "(" . $motivo_query;
+              $motivo_query .= " id_motivo in $listaDeMotivos)";
+            } else {
+              $motivo_query = "motivo";
+            }
+            if($ID_Persona > 0) {
+              $persona_query .= " and id_persona = $ID_Persona";
+            }
 
-                $Consulta .= "(M.motivo_1 = $ID_Motivo3 
-                            or M.motivo_2 = $ID_Motivo3 
-                            or M.motivo_3 = $ID_Motivo3)";
+            if ($Mostrar) {
+                $Consulta .=  " FROM ($movimiento_query) M
+                                  INNER JOIN movimiento_motivo MST 
+                                  ON (M.id_movimiento = MST.id_movimiento)
+                                  INNER JOIN $motivo_query MT
+                                  ON (MST.id_motivo = MT.id_motivo)
+                                  INNER JOIN ((SELECT * FROM GIN) UNION (SELECT * FROM INN)) GN
+                                  ON (GN.id_motivo = MT.id_motivo)
+                                  RIGHT JOIN ($persona_query) P 
+                                  ON (M.id_persona = P.id_persona)
+                                  INNER JOIN barrios B 
+                                  ON (B.ID_Barrio = P.ID_Barrio)                                    
+                                  LEFT JOIN ($categoria_query) C
+                                  ON (C.cod_categoria = MT.cod_categoria)
+                                  LEFT JOIN centros_salud CS
+                                  ON (M.id_centro = CS.id_centro)
+                                  LEFT JOIN otras_instituciones I
+                                  ON (M.id_otrainstitucion = I.ID_OtraInstitucion)
+                                  LEFT JOIN responsable R
+                                  ON (R.id_resp = M.id_resp)";
+                                
+            } else {
+                $Consulta .=  " FROM ($movimiento_query) M
+                                  INNER JOIN movimiento_motivo MST 
+                                  ON (M.id_movimiento = MST.id_movimiento)
+                                  INNER JOIN $motivo_query MT
+                                  ON (MST.id_motivo = MT.id_motivo)
+                                  INNER JOIN ((SELECT * FROM GIN) UNION (SELECT * FROM INN)) GN
+                                  ON (GN.id_motivo = MT.id_motivo)
+                                  INNER JOIN ($persona_query) P 
+                                  ON (M.id_persona = P.id_persona)
+                                  INNER JOIN barrios B 
+                                  ON (B.ID_Barrio = P.ID_Barrio)                                    
+                                  INNER JOIN ($categoria_query) C
+                                  ON (C.cod_categoria = MT.cod_categoria)
+                                  INNER JOIN centros_salud CS
+                                  ON (M.id_centro = CS.id_centro)
+                                  INNER JOIN otras_instituciones I
+                                  ON (M.id_otrainstitucion = I.ID_OtraInstitucion)
+                                  INNER JOIN responsable R
+                                  ON (R.id_resp = M.id_resp)";
 
-                $ConsultarMotivo = "select motivo 
-                                    from motivo 
-                                    where id_motivo = " . $ID_Motivo3." limit 1";
-
-                $EjecutarConsultarMotivo = mysqli_query($Con->Conexion,$ConsultarMotivo) or die("Problemas al consultar filtro Motivo");
-                $RetConsultarMotivo = mysqli_fetch_assoc($EjecutarConsultarMotivo);  
-                $filtros[] = "Motivo 3: " . $RetConsultarMotivo['motivo'];
-                //$filtrosSeleccionados["ID_Motivo3"] = $ID_Motivo3;
-              }
-
-              if($ID_Motivo4 > 1){
-                if($ID_Motivo > 1 || $ID_Motivo2 > 1 || $ID_Motivo3 > 1){
-                  $ConsultarMovimientosPersona .= " or ";
-                  $Consulta .= " or ";
-                }
-                $ConsultarMovimientosPersona .= "(M.motivo_1 = $ID_Motivo4 
-                                               or M.motivo_2 = $ID_Motivo4 
-                                               or M.motivo_3 = $ID_Motivo4)";
-
-                $Consulta .= "(M.motivo_1 = $ID_Motivo4 
-                            or M.motivo_2 = $ID_Motivo4 
-                            or M.motivo_3 = $ID_Motivo4)";
-
-                $ConsultarMotivo = "select motivo 
-                                    from motivo 
-                                    where id_motivo = " . $ID_Motivo4." limit 1";
-
-                $EjecutarConsultarMotivo = mysqli_query($Con->Conexion,$ConsultarMotivo) or die("Problemas al consultar filtro Motivo");
-                $RetConsultarMotivo = mysqli_fetch_assoc($EjecutarConsultarMotivo);  
-                $filtros[] = "Motivo 4: " . $RetConsultarMotivo['motivo'];
-              }
-
-              if($ID_Motivo5 > 1){
-                if($ID_Motivo > 1 || $ID_Motivo2 > 1 || $ID_Motivo3 > 1 || $ID_Motivo4 > 1){
-                  $ConsultarMovimientosPersona .= " or ";
-                  $Consulta .= " or ";
-                }
-                $ConsultarMovimientosPersona .= "(M.motivo_1 = $ID_Motivo5 
-                                               or M.motivo_2 = $ID_Motivo5 
-                                               or M.motivo_3 = $ID_Motivo5)";
-
-                $Consulta .= "(M.motivo_1 = $ID_Motivo5
-                            or M.motivo_2 = $ID_Motivo5
-                            or M.motivo_3 = $ID_Motivo5)";
-
-                $ConsultarMotivo = "select motivo 
-                                    from motivo 
-                                    where id_motivo = " . $ID_Motivo5." limit 1";
-                $EjecutarConsultarMotivo = mysqli_query($Con->Conexion,$ConsultarMotivo) or die("Problemas al consultar filtro Motivo");
-                $RetConsultarMotivo = mysqli_fetch_assoc($EjecutarConsultarMotivo);  
-                $filtros[] = "Motivo 5: " . $RetConsultarMotivo['motivo'];
-              }
-
-              if($CantOpMotivos > 1){
-                $ConsultarMovimientosPersona .= ")";
-                $Consulta .= ")";
-              }
-              */
-              if($ID_Categoria > 0){
-                $ConsultarMovimientosPersona .= " and  ((M.motivo_1 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria)
-                                                     or (M.motivo_2 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria)
-                                                     or (M.motivo_3 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria)
-                                                     or (M.motivo_4 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria)
-                                                     or (M.motivo_5 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria))";
-
-                $Consulta .= " and  ((M.motivo_1 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria)
-                                  or (M.motivo_2 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria)
-                                  or (M.motivo_3 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria)
-                                  or (M.motivo_4 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria)
-                                  or (M.motivo_5 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria))";
-
-                $ConsultarCategoria = "select categoria
-                                       from categoria
-                                       where id_categoria = " . $ID_Categoria." limit 1";
-
-                $EjecutarConsultarCategoria = mysqli_query($Con->Conexion,$ConsultarCategoria) or die("Problemas al consultar filtro Categoria");
-                $RetConsultarCategoria = mysqli_fetch_assoc($EjecutarConsultarCategoria);
-                $filtros[] = "Categoria: " . $RetConsultarCategoria['categoria'];
-                $filtrosSeleccionados["ID_Categoria"] = $ID_Categoria;
-              }
-
-              if($ID_CentroSalud > 0){
-                $ConsultarMovimientosPersona .= " and CS.id_centro = $ID_CentroSalud";
-                $Consulta .= " and CS.id_centro = $ID_CentroSalud";
-                $ConsultarCentroSalud = "select centro_salud from centros_salud where id_centro = " . $ID_CentroSalud." limit 1";
-                $EjecutarConsultarCentroSalud = mysqli_query($Con->Conexion,$ConsultarCentroSalud) or die("Problemas al consultar filtro Categoria");
-                $RetConsultarCentroSalud = mysqli_fetch_assoc($EjecutarConsultarCentroSalud);                  
-                $filtros[] = "Centro Salud: " . $RetConsultarCentroSalud['centro_salud'];
-                $filtrosSeleccionados["ID_CentroSalud"] = $ID_CentroSalud;
-              }
-
-              if($ID_OtraInstitucion > 0){
-                $ConsultarMovimientosPersona .= " and I.ID_OtraInstitucion = $ID_OtraInstitucion";
-                $Consulta .= " and I.ID_OtraInstitucion = $ID_OtraInstitucion";
-                $ConsultarOtraInstitucion = "select Nombre from otras_instituciones where ID_OtraInstitucion = " . $ID_OtraInstitucion." limit 1";
-                $EjecutarConsultarOtraInstitucion = mysqli_query($Con->Conexion,$ConsultarOtraInstitucion) or die("Problemas al consultar filtro Categoria");
-                $RetConsultarOtraInstitucion = mysqli_fetch_assoc($EjecutarConsultarOtraInstitucion);   
-                $filtros[] = "Otra Institucion: " . $RetConsultarOtraInstitucion['Nombre'];
-                $filtrosSeleccionados["ID_OtraInstitucion"] = $ID_OtraInstitucion;
-              }
-
-              if($ID_Responsable > 0){
-                $ConsultarMovimientosPersona .= " and R.ID_Responsable = $ID_Responsable";
-                $Consulta .= " and R.id_resp = $ID_Responsable";
-                $ConsultarResponsable = "select responsable from responsable where id_resp = " . $ID_Responsable." limit 1";
-                $EjecutarConsultarResponsable = mysqli_query($Con->Conexion,$ConsultarResponsable) or die("Problemas al consultar filtro Responsable");
-                $RetConsultarResponsable = mysqli_fetch_assoc($EjecutarConsultarResponsable);   
-                $filtros[] = "Responsable: " . $RetConsultarResponsable['responsable'];
-                $filtrosSeleccionados["ID_Responsable"] = $ID_Responsable;
-              }
-
-              $ConsultarMovimientosPersona .= " group by M.id_movimiento,  M.fecha order by M.fecha DESC";
+            }
 
               // Si la persona fue cargada en el formulario de la pagina de filtros de movimiento, se ordenara la lista
               // de movimientos usando los atributos de los movimiento asociados a la persona, en casos contrario, si no
               // se agrega a la persona en el filtrado, se ordenara la lista de movimientos sobre los atributos de cada persona en general.
 
-              if($ID_Persona > 0){
-                $Consulta .= " group by M.id_movimiento order by M.fecha DESC, B.Barrio DESC, P.domicilio DESC, P.manzana DESC, P.lote DESC, P.familia DESC, P.domicilio DESC, P.apellido DESC, M.id_movimiento DESC";
-              }else{
-                $Consulta .= " group by M.id_persona order by M.fecha DESC, B.Barrio DESC, P.domicilio DESC, P.manzana DESC, P.lote DESC, P.familia DESC, P.domicilio DESC, P.apellido DESC, M.id_movimiento DESC";
-              }
-                            
-
+              $Consulta .= " order by M.fecha DESC, B.Barrio DESC, P.domicilio DESC, P.manzana DESC, P.lote DESC, P.familia DESC, P.domicilio DESC, P.apellido DESC, M.id_movimiento DESC";
+   
+              $ConsultarMovimientosPersona = $Consulta;
               //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+              /*
               //	CREANDO FILTRO MOSTRAR PERSONAS (SIN MOVIMIENTOS)              
-              if($Mostrar > 0){
+              if ($Mostrar > 0) {
                 //, P.nro_legajo, P.nro_carpeta
               	$ConsultarTodos = "select P.id_persona, B.Barrio, P.manzana, 
                                           P.lote, P.familia, P.apellido, P.nombre,
                                           P.fecha_nac, P.domicilio
                                    from persona P, 
-                                        barrios B, 
-                                        movimiento M
+                                        barrios B
                                    where not exists(select * 
                                                     from movimiento M2 
                                                     where M2.id_persona = P.id_persona) 
@@ -811,7 +710,7 @@ $Con->CloseConexion();
                     }
                   }
                   $filtros[] = $filtroBarrios;
-                }else{
+                } else {
                   if($Barrio[0] > 0){
                     $ConsultarTodos .= " and P.ID_Barrio = $Barrio[0]";
                     $ConsultarBarrio = "select Barrio from barrios where ID_Barrio = " . $Barrio[0]." limit 1";
@@ -829,11 +728,7 @@ $Con->CloseConexion();
                   $ConsultarTodos .= " and P.Trabajo like '%$Trabajo%'";
                 }
 
-                if($ID_Persona > 0){
-                  $ConsultarTodos .= " group by P.id_movimiento, M.fecha order by M.fecha DESC, P.domicilio DESC, P.apellido DESC, P.nombre DESC";
-                }else{
-                  $ConsultarTodos .= " group by P.id_persona,P.id_movimiento, M.fecha order by M.fecha DESC, P.domicilio DESC, P.apellido DESC, P.nombre DESC";
-                }
+                $ConsultarTodos .= " group by P.id_persona order by P.ID_Barrio, P.domicilio DESC, P.domicilio DESC, P.apellido DESC, P.nombre DESC";
 
                 // $ConsultarTodos .= " group by P.id_persona order by P.apellido, P.nombre";
 
@@ -869,7 +764,7 @@ $Con->CloseConexion();
 
               	}
               }
-
+              */
               //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -890,21 +785,16 @@ $Con->CloseConexion();
         <center><p class = "LblForm">ENTRE: <?php echo $Etiqueta_Fecha_Inicio." Y " . $Etiqueta_Fecha_Fin; ?></p></center>
         <span> Filtros seleccionados </span>
         <!-- <i class="fa fa-filter"></i> -->
-        <!-- < ?php echo "DEBUG: " . $Consulta; ?>       -->
         <?php
-        // echo "DEBUG: " . $Consulta."<br><br>";
           foreach($filtros as $value){
             echo "<span class='etFiltros'>" . $value."</span> ";
-            // echo "DEBUG: " . $ConsultarMovimientosPersona;
           }
         }
         ?>
         </div>
         <div class="col-md-2">
-          <div class="row">
             <button type = "button" class = "btn btn-secondary" data-toggle="modal" data-target="#configModal">Config</button>
-            <!--<button type="button" class="btn btn-secondary" onClick="enviarImprimir()">Imprimir</button>-->
-          </div>
+            <button type="button" class="btn btn-secondary" onClick="htmlExcel('tabla-movimiento-general', 'excel');">Excel</button>
         </div>
      </div>
      <div class = "row">
@@ -1137,7 +1027,7 @@ $Con->CloseConexion();
               //   $ConsultarMovimientos = "select M.id_movimiento, M.fecha, P.apellido, P.nombre, M.motivo_1, M.motivo_2, M.motivo_3, M.observaciones, R.responsable from movimiento M, responsable R, persona P where M.id_resp = R.id_resp and M.id_persona = P.id_persona and M.id_persona = $ID_Persona";
               $MensajeErrorMovimientos = "No se pudo consultar los movimientos de la persona";
 
-              $TomarMovimientosPersona = mysqli_query($Con->Conexion,$ConsultarMovimientosPersona) or die($MensajeErrorMovimientos);
+              $TomarMovimientosPersona = mysqli_query($Con->Conexion, $ConsultarMovimientosPersona) or die($MensajeErrorMovimientos);
 
               $Rows = mysqli_num_rows($TomarMovimientosPersona);
 
@@ -1149,10 +1039,10 @@ $Con->CloseConexion();
                 echo "<div class = 'col'></div>";
               }
 
-              while($RetMovimientos = mysqli_fetch_assoc($TomarMovimientosPersona)){
+              /*while($RetMovimientos = mysqli_fetch_assoc($TomarMovimientosPersona)){
                 $RetMovimientos['tipo'] = "CM";
                 $tomarRetTodos[] = $RetMovimientos;
-              }
+              }*/
 
               /*foreach ($tomarRetTodos as $clave => $reg) {
                 $regdomicilio[$clave] = $reg['domicilio'];
@@ -1208,12 +1098,10 @@ $Con->CloseConexion();
               ];
               $jsonTable["head_movimientos_persona"] = $head_movimientos;
               $json_row = [];
-              foreach($tomarRetTodos as $clave => $RetTodos){                
-                // echo var_dump($RetTodos);
-                // echo "<br>";
+              while($RetTodos = mysqli_fetch_assoc($TomarMovimientosPersona)) {
                 if($RetTodos["fecha_nac"] == 'null'){
                   $Fecha_Nacimiento = "Sin Datos";
-                }else{
+                } else {
                   $Fecha_Nacimiento = implode("-", array_reverse(explode("-",$RetTodos["fecha_nac"])));
                 }
                 
@@ -1394,7 +1282,7 @@ $Con->CloseConexion();
                     $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
                     $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 3"])) ? strlen($json_row["Motivo 3"]) : $json_row["height"];
                   }
-                  $TableMov .= "<tr class='trObservaciones'><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>" . $DtoMovimiento->getObservaciones() . "</td></tr>";
+                  $TableMov .= "<tr class='trObservaciones'><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'><div style='max-height: 30px;'>" . $DtoMovimiento->getObservaciones() . "</div></td></tr>";
                   $json_row["obseravciones"] = $DtoMovimiento->getObservaciones();
                   $TableMov .= "<tr class='trResponsable'><td style = 'width: 30%;'>Responsable</td><td style = 'width: 70%;'>" . $DtoMovimiento->getResponsable() . "</td></tr>";
                   $json_row["Responsable"] = $DtoMovimiento->getResponsable();
@@ -1449,6 +1337,7 @@ $Con->CloseConexion();
                 $jsonTable["movimientos_persona"][] = $json_row;
                 $json_row["height"] = 0;
               }
+
               if($ID_Config == 'table'){
                 $TableMov .= "</table>";
 
@@ -1570,7 +1459,7 @@ $Con->CloseConexion();
               // $Con->OpenConexion();
               $MensajeErrorMovimientos = "No se pudo consultar los movimientos de la persona";
 
-              $TomarMovimientos = mysqli_query($Con->Conexion,$Consulta) or die($MensajeErrorMovimientos);
+              $TomarMovimientos = mysqli_query($Con->Conexion, $Consulta) or die($MensajeErrorMovimientos);
               $Rows = mysqli_num_rows($TomarMovimientos);
 
               if($Rows == 0){
@@ -1581,25 +1470,20 @@ $Con->CloseConexion();
                 echo "<div class = 'col'></div>";
               }
 
-              while($RetMovimientos = mysqli_fetch_assoc($TomarMovimientos)){
-                $RetMovimientos['tipo'] = "CM";
-                $tomarRetTodos[] = $RetMovimientos;
-              }
-
-              /*foreach ($tomarRetTodos as $clave => $reg) {
-                $regdomicilio[$clave] = $reg['domicilio'];                
-              }*/
-
-              //array_multisort($regdomicilio, SORT_DESC, $tomarRetTodos);
               $header_movimientos_general = [];
               if($ID_Config == 'table'){
                 $MotivosTh = "";
                 $header_movimientos_general[] = "Fecha";
                 $header_movimientos_general[] = "Persona";
-                if($ID_Motivo > 0 || $ID_Motivo2 > 0 || $ID_Motivo3 > 0){
+                if(count(array_filter($MotivosOpciones)) == 1){
                   $MotivosTh .= "<th rowspan='2' class='trMotivos'>Motivo</th>";
                   $header_movimientos_general[] = "Motivo";
-                }else{
+                } elseif (count(array_filter($MotivosOpciones)) == 2) {
+                  $MotivosTh .= "<th rowspan='2' class='trMotivos'>Motivo 1</th>";
+                  $header_movimientos_general[] = "Motivo 1";
+                  $MotivosTh .= "<th rowspan='2' class='trMotivos'>Motivo 2</th>";
+                  $header_movimientos_general[] = "Motivo 2";
+                } else {
                   $MotivosTh .= "<th rowspan='2' class='trMotivos'>Motivo 1</th>";
                   $header_movimientos_general[] = "Motivo 1";
                   $MotivosTh .= "<th rowspan='2' class='trMotivos'>Motivo 2</th>";
@@ -1648,172 +1532,150 @@ $Con->CloseConexion();
                 $TableMovPrint = $TableMov;
               }
               $json_row = [];
-              foreach($tomarRetTodos as $clave => $RetTodos){                
-                // echo var_dump($RetTodos);
-                // echo "<br>";
-                if($RetTodos["fecha_nac"] == 'null'){
-                  $Fecha_Nacimiento = "Sin Datos";
-                }else{
-                  $Fecha_Nacimiento = implode("-", array_reverse(explode("-",$RetTodos["fecha_nac"])));
-                }
+              $view = 0;
+              $count = 0;
+              $imprimir = false;
+              $carga = false;
+              $con_movimiento = false;
 
-                if ($RetTodos["tipo"] == "SM") {                
-                      $Apellido = $RetTodos["apellido"];
-                      $Nombre = $RetTodos["nombre"];
-                        //solucionar el error!
-                        //  variables inventadas solo para que arme la tabla              
+              $Motivo_1 = "";
+              $Motivo_2 = "";
+              $Motivo_3 = "";
+              $Motivo_4 = "";
+              $Motivo_5 = "";
+              $ID_Motivo_1 = 0;
+              $ID_Motivo_2 = 0;
+              $ID_Motivo_3 = 0;
+              $ID_Motivo_4 = 0;
+              $ID_Motivo_5 = 0;
 
-                      $TableMov = "<table class='table text-white' style='background-color: #AEB6BF;'>";                
-                      $TableMov .= "<tr><td style = 'width: 30%;'>Nombre</td><td style = 'width: 70%;'>" . $Apellido.", " . $Nombre."</td></tr>";
-                      $json_row["Persona"] = $Apellido." " . $Nombre;
-                      $TableMov .= "<tr><td style = 'width: 30%;'>Estado</td><td style = 'width: 70%;'>SIN MOVIMIENTOS</td></tr>";
-                      $json_row["estado"] = "sin movimientos";
-                      $TableMov .= "</table>";
-                      echo $TableMov;
-                } else {
-                  $ID_Movimiento = $RetTodos["id_movimiento"];
-                  $Fecha = implode("-", array_reverse(explode("-",$RetTodos["fecha"])));
-                  $Apellido = $RetTodos["apellido"];
-                  $Nombre = $RetTodos["nombre"];
+              while ($RetTodos = mysqli_fetch_assoc($TomarMovimientos)) {
+                  $count++;
 
-                  $ID_Motivo_1 = $RetTodos["motivo_1"];
-                  $ConsultarMotivo_1 = "select M.id_motivo IN (SELECT id_motivo 
-                                                                      FROM INN) as ConPermisoParaUsr,
-                                               M.id_motivo IN (SELECT id_motivo
-                                                               FROM GIN) as ConPermisoGeneral,
-                                               motivo 
-                                        from motivo M
-                                        where id_motivo = $ID_Motivo_1";
+                  if (empty($RetTodos["id_movimiento"])) {
 
-                  // echo "DEBUG: ".var_dump($ConsultarMotivo_1);
-
-                  $MensajeErrorMotivo_1 = "No se pudo consultar el motivo 1";
-                  $RetMotivo_1 = mysqli_query($Con->Conexion,$ConsultarMotivo_1) or die($MensajeErrorMotivo_1);
-                  $RetMotivo_1 = mysqli_fetch_assoc($RetMotivo_1);
-
-                  if(count(array_filter($MotivosOpciones)) > 0){
-                    if(in_array($ID_Motivo_1, array_values($MotivosOpciones))){
-                      $Motivo_1 = ($RetMotivo_1["ConPermisoParaUsr"] || $RetMotivo_1["ConPermisoGeneral"])?$RetMotivo_1["motivo"]:"";
+                    if ($RetTodos["fecha_nac"] == 'null') {
+                      $Fecha_Nacimiento = "Sin Datos";
                     } else {
-                      $Motivo_1 = "";
+                      $Fecha_Nacimiento = implode("-", array_reverse(explode("-",$RetTodos["fecha_nac"])));
                     }
+
+                    $Apellido = $RetTodos["apellido"];
+                    $Nombre = $RetTodos["nombre"];
+                    $id_persona = $RetTodos["id_persona"];
+                    $sin_datos = "";
+                    $DtoMovimiento = new DtoMovimiento(
+                                                       xID_Movimiento: $sin_datos,
+                                                               xFecha: $sin_datos,
+                                                            xApellido: $Apellido,
+                                                              xNombre: $Nombre,
+                                                            xMotivo_1: $sin_datos,
+                                                            xMotivo_2: $sin_datos,
+                                                            xMotivo_3: $sin_datos,
+                                                            xMotivo_4: $sin_datos,
+                                                            xMotivo_5: $sin_datos,
+                                                       xObservaciones: $sin_datos,
+                                                         xResponsable: $sin_datos,
+                                                         xCentroSalud: $sin_datos,
+                                                     xOtraInstitucion: $sin_datos
+                                                      );
+                    $DNI = $RetTodos["documento"];
+                    $Edad = $RetTodos["edad"];
+                    $Meses = $RetTodos["meses"];
+                    $Obra_Social = $RetTodos["obra_social"];
+                    $Domicilio = $RetTodos["domicilio"];
+                    $Barrio = $RetTodos["Barrio"];
+                    $Localidad = $RetTodos["localidad"];
+                    $con_movimiento = false;
                   } else {
-                    $Motivo_1 = ($RetMotivo_1["ConPermisoParaUsr"] || $RetMotivo_1["ConPermisoGeneral"])?$RetMotivo_1["motivo"]:"";
+                    $con_movimiento = true;
                   }
 
-                  $ID_Motivo_2 = $RetTodos["motivo_2"];
-                  $ConsultarMotivo_2 = "select M.id_motivo IN (SELECT id_motivo 
-                                                                      FROM INN) as ConPermisoParaUsr,
-                                               M.id_motivo IN (SELECT id_motivo
-                                                               FROM GIN) as ConPermisoGeneral,
-                                               motivo
-                                        from motivo M
-                                        where id_motivo = $ID_Motivo_2";
-                  $RetMotivo_2 = mysqli_query($Con->Conexion,$ConsultarMotivo_2) or die($MensajeErrorMotivo_2);
-                  $RetMotivo_2 = mysqli_fetch_assoc($RetMotivo_2);
-
-                  if(count(array_filter($MotivosOpciones)) > 0){
-                    if(in_array($ID_Motivo_2, array_values($MotivosOpciones))){
-                      $Motivo_2 = ($RetMotivo_2["ConPermisoParaUsr"] || $RetMotivo_2["ConPermisoGeneral"])?$RetMotivo_2["motivo"]:"";
-                    } else {
-                      $Motivo_2 = "";
+                  if ($view != $RetTodos["id_movimiento"] && $con_movimiento) {
+                    if ($view != 0) {
+                      $imprimir = true;
+                      mysqli_data_seek($TomarMovimientos, $count - 1);
+                      $count--;
                     }
-                  } else {
-                    $Motivo_2 = ($RetMotivo_2["ConPermisoParaUsr"] || $RetMotivo_2["ConPermisoGeneral"])?$RetMotivo_2["motivo"]:"";
+                    $view = $RetTodos["id_movimiento"];
+                    $carga = true;
                   }
 
-                  $ID_Motivo_3 = $RetTodos["motivo_3"];
-                  $ConsultarMotivo_3 = "select M.id_motivo IN (SELECT id_motivo 
-                                                                      FROM INN) as ConPermisoParaUsr,
-                                               M.id_motivo IN (SELECT id_motivo
-                                                               FROM GIN) as ConPermisoGeneral,
-                                               motivo
-                                        from motivo M
-                                        where id_motivo = $ID_Motivo_3";
-                  $RetMotivo_3 = mysqli_query($Con->Conexion,$ConsultarMotivo_3) or die($MensajeErrorMotivo_3);
-                  $RetMotivo_3 = mysqli_fetch_assoc($RetMotivo_3);
-
-                  if(count(array_filter($MotivosOpciones)) > 0){
-                    if(in_array($ID_Motivo_3, array_values($MotivosOpciones))){
-                      $Motivo_3 = ($RetMotivo_3["ConPermisoParaUsr"] || $RetMotivo_3["ConPermisoGeneral"])?$RetMotivo_3["motivo"]:"";
+                  if ($carga && !$imprimir && $con_movimiento) {
+                    if ($RetTodos["fecha_nac"] == 'null') {
+                      $Fecha_Nacimiento = "Sin Datos";
                     } else {
-                      $Motivo_3 = "";
+                      $Fecha_Nacimiento = implode("-", array_reverse(explode("-",$RetTodos["fecha_nac"])));
                     }
-                  } else {
-                    $Motivo_3 = ($RetMotivo_3["ConPermisoParaUsr"] || $RetMotivo_3["ConPermisoGeneral"])?$RetMotivo_3["motivo"]:"";
+
+                    $ID_Movimiento = $RetTodos["id_movimiento"];
+                    $id_persona = $RetTodos["id_persona"];
+                    $Fecha = implode("-", array_reverse(explode("-",$RetTodos["fecha"])));
+                    $Apellido = $RetTodos["apellido"];
+                    $Nombre = $RetTodos["nombre"];
+                    $Observaciones = $RetTodos["observaciones"];
+                    $Responsable = $RetTodos["responsable"];
+                      //solucionar el error!
+                      //  variables inventadas solo para que arme la tabla
+
+                    $CentroSalud = $RetTodos["centro_salud"]; //centro_salud
+                    $OtraInstitucion = $RetTodos["NombreInst"]; //otraInstitucion
+                    $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Motivo_4,$Motivo_5,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);   
+
+                    /////////////////////////////////////////////////////////////
+                    $DNI = $RetTodos["documento"];
+                    $Edad = $RetTodos["edad"];
+                    $Meses = $RetTodos["meses"];
+                    $Obra_Social = $RetTodos["obra_social"];
+                    $Domicilio = $RetTodos["domicilio"];
+                    $Barrio = $RetTodos["Barrio"];
+                    $Localidad = $RetTodos["localidad"];
+                    /////////////////////////////////////////////////////////////
+                    $json_row["height"] = (isset($json_row["height"])) ? $json_row["height"] : 0;
+                    $carga = false;
                   }
-
-                  $ID_Motivo_4 = $RetTodos["motivo_4"];
-                  $ConsultarMotivo_4 = "select M.id_motivo IN (SELECT id_motivo 
-                                                                      FROM INN) as ConPermisoParaUsr,
-                                               M.id_motivo IN (SELECT id_motivo
-                                                               FROM GIN) as ConPermisoGeneral,
-                                               motivo
-                                        from motivo M
-                                        where id_motivo = $ID_Motivo_4";
-                  $RetMotivo_4 = mysqli_query($Con->Conexion,$ConsultarMotivo_4) or die($MensajeErrorMotivo_4);
-                  $RetMotivo_4 = mysqli_fetch_assoc($RetMotivo_4);
-
-                  if(count(array_filter($MotivosOpciones)) > 0){
-                    if(in_array($ID_Motivo_4, array_values($MotivosOpciones))){
-                      $Motivo_4 = ($RetMotivo_4["ConPermisoParaUsr"] || $RetMotivo_4["ConPermisoGeneral"])?$RetMotivo_4["motivo"]:"";
-                    } else {
-                      $Motivo_4 = "";
+                  
+                  if ($RetTodos["id_movimiento"] 
+                      && ($view == $RetTodos["id_movimiento"]) 
+                      && !$imprimir
+                      && $con_movimiento) {
+                    $motivo_mov = (!empty($RetTodos["motivo"])) ? $RetTodos["motivo"] : "";
+                    if (!empty($RetTodos["nro_motivo"]) && $RetTodos["nro_motivo"] == '1') {
+                      $DtoMovimiento->setMotivo_1($motivo_mov);
+                      $ID_Motivo_1 = $RetTodos["id_motivo"];
                     }
-                  } else {
-                    $Motivo_4 = ($RetMotivo_4["ConPermisoParaUsr"] || $RetMotivo_4["ConPermisoGeneral"])?$RetMotivo_4["motivo"]:"";
-                  }
-  
-                  $ID_Motivo_5 = $RetTodos["motivo_5"];
-                  $ConsultarMotivo_5 = "select M.id_motivo IN (SELECT id_motivo 
-                                                                      FROM INN) as ConPermisoParaUsr,
-                                               M.id_motivo IN (SELECT id_motivo
-                                                               FROM GIN) as ConPermisoGeneral,
-                                               motivo
-                                        from motivo M
-                                        where id_motivo = $ID_Motivo_5";
-                  $RetMotivo_5 = mysqli_query($Con->Conexion,$ConsultarMotivo_5) or die($MensajeErrorMotivo_3);
-                  $RetMotivo_5 = mysqli_fetch_assoc($RetMotivo_5);
-                  if(count(array_filter($MotivosOpciones)) > 0){
-                    if(in_array($ID_Motivo_5, array_values($MotivosOpciones))){
-                      $Motivo_5 = ($RetMotivo_5["ConPermisoParaUsr"] || $RetMotivo_5["ConPermisoGeneral"])?$RetMotivo_5["motivo"]:"";
-                    } else {
-                      $Motivo_5 = "";
+                    if (!empty($RetTodos["nro_motivo"]) && $RetTodos["nro_motivo"] == '2') {
+                      $DtoMovimiento->setMotivo_2($motivo_mov);
+                      $ID_Motivo_2 = $RetTodos["id_motivo"];
                     }
-                  } else {
-                    $Motivo_5 = ($RetMotivo_5["ConPermisoParaUsr"] || $RetMotivo_5["ConPermisoGeneral"])?$RetMotivo_5["motivo"]:"";
-                  }
-
-                  $movimientoVisible = false;
-                  $movimientoVisible = $movimientoVisible || ($Motivo_1 != "");
-                  $movimientoVisible = $movimientoVisible || ($Motivo_2 != "");
-                  $movimientoVisible = $movimientoVisible || ($Motivo_3 != "");
-                  $movimientoVisible = $movimientoVisible || ($Motivo_4 != "");
-                  $movimientoVisible = $movimientoVisible || ($Motivo_5 != "");
-  
-                  if (!$movimientoVisible){
+                    if (!empty($RetTodos["nro_motivo"]) && $RetTodos["nro_motivo"] == '3') {
+                      $DtoMovimiento->setMotivo_3($motivo_mov);
+                      $ID_Motivo_3 = $RetTodos["id_motivo"];
+                    }
+                    if (!empty($RetTodos["nro_motivo"]) && $RetTodos["nro_motivo"] == '4') {
+                      $DtoMovimiento->setMotivo_4($motivo_mov);
+                      $ID_Motivo_4 = $RetTodos["id_motivo"];
+                    }
+                    if (!empty($RetTodos["nro_motivo"]) && $RetTodos["nro_motivo"] == '5') {
+                      $DtoMovimiento->setMotivo_5($motivo_mov);
+                      $ID_Motivo_5 = $RetTodos["id_motivo"];
+                    }
                     continue;
                   }
 
-                  $Observaciones = $RetTodos["observaciones"];
-                  $Responsable = $RetTodos["responsable"];
-                    //solucionar el error!
-                    //  variables inventadas solo para que arme la tabla
+                  $movimientoVisible = false;
+                  $movimientoVisible = $movimientoVisible || ($DtoMovimiento->getMotivo_1() != "1");
+                  $movimientoVisible = $movimientoVisible || ($DtoMovimiento->getMotivo_2() != "1");
+                  $movimientoVisible = $movimientoVisible || ($DtoMovimiento->getMotivo_3() != "1");
+                  $movimientoVisible = $movimientoVisible || ($DtoMovimiento->getMotivo_4() != "1");
+                  $movimientoVisible = $movimientoVisible || ($DtoMovimiento->getMotivo_5() != "1");
 
-                  $CentroSalud = $RetTodos["centro_salud"]; //centro_salud
-                  $OtraInstitucion = $RetTodos["NombreInst"]; //otraInstitucion
-                  $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Motivo_4,$Motivo_5,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);   
+                  if (!$movimientoVisible && $con_movimiento){
+                    $imprimir = false;
+                    continue;
+                  }
+                  $json_row["height"] = 0;
 
-                  /////////////////////////////////////////////////////////////
-                  $DNI = $RetTodos["documento"];
-                  $Edad = $RetTodos["edad"];
-                  $Meses = $RetTodos["meses"];
-                  $Obra_Social = $RetTodos["obra_social"];
-                  $Domicilio = $RetTodos["domicilio"];
-                  $Barrio = $RetTodos["Barrio"];
-                  $Localidad = $RetTodos["localidad"];
-                  /////////////////////////////////////////////////////////////
-                  $json_row["height"] = (isset($json_row["height"])) ? $json_row["height"] : 0;
                   if($ID_Config == 'grid'){
                     $TableMov = "<table class='table table-dark'>";                
                     $TableMov .= "<tr class='trFecha'><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>" . $DtoMovimiento->getFecha() . "</td></tr>";
@@ -1824,7 +1686,7 @@ $Con->CloseConexion();
                                       Persona
                                     </td>
                                     <td style = 'width: 70%;'>
-                                      <a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $RetTodos["id_persona"]."\",\"Ventana" . $RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".
+                                      <a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $id_persona ."\",\"Ventana" . $id_persona ."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".
                                         $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "
                                       </a>
                                     </td>
@@ -1838,123 +1700,22 @@ $Con->CloseConexion();
                                     </td>
                                   </tr>";
                     $json_row["Persona"] = $DtoMovimiento->getApellido() . " " . $DtoMovimiento->getNombre();
-                    if($ID_Motivo > 0){    
-                      switch ($ID_Motivo) {
-                        case $ID_Motivo_1: 
-                            $TableMov .= "<tr class='trMotivos'>
-                                            <td style = 'width: 30%;'>
-                                              Motivo 1
-                                            </td>
-                                          <td style = 'width: 70%;'>".
-                                            $DtoMovimiento->getMotivo_1() . "
-                                          </td>
-                                        </tr>";
-                            $TableMovPrint .= "<tr class='trMotivos'>
-                                        <td style = 'width: 30%;'>
-                                          Motivo 1
-                                        </td>
-                                      <td style = 'width: 70%;'>".
-                                        $DtoMovimiento->getMotivo_1() . "
-                                      </td>
-                                    </tr>";
-                            $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
-                            $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
-                            break;
-                        case $ID_Motivo_2:
-                            $TableMov .= "<tr class='trMotivos'>
-                                            <td style = 'width: 30%;'>
-                                              Motivo 2
-                                            </td>
-                                            <td style = 'width: 70%;'>".
-                                              $DtoMovimiento->getMotivo_2() . "
-                                            </td>
-                                          </tr>";
-                            $TableMovPrint .= "<tr class='trMotivos'>
-                                            <td style = 'width: 30%;'>
-                                              Motivo 2
-                                            </td>
-                                            <td style = 'width: 70%;'>".
-                                              $DtoMovimiento->getMotivo_2() . "
-                                            </td>
-                                          </tr>";
-                             $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
+
+                    if (count(array_filter($MotivosOpciones)) == 1) {
+                      $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
+                      $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
+                      $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
+                      $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
+                    } elseif (count(array_filter($MotivosOpciones)) == 2) {
+                      $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
+                      $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
+                      $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
+                      $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
+
+                      $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
+                      $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
+                      $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
                       $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 2"])) ? strlen($json_row["Motivo 2"]) : $json_row["height"];
-                            break;
-                        case $ID_Motivo_3: 
-                            $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";
-                            $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";
-                            $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
-                      $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 3"])) ? strlen($json_row["Motivo 3"]) : $json_row["height"];
-                            break;
-                        
-                        default: 
-                            $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>"; 
-                            $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>"; 
-                            $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
-                            $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
-                            break;
-                      }                  
-  
-                    }elseif($ID_Motivo2 > 0){
-
-                      switch ($ID_Motivo2) {
-                        case $ID_Motivo_1: 
-                            $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
-                            $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
-                            $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
-                            $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
-                            break;
-                        case $ID_Motivo_2:
-                            $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
-                            $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
-                            $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
-                            $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 2"])) ? strlen($json_row["Motivo 2"]) : $json_row["height"];
-                            break;
-                        case $ID_Motivo_3:
-                            $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";
-                            $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
-                            $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
-                            $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 3"])) ? strlen($json_row["Motivo 3"]) : $json_row["height"];
-                            break;
-                        
-                        default: 
-                            $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
-                            $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
-                            $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
-                            $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
-                            break;
-                      }
-
-                    }elseif($ID_Motivo3 > 0){
-
-                      switch ($ID_Motivo3) {
-                        case $ID_Motivo_1:
-                            $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
-                            $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
-                            $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
-                            $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
-                            break;
-                        case $ID_Motivo_2: 
-                            $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
-                            $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
-                            $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
-                            $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 2"])) ? strlen($json_row["Motivo 2"]) : $json_row["height"];
-                            break;
-                        case $ID_Motivo_3:
-                            $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";
-                            $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";
-                            $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
-                            $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 3"])) ? strlen($json_row["Motivo 3"]) : $json_row["height"];
-                            break;
-                        
-                        default:
-                            $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
-                            $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
-                            $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
-                            $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
-                            break;
-                      }
-
                     } else {
                       $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
                       $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
@@ -1970,6 +1731,7 @@ $Con->CloseConexion();
                       $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
                       $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 3"])) ? strlen($json_row["Motivo 3"]) : $json_row["height"];
                     }
+
                     $TableMov .= "<tr class='trObservaciones'><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>" . $DtoMovimiento->getObservaciones() . "</td></tr>";
                     $TableMovPrint .= "<tr class='trObservaciones'><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>" . $DtoMovimiento->getObservaciones() . "</td></tr>";
                     $json_row["Observaciones"] = $DtoMovimiento->getObservaciones();
@@ -1991,102 +1753,26 @@ $Con->CloseConexion();
                     $TableMov .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td>";
                     $TableMovPrint .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td>";
                     $json_row["Fecha"] = $DtoMovimiento->getFecha();
-                    $TableMov .= "<td class='trPersona' style = 'width: auto;'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $RetTodos["id_persona"]."\",\"Ventana" . $RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" . $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "</a></td>";
+                    $TableMov .= "<td class='trPersona' style = 'width: auto;'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $id_persona . "\",\"Ventana" . $id_persona . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" . $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "</a></td>";
                     $TableMovPrint .= "<td class='trPersona' style = 'width: auto;'>".
                                           $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "
                                       </td>";
                     $json_row["Persona"] = $DtoMovimiento->getApellido() . " " . $DtoMovimiento->getNombre();
 
-                    if ($ID_Motivo > 0) {    
-                      switch ($ID_Motivo) {
-                        case $ID_Motivo_1:
-                            $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
-                            $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
-                            $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
-                            $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
-                            break;
-                        case $ID_Motivo_2:
-                            $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td>";
-                            $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td>";
-                            $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
-                            $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 2"])) ? strlen($json_row["Motivo 2"]) : $json_row["height"];
-                            break;
-                        case $ID_Motivo_3:
-                            $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_3() . "</td>";
-                            $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_3() . "</td>";
-                            $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
-                            $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 3"])) ? strlen($json_row["Motivo 3"]) : $json_row["height"];
-                            break;
-                        
-                        default:
-                            $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
-                            $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
-                            $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
-                            $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
-                            break;
-                      }                  
-  
-                    } elseif ($ID_Motivo2 > 0) {
-
-                      switch ($ID_Motivo2) {
-                        case $ID_Motivo_1:
-                            $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
-                            $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
-                            $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
-                            $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
-                            break;
-                        case $ID_Motivo_2:
-                            $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td>";
-                            $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td>";
-                            $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
-                            $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 2"])) ? strlen($json_row["Motivo 2"]) : $json_row["height"];
-                            break;
-                        case $ID_Motivo_3:
-                            $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_3() . "</td>";
-                            $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_3() . "</td>";
-                            $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
-                            $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 3"])) ? strlen($json_row["Motivo 3"]) : $json_row["height"];
-                            break;
-                        
-                        default:
-                            $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
-                            $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
-                            $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
-                            $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
-                            break;
-                      }
-
-                    } elseif($ID_Motivo3 > 0) {
-
-                      switch ($ID_Motivo3) {
-                        case $ID_Motivo_1:
-                            $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
-                            $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
-                            $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
-                            $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
-                            break;
-                        case $ID_Motivo_2:
-                            $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td>";
-                            $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td>";
-                            $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
-                            $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 2"])) ? strlen($json_row["Motivo 2"]) : $json_row["height"];
-                            break;
-                        case $ID_Motivo_3:
-                            $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_3() . "</td>";
-                            $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_3() . "</td>";
-                            $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
-                            $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 3"])) ? strlen($json_row["Motivo 3"]) : $json_row["height"];
-                      
-                            break;
-                        
-                        default:
-                            $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
-                            $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
-                            $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
-                            $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
-                            break;
-                      }
-
+                    if (count(array_filter($MotivosOpciones)) == 1) {
+                      $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
+                      $TableMovPrint .=  "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
+                      $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
+                      $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
+                    } elseif (count(array_filter($MotivosOpciones)) == 2) {
+                      $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
+                      $TableMovPrint .=  "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
+                      $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
+                      $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
+                      $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td>";
+                      $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td>";
+                      $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
+                      $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 2"])) ? strlen($json_row["Motivo 2"]) : $json_row["height"];
                     } else {
                       $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
                       $TableMovPrint .=  "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
@@ -2126,7 +1812,7 @@ $Con->CloseConexion();
                     $TableMov .= "<td class='trLocalidad' style = 'width: auto;'>" . $Localidad."</td>";
                     $TableMovPrint .= "<td class='trLocalidad' style = 'width: auto;'>" . $Localidad."</td>";
                     $json_row["Localidad"] = $Localidad;
-                    $TableMov .= "<td class='trObservaciones' style = 'width: auto;'>" . $DtoMovimiento->getObservaciones() . "</td>";
+                    $TableMov .= "<td class='trObservaciones' style = 'width: auto;'><div style='max-height: 9em; overflow: hidden'>" . $DtoMovimiento->getObservaciones() . "</div></td>";
                     $TableMovPrint .= "<td class='trObservaciones' style = 'width: auto;'>" . $DtoMovimiento->getObservaciones() . "</td>";
                     $json_row["Observaciones"] = $DtoMovimiento->getObservaciones();
                     $TableMov .= "<td class='trResponsable' style = 'width: auto;'>" . $DtoMovimiento->getResponsable() . "</td>";
@@ -2141,128 +1827,122 @@ $Con->CloseConexion();
                     $TableMov .= "</tr>";
                     $TableMovPrint .= "</tr>";
                   }
-                }
-                $jsonTable["movimientos_general"][] = $json_row;
-                $json_row["height"] = 0;
+                  $imprimir = false;
+                  //}
+                  $jsonTable["movimientos_general"][] = $json_row;
+                  $json_row["height"] = 0;
               }
               
+              $view = 0;
+              $count = 0;
+              $imprimir = false;
+              $carga = false;
+
+              $Motivo_1 = "";
+              $Motivo_2 = "";
+              $Motivo_3 = "";
+              $Motivo_4 = "";
+              $Motivo_5 = "";
+              $ID_Motivo_1 = 0;
+              $ID_Motivo_2 = 0;
+              $ID_Motivo_3 = 0;
+              $ID_Motivo_4 = 0;
+              $ID_Motivo_5 = 0;
 
               while ($RetMovimientos = mysqli_fetch_assoc($TomarMovimientos)) {
-                $ID_Movimiento = $RetMovimientos["id_movimiento"];
-                $Fecha = implode("-", array_reverse(explode("-",$RetMovimientos["fecha"])));
-                $Apellido = $RetMovimientos["apellido"];
-                $Nombre = $RetMovimientos["nombre"];
+                $count++;
 
-                $ID_Motivo_1 = $RetMovimientos["motivo_1"];
-                $ConsultarMotivo_1 = "select M.id_motivo IN (SELECT id_motivo 
-                                                                      FROM INN) as ConPermisoParaUsr,
-                                               M.id_motivo IN (SELECT id_motivo
-                                                               FROM GIN) as ConPermisoGeneral,
-                                               motivo 
-                                        from motivo M
-                                        where id_motivo = $ID_Motivo_1";
+                if (empty($RetTodos["id_movimiento"]) && ($view != $RetTodos["id_movimiento"])) {
+                  $Apellido = $RetTodos["apellido"];
+                  $Nombre = $RetTodos["nombre"];
 
-                // echo "DEBUG: ".var_dump($ConsultarMotivo_1);
-
-                $MensajeErrorMotivo_1 = "No se pudo consultar el motivo 1";
-                $RetMotivo_1 = mysqli_query($Con->Conexion,$ConsultarMotivo_1) or die($MensajeErrorMotivo_1);
-                $RetMotivo_1 = mysqli_fetch_assoc($RetMotivo_1);
-                if(count(array_filter($MotivosOpciones)) > 0){
-                  if(in_array($ID_Motivo_1, array_values($MotivosOpciones))){
-                    $Motivo_1 = ($RetMotivo_1["ConPermisoParaUsr"] || $RetMotivo_1["ConPermisoGeneral"])?$RetMotivo_1["motivo"]:"";
-                  } else {
-                    $Motivo_1 = "";
-                  }
-                } else {
-                  $Motivo_1 = ($RetMotivo_1["ConPermisoParaUsr"] || $RetMotivo_1["ConPermisoGeneral"])?$RetMotivo_1["motivo"]:"";
+                  $TableSinMov = "<table class='table text-white' style='background-color: #AEB6BF;'>";                
+                  $TableSinMov .= "<tr><td style = 'width: 30%;'>Nombre</td><td style = 'width: 70%;'>" . $Apellido . ", " . $Nombre . "</td></tr>";
+                  $json_row["Persona"] = $Apellido . " " . $Nombre;
+                  $TableSinMov .= "<tr><td style = 'width: 30%;'>Estado</td><td style = 'width: 70%;'>SIN MOVIMIENTOS</td></tr>";
+                  $json_row["estado"] = "sin movimientos";
+                  $TableSinMov .= "</table>";
+                  echo $TableSinMov;
+                  continue;
                 }
 
-                $ID_Motivo_2 = $RetMovimientos["motivo_2"];
-                $ConsultarMotivo_2 = "select M.id_motivo IN (SELECT id_motivo 
-                                                                      FROM INN) as ConPermisoParaUsr,
-                                               M.id_motivo IN (SELECT id_motivo
-                                                               FROM GIN) as ConPermisoGeneral,
-                                               motivo 
-                                        from motivo M
-                                        where id_motivo = $ID_Motivo_2";
-                $RetMotivo_2 = mysqli_query($Con->Conexion,$ConsultarMotivo_2) or die($MensajeErrorMotivo_2);
-                $RetMotivo_2 = mysqli_fetch_assoc($RetMotivo_2);
-                if(count(array_filter($MotivosOpciones)) > 0){
-                  if(in_array($ID_Motivo_2, array_values($MotivosOpciones))){
-                    $Motivo_2 = ($RetMotivo_2["ConPermisoParaUsr"] || $RetMotivo_2["ConPermisoGeneral"])?$RetMotivo_2["motivo"]:"";
-                  } else {
-                    $Motivo_2 = "";
+                if ($view != $RetTodos["id_movimiento"]) {
+                  if ($view != 0) {
+                    $imprimir = true;
+                    mysqli_data_seek($TomarMovimientos, $count - 1);
+                    $count--;
                   }
-                } else {
-                  $Motivo_2 = ($RetMotivo_2["ConPermisoParaUsr"] || $RetMotivo_2["ConPermisoGeneral"])?$RetMotivo_2["motivo"]:"";
+                  $view = $RetTodos["id_movimiento"];
+                  $carga = true;
                 }
 
-                $ID_Motivo_3 = $RetMovimientos["motivo_3"];
-                $ConsultarMotivo_3 = "select M.id_motivo IN (SELECT id_motivo 
-                                                                      FROM INN) as ConPermisoParaUsr,
-                                               M.id_motivo IN (SELECT id_motivo
-                                                               FROM GIN) as ConPermisoGeneral,
-                                               motivo 
-                                        from motivo M
-                                        where id_motivo = $ID_Motivo_3";
-                $RetMotivo_3 = mysqli_query($Con->Conexion,$ConsultarMotivo_3) or die($MensajeErrorMotivo_3);
-                $RetMotivo_3 = mysqli_fetch_assoc($RetMotivo_3);
-                if(count(array_filter($MotivosOpciones)) > 0){
-                  if(in_array($ID_Motivo_3, array_values($MotivosOpciones))){
-                    $Motivo_3 = ($RetMotivo_3["ConPermisoParaUsr"] || $RetMotivo_3["ConPermisoGeneral"])?$RetMotivo_3["motivo"]:"";
+                if ($carga && !$imprimir) {
+                  if ($RetTodos["fecha_nac"] == 'null') {
+                    $Fecha_Nacimiento = "Sin Datos";
                   } else {
-                    $Motivo_3 = "";
+                    $Fecha_Nacimiento = implode("-", array_reverse(explode("-",$RetTodos["fecha_nac"])));
                   }
-                } else {
-                  $Motivo_3 = ($RetMotivo_3["ConPermisoParaUsr"] || $RetMotivo_3["ConPermisoGeneral"])?$RetMotivo_3["motivo"]:"";
-                }
 
-                $ID_Motivo_4 = $RetMovimientos["motivo_4"];
-                $ConsultarMotivo_4 = "select M.id_motivo IN (SELECT id_motivo 
-                                                                      FROM INN) as ConPermisoParaUsr,
-                                               M.id_motivo IN (SELECT id_motivo
-                                                               FROM GIN) as ConPermisoGeneral,
-                                               motivo 
-                                        from motivo M
-                                        where id_motivo = $ID_Motivo_4";
-                $RetMotivo_4 = mysqli_query($Con->Conexion,$ConsultarMotivo_4) or die($MensajeErrorMotivo_4);
-                $RetMotivo_4 = mysqli_fetch_assoc($RetMotivo_4);
-                if(count(array_filter($MotivosOpciones)) > 0){
-                  if(in_array($ID_Motivo_4, array_values($MotivosOpciones))){
-                    $Motivo_4 = ($RetMotivo_4["ConPermisoParaUsr"] || $RetMotivo_4["ConPermisoGeneral"])?$RetMotivo_4["motivo"]:"";
-                  } else {
-                    $Motivo_4 = "";
-                  }
-                } else {
-                  $Motivo_4 = ($RetMotivo_4["ConPermisoParaUsr"] || $RetMotivo_4["ConPermisoGeneral"])?$RetMotivo_4["motivo"]:"";
-                }
+                  $ID_Movimiento = $RetTodos["id_movimiento"];
+                  $id_persona = $RetTodos["id_persona"];
+                  $Fecha = implode("-", array_reverse(explode("-",$RetTodos["fecha"])));
+                  $Apellido = $RetTodos["apellido"];
+                  $Nombre = $RetTodos["nombre"];
+                  $Observaciones = $RetTodos["observaciones"];
+                  $Responsable = $RetTodos["responsable"];
+                    //solucionar el error!
+                    //  variables inventadas solo para que arme la tabla
 
-                $ID_Motivo_5 = $RetMovimientos["motivo_5"];
-                $ConsultarMotivo_5 = "select M.id_motivo IN (SELECT id_motivo 
-                                                                      FROM INN) as ConPermisoParaUsr,
-                                               M.id_motivo IN (SELECT id_motivo
-                                                               FROM GIN) as ConPermisoGeneral,
-                                               motivo 
-                                        from motivo M
-                                        where id_motivo = $ID_Motivo_5";
-                $RetMotivo_5 = mysqli_query($Con->Conexion,$ConsultarMotivo_5) or die($MensajeErrorMotivo_5);
-                $RetMotivo_5 = mysqli_fetch_assoc($RetMotivo_5);
-                if(count(array_filter($MotivosOpciones)) > 0){
-                  if(in_array($ID_Motivo_5, array_values($MotivosOpciones))){
-                    $Motivo_5 = ($RetMotivo_5["ConPermisoParaUsr"] || $RetMotivo_5["ConPermisoGeneral"])?$RetMotivo_5["motivo"]:"";
-                  } else {
-                    $Motivo_5 = "";
+                  $CentroSalud = $RetTodos["centro_salud"]; //centro_salud
+                  $OtraInstitucion = $RetTodos["NombreInst"]; //otraInstitucion
+                  $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Motivo_4,$Motivo_5,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);   
+
+                  /////////////////////////////////////////////////////////////
+                  $DNI = $RetTodos["documento"];
+                  $Edad = $RetTodos["edad"];
+                  $Meses = $RetTodos["meses"];
+                  $Obra_Social = $RetTodos["obra_social"];
+                  $Domicilio = $RetTodos["domicilio"];
+                  $Barrio = $RetTodos["Barrio"];
+                  $Localidad = $RetTodos["localidad"];
+                  /////////////////////////////////////////////////////////////
+                  $json_row["height"] = (isset($json_row["height"])) ? $json_row["height"] : 0;
+                  $carga = false;
+                }
+                
+                if ($RetTodos["id_movimiento"] 
+                    && ($view == $RetTodos["id_movimiento"]) 
+                    && !$imprimir) {
+                  $motivo_mov = (!empty($RetTodos["motivo"])) ? $RetTodos["motivo"] : "";
+                  if (!empty($RetTodos["nro_motivo"]) && $RetTodos["nro_motivo"] == '1') {
+                    $DtoMovimiento->setMotivo_1($motivo_mov);
+                    $ID_Motivo_1 = $RetTodos["id_motivo"];
                   }
-                } else {
-                  $Motivo_5 = ($RetMotivo_5["ConPermisoParaUsr"] || $RetMotivo_5["ConPermisoGeneral"])?$RetMotivo_5["motivo"]:"";
+                  if (!empty($RetTodos["nro_motivo"]) && $RetTodos["nro_motivo"] == '2') {
+                    $DtoMovimiento->setMotivo_2($motivo_mov);
+                    $ID_Motivo_2 = $RetTodos["id_motivo"];
+                  }
+                  if (!empty($RetTodos["nro_motivo"]) && $RetTodos["nro_motivo"] == '3') {
+                    $DtoMovimiento->setMotivo_3($motivo_mov);
+                    $ID_Motivo_3 = $RetTodos["id_motivo"];
+                  }
+                  if (!empty($RetTodos["nro_motivo"]) && $RetTodos["nro_motivo"] == '4') {
+                    $DtoMovimiento->setMotivo_4($motivo_mov);
+                    $ID_Motivo_4 = $RetTodos["id_motivo"];
+                  }
+                  if (!empty($RetTodos["nro_motivo"]) && $RetTodos["nro_motivo"] == '5') {
+                    $DtoMovimiento->setMotivo_5($motivo_mov);
+                    $ID_Motivo_5 = $RetTodos["id_motivo"];
+                  }
+                  continue;
                 }
 
                 $movimientoVisible = false;
-                $movimientoVisible = $movimientoVisible || ($Motivo_1 != "");
-                $movimientoVisible = $movimientoVisible || ($Motivo_2 != "");
-                $movimientoVisible = $movimientoVisible || ($Motivo_3 != "");
-                $movimientoVisible = $movimientoVisible || ($Motivo_4 != "");
-                $movimientoVisible = $movimientoVisible || ($Motivo_5 != "");
+                $movimientoVisible = $movimientoVisible || ($DtoMovimiento->getMotivo_1() != "1");
+                $movimientoVisible = $movimientoVisible || ($DtoMovimiento->getMotivo_2() != "1");
+                $movimientoVisible = $movimientoVisible || ($DtoMovimiento->getMotivo_3() != "1");
+                $movimientoVisible = $movimientoVisible || ($DtoMovimiento->getMotivo_4() != "1");
+                $movimientoVisible = $movimientoVisible || ($DtoMovimiento->getMotivo_5() != "1");
 
                 if (!$movimientoVisible){
                   continue;
@@ -2323,7 +2003,7 @@ $Con->CloseConexion();
                   $classAReemplazar[] = "~class='trObservaciones'~";
                   $TableMovPrint .= preg_replace( $tdReemplazar, "", $TableMov);
                   echo $TableMov;
-                }else{
+                } else {
                   $TableMov .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td></tr>";
                   $TableMovPrint .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td></tr>";
                   $json_row["Fecha"] = $DtoMovimiento->getFecha();
@@ -2455,88 +2135,6 @@ $Con->CloseConexion();
             //unset($_SESSION["datosNav"]);
           ?>
         </div>
-        <?php
-        $htmlPrint = "<html>
-                        <head>
-                        <link href='https://fonts.cdnfonts.com/css/symbol' rel='stylesheet'>
-                        <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-    
-                          <style>
-                            @page {
-                              margin: 15px !important;
-                              padding: 15px !important;
-                            }
-                            .table{
-                              border-collapse: collapse;
-                            }
-                            .thead-dark{
-                              background-color: #ccc;
-                              font-size: 12px;
-                            }
-                            .table_pdf {
-                              width: 100%;
-                            }
-                            tr td {
-                              text-align: center;
-                              font-size: 12px;
-                            }
-
-                            table thead tr th {
-                              background-color: #ccc;
-                            }
-
-                            h5, h2{
-                              text-align: center;
-                              margin-bottom: 0px
-                            }
-
-                            #InformacionDeCentro {
-                              float: right; 
-                              text-align: left;
-                            }
-
-                            #frase {
-                              font-weight: bold;
-                            }
-
-                            #encabezado {
-                              text-align: center;
-                              float: right;
-                              padding-right: 13rem;
-                            }
-
-                            #InformacionDeCiudad {
-                              text-align: left;
-                              margin-bottom: 2rem;
-                              margin-top: 2rem;
-                            }
-
-                            table, th, td {
-                              border: 1px solid;
-                            }
-                          </style>
-                          </head> 
-                          <body>
-                            <p id='InformacionDeCentro'> Centro de Atencion Primaria en Salud<br>
-                              Direccion de Accion Social<br>
-                              DESDE : ". $Etiqueta_Fecha_Inicio . " HASTA : " . $Etiqueta_Fecha_Fin ." </p>
-                            <p id='encabezado'> Plan para el fortalecimiento del bienestar Comunitario<br>
-                              <span id='frase'> 
-                                Listado de moviminetos
-                              </span>
-                              <br>
-                            </p>
-                            <p id='InformacionDeCiudad'>
-                              Municipialidad de Rio Tercero
-                            </p>" .
-                            ((empty($tablePrint))?"":$tablePrint) ."
-                            <br>".
-                            ((empty($TableMovPrint))?"":$TableMovPrint)."
-                        </body>
-                      </html>";
-        
-        ?>
-        <input type="hidden" name="tabla_1" id = "tabla_1" value = "<?php echo $htmlPrint;?>">
   </div>
 </div>
 </div>

@@ -100,37 +100,6 @@ $Con->CloseConexion();
       $("#BarraDeNavHTabla").attr("style", "width: 95%; margin-left: 2%;");
     }
 
-    function ordenGeoreferencia(personaObjectA, personaObjectB) {
-      if (personaObjectA.lat < personaObjectB.lat) {
-        return -1;
-      } else if (personaObjectA.lat > personaObjectB.lat) {
-        return 1;
-      } else {
-        if (personaObjectA.lon < personaObjectB.lon) {
-          return -1;
-        } else if (personaObjectA.lon > personaObjectB.lon) {
-          return 1;
-        } else {
-          return 0;
-        }
-      }
-    }
-
-    function ordenCategoria(categoriaA, categoriaB) {
-      if (categoriaA[1] < categoriaB[1]) {
-        return -1;
-      } else if (categoriaA[1] > categoriaB[1]) {
-        return 1;
-      } else {
-        if (categoriaA[2] < categoriaB[2]) {
-          return -1;
-        } else if (categoriaA[2] > categoriaB[2]) {
-          return 1;
-        } else {
-          return 0;
-        }
-      }
-    }
     var map = null;
     var nroFilasTabla = 0;
     var nroColumnasTabla = 0;
@@ -218,12 +187,19 @@ $Con->CloseConexion();
         columnaRemoverClass.removeClass("showColTablaAnimacionfire");
         columnaRemoverClass.removeClass("showColTablaAnimacion");
       });
+      /*
       $("#map-modal").on("transitionend", function (e) {
         if (!map) {
           map = init();
           carga(map, objectJsonTabla);
         };
-      })
+      });
+      */
+      if (!map) {
+          map = init();
+          carga(map, objectJsonTabla);
+        };
+
     });
 
     function fireKey(el) {
@@ -1091,6 +1067,413 @@ $Con->CloseConexion();
 
             $cmb_seleccion = (isset($_REQUEST["cmb_seleccion"])) ? $_REQUEST["cmb_seleccion"] : null;
             $esPersonaSeleccionada = ($ID_Persona) ? ", IF(M.id_persona = $ID_Persona, 1, 0) as esPersona" : "";
+            $motivos = array_filter($MotivosOpciones, 
+                                 function ($x) {
+                                              return !empty($x); 
+                                            }
+                                    );
+            $CantOpMotivos = count($motivos);
+
+            $listaDeMotivos = "(".implode(",",array_filter($MotivosOpciones)).")";
+
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            $consultaGeneralPermisos = "CREATE TEMPORARY TABLE GIN " ;
+            $consultaUsuarioPermisos = "CREATE TEMPORARY TABLE INN ";
+        
+            $motivosVisiblesParaUsuario =  "SELECT MT.id_motivo
+                                            FROM motivo MT,
+                                                categoria  C,
+                                                categorias_roles CS
+                                            WHERE C.cod_categoria = MT.cod_categoria
+                                              and MT.estado = 1
+                                              and C.estado = 1
+                                              and CS.id_categoria = C.id_categoria
+                                              and CS.id_tipousuario = $TipoUsuario
+                                              and CS.estado = 1";
+        
+            $motivosVisiblesParaTodoUsuario = "SELECT MT.id_motivo
+                                                FROM motivo MT,
+                                                    categoria  C
+                                            WHERE C.cod_categoria = MT.cod_categoria
+                                              and MT.estado = 1
+                                              and C.estado = 1
+                                              and MT.id_motivo <> 1   
+                                              and C.id_categoria NOT IN (SELECT id_categoria
+                                                                          FROM categorias_roles CS
+                                                                          where estado = 1)";
+            $motivosVisiblesParaUsuario = $consultaUsuarioPermisos . $motivosVisiblesParaUsuario;
+            $motivosVisiblesParaTodoUsuario = $consultaGeneralPermisos . $motivosVisiblesParaTodoUsuario;
+            $MessageError = "Problemas al crear la tabla temporaria de usuarios";
+            $motivosUsuario = mysqli_query(
+                              $Con->Conexion,$motivosVisiblesParaUsuario
+                              ) or die($MessageError);
+        
+            $MessageError = "Problemas al crear la tabla temporaria general";
+            $motivosTodoUsuario = mysqli_query(
+                              $Con->Conexion,$motivosVisiblesParaTodoUsuario
+                              ) or die($MessageError);
+
+
+            $Consulta = "SELECT M.id_movimiento, M.fecha, M.id_persona, MONTH(M.fecha) as 'Mes',
+                                YEAR(M.fecha) as 'Anio', B.Barrio, P.manzana, P.documento, P.obra_social,
+                                P.localidad, P.edad, P.meses, P.lote, P.familia, P.apellido, P.fecha_nac,
+                                P.nombre, P.fecha_nac, P.domicilio, M.motivo_1, M.motivo_2, M.motivo_3,
+                                M.motivo_4,M.motivo_5, MT.motivo, R.responsable, M.observaciones, CS.centro_salud,
+                                I.Nombre as 'NombreInst', MST.id_motivo, MST.nro_motivo, L.calle_nombre, P.nro,
+                                ST_X(P.georeferencia) as lat, ST_Y(P.georeferencia) as lon, C.color, CF.Forma_Categoria,
+                                MT.codigo, C.tipo_categoria";
+
+            $json_filtro = [];
+            $filtros = [];
+            $filtrosSeleccionados = [];
+
+            $filtrosSeleccionados["Fecha_Desde"] = $_REQUEST["Fecha_Desde"];
+            $filtrosSeleccionados["Fecha_Hasta"] = $_REQUEST["Fecha_Hasta"];
+
+            if ($ID_Persona > 0) {
+                $ConsultarPersona = "select apellido, nombre
+                              from persona
+                              where ID_Persona = " . $ID_Persona." limit 1";
+
+                $EjecutarConsultarPersona = mysqli_query($Con->Conexion,$ConsultarPersona) or die("Problemas al consultar filtro Persona");
+                $RetConsultarPersona = mysqli_fetch_assoc($EjecutarConsultarPersona);
+                $filtrosSeleccionados["ID_Persona"] = $ID_Persona;
+            }
+
+            $persona_query = "SELECT *
+                              FROM persona 
+                              WHERE estado = 1";
+
+            $motivo_query = "SELECT *
+                              FROM motivo
+                              WHERE ";
+            $categoria_query = "SELECT *
+                                FROM categoria ";
+            $movimiento_query = "SELECT *
+                                  FROM movimiento 
+                                  WHERE fecha between '$Fecha_Inicio' and '$Fecha_Fin'
+                                    AND estado = 1";
+
+            if ($Edad_Desde !== null && $Edad_Desde !== "" && $Edad_Hasta !== null && $Edad_Hasta !== "") {
+              $persona_query .= " edad >= $Edad_Desde and edad <= $Edad_Hasta";
+              $filtros[] = "Edad: Desde " . $Edad_Desde . " hasta " . $Edad_Hasta;
+              if ($Meses_Hasta !== null && $Meses_Hasta !== "") {
+                $Consulta .= " and (edad < $Edad_Hasta or meses <= $Meses_Hasta)";
+                if ($Meses_Desde != null) {
+                  $Consulta .= " and meses >= $Meses_Desde ";
+                  $filtros[] = "Meses: Desde " . $Meses_Desde . " hasta " . $Meses_Hasta;
+                } else {
+                  $filtros[] = "Meses: Desde 0 hasta " . $Meses_Hasta;
+                }
+              }
+            } else {
+              if ($Meses_Desde !== null && $Meses_Desde !== "" && $Meses_Hasta !== null && $Meses_Hasta !== "") {
+                $persona_query .= " meses <= $Meses_Hasta and edad = 0 ";
+                if ($Meses_Desde != null) {
+                  $Consulta .= " and meses >= $Meses_Desde";
+                  $filtros[] = "Meses: Desde " . $Meses_Desde . " hasta " . $Meses_Hasta;
+                } else {
+                  $filtros[] = "Meses: Desde 0 hasta " . $Meses_Hasta;
+                }
+              }
+            }
+
+            if($Domicilio != null && $Domicilio != ""){
+              $persona_query .= " and domicilio like '%$Domicilio%'";
+              $filtros[] = "Domicilio: " . $Domicilio;
+              $filtrosSeleccionados["Domicilio"] = $Domicilio;
+            }
+
+            if($Manzana != null && $Manzana != ""){
+              $persona_query .= " and manzana = '$Manzana'";
+              $filtros[] = "Manzana: " . $Manzana;
+              $filtrosSeleccionados["Manzana"] = $Manzana;
+            }
+
+            if($Lote != null && $Lote != ""){
+              $persona_query .= " and lote = $Lote";
+              $filtros[] = "Lote: " . $Lote;
+              $filtrosSeleccionados["Lote"] = $Lote;
+            }
+
+            if($Familia != null && $Familia != ""){
+              $persona_query .= " and familia = $Familia";
+              $filtros[] = "Sublote: " . $Familia;
+              $filtrosSeleccionados["Familia"] = $Familia;
+            }
+
+            if($Nro_Carpeta != null && $Nro_Carpeta != ""){
+              $persona_query .= " and nro_carpeta = '$Nro_Carpeta'";
+              $filtros[] = "Nro_carpeta: " . $Nro_Carpeta;
+            }
+            $filtrosSeleccionados["Nro_Carpeta"] = $Nro_Carpeta;
+
+            if($Nro_Legajo != null && $Nro_Legajo != ""){
+              $persona_query .= " and nro_legajo = '$Nro_Legajo'";
+              $filtros[] =  " Nro_legajo : " . $Nro_Legajo;
+              $filtrosSeleccionados["Nro_Legajo"] = $Nro_Legajo;
+            }
+
+            if(count((Array)$Barrio) > 1){
+              $filtroBarrios = 'Barrios:';
+              foreach($Barrio as $key => $valueBarrio){
+                if($key == $Barrio->array_key_first){
+                  $persona_query .= " and (";
+                }
+                if($valueBarrio > 0){
+                  if($key === count($Barrio) - 1){
+                    $persona_query .= " ID_Barrio = $valueBarrio )";
+                  }else{
+                    $persona_query .= " ID_Barrio = $valueBarrio or";
+                  }
+
+                  $ConsultarBarrio = "select Barrio 
+                                      from barrios 
+                                      where ID_Barrio = " . $valueBarrio." limit 1";
+
+                  $EjecutarConsultarBarrio = mysqli_query($Con->Conexion,$ConsultarBarrio) or die("Problemas al consultar filtro Barrios");
+                  $RetConsultarBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);
+                  if($key == $Barrio->array_key_first){
+                    $filtroBarrios .= " " . $RetConsultarBarrio['Barrio'];
+                  }else{
+                    $filtroBarrios .= " - " . $RetConsultarBarrio['Barrio'];
+                  }
+                }
+              }
+              $filtros[] = $filtroBarrios;
+            } else {
+              if ($Barrio[0] > 0) {
+                $persona_query .= " and ID_Barrio = $Barrio[0]";
+                $ConsultarBarrio = "select Barrio 
+                                    from barrios 
+                                    where ID_Barrio = " . $Barrio[0]." limit 1";
+                $EjecutarConsultarBarrio = mysqli_query($Con->Conexion,$ConsultarBarrio) or die("Problemas al consultar filtro Barrios");
+                $RetConsultarBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);
+                $filtros[] = "Barrio: " . $RetConsultarBarrio['Barrio'];
+                $filtrosSeleccionados["ID_Barrio"] = $Barrio[0];
+              }
+            }
+
+
+            if($ID_Escuela > 0){                
+              $persona_query .= " and ID_Escuela = $ID_Escuela";
+              $ConsultarEscuela = "select Escuela 
+                                    from escuelas 
+                                    where ID_Escuela = " . $ID_Escuela." limit 1";
+              $EjecutarConsultarEscuela = mysqli_query($Con->Conexion,$ConsultarEscuela) or die("Problemas al consultar filtro Escuela");
+              $RetConsultarEscuela = mysqli_fetch_assoc($EjecutarConsultarEscuela);  
+              $filtros[] = "Escuela: " . $RetConsultarEscuela['Escuela'];
+              $filtrosSeleccionados["ID_Escuela"] = $ID_Escuela;
+            }
+
+            if($Trabajo != null && $Trabajo != ""){
+              $persona_query .= " and Trabajo like '%$Trabajo%'";
+              $filtros[] = "Trabajo: " . $Trabajo;
+              $filtrosSeleccionados["Trabajo"] = $Trabajo;                
+            }
+
+            if($ID_Categoria > 0){
+              $categoria_query .= " WHERE id_categoria = $ID_Categoria";
+
+              $ConsultarCategoria = "select categoria
+                                    from categoria
+                                    where id_categoria = " . $ID_Categoria." limit 1";
+
+              $EjecutarConsultarCategoria = mysqli_query($Con->Conexion,$ConsultarCategoria) or die("Problemas al consultar filtro Categoria");
+              $RetConsultarCategoria = mysqli_fetch_assoc($EjecutarConsultarCategoria);
+              $filtros[] = "Categoria: " . $RetConsultarCategoria['categoria'];
+              $filtrosSeleccionados["ID_Categoria"] = $ID_Categoria;
+            }
+
+            if($ID_CentroSalud > 0){
+              $movimiento_query  .= " AND id_centro = $ID_CentroSalud";
+              $ConsultarCentroSalud = "select centro_salud 
+                                        from centros_salud 
+                                        where id_centro = " . $ID_CentroSalud." limit 1";
+              $EjecutarConsultarCentroSalud = mysqli_query($Con->Conexion,$ConsultarCentroSalud) or die("Problemas al consultar filtro Categoria");
+              $RetConsultarCentroSalud = mysqli_fetch_assoc($EjecutarConsultarCentroSalud);                  
+              $filtros[] = "Centro Salud: " . $RetConsultarCentroSalud['centro_salud'];
+              $filtrosSeleccionados["ID_CentroSalud"] = $ID_CentroSalud;
+            }
+
+            if($ID_OtraInstitucion > 0){
+              $movimiento_query  .= " and ID_OtraInstitucion = $ID_OtraInstitucion";
+              $ConsultarOtraInstitucion = "select Nombre 
+                                            from otras_instituciones 
+                                            where ID_OtraInstitucion = " . $ID_OtraInstitucion." limit 1";
+              $EjecutarConsultarOtraInstitucion = mysqli_query($Con->Conexion,$ConsultarOtraInstitucion) or die("Problemas al consultar filtro Categoria");
+              $RetConsultarOtraInstitucion = mysqli_fetch_assoc($EjecutarConsultarOtraInstitucion);   
+              $filtros[] = "Otra Institucion: " . $RetConsultarOtraInstitucion['Nombre'];
+              $filtrosSeleccionados["ID_OtraInstitucion"] = $ID_OtraInstitucion;
+            }
+
+            if($ID_Responsable > 0){
+              $movimiento_query  .= " and id_resp = $ID_Responsable";
+              $ConsultarResponsable = "select responsable 
+                                        from responsable 
+                                        where id_resp = " . $ID_Responsable." limit 1";
+              $EjecutarConsultarResponsable = mysqli_query($Con->Conexion,$ConsultarResponsable) or die("Problemas al consultar filtro Responsable");
+              $RetConsultarResponsable = mysqli_fetch_assoc($EjecutarConsultarResponsable);   
+              $filtros[] = "Responsable: " . $RetConsultarResponsable['responsable'];
+              $filtrosSeleccionados["ID_Responsable"] = $ID_Responsable;
+            }
+
+            if (count(array_filter($MotivosOpciones))) {
+              $motivo_query = "(" . $motivo_query;
+              $motivo_query .= " id_motivo in $listaDeMotivos)";
+            } else {
+              $motivo_query = "motivo";
+            }
+
+            if ($ID_Persona > 0) {
+              $countPostfield = count(array_filter($_POST, function ($element) {
+                return $element;
+              }));
+
+              $ConsultaFlia = $Consulta;
+              $ConsultarPersona = "select apellido, 
+                                          nombre, 
+                                          domicilio,
+                                          ID_Barrio,
+                                          calle,
+                                          nro
+                                   from persona 
+                                   where ID_Persona = " . $ID_Persona . " 
+                                     and estado = 1";
+              $EjecutarConsultarPersona = mysqli_query($Con->Conexion, $ConsultarPersona) or die("Problemas al consultar filtro Persona");
+              $RetConsultarPersona = mysqli_fetch_assoc($EjecutarConsultarPersona);
+
+              if (($countPostfield - 3) == 1) {
+                if (!(empty($RetConsultarPersona["domicilio"]) && (empty($RetConsultarPersona["calle"]) || empty($RetConsultarPersona["nro"])))) {
+                  $domicilio = $RetConsultarPersona["domicilio"];
+                  $persona = new Persona(ID_Persona: $ID_Persona);
+                  $domicilioPersona = "";
+                  if ($persona->getCalle() && $persona->getNroCalle()) {
+                    $domicilioPersona = "domicilio like '%" . $persona->getCalle() . "%" . $persona->getNroCalle() . "%' or ";
+                  }
+                  $ConsultarPersdomicilio = "select id_persona
+                                            from persona
+                                            where ($domicilioPersona (calle = " . (($persona->getId_Calle()) ? $persona->getId_Calle() : "null") . "
+                                                  and nro = " . (($persona->getNro()) ? $persona->getNro() : "null") . "))
+                                              and estado = 1";
+                  $persona_query  .= " and id_persona in ($ConsultarPersdomicilio)";
+                } else {
+                  $persona_query  .= " and id_persona = $ID_Persona";
+                }
+              } else {
+                $persona_query  .= " and id_persona = $ID_Persona";
+              }
+              $filtros[] = "Persona: " . $RetConsultarPersona["apellido"] . ", " . $RetConsultarPersona["nombre"];
+              $json_filtro[] = "Persona " . $RetConsultarPersona["apellido"] . " " . $RetConsultarPersona["nombre"];
+            }
+            if ($Mostrar) {
+                $Consulta .=  " FROM ($movimiento_query) M
+                                  INNER JOIN movimiento_motivo MST 
+                                  ON (M.id_movimiento = MST.id_movimiento)
+                                  INNER JOIN $motivo_query MT
+                                  ON (MST.id_motivo = MT.id_motivo)
+                                  INNER JOIN ((SELECT * FROM GIN) UNION (SELECT * FROM INN)) GN
+                                  ON (GN.id_motivo = MT.id_motivo)
+                                  RIGHT JOIN ($persona_query) P 
+                                  ON (M.id_persona = P.id_persona)
+                                  INNER JOIN barrios B 
+                                  ON (B.ID_Barrio = P.ID_Barrio)                                    
+                                  LEFT JOIN ($categoria_query) C
+                                  ON (C.cod_categoria = MT.cod_categoria)
+                                  LEFT JOIN centros_salud CS
+                                  ON (M.id_centro = CS.id_centro)
+                                  LEFT JOIN otras_instituciones I
+                                  ON (M.id_otrainstitucion = I.ID_OtraInstitucion)
+                                  LEFT JOIN responsable R
+                                  ON (R.id_resp = M.id_resp)
+                                  LEFT JOIN calle L 
+                                  ON (L.id_calle = P.calle)
+                                  LEFT JOIN formas_categorias CF 
+                                  ON (CF.ID_Forma = C.ID_Forma)";
+                                
+            } else {
+                $Consulta .=  " FROM ($movimiento_query) M
+                                  INNER JOIN movimiento_motivo MST 
+                                  ON (M.id_movimiento = MST.id_movimiento)
+                                  INNER JOIN $motivo_query MT
+                                  ON (MST.id_motivo = MT.id_motivo)
+                                  INNER JOIN ((SELECT * FROM GIN) UNION (SELECT * FROM INN)) GN
+                                  ON (GN.id_motivo = MT.id_motivo)
+                                  INNER JOIN ($persona_query) P 
+                                  ON (M.id_persona = P.id_persona)
+                                  INNER JOIN barrios B 
+                                  ON (B.ID_Barrio = P.ID_Barrio)                                    
+                                  INNER JOIN ($categoria_query) C
+                                  ON (C.cod_categoria = MT.cod_categoria)
+                                  INNER JOIN centros_salud CS
+                                  ON (M.id_centro = CS.id_centro)
+                                  INNER JOIN otras_instituciones I
+                                  ON (M.id_otrainstitucion = I.ID_OtraInstitucion)
+                                  INNER JOIN responsable R
+                                  ON (R.id_resp = M.id_resp)
+                                  LEFT JOIN calle L 
+                                  ON (L.id_calle = P.calle)
+                                  LEFT JOIN formas_categorias CF 
+                                  ON (CF.ID_Forma = C.ID_Forma)";
+
+            }
+  
+            $ConsultarMovimientosPersona = $Consulta;
+
+
+            if ($ID_Persona > 0) {
+              $Consulta .= " group by M.id_movimiento 
+                             order by B.Barrio DESC, P.domicilio DESC, P.manzana DESC, P.lote DESC, P.familia DESC,
+                                   P.domicilio DESC, P.apellido DESC, M.fecha ASC, M.id_movimiento ASC";
+              //$Consulta .= " order by esPersona DESC, B.Barrio DESC, P.domicilio DESC, P.manzana DESC, P.lote DESC, P.familia DESC,
+              //                     P.domicilio DESC, P.apellido DESC, M.fecha DESC, M.id_movimiento DESC";
+            } else {
+              $Consulta .= " order by B.Barrio DESC, P.domicilio DESC , P.manzana DESC, P.lote DESC, P.familia DESC,
+                                      P.domicilio DESC, P.apellido DESC, M.fecha ASC, M.id_movimiento ASC";
+            }
+
+
+            /*
+            $consultaGeneralPermisos = "CREATE TEMPORARY TABLE GIN " ;
+            $consultaUsuarioPermisos = "CREATE TEMPORARY TABLE INN ";
+        
+            $motivosVisiblesParaUsuario =  "SELECT MT.id_motivo
+                                            FROM motivo MT,
+                                                categoria  C,
+                                                categorias_roles CS
+                                            WHERE C.cod_categoria = MT.cod_categoria
+                                              and MT.estado = 1
+                                              and C.estado = 1
+                                              and CS.id_categoria = C.id_categoria
+                                              and CS.id_tipousuario = $TipoUsuario
+                                              and CS.estado = 1";
+        
+            $motivosVisiblesParaTodoUsuario = "SELECT MT.id_motivo
+                                                FROM motivo MT,
+                                                    categoria  C
+                                            WHERE C.cod_categoria = MT.cod_categoria
+                                              and MT.estado = 1
+                                              and C.estado = 1
+                                              and MT.id_motivo <> 1   
+                                              and C.id_categoria NOT IN (SELECT id_categoria
+                                                                          FROM categorias_roles CS
+                                                                          where estado = 1)";
+            $motivosVisiblesParaUsuario = $consultaUsuarioPermisos . $motivosVisiblesParaUsuario;
+            $motivosVisiblesParaTodoUsuario = $consultaGeneralPermisos . $motivosVisiblesParaTodoUsuario;
+            $MessageError = "Problemas al crear la tabla temporaria de usuarios";
+            $motivosUsuario = mysqli_query(
+                              $Con->Conexion,$motivosVisiblesParaUsuario
+                              ) or die($MessageError);
+        
+            $MessageError = "Problemas al crear la tabla temporaria general";
+            $motivosTodoUsuario = mysqli_query(
+                              $Con->Conexion,$motivosVisiblesParaTodoUsuario
+                              ) or die($MessageError);
+
+
+            $listaDeMotivos = "(".implode(",",array_filter($MotivosOpciones)).")";
 
             $Consulta = "SELECT M.id_movimiento, M.id_persona, MONTH(M.fecha) as 'Mes',
                                 YEAR(M.fecha) as 'Anio', B.Barrio, P.manzana, P.lote,
@@ -1243,7 +1626,7 @@ $Con->CloseConexion();
               }
             }
             */
-
+            /* ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             if ($Edad_Desde !== null && $Edad_Desde !== "" && $Edad_Hasta !== null && $Edad_Hasta !== "") {
               // $Consulta .= " and P.edad between $Edad_Desde and $Edad_Hasta";
               $Consulta .= " and P.edad >= $Edad_Desde and P.edad <= $Edad_Hasta";
@@ -1534,7 +1917,7 @@ $Con->CloseConexion();
             */
 
 
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /*
             if ($ID_Categoria > 0) {
               $Consulta .= " and  ((M.motivo_1 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria) or (M.motivo_2 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria) or (M.motivo_3 = MT.id_motivo and MT.cod_categoria = C.cod_categoria and C.id_categoria = $ID_Categoria))";
               $ConsultarCategoria = "select categoria from categoria where id_categoria = " . $ID_Categoria . " limit 1";
@@ -1593,7 +1976,7 @@ $Con->CloseConexion();
             //$Con->CloseConexion();
           
             // $Consulta .= " group by M.id_persona order by Anio, Mes, B.Barrio, P.domicilio, P.manzana, P.lote, P.familia, P.domicilio, P.apellido, M.id_movimiento";
-          
+            */
             $MensajeError = "No se pudieron consultar los Datos";
 
             $Etiqueta_Fecha_Inicio = implode("-", array_reverse(explode("-", $Fecha_Inicio)));
@@ -1605,9 +1988,8 @@ $Con->CloseConexion();
             </center>
             <!-- <span><i class="fa fa-filter"></i> Filtros </span> -->
             <span> Filtros seleccionados </span>
-            <!-- < ?php echo "DEBUG: ".$Consulta; ?>       -->
+
             <?php
-            // echo "DEBUG: ".$Consulta;
           
             foreach ($filtros as $value) {
               echo "<span class='etFiltros'>" . $value . "</span> ";
@@ -1639,11 +2021,9 @@ $Con->CloseConexion();
 
           <div class="table-responsive" id="tabla-responsive">
             <?php
-            //$Con = new Conexion();
-            //$Con->OpenConexion();
           
             $tomarRetTodos = array();
-            //$Con->ResultSet = mysqli_query($Con->Conexion, $Consulta) or die($MensajeError . " Consulta: " . $Consulta);
+
             $Ejecutar_Consulta_general = mysqli_query($Con->Conexion, $Consulta) or die("Error al consultar datos");
             $Con->ResultSet = $Ejecutar_Consulta_general;
 
@@ -1663,18 +2043,14 @@ $Con->CloseConexion();
             // }
           
             // foreach($ResultadosPrincipal as $valor){   
-            //     // echo var_dump($valor);               
             //     $arrIDMovimientos[] = $value["id_movimiento"];
             //     //TODO: revisar bien esto
             //     // $arrIDMovimientos[] = $value;
             // }
           
             /*while ($Ret = $Con->ResultSet->fetch_assoc()) {
-              // echo "DEBUG :".$Ret['id_movimiento'];
               $arrIDMovimientos[] = $Ret['id_movimiento'];
             }*/
-
-            // echo "DEBUG IDS:".var_dump($arrIDMovimientos);
           
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1701,11 +2077,7 @@ $Con->CloseConexion();
                               <tr align='center' valign='middle'>
                                 <th id='Contenido-Titulo-1'>Barrio</th>
                                 <th id='Contenido-Titulo-2'>Direc.</th>";
-              $Table_imprimir = "<table cellspacing='0' id='tablaMovimientos' style='page-break-after:always;'>
-                                    <thead>
-                                      <tr align='center' valign='middle'>
-                                      <th id='Contenido-Titulo-1'>Barrio</th>
-                                      <th id='Contenido-Titulo-2'>Direc.</th>";
+
               $jsonTable = array();
               $mesesHeader = array();
               $nroColumnas += 2;
@@ -1742,8 +2114,6 @@ $Con->CloseConexion();
               $nroColumnas += 1;
             }
 
-            $Tomar_Meses = mysqli_query($Con->Conexion, $Consulta) or die($MensajeError . " Consulta: " . $Consulta);
-
             /* TOMAR LOS MESES ENTRE LAS FECHAS  */
             $MesFecha_Inicio = new DateTime($Fecha_Inicio);
             $MesFecha_Fin = new DateTime($Fecha_Fin);
@@ -1759,7 +2129,10 @@ $Con->CloseConexion();
                 $Mes_Actual_Bandera = 01;
                 $Anio_Actual_Bandera++;
               }
-              $arr[] = $Mes_Actual_Bandera . "/" . $Anio_Actual_Bandera;
+              $fecha_tabla["fecha"] = $Mes_Actual_Bandera . "/" . $Anio_Actual_Bandera;
+              $fecha_tabla["anio"] = $Anio_Actual_Bandera + 2000;
+              $fecha_tabla["mes"] = $Mes_Actual_Bandera;
+              $arr[] = $fecha_tabla;
               $Mes_Actual_Bandera++;
             }
             //$arr = array_reverse($arr);
@@ -1785,18 +2158,13 @@ $Con->CloseConexion();
           
             // }             
             // $arr_reverse = array_reverse($arr);
-          
-            // var_dump($Table);
-            // array(13) { [0]=> string(5) "12/21" [1]=> string(4) "1/22" [2]=> string(4) "2/22" [3]=> string(4) "3/22"
-            //    [4]=> string(4) "4/22" [5]=> string(4) "5/22" [6]=> string(4) "6/22" [7]=> string(4) "7/22"
-            //     [8]=> string(4) "8/22" [9]=> string(4) "9/22" [10]=> string(5) "10/22" [11]=> string(5) "11/22" [12]=> string(5) "12/22" }
+
             foreach ($arr as $key => $value) {
 
               if ($value != "") {
                 // TODO: Cambiando de tamaño las columnas
-                $Table .= "<th name='DatosResultados' style='min-width: 190px;'>" . $value . "</th>";
-                $Table_imprimir .= "<th name='DatosResultados'>" . $value . "</th>";
-                $mesesHeader[] = $value;
+                $Table .= "<th name='DatosResultados' style='min-width: 190px;'>" . $value["fecha"] . "</th>";
+                $mesesHeader[] = $value["fecha"];
               }
 
             }
@@ -1807,10 +2175,6 @@ $Con->CloseConexion();
                     </thead>
                 <tbody id='cuerpo-tabla'>";
 
-            $Table_imprimir .= "</tr>
-                              </thead>
-                            <tbody id='cuerpo-tabla'>";
-
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1819,20 +2183,21 @@ $Con->CloseConexion();
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
           
-
+            /*
             //	CREANDO FILTRO MOSTRAR - Mostrar = "0" Con Movimientos,  "1" sin movimientos.
             if ($Mostrar > 0) {
               //, P.nro_legajo, P.nro_carpeta
-              $ConsultarTodos = "select P.id_persona, B.Barrio, P.manzana, P.lote, P.familia, 
-                                          P.apellido, P.nombre, P.fecha_nac, P.domicilio
-                                   from persona P, 
-                                        barrios B, 
-                                        movimiento M
-                                   where not exists(select * 
+              $ConsultarTodos = "SELECT P.id_persona, B.Barrio, P.manzana, P.lote, P.familia, 
+                                          P.apellido, P.nombre, P.fecha_nac, P.domicilio,
+                                          L.calle_nombre, P.nro, P.edad, P.meses
+                                   FROM (persona P, 
+                                        barrios B) LEFT JOIN 
+                                        calle L ON (L.id_calle = P.calle)
+                                   WHERE not exists(select * 
                                                     from movimiento M2 
                                                     where M2.id_persona = P.id_persona) 
-                                      and B.ID_Barrio = P.ID_Barrio 
-                                      and P.estado = 1";
+                                      AND B.ID_Barrio = P.ID_Barrio 
+                                      AND P.estado = 1";
 
               if ($ID_Persona > 0) {
                 $ConsultarTodos .= " and P.id_persona = $ID_Persona";
@@ -1913,19 +2278,22 @@ $Con->CloseConexion();
                 $ConsultarTodos .= " and P.Trabajo like '%$Trabajo%'";
               }
 
-              if ($ID_Persona > 0) {
-                $ConsultarTodos .= " group by P.id_movimiento 
-                                       order by B.Barrio DESC, P.domicilio DESC, P.apellido DESC, P.nombre DESC";
-              } else {
-                $ConsultarTodos .= " group by P.id_persona 
-                                       order by B.Barrio DESC, P.domicilio DESC, P.apellido DESC, P.nombre DESC";
-              }
+              $ConsultarTodos .= " group by P.id_persona 
+                                   order by B.Barrio DESC, P.domicilio DESC, P.apellido DESC, P.nombre DESC";
 
               // $ConsultarTodos .= " group by P.id_persona order by P.apellido, P.nombre";            
           
               $MensajeErrorTodos = "No se pudieron consultar los datos de todas las personas";
 
               $EjecutarConsultarTodos = mysqli_query($Con->Conexion, $ConsultarTodos) or die($MensajeErrorTodos);
+
+
+
+
+
+
+
+
 
               // CAMBIOS CON TODOS                
               // $tomarRetTodos = mysqli_fetch_array($EjecutarConsultarTodos);
@@ -1939,7 +2307,7 @@ $Con->CloseConexion();
                 // }
           
                 // $Table .= "<tr class='SinMovimientos Datos'>";
-                // $Table .= "<td id='Contenido-1'>".$RetTodos["Barrio"]."</td><td id='Contenido-2'>".$RetTodos["domicilio"]."</td><td id='Contenido-3' name='datosflia' style='max-width: 50px;'>".$RetTodos["manzana"]."</td><td id='Contenido-4' name='datosflia' style='max-width: 50px;'>".$RetTodos["lote"]."</td><td id='Contenido-5' name='datosflia' style='max-width: 50px;'>".$RetTodos["familia"]."</td><td id='Contenido-6'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$RetTodos["apellido"].", ".$RetTodos["nombre"]."</a></td><td id='Contenido-7' style='max-width: 100px;'>".$Fecha_Nacimiento."</td>";
+                // $Table .= "<td id='Contenido-1'>".$RetTodos["Barrio"]."</td><td id='Contenido-2'>".$RetTodos["domicilio"]."</td><td id='Contenido-3' name='datosflia' style='max-width: 50px;'>".$RetTodos["manzana"]."</td><td id='Contenido-4' name='datosflia' style='max-width: 50px;'>".$RetTodos["lote"]."</td><td id='Contenido-5' name='datosflia' style='max-width: 50px;'>".$RetTodos["familia"]."</td><td id='Contenido-6'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$RetTodos["apellido"].", ".$RetTodos["nombre"]."</a></td><td id='Contenido-7' style='max-width: 100px;'>".$Fecha_Nacimiento."</td>";
           
                 // $ColSpans = $MesesDiferencia * 270;
                 // $Table .= "<td style='width:".$ColSpans."px'></td>";
@@ -1958,10 +2326,7 @@ $Con->CloseConexion();
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
           
 
-            while ($Ret = mysqli_fetch_array($Ejecutar_Consulta_general)) {
-
-              // echo "A";
-              // echo var_dump($Ret);                
+            while ($Ret = mysqli_fetch_array($Ejecutar_Consulta_general)) {            
               if ($Ret["fecha_nac"] == 'null') {
                 $Fecha_Nacimiento = "Sin Datos";
               } else {
@@ -1979,7 +2344,7 @@ $Con->CloseConexion();
           
               // }else{                               
               //   $Table .= "<tr class='Datos'>";
-              //   $Table .= "<td id='Contenido-1'>".$Ret["Barrio"]."</td><td id='Contenido-2'>".$Ret["domicilio"]."</td><td id='Contenido-3' name='datosflia' style='max-width: 50px;'>".$Ret["manzana"]."</td><td id='Contenido-4' name='datosflia' style='max-width: 50px;'>".$Ret["lote"]."</td><td id='Contenido-5' name='datosflia' style='max-width: 50px;'>".$Ret["familia"]."</td><td id='Contenido-6'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$Ret["id_persona"]."\",\"Ventana".$Ret["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$Ret["apellido"].", ".$Ret["nombre"]."</a></td><td id='Contenido-7' style='max-width: 100px;'>".$Fecha_Nacimiento."</td>";
+              //   $Table .= "<td id='Contenido-1'>".$Ret["Barrio"]."</td><td id='Contenido-2'>".$Ret["domicilio"]."</td><td id='Contenido-3' name='datosflia' style='max-width: 50px;'>".$Ret["manzana"]."</td><td id='Contenido-4' name='datosflia' style='max-width: 50px;'>".$Ret["lote"]."</td><td id='Contenido-5' name='datosflia' style='max-width: 50px;'>".$Ret["familia"]."</td><td id='Contenido-6'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$Ret["id_persona"]."\",\"Ventana".$Ret["id_persona"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$Ret["apellido"].", ".$Ret["nombre"]."</a></td><td id='Contenido-7' style='max-width: 100px;'>".$Fecha_Nacimiento."</td>";
               // }
           
               $ID_Persona_Bandera = $Ret["id_persona"];
@@ -1993,7 +2358,6 @@ $Con->CloseConexion();
 
               //     $Tomar_Movimientos_Persona = mysqli_query($Con->Conexion,$Consultar_Movimientos_Persona) or die($MensajeErrorConsultar_Mov_Persona." - ".$Consultar_Movimientos_Persona);
           
-              // echo var_dump($arr);
           
               // PASAR A TODOS
               // $Table .= "<td name='DatosResultados' style='min-width:270px'><div class = 'row'>";                    
@@ -2021,52 +2385,44 @@ $Con->CloseConexion();
               //     if($ID_Motivo == $Ret_Datos_Movimiento["motivo_1"]){
               //       $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color from motivo M, categoria C, formas_categorias F where M.id_motivo = ".$Ret_Datos_Movimiento["motivo_1"]." and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
               //       $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
-          
-              //       //echo $ConsultarCodyColor;               
-          
+                    
               //       $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor." - ".$ConsultarCodyColor." valor:".$Ret_Datos_Movimiento["motivo_1"]);
           
               //       $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
           
-              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
+              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
               //     }
               //   }elseif($ID_Motivo2 > 0){
               //     if($ID_Motivo2 == $Ret_Datos_Movimiento["motivo_1"]){
               //       $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color from motivo M, categoria C, formas_categorias F where M.id_motivo = ".$Ret_Datos_Movimiento["motivo_1"]." and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
               //       $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
-          
-              //       //echo $ConsultarCodyColor;               
-          
+                    
               //       $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor." - ".$ConsultarCodyColor." valor:".$Ret_Datos_Movimiento["motivo_1"]);
           
               //       $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
           
-              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
+              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
               //     }
               //   }elseif($ID_Motivo3 > 0){
               //     if($ID_Motivo3 == $Ret_Datos_Movimiento["motivo_1"]){
               //       $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color from motivo M, categoria C, formas_categorias F where M.id_motivo = ".$Ret_Datos_Movimiento["motivo_1"]." and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
               //       $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
-          
-              //       //echo $ConsultarCodyColor;               
-          
+                    
               //       $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor." - ".$ConsultarCodyColor." valor:".$Ret_Datos_Movimiento["motivo_1"]);
           
               //       $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
           
-              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
+              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
               //     }
               //   }else{                                                        
               //     $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color from motivo M, categoria C, formas_categorias F where M.id_motivo = ".$Ret_Datos_Movimiento["motivo_1"]." and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
               //     $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
-          
-              //     //echo $ConsultarCodyColor;               
-          
+                    
               //     $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor." - ".$ConsultarCodyColor." valor:".$Ret_Datos_Movimiento["motivo_1"]);
           
               //     $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
           
-              //     $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; padding: 0px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";
+              //     $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; padding: 0px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";
               //   }
               // }
           
@@ -2075,40 +2431,34 @@ $Con->CloseConexion();
               //     if($ID_Motivo == $Ret_Datos_Movimiento["motivo_2"]){
               //       $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color from motivo M, categoria C, formas_categorias F where M.id_motivo = ".$Ret_Datos_Movimiento["motivo_2"]." and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
               //       $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
-          
-              //       //echo $ConsultarCodyColor;               
-          
+                    
               //       $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor." - ".$ConsultarCodyColor." valor:".$Ret_Datos_Movimiento["motivo_2"]);
           
               //       $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
           
-              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
+              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
               //     }
               //   }elseif($ID_Motivo2 > 0){
               //     if($ID_Motivo2 == $Ret_Datos_Movimiento["motivo_2"]){
               //       $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color from motivo M, categoria C, formas_categorias F where M.id_motivo = ".$Ret_Datos_Movimiento["motivo_2"]." and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
               //       $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
-          
-              //       //echo $ConsultarCodyColor;               
-          
+                    
               //       $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor." - ".$ConsultarCodyColor." valor:".$Ret_Datos_Movimiento["motivo_2"]);
           
               //       $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
           
-              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
+              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
               //     }
               //   }elseif($ID_Motivo3 > 0){
               //     if($ID_Motivo3 == $Ret_Datos_Movimiento["motivo_2"]){
               //       $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color from motivo M, categoria C, formas_categorias F where M.id_motivo = ".$Ret_Datos_Movimiento["motivo_2"]." and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
               //       $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
-          
-              //       //echo $ConsultarCodyColor;               
-          
+                    
               //       $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor." - ".$ConsultarCodyColor." valor:".$Ret_Datos_Movimiento["motivo_2"]);
           
               //       $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
           
-              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
+              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
               //     }
               //   }else{ 
               //     $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color from motivo M, categoria C, formas_categorias F where M.id_motivo = ".$Ret_Datos_Movimiento["motivo_2"]." and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
@@ -2121,7 +2471,7 @@ $Con->CloseConexion();
           
 
 
-              //     $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"]."; text-align= center;'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";
+              //     $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"]."; text-align= center;'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";
               //   }
               // }
           
@@ -2131,40 +2481,34 @@ $Con->CloseConexion();
               //     if($ID_Motivo == $Ret_Datos_Movimiento["motivo_3"]){
               //       $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color from motivo M, categoria C, formas_categorias F where M.id_motivo = ".$Ret_Datos_Movimiento["motivo_3"]." and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
               //       $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
-          
-              //       //echo $ConsultarCodyColor;               
-          
+                    
               //       $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor." - ".$ConsultarCodyColor." valor:".$Ret_Datos_Movimiento["motivo_3"]);
           
               //       $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
           
-              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
+              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
               //     }
               //   }elseif($ID_Motivo2 > 0){
               //     if($ID_Motivo2 == $Ret_Datos_Movimiento["motivo_3"]){
               //       $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color from motivo M, categoria C, formas_categorias F where M.id_motivo = ".$Ret_Datos_Movimiento["motivo_3"]." and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
               //       $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
-          
-              //       //echo $ConsultarCodyColor;               
-          
+                    
               //       $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor." - ".$ConsultarCodyColor." valor:".$Ret_Datos_Movimiento["motivo_3"]);
           
               //       $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
           
-              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
+              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
               //     }
               //   }elseif($ID_Motivo3 > 0){
               //     if($ID_Motivo3 == $Ret_Datos_Movimiento["motivo_3"]){
               //       $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color from motivo M, categoria C, formas_categorias F where M.id_motivo = ".$Ret_Datos_Movimiento["motivo_3"]." and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
               //       $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
-          
-              //       //echo $ConsultarCodyColor;               
-          
+                    
               //       $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor." - ".$ConsultarCodyColor." valor:".$Ret_Datos_Movimiento["motivo_3"]);
           
               //       $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
           
-              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
+              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
               //     }
               //   }else{ 
               //     $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color from motivo M, categoria C, formas_categorias F where M.id_motivo = ".$Ret_Datos_Movimiento["motivo_3"]." and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
@@ -2176,7 +2520,7 @@ $Con->CloseConexion();
               //     $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
           
 
-              //     $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";
+              //     $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";
               //   }
               // }     
               ////////////////////////////////////////////////////////////////                                             
@@ -2204,7 +2548,6 @@ $Con->CloseConexion();
           
 
 
-
             // SE PINTO ESTE CIERRE
             // $Table .= "</tr>";
           
@@ -2219,1364 +2562,291 @@ $Con->CloseConexion();
             */
             //array_multisort($regdomicilio, SORT_DESC, $tomarRetTodos);
           
-            //echo "DEBUG 1: ".var_dump($tomarRetTodos);    
-            foreach ($tomarRetTodos as $clave => $RetTodos) {
-              // echo var_dump($RetTodos);
-              // echo "<br>";
-              if ($RetTodos["fecha_nac"] == 'null') {
-                $Fecha_Nacimiento = "Sin Datos";
-              } else {
-                $Fecha_Nacimiento = implode("-", array_reverse(explode("-", $RetTodos["fecha_nac"])));
-              }
+            $tomar_movimientos = mysqli_query($Con->Conexion, $Consulta) or die($MensajeError . " Consulta: " . $Consulta);
 
-              if ($RetTodos["tipo"] == "SM") {
-                // echo "Entra aca SM";
-                $Table .= "<tr class='SinMovimientos Datos'>";
-                $Table_imprimir .= "<tr>";
+            $json_row = [];
+            $view = 0;
+            $count = 0;
+            $imprimir = false;
+            $carga = false;
+            $con_movimiento = false;
 
-                $Table_imprimir .= "<td id='Contenido-1'>" . $RetTodos["Barrio"] . "</td>
-                                      <td id='Contenido-2'>" . ((empty($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]) . "</td>";
-                $jsonTable[$clave]["barrio"] = $RetTodos["Barrio"];
-                $jsonTable[$clave]["domicilio"] = ((empty($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]);
-                $Table .= "<td id='Contenido-1' style='max-width: 100px;'>" . $RetTodos["Barrio"] . "</td>
-                             <td id='Contenido-2' style='max-width: 100px;'>" . ((empty($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]) . "</td>";
-                /*
-                if ($Manzana == "manzana") {
-                  $Table .= "<td id='Contenido-5' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>";
-                  $Table_imprimir .= "<td id='Contenido-5' name='datosflia' style='max-width: 100px;'>" . $RetTodos["manzana"] . "</td>";
+            $Motivo_1 = "";
+            $Motivo_2 = "";
+            $Motivo_3 = "";
+            $Motivo_4 = "";
+            $Motivo_5 = "";
+            $ID_Motivo_1 = 0;
+            $ID_Motivo_2 = 0;
+            $ID_Motivo_3 = 0;
+            $ID_Motivo_4 = 0;
+            $ID_Motivo_5 = 0;
+            $nroMotivosEnFecha = 0;
+            $clave = 0;
+            $tagsTD = "";
+            $tagsTD_imprimir = "";
 
-                }
-
-                if ($Lote == "lote") {
-                  $Table .= "<td id='Contenido-6' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>";
-                  $Table_imprimir .= "<td id='Contenido-6' name='datosflia' style='max-width: 100px;'>" . $RetTodos["lote"] . "</td>";
-                }
-
-                if ($Familia == "familia") {
-                  $Table .= "<td id='Contenido-7' name='datosflia' style='max-width: 60px;'>" . $RetTodos["familia"] . "</td>";
-                  $Table_imprimir .= "<td id='Contenido-7' name='datosflia' style='max-width: 100px;'>" . $RetTodos["familia"] . "</td>";
-                }
-                */
-                $Table .= "<td id='Contenido-5' name='datosflia' style='max-width: 50px; display: none'>" . $RetTodos["manzana"] . "</td>";
-                $Table_imprimir .= "<td id='Contenido-5' name='datosflia' style='max-width: 100px;'>" . $RetTodos["manzana"] . "</td>";
-                $jsonTable[$clave]["manzana"] = $RetTodos["manzana"];
-                $Table .= "<td id='Contenido-6' name='datosflia' style='max-width: 50px; display: none'>" . $RetTodos["lote"] . "</td>";
-                $Table_imprimir .= "<td id='Contenido-6' name='datosflia' style='max-width: 100px;'>" . $RetTodos["lote"] . "</td>";
-                $jsonTable[$clave]["lote"] = $RetTodos["lote"];
-                $Table .= "<td id='Contenido-7' name='datosflia' style='max-width: 70px; display: none'>" . $RetTodos["familia"] . "</td>";
-                $Table_imprimir .= "<td id='Contenido-7' name='datosflia' style='max-width: 100px;'>" . $RetTodos["familia"] . "</td>";
-                $jsonTable[$clave]["familia"] = $RetTodos["familia"];
-                $Table .= " <td id='Contenido-3' style='overflow: hidden;'>
-                                <div style='position: relative;z-index: 1000;'>
-                                  <a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $RetTodos["id_persona"] . "\",\"Ventana" . $RetTodos["id_persona"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" .
-                  $RetTodos["apellido"] . ", " . $RetTodos["nombre"] . "
-                                  </a>
-                                </div>
-                              </td>
-                              <td id='Contenido-4' style='min-width: 120px;'>" .
-                  $Fecha_Nacimiento . "
-                              </td>";
-
-                $Table_imprimir .= " <td id='Contenido-3'>" . $RetTodos["apellido"] . ", " . $RetTodos["nombre"] . "</td>
-                                       <td id='Contenido-4' style='max-width: 100px;'>" . $Fecha_Nacimiento . "</td>";
-                $jsonTable[$clave]["persona"] = $RetTodos["apellido"] . ", " . $RetTodos["nombre"];
-                $jsonTable[$clave]["id_persona"] = $RetTodos["id_persona"];
-                $jsonTable[$clave]["fechanac"] = $Fecha_Nacimiento;
-                $ColSpans = $MesesDiferencia * 270;
-                $Table .= "<td name='DatosSinResultados' style='width:" . $ColSpans . "px'></td>";
-                $Table_imprimir .= "<td name='DatosSinResultados' style='max-width: 100px;'></td>";
-              } else {
-                //En este punto se cominza a procesar los movimientos asociados a una persona persona
-          
-                // ACA IRIA TODO LO OTRO PARA LOS QUE SI TIENEN MOVIMIENTOS
-                $ID_Persona_Nuevo = $RetTodos["id_persona"];
-
-                // POSIBLE BUG
-                // if($ID_Persona_Nuevo == $ID_Persona_Bandera){                                                 
-                //   $Table .= "<tr style='border: 0px;'>";
-                //   $Table .= "<td colspan = '7' style='border: 0px;'></td>";                     
-                // }else{                               
-                //   $Table .= "<tr class='Datos'>";
-                //   $Table .= "<td id='Contenido-1'>".$RetTodos["Barrio"]."</td><td id='Contenido-2'>".$RetTodos["domicilio"]."</td><td id='Contenido-3' name='datosflia' style='max-width: 50px;'>".$RetTodos["manzana"]."</td><td id='Contenido-4' name='datosflia' style='max-width: 50px;'>".$RetTodos["lote"]."</td><td id='Contenido-5' name='datosflia' style='max-width: 50px;'>".$RetTodos["familia"]."</td><td id='Contenido-6'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$RetTodos["apellido"].", ".$RetTodos["nombre"]."</a></td><td id='Contenido-7' style='max-width: 100px;'>".$Fecha_Nacimiento."</td>";
-                // }
-          
-                //$Table_imprimir = (isset($Table_imprimir))? $Table_imprimir: $Table;
-                if (!isset($Table_imprimir)) {
-                  $Table_imprimir = $Table;
-                }
-                $tagsTD = "";
-                $tagsTD_imprimir = "";
-                $tdExtenso = false;
-
-                $Table .= "<tr class='Datos'>";
-                $Table_imprimir .= "<tr style='text-align:center;'>";
-                $nroColumnas = 70;
-                $tagsTD .= "<td id='Contenido-1'>" . $RetTodos["Barrio"] . "</td>
-                              <td id='Contenido-2'>" . ((empty($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]) . "</td>";
-                $tagsTD_imprimir .= "<td id='Contenido-1' style='text-align:center;font-size: 10px;max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;'>" . $RetTodos["Barrio"] . "</td>
-                                       <td id='Contenido-2' style='text-align:center;font-size: 10px;max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;'>" . ((empty($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]) . "</td>";
-                $jsonTable[$clave]["barrio"] = $RetTodos["Barrio"];
-                $jsonTable[$clave]["domicilio"] = ((empty($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]);
-                $jsonTable[$clave]["lat"] = $RetTodos["lat"];
-                $jsonTable[$clave]["lon"] = $RetTodos["lon"];
-
-                /*
-                if ($Manzana == "manzana") {
-                  $tagsTD .= "<td id='Contenido-5' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>";
-                  $tagsTD_imprimir .= "<td id='Contenido-5' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["manzana"] . "</td>";
-                }
-
-                if ($Lote == "lote") {
-                  $tagsTD .= "<td id='Contenido-6' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>";
-                  $tagsTD_imprimir .= "<td id='Contenido-6' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["lote"] . "</td>";
-                }
-
-                if ($Familia == "familia") {
-                  $tagsTD .= "<td id='Contenido-7' name='datosflia' style='max-width: 60px;'>" . $RetTodos["familia"] . "</td>";
-                  $tagsTD_imprimir .= "<td id='Contenido-7' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["familia"] . "</td>";
-                }
-                */
-                $tagsTD .= "<td id='Contenido-5' name='datosflia' style='max-width: 50px; display: none'>" . $RetTodos["manzana"] . "</td>";
-                $tagsTD_imprimir .= "<td id='Contenido-5' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["manzana"] . "</td>";
-                $jsonTable[$clave]["manzana"] = $RetTodos["manzana"];
-                $tagsTD .= "<td id='Contenido-6' name='datosflia' style='max-width: 50px; display: none'>" . $RetTodos["lote"] . "</td>";
-                $tagsTD_imprimir .= "<td id='Contenido-6' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["lote"] . "</td>";
-                $jsonTable[$clave]["lote"] = $RetTodos["lote"];
-                $tagsTD .= "<td id='Contenido-7' name='datosflia' style='max-width: 70px; display: none'>" . $RetTodos["familia"] . "</td>";
-                $tagsTD_imprimir .= "<td id='Contenido-7' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["familia"] . "</td>";
-                $jsonTable[$clave]["familia"] = $RetTodos["familia"];
-                $tagsTD .= "
-                  <td id='Contenido-3' style='overflow: hidden;'>
-                    <div style='position: relative;z-index: 1000;'>
-                      <a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $RetTodos["id_persona"] . "\",\"Ventana" . $RetTodos["id_persona"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" .
-                  $RetTodos["apellido"] . ", " . $RetTodos["nombre"] . "
-                      </a>
-                    </div>
-                  </td>
-                  <td id='Contenido-4' style='min-width: 120px;'>" .
-                  $Fecha_Nacimiento . "
-                  </td>";
-
-                $tagsTD_imprimir .= "<td id='Contenido-3' style='text-align:center;font-size: 10px;max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;'>" .
-                  $RetTodos["apellido"] . ", " . $RetTodos["nombre"] . "
-                                       </td>
-                                       <td id='Contenido-4' style='text-align:center;max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" .
-                  $Fecha_Nacimiento . "
-                                       </td>";
-                $jsonTable[$clave]["persona"] = $RetTodos["apellido"] . ", " . $RetTodos["nombre"];
-                $jsonTable[$clave]["id_persona"] = $RetTodos["id_persona"];
-                $jsonTable[$clave]["fechanac"] = $Fecha_Nacimiento;
-                $tagsTD .= "<td id='Contenido-8' name='datosflia' style='max-width: 70px; display: none; text-align: center; background-color: white;'>" . $RetTodos["edad"] . "</td>";
-                $tagsTD_imprimir .= "<td id='Contenido-8' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["edad"] . "</td>";
-                $jsonTable[$clave]["edad"] = $RetTodos["edad"];
-                $tagsTD .= "<td id='Contenido-9' name='datosflia' style='max-width: 70px; display: none; text-align: center;  background-color: white;'>" . $RetTodos["meses"] . "</td>";
-                $tagsTD_imprimir .= "<td id='Contenido-9' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["meses"] . "</td>";
-                $jsonTable[$clave]["meses"] = $RetTodos["meses"];
-                foreach ($arr as $key => $value) {
-                  $Separar = explode("/", $value);
-                  $Mes = $Separar[0];
-                  $Anio = $Separar[1];
-                  $Consultar_Movimientos_Persona = "select M.id_movimiento,
-                                                             M.fecha,
-                                                             M.motivo_1, 
-                                                             max(M.motivo_1 = MI.id_motivo) as permiso_1,
-                                                             M.motivo_2, 
-                                                             max(M.motivo_2 = MI.id_motivo) as permiso_2,
-                                                             M.motivo_3, 
-                                                             max(M.motivo_3 = MI.id_motivo) as permiso_3,
-                                                             M.motivo_4, 
-                                                             max(M.motivo_4 = MI.id_motivo) as permiso_4,
-                                                             M.motivo_5,
-                                                             max(M.motivo_5 = MI.id_motivo) as permiso_5
-                                                      from movimiento M,
-                                                           motivo MT,
-                                                           categoria C,
-                                                           PERMISOS MI
-                                                      where M.id_persona = " . $RetTodos["id_persona"] . " 
-                                                        and MONTH(M.fecha) = " . $Mes . " 
-                                                        and YEAR(M.fecha) = 20" . $Anio . "
-                                                        and (M.motivo_1 = MT.id_motivo 
-                                                          or M.motivo_2 = MT.id_motivo
-                                                          or M.motivo_3 = MT.id_motivo
-                                                          or M.motivo_4 = MT.id_motivo
-                                                          or M.motivo_5 = MT.id_motivo)
-                                                        $consulta_motivos
-                                                        and MT.id_motivo <> 1 
-                                                        and MT.cod_categoria = C.cod_categoria
-                                                        $consulta_categoria
-                                                        and M.estado = 1 
-                                                        and MI.id_motivo = MT.id_motivo 
-                                                        group by M.id_movimiento, M.motivo_1, M.motivo_2, M.motivo_3, M.motivo_4, M.motivo_5";
+            while ($RetTodos = mysqli_fetch_assoc($tomar_movimientos)) {
+                $count++;
+                if (empty($RetTodos["id_movimiento"])) {
 
 
-                  $Tomar_Movimientos_Persona = mysqli_query($Con->Conexion, $Consultar_Movimientos_Persona) or die($MensajeErrorConsultar_Mov_Persona . " - " . $Consultar_Movimientos_Persona);
-                  $IndexCelda += 1;
-                  $nroMotivosEnFecha = 0;
-                  if (mysqli_num_rows($Tomar_Movimientos_Persona) > 6) {
-                    $tdExtenso = true;
+                  if ($RetTodos["fecha_nac"] == 'null') {
+                    $Fecha_Nacimiento = "Sin Datos";
+                  } else {
+                    $Fecha_Nacimiento = implode("-", array_reverse(explode("-",$RetTodos["fecha_nac"])));
                   }
-                  $tagsTD .= "<td name='DatosResultados' id=$IndexCelda style='min-width:190px'>
-                                 <div class = 'row' style='margin:0'>";
-                  $tagsTD_imprimir .= "<td style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;'>
-                                          <div style='margin-left:-52px; padding-top:4px;height:38px;'>";
+
+                  $Apellido = $RetTodos["apellido"];
+                  $Nombre = $RetTodos["nombre"];
+                  $id_persona = $RetTodos["id_persona"];
+                  $sin_datos = "";
+
+                  $DNI = $RetTodos["documento"];
+                  $Edad = $RetTodos["edad"];
+                  $Meses = $RetTodos["meses"];
+                  $Obra_Social = $RetTodos["obra_social"];
+                  $Domicilio = $RetTodos["domicilio"];
+                  $Barrio = $RetTodos["Barrio"];
+                  $Localidad = $RetTodos["localidad"];
+                  
+                  $Table .= "<tr class='Datos'>";
+                  $jsonTable[$clave]["barrio"] = $RetTodos["Barrio"];
+                  $jsonTable[$clave]["domicilio"] = ((empty($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]);
+                  $Table .= "<td id='Contenido-1'>" . $RetTodos["Barrio"] . "</td>
+                               <td id='Contenido-2'>" . ((empty($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]) . "</td>";
+                  /*
+                  if ($Manzana == "manzana") {
+                    $Table .= "<td id='Contenido-5' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>";
+                    $Table_imprimir .= "<td id='Contenido-5' name='datosflia' style='max-width: 100px;'>" . $RetTodos["manzana"] . "</td>";
+  
+                  }
+  
+                  if ($Lote == "lote") {
+                    $Table .= "<td id='Contenido-6' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>";
+                    $Table_imprimir .= "<td id='Contenido-6' name='datosflia' style='max-width: 100px;'>" . $RetTodos["lote"] . "</td>";
+                  }
+  
+                  if ($Familia == "familia") {
+                    $Table .= "<td id='Contenido-7' name='datosflia' style='max-width: 60px;'>" . $RetTodos["familia"] . "</td>";
+                    $Table_imprimir .= "<td id='Contenido-7' name='datosflia' style='max-width: 100px;'>" . $RetTodos["familia"] . "</td>";
+                  }
+                  */
+                  $Table .= "<td id='Contenido-5' name='datosflia' style='max-width: 50px; display: none'>" . $RetTodos["manzana"] . "</td>";
+                  $jsonTable[$clave]["manzana"] = $RetTodos["manzana"];
+                  $Table .= "<td id='Contenido-6' name='datosflia' style='max-width: 50px; display: none'>" . $RetTodos["lote"] . "</td>";
+                  $jsonTable[$clave]["lote"] = $RetTodos["lote"];
+                  $Table .= "<td id='Contenido-7' name='datosflia' style='max-width: 70px; display: none'>" . $RetTodos["familia"] . "</td>";
+                  $jsonTable[$clave]["familia"] = $RetTodos["familia"];
+                  $Table .= " <td id='Contenido-3' style='overflow: hidden;'>
+                                  <div style='position: relative;z-index: 1000;'>
+                                    <a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $RetTodos["id_persona"] . "\",\"Ventana" . $RetTodos["id_persona"] . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" .
+                    $RetTodos["apellido"] . ", " . $RetTodos["nombre"] . "
+                                    </a>
+                                  </div>
+                                </td>
+                                <td id='Contenido-4' style='min-width: 120px;'>" .
+                    $Fecha_Nacimiento . "
+                                </td>";
+                  $jsonTable[$clave]["persona"] = $RetTodos["apellido"] . ", " . $RetTodos["nombre"];
+                  $jsonTable[$clave]["id_persona"] = $RetTodos["id_persona"];
+                  $jsonTable[$clave]["fechanac"] = $Fecha_Nacimiento;
+  
+                  $Table .= "<td id='Contenido-8' name='datosflia' style='max-width: 70px; display: none; text-align: center; background-color: white;'>" . $RetTodos["edad"] . "</td>";
+                  $jsonTable[$clave]["edad"] = $RetTodos["edad"];
+                  $Table .= "<td id='Contenido-9' name='datosflia' style='max-width: 70px; display: none; text-align: center;  background-color: white;'>" . $RetTodos["meses"] . "</td>";
+                  $jsonTable[$clave]["meses"] = $RetTodos["meses"];
+  
+                  foreach ($arr as $key => $value) {
+                      $Table .= "<td name='DatosResultados' id=$IndexCelda style='min-width:190px'>
+                                 </td>";
+                  }
+                  continue;
+
+                } else {
+                  $con_movimiento = true;
+                }
+
+                if ($view != $RetTodos["id_persona"] && $con_movimiento) {
+
+                  $imprimir = false;
+                  $view = $RetTodos["id_persona"];
+                  $carga = true;
+                  $clave++;
+                }
+
+                if ($carga && !$imprimir && $con_movimiento) {
+                  if ($RetTodos["fecha_nac"] == 'null') {
+                    $Fecha_Nacimiento = "Sin Datos";
+                  } else {
+                    $Fecha_Nacimiento = implode("-", array_reverse(explode("-",$RetTodos["fecha_nac"])));
+                  }
+                  $imprimir = true;
+                  $ID_Movimiento = $RetTodos["id_movimiento"];
+                  $id_persona = $RetTodos["id_persona"];
+                  $Fecha = implode("-", array_reverse(explode("-",$RetTodos["fecha"])));
+                  $Apellido = $RetTodos["apellido"];
+                  $Nombre = $RetTodos["nombre"];
+                  $Observaciones = $RetTodos["observaciones"];
+                  $Responsable = $RetTodos["responsable"];
+
+                  $CentroSalud = $RetTodos["centro_salud"];
+                  $OtraInstitucion = $RetTodos["NombreInst"];
+                  /////////////////////////////////////////////////////////////
+                  $DNI = $RetTodos["documento"];
+                  $Edad = $RetTodos["edad"];
+                  $Meses = $RetTodos["meses"];
+                  $Obra_Social = $RetTodos["obra_social"];
+                  $Domicilio = $RetTodos["domicilio"];
+                  $Barrio = $RetTodos["Barrio"];
+                  $Localidad = $RetTodos["localidad"];
+                  /////////////////////////////////////////////////////////////
+                  $carga = false;
+
+
+                  $tagsTD = "";
+                  $tagsTD_imprimir = "";
+                  $tdExtenso = false;
+  
+                  $Table .= "<tr class='Datos'>";
+                  $nroColumnas = 70;
+                  $tagsTD .= "<td id='Contenido-1'>" . $RetTodos["Barrio"] . "</td>
+                                <td id='Contenido-2'>" . ((empty($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]) . "</td>";
+                  $jsonTable[$clave]["barrio"] = $RetTodos["Barrio"];
+                  $jsonTable[$clave]["domicilio"] = ((empty($RetTodos["domicilio"])) ? $RetTodos["domicilio"] : $RetTodos["calle_nombre"] . " " . $RetTodos["nro"]);
+                  $jsonTable[$clave]["lat"] = $RetTodos["lat"];
+                  $jsonTable[$clave]["lon"] = $RetTodos["lon"];
+  
+                  /*
+                  if ($Manzana == "manzana") {
+                    $tagsTD .= "<td id='Contenido-5' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"] . "</td>";
+                    $tagsTD_imprimir .= "<td id='Contenido-5' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["manzana"] . "</td>";
+                  }
+  
+                  if ($Lote == "lote") {
+                    $tagsTD .= "<td id='Contenido-6' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"] . "</td>";
+                    $tagsTD_imprimir .= "<td id='Contenido-6' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["lote"] . "</td>";
+                  }
+  
+                  if ($Familia == "familia") {
+                    $tagsTD .= "<td id='Contenido-7' name='datosflia' style='max-width: 60px;'>" . $RetTodos["familia"] . "</td>";
+                    $tagsTD_imprimir .= "<td id='Contenido-7' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["familia"] . "</td>";
+                  }
+                  */
+                  $tagsTD .= "<td id='Contenido-5' name='datosflia' style='max-width: 50px; display: none'>" . $RetTodos["manzana"] . "</td>";
+                  $tagsTD_imprimir .= "<td id='Contenido-5' name='datosflia' style='max-width: {$nroColumnas}px;min-width: {$nroColumnas}px;width:{$nroColumnas}px;height:38px;;font-size: 10px;'>" . $RetTodos["manzana"] . "</td>";
+                  $jsonTable[$clave]["manzana"] = $RetTodos["manzana"];
+                  $tagsTD .= "<td id='Contenido-6' name='datosflia' style='max-width: 50px; display: none'>" . $RetTodos["lote"] . "</td>";
+                  $jsonTable[$clave]["lote"] = $RetTodos["lote"];
+                  $tagsTD .= "<td id='Contenido-7' name='datosflia' style='max-width: 70px; display: none'>" . $RetTodos["familia"] . "</td>";
+                  $jsonTable[$clave]["familia"] = $RetTodos["familia"];
+                  $tagsTD .= "
+                    <td id='Contenido-3' style='overflow: hidden;'>
+                      <div style='position: relative;z-index: 1000;'>
+                        <a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $RetTodos["id_persona"] . "\",\"Ventana" . $RetTodos["id_persona"] . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" .
+                    $RetTodos["apellido"] . ", " . $RetTodos["nombre"] . "
+                        </a>
+                      </div>
+                    </td>
+                    <td id='Contenido-4' style='min-width: 120px;'>" .
+                    $Fecha_Nacimiento . "
+                    </td>";
+                  $jsonTable[$clave]["persona"] = $RetTodos["apellido"] . ", " . $RetTodos["nombre"];
+                  $jsonTable[$clave]["id_persona"] = $RetTodos["id_persona"];
+                  $jsonTable[$clave]["fechanac"] = $Fecha_Nacimiento;
+                  $tagsTD .= "<td id='Contenido-8' name='datosflia' style='max-width: 70px; display: none; text-align: center; background-color: white;'>" . $RetTodos["edad"] . "</td>";
+                  $jsonTable[$clave]["edad"] = $RetTodos["edad"];
+                  $tagsTD .= "<td id='Contenido-9' name='datosflia' style='max-width: 70px; display: none; text-align: center;  background-color: white;'>" . $RetTodos["meses"] . "</td>";
+                  $jsonTable[$clave]["meses"] = $RetTodos["meses"];
 
                   $tagsMotivos = "";
-
-                  //$Num_Movimientos_Persona = mysqli_num_rows($Tomar_Movimientos_Persona);
-          
-                  while ($Ret_Movimientos_Persona = mysqli_fetch_assoc($Tomar_Movimientos_Persona)) {
-                    /*$Consultar_Datos_Movimientos = "select M.id_movimiento, MONTH(M.fecha) as 'Mes', YEAR(M.fecha) as 'Anio',
-                                                           M.motivo_1, M.motivo_2, M.motivo_3, M.motivo_4, M.motivo_5 
-                                                    from movimiento M, 
-                                                         motivo MT, 
-                                                         categoria C 
-                                                    where (M.motivo_1 = MT.id_motivo 
-                                                           or M.motivo_2 = MT.id_motivo
-                                                           or M.motivo_3 = MT.id_motivo
-                                                           or M.motivo_4 = MT.id_motivo
-                                                           or M.motivo_5 = MT.id_motivo) 
-                                                          and MT.cod_categoria = C.cod_categoria 
-                                                          and M.id_movimiento = " . $Ret_Movimientos_Persona['id_movimiento'] . " 
-                                                          and M.id_persona = " . $Ret_Movimientos_Persona['id_persona'] . " 
-                                                    group by M.id_movimiento
-                                                    order by M.fecha DESC";
-                    */
-
-                    //$MensajeErrorConsultar_Datos_Movimientos = "No se pudieron consultar los datos del movimiento";
-                    //$Tomar_Datos_Movimientos = mysqli_query($Con->Conexion, $Consultar_Datos_Movimientos) or die($MensajeErrorConsultar_Datos_Movimientos . " - " . $Consultar_Datos_Movimientos);
-                    //if (mysqli_num_rows($Tomar_Datos_Movimientos) == 0) {
-                    //continue;
-                    //}
-                    //$Ret_Datos_Movimiento = mysqli_fetch_assoc($Tomar_Datos_Movimientos);
-                    $Ret_Datos_Movimiento = $Ret_Movimientos_Persona;
-
-                    if ($Ret_Datos_Movimiento["motivo_1"] > 1 && $Ret_Datos_Movimiento["permiso_1"]) {
-                      if ($ID_Motivo > 0) {
-                        if ($ID_Motivo == $Ret_Datos_Movimiento["motivo_1"]) {
-                          $ConsultarCodyColor = "select M.cod_categoria, 
-                                                          F.Forma_Categoria, 
-                                                          C.color, 
-                                                          M.codigo,
-                                                          C.tipo_categoria,
-                                                          C.orden 
-                                                   from motivo M, 
-                                                        categoria C, 
-                                                        formas_categorias F 
-                                                    where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_1"] . " 
-                                                      and M.cod_categoria = C.cod_categoria 
-                                                      and C.ID_Forma = F.ID_Forma 
-                                                      and M.estado = 1 and 
-                                                      C.estado = 1";
-                          $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
-
-                          $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor . " - " . $ConsultarCodyColor . " valor:" . $Ret_Datos_Movimiento["motivo_1"]);
-                          $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
-                          $nroMotivosEnFecha += 1;
-                          $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
-                          $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
-                                         <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
-                                          <span style='font-size: 30px; color: " . $RetMotivo["color"] . ";'>" .
-                            $RetMotivo["Forma_Categoria"] . "
-                                            <center>
-                                              <span class='nombreCategoria'>" .
-                            $RetMotivo["codigo"] . "
-                                              </span>
-                                             </center>
-                                          </span>
-                                        </a>
-                                       </div>";
-                          $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
-                          $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
-                                               <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 7px; color: " . $RetMotivo["color"] . ";'>" .
-                            $RetMotivo["Forma_Categoria"] . "
-                                               </div>
-                                               <div style='font-size: 5.5px;'>" .
-                            $RetMotivo["codigo"] . "
-                                               </div>
-                                             </div>";
-
-                          $jsonTable[$clave]["$Mes/$Anio"][] = [
-                            $RetMotivo["Forma_Categoria"],
-                            $RetMotivo["codigo"],
-                            $RetMotivo["color"]
-                          ];
-                          $forma_motivo = $RetMotivo["Forma_Categoria"];
-                          if (strlen($forma_motivo) > 1) {
-                            $forma_motivo = substr($forma_motivo, 2);
-                            $forma_motivo = substr($forma_motivo, 0, -1);
-                          }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
-                            $RetMotivo["color"],
-                            $RetMotivo["tipo_categoria"],
-                            $Ret_Movimientos_Persona["fecha"]
-                          ];
-
-                        }
-                      }
-                      if ($ID_Motivo2 > 0) {
-                        if ($ID_Motivo2 == $Ret_Datos_Movimiento["motivo_1"]) {
-                          $ConsultarCodyColor = "select M.cod_categoria, 
-                                                          F.Forma_Categoria, 
-                                                          C.color, 
-                                                          M.codigo,
-                                                          C.tipo_categoria,
-                                                          C.orden
-                                                    from motivo M, 
-                                                         categoria C, 
-                                                         formas_categorias F 
-                                                    where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_1"] . " 
-                                                      and M.cod_categoria = C.cod_categoria 
-                                                      and C.ID_Forma = F.ID_Forma 
-                                                      and M.estado = 1 
-                                                      and C.estado = 1";
-                          $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
-
-                          $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor . " - " . $ConsultarCodyColor . " valor:" . $Ret_Datos_Movimiento["motivo_1"]);
-                          $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
-                          $nroMotivosEnFecha += 1;
-
-                          $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
-                          $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
-                                          <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
-                                            <span style='font-size: 30px; color: " . $RetMotivo["color"] . ";'>" .
-                            $RetMotivo["Forma_Categoria"] . "
-                                              <center>
-                                                <span class='nombreCategoria'>" . $RetMotivo["codigo"] . "
-                                                </span>
-                                              </center>
-                                            </span>
-                                          </a>
-                                      </div>";
-                          $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
-                          $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
-                                                <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 7px; color: " . $RetMotivo["color"] . ";'>" .
-                            $RetMotivo["Forma_Categoria"] . "
-                                                </div>
-                                                <div style='font-size: 5.5px;'>" .
-                            $RetMotivo["codigo"] . "
-                                                </div>
-                                              </div>";
-
-                          $jsonTable[$clave]["$Mes/$Anio"][] = [
-                            $RetMotivo["Forma_Categoria"],
-                            $RetMotivo["codigo"],
-                            $RetMotivo["color"]
-                          ];
-                          $forma_motivo = $RetMotivo["Forma_Categoria"];
-                          if (strlen($forma_motivo) > 1) {
-                            $forma_motivo = substr($forma_motivo, 2);
-                            $forma_motivo = substr($forma_motivo, 0, -1);
-                          }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
-                            $RetMotivo["color"],
-                            $RetMotivo["tipo_categoria"],
-                            $Ret_Movimientos_Persona["fecha"]
-                          ];
-                        }
-                      }
-                      if ($ID_Motivo3 > 0) {
-                        if ($ID_Motivo3 == $Ret_Datos_Movimiento["motivo_1"]) {
-                          $ConsultarCodyColor = "select M.cod_categoria,
-                                                          F.Forma_Categoria,
-                                                          C.color, 
-                                                          M.codigo,
-                                                          C.tipo_categoria,
-                                                          C.orden 
-                                                   from motivo M,
-                                                        categoria C,
-                                                        formas_categorias F
-                                                    where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_1"] . " 
-                                                      and M.cod_categoria = C.cod_categoria 
-                                                      and C.ID_Forma = F.ID_Forma 
-                                                      and M.estado = 1 
-                                                      and C.estado = 1";
-                          $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
-
-                          $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor . " - " . $ConsultarCodyColor . " valor:" . $Ret_Datos_Movimiento["motivo_1"]);
-                          $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
-                          $nroMotivosEnFecha += 1;
-
-                          $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
-                          $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
-                                        <span style='font-size: 30px; color: " . $RetMotivo["color"] . ";'>" .
-                            $RetMotivo["Forma_Categoria"] . "
-                                          <center>
-                                            <span class='nombreCategoria'>" .
-                            $RetMotivo["codigo"] . "
-                                            </span>
-                                          </center>
-                                        </span>
-                                      </div>";
-                          $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
-                          $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
-                                                  <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px; color: " . $RetMotivo["color"] . "; '>" .
-                            $RetMotivo["Forma_Categoria"] . "
-                                                  </div>
-                                                  <div style='font-size: 5.5px;'>" .
-                            $RetMotivo["codigo"] . "
-                                                  </div>
-                                                </div>";
-                          $jsonTable[$clave]["$Mes/$Anio"][] = [
-                            $RetMotivo["Forma_Categoria"],
-                            $RetMotivo["codigo"],
-                            $RetMotivo["color"]
-                          ];
-                          $forma_motivo = $RetMotivo["Forma_Categoria"];
-                          if (strlen($forma_motivo) > 1) {
-                            $forma_motivo = substr($forma_motivo, 2);
-                            $forma_motivo = substr($forma_motivo, 0, -1);
-                          }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
-                            $RetMotivo["color"],
-                            $RetMotivo["tipo_categoria"],
-                            $Ret_Movimientos_Persona["fecha"]
-                          ];
-                        }
-                      }
-                      if ($ID_Motivo4 > 0) {
-                        if ($ID_Motivo4 == $Ret_Datos_Movimiento["motivo_1"]) {
-                          $ConsultarCodyColor = "select M.cod_categoria,
-                                                          F.Forma_Categoria,
-                                                          C.color, 
-                                                          M.codigo,
-                                                          C.tipo_categoria,
-                                                          C.orden 
-                                                   from motivo M,
-                                                        categoria C,
-                                                        formas_categorias F
-                                                   where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_1"] . " 
-                                                     and M.cod_categoria = C.cod_categoria 
-                                                     and C.ID_Forma = F.ID_Forma 
-                                                     and M.estado = 1 
-                                                     and C.estado = 1";
-                          $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
-
-                          $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor . " - " . $ConsultarCodyColor . " valor:" . $Ret_Datos_Movimiento["motivo_1"]);
-                          $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
-                          $nroMotivosEnFecha += 1;
-
-                          $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
-                          $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
-                                        <span style='font-size: 30px; color: " . $RetMotivo["color"] . ";'>" .
-                            $RetMotivo["Forma_Categoria"] . "
-                                          <center>
-                                            <span class='nombreCategoria'>" .
-                            $RetMotivo["codigo"] . "
-                                            </span>
-                                          </center>
-                                        </span>
-                                      </div>";
-                          $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
-                          $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
-                                                  <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px; color: " . $RetMotivo["color"] . "; '>" .
-                            $RetMotivo["Forma_Categoria"] . "
-                                                  </div>
-                                                  <div style='font-size: 5.5px;'>" .
-                            $RetMotivo["codigo"] . "
-                                                  </div>
-                                                </div>";
-                          $jsonTable[$clave]["$Mes/$Anio"][] = [
-                            $RetMotivo["Forma_Categoria"],
-                            $RetMotivo["codigo"],
-                            $RetMotivo["color"]
-                          ];
-                          $forma_motivo = $RetMotivo["Forma_Categoria"];
-                          if (strlen($forma_motivo) > 1) {
-                            $forma_motivo = substr($forma_motivo, 2);
-                            $forma_motivo = substr($forma_motivo, 0, -1);
-                          }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
-                            $RetMotivo["color"],
-                            $RetMotivo["tipo_categoria"],
-                            $Ret_Movimientos_Persona["fecha"]
-                          ];
-                        }
-                      }
-                      if ($ID_Motivo5 > 0) {
-                        if ($ID_Motivo5 == $Ret_Datos_Movimiento["motivo_1"]) {
-                          $ConsultarCodyColor = "select M.cod_categoria,
-                                                          F.Forma_Categoria,
-                                                          C.color, 
-                                                          M.codigo,
-                                                          C.tipo_categoria,
-                                                          C.orden 
-                                                   from motivo M,
-                                                        categoria C,
-                                                        formas_categorias F
-                                                   where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_1"] . " 
-                                                     and M.cod_categoria = C.cod_categoria 
-                                                     and C.ID_Forma = F.ID_Forma 
-                                                     and M.estado = 1 
-                                                     and C.estado = 1";
-                          $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
-
-                          $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor . " - " . $ConsultarCodyColor . " valor:" . $Ret_Datos_Movimiento["motivo_1"]);
-                          $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
-                          $nroMotivosEnFecha += 1;
-
-                          $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
-                          $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
-                                        <span style='font-size: 30px; color: " . $RetMotivo["color"] . ";'>" .
-                            $RetMotivo["Forma_Categoria"] . "
-                                          <center>
-                                            <span class='nombreCategoria'>" .
-                            $RetMotivo["codigo"] . "
-                                            </span>
-                                          </center>
-                                        </span>
-                                      </div>";
-                          $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
-                          $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
-                                                  <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px; color: " . $RetMotivo["color"] . "; '>" .
-                            $RetMotivo["Forma_Categoria"] . "
-                                                  </div>
-                                                  <div style='font-size: 5.5px;'>" .
-                            $RetMotivo["codigo"] . "
-                                                  </div>
-                                                </div>";
-                          $jsonTable[$clave]["$Mes/$Anio"][] = [
-                            $RetMotivo["Forma_Categoria"],
-                            $RetMotivo["codigo"],
-                            $RetMotivo["color"]
-                          ];
-                          $forma_motivo = $RetMotivo["Forma_Categoria"];
-                          if (strlen($forma_motivo) > 1) {
-                            $forma_motivo = substr($forma_motivo, 2);
-                            $forma_motivo = substr($forma_motivo, 0, -1);
-                          }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
-                            $RetMotivo["color"],
-                            $RetMotivo["tipo_categoria"],
-                            $Ret_Movimientos_Persona["fecha"]
-                          ];
-                        }
-                      }
-
-                      if ($CantOpMotivos == 0) {
-                        $ConsultarCodyColor = "select M.cod_categoria,
-                                                        F.Forma_Categoria,
-                                                        C.color,
-                                                        M.codigo,
-                                                        C.tipo_categoria,
-                                                        C.orden
-                                                 from motivo M, 
-                                                      categoria C, 
-                                                      formas_categorias F 
-                                                 where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_1"] . " 
-                                                   and M.cod_categoria = C.cod_categoria 
-                                                   and C.ID_Forma = F.ID_Forma 
-                                                   and M.estado = 1 
-                                                   and C.estado = 1";
-
-                        $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
-
-                        $TomarCodyColor = mysqli_query($Con->Conexion, $ConsultarCodyColor) or die($MensajeErrorConsultarCodyColor . " - " . $ConsultarCodyColor . " valor:" . $Ret_Datos_Movimiento["motivo_1"]);
-                        $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
-                        $nroMotivosEnFecha += 1;
-
-                        $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
-                        $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
-                                      <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
-                                        <span style='font-size: 30px; padding: 0px; color: " . $RetMotivo["color"] . ";'>" .
-                          $RetMotivo["Forma_Categoria"] . "
-                                          <center>
-                                            <span class='nombreCategoria'>" . $RetMotivo["codigo"] . "</span>
-                                          </center>
-                                        </span>
-                                      </a>
-                                    </div>";
-                        $marginLeft = (strlen($RetMotivo["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
-                        $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
-                                              <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 7px; padding: 0px; color: " . $RetMotivo["color"] . ";'>" .
-                          $RetMotivo["Forma_Categoria"] . "
-                                              </div>
-                                              <div style='font-size: 5.5px;'>" .
-                          $RetMotivo["codigo"] . "
-                                              </div>
-                                            </div>";
-                        $jsonTable[$clave]["$Mes/$Anio"][] = [
-                          $RetMotivo["Forma_Categoria"],
-                          $RetMotivo["codigo"],
-                          $RetMotivo["color"]
-                        ];
-                        $forma_motivo = $RetMotivo["Forma_Categoria"];
-                        if (strlen($forma_motivo) > 1) {
-                          $forma_motivo = substr($forma_motivo, 2);
-                          $forma_motivo = substr($forma_motivo, 0, -1);
-                        }
-                        $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
-                          $RetMotivo["color"],
-                          $RetMotivo["tipo_categoria"],
-                          $Ret_Movimientos_Persona["fecha"]
-                        ];
-                      }
-                    }
-
-                    if ($Ret_Datos_Movimiento["motivo_2"] > 1 && $Ret_Datos_Movimiento["permiso_2"]) {
-                      if ($ID_Motivo > 0) {
-                        if ($ID_Motivo == $Ret_Datos_Movimiento["motivo_2"]) {
-                          $ConsultarCodyColor2 = "select M.cod_categoria, 
-                                                           F.Forma_Categoria, 
-                                                           C.color, 
-                                                           M.codigo,
-                                                           C.tipo_categoria,
-                                                           C.orden 
-                                                    from motivo M, 
-                                                         categoria C, 
-                                                         formas_categorias F 
-                                                    where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_2"] . " 
-                                                      and M.cod_categoria = C.cod_categoria 
-                                                      and C.ID_Forma = F.ID_Forma 
-                                                      and M.estado = 1 
-                                                      and C.estado = 1";
-                          $MensajeErrorConsultarCodyColor2 = "No se pudieron consultar los motivos de los Movimientos";
-
-
-                          $TomarCodyColor2 = mysqli_query($Con->Conexion, $ConsultarCodyColor2) or die($MensajeErrorConsultarCodyColor2 . " - " . $ConsultarCodyColor2 . " valor:" . $Ret_Datos_Movimiento["motivo_2"]);
-
-                          $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
-
-                          $nroMotivosEnFecha += 1;
-
-                          $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
-                          $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
-                                          <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
-                                            <span style='font-size: 30px; padding: 0px; color: " . $RetMotivo2["color"] . ";'>" . $RetMotivo2["Forma_Categoria"] . "
-                                              <center>
-                                                <span class='nombreCategoria'>" . $RetMotivo2["codigo"] . "
-                                                </span>
-                                              </center>
-                                            </span>
-                                          </a>
-                                        </div>";
-                          $marginLeft = (strlen($RetMotivo2["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
-                          $tagsMotivos .= "<div style = 'padding: 0; $marginLeft;text-align: center; display: inline-block;'>
-                                                <div style='font-family: DejaVu Sans, Noto Sans Symbols 2;font-size: 7px; padding: 0px; color: " . $RetMotivo2["color"] . ";'>" .
-                            $RetMotivo2["Forma_Categoria"] . "
-                                                </div>
-                                                <div style='font-size: 5.5px;'>" .
-                            $RetMotivo2["codigo"] . "
-                                                </div>
-                                              </div>";
-
-                          $jsonTable[$clave]["$Mes/$Anio"][] = [
-                            $RetMotivo2["Forma_Categoria"],
-                            $RetMotivo2["codigo"],
-                            $RetMotivo2["color"]
-                          ];
-                          $forma_motivo = $RetMotivo2["Forma_Categoria"];
-                          if (strlen($forma_motivo) > 1) {
-                            $forma_motivo = substr($forma_motivo, 2);
-                            $forma_motivo = substr($forma_motivo, 0, -1);
-                          }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
-                            $RetMotivo2["color"],
-                            $RetMotivo2["tipo_categoria"],
-                            $Ret_Movimientos_Persona["fecha"]
-                          ];
-                        }
-                      }
-                      if ($ID_Motivo2 > 0) {
-                        if ($ID_Motivo2 == $Ret_Datos_Movimiento["motivo_2"]) {
-                          $ConsultarCodyColor2 = "select M.cod_categoria, 
-                                                           F.Forma_Categoria, 
-                                                           C.color, 
-                                                           M.codigo,
-                                                           C.tipo_categoria,
-                                                           C.orden 
-                                                    from motivo M, 
-                                                         categoria C, 
-                                                         formas_categorias F 
-                                                    where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_2"] . " 
-                                                      and M.cod_categoria = C.cod_categoria 
-                                                      and C.ID_Forma = F.ID_Forma 
-                                                      and M.estado = 1 
-                                                      and C.estado = 1";
-                          $MensajeErrorConsultarCodyColor2 = "No se pudieron consultar los motivos de los Movimientos";
-
-
-                          $TomarCodyColor2 = mysqli_query($Con->Conexion, $ConsultarCodyColor2) or die($MensajeErrorConsultarCodyColor2 . " - " . $ConsultarCodyColor2 . " valor:" . $Ret_Datos_Movimiento["motivo_2"]);
-                          $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
-                          $nroMotivosEnFecha += 1;
-
-                          $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
-                          $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
-                                        <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
-                                          <span style='font-size: 30px; color: " . $RetMotivo2["color"] . ";'>" .
-                            $RetMotivo2["Forma_Categoria"] . "
-                                            <center>
-                                              <span class='nombreCategoria'>" .
-                            $RetMotivo2["codigo"] . "
-                                              </span>
-                                            </center>
-                                          </span>
-                                        </a>
-                                      </div>";
-                          $marginLeft = (strlen($RetMotivo2["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
-                          $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
-                                                <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo2["color"] . ";'>" .
-                            $RetMotivo2["Forma_Categoria"] . "
-                                                </div>
-                                                <div style='font-size: 5.5px;'>" .
-                            $RetMotivo2["codigo"] . "
-                                                </div>
-                                              </div>";
-                          $jsonTable[$clave]["$Mes/$Anio"][] = [
-                            $RetMotivo2["Forma_Categoria"],
-                            $RetMotivo2["codigo"],
-                            $RetMotivo2["color"]
-                          ];
-                          $forma_motivo = $RetMotivo2["Forma_Categoria"];
-                          if (strlen($forma_motivo) > 1) {
-                            $forma_motivo = substr($forma_motivo, 2);
-                            $forma_motivo = substr($forma_motivo, 0, -1);
-                          }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
-                            $RetMotivo2["color"],
-                            $RetMotivo2["tipo_categoria"],
-                            $Ret_Movimientos_Persona["fecha"]
-                          ];
-                        }
-                      }
-                      if ($ID_Motivo3 > 0) {
-                        if ($ID_Motivo3 == $Ret_Datos_Movimiento["motivo_2"]) {
-                          $ConsultarCodyColor2 = "select M.cod_categoria, 
-                                                           F.Forma_Categoria, 
-                                                           C.color, 
-                                                           M.codigo,
-                                                           C.tipo_categoria,
-                                                           C.orden 
-                                                    from motivo M, 
-                                                         categoria C, 
-                                                         formas_categorias F 
-                                                    where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_2"] . " 
-                                                      and M.cod_categoria = C.cod_categoria 
-                                                      and C.ID_Forma = F.ID_Forma 
-                                                      and M.estado = 1 
-                                                      and C.estado = 1";
-                          $MensajeErrorConsultarCodyColor2 = "No se pudieron consultar los motivos de los Movimientos";
-
-                          $TomarCodyColor2 = mysqli_query($Con->Conexion, $ConsultarCodyColor2) or die($MensajeErrorConsultarCodyColor2 . " - " . $ConsultarCodyColor2 . " valor:" . $Ret_Datos_Movimiento["motivo_2"]);
-
-                          $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
-                          $nroMotivosEnFecha += 1;
-
-                          $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
-                          $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
-                                          <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
-                                            <span style='font-size: 30px; color: " . $RetMotivo2["color"] . ";'>" .
-                            $RetMotivo2["Forma_Categoria"] . "
-                                              <center>
-                                                <span class='nombreCategoria'>" .
-                            $RetMotivo2["codigo"] . "
-                                                </span>
-                                              </center>
-                                            </span>
-                                          </a>
-                                        </div>";
-                          $marginLeft = (strlen($RetMotivo2["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
-                          $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
-                                                <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo2["color"] . ";'>" .
-                            $RetMotivo2["Forma_Categoria"] . "
-                                                </div>
-                                                <div style='font-size: 5.5px;'>" .
-                            $RetMotivo2["codigo"] . "
-                                                </div>
-                                              </div>";
-                          $jsonTable[$clave]["$Mes/$Anio"][] = [
-                            $RetMotivo2["Forma_Categoria"],
-                            $RetMotivo2["codigo"],
-                            $RetMotivo2["color"]
-                          ];
-                          $forma_motivo = $RetMotivo2["Forma_Categoria"];
-                          if (strlen($forma_motivo) > 1) {
-                            $forma_motivo = substr($forma_motivo, 2);
-                            $forma_motivo = substr($forma_motivo, 0, -1);
-                          }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
-                            $RetMotivo2["color"],
-                            $RetMotivo2["tipo_categoria"],
-                            $Ret_Movimientos_Persona["fecha"]
-                          ];
-                        }
-                      }
-                      if ($ID_Motivo4 > 0) {
-                        if ($ID_Motivo4 == $Ret_Datos_Movimiento["motivo_2"]) {
-                          $ConsultarCodyColor2 = "select  M.cod_categoria, 
-                                                            F.Forma_Categoria, 
-                                                            C.color, 
-                                                            M.codigo,
-                                                            C.tipo_categoria,
-                                                            C.orden
-                                                            from motivo M, 
-                                                                 categoria C, 
-                                                                 formas_categorias F 
-                                                            where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_2"] . " 
-                                                              and M.cod_categoria = C.cod_categoria 
-                                                              and C.ID_Forma = F.ID_Forma 
-                                                              and M.estado = 1 
-                                                              and C.estado = 1";
-                          $MensajeErrorConsultarCodyColor2 = "No se pudieron consultar los motivos de los Movimientos";
-
-                          $TomarCodyColor2 = mysqli_query($Con->Conexion, $ConsultarCodyColor2) or die($MensajeErrorConsultarCodyColor2 . " - " . $ConsultarCodyColor2 . " valor:" . $Ret_Datos_Movimiento["motivo_2"]);
-
-                          $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
-                          $nroMotivosEnFecha += 1;
-
-                          $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
-                          $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
-                                          <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
-                                            <span style='font-size: 30px; color: " . $RetMotivo2["color"] . ";'>" .
-                            $RetMotivo2["Forma_Categoria"] . "
-                                              <center>
-                                                <span class='nombreCategoria'>" .
-                            $RetMotivo2["codigo"] . "
-                                                </span>
-                                              </center>
-                                            </span>
-                                          </a>
-                                        </div>";
-                          $marginLeft = (strlen($RetMotivo2["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
-                          $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
-                                                <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo2["color"] . ";'>" .
-                            $RetMotivo2["Forma_Categoria"] . "
-                                                </div>
-                                                <div style='font-size: 5.5px;'>" .
-                            $RetMotivo2["codigo"] . "
-                                                </div>
-                                              </div>";
-                          $jsonTable[$clave]["$Mes/$Anio"][] = [
-                            $RetMotivo2["Forma_Categoria"],
-                            $RetMotivo2["codigo"],
-                            $RetMotivo2["color"]
-                          ];
-                          $forma_motivo = $RetMotivo2["Forma_Categoria"];
-                          if (strlen($forma_motivo) > 1) {
-                            $forma_motivo = substr($forma_motivo, 2);
-                            $forma_motivo = substr($forma_motivo, 0, -1);
-                          }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
-                            $RetMotivo2["color"],
-                            $RetMotivo2["tipo_categoria"],
-                            $Ret_Movimientos_Persona["fecha"]
-                          ];
-                        }
-                      }
-                      if ($ID_Motivo5 > 0) {
-                        if ($ID_Motivo5 == $Ret_Datos_Movimiento["motivo_2"]) {
-                          $ConsultarCodyColor2 = "select  M.cod_categoria, 
-                                                            F.Forma_Categoria, 
-                                                            C.color, 
-                                                            M.codigo,
-                                                            C.tipo_categoria,
-                                                            C.orden
-                                                            from motivo M, 
-                                                                 categoria C, 
-                                                                 formas_categorias F 
-                                                            where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_2"] . " 
-                                                              and M.cod_categoria = C.cod_categoria 
-                                                              and C.ID_Forma = F.ID_Forma 
-                                                              and M.estado = 1 
-                                                              and C.estado = 1";
-                          $MensajeErrorConsultarCodyColor2 = "No se pudieron consultar los motivos de los Movimientos";
-
-                          $TomarCodyColor2 = mysqli_query($Con->Conexion, $ConsultarCodyColor2) or die($MensajeErrorConsultarCodyColor2 . " - " . $ConsultarCodyColor2 . " valor:" . $Ret_Datos_Movimiento["motivo_2"]);
-
-                          $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
-                          $nroMotivosEnFecha += 1;
-
-                          $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
-                          $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
-                                          <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
-                                            <span style='font-size: 30px; color: " . $RetMotivo2["color"] . ";'>" .
-                            $RetMotivo2["Forma_Categoria"] . "
-                                              <center>
-                                                <span class='nombreCategoria'>" .
-                            $RetMotivo2["codigo"] . "
-                                                </span>
-                                              </center>
-                                            </span>
-                                          </a>
-                                        </div>";
-                          $marginLeft = (strlen($RetMotivo2["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
-                          $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
-                                                <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo2["color"] . ";'>" .
-                            $RetMotivo2["Forma_Categoria"] . "
-                                                </div>
-                                                <div style='font-size: 5.5px;'>" .
-                            $RetMotivo2["codigo"] . "
-                                                </div>
-                                              </div>";
-
-                          $jsonTable[$clave]["$Mes/$Anio"][] = [
-                            $RetMotivo2["Forma_Categoria"],
-                            $RetMotivo2["codigo"],
-                            $RetMotivo2["color"]
-                          ];
-                          $forma_motivo = $RetMotivo2["Forma_Categoria"];
-                          if (strlen($forma_motivo) > 1) {
-                            $forma_motivo = substr($forma_motivo, 2);
-                            $forma_motivo = substr($forma_motivo, 0, -1);
-                          }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
-                            $RetMotivo2["color"],
-                            $RetMotivo2["tipo_categoria"],
-                            $Ret_Movimientos_Persona["fecha"]
-                          ];
-                        }
-                      }
-                      if ($CantOpMotivos == 0) {
-                        $ConsultarCodyColor2 = "select  M.cod_categoria, 
-                                                          F.Forma_Categoria, 
-                                                          C.color, 
-                                                          M.codigo,
-                                                          C.tipo_categoria,
-                                                          C.orden
-                                                  from motivo M, 
-                                                       categoria C, 
-                                                       formas_categorias F 
-                                                  where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_2"] . " 
-                                                    and M.cod_categoria = C.cod_categoria 
-                                                    and C.ID_Forma = F.ID_Forma 
-                                                    and M.estado = 1 
-                                                    and C.estado = 1";
-                        $MensajeErrorConsultarCodyColor2 = "No se pudieron consultar los motivos de los Movimientos";
-
-
-                        $TomarCodyColor2 = mysqli_query($Con->Conexion, $ConsultarCodyColor2) or die($MensajeErrorConsultarCodyColor2 . " - " . $ConsultarCodyColor2);
-
-                        $RetMotivo2 = mysqli_fetch_assoc($TomarCodyColor2);
-                        $nroMotivosEnFecha += 1;
-
-                        $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
-                        $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
-                                        <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
-                                          <span style='font-size: 30px; color: " . $RetMotivo2["color"] . "; text-align: center;'>" .
-                          $RetMotivo2["Forma_Categoria"] . "
-                                            <center>
-                                              <span class='nombreCategoria'>" .
-                          $RetMotivo2["codigo"] . "
-                                              </span>
-                                            </center>
-                                          </span>
-                                        </a>
-                                      </div>";
-                        $marginLeft = (strlen($RetMotivo2["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
-                        $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center;  display: inline-block;'>
-                                              <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo2["color"] . "; text-align= center;'>" .
-                          $RetMotivo2["Forma_Categoria"] . "
-                                              </div>
-                                              <div style='font-size: 5.5px;'>" .
-                          $RetMotivo2["codigo"] . "
-                                              </div>
-                                            </div>";
-                        $jsonTable[$clave]["$Mes/$Anio"][] = [
-                          $RetMotivo2["Forma_Categoria"],
-                          $RetMotivo2["codigo"],
-                          $RetMotivo2["color"]
-                        ];
-                        $forma_motivo = $RetMotivo2["Forma_Categoria"];
-                        if (strlen($forma_motivo) > 1) {
-                          $forma_motivo = substr($forma_motivo, 2);
-                          $forma_motivo = substr($forma_motivo, 0, -1);
-                        }
-                        $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
-                          $RetMotivo2["color"],
-                          $RetMotivo2["tipo_categoria"],
-                          $Ret_Movimientos_Persona["fecha"]
-                        ];
-                      }
-                    }
-
-                    if ($Ret_Datos_Movimiento["motivo_3"] > 1 && $Ret_Datos_Movimiento["permiso_3"]) {
-                      if ($ID_Motivo > 0) {
-                        if ($ID_Motivo == $Ret_Datos_Movimiento["motivo_3"]) {
-                          $ConsultarCodyColor3 = "select  M.cod_categoria, 
-                                                            F.Forma_Categoria, 
-                                                            C.color, 
-                                                            M.codigo,
-                                                            C.tipo_categoria,
-                                                            C.orden 
-                                                    from motivo M, 
-                                                         categoria C, 
-                                                         formas_categorias F 
-                                                    where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " 
-                                                      and M.cod_categoria = C.cod_categoria 
-                                                      and C.ID_Forma = F.ID_Forma 
-                                                      and M.estado = 1 
-                                                      and C.estado = 1";
-                          $MensajeErrorConsultarCodyColor3 = "No se pudieron consultar los motivos de los Movimientos";
-
-                          $TomarCodyColor3 = mysqli_query($Con->Conexion, $ConsultarCodyColor3) or die($MensajeErrorConsultarCodyColor3 . " - " . $ConsultarCodyColor3 . " valor:" . $Ret_Datos_Movimiento["motivo_3"]);
-
-                          $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
-                          $nroMotivosEnFecha += 1;
-
-                          $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
-                          $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
-                                        <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
-                                          <span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" .
-                            $RetMotivo3["Forma_Categoria"] . "
-                                              <center>
-                                                <span class='nombreCategoria'>" .
-                            $RetMotivo3["codigo"] . "
-                                                </span>
-                                              </center>
-                                            </span>
-                                          </a>
-                                        </div>";
-                          $marginLeft = (strlen($RetMotivo3["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
-                          $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
-                                                <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" .
-                            $RetMotivo3["Forma_Categoria"] . "
-                                                </div>
-                                                <div style='font-size: 5.5px;'>" .
-                            $RetMotivo3["codigo"] . "
-                                                </div>
-                                              </div>";
-                          $jsonTable[$clave]["$Mes/$Anio"][] = [
-                            $RetMotivo3["Forma_Categoria"],
-                            $RetMotivo3["codigo"],
-                            $RetMotivo3["color"]
-                          ];
-                          $forma_motivo = $RetMotivo3["Forma_Categoria"];
-                          if (strlen($forma_motivo) > 1) {
-                            $forma_motivo = substr($forma_motivo, 2);
-                            $forma_motivo = substr($forma_motivo, 0, -1);
-                          }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
-                            $RetMotivo3["color"],
-                            $RetMotivo3["tipo_categoria"],
-                            $Ret_Movimientos_Persona["fecha"]
-                          ];
-                        }
-                      }
-                      if ($ID_Motivo2 > 0) {
-                        if ($ID_Motivo2 == $Ret_Datos_Movimiento["motivo_3"]) {
-                          $ConsultarCodyColor3 = "select  M.cod_categoria, 
-                                                            F.Forma_Categoria, 
-                                                            C.color, 
-                                                            M.codigo,
-                                                            C.tipo_categoria,
-                                                            C.orden 
-                                                    from motivo M, 
-                                                         categoria C, 
-                                                         formas_categorias F 
-                                                    where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " 
-                                                      and M.cod_categoria = C.cod_categoria 
-                                                      and C.ID_Forma = F.ID_Forma 
-                                                      and M.estado = 1 
-                                                      and C.estado = 1";
-                          $MensajeErrorConsultarCodyColor3 = "No se pudieron consultar los motivos de los Movimientos";
-
-                          $TomarCodyColor3 = mysqli_query($Con->Conexion, $ConsultarCodyColor3) or die($MensajeErrorConsultarCodyColor3 . " - " . $ConsultarCodyColor3 . " valor:" . $Ret_Datos_Movimiento["motivo_3"]);
-                          $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
-                          $nroMotivosEnFecha += 1;
-
-                          $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
-                          $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
-                                          <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
-                                            <span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" .
-                            $RetMotivo3["Forma_Categoria"] . "
-                                              <center>
-                                                <span class='nombreCategoria'>" .
-                            $RetMotivo3["codigo"] . "
-                                                </span>
-                                              </center>
-                                            </span>
-                                          </a>
-                                        </div>";
-                          $marginLeft = (strlen($RetMotivo3["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
-                          $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
-                                                <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" .
-                            $RetMotivo3["Forma_Categoria"] . "
-                                                </div>
-                                                <div style='font-size: 5.5px;'>" .
-                            $RetMotivo3["codigo"] . "
-                                                </div>
-                                              </div>";
-                          $jsonTable[$clave]["$Mes/$Anio"][] = [
-                            $RetMotivo3["Forma_Categoria"],
-                            $RetMotivo3["codigo"],
-                            $RetMotivo3["color"]
-                          ];
-                          $forma_motivo = $RetMotivo3["Forma_Categoria"];
-                          if (strlen($forma_motivo) > 1) {
-                            $forma_motivo = substr($forma_motivo, 2);
-                            $forma_motivo = substr($forma_motivo, 0, -1);
-                          }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
-                            $RetMotivo3["color"],
-                            $RetMotivo3["tipo_categoria"],
-                            $Ret_Movimientos_Persona["fecha"]
-                          ];
-                        }
-                      }
-                      if ($ID_Motivo3 > 0) {
-                        if ($ID_Motivo3 == $Ret_Datos_Movimiento["motivo_3"]) {
-                          $ConsultarCodyColor3 = "select  M.cod_categoria, 
-                                                            F.Forma_Categoria, 
-                                                            C.color, 
-                                                            M.codigo,
-                                                            C.tipo_categoria,
-                                                            C.orden 
-                                                    from motivo M, 
-                                                         categoria C, 
-                                                         formas_categorias F 
-                                                    where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " 
-                                                      and M.cod_categoria = C.cod_categoria 
-                                                      and C.ID_Forma = F.ID_Forma 
-                                                      and M.estado = 1 
-                                                      and C.estado = 1";
-                          $MensajeErrorConsultarCodyColor3 = "No se pudieron consultar los motivos de los Movimientos";
-
-                          $TomarCodyColor3 = mysqli_query($Con->Conexion, $ConsultarCodyColor3) or die($MensajeErrorConsultarCodyColor3 . " - " . $ConsultarCodyColor3 . " valor:" . $Ret_Datos_Movimiento["motivo_3"]);
-                          $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
-                          $nroMotivosEnFecha += 1;
-
-                          $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
-                          $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
-                                          <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
-                                            <span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" .
-                            $RetMotivo3["Forma_Categoria"] . "
-                                              <center>
-                                                <span class='nombreCategoria'>" .
-                            $RetMotivo3["codigo"] . "
-                                                </span>
-                                              </center>
-                                            </span>
-                                          </a>
-                                        </div>";
-                          $marginLeft = (strlen($RetMotivo3["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
-                          $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
-                                                <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" .
-                            $RetMotivo3["Forma_Categoria"] . "
-                                                </div>
-                                                <div style='font-size: 5.5px;'>" .
-                            $RetMotivo3["codigo"] . "
-                                                </div>
-                                              </div>";
-                          $jsonTable[$clave]["$Mes/$Anio"][] = [
-                            $RetMotivo3["Forma_Categoria"],
-                            $RetMotivo3["codigo"],
-                            $RetMotivo3["color"]
-                          ];
-                          $forma_motivo = $RetMotivo3["Forma_Categoria"];
-                          if (strlen($forma_motivo) > 1) {
-                            $forma_motivo = substr($forma_motivo, 2);
-                            $forma_motivo = substr($forma_motivo, 0, -1);
-                          }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
-                            $RetMotivo3["color"],
-                            $RetMotivo3["tipo_categoria"],
-                            $Ret_Movimientos_Persona["fecha"]
-                          ];
-                        }
-                      }
-                      if ($ID_Motivo4 > 0) {
-                        if ($ID_Motivo4 == $Ret_Datos_Movimiento["motivo_3"]) {
-                          $ConsultarCodyColor3 = "select  M.cod_categoria, 
-                                                            F.Forma_Categoria, 
-                                                            C.color, 
-                                                            M.codigo,
-                                                            C.tipo_categoria,
-                                                            C.orden
-                                                    from motivo M, 
-                                                         categoria C, 
-                                                         formas_categorias F 
-                                                    where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " 
-                                                      and M.cod_categoria = C.cod_categoria 
-                                                      and C.ID_Forma = F.ID_Forma 
-                                                      and M.estado = 1 
-                                                      and C.estado = 1";
-                          $MensajeErrorConsultarCodyColor3 = "No se pudieron consultar los motivos de los Movimientos";
-
-                          $TomarCodyColor3 = mysqli_query($Con->Conexion, $ConsultarCodyColor3) or die($MensajeErrorConsultarCodyColor3 . " - " . $ConsultarCodyColor3 . " valor:" . $Ret_Datos_Movimiento["motivo_3"]);
-                          $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
-                          $nroMotivosEnFecha += 1;
-
-                          $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
-                          $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
-                                          <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
-                                            <span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" .
-                            $RetMotivo3["Forma_Categoria"] . "
-                                              <center>
-                                                <span class='nombreCategoria'>" .
-                            $RetMotivo3["codigo"] . "
-                                                </span>
-                                              </center>
-                                            </span>
-                                          </a>
-                                        </div>";
-                          $marginLeft = (strlen($RetMotivo3["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
-                          $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
-                                                <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" .
-                            $RetMotivo3["Forma_Categoria"] . "
-                                                </div>
-                                                <div style='font-size: 5.5px;'>" .
-                            $RetMotivo3["codigo"] . "
-                                                </div>
-                                              </div>";
-                          $jsonTable[$clave]["$Mes/$Anio"][] = [
-                            $RetMotivo3["Forma_Categoria"],
-                            $RetMotivo3["codigo"],
-                            $RetMotivo3["color"]
-                          ];
-                          $forma_motivo = $RetMotivo3["Forma_Categoria"];
-                          if (strlen($forma_motivo) > 1) {
-                            $forma_motivo = substr($forma_motivo, 2);
-                            $forma_motivo = substr($forma_motivo, 0, -1);
-                          }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
-                            $RetMotivo3["color"],
-                            $RetMotivo3["tipo_categoria"],
-                            $Ret_Movimientos_Persona["fecha"]
-                          ];
-                        }
-                      }
-                      if ($ID_Motivo5 > 0) {
-                        if ($ID_Motivo5 == $Ret_Datos_Movimiento["motivo_3"]) {
-                          $ConsultarCodyColor3 = "select  M.cod_categoria, 
-                                                            F.Forma_Categoria, 
-                                                            C.color, 
-                                                            M.codigo,
-                                                            C.tipo_categoria,
-                                                            C.orden 
-                                                    from motivo M, 
-                                                         categoria C, 
-                                                         formas_categorias F 
-                                                    where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " 
-                                                      and M.cod_categoria = C.cod_categoria 
-                                                      and C.ID_Forma = F.ID_Forma 
-                                                      and M.estado = 1 
-                                                      and C.estado = 1";
-                          $MensajeErrorConsultarCodyColor3 = "No se pudieron consultar los motivos de los Movimientos";
-
-                          $TomarCodyColor3 = mysqli_query($Con->Conexion, $ConsultarCodyColor3) or die($MensajeErrorConsultarCodyColor3 . " - " . $ConsultarCodyColor3 . " valor:" . $Ret_Datos_Movimiento["motivo_3"]);
-                          $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
-                          $nroMotivosEnFecha += 1;
-
-                          $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
-                          $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
-                                          <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
-                                            <span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" .
-                            $RetMotivo3["Forma_Categoria"] . "
-                                              <center>
-                                                <span class='nombreCategoria'>" .
-                            $RetMotivo3["codigo"] . "
-                                                </span>
-                                              </center>
-                                            </span>
-                                          </a>
-                                        </div>";
-                          $marginLeft = (strlen($RetMotivo3["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
-                          $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
-                                                <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" .
-                            $RetMotivo3["Forma_Categoria"] . "
-                                                </div>
-                                                <div style='font-size: 5.5px;'>" .
-                            $RetMotivo3["codigo"] . "
-                                                </div>
-                                              </div>";
-                          $jsonTable[$clave]["$Mes/$Anio"][] = [
-                            $RetMotivo3["Forma_Categoria"],
-                            $RetMotivo3["codigo"],
-                            $RetMotivo3["color"]
-                          ];
-                          $forma_motivo = $RetMotivo3["Forma_Categoria"];
-                          if (strlen($forma_motivo) > 1) {
-                            $forma_motivo = substr($forma_motivo, 2);
-                            $forma_motivo = substr($forma_motivo, 0, -1);
-                          }
-                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
-                            $RetMotivo3["color"],
-                            $RetMotivo3["tipo_categoria"],
-                            $Ret_Movimientos_Persona["fecha"]
-                          ];
-                        }
-                      }
-                      if ($CantOpMotivos == 0) {
-                        $ConsultarCodyColor3 = "select  M.cod_categoria, 
-                                                          F.Forma_Categoria, 
-                                                          C.color, 
-                                                          M.codigo,
-                                                          C.tipo_categoria,
-                                                          C.orden 
-                                                  from motivo M, 
-                                                       categoria C, 
-                                                       formas_categorias F 
-                                                  where M.id_motivo = " . $Ret_Datos_Movimiento["motivo_3"] . " 
-                                                    and M.cod_categoria = C.cod_categoria 
-                                                    and C.ID_Forma = F.ID_Forma 
-                                                    and M.estado = 1 
-                                                    and C.estado = 1";
-                        $MensajeErrorConsultarCodyColor = "No se pudieron consultar los motivos de los Movimientos";
-
-
-                        $TomarCodyColor3 = mysqli_query($Con->Conexion, $ConsultarCodyColor3) or die($MensajeErrorConsultarCodyColor3 . " - " . $ConsultarCodyColor3);
-                        $RetMotivo3 = mysqli_fetch_assoc($TomarCodyColor3);
-                        $nroMotivosEnFecha += 1;
-
-                        $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
-                        $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
-                                        <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"Ventana" . $Ret_Datos_Movimiento["id_movimiento"] . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
-                                          <span style='font-size: 30px; color: " . $RetMotivo3["color"] . ";'>" .
-                          $RetMotivo3["Forma_Categoria"] . "
-                                            <center>
-                                              <span class='nombreCategoria'>" .
-                          $RetMotivo3["codigo"] . "
-                                              </span>
-                                            </center>
-                                          </span>
-                                        </a>
-                                      </div>";
-                        $marginLeft = (strlen($RetMotivo3["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
-                        $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block; '>
-                                              <div style=' font-family: DejaVu Sans, Noto Sans Symbols 2; font-size:  7px;  color: " . $RetMotivo3["color"] . ";'>" .
-                          $RetMotivo3["Forma_Categoria"] . "
-                                              </div>
-                                              <div style='font-size: 5.5px;'>" .
-                          $RetMotivo3["codigo"] . "
-                                              </div>
-                                            </div>";
-                        $jsonTable[$clave]["$Mes/$Anio"][] = [
-                          $RetMotivo3["Forma_Categoria"],
-                          $RetMotivo3["codigo"],
-                          $RetMotivo3["color"]
-                        ];
-                        $forma_motivo = $RetMotivo3["Forma_Categoria"];
-                        if (strlen($forma_motivo) > 1) {
-                          $forma_motivo = substr($forma_motivo, 2);
-                          $forma_motivo = substr($forma_motivo, 0, -1);
-                        }
-                        $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
-                          $RetMotivo3["color"],
-                          $RetMotivo3["tipo_categoria"],
-                          $Ret_Movimientos_Persona["fecha"]
-                        ];
-                      }
-                    }
-                  }
-                  $tagsMotivos .= ($nroMotivosEnFecha >= 6) ? "</div>" : "";
-                  $tagsTD .= "</div></td>";
-                  $tagsTD_imprimir .= $tagsMotivos . "</div></td>";
-                  $ID_Persona_Bandera = $RetTodos["id_persona"];
                 }
 
-                if ($tdExtenso) {
-                  $tdReemplazar = "~<td~";
-                  $tdClassExtenso = "<td class='td--extenso-height-127'";
-                  $tagsTD = preg_replace($tdReemplazar, $tdClassExtenso, $tagsTD);
+                if ($RetTodos["id_movimiento"]
+                    && ($view == $RetTodos["id_persona"]) 
+                    && $imprimir
+                    && $con_movimiento) {
+                    foreach ($arr as $key => $value) {
+                        $Mes = $value["mes"];
+                        $Anio = $value["anio"];
+                        $tagsMotivos = "";
+                        $nroMotivosEnFecha = 0;
+                        $tagsTD .= "<td name='DatosResultados' id=$IndexCelda style='min-width:190px'>
+                                      <div class = 'row' style='margin:0'>";
+                          while (!empty($RetTodos) && $view == $RetTodos["id_persona"]) {
+
+                            if (!empty($RetTodos)
+                                && ($RetTodos["Mes"] == $value["mes"])
+                                && ($RetTodos["Anio"] == $value["anio"])) {
+                                    $motivo = in_array($RetTodos["id_motivo"], array_values($MotivosOpciones));
+                                    if (($CantOpMotivos == 0) || $motivo) {
+                                          $nroMotivosEnFecha += 1;
+                                          $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
+                                          $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
+                                                        <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $RetTodos["id_movimiento"] . "\",\"Ventana" . $RetTodos["id_movimiento"] . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
+                                                          <span style='font-size: 30px; color: " . $RetTodos["color"] . ";'>" .
+                                                            $RetTodos["Forma_Categoria"] . "
+                                                            <center>
+                                                              <span class='nombreCategoria'>" .
+                                                                $RetTodos["codigo"] . "
+                                                              </span>
+                                                            </center>
+                                                          </span>
+                                                        </a>
+                                                      </div>";
+                                          $marginLeft = (strlen($RetTodos["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
+                                          $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
+                                                            <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 7px; color: " . $RetTodos["color"] . ";'>" .
+                                                              $RetTodos["Forma_Categoria"] . "
+                                                            </div>
+                                                            <div style='font-size: 5.5px;'>" .
+                                                              $RetTodos["codigo"] . "
+                                                            </div>
+                                                          </div>";
+                                          $jsonTable[$clave]["$Mes/$Anio"][] = [
+                                                                                $RetTodos["Forma_Categoria"],
+                                                                                $RetTodos["codigo"],
+                                                                                $RetTodos["color"]
+                                                                                ];
+                                          $forma_motivo = $RetTodos["Forma_Categoria"];
+                                          if (strlen($forma_motivo) > 1) {
+                                              $forma_motivo = substr($forma_motivo, 2);
+                                              $forma_motivo = substr($forma_motivo, 0, -1);
+                                          }
+                                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
+                                                                                                          $RetTodos["color"],
+                                                                                                          $RetTodos["tipo_categoria"],
+                                                                                                          $RetTodos["fecha"]
+                                                                                                          ];
+                                  }
+                                  $count++;
+                                  $RetTodos = mysqli_fetch_assoc($tomar_movimientos);
+                            } else {
+                              break;
+                            }
+                        }
+
+                        $tagsMotivos .= ($nroMotivosEnFecha >= 6) ? "</div>" : "";
+                        if ($nroMotivosEnFecha > 6) {
+                          $tdExtenso = true;
+                        }
+                        $tagsTD .= "</div></td>";
+
+                    }
+
+                    mysqli_data_seek($tomar_movimientos, $count - 1);
+                    $count--;
+                    
+                    if ($tdExtenso) {
+                      $tdReemplazar = "~<td~";
+                      $tdClassExtenso = "<td class='td--extenso-height-127'";
+                      $tagsTD = preg_replace($tdReemplazar, $tdClassExtenso, $tagsTD);
+                    }
+
+                    $Table = $Table . $tagsTD . "</tr>";
+                    continue;
                 }
 
-                $Table = $Table . $tagsTD . "</tr>";
-
-              }
-
-
-              //////////////////////////////////////////////////////////////////////////////////
-              //////////////////////////////////////////////////////////////////////////////////
-          
             }
 
             if (isset($Table)) {
@@ -3669,7 +2939,7 @@ $Con->CloseConexion();
     })();
 
     <?php $_SESSION["meses"] = $mesesHeader; ?>
-    var objectJsonTabla = <?php echo json_encode($jsonTable); ?>;
+    var objectJsonTabla = <?php echo json_encode(value: array_values($jsonTable), flags: true); ?>;
 
     function toggleZoom(porcentaje) {
       var Tabla = document.getElementById("tablaMovimientos");

@@ -7,6 +7,8 @@ header("Content-Type: text/html;charset=utf-8");
 
 $ID_Usuario = $_SESSION["Usuario"];
 
+$from_reporte_grafico = (!empty($_SESSION["from_reporte_grafico"])) ? true : false;
+
 $ID_Persona = $_REQUEST["ID"];
 $Apellido = ucwords($_REQUEST["Apellido"]);
 $Nombre = ucwords($_REQUEST["Nombre"]);
@@ -222,7 +224,7 @@ try {
 		// CREANDO NOTIFICACION PARA EL USUARIO		
 		$DetalleNot = 'Se modifico la persona Nombre: '.$Persona->getApellido(). ', '.$Persona->getNombre(). (($Persona->getDNI() == null)?'':' dni: '. $Persona->getDNI());
 		$Expira = date("Y-m-d", strtotime($Fecha." + 15 days"));
-		
+
 		$ConsultaNot = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$DetalleNot','$Fecha', '$Expira',1)";
 		if(!$RetNot = mysqli_query($Con->Conexion,$ConsultaNot)){
 			throw new Exception("Error al intentar registrar Notificacion. Consulta: ".$ConsultaNot, 3);
@@ -230,7 +232,14 @@ try {
 
 	 	$Con->CloseConexion();
 	 	$Mensaje = "La Persona fue modificada Correctamente";
-		header('Location: ../view_modpersonas.php?ID='.$ID_Persona.'&Mensaje='.$Mensaje);		
+
+		if ($from_reporte_grafico) {
+			$reporte = "true";
+		} else {
+			$reporte = "false";
+		}
+
+		header('Location: ../view_modpersonas.php?ID=' . $ID_Persona . '&Mensaje=' . $Mensaje . "&reporte=" . $reporte);		
 	}
 
 } catch (Exception $e) {

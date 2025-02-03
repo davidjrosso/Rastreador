@@ -601,3 +601,7 @@ div .nav-side-menu {
   height: 100%;
   margin: 0;
 }
+
+.text-dialog {
+  font-size: 21px;
+}

@@ -10,6 +10,12 @@ if (!isset($_SESSION["Usuario"])) {
   header("Location: Error_Session.php");
 }
 
+if (!preg_match("~view_personas~", $_SERVER["HTTP_REFERER"])) {
+  $_SESSION["from_reporte_grafico"] = true;
+} else {
+  $_SESSION["from_reporte_grafico"] = false;
+}
+
 $Con = new Conexion();
 $Con->OpenConexion();
 $ID_Usuario = $_SESSION["Usuario"];
@@ -30,28 +36,23 @@ $Con->CloseConexion();
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
     integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-  <!--<link href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-  <!--<script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script> -->
   <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
-
-  <!--<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>-->
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.0.0.min.js"></script>
   <script type="text/javascript"
     src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-  <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
-  <script src="js/bootstrap-datepicker.min.js"></script> <!-- ESTO ES NECESARIO PARA QUE ANDE EN ESPAÑOL -->
+  <script src="js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
     integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
     crossorigin="anonymous"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
   <script src="./dist/mapa.js"></script>
+
   <script>
     var map = null;
     var objectJsonPersona = {};
+    var isSave = false;
 
     $(document).ready(function () {
       var date_input = $('input[name="Fecha_Nacimiento"]'); //our date input has the name "date"
@@ -82,6 +83,7 @@ $Con->CloseConexion();
           map.setGeoreferenciacion();
         };
       });
+
       $("#ID_Calle").on("input", function(e) {
         let nro = $("#NumeroDeCalle").val();
         if (nro) {
@@ -203,7 +205,7 @@ $Con->CloseConexion();
 
               ?>
               <div class="col-10">
-                <form method="post" onKeydown="return event.key != 'Enter';" action="Controladores/ModificarPersona.php">
+                <form id="form-mod-persona" method="post" onKeydown="return event.key != 'Enter';" action="Controladores/ModificarPersona.php">
                   <input type="hidden" name="ID" value="<?php echo $Persona->getID_Persona(); ?>">
                   <div class="form-group row">
                     <label for="inputPassword" class="col-md-2 col-form-label LblForm">Apellido: </label>
@@ -435,14 +437,11 @@ $Con->CloseConexion();
   <?php
   if (isset($_REQUEST["Mensaje"])) {
     echo "<script type='text/javascript'>
-    swal('" . $_REQUEST['Mensaje'] . "','','success');
-</script>";
-  }
-
-  if (isset($_REQUEST['MensajeError'])) {
-    echo "<script type='text/javascript'>
-    swal('" . $_REQUEST['MensajeError'] . "','','warning');
-</script>";
+            swal('" . $_REQUEST['Mensaje'] . "','','success');
+            if (" . $_REQUEST['reporte'] . ") {
+              window.opener.document.location.reload();
+            }
+          </script>";
   }
   ?>
   <script>

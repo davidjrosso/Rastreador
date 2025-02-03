@@ -35,21 +35,23 @@ $Con->CloseConexion();
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-  <script src="js/bootstrap-datepicker.min.js"></script> <!-- ESTO ES NECESARIO PARA QUE ANDE EN ESPAÑOL -->
+  <script src="js/bootstrap-datepicker.min.js"></script>
   <script src="js/ValidarGeneral.js"></script>
   <script src="./dist/alerta.js"></script>
+  <script src="./dist/control.js"></script>
+
   <script>
     var cantBarrios = 1;
     var cantMotivos = 3;
     $(document).ready(function(){
-              var date_input=$('input[name="Fecha_Desde"]'); //our date input has the name "date"
+              var date_input=$('input[name="Fecha_Desde"]');
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
               date_input.datepicker({
                   format: 'dd/mm/yyyy',
                   container: container,
                   todayHighlight: true,
                   autoclose: true,
-                  closeText: 'Cerrar', /* HASTA ACA */
+                  closeText: 'Cerrar',
                   days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
                   daysShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
                   daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
@@ -60,14 +62,14 @@ $Con->CloseConexion();
                   clear: "Borrar",
                   weekStart: 1,
               });
-              var date_input2=$('input[name="Fecha_Hasta"]'); //our date input has the name "date"
+              var date_input2=$('input[name="Fecha_Hasta"]');
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
               date_input2.datepicker({
                   format: 'dd/mm/yyyy',
                   container: container,
                   todayHighlight: true,
                   autoclose: true,
-                  closeText: 'Cerrar', /* HASTA ACA */
+                  closeText: 'Cerrar',
                   days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
                   daysShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
                   daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
@@ -80,7 +82,10 @@ $Con->CloseConexion();
               });
               $("#btn-enlace-driver").on("click", function (){
                 cargaMovimientosFormulario();
-              })
+              });
+              $("#inpMostrar").on("change", function (event){
+                controlMovimiento(this);
+              });
           });
    
     function buscarPersonas(){
@@ -474,13 +479,13 @@ $Con->CloseConexion();
           <p class = "Titulos">Parámetros</p>
           <form method = "post" onKeydown="return event.key != 'Enter';" action = "view_rep_general_new.php" onSubmit = "return ValidarGeneral();">
             <div class="form-group row">
-                <label for="inputPassword" class="col-md-2 col-form-label LblForm">Fecha desde *: </label>
+                <label for="Fecha_Desde" class="col-md-2 col-form-label LblForm">Fecha desde *: </label>
                 <div class="col-md-10">
                     <input type="text" name="Fecha_Desde" id = "Fecha_Desde" class="form-control" autocomplete="off" value = "<?php echo implode("/", array_reverse(explode("-",date('Y-m-d',strtotime(date('Y-m-d')."- 1 year"))))); ?>">
                 </div>
             </div> 
             <div class="form-group row">
-                <label for="inputPassword" class="col-md-2 col-form-label LblForm">Fecha hasta *: </label>
+                <label for="Fecha_Hasta" class="col-md-2 col-form-label LblForm">Fecha hasta *: </label>
                 <div class="col-md-10">
                     <input type="text" name="Fecha_Hasta" id = "Fecha_Hasta" class="form-control" autocomplete="off" value = "<?php echo implode("/", array_reverse(explode("-",date('Y-m-d')))); ?>">
                 </div>
@@ -495,32 +500,32 @@ $Con->CloseConexion();
               Edad <br>
             </div>
             <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Desde (años): </label>
+                  <label for="Edad_Desde" class="col-md-2 col-form-label LblForm">Desde (años): </label>
                   <div class="col-md-10">
                       <input type="number" name="Edad_Desde" id="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarMeses(this)">
                       <input type="hidden" name="ID_Persona" id = "ID_Persona" value = "0">
                   </div>
             </div> 
             <div class="form-group row">
-                <label for="inputPassword" class="col-md-2 col-form-label LblForm">Hasta (años): </label>
+                <label for="Edad_Hasta" class="col-md-2 col-form-label LblForm">Hasta (años): </label>
                 <div class="col-md-10">
                     <input type="number" name="Edad_Hasta" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarMeses(this)">
                 </div>
             </div> 
             <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Desde (Meses): </label>
+                  <label for="Meses_Desde" class="col-md-2 col-form-label LblForm">Desde (Meses): </label>
                   <div class="col-md-10">
                       <input type="number" name="Meses_Desde" id="Meses_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarEdad(this)">
                   </div>
             </div> 
             <div class="form-group row">
-                <label for="inputPassword" class="col-md-2 col-form-label LblForm">Hasta (Meses): </label>
+                <label for="Meses_Hasta" class="col-md-2 col-form-label LblForm">Hasta (Meses): </label>
                 <div class="col-md-10">
                     <input type="number" name="Meses_Hasta" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" max="11">
                 </div>
             </div> 
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Barrio: </label>
+              <label for="ID_Barrio" class="col-md-2 col-form-label LblForm">Barrio: </label>
               <div class="col-md-9">
                 <?php  
                 $Element = new Elements();
@@ -534,7 +539,7 @@ $Con->CloseConexion();
             <div id="contenedorBarrios">              
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Domicilio/Familia: </label>
+              <label for="Domicilio" class="col-md-2 col-form-label LblForm">Domicilio/Familia: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Domicilio" id="Domicilio" autocomplete="off">
               </div>
@@ -555,19 +560,19 @@ $Con->CloseConexion();
             </div>
             -->
             <div class="form-group row" id="div_manzana">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Manzana: </label>
+              <label for="manzana" class="col-md-2 col-form-label LblForm">Manzana: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Manzana" id="manzana" autocomplete="off">
               </div>
             </div>
             <div class="form-group row" id="div_lote">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Lote: </label>
+              <label for="lote" class="col-md-2 col-form-label LblForm">Lote: </label>
               <div class="col-md-10">
                 <input type="number" class="form-control" name = "Lote" id="lote" autocomplete="off">
               </div>
             </div>
             <div class="form-group row" id="div_familia">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Sub-lote: </label>
+              <label for="familia" class="col-md-2 col-form-label LblForm">Sub-lote: </label>
               <div class="col-md-10">
                 <input type="number" class="form-control" name = "Familia" id="familia" autocomplete="off">
               </div>
@@ -612,7 +617,7 @@ $Con->CloseConexion();
             </div>
 
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Centro Salud: </label>
+              <label for="ID_Centro" class="col-md-2 col-form-label LblForm">Centro Salud: </label>
               <div class="col-md-10">
                 <?php  
                 $Element = new Elements();
@@ -621,19 +626,19 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
+              <label for="Nro_Carpeta" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Nro_Carpeta" id="Nro_Carpeta" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
+              <label for="Nro_Legajo" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Nro_Legajo" id="Nro_Legajo" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Otras Instituciones: </label>
+              <label for="ID_OtraInstitucion" class="col-md-2 col-form-label LblForm">Otras Instituciones: </label>
               <div class="col-md-10">
                 <?php  
                 $Element = new Elements();
@@ -642,7 +647,7 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Escuela: </label>
+              <label for="ID_Escuela" class="col-md-2 col-form-label LblForm">Escuela: </label>
               <div class="col-md-10">
                 <?php  
                 $Element = new Elements();
@@ -652,7 +657,7 @@ $Con->CloseConexion();
             </div>
 
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Responsable: </label>
+              <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable: </label>
               <div class="col-md-10">
                 <?php  
                 $Element = new Elements();
@@ -660,16 +665,15 @@ $Con->CloseConexion();
                 ?>
               </div>
             </div>
-            <!--
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Mostrar Personas: </label>
+              <label for="inpMostrar" class="col-md-2 col-form-label LblForm">Mostrar Personas: </label>
               <div class="col-md-10">
                 <select class="form-control" name="Mostrar" id="inpMostrar">
-                	<option value="0">Con Movimientos</option>
+                	<option value="0" selected>Con Movimientos</option>
                 	<option value="1">Todos</option>
                 </select>
               </div>
-            </div> -->
+            </div>
             <div class="form-group row">
               <div class="offset-md-2 col-md-10">
                 <div class="offset-md-2 col-md-10" id = "InputsGenerales">

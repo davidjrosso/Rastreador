@@ -37,9 +37,10 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-  <script src="js/bootstrap-datepicker.min.js"></script> <!-- ESTO ES NECESARIO PARA QUE ANDE EN ESPAÑOL -->
+  <script src="js/bootstrap-datepicker.min.js"></script>
   <script src="js/ValidarGeneral.js"></script>
   <script src="./dist/alerta.js"></script>
+  <script src="./dist/control.js"></script>
   <script>
     var cantBarrios = 1;
     var cantMotivos = 3;
@@ -82,7 +83,10 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
               });
               $("#btn-enlace-driver").on("click", function (){
                 cargaMovimientosFormulario();
-              })
+              });
+              $("#inpMostrar").on("change", function (event){
+                controlMovimiento(this);
+              });
           });
 
     function buscarPersonas(){
