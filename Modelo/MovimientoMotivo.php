@@ -16,11 +16,46 @@ class MovimientoMotivo
 		$nro_motivo = null,
 		$estado = null
 	) {
-		$this->id_movimiento = $id_movimiento;
-		$this->id_motivo = $id_motivo;
-		$this->nro_motivo = $nro_motivo;
-		$this->estado = $estado;
-        $this->connection = $connection;
+		$this->connection = $connection;
+
+		if ($id_movimiento && $id_motivo) {
+			$consulta = "select * 
+						 from movimiento_motivo
+						 where id_movimiento = $id_movimiento
+						   and id_motivo = $id_motivo 
+						   and estado = 1";
+			$rs = mysqli_query(
+							$this->connection->Conexion,
+							$consulta
+							  ) or die("Problemas al consultar las acciones.");
+			$result = mysqli_fetch_assoc($rs); 
+			$this->id_movimiento = $id_movimiento;
+			$this->id_motivo = (!empty($id_motivo)) ? $id_motivo : $result["id_motivo"];
+			$this->nro_motivo = (!empty($nro_motivo ))? $nro_motivo : $result["nro_motivo"];
+			$this->estado = (!empty($estado))? $estado : $result["estado"];
+		} else if ($id_movimiento 
+					&& !$id_motivo
+					&& $nro_motivo) {
+			$consulta = "select * 
+						 from movimiento_motivo
+						 where id_movimiento = $id_movimiento
+						   and nro_motivo = $nro_motivo 
+						   and estado = 1";
+			$rs = mysqli_query(
+							$this->connection->Conexion,
+							$consulta
+							  ) or die("Problemas al consultar las acciones.");
+			$result = mysqli_fetch_assoc($rs); 
+			$this->id_movimiento = $id_movimiento;
+			$this->id_motivo = (!empty($id_motivo)) ? $id_motivo : $result["id_motivo"];
+			$this->nro_motivo = (!empty($nro_motivo ))? $nro_motivo : $result["nro_motivo"];
+			$this->estado = (!empty($estado))? $estado : $result["estado"];
+		} else {
+			$this->id_movimiento = $id_movimiento;
+			$this->id_motivo = $id_motivo;
+			$this->nro_motivo = $nro_motivo;
+			$this->estado = $estado;
+}
 	}
 
     public static function exist_movimiento_motivo($connection, $movimiento, $motivo)
@@ -28,11 +63,43 @@ class MovimientoMotivo
 		$consulta = "select * 
 					from movimiento_motivo
 					where id_movimiento = $movimiento
-                      and id_motivo = $motivo ";
+                      and id_motivo = $motivo 
+					  and estado = 1";
 		$rs = mysqli_query($connection->Conexion,$consulta) or die("Problemas al consultar las acciones.");
         return (mysqli_num_rows($rs) > 0);
 	}
 
+    public static function exist_movimiento_motivo_nro(
+													   $connection, 
+													   $movimiento, 
+													   $motivo,
+													   $nro
+													   )
+	{
+		$consulta = "select * 
+					from movimiento_motivo
+					where id_movimiento = $movimiento
+                      and id_motivo = $motivo
+					  and nro_motivo = $nro 
+						  and estado = 1";
+		$rs = mysqli_query($connection->Conexion,$consulta) or die("Problemas al consultar las acciones.");
+        return (mysqli_num_rows($rs) > 0);
+	}
+
+	public static function exist_movimiento_nro(
+													   $connection, 
+													   $movimiento, 
+													   $nro
+													   )
+	{
+		$consulta = "select * 
+					from movimiento_motivo
+					where id_movimiento = $movimiento
+					  and nro_motivo = $nro 
+					  and estado = 1";
+		$rs = mysqli_query($connection->Conexion,$consulta) or die("Problemas al consultar las acciones.");
+        return (mysqli_num_rows($rs) > 0);
+	}
 	// METODOS SET
 	public function set_id_movimiento($id_movimiento)
 	{
@@ -77,7 +144,7 @@ class MovimientoMotivo
 
 	public function save() 
 	{
-		$consulta_accion = "insert into movimiento_motivo(id_movimiento, 
+		$consulta = "insert into movimiento_motivo(id_movimiento, 
 												          id_motivo, 
 												          nro_motivo, 
 												          estado
@@ -86,34 +153,42 @@ class MovimientoMotivo
 											 . $this->id_motivo . "," 
 											 . $this->nro_motivo . ",
 										        1)";
-		if (!$RetAccion = mysqli_query($this->connection->Conexion,$consulta_accion)) {
-			throw new Exception("Error al intentar registrar Accion. Consulta: ". $consulta_accion, 3);
+		if (!$RetAccion = mysqli_query($this->connection->Conexion,$consulta)) {
+			throw new Exception("Error al intentar insertar el movimiento_motivo. Consulta: ". $consulta, 3);
 		}
 	}
 
-    public function update_motivo($motivo) 
+    public function update_motivo() 
 	{
-		$consulta_accion = "update movimiento_motivo
-                            set id_motivo = " . $motivo . ",
-                                nro_motivo = " . $this->nro_motivo . "
-                                estado = " . $this->estado . "
+		$consulta = "update movimiento_motivo
+                            set id_motivo = " . $this->id_motivo . "
                             where id_movimiento = " . $this->id_movimiento . "
-                              and id_motivo = " . $this->id_motivo;
-		if (!$RetAccion = mysqli_query($this->connection->Conexion,$consulta_accion)) {
-			throw new Exception("Error al intentar registrar Accion. Consulta: ". $consulta_accion, 3);
+                              and nro_motivo = " . $this->nro_motivo;
+		if (!$RetAccion = mysqli_query($this->connection->Conexion,$consulta)) {
+			throw new Exception("Error al intentar actualizar el movimiento_motivo. Consulta: ". $consulta, 3);
 		}
 	}
 
     public function update() 
 	{
-		$consulta_accion = "update movimiento_motivo
+		$consulta = "update movimiento_motivo
                             set nro_motivo = " . $this->nro_motivo . "
                                 estado = " . $this->estado . "
                             where id_movimiento = " . $this->id_movimiento . "
                               and id_motivo = " . $this->id_motivo;
-		if (!$RetAccion = mysqli_query($this->connection->Conexion,$consulta_accion)) {
-			throw new Exception("Error al intentar registrar Accion. Consulta: ". $consulta_accion, 3);
+		if (!$RetAccion = mysqli_query($this->connection->Conexion,$consulta)) {
+			throw new Exception("Error al intentar actualizar el movimiento_motivo. Consulta: ". $consulta, 3);
 		}
 	}
 
+	public function delete() 
+	{
+		$consulta = "update movimiento_motivo
+                            set estado = 0
+                            where id_movimiento = " . $this->id_movimiento . "
+                              and id_motivo = " . $this->id_motivo;
+		if (!$RetAccion = mysqli_query($this->connection->Conexion,$consulta)) {
+			throw new Exception("Error al intentar borrar el movimiento_motivo. Consulta: ". $consulta, 3);
+		}
+	}
 }
