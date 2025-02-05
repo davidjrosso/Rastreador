@@ -158,7 +158,7 @@ export class MapaOl {
               width: 1.25
             }),
             text: new Text({
-              font: (simbolo.length == 1) ? '19px Calibri,sans-serif' : '12px Calibri,sans-serif',
+              font: (simbolo.length == 1) ? '19px Calibri,sans-serif' : '9px Calibri,sans-serif',
               fill: new Fill({ color: color }),
               stroke: new Stroke({
                 color: '#fff', width: 2
