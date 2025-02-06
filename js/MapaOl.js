@@ -74,14 +74,16 @@ export class MapaOl {
       let request = $.ajax({
         url : addres,
         success : function (data, status, requestHttp) {
-            let lon = requestHttp.responseJSON[0].lon;
-            let lat = requestHttp.responseJSON[0].lat;
-            let imagen = './images/icons/location.png';
-            this.addIcon(
-                         lat,
-                         lon,
-                         imagen
-                        );
+            if (requestHttp.responseJSON) {
+              let lon = requestHttp.responseJSON[0].lon;
+              let lat = requestHttp.responseJSON[0].lat;
+              let imagen = './images/icons/location.png';
+              this.addIcon(
+                          lat,
+                          lon,
+                          imagen
+                          );
+            }
         }.bind(this)
       });
     }
@@ -113,7 +115,7 @@ export class MapaOl {
                                         );
         }
       });
-  }
+    }
 
     addIcon(lon, lat, imagen) {
         let iconFeatures=[];
@@ -152,7 +154,8 @@ export class MapaOl {
         }
     }
 
-    addIconLayerR(lon,
+    addIconLayerR(
+                  lon,
                   lat,
                   desplazamientoY,
                   desplazamientoX,

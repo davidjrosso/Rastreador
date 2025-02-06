@@ -94,6 +94,14 @@ $Con->CloseConexion();
           $("#mapa-sig").prop('disabled', false);
           calle = $("#ID_Calle").find(":selected").text();
           nro = $("#NumeroDeCalle").val();
+          if (!map) {
+            map = init(
+                       objectJsonPersona.lat, 
+                       objectJsonPersona.lon,
+                       map
+                      );
+            map.setGeoreferenciacion();
+          }
           map.addPersonMapAddress(
                                   calle,
                                   nro
@@ -107,8 +115,16 @@ $Con->CloseConexion();
           $("#mapa-sig").prop('disabled', false);
           calle = $("#ID_Calle").find(":selected").text();
           nro = $("#NumeroDeCalle").val();
+          if (!map) {
+            map = init(
+                       objectJsonPersona.lat, 
+                       objectJsonPersona.lon,
+                       map
+                      );
+            map.setGeoreferenciacion();
+          }
           map.addPersonMapAddress(
-                                  calle,
+            calle,
                                   nro
                                  );
         } else {
