@@ -29,7 +29,7 @@ export class MapaOl {
         zoom = null,
         lat = null,
         lon = null
-    ){
+    ) {
         this.#zoom = (zoom) ? zoom : 15;
         this.#target = target;
         this.#center = [lon, lat];
@@ -62,12 +62,31 @@ export class MapaOl {
               zoom: this.#zoom,
             }),
         });
-        //this.#mapa.addControl(new Zoom());
-        //let imagen = './images/icons/location.png'
-        //this.addIcon(lon, lat, imagen);
     }
 
-    setGeoreferenciacion(){
+    addPersonMap(lon, lat) {
+        let imagen = './images/icons/location.png';
+        this.addIcon(lon, lat, imagen);
+    }
+
+    addPersonMapAddress(calle, nro) {
+      let addres = "https://nominatim.openstreetmap.org/search?street=" + calle + "+" + nro + "&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com";
+      let request = $.ajax({
+        url : addres,
+        success : function (data, status, requestHttp) {
+            let lon = requestHttp.responseJSON[0].lon;
+            let lat = requestHttp.responseJSON[0].lat;
+            let imagen = './images/icons/location.png';
+            this.addIcon(
+                         lat,
+                         lon,
+                         imagen
+                        );
+        }.bind(this)
+      });
+    }
+
+    setGeoreferenciacion() {
         this.#mapa.on('click', function(event) {
           let point = this.getCoordinateFromPixel(event.pixel);
           let lonLat = olProj.toLonLat(point);
@@ -79,7 +98,7 @@ export class MapaOl {
         });
     }
 
-    viewPersonaGeoreferenciada(){
+    viewPersonaGeoreferenciada() {
       this.#mapa.on('click', function (evt) {
         let windowsReference = null;
         const feature = this.forEachFeatureAtPixel(evt.pixel, function (feature) {
@@ -96,35 +115,41 @@ export class MapaOl {
       });
   }
 
-    addIcon(lon, lat, imagen){
+    addIcon(lon, lat, imagen) {
         let iconFeatures=[];
-        let pos = [lon, lat];
-        pos = olProj.transform(pos, "EPSG:3857", "EPSG:4326");
+        let pos = [parseFloat(lat), parseFloat(lon)];
         let point = new Point(pos);
-        point = point.transform("EPSG:4326", "EPSG:3857");
-        let iconFeature = new Feature({
-          geometry: point
-        });
-        iconFeatures.push(iconFeature);
-        let vectorSource = new olSource.Vector({
-          features: iconFeatures
-        });
-        let iconStyle = new Style({
-          image: new Icon(/** @type {olx.style.IconOptions} */ ({
-            anchor: [200, 500],
-            anchorXUnits: 'pixels',
-            anchorYUnits: 'pixels',
-            scale: 0.07,
-            opacity: 0.85,
-            src: imagen
-          }))
-        });
-  
-        let vectorLayer = new VectorLayer({
-          source: vectorSource,
-          style: iconStyle
-        });
-        this.#mapa.addLayer(vectorLayer);
+        let vectorLayer = null;
+
+        vectorLayer = this.#mapa.getLayers();
+
+        if (vectorLayer.item(1)) {
+          vectorLayer.item(1).getSource().getFeatures()[0].setGeometry(point);
+        } else {
+          let iconFeature = new Feature({
+            geometry: point
+          });
+          iconFeatures.push(iconFeature);
+          let vectorSource = new olSource.Vector({
+            features: iconFeatures
+          });
+          let iconStyle = new Style({
+            image: new Icon(/** @type {olx.style.IconOptions} */ ({
+              anchor: [200, 500],
+              anchorXUnits: 'pixels',
+              anchorYUnits: 'pixels',
+              scale: 0.07,
+              opacity: 0.85,
+              src: imagen
+            }))
+          });
+    
+          vectorLayer = new VectorLayer({
+            source: vectorSource,
+            style: iconStyle
+          });
+          this.#mapa.addLayer(vectorLayer);
+        }
     }
 
     addIconLayerR(lon,
@@ -134,7 +159,7 @@ export class MapaOl {
                   elemento,
                   simbolo,
                   color
-    ){
+    ) {
       let pos = [parseFloat(lon), parseFloat(lat)];
       pos = add(pos, [desplazamientoY, desplazamientoX]);
       pos = olProj.transform(pos, "EPSG:3857", "EPSG:4326");

@@ -81,6 +81,10 @@ $Con->CloseConexion();
                      map
                   );
           map.setGeoreferenciacion();
+          map.addPersonMap(
+                           objectJsonPersona.lat, 
+                           objectJsonPersona.lon
+                          );
         };
       });
 
@@ -88,6 +92,12 @@ $Con->CloseConexion();
         let nro = $("#NumeroDeCalle").val();
         if (nro) {
           $("#mapa-sig").prop('disabled', false);
+          calle = $("#ID_Calle").find(":selected").text();
+          nro = $("#NumeroDeCalle").val();
+          map.addPersonMapAddress(
+                                  calle,
+                                  nro
+                                 );
         }
       });
       $("#NumeroDeCalle").on("input", function(e) {
@@ -95,6 +105,12 @@ $Con->CloseConexion();
         let nro = $(this).val();
         if (calle && nro) {
           $("#mapa-sig").prop('disabled', false);
+          calle = $("#ID_Calle").find(":selected").text();
+          nro = $("#NumeroDeCalle").val();
+          map.addPersonMapAddress(
+                                  calle,
+                                  nro
+                                 );
         } else {
           $("#mapa-sig").prop('disabled', true);
         }
@@ -198,7 +214,6 @@ $Con->CloseConexion();
               $Estado = $Ret["estado"];
               $ID_Escuela = $Ret["ID_Escuela"];
               $Trabajo = $Ret["Trabajo"];
-
 
               $Persona = new Persona($ID_Persona);
               $Con->CloseConexion();

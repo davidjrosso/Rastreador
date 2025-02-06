@@ -27,18 +27,14 @@ $Con->CloseConexion();
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-  <!--<link href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-  <!--<script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script> -->
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
   <link rel="import" href="https://sites.google.com/view/generales2019riotercero/página-principal">
 
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-  <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
-  <script src="js/bootstrap-datepicker.min.js"></script> <!-- ESTO ES NECESARIO PARA QUE ANDE EN ESPAÑOL -->
+  <script src="js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="js/ValidarPersona.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -46,6 +42,7 @@ $Con->CloseConexion();
   <script>
       var map = null;
       var objectJsonPersona = {};
+      var nombreCalle;
        $(document).ready(function(){
               var date_input=$('input[name="Fecha_Nacimiento"]'); //our date input has the name "date"
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
@@ -68,25 +65,46 @@ $Con->CloseConexion();
               $("#map-modal").on("transitionend", function(e) {
                 if (!map) {
                   map = init(
-                       objectJsonPersona.lat, 
-                       objectJsonPersona.lon,
-                       map
+                             objectJsonPersona.lat, 
+                             objectJsonPersona.lon,
+                             map
                   );
                   map.setGeoreferenciacion();
-                };
+                }
+                let nro = $("#NumeroDeCalle").val();
+                  if (!nombreCalle && !nro) {
+                    map.addPersonMap(
+                                   objectJsonPersona.lon,
+                                   objectJsonPersona.lat
+                                  );
+                  } else if (nombreCalle && nro) {
+                    map.addPersonMapAddress(
+                                            nombreCalle,
+                                            nro
+                                           );
+                    
+                  }
               });
               $("#NumeroDeCalle").on("input", function(e) {
                 let calle = $("#Calle").val();
                 let nro = $(this).val();
                 if (calle && nro) {
                   $("#mapa-sig").prop('disabled', false);
+                  if($("#NumeroDeCalle").val() && $("#Calle").val()) {
+                  $("#mapa-sig").prop('disabled', false);
+                  }
                 } else {
                   $("#mapa-sig").prop('disabled', true);
                 }
               });
-              if($("#NumeroDeCalle").val() && $("#Calle").val()) {
-                $("#mapa-sig").prop('disabled', false);
-              }
+              if (!map) {
+                  map = init(
+                             objectJsonPersona.lat, 
+                             objectJsonPersona.lon,
+                             map
+                  );
+                  map.setGeoreferenciacion();
+                }
           });
 
         function ValidarDocumento(){
@@ -191,13 +209,18 @@ $Con->CloseConexion();
 
     function seleccionCalle(xNombre,xID){
           var BotonModalPersona = document.getElementById("BotonModalDireccion_1");
-          var Calle = document.getElementById("Calle");
+          var calle = document.getElementById("Calle");
+          nombreCalle = xNombre;
           BotonModalPersona.innerHTML = "";
           BotonModalPersona.innerHTML = xNombre;
-          Calle.setAttribute('value',xID);
+          calle.setAttribute('value',xID);
           let nro = $("#NumeroDeCalle").val();
-          if (nro) {
+          if (nro && map) {
             $("#mapa-sig").prop('disabled', false);
+            map.addPersonMapAddress(
+                                    xNombre,
+                                    nro
+                                   );
           }
         }
   </script>
