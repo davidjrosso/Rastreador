@@ -83,6 +83,7 @@ export class MapaOl {
                           lon,
                           imagen
                           );
+              this.#mapa.getView().setCenter([lon, lat]);
             }
         }.bind(this)
       });
@@ -94,7 +95,7 @@ export class MapaOl {
           let lonLat = olProj.toLonLat(point);
           let vectorLayer = this.getLayers();
           lonLat = olProj.transform(lonLat, "EPSG:4326", "EPSG:3857");
-          vectorLayer.item(1).getSource().getFeatures()[0].setGeometry(new Point(lonLat))
+          vectorLayer.item(1).getSource().getFeatures()[0].setGeometry(new Point(lonLat));
           $("#lat").attr("value", lonLat[1]);
           $("#lon").attr("value", lonLat[0]);
         });
