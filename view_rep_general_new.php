@@ -3110,8 +3110,8 @@ $Con->CloseConexion();
 
     if (!map) {
           map = init(
-                     <?php echo $lat_person ?>,
-                     <?php echo $lon_person ?>,
+                     <?php echo ($lat_person ? $lat_person : "null"); ?>,
+                     <?php echo ($lon_person ? $lon_person : "null"); ?>,
                      null
                     );
           carga(map, objectJsonTabla);
