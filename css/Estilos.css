@@ -605,3 +605,11 @@ div .nav-side-menu {
 .text-dialog {
   font-size: 21px;
 }
+
+.buttom-arrow {
+  float:left;
+  margin-left: 16px;
+  padding: 0;
+  background-color: transparent;
+  border: 0;
+}
