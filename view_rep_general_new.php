@@ -199,10 +199,6 @@ $Con->CloseConexion();
         };
       });
       */
-      if (!map) {
-          map = init();
-          carga(map, objectJsonTabla);
-        };
 
     });
 
@@ -1129,10 +1125,12 @@ $Con->CloseConexion();
                                 ST_X(P.georeferencia) as lat, ST_Y(P.georeferencia) as lon, C.color, CF.Forma_Categoria,
                                 MT.codigo, C.tipo_categoria";
 
+            $lon_person = null;
+            $lat_person = null;
             $json_filtro = [];
             $filtros = [];
             $filtrosSeleccionados = [];
-
+            
             $filtrosSeleccionados["Fecha_Desde"] = $_REQUEST["Fecha_Desde"];
             $filtrosSeleccionados["Fecha_Hasta"] = $_REQUEST["Fecha_Hasta"];
 
@@ -1342,13 +1340,16 @@ $Con->CloseConexion();
                                           domicilio,
                                           ID_Barrio,
                                           calle,
-                                          nro
+                                          nro,
+                                          ST_X(georeferencia) as lat, 
+                                          ST_Y(georeferencia) as lon
                                    from persona 
                                    where ID_Persona = " . $ID_Persona . " 
                                      and estado = 1";
               $EjecutarConsultarPersona = mysqli_query($Con->Conexion, $ConsultarPersona) or die("Problemas al consultar filtro Persona");
               $RetConsultarPersona = mysqli_fetch_assoc($EjecutarConsultarPersona);
-
+              $lon_person = (!empty($RetConsultarPersona["lon"])) ? $RetConsultarPersona["lon"]: null; 
+              $lat_person = (!empty($RetConsultarPersona["lat"])) ? $RetConsultarPersona["lat"]: null;
               if (($countPostfield - 3) == 1) {
                 if (!(empty($RetConsultarPersona["domicilio"]) && (empty($RetConsultarPersona["calle"]) || empty($RetConsultarPersona["nro"])))) {
                   $domicilio = $RetConsultarPersona["domicilio"];
@@ -2575,16 +2576,6 @@ $Con->CloseConexion();
             $carga = false;
             $con_movimiento = false;
 
-            $Motivo_1 = "";
-            $Motivo_2 = "";
-            $Motivo_3 = "";
-            $Motivo_4 = "";
-            $Motivo_5 = "";
-            $ID_Motivo_1 = 0;
-            $ID_Motivo_2 = 0;
-            $ID_Motivo_3 = 0;
-            $ID_Motivo_4 = 0;
-            $ID_Motivo_5 = 0;
             $nroMotivosEnFecha = 0;
             $clave = 0;
             $tagsTD = "";
@@ -3116,6 +3107,15 @@ $Con->CloseConexion();
     var tituloFlia = document.getElementById("Contenido-Titulo-5");
     var tituloMz = document.getElementById("Contenido-Titulo-6");
     var tituloLote = document.getElementById("Contenido-Titulo-7");
+
+    if (!map) {
+          map = init(
+                     <?php echo $lat_person ?>,
+                     <?php echo $lon_person ?>,
+                     null
+                    );
+          carga(map, objectJsonTabla);
+        };
 
   </script>
   <?php
