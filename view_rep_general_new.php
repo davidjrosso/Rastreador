@@ -1117,8 +1117,8 @@ $Con->CloseConexion();
 
             $Consulta = "SELECT M.id_movimiento, M.fecha, M.id_persona, MONTH(M.fecha) as 'Mes',
                                 YEAR(M.fecha) as 'Anio', B.Barrio, P.manzana, P.documento, P.obra_social,
-                                P.localidad, P.edad, P.meses, P.lote, P.familia, P.apellido, P.fecha_nac,
-                                P.nombre, P.fecha_nac, P.domicilio, M.motivo_1, M.motivo_2, M.motivo_3,
+                                P.localidad, P.edad, P.meses, P.lote, P.familia, UPPER(P.apellido) as apellido, P.fecha_nac,
+                                UPPER(P.nombre) as nombre, P.fecha_nac, P.domicilio, M.motivo_1, M.motivo_2, M.motivo_3,
                                 M.motivo_4,M.motivo_5, MT.motivo, R.responsable, M.observaciones, CS.centro_salud,
                                 I.Nombre as 'NombreInst', MST.id_motivo, MST.nro_motivo, L.calle_nombre, P.nro,
                                 ST_X(P.georeferencia) as lat, ST_Y(P.georeferencia) as lon, C.color, CF.Forma_Categoria,
