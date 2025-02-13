@@ -139,11 +139,19 @@ $Con->CloseConexion();
           $('#input-zoom')[0].stepUp();
           //toggleZoom($('#input-zoom').prop("value"));
           let valor = $('#input-zoom').prop("value") / 100;
-          $("#tablaMovimientos").css(
+          $("#tablaMovimientos > thead").css(
                                      'transform-origin', 
                                      '0 0'
                                     );
-          $("#tablaMovimientos").css(
+          $("#tablaMovimientos > thead").css(
+                                     'transform', 
+                                     'scale(' + valor + ')'
+                                    );
+          $("#tablaMovimientos > tbody").css(
+                                     'transform-origin', 
+                                     '0 0'
+                                    );
+          $("#tablaMovimientos > tbody").css(
                                      'transform', 
                                      'scale(' + valor + ')'
                                     );
@@ -159,11 +167,19 @@ $Con->CloseConexion();
           $('#input-zoom')[0].stepDown();
           //toggleZoom($('#input-zoom').prop("value"));
           let valor = $('#input-zoom').prop("value") / 100;
-          $("#tablaMovimientos").css(
+          $("#tablaMovimientos > thead").css(
                                      'transform-origin', 
                                      '0 0'
                                     );
-          $("#tablaMovimientos").css(
+          $("#tablaMovimientos > thead").css(
+                                     'transform', 
+                                     'scale(' + valor + ')'
+                                    );
+          $("#tablaMovimientos > tbody").css(
+                                     'transform-origin', 
+                                     '0 0'
+                                    );
+          $("#tablaMovimientos > tbody").css(
                                      'transform', 
                                      'scale(' + valor + ')'
                                     );
@@ -1539,7 +1555,7 @@ $Con->CloseConexion();
               // $Familia_sel=true;
           
               $Table = "<table class='table table-fixeder table-bordered table-sm' cellspacing='0' id='tablaMovimientos' style='page-break-after:always;'>
-                             <thead class='thead-dark'>
+                             <thead id='header-tabla' class='thead-dark'>
                               <tr align='center' valign='middle'>
                                 <th id='Contenido-Titulo-1'>Barrio</th>
                                 <th id='Contenido-Titulo-2'>Direc.</th>";
