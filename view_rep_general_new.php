@@ -88,7 +88,6 @@ $Con->CloseConexion();
       // ContenidoMenu.setAttribute("class","col-md-1");
       // document.getElementById("sidebar").style.width = "3%"; //5
 
-
       //document.getElementById("ContenidoTabla").style.marginLeft = "0";
       var ContenidoTabla = document.getElementById("ContenidoTabla");
       ContenidoTabla.setAttribute("class", "col-md-12");
@@ -138,7 +137,16 @@ $Con->CloseConexion();
       $("#zoomIncrementar").on("mousedown", function (e) {
         timeout = setInterval(function () {
           $('#input-zoom')[0].stepUp();
-          toggleZoom($('#input-zoom').prop("value"));
+          //toggleZoom($('#input-zoom').prop("value"));
+          let valor = $('#input-zoom').prop("value") / 100;
+          $("#tablaMovimientos").css(
+                                     'transform-origin', 
+                                     '0 0'
+                                    );
+          $("#tablaMovimientos").css(
+                                     'transform', 
+                                     'scale(' + valor + ')'
+                                    );
         }, 37);
       });
 
@@ -149,7 +157,16 @@ $Con->CloseConexion();
       $("#zoomDecrementar").on("mousedown", function (e) {
         timeout = setInterval(function () {
           $('#input-zoom')[0].stepDown();
-          toggleZoom($('#input-zoom').prop("value"));
+          //toggleZoom($('#input-zoom').prop("value"));
+          let valor = $('#input-zoom').prop("value") / 100;
+          $("#tablaMovimientos").css(
+                                     'transform-origin', 
+                                     '0 0'
+                                    );
+          $("#tablaMovimientos").css(
+                                     'transform', 
+                                     'scale(' + valor + ')'
+                                    );
         }, 37);
       });
 
@@ -191,14 +208,6 @@ $Con->CloseConexion();
       $("#boton-desplegale").on("click", function (e) {
         $("#desplegable").toggle();
       });
-      /*
-      $("#map-modal").on("transitionend", function (e) {
-        if (!map) {
-          map = init();
-          carga(map, objectJsonTabla);
-        };
-      });
-      */
 
     });
 
@@ -1113,7 +1122,6 @@ $Con->CloseConexion();
             $motivosTodoUsuario = mysqli_query(
                               $Con->Conexion,$motivosVisiblesParaTodoUsuario
                               ) or die($MessageError);
-
 
             $Consulta = "SELECT M.id_movimiento, M.fecha, M.id_persona, MONTH(M.fecha) as 'Mes',
                                 YEAR(M.fecha) as 'Anio', B.Barrio, P.manzana, P.documento, P.obra_social,
