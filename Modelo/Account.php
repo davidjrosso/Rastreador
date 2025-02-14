@@ -116,9 +116,23 @@ public static function control_user_password($con, $user_name, $user_pass)
  	$consulta = "select * 
 				 from accounts 
 				 where username = '$user_name' 
-				 and password = '$user_pass'
-				 and estado = 1";
+				   and password = '$user_pass'
+				   and estado = 1";
  	$rs = mysqli_query($con->Conexion,$consulta) or die("Problemas al tomar Sesion. Nombre de usuario o password incorrectos");
+ 	$cont = mysqli_num_rows($rs);
+	$resultado = mysqli_fetch_assoc($rs);
+	$control = ($cont > 0) ? $resultado['accountid'] : -1;
+	return $control;
+}
+
+public static function exist_email($con, $email)
+{
+ 	$consulta = "select * 
+				 from accounts 
+				 where email = '$email'
+				   and email <> ''
+				   and estado = 1";
+ 	$rs = mysqli_query($con->Conexion,$consulta) or die("Problemas al recuperar datos. Nombre de email incorrecto");
  	$cont = mysqli_num_rows($rs);
 	$resultado = mysqli_fetch_assoc($rs);
 	$control = ($cont > 0) ? $resultado['accountid'] : -1;
@@ -133,10 +147,25 @@ public static function exist_user($user_name)
 				 from accounts 
 				 where username = '$user_name' 
 				 and estado = 1";
- 	$rs = mysqli_query($con->Conexion,$consulta)or die("Problemas al crear/modificar un usuario.");
+ 	$rs = mysqli_query($con->Conexion,$consulta)or die("Problemas al recuperar datos. Nomnre de usuario incorrecto.");
  	$cont = mysqli_num_rows($rs);
 	$exist = ($cont > 0) ? 1 : 0;
 	return $exist;
+}
+
+public static function exist_user_id($user_name)
+{
+	$con = new Conexion();
+	$con->OpenConexion();
+ 	$consulta = "select * 
+				 from accounts 
+				 where username = '$user_name' 
+				 and estado = 1";
+ 	$rs = mysqli_query($con->Conexion,$consulta)or die("Problemas al recuperar datos. Nomnre de usuario incorrecto.");
+ 	$cont = mysqli_num_rows($rs);
+	 $resultado = mysqli_fetch_assoc($rs);
+	 $control = ($cont > 0) ? $resultado['accountid'] : -1;
+	return $control;
 }
 
 public static function exist_account($account_id)
@@ -149,8 +178,9 @@ public static function exist_account($account_id)
 				 and estado = 1";
  	$rs = mysqli_query($con->Conexion,$consulta)or die("Problemas al crear/modificar un usuario.");
  	$cont = mysqli_num_rows($rs);
-	$exist = ($cont > 0) ? 1 : 0;
-	return $exist;
+	$resultado = mysqli_fetch_assoc($rs);
+	$control = ($cont > 0) ? $resultado['accountid'] : -1;
+	return $control;
 }
 
 public function get_account_id()
