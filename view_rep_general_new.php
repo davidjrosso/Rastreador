@@ -128,7 +128,10 @@ $Con->CloseConexion();
       let floorPag = Math.floor((nroFilasTabla + 2) / 10);
       nroPaginaPdf = (nroPag > floorPag) ? (floorPag + 1) : floorPag;
       thTable = $("thead > tr > th");
-      DesaplazamientoIniciaDeTabla();
+
+      columnaIndice = nroColumnasTabla + 1;
+      $("#BarraDeNavHTabla").attr("value", columnaIndice);
+      $("#BarraDeNavHTabla").prop("value", columnaIndice);
 
       $("#input-zoom").on("input", function (e) {
         toggleZoom($('#input-zoom').prop("value"));
@@ -197,23 +200,25 @@ $Con->CloseConexion();
       });
 
       $("#BarraDeNavHTabla").on("input", function (e) {
-        //if (e.originalEvent.detail){
         if (focusBarraNavegacionH) {
           navegacionConBarHNav(e);
         }
-        //}
       });
+
       $("#BarraDeNavVTabla").on("input", function (e) {
         navegacionConBarVNav(e);
       });
+
       $("#BarraDeNavHTabla").on("mouseup", function (e) {
         focusBarraNavegacionH = false;
         actualizacionDePosicionBarraDenavegacionH(e, $(this).attr("value"));
       });
+
       $('thead tr >*').on("transitionstart", function (e) {
         var columnaRemoverClass = $("tbody tr > *:nth-child(" + (this.cellIndex + 1) + ")[class ~='hiddenColTablaAnimacion'] div div");
         columnaRemoverClass.removeClass("itemMotivoAccesible");
       });
+
       $('thead tr >*').on("transitionend", function (e) {
         var columnaRemoverClass = $("tbody tr > *:nth-child(" + (this.cellIndex + 1) + ")[class ~='showColTablaAnimacion'] div div");
         columnaRemoverClass.addClass("itemMotivoAccesible");
@@ -304,56 +309,122 @@ $Con->CloseConexion();
     }
 
     function navegacionConBarHNav(e) {
-      var value = $("#BarraDeNavHTabla").val();
-      var movDecrec = (value < valInputRangePrev);
-      var columnaActual = columnaIndice;
-      if (columnaIndice + 1 <= value && (Math.floor(valInputRangePrev) == columnaIndice)) {
-        columnaActual = columnaIndice;
-      } else if (value < columnaIndice && columnaIndice < valInputRangePrev) {
-        columnaActual = columnaIndice;
-      } else {
-        if (value < columnaIndice) {
-          columnaIndice--;
-          columnaActual = columnaIndice;
+      let value = $("#BarraDeNavHTabla").val();
+      if (1 < Math.abs(columnaIndice - value)) {
+        if (columnaIndice < value) {
+          for (let index = columnaIndice; index <= value; index++) {
+              let columnaActual = columnaIndice;
+              let updateMarginLeft = "-190px";
+
+              //$("#BarraDeNavHTabla").attr("value", columnaIndice);
+              headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
+              columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
+              divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
+              columnaABorrar.removeClass("showColTablaAnimacion");
+              columnaABorrar.removeClass("showColTablaAnimacionfire");
+              columnaABorrar.find("div div").removeClass("itemMotivoAccesible");
+              columnaABorrar.removeClass("hiddenColTablaAnimacion");
+              columnaABorrar.removeClass("hiddenColTablaAnimacionfire");
+              headABorrar.removeClass("showColTablaAnimacion");
+              headABorrar.removeClass("showColTablaAnimacionfire");
+              headABorrar.removeClass("hiddenColTablaAnimacion");
+              headABorrar.removeClass("hiddenColTablaAnimacionfire");
+              divABorrar.css("z-index", "-1");
+              columnaABorrar.css({
+                "margin-left": updateMarginLeft,
+                "border-right-width": "0px",
+                "border-left-width":  "0px"
+              });
+              headABorrar.css("margin-left", updateMarginLeft);
+              columnaIndice = index;
+              valInputRangePrev = index;
+              $("#BarraDeNavHTabla").attr("value", columnaIndice);
+              $("#BarraDeNavHTabla").prop("value", columnaIndice);
+          }
         } else {
-          columnaActual = (value < columnaIndice) ? Math.floor(value) : columnaIndice;
+          for (let index = columnaIndice; value < (index + 1) ; index--) {
+              let columnaActual = columnaIndice;
+              let updateMarginLeft = "0px";
+
+              //$("#BarraDeNavHTabla").attr("value", columnaIndice);
+              headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
+              columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
+              divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
+
+              columnaABorrar.removeClass("showColTablaAnimacion");
+              columnaABorrar.removeClass("showColTablaAnimacionfire");
+              columnaABorrar.find("div div").removeClass("itemMotivoAccesible");
+              columnaABorrar.removeClass("hiddenColTablaAnimacion");
+              columnaABorrar.removeClass("hiddenColTablaAnimacionfire");
+
+              headABorrar.removeClass("showColTablaAnimacion");
+              headABorrar.removeClass("showColTablaAnimacionfire");
+              headABorrar.removeClass("hiddenColTablaAnimacion");
+              headABorrar.removeClass("hiddenColTablaAnimacionfire");
+
+              divABorrar.css("z-index", "300");
+              columnaABorrar.css({
+                "margin-left": updateMarginLeft,
+                "border-right-width":  "1px",
+                "border-left-width": "1px"
+              });
+              headABorrar.css("margin-left", updateMarginLeft);
+              columnaIndice = index;
+              valInputRangePrev = index;
+              $("#BarraDeNavHTabla").attr("value", index);
+              $("#BarraDeNavHTabla").prop("value", index);
+          }
         }
-      }
-      valInputRangePrev = value;
+      } else {
+          var columnaActual = columnaIndice;
+          if (columnaIndice + 1 <= value && (Math.floor(valInputRangePrev) == columnaIndice)) {
+            columnaActual = columnaIndice;
+          } else if (value < columnaIndice && columnaIndice < valInputRangePrev) {
+            columnaActual = columnaIndice;
+          } else {
+            if (value < columnaIndice) {
+              columnaIndice--;
+              columnaActual = columnaIndice;
+            } else {
+              columnaActual = (value < columnaIndice) ? Math.floor(value) : columnaIndice;
+            }
+          }
+          valInputRangePrev = value;
 
-      var margin = Math.abs(value - columnaActual);
-      var width = 190;
-      var updateMarginLeft = "-" + margin * width + "px";
-      if (columnaIndice + 1 <= value) {
-        updateMarginLeft = "-190px";
-      } else if (value < columnaIndice) {
-        updateMarginLeft = "0px";
-      }
+          var margin = Math.abs(value - columnaActual);
+          var width = 190;
+          var updateMarginLeft = "-" + margin * width + "px";
+          if (columnaIndice + 1 <= value) {
+            updateMarginLeft = "-190px";
+          } else if (value < columnaIndice) {
+            updateMarginLeft = "0px";
+          }
 
-      $("#BarraDeNavHTabla").attr("value", columnaIndice);
-      headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
-      columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
-      divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
-      columnaABorrar.removeClass("showColTablaAnimacion");
-      columnaABorrar.removeClass("showColTablaAnimacionfire");
-      columnaABorrar.find("div div").removeClass("itemMotivoAccesible");
-      columnaABorrar.removeClass("hiddenColTablaAnimacion");
-      columnaABorrar.removeClass("hiddenColTablaAnimacionfire");
-      headABorrar.removeClass("showColTablaAnimacion");
-      headABorrar.removeClass("showColTablaAnimacionfire");
-      headABorrar.removeClass("hiddenColTablaAnimacion");
-      headABorrar.removeClass("hiddenColTablaAnimacionfire");
-      divABorrar.css("z-index", ((value <= columnaIndice) ? "300" : "-1"));
-      columnaABorrar.css({
-        "margin-left": updateMarginLeft,
-        "border-right-width": ((value < columnaIndice) ? "1px" : "0px"),
-        "border-left-width": ((value < columnaIndice) ? "1px" : "0px")
-      });
-      headABorrar.css("margin-left", updateMarginLeft);
-      if (columnaIndice + 1 <= value) {
-        columnaIndice++;
+          $("#BarraDeNavHTabla").attr("value", columnaIndice);
+          headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
+          columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
+          divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
+          columnaABorrar.removeClass("showColTablaAnimacion");
+          columnaABorrar.removeClass("showColTablaAnimacionfire");
+          columnaABorrar.find("div div").removeClass("itemMotivoAccesible");
+          columnaABorrar.removeClass("hiddenColTablaAnimacion");
+          columnaABorrar.removeClass("hiddenColTablaAnimacionfire");
+          headABorrar.removeClass("showColTablaAnimacion");
+          headABorrar.removeClass("showColTablaAnimacionfire");
+          headABorrar.removeClass("hiddenColTablaAnimacion");
+          headABorrar.removeClass("hiddenColTablaAnimacionfire");
+          divABorrar.css("z-index", ((value <= columnaIndice) ? "300" : "-1"));
+          columnaABorrar.css({
+            "margin-left": updateMarginLeft,
+            "border-right-width": ((value < columnaIndice) ? "1px" : "0px"),
+            "border-left-width": ((value < columnaIndice) ? "1px" : "0px")
+          });
+          headABorrar.css("margin-left", updateMarginLeft);
+          if (columnaIndice + 1 <= value) {
+            columnaIndice++;
+          }
+          $("#BarraDeNavHTabla").attr("value", columnaIndice);
       }
-      $("#BarraDeNavHTabla").attr("value", columnaIndice);
     }
 
 
@@ -1474,8 +1545,7 @@ $Con->CloseConexion();
             <!--<button type="button" class="btn btn-secondary" onclick="enviarImprimir()">**Imprimir</button>-->
             <!--button type="button" class="btn btn-secondary" onclick="enviarImprimirPdf();"> Imprimir</button>-->
             <button type="button" class="btn btn-secondary" data-toggle="modal"
-              style="background-color: #ffc6b1; color: black; border-color: white; " data-target="#map-modal">S. I.
-              G.</button>
+              style="background-color: #ffc6b1; color: black; border-color: white; " data-target="#map-modal">S. I. G.</button>
             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#configModal">Config</button>
           </div>
           <div>
@@ -1614,11 +1684,19 @@ $Con->CloseConexion();
               $fecha_tabla["fecha"] = $Mes_Actual_Bandera . "/" . $Anio_Actual_Bandera;
               $fecha_tabla["anio"] = $Anio_Actual_Bandera + 2000;
               $fecha_tabla["mes"] = $Mes_Actual_Bandera;
+              if ($i >= ($MesesDiferencia - 2)) {
+                $fecha_tabla["td_hidden"] = "";
+                $fecha_tabla["div_hidden"] = "";
+              } else {
+                $fecha_tabla["td_hidden"] = " margin-left: -300px; border-right-width: 0px; border-left-width: 0px;"; 
+                $fecha_tabla["div_hidden"] = "z-index: -1";
+              }
               $arr[] = $fecha_tabla;
               $Mes_Actual_Bandera++;
             }
             //$arr = array_reverse($arr);
             $nroColumnas += $MesesDiferencia;
+            $nro_column = count($arr);
 
             /*             FIN TOMAR MESES */
 
@@ -1641,21 +1719,26 @@ $Con->CloseConexion();
             // }             
             // $arr_reverse = array_reverse($arr);
 
-            foreach ($arr as $key => $value) {
 
+            $nro_column_header = $nro_column;
+            foreach ($arr as $key => $value) {
               if ($value != "") {
                 // TODO: Cambiando de tamaño las columnas
-                $Table .= "<th name='DatosResultados' style='min-width: 190px;'>" . $value["fecha"] . "</th>";
+                if ($nro_column_header <= 2) {
+                  $Table .= "<th name='DatosResultados' style='min-width: 190px;'>" . $value["fecha"] . "</th>";
+                } else {
+                  $Table .= "<th name='DatosResultados' style='min-width: 190px; margin-left: -300px;'>" . $value["fecha"] . "</th>";
+                }
                 $mesesHeader[] = $value["fecha"];
+                $nro_column_header--;
               }
-
             }
 
             // ob_start();   
           
             $Table .= "</tr>
                     </thead>
-                <tbody id='cuerpo-tabla'>";
+                <tbody id='cuerpo-tabla' style='border-style: none;'>";
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1768,14 +1851,6 @@ $Con->CloseConexion();
               $MensajeErrorTodos = "No se pudieron consultar los datos de todas las personas";
 
               $EjecutarConsultarTodos = mysqli_query($Con->Conexion, $ConsultarTodos) or die($MensajeErrorTodos);
-
-
-
-
-
-
-
-
 
               // CAMBIOS CON TODOS                
               // $tomarRetTodos = mysqli_fetch_array($EjecutarConsultarTodos);
@@ -2130,7 +2205,7 @@ $Con->CloseConexion();
                   $jsonTable[$clave]["meses"] = $RetTodos["meses"];
   
                   foreach ($arr as $key => $value) {
-                      $Table .= "<td name='DatosResultados' id=$IndexCelda style='min-width:190px'>
+                      $Table .= "<td name='DatosResultados' id=$IndexCelda style='min-width: 190px'>
                                  </td>";
                   }
                   continue;
@@ -2238,12 +2313,15 @@ $Con->CloseConexion();
                     && ($view == $RetTodos["id_persona"]) 
                     && $imprimir
                     && $con_movimiento) {
+                    $nro_col_body = $nro_column;
                     foreach ($arr as $key => $value) {
                         $Mes = $value["mes"];
                         $Anio = $value["anio"];
                         $tagsMotivos = "";
                         $nroMotivosEnFecha = 0;
-                        $tagsTD .= "<td name='DatosResultados' id=$IndexCelda style='min-width:190px'>
+                        $td_hidden = " margin-left: -300px; border-right-width: 0px; border-left-width: 0px;";
+                        $div_hidden = "z-index: -1;";
+                        $tagsTD .= "<td name='DatosResultados' id=$IndexCelda style='min-width: 190px; " . $value["td_hidden"] . "'>
                                       <div class = 'row' style='margin:0'>";
                           while (!empty($RetTodos) && $view == $RetTodos["id_persona"]) {
 
@@ -2254,7 +2332,7 @@ $Con->CloseConexion();
                                     if (($CantOpMotivos == 0) || $motivo) {
                                           $nroMotivosEnFecha += 1;
                                           $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
-                                          $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'>
+                                          $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center; " . $value["div_hidden"] . "'>
                                                         <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $RetTodos["id_movimiento"] . "\",\"Ventana" . $RetTodos["id_movimiento"] . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
                                                           <span style='font-size: 30px; color: " . $RetTodos["color"] . ";'>" .
                                                             $RetTodos["Forma_Categoria"] . "
@@ -2267,14 +2345,7 @@ $Con->CloseConexion();
                                                         </a>
                                                       </div>";
                                           $marginLeft = (strlen($RetTodos["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
-                                          $tagsMotivos .= "<div style = 'padding: 0; $marginLeft; text-align: center; display: inline-block;'>
-                                                            <div style='font-family: DejaVu Sans, Noto Sans Symbols 2; font-size: 7px; color: " . $RetTodos["color"] . ";'>" .
-                                                              $RetTodos["Forma_Categoria"] . "
-                                                            </div>
-                                                            <div style='font-size: 5.5px;'>" .
-                                                              $RetTodos["codigo"] . "
-                                                            </div>
-                                                          </div>";
+
                                           $jsonTable[$clave]["$Mes/$Anio"][] = [
                                                                                 $RetTodos["Forma_Categoria"],
                                                                                 $RetTodos["codigo"],
@@ -2303,6 +2374,7 @@ $Con->CloseConexion();
                           $tdExtenso = true;
                         }
                         $tagsTD .= "</div></td>";
+                        $nro_col_body--;
 
                     }
 
