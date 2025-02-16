@@ -130,6 +130,7 @@ $Con->CloseConexion();
       thTable = $("thead > tr > th");
 
       columnaIndice = nroColumnasTabla + 1;
+      valInputRangePrev = columnaIndice;
       $("#BarraDeNavHTabla").attr("value", columnaIndice);
       $("#BarraDeNavHTabla").prop("value", columnaIndice);
 
@@ -247,8 +248,8 @@ $Con->CloseConexion();
     }
 
     function actualizacionDePosicionBarraDenavegacionH(e, element) {
-      var value = $("#BarraDeNavHTabla").val();
-      var columnaActual = columnaIndice;
+      let value = $("#BarraDeNavHTabla").val();
+      let columnaActual = columnaIndice;
       if (value < (columnaIndice - 0.5)) {
         columnaIndice--;
         headABorrar = $('thead tr > *:nth-child(' + columnaIndice + ')');
@@ -316,7 +317,6 @@ $Con->CloseConexion();
               let columnaActual = columnaIndice;
               let updateMarginLeft = "-190px";
 
-              //$("#BarraDeNavHTabla").attr("value", columnaIndice);
               headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
               columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
               divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
@@ -346,7 +346,6 @@ $Con->CloseConexion();
               let columnaActual = columnaIndice;
               let updateMarginLeft = "0px";
 
-              //$("#BarraDeNavHTabla").attr("value", columnaIndice);
               headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
               columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
               divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
@@ -376,54 +375,149 @@ $Con->CloseConexion();
           }
         }
       } else {
-          var columnaActual = columnaIndice;
-          if (columnaIndice + 1 <= value && (Math.floor(valInputRangePrev) == columnaIndice)) {
-            columnaActual = columnaIndice;
-          } else if (value < columnaIndice && columnaIndice < valInputRangePrev) {
-            columnaActual = columnaIndice;
-          } else {
-            if (value < columnaIndice) {
+          let columnaActual = columnaIndice;
+          if (value <= columnaIndice && columnaIndice < valInputRangePrev) {
+              let columnaActual = columnaIndice;
+
+              headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
+              columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
+              divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
+              divABorrar.css("z-index", "300");
+              columnaABorrar.css({
+                "margin-left": "0px",
+                "border-right-width": "1px",
+                "border-left-width": "1px"
+              });
+              headABorrar.css("margin-left", "0px");
               columnaIndice--;
               columnaActual = columnaIndice;
-            } else {
-              columnaActual = (value < columnaIndice) ? Math.floor(value) : columnaIndice;
-            }
-          }
-          valInputRangePrev = value;
+              let margin = Math.abs(value - columnaActual);
+              let width = 190;
+              let updateMarginLeft = "-" + margin * width + "px";
+              $("#BarraDeNavHTabla").attr("value", columnaIndice);
+              headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
+              columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
+              divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
+              columnaABorrar.removeClass("showColTablaAnimacion");
+              columnaABorrar.removeClass("showColTablaAnimacionfire");
+              columnaABorrar.find("div div").removeClass("itemMotivoAccesible");
+              columnaABorrar.removeClass("hiddenColTablaAnimacion");
+              columnaABorrar.removeClass("hiddenColTablaAnimacionfire");
+              headABorrar.removeClass("showColTablaAnimacion");
+              headABorrar.removeClass("showColTablaAnimacionfire");
+              headABorrar.removeClass("hiddenColTablaAnimacion");
+              headABorrar.removeClass("hiddenColTablaAnimacionfire");
+              divABorrar.css("z-index", "-1");
+              columnaABorrar.css({
+                "margin-left": updateMarginLeft,
+                "border-right-width": "0px",
+                "border-left-width": "0px"
+              });
+              headABorrar.css("margin-left", updateMarginLeft);
+              $("#BarraDeNavHTabla").attr("value", columnaIndice);
+              valInputRangePrev = value;
 
-          var margin = Math.abs(value - columnaActual);
-          var width = 190;
-          var updateMarginLeft = "-" + margin * width + "px";
-          if (columnaIndice + 1 <= value) {
-            updateMarginLeft = "-190px";
-          } else if (value < columnaIndice) {
-            updateMarginLeft = "0px";
-          }
+          } else if (value <= columnaIndice &&  valInputRangePrev <= columnaIndice) {
+              if (value < columnaIndice 
+                  && valInputRangePrev == columnaIndice 
+                  && valInputRangePrev != (nroColumnasTabla + 1)
+                ) {
+                headABorrar = $('thead tr > *:nth-child(' + columnaIndice + ')');
+                columnaABorrar = $('tbody tr > *:nth-child(' + columnaIndice + ')');
+                divABorrar = $('tbody tr > *:nth-child(' + columnaIndice + ') div div');
+                divABorrar.css("z-index", "300");
+                columnaABorrar.css({
+                  "margin-left": "0px",
+                  "border-right-width": "1px",
+                  "border-left-width": "1px"
+                });
+                headABorrar.css("margin-left", "0px");
+              }
+              columnaIndice--;
+              let columnaActual = columnaIndice;
+              let margin = Math.abs(value - columnaActual);
+              let width = 190;
+              let updateMarginLeft = "-" + margin * width + "px";
+              $("#BarraDeNavHTabla").attr("value", columnaIndice);
+              headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
+              columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
+              divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
+              columnaABorrar.removeClass("showColTablaAnimacion");
+              columnaABorrar.removeClass("showColTablaAnimacionfire");
+              columnaABorrar.find("div div").removeClass("itemMotivoAccesible");
+              columnaABorrar.removeClass("hiddenColTablaAnimacion");
+              columnaABorrar.removeClass("hiddenColTablaAnimacionfire");
+              headABorrar.removeClass("showColTablaAnimacion");
+              headABorrar.removeClass("showColTablaAnimacionfire");
+              headABorrar.removeClass("hiddenColTablaAnimacion");
+              headABorrar.removeClass("hiddenColTablaAnimacionfire");
+              columnaABorrar.css({
+                "margin-left": updateMarginLeft,
+                "border-right-width": "1px",
+                "border-left-width": "0px"
+              });
+              headABorrar.css("margin-left", updateMarginLeft);
+              divABorrar.css("z-index","-1");
+              $("#BarraDeNavHTabla").attr("value", columnaIndice);
+              valInputRangePrev = value;
 
-          $("#BarraDeNavHTabla").attr("value", columnaIndice);
-          headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
-          columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
-          divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
-          columnaABorrar.removeClass("showColTablaAnimacion");
-          columnaABorrar.removeClass("showColTablaAnimacionfire");
-          columnaABorrar.find("div div").removeClass("itemMotivoAccesible");
-          columnaABorrar.removeClass("hiddenColTablaAnimacion");
-          columnaABorrar.removeClass("hiddenColTablaAnimacionfire");
-          headABorrar.removeClass("showColTablaAnimacion");
-          headABorrar.removeClass("showColTablaAnimacionfire");
-          headABorrar.removeClass("hiddenColTablaAnimacion");
-          headABorrar.removeClass("hiddenColTablaAnimacionfire");
-          divABorrar.css("z-index", ((value <= columnaIndice) ? "300" : "-1"));
-          columnaABorrar.css({
-            "margin-left": updateMarginLeft,
-            "border-right-width": ((value < columnaIndice) ? "1px" : "0px"),
-            "border-left-width": ((value < columnaIndice) ? "1px" : "0px")
-          });
-          headABorrar.css("margin-left", updateMarginLeft);
-          if (columnaIndice + 1 <= value) {
+          } else if (value >= columnaIndice && columnaIndice > valInputRangePrev) {
             columnaIndice++;
+            let columnaActual = columnaIndice;
+            let margin = Math.abs(value - columnaActual);
+            let width = 190;
+            let updateMarginLeft = "-" + margin * width + "px";
+            $("#BarraDeNavHTabla").attr("value", columnaIndice);
+            headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
+            columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
+            divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
+            columnaABorrar.removeClass("showColTablaAnimacion");
+            columnaABorrar.removeClass("showColTablaAnimacionfire");
+            columnaABorrar.find("div div").removeClass("itemMotivoAccesible");
+            columnaABorrar.removeClass("hiddenColTablaAnimacion");
+            columnaABorrar.removeClass("hiddenColTablaAnimacionfire");
+            headABorrar.removeClass("showColTablaAnimacion");
+            headABorrar.removeClass("showColTablaAnimacionfire");
+            headABorrar.removeClass("hiddenColTablaAnimacion");
+            headABorrar.removeClass("hiddenColTablaAnimacionfire");
+            divABorrar.css("z-index", "-1");
+            columnaABorrar.css({
+              "margin-left": updateMarginLeft,
+              "border-right-width": "0px",
+              "border-left-width": "0px"
+            });
+            headABorrar.css("margin-left", updateMarginLeft);
+            $("#BarraDeNavHTabla").attr("value", columnaIndice);
+            valInputRangePrev = value;
+          } else if (value >= columnaIndice &&  valInputRangePrev >= columnaIndice) {
+                let columnaActual = columnaIndice;
+                let margin = Math.abs(value - columnaActual);
+                let width = 190;
+                let updateMarginLeft = "-" + margin * width + "px";
+                $("#BarraDeNavHTabla").attr("value", columnaIndice);
+                headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
+                columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
+                divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
+                columnaABorrar.removeClass("showColTablaAnimacion");
+                columnaABorrar.removeClass("showColTablaAnimacionfire");
+                columnaABorrar.find("div div").removeClass("itemMotivoAccesible");
+                columnaABorrar.removeClass("hiddenColTablaAnimacion");
+                columnaABorrar.removeClass("hiddenColTablaAnimacionfire");
+                headABorrar.removeClass("showColTablaAnimacion");
+                headABorrar.removeClass("showColTablaAnimacionfire");
+                headABorrar.removeClass("hiddenColTablaAnimacion");
+                headABorrar.removeClass("hiddenColTablaAnimacionfire");
+                divABorrar.css("z-index",  "-1");
+                columnaABorrar.css({
+                  "margin-left": updateMarginLeft,
+                  "border-right-width": "0px",
+                  "border-left-width": "0px"
+                });
+                headABorrar.css("margin-left", updateMarginLeft);
+                $("#BarraDeNavHTabla").attr("value", columnaIndice);
+                valInputRangePrev = value;
           }
-          $("#BarraDeNavHTabla").attr("value", columnaIndice);
+
       }
     }
 
