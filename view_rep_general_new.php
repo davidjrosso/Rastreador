@@ -131,8 +131,8 @@ $Con->CloseConexion();
 
       columnaIndice = nroColumnasTabla + 1;
       valInputRangePrev = columnaIndice;
-      $("#BarraDeNavHTabla").attr("value", columnaIndice);
-      $("#BarraDeNavHTabla").prop("value", columnaIndice);
+      //$("#BarraDeNavHTabla").attr("value", columnaIndice);
+      //$("#BarraDeNavHTabla").prop("value", columnaIndice);
 
       $("#input-zoom").on("input", function (e) {
         toggleZoom($('#input-zoom').prop("value"));
@@ -2508,7 +2508,8 @@ $Con->CloseConexion();
     </div>
   </div>
   </div>
-  <input type="range" class="fixed-bottom form-range input--transform-rotate180" step="0.01" value="10" min="10"
+  <input type="range" class="fixed-bottom form-range input--transform-rotate180" 
+         step="0.2" value="<?php echo (($nro_column) ? $nro_column + 8 : "10") ?>" min="10"
     id="BarraDeNavHTabla">
   <!--<input type="range" class="fixed-bottom form-range" step="1" value="1" min="1" id="BarraDeNavVTabla">-->
 
