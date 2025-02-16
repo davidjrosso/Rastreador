@@ -342,7 +342,7 @@ $Con->CloseConexion();
               $("#BarraDeNavHTabla").prop("value", columnaIndice);
           }
         } else {
-          for (let index = columnaIndice; value < (index + 1) ; index--) {
+          for (let index = columnaIndice; value <= index ; index--) {
               let columnaActual = columnaIndice;
               let updateMarginLeft = "0px";
 
