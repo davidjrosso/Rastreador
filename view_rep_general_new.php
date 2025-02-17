@@ -102,6 +102,10 @@ $Con->CloseConexion();
     var map = null;
     var nroFilasTabla = 0;
     var nroColumnasTabla = 0;
+    var tablaBody = null;
+    var tablaHead = null;
+    var tablaBodyRows = null;
+    var tablaHeadRow = null;
     var currCell = null;
     var editing = false;
     var columnaIndice = 10;
@@ -117,11 +121,14 @@ $Con->CloseConexion();
     let nroPaginaGeneradas = 0;
     let thTable = null;
 
+
     $(document).on("keydown", function (e) {
       NavegacionConTeclado(e);
     });
 
     $(document).on("ready", function (e) {
+      tablaBody = $("#tablaMovimientos tbody");
+      tablaHead = $("#tablaMovimientos thead");
       nroFilasTabla = $("#tablaMovimientos tbody > tr").length - 2;
       nroColumnasTabla = $("thead > tr > th").length - 2;
       let nroPag = (nroFilasTabla + 2) / 10;
@@ -131,8 +138,6 @@ $Con->CloseConexion();
 
       columnaIndice = nroColumnasTabla + 1;
       valInputRangePrev = columnaIndice;
-      //$("#BarraDeNavHTabla").attr("value", columnaIndice);
-      //$("#BarraDeNavHTabla").prop("value", columnaIndice);
 
       $("#input-zoom").on("input", function (e) {
         toggleZoom($('#input-zoom').prop("value"));
@@ -141,24 +146,14 @@ $Con->CloseConexion();
       $("#zoomIncrementar").on("mousedown", function (e) {
         timeout = setInterval(function () {
           $('#input-zoom')[0].stepUp();
-          //toggleZoom($('#input-zoom').prop("value"));
           let valor = $('#input-zoom').prop("value") / 100;
-          $("#tablaMovimientos > thead").css(
-                                     'transform-origin', 
-                                     '0 0'
-                                    );
-          $("#tablaMovimientos > thead").css(
-                                     'transform', 
-                                     'scale(' + valor + ')'
-                                    );
-          $("#tablaMovimientos > tbody").css(
-                                     'transform-origin', 
-                                     '0 0'
-                                    );
-          $("#tablaMovimientos > tbody").css(
-                                     'transform', 
-                                     'scale(' + valor + ')'
-                                    );
+          tablaHead.css({
+                        'transform-origin' : '0 0',
+                        'transform' : 'scale(' + valor + ')'
+                        });
+          tablaBody.css({'transform-origin': '0 0',
+                         'transform' : 'scale(' + valor + ')'
+                        });
         }, 37);
       });
 
@@ -169,24 +164,14 @@ $Con->CloseConexion();
       $("#zoomDecrementar").on("mousedown", function (e) {
         timeout = setInterval(function () {
           $('#input-zoom')[0].stepDown();
-          //toggleZoom($('#input-zoom').prop("value"));
           let valor = $('#input-zoom').prop("value") / 100;
-          $("#tablaMovimientos > thead").css(
-                                     'transform-origin', 
-                                     '0 0'
-                                    );
-          $("#tablaMovimientos > thead").css(
-                                     'transform', 
-                                     'scale(' + valor + ')'
-                                    );
-          $("#tablaMovimientos > tbody").css(
-                                     'transform-origin', 
-                                     '0 0'
-                                    );
-          $("#tablaMovimientos > tbody").css(
-                                     'transform', 
-                                     'scale(' + valor + ')'
-                                    );
+          tablaHead.css({
+                        'transform-origin' : '0 0',
+                        'transform' : 'scale(' + valor + ')'
+                        });
+          tablaBody.css({'transform-origin': '0 0',
+                         'transform' : 'scale(' + valor + ')'
+                        });
         }, 37);
       });
 
@@ -194,21 +179,25 @@ $Con->CloseConexion();
         clearInterval(timeout);
       });
 
-      $("#BarraDeNavHTabla").attr("max", nroColumnasTabla + 1);
-
       $("#BarraDeNavHTabla").on("mousedown", function (e) {
         focusBarraNavegacionH = true;
       });
 
       $("#BarraDeNavHTabla").on("input", function (e) {
         if (focusBarraNavegacionH) {
+          if (!(tablaBodyRows && tablaHeadRow)) {
+            tablaBodyRows = $("#tablaMovimientos tbody > tr");
+            tablaHeadRow = $("#tablaMovimientos thead > tr");
+          }
           navegacionConBarHNav(e);
         }
       });
 
+      /*
       $("#BarraDeNavVTabla").on("input", function (e) {
         navegacionConBarVNav(e);
       });
+      */
 
       $("#BarraDeNavHTabla").on("mouseup", function (e) {
         focusBarraNavegacionH = false;
@@ -317,9 +306,12 @@ $Con->CloseConexion();
               let columnaActual = columnaIndice;
               let updateMarginLeft = "-190px";
 
-              headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
-              columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
-              divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
+              //headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
+              //columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
+              //divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
+              headABorrar = tablaHeadRow.find('> *:nth-child(' + columnaActual + ')');
+              columnaABorrar = tablaBodyRows.find('> *:nth-child(' + columnaActual + ')');
+              divABorrar = columnaABorrar.find('div div');
               columnaABorrar.removeClass("showColTablaAnimacion");
               columnaABorrar.removeClass("showColTablaAnimacionfire");
               columnaABorrar.find("div div").removeClass("itemMotivoAccesible");
@@ -346,9 +338,12 @@ $Con->CloseConexion();
               let columnaActual = columnaIndice;
               let updateMarginLeft = "0px";
 
-              headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
-              columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
-              divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
+              //headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
+              //columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
+              //divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
+              headABorrar = tablaHeadRow.find('> *:nth-child(' + columnaActual + ')');
+              columnaABorrar = tablaBodyRows.find('> *:nth-child(' + columnaActual + ')');
+              divABorrar = columnaABorrar.find('div div');
 
               columnaABorrar.removeClass("showColTablaAnimacion");
               columnaABorrar.removeClass("showColTablaAnimacionfire");
@@ -379,9 +374,12 @@ $Con->CloseConexion();
           if (value <= columnaIndice && columnaIndice < valInputRangePrev) {
               let columnaActual = columnaIndice;
 
-              headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
-              columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
-              divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
+              //headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
+              //columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
+              //divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
+              headABorrar = tablaHeadRow.find('> *:nth-child(' + columnaActual + ')');
+              columnaABorrar = tablaBodyRows.find('> *:nth-child(' + columnaActual + ')');
+              divABorrar = columnaABorrar.find('div div');
               divABorrar.css("z-index", "300");
               columnaABorrar.css({
                 "margin-left": "0px",
@@ -422,9 +420,12 @@ $Con->CloseConexion();
                   && valInputRangePrev == columnaIndice 
                   && valInputRangePrev != (nroColumnasTabla + 1)
                 ) {
-                headABorrar = $('thead tr > *:nth-child(' + columnaIndice + ')');
-                columnaABorrar = $('tbody tr > *:nth-child(' + columnaIndice + ')');
-                divABorrar = $('tbody tr > *:nth-child(' + columnaIndice + ') div div');
+                //headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
+                //columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
+                //divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
+                headABorrar = tablaHeadRow.find('> *:nth-child(' + columnaActual + ')');
+                columnaABorrar = tablaBodyRows.find('> *:nth-child(' + columnaActual + ')');
+                divABorrar = columnaABorrar.find('div div');
                 divABorrar.css("z-index", "300");
                 columnaABorrar.css({
                   "margin-left": "0px",
@@ -468,9 +469,12 @@ $Con->CloseConexion();
             let width = 190;
             let updateMarginLeft = "-" + margin * width + "px";
             $("#BarraDeNavHTabla").attr("value", columnaIndice);
-            headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
-            columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
-            divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
+            //headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
+            //columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
+            //divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
+            headABorrar = tablaHeadRow.find('> *:nth-child(' + columnaActual + ')');
+            columnaABorrar = tablaBodyRows.find('> *:nth-child(' + columnaActual + ')');
+            divABorrar = columnaABorrar.find('div div');
             columnaABorrar.removeClass("showColTablaAnimacion");
             columnaABorrar.removeClass("showColTablaAnimacionfire");
             columnaABorrar.find("div div").removeClass("itemMotivoAccesible");
@@ -495,9 +499,12 @@ $Con->CloseConexion();
                 let width = 190;
                 let updateMarginLeft = "-" + margin * width + "px";
                 $("#BarraDeNavHTabla").attr("value", columnaIndice);
-                headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
-                columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
-                divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
+                //headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
+                //columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
+                //divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
+                headABorrar = tablaHeadRow.find('> *:nth-child(' + columnaActual + ')');
+                columnaABorrar = tablaBodyRows.find('> *:nth-child(' + columnaActual + ')');
+                divABorrar = columnaABorrar.find('div div');
                 columnaABorrar.removeClass("showColTablaAnimacion");
                 columnaABorrar.removeClass("showColTablaAnimacionfire");
                 columnaABorrar.find("div div").removeClass("itemMotivoAccesible");
@@ -2510,6 +2517,7 @@ $Con->CloseConexion();
   </div>
   <input type="range" class="fixed-bottom form-range input--transform-rotate180" 
          step="0.2" value="<?php echo (($nro_column) ? $nro_column + 8 : "10") ?>" min="10"
+         max="<?php echo (($nro_column) ? $nro_column + 8 : "") ?>"
     id="BarraDeNavHTabla">
   <!--<input type="range" class="fixed-bottom form-range" step="1" value="1" min="1" id="BarraDeNavVTabla">-->
 
