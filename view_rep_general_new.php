@@ -4,6 +4,7 @@ require_once "Controladores/Elements.php";
 require_once "Controladores/CtrGeneral.php";
 require_once "Controladores/Conexion.php";
 require_once "Modelo/Persona.php";
+require_once "Modelo/Motivo.php";
 require_once "sys_config.php";
 require_once 'dompdf/autoload.inc.php';
 
@@ -1192,8 +1193,8 @@ $Con->CloseConexion();
         </div>
         <div class="col"></div>
       </div><br>
-      <div class="row">
-        <div class="col">
+      <div class="row" style="margin-bottom: 0.5rem;">
+        <div class="col-3">
           <!--<button class="btn btn-info btn-sm" onClick="toggleZoomScreen()">Zoom +</button> 
             <button class="btn btn-info btn-sm" onClick="toggleZoomScreenNormal()">Zoom -</button>-->
           <div class="number-input">
@@ -1265,14 +1266,28 @@ $Con->CloseConexion();
             $motivos = array_filter($MotivosOpciones, 
                                  function ($x) {
                                               return !empty($x); 
-                                            }
+                                           }
                                     );
             $CantOpMotivos = count($motivos);
 
-            $listaDeMotivos = "(".implode(",",array_filter($MotivosOpciones)).")";
-
             $Con = new Conexion();
             $Con->OpenConexion();
+
+            $filtro_motivo = array_reduce($motivos, 
+                                       function ($motivos, $valor){
+                                                    $con = new Conexion();
+                                                    $con->OpenConexion();
+                                                    $ret_motivo = new Motivo(
+                                                                             coneccion_base: $con, 
+                                                                             id_motivo: $valor
+                                                                            );
+                                                    $con->CloseConexion();
+                                                    return $motivos . " - " . $ret_motivo->get_motivo();
+                                                 },
+                                        "Motivos: "
+                                         );
+
+            $listaDeMotivos = "(" . implode(",", array_filter($MotivosOpciones)) . ")";
 
             $consultaGeneralPermisos = "CREATE TEMPORARY TABLE GIN " ;
             $consultaUsuarioPermisos = "CREATE TEMPORARY TABLE INN ";
@@ -1519,6 +1534,7 @@ $Con->CloseConexion();
             if (count(array_filter($MotivosOpciones))) {
               $motivo_query = "(" . $motivo_query;
               $motivo_query .= " id_motivo in $listaDeMotivos)";
+              $filtros[] = $filtro_motivo;
             } else {
               $motivo_query = "motivo";
             }
@@ -1639,8 +1655,14 @@ $Con->CloseConexion();
             $Etiqueta_Fecha_Fin = implode("-", array_reverse(explode("-", $Fecha_Fin)));
 
           ?>
-          <div class="col">
-            <button type="button" class="btn btn-danger" style="margin-left: 45%;"
+          <div class="col-5">
+            <center>
+              <p class="LblForm">ENTRE: <?php echo $Etiqueta_Fecha_Inicio . " Y " . $Etiqueta_Fecha_Fin; ?></p>
+            </center>
+            <!-- <span><i class="fa fa-filter"></i> Filtros </span> -->
+          </div>
+          <div class="col-4">
+            <button type="button" class="btn btn-danger" style="margin-left: 27%;"
               onclick="location.href = 'view_general_new.php'">Atrás</button>
             <!--<button type="button" class="btn btn-secondary" onclick="enviarImprimir()">**Imprimir</button>-->
             <!--button type="button" class="btn btn-secondary" onclick="enviarImprimirPdf();"> Imprimir</button>-->
@@ -1648,22 +1670,21 @@ $Con->CloseConexion();
               style="background-color: #ffc6b1; color: black; border-color: white; " data-target="#map-modal">S. I. G.</button>
             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#configModal">Config</button>
           </div>
-          <div>
-            <center>
-              <p class="LblForm">ENTRE: <?php echo $Etiqueta_Fecha_Inicio . " Y " . $Etiqueta_Fecha_Fin; ?></p>
-            </center>
-            <!-- <span><i class="fa fa-filter"></i> Filtros </span> -->
-            <p style="text-align: center"> Filtros seleccionados 
-            <?php
-              foreach ($filtros as $value) {
-                echo "<span class='etFiltros'>" . $value . "</span> ";
-
-              }
-            ?>
-            </p>
-          </div>
         </div>
-        <br>
+        <?php
+          if (count($filtros) > 0) {
+        ?>
+        <p style="text-align: center; margin-bottom: 0.7rem"> Filtros seleccionados 
+        <?php
+            foreach ($filtros as $value) {
+              echo "<span class='etFiltros'>" . $value . "</span> ";
+
+            }
+        ?>
+        </p>
+        <?php
+          }
+        ?>
         <div class="row">
           <div class="offset-md-3 col-md-6">
            <!-- <?php echo NOMBRE_ENTIDAD ?> -->
