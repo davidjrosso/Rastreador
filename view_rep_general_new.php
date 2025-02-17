@@ -1198,8 +1198,7 @@ $Con->CloseConexion();
             <button class="btn btn-info btn-sm" onClick="toggleZoomScreenNormal()">Zoom -</button>-->
           <div class="number-input">
             <button id="zoomIncrementar" class="plus"></button>
-            <input id="input-zoom" value="100" class="quantity" style="padding-right: 3px;" min="0" name="quantity"
-              value="1" type="number">
+            <input id="input-zoom" value="70" class="quantity" style="padding-right: 3px;" min="0" name="quantity"  type="number">
             <div id="divporcentaje">%</div>
             <button id="zoomDecrementar"></button>
           </div>
@@ -1726,7 +1725,7 @@ $Con->CloseConexion();
               // $Familia_sel=true;
           
               $Table = "<table class='table table-fixeder table-bordered table-sm' cellspacing='0' id='tablaMovimientos' style='page-break-after:always;'>
-                             <thead id='header-tabla' class='thead-dark'>
+                             <thead id='header-tabla' class='thead-dark' style='transform-origin : 0 0; transform : scale(0.7);'>
                               <tr align='center' valign='middle'>
                                 <th id='Contenido-Titulo-1'>Barrio</th>
                                 <th id='Contenido-Titulo-2'>Direc.</th>";
@@ -1785,7 +1784,7 @@ $Con->CloseConexion();
               $fecha_tabla["fecha"] = $Mes_Actual_Bandera . "/" . $Anio_Actual_Bandera;
               $fecha_tabla["anio"] = $Anio_Actual_Bandera + 2000;
               $fecha_tabla["mes"] = $Mes_Actual_Bandera;
-              if ($i >= ($MesesDiferencia - 2)) {
+              if ($i >= ($MesesDiferencia - 4)) {
                 $fecha_tabla["td_hidden"] = "";
                 $fecha_tabla["div_hidden"] = "";
               } else {
@@ -1825,7 +1824,7 @@ $Con->CloseConexion();
             foreach ($arr as $key => $value) {
               if ($value != "") {
                 // TODO: Cambiando de tamaño las columnas
-                if ($nro_column_header <= 2) {
+                if ($nro_column_header <= 4) {
                   $Table .= "<th name='DatosResultados' style='min-width: 190px;'>" . $value["fecha"] . "</th>";
                 } else {
                   $Table .= "<th name='DatosResultados' style='min-width: 190px; margin-left: -300px;'>" . $value["fecha"] . "</th>";
@@ -1839,7 +1838,7 @@ $Con->CloseConexion();
           
             $Table .= "</tr>
                     </thead>
-                <tbody id='cuerpo-tabla' style='border-style: none;'>";
+                <tbody id='cuerpo-tabla' style='border-style: none; transform-origin : 0 0; transform : scale(0.7);'>";
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2516,7 +2515,7 @@ $Con->CloseConexion();
   </div>
   </div>
   <input type="range" class="fixed-bottom form-range input--transform-rotate180" 
-         step="0.2" value="<?php echo (($nro_column) ? $nro_column + 8 : "10") ?>" min="10"
+         step="0.2" value="<?php echo (($nro_column) ? $nro_column + 6 : "10") ?>" min="10"
          max="<?php echo (($nro_column) ? $nro_column + 8 : "") ?>"
     id="BarraDeNavHTabla">
   <!--<input type="range" class="fixed-bottom form-range" step="1" value="1" min="1" id="BarraDeNavVTabla">-->
