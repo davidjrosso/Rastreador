@@ -242,7 +242,7 @@ $Con->CloseConexion();
                     <label for="inputPassword" class="col-md-2 col-form-label LblForm">Apellido: </label>
                     <div class="col-md-10">
                       <input type="text" class="form-control" name="Apellido" id="inputPassword" autocomplete="off"
-                        value="<?php echo $Persona->getApellido(); ?>">
+                        value="<?php echo strtoupper($Persona->getApellido()); ?>">
                     </div>
                   </div>
                   <div class="form-group row">
