@@ -256,7 +256,7 @@ $Con->CloseConexion();
                                           and CS.id_categoria = C.id_categoria
                                           and CS.id_tipousuario = $TipoUsuario
                                           and CS.estado = 1";
-    
+
         $motivosVisiblesParaTodoUsuario = "SELECT MT.id_motivo
                                             FROM motivo MT,
                                                 categoria  C
@@ -273,7 +273,7 @@ $Con->CloseConexion();
         $motivosUsuario = mysqli_query(
                           $Con->Conexion,$motivosVisiblesParaUsuario
                           ) or die($MessageError);
-    
+
         $MessageError = "Problemas al crear la tabla temporaria general";
         $motivosTodoUsuario = mysqli_query(
                           $Con->Conexion,$motivosVisiblesParaTodoUsuario
@@ -332,8 +332,8 @@ $Con->CloseConexion();
 
           	  $Consulta = "SELECT M.id_movimiento, M.fecha, M.id_persona, MONTH(M.fecha) as 'Mes',
                                   YEAR(M.fecha) as 'Anio', B.Barrio, P.manzana, P.documento, P.obra_social,
-                                  P.localidad, P.edad, P.meses, P.lote, P.familia, P.apellido, P.fecha_nac,
-                                  P.nombre, P.fecha_nac, P.domicilio, M.motivo_1, M.motivo_2, M.motivo_3,
+                                  P.localidad, P.edad, P.meses, P.lote, P.familia, UPPER(P.apellido) as apellido, P.fecha_nac,
+                                  UPPER(P.nombre) as nombre, P.fecha_nac, P.domicilio, M.motivo_1, M.motivo_2, M.motivo_3,
                                   M.motivo_4,M.motivo_5, MT.motivo, R.responsable, M.observaciones, CS.centro_salud,
                                   I.Nombre as 'NombreInst', MST.id_motivo, MST.nro_motivo";
 

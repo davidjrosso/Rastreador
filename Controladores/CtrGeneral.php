@@ -41,10 +41,10 @@ class CtrGeneral{
 									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
 									   ) or die($MessageError);
 
-		$Consulta = "select M.id_movimiento,
+		$Consulta = "SELECT M.id_movimiento,
 							M.fecha,
 							M.fecha_creacion,
-							P.apellido,
+							UPPER(P.apellido) AS apellido,
 							P.nombre,
 							R.responsable
 							from movimiento M,
@@ -245,7 +245,7 @@ class CtrGeneral{
 									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
 									   ) or die($MessageError);
 
-		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
+		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
 					 from movimiento M, 
 					 	  persona P, 
 						  responsable R,
@@ -320,7 +320,7 @@ class CtrGeneral{
 									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
 									   ) or die($MessageError);
 
-		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
+		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
 					 from movimiento M, 
 					 	  persona P, 
 						  responsable R,
@@ -395,7 +395,7 @@ class CtrGeneral{
 									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
 									   ) or die($MessageError);
 
-		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
+		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
 					 from movimiento M, 
 						  persona P, 
 						  responsable R,
@@ -470,7 +470,7 @@ class CtrGeneral{
 									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
 									   ) or die($MessageError);
 
-		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
+		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
 					 from movimiento M,
 					 	  persona P,
 						  responsable R,
@@ -545,7 +545,7 @@ class CtrGeneral{
 									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
 									   ) or die($MessageError);
 
-		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
+		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
 					 from movimiento M, 
 					 	  persona P, 
 						  responsable R,
@@ -622,7 +622,7 @@ class CtrGeneral{
 									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
 									   ) or die($MessageError);
 
-		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
+		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
 					 from movimiento M, 
 					 	  persona P, 
 						  responsable R,
@@ -699,7 +699,7 @@ class CtrGeneral{
 									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
 									   ) or die($MessageError);
 
-		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
+		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
 					 from movimiento M, 
 					 	  persona P, 
 						  responsable R,
