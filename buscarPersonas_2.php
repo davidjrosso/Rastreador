@@ -27,7 +27,8 @@ if (isset($consultaBusqueda)) {
 	if(is_numeric($consultaBusqueda)){
 		$consulta = mysqli_query(
 						  $Con->Conexion, 
-						  "SELECT id_persona, UPPER(apellido) AS apellido, nombre, 
+						  "SELECT id_persona, UPPER(apellido) AS apellido, 
+						  				 CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 						  				 documento, nro_carpeta, domicilio
 								  FROM persona 
 								  WHERE documento LIKE '%$consultaBusqueda%' and estado = 1 
@@ -35,7 +36,8 @@ if (isset($consultaBusqueda)) {
 	}else{
 		$consulta = mysqli_query(
 						  $Con->Conexion, 
-						  "SELECT id_persona, UPPER(apellido) AS apellido, nombre, 
+						  "SELECT id_persona, UPPER(apellido) AS apellido, 
+						  				 CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 						  				 documento, nro_carpeta, domicilio
 								  FROM persona WHERE (apellido LIKE '%$consultaBusqueda%' or nombre LIKE '%$consultaBusqueda%') and estado = 1
 								  order by apellido, nombre");
