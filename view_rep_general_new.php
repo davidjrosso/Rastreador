@@ -1746,7 +1746,7 @@ $Con->CloseConexion();
               // $Familia_sel=true;
           
               $Table = "<table class='table table-fixeder table-bordered table-sm' cellspacing='0' id='tablaMovimientos' style='page-break-after:always;'>
-                             <thead id='header-tabla' class='thead-dark' style='transform-origin : 0 0; transform : scale(0.7);'>
+                             <thead id='header-tabla' class='thead-dark' style='transform-origin : 0 0; transform : scale(0.6);'>
                               <tr align='center' valign='middle'>
                                 <th id='Contenido-Titulo-1'>Barrio</th>
                                 <th id='Contenido-Titulo-2'>Direc.</th>";
