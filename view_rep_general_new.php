@@ -1199,7 +1199,7 @@ $Con->CloseConexion();
             <button class="btn btn-info btn-sm" onClick="toggleZoomScreenNormal()">Zoom -</button>-->
           <div class="number-input">
             <button id="zoomIncrementar" class="plus"></button>
-            <input id="input-zoom" value="70" class="quantity" style="padding-right: 3px;" min="0" name="quantity"  type="number">
+            <input id="input-zoom" value="60" class="quantity" style="padding-right: 3px;" min="0" name="quantity"  type="number">
             <div id="divporcentaje">%</div>
             <button id="zoomDecrementar"></button>
           </div>
