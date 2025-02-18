@@ -125,7 +125,13 @@ $Con->CloseConexion();
               }             
               ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-              $ConsultarDatos = "select * from persona where id_persona = $xID_Persona and estado = 1 limit 1";
+              $ConsultarDatos = "select id_persona, UPPER(apellido) AS apellido, nombre, documento, 
+                                        edad, fecha_nac, nro_carpeta, nro_legajo,
+                                        obra_social, domicilio, localidad, circunscripcion,
+                                        seccion, manzana, lote, familia, mail, observacion,
+                                        cambio_domicilio, estado, ID_Escuela, meses, Trabajo,
+                                        ID_Barrio, telefono
+                                 from persona where id_persona = $xID_Persona and estado = 1 limit 1";
               $MensajeErrorDatos = "No se pudo consultar los Datos de la Persona";
 
               $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);              
