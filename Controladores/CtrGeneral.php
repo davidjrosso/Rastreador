@@ -937,7 +937,7 @@ class CtrGeneral{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select id_persona, 
-					 CONCAT(UPPER(SUBSTRING(apellido,1,1)),LOWER(SUBSTRING(apellido,2))) as apellido, 
+					 UPPER(apellido) as apellido, 
 					 CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
 					 documento, 
 					 IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
@@ -962,7 +962,7 @@ class CtrGeneral{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select id_persona, 
-							CONCAT(UPPER(SUBSTRING(apellido,1,1)),LOWER(SUBSTRING(apellido,2))) as apellido, 
+							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
 							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
@@ -986,7 +986,7 @@ class CtrGeneral{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select id_persona, 
-							CONCAT(UPPER(SUBSTRING(apellido,1,1)),LOWER(SUBSTRING(apellido,2))) as apellido, 
+							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
 							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
@@ -1010,7 +1010,7 @@ class CtrGeneral{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select id_persona, 
-							CONCAT(UPPER(SUBSTRING(apellido,1,1)),LOWER(SUBSTRING(apellido,2))) as apellido, 
+							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
 							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
@@ -1035,7 +1035,7 @@ class CtrGeneral{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select id_persona, 
-							CONCAT(UPPER(SUBSTRING(apellido,1,1)),LOWER(SUBSTRING(apellido,2))) as apellido, 
+							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
 							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
@@ -1059,7 +1059,7 @@ class CtrGeneral{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select id_persona, 
-							CONCAT(UPPER(SUBSTRING(apellido,1,1)),LOWER(SUBSTRING(apellido,2))) as apellido, 
+							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
 							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
@@ -1083,7 +1083,7 @@ class CtrGeneral{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select id_persona, 
-							CONCAT(UPPER(SUBSTRING(apellido,1,1)),LOWER(SUBSTRING(apellido,2))) as apellido, 
+							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
 							documento,
 							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
@@ -1107,7 +1107,7 @@ class CtrGeneral{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select id_persona, 
-					 		CONCAT(UPPER(SUBSTRING(apellido,1,1)),LOWER(SUBSTRING(apellido,2))) as apellido, 
+					 		UPPER(apellido) as apellido, 
 					 		CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 					 		documento, 
 					 		IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo,domicilio 
