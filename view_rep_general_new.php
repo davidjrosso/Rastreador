@@ -26,6 +26,7 @@ $Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
 $TipoUsuario = $Ret["ID_TipoUsuario"];
 $_SESSION["reporte_grafico"] = true;
 $Con->CloseConexion();
+$width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"] : null;
 
 ?>
 <!DOCTYPE html>
@@ -101,8 +102,10 @@ $Con->CloseConexion();
     }
 
     var map = null;
+    var widthDispay = <?php echo (($width_dispay) ? $width_dispay : "0"); ?>;
     var nroFilasTabla = 0;
     var nroColumnasTabla = 0;
+    var nroColumnaInicial = 0;
     var tablaBody = null;
     var tablaHead = null;
     var tablaBodyRows = null;
@@ -137,17 +140,18 @@ $Con->CloseConexion();
       nroPaginaPdf = (nroPag > floorPag) ? (floorPag + 1) : floorPag;
       thTable = $("thead > tr > th");
 
-      columnaIndice = nroColumnasTabla + 1;
-      valInputRangePrev = columnaIndice;
-
       $("#input-zoom").on("input", function (e) {
         toggleZoom($('#input-zoom').prop("value"));
       });
 
       $("#zoomIncrementar").on("mousedown", function (e) {
+        let nroColumnDisplonible = nroColumnasTabla + 2;
         timeout = setInterval(function () {
           $('#input-zoom')[0].stepUp();
+          let nroColumnVisible = nroColumnDisplonible - columnaIndice;
           let valor = $('#input-zoom').prop("value") / 100;
+          let widthColumns = widthDispay  - 200 - 29 - 30 - (150 * 3 + 120) * valor - nroColumnVisible * 190 * valor;
+          let columnDisplonible = widthColumns / (190 * valor);
           tablaHead.css({
                         'transform-origin' : '0 0',
                         'transform' : 'scale(' + valor + ')'
@@ -155,6 +159,9 @@ $Con->CloseConexion();
           tablaBody.css({'transform-origin': '0 0',
                          'transform' : 'scale(' + valor + ')'
                         });
+          if ((0.5 > Math.floor(columnDisplonible)) && columnaIndice <= nroColumnasTabla) {
+              actualizacionDePosicionBarraDenavegacionH(e, columnaIndice + 0.7);
+          }
         }, 37);
       });
 
@@ -163,17 +170,25 @@ $Con->CloseConexion();
       });
 
       $("#zoomDecrementar").on("mousedown", function (e) {
-        timeout = setInterval(function () {
-          $('#input-zoom')[0].stepDown();
-          let valor = $('#input-zoom').prop("value") / 100;
-          tablaHead.css({
-                        'transform-origin' : '0 0',
-                        'transform' : 'scale(' + valor + ')'
-                        });
-          tablaBody.css({'transform-origin': '0 0',
-                         'transform' : 'scale(' + valor + ')'
-                        });
-        }, 37);
+          let nroColumnDisplonible = nroColumnasTabla + 2;
+          timeout = setInterval(function () {
+              $('#input-zoom')[0].stepDown();
+              let nroColumnVisible = nroColumnDisplonible - columnaIndice + 1;
+              let valor = $('#input-zoom').prop("value") / 100;
+              let widthColumns = widthDispay  - 200 - 29 - 30 - (150 * 3 + 120) * valor - nroColumnVisible * 190 * valor;
+              let columnDisplonible = widthColumns / (190 * valor);
+
+              tablaHead.css({
+                            'transform-origin' : '0 0',
+                            'transform' : 'scale(' + valor + ')'
+                            });
+              tablaBody.css({'transform-origin': '0 0',
+                            'transform' : 'scale(' + valor + ')'
+                            });
+              if ((1.2 < columnDisplonible) && columnaIndice > 10) {
+                actualizacionDePosicionBarraDenavegacionH(e, (columnaIndice - 0.7));
+              }
+        }, 50);
       });
 
       $("#zoomDecrementar").on("mouseup", function (e) {
@@ -193,12 +208,6 @@ $Con->CloseConexion();
           navegacionConBarHNav(e);
         }
       });
-
-      /*
-      $("#BarraDeNavVTabla").on("input", function (e) {
-        navegacionConBarVNav(e);
-      });
-      */
 
       $("#BarraDeNavHTabla").on("mouseup", function (e) {
         focusBarraNavegacionH = false;
@@ -238,7 +247,7 @@ $Con->CloseConexion();
     }
 
     function actualizacionDePosicionBarraDenavegacionH(e, element) {
-      let value = $("#BarraDeNavHTabla").val();
+      let value = (element) ? element : $("#BarraDeNavHTabla").val();
       let columnaActual = columnaIndice;
       if (value < (columnaIndice - 0.5)) {
         columnaIndice--;
@@ -301,6 +310,9 @@ $Con->CloseConexion();
 
     function navegacionConBarHNav(e) {
       let value = $("#BarraDeNavHTabla").val();
+      if (!valInputRangePrev) {
+        valInputRangePrev = value;
+      }
       if (1 < Math.abs(columnaIndice - value)) {
         if (columnaIndice < value) {
           for (let index = columnaIndice; index <= value; index++) {
@@ -419,7 +431,7 @@ $Con->CloseConexion();
           } else if (value <= columnaIndice &&  valInputRangePrev <= columnaIndice) {
               if (value < columnaIndice 
                   && valInputRangePrev == columnaIndice 
-                  && valInputRangePrev != (nroColumnasTabla + 1)
+                  && valInputRangePrev != nroColumnaInicial
                 ) {
                 //headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
                 //columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
@@ -1263,6 +1275,7 @@ $Con->CloseConexion();
 
             $cmb_seleccion = (isset($_REQUEST["cmb_seleccion"])) ? $_REQUEST["cmb_seleccion"] : null;
             $esPersonaSeleccionada = ($ID_Persona) ? ", IF(M.id_persona = $ID_Persona, 1, 0) as esPersona" : "";
+            $width_dispay = $width_dispay - 200 - (150 * 3 + 120) * 0.6 - 29;
             $motivos = array_filter($MotivosOpciones, 
                                  function ($x) {
                                               return !empty($x); 
@@ -1787,6 +1800,7 @@ $Con->CloseConexion();
               $nroColumnas += 1;
             }
 
+            $nro_col_disponible = floor($width_dispay/ (190 * 0.6));
             /* TOMAR LOS MESES ENTRE LAS FECHAS  */
             $MesFecha_Inicio = new DateTime($Fecha_Inicio);
             $MesFecha_Fin = new DateTime($Fecha_Fin);
@@ -1805,7 +1819,7 @@ $Con->CloseConexion();
               $fecha_tabla["fecha"] = $Mes_Actual_Bandera . "/" . $Anio_Actual_Bandera;
               $fecha_tabla["anio"] = $Anio_Actual_Bandera + 2000;
               $fecha_tabla["mes"] = $Mes_Actual_Bandera;
-              if ($i >= ($MesesDiferencia - 4)) {
+              if ($i >= ($MesesDiferencia - $nro_col_disponible)) {
                 $fecha_tabla["td_hidden"] = "";
                 $fecha_tabla["div_hidden"] = "";
               } else {
@@ -1840,12 +1854,11 @@ $Con->CloseConexion();
             // }             
             // $arr_reverse = array_reverse($arr);
 
-
             $nro_column_header = $nro_column;
             foreach ($arr as $key => $value) {
               if ($value != "") {
                 // TODO: Cambiando de tamaño las columnas
-                if ($nro_column_header <= 4) {
+                if ($nro_column_header <= $nro_col_disponible) {
                   $Table .= "<th name='DatosResultados' style='min-width: 190px;'>" . $value["fecha"] . "</th>";
                 } else {
                   $Table .= "<th name='DatosResultados' style='min-width: 190px; margin-left: -300px;'>" . $value["fecha"] . "</th>";
@@ -2465,7 +2478,7 @@ $Con->CloseConexion();
                                                           </span>
                                                         </a>
                                                       </div>";
-                                          $marginLeft = (strlen($RetTodos["codigo"]) >= 4) ? "margin-left:10px" : "margin-left:2px";
+                                          $marginLeft = (strlen($RetTodos["codigo"]) >= $nro_col_disponible) ? "margin-left:10px" : "margin-left:2px";
 
                                           $jsonTable[$clave]["$Mes/$Anio"][] = [
                                                                                 $RetTodos["Forma_Categoria"],
@@ -2536,7 +2549,7 @@ $Con->CloseConexion();
   </div>
   </div>
   <input type="range" class="fixed-bottom form-range input--transform-rotate180" 
-         step="0.2" value="<?php echo (($nro_column) ? $nro_column + 6 : "10") ?>" min="10"
+         step="0.2" value="<?php echo (($nro_column) ? ($nro_column - $nro_col_disponible + 10) : "10") ?>" min="10"
          max="<?php echo (($nro_column) ? $nro_column + 8 : "") ?>"
     id="BarraDeNavHTabla">
   <!--<input type="range" class="fixed-bottom form-range" step="1" value="1" min="1" id="BarraDeNavVTabla">-->
@@ -2607,8 +2620,13 @@ $Con->CloseConexion();
       var tabla = document.getElementById("tabla-responsive");
     })();
 
+    columnaIndice = <?php echo (($nro_column) ? ($nro_column - $nro_col_disponible + 10) : "10"); ?>;
+    valInputRangePrev = columnaIndice;
+    nroColumnaInicial = columnaIndice;
+
     <?php $_SESSION["meses"] = $mesesHeader; ?>
     var objectJsonTabla = <?php echo json_encode(value: array_values($jsonTable), flags: true); ?>;
+
 
     function toggleZoom(porcentaje) {
       var Tabla = document.getElementById("tablaMovimientos");

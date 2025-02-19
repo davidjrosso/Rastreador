@@ -86,6 +86,7 @@ $Con->CloseConexion();
               $("#inpMostrar").on("change", function (event){
                 controlMovimiento(this);
               });
+              $("#width-display").prop("value", window.screen.availWidth);
           });
    
     function buscarPersonas(){
@@ -343,7 +344,7 @@ $Con->CloseConexion();
         agregarAtributoxElemento(btnCategoria,"class","btn btn-lg btn-primary btn-block");
         agregarAtributoxElemento(btnCategoria,"data-toggle","modal");
         agregarAtributoxElemento(btnCategoria,"data-target","#ModalCategoria");        
-      agregarEtiqueta(btnCategoria,"Seleccione una Categoria");       
+        agregarEtiqueta(btnCategoria,"Seleccione una Categoria");       
         var div_btnCategoria = tomarElemento("Categoria");
         resetearValorDiv(div_btnCategoria);        
         agregarElementoxDiv(div_btnCategoria,btnCategoria);              
@@ -681,6 +682,7 @@ $Con->CloseConexion();
                     <input type="hidden" name="ID_Motivo2" id = "ID_Motivo2" value = "0">
                     <input type="hidden" name="ID_Motivo3" id = "ID_Motivo3" value = "0">
                     <input type="hidden" name="ID_Categoria" id = "ID_Categoria" value = "0">
+                    <input type="hidden" name="width-display" id = "width-display" value = "0">
                     <button type="submit" class="btn btn-outline-success">Aceptar</button>
                     <button type="button" class="btn btn-outline-secondary" onClick="resetearForm()">Cancel</button>
                     <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = 'view_inicio.php'">Volver</button>
