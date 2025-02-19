@@ -185,7 +185,7 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
               tablaBody.css({'transform-origin': '0 0',
                             'transform' : 'scale(' + valor + ')'
                             });
-              if ((1.2 < columnDisplonible) && columnaIndice > 10) {
+              if ((1 <= columnDisplonible) && columnaIndice > 10) {
                 actualizacionDePosicionBarraDenavegacionH(e, (columnaIndice - 0.7));
               }
         }, 50);
