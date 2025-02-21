@@ -3,7 +3,7 @@
 header("Content-Type: text/html;charset=utf-8");
 ?>
 <!DOCTYPE html>
-<html lang="es" >
+<html lang="es">
 
 <head>
   <meta charset="UTF-8">
@@ -64,8 +64,9 @@ header("Content-Type: text/html;charset=utf-8");
 						</i>
 					</span>
 				</div>
-				<button class="btn btn-primary btn-large btn-block Hander" type = "submit">Entrar</button>				
+				<button class="btn btn-primary btn-large btn-block Hander" style="margin-bottom: 12px;" type = "submit">Entrar</button>				
 				</form>
+				<a href="view_recuperar_password.php" class="recovery-email">¿Olvidaste tu contraseña?</a>
 			</div>
 		</div>
 	</div>
@@ -77,7 +78,7 @@ if(isset($_REQUEST["MensajeError"])){
 	$MensajeError = $_REQUEST["MensajeError"]; 
 	echo "<script type='text/javascript'>
 		  swal('".$MensajeError."','','warning');
-		</script>";					
+		</script>";			
 }
 ?>
 <?php

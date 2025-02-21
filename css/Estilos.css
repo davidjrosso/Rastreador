@@ -613,3 +613,8 @@ div .nav-side-menu {
   background-color: transparent;
   border: 0;
 }
+
+.recovery-email {
+  text-decoration: none;
+  color: #0b475d;
+}
