@@ -39,7 +39,7 @@ header("Content-Type: text/html;charset=utf-8");
             </div>
             <div class="form-group row" style="align-content: center">
             <div class="col"></div>
-              <div class="col">
+              <div class="col" style="text-align: center;">
                 <button type="submit" class="btn btn-outline-success">Enviar</button>
                 <button type = "button" class = "btn btn-danger" onClick = "location.href = 'index.php'">Atras</button>
               </div>
