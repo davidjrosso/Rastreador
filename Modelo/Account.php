@@ -153,18 +153,20 @@ public static function exist_user($user_name)
 	return $exist;
 }
 
-public static function exist_user_id($user_name)
+public static function exist_user_id($con, $user_name)
 {
-	$con = new Conexion();
-	$con->OpenConexion();
  	$consulta = "select * 
 				 from accounts 
 				 where username = '$user_name' 
 				 and estado = 1";
- 	$rs = mysqli_query($con->Conexion,$consulta)or die("Problemas al recuperar datos. Nomnre de usuario incorrecto.");
+ 	$rs = mysqli_query(
+				$con->Conexion,
+				$consulta
+	)or die("Problemas al recuperar datos. Nomnre de usuario incorrecto.");
+
  	$cont = mysqli_num_rows($rs);
-	 $resultado = mysqli_fetch_assoc($rs);
-	 $control = ($cont > 0) ? $resultado['accountid'] : -1;
+	$resultado = mysqli_fetch_assoc($rs);
+	$control = ($cont > 0) ? $resultado['accountid'] : -1;
 	return $control;
 }
 
