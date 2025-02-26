@@ -9,7 +9,7 @@ $from_reporte_listado = (preg_match("~view_vermovlistados~", $_SERVER["HTTP_REFE
 $from_reporte_grafico = (preg_match("~view_rep_general_new~", $_SERVER["HTTP_REFERER"])) ? true : false;
 $nro_paquete = getallheaders()["x-request-id"];
 
-try{
+try {
     $json_filas = file_get_contents('php://input');
     $array_filas = json_decode($json_filas, true);
     $row = "";
@@ -220,10 +220,8 @@ try{
             </html>";
     } elseif ($from_reporte_listado) {
         $header_mov_general = (isset($array_filas["header_movimientos_general"])) ? $array_filas["header_movimientos_general"] : $array_filas["head_movimientos_persona"];
-        $count = count($array_filas) - 1; 
+        $count = $array_filas["cont_movimientos"];
         if ($nro_paquete == 0) {
-            //$count -= (isset($array_filas["det_persona"]) ? 6 : 4);
-            $count -= (isset($array_filas["det_persona"]) ? 5 : 3);
             $page_widht = 563;
         } else {
             $page_widht = 650;
@@ -244,7 +242,11 @@ try{
             for ($h = 0; $h < count($header_mov_general); $h++) {
                 if (isset($array_filas[$i][$header_mov_general[$h]])) {
                     $row .= "<td style='height: " . $cell_widht . "px'>" . 
-                              $array_filas[$i][$header_mov_general[$h]] . "
+                                substr(
+                                $array_filas[$i][$header_mov_general[$h]],
+                                0, 
+                                165
+                                ) . "
                             </td>";
                 } else {
                     $row .=  "<td></td>";

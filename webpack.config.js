@@ -11,7 +11,8 @@ module.exports = {
     mapa : './js/mapa.js',
     reporte : './js/acciones-reporte-grafico.js',
     alerta : './js/Enlace-Drive.js',
-    control : './js/MensajeControl.js'
+    control : './js/MensajeControl.js',
+    reporte : './js/ReporteMovimiento.js',
   },
   output: {
     libraryTarget: 'umd',

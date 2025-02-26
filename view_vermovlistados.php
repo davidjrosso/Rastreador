@@ -1,9 +1,9 @@
 <?php 
 session_start(); 
-require_once "Controladores/Elements.php";
-require_once "Controladores/CtrGeneral.php";
-require_once "Modelo/Persona.php";
-require_once "Modelo/DtoMovimiento.php";
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Controladores/Elements.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Controladores/CtrGeneral.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Persona.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/DtoMovimiento.php");
 header("Content-Type: text/html;charset=utf-8");
 
 /*     CONTROL DE USUARIOS                    */
@@ -37,26 +37,13 @@ $Con->CloseConexion();
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-  <script src="js/acciones-reporte-grafico.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.js"></script>
-<script>
-        const { PDFDocument, StandardFonts, rgb } = PDFLib
-        var objectJsonTabla = {};
-        let jsonTabla = {};
-        var rowsRequest = {};
-        var countList = 0;
-        let indexList = 0;
-        let listaDeRequest = new Array();
-        let listaDePdf = new Array();
-        let nroPaginaPdf = 0;
-        let nroPaginaGeneradas = 0;
-        let documentoPdf = PDFDocument.create()
-        let idRequestField = 0;
-        let fechaDesde = null;
-        let fechaHasta = null;
-        let filtroSeleccionados = null;
-       $(document).ready(function(){
-              var date_input=$('input[name="date"]'); //our date input has the name "date"
+  <script src="dist/reporte.js"></script>
+  <script>
+      let fechaDesde = null;
+      let fechaHasta = null;
+      let filtroSeleccionados = null;
+      $(document).ready(function(){
+              var date_input=$('input[name="date"]');
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
               date_input.datepicker({
                   format: 'dd/mm/yyyy',
@@ -69,12 +56,11 @@ $Con->CloseConexion();
               nroColumnasTabla = $("thead > tr > th").length - 2;
               let nroPag = (nroFilasTabla + 2) / 16;
               let floorPag = Math.floor((nroFilasTabla + 2) / 16);
-              //nroPaginaPdf = (nroPag > floorPag) ? (floorPag + 1) : floorPag;
               nroPaginaPdf = 0;
               thTable = $("thead > tr > th");
-          });
+      });
 
-       function CalcularPrecio(){
+      function CalcularPrecio(){
         //var Combus = document.getElementById("Combustible").value;
         var Litros = document.getElementById("Litros").value;
         var Combustible = document.getElementById("Combustible");
@@ -85,96 +71,30 @@ $Con->CloseConexion();
         var Precio = document.getElementById("Precio");
         Precio.setAttribute("value",parseFloat(Total).toFixed(2));
         //Terminar esta parte cuando termine lo demas.
-       }
-
-
-       function base64ToArrayBuffer(data) {
-         var binaryString = window.atob(data);
-         var binaryLen = binaryString.length;
-         var bytes = new Uint8Array(binaryLen);
-         for (var i = 0; i < binaryLen; i++) {
-             var ascii = binaryString.charCodeAt(i);
-             bytes[i] = ascii;
-         }
-         return bytes;
-        };
-
-        function enviarImprimir() {     
-
-          alert("hacer imprimir!");
-      
-        }
-
-        /*function enviarImprimirPdf() {
-          var tabla1 = document.getElementById("tabla_1");
-          var dataString = "tabla=" + tabla1.value;
-          console.log(dataString);
-          $.ajax({
-            type: "POST",
-            dataType: "html",
-            contentType: "application/x-www-form-urlencoded",
-            cache: false,
-            url: "Controladores/GeneradorPdf.php",
-            data: dataString,
-            async: false,
-            cache: false,
-            success: function (res) {
-              var arrBuffer = base64ToArrayBuffer(res);
-              var blob = new Blob([arrBuffer], { type: "application/pdf" });
-              //location.href = res;
-              var link=document.createElement('a');
-              var url1 = window.URL.createObjectURL(blob);
-              window.open(url1);
-              //link.href=window.URL.createObjectURL(blob);
-              //link.download="<FILENAME_TO_SAVE_WITH_EXTENSION>.pdf";
-              //link.click();
-            },
-            error: function (e) {
-              var errorJsonString = JSON.stringify(e);
-              console.log(errorJsonString);
-              var error = JSON.parse(errorJsonString);
-              console.log(error);
-              alert("error " + atob(error.responseText));
-            }
-          });
-        }*/
+      }
 
       function enviarImprimirPdf() {
-        configColumnasTabla();
+        //configColumnasTabla();
+        let reporte = null;
         if (objectJsonTabla["movimientos_general"] !== undefined) {
-          let filas = objectJsonTabla["movimientos_general"].forEach((element, index, array) => {envioDeFilasMultiplesEnBloques(element, index, array);});
+          reporte = new RerpoteMovimiento( 
+                                          objectJsonTabla["movimientos_general"],
+                                          objectJsonTabla["header_movimientos_general"],
+                                          objectJsonTabla["head_movimientos_persona"],
+                                          null,
+                                          null
+                                        );
+          reporte.sendRequest();
         } else if (objectJsonTabla["movimientos_persona"] !== undefined) {
-          let filas = objectJsonTabla["movimientos_persona"].forEach((element, index, array) => {envioDeFilasMultiplesEnBloques(element, index, array);});
+          reporte = new RerpoteMovimiento(
+                                          null,
+                                          objectJsonTabla["header_movimientos_general"],
+                                          objectJsonTabla["movimientos_persona"],
+                                          objectJsonTabla["header_movimientos_general"],
+                                          objectJsonTabla["head_movimientos_persona"]
+                                        );
+          reporte.sendRequest();
         }
-        if (rowsRequest != {} && idRequestField >= 1 && countList >= 1) {
-          rowsRequest["header_movimientos_general"] = objectJsonTabla["header_movimientos_general"];
-          rowsRequest["head_movimientos_persona"] = objectJsonTabla["head_movimientos_persona"]
-          let request = new XMLHttpRequest();
-          listaDeRequest[idRequestField] = request;
-          request.open("POST", "Controladores/GeneradorPdf.php", true);
-          request.setRequestHeader("x-request-id", idRequestField);
-          request.onreadystatechange = addPdf;
-          request.send(JSON.stringify(rowsRequest));
-          nroPaginaPdf++;
-          rowsRequest = {};
-        } else if ((rowsRequest != {} && idRequestField == 0) && countList >= 1) {
-          rowsRequest["head_det_persona"] = objectJsonTabla["head_det_persona"];
-          rowsRequest["det_persona"] = objectJsonTabla["det_persona"];
-          rowsRequest["header_movimientos_general"] = objectJsonTabla["header_movimientos_general"];
-          rowsRequest["head_movimientos_persona"] = objectJsonTabla["head_movimientos_persona"]
-          rowsRequest["fecha_desde"] = fechaDesde;
-          rowsRequest["fecha_hasta"] = fechaHasta;
-          rowsRequest["fitros"] = filtroSeleccionados;
-          let request = new XMLHttpRequest();
-          listaDeRequest[idRequestField] = request;
-          request.open("POST", "Controladores/GeneradorPdf.php", true);
-          request.setRequestHeader("x-request-id", idRequestField);
-          request.onreadystatechange = addPdf;
-          request.send(JSON.stringify(rowsRequest));
-          nroPaginaPdf++;
-          rowsRequest = {};
-        }
-          idRequestField = 0;
       }
 
 
