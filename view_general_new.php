@@ -80,9 +80,6 @@ $Con->CloseConexion();
                   clear: "Borrar",
                   weekStart: 1,
               });
-              $("#btn-enlace-driver").on("click", function (){
-                cargaMovimientosFormulario();
-              });
               $("#inpMostrar").on("change", function (event){
                 controlMovimiento(this);
               });
@@ -469,9 +466,13 @@ $Con->CloseConexion();
     <br>
     <div class = "row">
       <div class = "col-10" style="margin-bottom: 0.6rem;">
-          <button id="btn-enlace-driver"
-                  type="button"  
-                  class = "btn btn-md btn-secondary">Enlace</button>
+      <button id="btn-enlace-driver" 
+              class="btn btn-md btn-secondary" 
+              data-toggle="modal" 
+              data-target="#modal-enlace-drive">
+          Enlace
+      </button>
+
       </div>
     </div>
     <div class = "row">
@@ -699,6 +700,34 @@ $Con->CloseConexion();
           <br><br><br>
           <!-- Fin Carga -->
           <!-- SECCION DE MODALES -->
+      <!-- Modal ENLACE DRIVER-->
+      <div class="modal fade bd-example-modal-lg" id="modal-enlace-drive" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header" style="justify-content: center;">
+              <h1>Enlaces Drive</h1>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-4">
+                  <?php 
+                    echo $Element->CBBarrioDrives();
+                  ?>
+                </div>
+                <div class="col-8">
+                  <?php 
+                    echo $Element->CBDrive();
+                  ?>
+                </div>
+              </div>            
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- FIN MODAL SELECCION ENLACE DRIVER -->
 			<!-- Modal SELECCION PERSONAS -->
 			<div class="modal fade bd-example-modal-lg" id="ModalPersona" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 			  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">

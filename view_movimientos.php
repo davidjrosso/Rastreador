@@ -50,9 +50,6 @@ $Con->CloseConexion();
         todayHighlight: true,
         autoclose: true,
       });
-      $("#btn-enlace-driver").on("click", function () {
-        cargaMovimientosFormulario();
-      })
     });
   </script>
 </head>
@@ -73,7 +70,7 @@ $Con->CloseConexion();
       </div><br>
       <div class="row">
         <div class="col-2">
-          <button id="btn-enlace-driver" type="button" class="btn btn-secondary">Enlace</button>
+        <button id="btn-enlace-driver" class="btn btn-md btn-secondary" data-toggle="modal" data-target="#modal-enlace-drive">Enlace</button>
         </div>
         <div class="col-4">
           <center><button class="btn btn-secondary" onClick="location.href='view_newmovimientos.php'">Agregar Nuevo
@@ -158,6 +155,34 @@ $Con->CloseConexion();
         </div>
       </div>
     </div>
+    <!-- Modal ENLACE DRIVER-->
+    <div class="modal fade bd-example-modal-lg" id="modal-enlace-drive" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header" style="justify-content: center;">
+            <h1>Enlaces Drive</h1>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-4">
+                <?php 
+                  echo $Element->CBBarrioDrives();
+                ?>
+              </div>
+              <div class="col-8">
+                <?php 
+                  echo $Element->CBDrive();
+                ?>
+              </div>
+            </div>            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+          </div>
+        </div>
+      </div>
+    </div>
+  <!-- FIN MODAL SELECCION ENLACE DRIVER -->
     <?php
     if (isset($_REQUEST['Mensaje'])) {
       echo "<script type='text/javascript'>
