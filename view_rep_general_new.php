@@ -211,7 +211,7 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
 
       $("#BarraDeNavHTabla").on("mouseup", function (e) {
         focusBarraNavegacionH = false;
-        actualizacionDePosicionBarraDenavegacionH(e, $(this).attr("value"));
+        actualizacionDePosicionBarraDenavegacionH(e, $(this).prop("value"));
       });
 
       $('thead tr >*').on("transitionstart", function (e) {

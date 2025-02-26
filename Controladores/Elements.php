@@ -2456,6 +2456,94 @@ public function getMenuSeguridadUsuario($ID){
     return $Select;
   }
 
+  ////////////////////////////////////////// DRIVE ///////////////////////////////////////////////////
+
+  public function CBBarrioDrives()
+  {
+    $con = new Conexion();
+    $con->OpenConexion();
+    $div = "<div class='list-group lista-barrio' 
+                 id='list-tab' 
+                 role='tablist' 
+                 style='overflow: auto; border-bottom: 1px solid #cdcdcd; border-top: 1px solid #cdcdcd;'>";
+    $consulta = "SELECT * 
+                 FROM barrios
+                 ORDER BY ID_Barrio";
+    $obj_query = mysqli_query(
+                      $con->Conexion,
+                      $consulta
+                      ) or die("Problemas al mostrar Personas");
+    $count = 0;
+    while ($Ret = mysqli_fetch_array($obj_query)) {
+      $div .= "<a class='list-group-item list-group-item-action " . (($count == 0) ? "active": "") . " ' 
+                  id='list-" . str_replace(" ", "-",$Ret['Barrio']) . "-list' 
+                  data-toggle='list' 
+                  href='#list-" . str_replace(" ", "-",$Ret['Barrio']) . "' 
+                  role='tab' 
+                  aria-controls='" . str_replace(" ", "-",$Ret['Barrio']) . "'>" . 
+                 $Ret['Barrio'] . 
+              "</a>";
+      $count++;
+    }
+    $div .= "</div>";
+    $con->CloseConexion();
+    return $div;
+  }
+
+  public function CBDrive()
+  {
+    $con = new Conexion();
+    $con->OpenConexion();
+    $div = "<div class='tab-content' id='nav-tabContent'>";
+    $consulta = "SELECT * 
+                 FROM barrios
+                 ORDER BY ID_Barrio";
+    $obj_query = mysqli_query(
+                      $con->Conexion,
+                      $consulta
+                      ) or die("Problemas al mostrar los barrios");
+    $count = 0;
+
+		$Table = "<table class='table'>
+                <thead>
+                  <tr>
+                    <th style='text-align: center;'>Archivo</th>
+                    <th style='max-width: 45px; padding-left: 4%'>Accion</th>
+                  </tr>
+              </thead>";
+
+    while ($Ret = mysqli_fetch_array($obj_query)) {
+        $div .= "<div class='tab-pane fade " . (($count == 0) ? "show active": "") . "' 
+                      id='list-" . str_replace(" ", "-",$Ret['Barrio']) . "' 
+                      role='tabpanel' 
+                      aria-labelledby='ist-" . str_replace(" ", "-",$Ret['Barrio']) . "-list'>"; 
+        $div .= $Table;
+
+        $consulta = "SELECT * 
+                     FROM archivos
+                     WHERE barrio = " . $Ret['ID_Barrio'] . "
+                       AND estado = 1";
+        $result = mysqli_query($con->Conexion,$consulta) or die("Problemas al mostrar los archivos");
+        while ($row = mysqli_fetch_array($result)) {
+            $div .= "<tr>
+                        <td>" . $row["archivo"] . "</td>
+                        <td style='max-width: 45px;'> 
+                            <button class='btn btn-secondary'  
+                                    onClick='cargaMovimientosFormulario(" . $row['id_archivo'] . "," . $row['barrio'] . ")'>
+                              Enlace
+                            </button>
+                        </td>
+                     </tr>";
+        }
+        $div .= "</table>";
+        $div .= "</div>";
+        $count++;
+    }
+    $div .= "</div>";
+    $con->CloseConexion();
+    return $div;
+  }
+
   /////////////////////////////////////// MENU DE NAVEGACION /////////////////////////////////////////
   public function CBSessionNombre($idAccount){
     $Con3 = new Conexion();

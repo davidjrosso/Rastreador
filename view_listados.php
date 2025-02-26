@@ -81,9 +81,11 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
                   clear: "Borrar",
                   weekStart: 1,
               });
+              /*
               $("#btn-enlace-driver").on("click", function (){
                 cargaMovimientosFormulario();
               });
+              */
               $("#inpMostrar").on("change", function (event){
                 controlMovimiento(this);
               });
@@ -355,9 +357,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
     <br>
     <div class="row" style="margin-bottom: 0.6rem;">
       <div class="col">
-        <button id="btn-enlace-driver"
-                    type="button"  
-                    class = "btn btn-secondary">Enlace</button>
+        <button id="btn-enlace-driver" class="btn btn-md btn-secondary" data-toggle="modal" data-target="#modal-enlace-drive">Enlace</button>
       </div>
       <div class="offset-md-7 col-md-2">
         <button class="btn btn-md btn-secondary" data-toggle="modal" data-target="#ModalConfig">Config</button>
@@ -880,7 +880,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
       <div class="modal fade bd-example-modal-lg" id="ModalConfig" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
           <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header" style="justify-content: center;">
               <h1>Configuración</h1>
             </div>
             <div class="modal-body">
@@ -902,8 +902,36 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
           </div>
         </div>
       </div>
-      <!-- FIN MODAL SELECCION CATEGORIA -->
-          <!-- FIN SECCION DE MODALES -->
+      <!-- FIN MODAL SELECCION CONFIGURACION -->
+      <!-- Modal ENLACE DRIVER-->
+      <div class="modal fade bd-example-modal-lg" id="modal-enlace-drive" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header" style="justify-content: center;">
+              <h1>Enlaces Drive</h1>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-4">
+                  <?php 
+                    echo $Element->CBBarrioDrives();
+                  ?>
+                </div>
+                <div class="col-8">
+                  <?php 
+                    echo $Element->CBDrive();
+                  ?>
+                </div>
+              </div>            
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- FIN MODAL SELECCION ENLACE DRIVER -->
+      <!-- FIN SECCION DE MODALES -->
   </div>
 </div>
 </div>

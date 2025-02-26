@@ -618,3 +618,16 @@ div .nav-side-menu {
   text-decoration: none;
   color: #0b475d;
 }
+
+.lista-barrio {
+  overflow: auto; 
+  border-bottom: 1px solid #cdcdcd; 
+  border-top: 1px solid #cdcdcd;
+  @media (500px <= height <= 800px) {
+    height: 400px;
+  }
+
+  @media (800px < height <= 1200px) {
+    height: 700px;
+  }
+}

@@ -19,7 +19,7 @@ import swal from '../node_modules/sweetalert2';
     });
   }
 
-  export function cargaMovimientosFormulario(){
+  export function cargaMovimientosFormulario(idArchivo, idBarrio){
     swal.fire({
       title: "Proceso de carga de Excel",
       text: "Los registros de casos de Dengue estan siendo cargados al sistema",
@@ -33,6 +33,8 @@ import swal from '../node_modules/sweetalert2';
       cache: false,
       url: "./Controladores/InsertFormularios.php",
       async: true,
+      data: "{archivo: " + idArchivo + "," +
+             "barrio : " + idBarrio + "}",
       success: dialogCargaEnlace,
       error: dialogErrorCargaEnlace
     });
