@@ -245,7 +245,7 @@ try {
                                 substr(
                                 $array_filas[$i][$header_mov_general[$h]],
                                 0, 
-                                165
+                                110
                                 ) . "
                             </td>";
                 } else {
