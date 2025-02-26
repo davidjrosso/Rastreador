@@ -2104,11 +2104,7 @@ $Con->CloseConexion();
         // <input type="checkbox" id="chkDomicilio"> Domicilio 
         // <input type="checkbox" id="chkBarrio"> Barrio 
         // <input type="checkbox" id="chkLocalidad"> Localidad 
-
-  <?php
-  //$_SESSION["meses"] = $mesesHeader; ?>
   objectJsonTabla = <?php echo json_encode($jsonTable);?>;
-  jsonTabla = <?php echo json_encode($jsonTable);?>;
   fechaDesde = "<?php echo $Fecha_Inicio;?>";
   fechaHasta = "<?php echo $Fecha_Fin;?>";
   filtroSeleccionados = <?php echo json_encode($filtros); ?>;
