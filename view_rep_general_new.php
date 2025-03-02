@@ -1381,7 +1381,7 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
                                     AND estado = 1";
 
             if ($Edad_Desde !== null && $Edad_Desde !== "" && $Edad_Hasta !== null && $Edad_Hasta !== "") {
-              $persona_query .= " edad >= $Edad_Desde and edad <= $Edad_Hasta";
+              $persona_query .= " and edad >= $Edad_Desde and edad <= $Edad_Hasta";
               $filtros[] = "Edad: Desde " . $Edad_Desde . " hasta " . $Edad_Hasta;
               if ($Meses_Hasta !== null && $Meses_Hasta !== "") {
                 $Consulta .= " and (edad < $Edad_Hasta or meses <= $Meses_Hasta)";
@@ -1394,7 +1394,7 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
               }
             } else {
               if ($Meses_Desde !== null && $Meses_Desde !== "" && $Meses_Hasta !== null && $Meses_Hasta !== "") {
-                $persona_query .= " meses <= $Meses_Hasta and edad = 0 ";
+                $persona_query .= " and meses <= $Meses_Hasta and edad = 0 ";
                 if ($Meses_Desde != null) {
                   $Consulta .= " and meses >= $Meses_Desde";
                   $filtros[] = "Meses: Desde " . $Meses_Desde . " hasta " . $Meses_Hasta;
