@@ -1,28 +1,28 @@
 import swal from '../node_modules/sweetalert2';
 
-  export function dialogCargaEnlace(){
+  export function dialogCargaEnlace() {
     swal.fire({
       title: "El proceso de carga de Excel finalizo",
-      text: "Los registros de casos de Dengue han sido cargados al sistema",
+      text: "Los registros han sido cargados al sistema",
       icon: "success",
       showCancelButton: false
     });
   }
 
-  export function dialogErrorCargaEnlace(){
+  export function dialogErrorCargaEnlace() {
     swal.fire({
       title: "Fallo de carga de Excel",
-      text: "Los registros de casos de Dengue no se han cargados al sistema",
+      text: "Los registros no se han cargados al sistema",
       icon: "error",
       showCancelButton: false,
       dangerMode: true
     });
   }
 
-  export function cargaMovimientosFormulario(idArchivo, idBarrio){
+  export function cargaMovimientosExcel(idArchivo, idCentroSalud) {
     swal.fire({
       title: "Proceso de carga de Excel",
-      text: "Los registros de casos de Dengue estan siendo cargados al sistema",
+      text: "Los registros estan siendo cargados al sistema",
       icon: "warning",
       showConfirmButton: true,
       dangerMode: true,
@@ -31,10 +31,10 @@ import swal from '../node_modules/sweetalert2';
     $.ajax({
       type: "POST",
       cache: false,
-      url: "./Controladores/InsertFormularios.php",
+      url: "./Controladores/InsertExcel.php",
       async: true,
-      data: "{archivo: " + idArchivo + "," +
-             "barrio : " + idBarrio + "}",
+      data: "{id_archivo: " + idArchivo + "," +
+             "centro_salud: " + idCentroSalud + "}",
       success: dialogCargaEnlace,
       error: dialogErrorCargaEnlace
     });

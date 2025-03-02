@@ -2507,7 +2507,7 @@ public function getMenuSeguridadUsuario($ID){
 		$Table = "<table class='table'>
                 <thead>
                   <tr>
-                    <th style='text-align: center;'>Archivo</th>
+                    <th style='text-align: center;'>Planilla</th>
                     <th style='max-width: 45px; padding-left: 4%'>Accion</th>
                   </tr>
               </thead>";
@@ -2526,10 +2526,13 @@ public function getMenuSeguridadUsuario($ID){
         $result = mysqli_query($con->Conexion,$consulta) or die("Problemas al mostrar los archivos");
         while ($row = mysqli_fetch_array($result)) {
             $div .= "<tr>
-                        <td>" . $row["archivo"] . "</td>
+                        <td>" . $row["planilla"] . "</td>
                         <td style='max-width: 45px;'> 
-                            <button class='btn btn-secondary'  
-                                    onClick='cargaMovimientosFormulario(" . $row['id_archivo'] . "," . $row['centro_salud'] . ")'>
+                            <button class='btn btn-secondary' 
+                                    onClick='cargaMovimientosExcel(" . 
+                                                                    $row['id_archivo'] . "," . 
+                                                                    $row['centro_salud'] . "
+                                                                  )'>
                               Enlace
                             </button>
                         </td>

@@ -81,11 +81,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
                   clear: "Borrar",
                   weekStart: 1,
               });
-              /*
-              $("#btn-enlace-driver").on("click", function (){
-                cargaMovimientosFormulario();
-              });
-              */
+
               $("#inpMostrar").on("change", function (event){
                 controlMovimiento(this);
               });
