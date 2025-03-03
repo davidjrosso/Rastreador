@@ -35,7 +35,7 @@ import swal from '../node_modules/sweetalert2';
     $.ajax({
       type: "POST",
       cache: false,
-      url: "./Controladores/InsertExcel.php",
+      url: "./Controladores/insertExcel.php",
       async: true,
       data: dataRequest,
       processData: false,
