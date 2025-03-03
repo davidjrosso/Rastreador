@@ -67,13 +67,13 @@
 			$observacion = "";
 			$response_json = [];
 			$row_json = [];
-			$highestColumnIndex = count($result->values[0]);
 			$highestRow = count($result->values) - 1;
 			for ($row = 0; $row <= $highestRow; $row++) {
 				$observacion = "";
-				for ($col = 0; $col <= $highestColumnIndex; $col++) {
-					$value = (!empty($result->values[$row][$col])) ? $result->values[$row][$col] : null;
-					if ($planilla == "EMBARAZADAS") {
+				$highestColumnIndex = count($result->values[$row]) - 1;
+				if ($planilla == "EMBARAZADAS") {
+					for ($col = 0; $col <= $highestColumnIndex; $col++) {
+						$value = (!empty($result->values[$row][$col])) ? $result->values[$row][$col] : null;
 						$id_barrio = Barrio::get_id_by_name($con, "Castagnino");
 						switch ($col) {
 							case 0:
@@ -94,7 +94,7 @@
 								$telefono = $value;
 								break;
 							case 5:
-								$Obra_Social = $value;
+								$obra_social = $value;
 								break;
 							case 6:
 								$observacion .= " FPP : " . $value;
@@ -111,17 +111,13 @@
 							case 10:
 								$observacion .= " - " . $value;
 								break;
-							case 11:
-								break;
-							case 12:
-								break;
-							case 13:
-								break;
 							default :
 								break;
 						}
-					} else if ($planilla == "C. INDICE ENFERMERIA") {
-						$row++;
+					}
+				} else if ($planilla == "C. INDICE ENFERMERIA") {
+					for ($col = 0; $col <= $highestColumnIndex; $col++) {
+						$value = (!empty($result->values[$row][$col])) ? $result->values[$row][$col] : null;
 						$id_barrio = Barrio::get_id_by_name($con, "Castagnino");
 						switch ($col) {
 							case 0:
@@ -133,9 +129,11 @@
 								$hc = $value;
 								break;
 							case 2:
-								$value = str_replace("/", "-", $value);
+								$lista_fecha = explode("/", $value);
+								$lista_fecha = array_reverse($lista_fecha);
+								$value = implode( "-", $lista_fecha);
 								$fecha_excel = strtotime($value);
-								$Fecha_Accion = date(format: 'Y-m-d',timestamp: $fecha_excel);
+								$Fecha_Nacimiento  = date(format: 'Y-m-d',timestamp: $fecha_excel);
 								break;
 							case 3:
 								$dni = $value;
@@ -150,7 +148,7 @@
 								$telefono = $value;
 								break;
 							case 7:
-								$Obra_Social = $value;
+								$obra_social = $value;
 								break;
 							case 8:
 								$observacion .= " vacunas : " . $value;
@@ -174,8 +172,11 @@
 								$observacion .= " - " . $value;
 								break;
 						}
-					} else if ($planilla == "C. INDICE PEDIATRIA") {
-						$row++;
+					}
+					$row++;
+				} else if ($planilla == "C. INDICE PEDIATRIA") {
+					for ($col = 0; $col <= $highestColumnIndex; $col++) {
+						$value = (!empty($result->values[$row][$col])) ? $result->values[$row][$col] : null;
 						$id_barrio = Barrio::get_id_by_name($con, "Castagnino");
 						switch ($col) {
 							case 0:
@@ -187,9 +188,11 @@
 								$hc = $value;
 								break;
 							case 2:
-								$value = str_replace("/", "-", $value);
+								$lista_fecha = explode("/", $value);
+								$lista_fecha = array_reverse($lista_fecha);
+								$value = implode( "-", $lista_fecha);
 								$fecha_excel = strtotime($value);
-								$Fecha_Nacimiento = date(format: 'Y-m-d',timestamp: $fecha_excel);
+								$Fecha_Nacimiento  = date(format: 'Y-m-d',timestamp: $fecha_excel);
 								break;
 							case 3:
 								$dni = $value;
@@ -204,7 +207,7 @@
 								$telefono = $value;
 								break;
 							case 7:
-								$Obra_Social = $value;
+								$obra_social = $value;
 								break;
 							case 8:
 								$observacion .= " atencion : " . $value;
@@ -231,7 +234,12 @@
 								$observacion .= " - " . $value;
 								break;
 						}
-					} else if ($planilla == "11 Años") {
+					}
+					$row++;
+				} else if ($planilla == "11 Años") {
+					$observacion = "";
+					for ($col = 0; $col <= $highestColumnIndex; $col++) {
+						$value = (!empty($result->values[$row][$col])) ? $result->values[$row][$col] : null;
 						$id_barrio = Barrio::get_id_by_name($con, "Castagnino");
 						switch ($col) {
 							case 0:
@@ -248,6 +256,12 @@
 								$dni = $value;
 								break;
 							case 3:
+								$lista_fecha = explode("/", $value);
+								$lista_fecha = array_reverse($lista_fecha);
+								$value = implode( "-", $lista_fecha);
+								$fecha_excel = strtotime($value);
+								$Fecha_Nacimiento  = date(format: 'Y-m-d',timestamp: $fecha_excel);
+							case 4:
 								$motivo = Motivo::get_id_by_name($con, $value);
 								break;
 							default :
@@ -300,14 +314,16 @@
 					xID_TipoAccion: $ID_TipoAccion
 				);
 				$accion->save();
-				$Fecha_Nacimiento = null;
+				$Fecha_Nacimiento = (empty($Fecha_Nacimiento)) ? null : $Fecha_Nacimiento;
 				if (!Persona::is_registered($dni)) {
 					$persona = new Persona(
 						xApellido : $apellido,
 						xNombre : $nombre,
 						xBarrio :  $id_barrio,
 						xDNI : $dni,
+						xNro_Carpeta:$hc,
 						xEstado : $estado,
+						xObra_Social : $obra_social,
 						xFecha_Nacimiento: $Fecha_Nacimiento,
 						xTelefono : $telefono,
 						xMail:$email,
@@ -323,6 +339,7 @@
 					}
 					$persona = new Persona(ID_Persona: $id_persona);
 				}
+
 				$row_json["persona"] = $persona->jsonSerialize();
 				$detalles = "El usuario con ID: $ID_Usuario ha registrado un nueva persona. Datos: Persona: " . $persona->getID_Persona();
 				$accion = new Accion(
