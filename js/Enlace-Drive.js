@@ -27,14 +27,19 @@ import swal from '../node_modules/sweetalert2';
       showConfirmButton: true,
       dangerMode: true,
     });
+    let dataRequest = new FormData();
+
+    dataRequest.append("id_archivo", idArchivo);
+    dataRequest.append("centro_salud", idCentroSalud);
 
     $.ajax({
       type: "POST",
       cache: false,
       url: "./Controladores/InsertExcel.php",
       async: true,
-      data: "{id_archivo: " + idArchivo + "," +
-             "centro_salud: " + idCentroSalud + "}",
+      data: dataRequest,
+      processData: false,
+      contentType: false,
       success: dialogCargaEnlace,
       error: dialogErrorCargaEnlace
     });
