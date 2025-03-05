@@ -412,6 +412,7 @@
 						$persona->setNro($direccion);
 						$persona->setDomicilio($direccion);
 						$persona->save();
+						$id_persona = $persona->getID_Persona();
 					} else {
 						$id_persona = Persona::get_id_persona_by_dni($dni);
 						if (is_null($id_persona)) {
@@ -436,16 +437,19 @@
 																	   id_persona: $id_persona
 																	  );
 					if ($exist_mov) {
-						$id_movimiento =  new Movimiento(xID_Movimiento: $exist_mov);
-						$id_motivo = MovimientoMotivo::exist_movimiento_motivo(
+						$movimiento =  new Movimiento(
+														coneccion_base: $con,
+														xID_Movimiento: $exist_mov
+														);
+						$id_movimiento = $movimiento->getID_Movimiento();
+						$motivo_mov = MovimientoMotivo::exist_movimiento_motivo(
 																   connection: $con,
 																   movimiento: $id_movimiento,
 																       motivo: $ID_Motivo_1
 																			  );
-						if ($id_motivo) {
+						if ($motivo_mov) {
 							continue;
 						}
-						$movimiento = new Movimiento(xID_Movimiento: $id_movimiento);
 					} else {
 						$movimiento = new Movimiento(
 							coneccion_base: $con, 
