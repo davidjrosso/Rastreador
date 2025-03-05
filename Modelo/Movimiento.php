@@ -127,6 +127,29 @@ class Movimiento implements JsonSerializable
 		return $is_multiple;
 	}
 
+	public static function is_exist_movimiento_fecha(
+													 $coneccion, 
+													 $fecha,
+													 $id_persona
+													 )
+	{
+		$consulta = "select * 
+					 from movimiento 
+					 where fecha = $fecha
+					   and id_persona = $id_persona
+					   and estado = 1";
+		$mensaje_error = "Hubo un problema al consultar los registros para validar";
+		$ret = mysqli_query(
+					$coneccion->Conexion,
+					$consulta
+		) or die(
+			$mensaje_error
+		);
+		$ret_query = mysqli_fetch_assoc($ret);
+		$is_multiple = ((!empty($ret_query["id_movimiento"])) ? $ret_query["id_movimiento"] : 0);
+		return $is_multiple;
+	}
+
 	// METODOS SET
 	public function setID_Movimiento($xID_Movimiento){
 		$this->ID_Movimiento = $xID_Movimiento;

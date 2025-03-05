@@ -64,14 +64,16 @@ class Formulario implements JsonSerializable
 	}
 	
 	public static function exist(
-								 $coneccion, 
-								 $persona, 
-								 $responsable
+								 $coneccion,
+								 $persona,
+								 $responsable,
+								 $id_movimiento = null
 	)	{
 		$consultar = "select *
 					  from formularios 
 					  where responsable = " . $responsable . " 
-					  	and	persona = " . $persona . " 
+					  	and	persona = " . $persona . "
+						" . ((isset($id_movimiento)) ? "and movimiento = " . $id_movimiento : "") . " 
 						and estado = 1";
 		$ejecutar_consultar = mysqli_query(
 		$coneccion->Conexion,

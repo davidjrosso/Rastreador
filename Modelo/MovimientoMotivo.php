@@ -66,7 +66,9 @@ class MovimientoMotivo
                       and id_motivo = $motivo 
 					  and estado = 1";
 		$rs = mysqli_query($connection->Conexion,$consulta) or die("Problemas al consultar las acciones.");
-        return (mysqli_num_rows($rs) > 0);
+		$ret_query = mysqli_fetch_assoc($rs);
+		$is_multiple = ((!empty($ret_query["id_movimiento"])) ? $ret_query["id_movimiento"] : 0);
+        return ($is_multiple);
 	}
 
     public static function exist_movimiento_motivo_nro(
