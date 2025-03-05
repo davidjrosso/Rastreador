@@ -135,7 +135,7 @@ class Movimiento implements JsonSerializable
 	{
 		$consulta = "select * 
 					 from movimiento 
-					 where fecha = $fecha
+					 where fecha = '$fecha'
 					   and id_persona = $id_persona
 					   and estado = 1";
 		$mensaje_error = "Hubo un problema al consultar los registros para validar";
