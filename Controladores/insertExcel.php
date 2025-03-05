@@ -432,7 +432,7 @@
 
 					$exist_mov = Movimiento::is_exist_movimiento_fecha(
 																	   coneccion: $con,
-																	   fecha: $fecha_movimiento,
+																	   fecha: $value["fecha"],
 																	   id_persona: $id_persona
 																	  );
 					if ($exist_mov) {
