@@ -228,7 +228,7 @@
 										$movimientos_motivo["motivo"] = null;
 										$movimientos_motivo["fecha"] = null;
 									} else {
-										$movimientos_motivo["motivo"] = codigoExcelMotivo($Z[0]);
+										$movimientos_motivo["motivo"] = codigoExcelMotivo($result_array[0]);
 										$movimientos_motivo["fecha"] = $fecha_movimiento;
 									}
 									$lista_motivos[] = $movimientos_motivo;
