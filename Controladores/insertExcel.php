@@ -167,6 +167,7 @@
 						}
 					}
 				} else if ($planilla == "C. INDICE ENFERMERIA") {
+					$lista_motivos = null;
 					for ($col = 0; $col <= $highestColumnIndex; $col++) {
 						$value = (!empty($result->values[$row][$col])) ? $result->values[$row][$col] : null;
 						$id_barrio = Barrio::get_id_by_name($con, "Castagnino");
@@ -210,6 +211,7 @@
 																$value,
 																$result_array
 																);
+								$movimientos_motivo = null;
 								if (!empty($result_array[0])) {
 									$lista_fecha = explode("-", $result_array[0]);
 									$lista_fecha = array_reverse($lista_fecha);
@@ -226,7 +228,7 @@
 										$movimientos_motivo["motivo"] = null;
 										$movimientos_motivo["fecha"] = null;
 									} else {
-										$movimientos_motivo["motivo"] = codigoExcelMotivo($result_array[0]);
+										$movimientos_motivo["motivo"] = codigoExcelMotivo($Z[0]);
 										$movimientos_motivo["fecha"] = $fecha_movimiento;
 									}
 									$lista_motivos[] = $movimientos_motivo;
