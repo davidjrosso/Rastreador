@@ -89,7 +89,7 @@ class Movimiento implements JsonSerializable
 				$mov_estado = $ret["estado"];
 				$mov_fecha_creacion = $ret["fecha_creacion"];
 
-				$this->id_movimiento = $mov_id_movimiento;
+				$this->ID_Movimiento = $mov_id_movimiento;
 				$this->motivo_1 = $mov_motivo_1;
 				$this->motivo_2 = $mov_motivo_2;
 				$this->motivo_3 = $mov_motivo_3;
