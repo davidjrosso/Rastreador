@@ -27,10 +27,10 @@
 				$result = "CDAT";
 				break;
 			case 'CDOS':
-				$result = "EPFO";
+				$result = "CDOS";
 				break;
 			case 'CDSO':
-				$result = "CDFS";
+				$result = "CDSO";
 				break;
 			case 'EPAD':
 				$result = "EPAD";
@@ -39,7 +39,7 @@
 				$result = "EPAT";
 				break;
 			case 'EPOS':
-				$result = "EPFO";
+				$result = "EPOS";
 				break;
 			case 'EPSO':
 				$result = "EPSO";
