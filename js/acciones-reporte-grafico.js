@@ -110,133 +110,6 @@ function configResultados() {
 
   }
 
-  function base64ToArrayBuffer(data) {
-    var binaryString = window.atob(data);
-    var binaryLen = binaryString.length;
-    var bytes = new Uint8Array(binaryLen);
-    for (var i = 0; i < binaryLen; i++) {
-        var ascii = binaryString.charCodeAt(i);
-        bytes[i] = ascii;
-    }
-    return bytes;
-  }
-
-  async function copiadoDePaginas(pdfBinary){
-    const pdf = await PDFDocument.load(pdfBinary);
-    const copiedPages = await documentoPdf.copyPages(pdf, pdf.getPageIndices());
-    copiedPages.forEach((page) => {
-        documentoPdf.addPage(page);
-    });
-  }
-
-  async function mergePdfs() {
-    const documentoPdf = await PDFDocument.create();
-    for (i = 0; i < listaDePdf.length; i++) {
-        const pdf = await PDFDocument.load(listaDePdf[i]);
-        const copiedPages = await documentoPdf.copyPages(pdf, pdf.getPageIndices());
-        copiedPages.forEach((page) => {
-            documentoPdf.addPage(page);
-        });
-    }
-    const mergedPdfFile = await documentoPdf.save();
-    return mergedPdfFile;
-  }
-
-  /* function addPdf(element) {
-    if ((this.readyState == 4) && (this.status == 200)) {
-        let response = element.currentTarget.response;
-        let arrBuffer = base64ToArrayBuffer(response);
-        listaDePdf.push(arrBuffer);
-        var blob = new Blob([arrBuffer], { type: "application/pdf" });
-        var url1 = window.URL.createObjectURL(blob);
-        window.open(url1);
-    }
-  }*/
-
-  async function addPdf(element) {
-    if ((this.readyState == 4) && (this.status == 200)) {
-        let response = element.currentTarget.response;
-        let arrBuffer = base64ToArrayBuffer(response);
-        let requestIdRequest = this.getResponseHeader("x-request-id");
-        listaDePdf[requestIdRequest] = arrBuffer;
-        listaDeRequest.splice(requestIdRequest, 1);
-        nroPaginaPdf--;
-        if (listaDeRequest.length === 0 || nroPaginaPdf == 0) {
-            nroPaginaGeneradas = 0;
-            documentoPdf = await mergePdfs();
-            listaDePdf = new Array();
-            var blob = new Blob([documentoPdf], { type: "application/pdf" });
-            var url1 = window.URL.createObjectURL(blob);
-            window.open(url1);
-        }
-    }
-  }
-
-  /*function envioDeFilasEnBloques(index, elemento) {
-    let fila = index % 10;
-    var chkPersona = $('#chk-persona');
-    var chkFechaNac = $('#chk-fechaNac');
-    var chkDomicilio = $('#chk-domicilio');
-    var chkBarrio = $('#chk-barrio');
-    var chkManzana = $('#chk-manzana');
-    var chkLote = $('#chk-lote');
-    var chkSublote = $('#chk-sublote');
-    var chkAnios = $('#chk-anios');
-    var chkMeses = $('#chk-meses');
-    let cells = elemento.cells;
-    let rows = {};
-
-    let tdBarrio = elemento.cells[0].innerText;
-    let tdDomicilio = cells[1].innerText;
-    let tdManzana = cells[2].innerText;
-    let tdLote = cells[3].innerText;
-    let tdSublote = cells[4].innerText;
-    let tdPersona = cells[5].innerText;
-    let tFechaNac= cells[6].innerText;
-    for (let i = 7; i < (nroColumnasTabla + 2); i++) {
-        rows[thTable[i].innerText] = cells[i].innerText;
-        
-    }
-
-    if (chkPersona.is(":checked")) {
-        rows["persona"] = tdPersona;
-    }
-
-    if (chkFechaNac.is(":checked")) {
-        rows["fechanac"] = tFechaNac;
-    }
-
-    if (chkDomicilio.is(":checked")) {
-        rows["domicilio"] = tdDomicilio;
-    }
-
-    if (chkBarrio.is(":checked")) {
-        rows["barrio"] = tdBarrio;
-    }
-
-    if (chkManzana.is(":checked")) {
-        rows["manzana"] = tdManzana;
-    }
-
-    if (chkLote.is(":checked")) {
-        rows["lote"] = tdLote;
-    }
-
-    if (chkSublote.is(":checked")) {
-        rows["sublote"] = tdSublote;
-    }
-    rowsRequest[fila] = rows;
-
-    if (fila == 9) {
-        let request = new XMLHttpRequest();
-        request.open("POST", "Controladores/GeneradorPdf.php", true);
-        request.onreadystatechange = addPdf;
-        request.send(JSON.stringify(rowsRequest));
-        listaDeRequest.push(request);
-        rowsRequest = {};
-    }
-  }*/
-
 function configColumnasTabla() {
     let chkPersona = $('#chkPersona');
     let chkFechaNac = $('#chkFechaNac');
@@ -811,123 +684,26 @@ function configColumnasTabla() {
     }
 }
 
-function envioDeFilasMultiplesEnBloques(elemento, index, array) {
-    let objectJson = elemento;
-    countList++;
-    let height = ((elemento.height > 23) ? 0.7 : 0);
-    countList += height;
-    delete objectJson.height;
-    rowsRequest[indexList] = objectJson;
-    indexList++;
-
-    if (countList >= 19 && idRequestField >= 1) {
-        rowsRequest["header_movimientos_general"] = objectJsonTabla["header_movimientos_general"];
-        rowsRequest["head_movimientos_persona"] = objectJsonTabla["head_movimientos_persona"];
-        let request = new XMLHttpRequest();
-        request.open("POST", "Controladores/GeneradorPdf.php", true);
-        request.setRequestHeader("x-request-id", idRequestField);
-        request.onreadystatechange = addPdf;
-        request.send(JSON.stringify(rowsRequest));
-        listaDeRequest[idRequestField] = request;
-        nroPaginaPdf++;
-        rowsRequest = {};
-        idRequestField++;
-        countList = 0;
-        indexList = 0;
-    } else if ((countList >= 15 && idRequestField == 0)) {
-        rowsRequest["head_det_persona"] = objectJsonTabla["head_det_persona"];
-        rowsRequest["det_persona"] = objectJsonTabla["det_persona"];
-        rowsRequest["header_movimientos_general"] = objectJsonTabla["header_movimientos_general"];
-        rowsRequest["head_movimientos_persona"] = objectJsonTabla["head_movimientos_persona"];
-        rowsRequest["fecha_desde"] = fechaDesde;
-        rowsRequest["fecha_hasta"] = fechaHasta;
-        rowsRequest["fitros"] = filtroSeleccionados;
-        let request = new XMLHttpRequest();
-        request.open("POST", "Controladores/GeneradorPdf.php", true);
-        request.setRequestHeader("x-request-id", idRequestField);
-        request.onreadystatechange = addPdf;
-        request.send(JSON.stringify(rowsRequest));
-        listaDeRequest[idRequestField] = request;
-        nroPaginaPdf++;
-        rowsRequest = {};
-        idRequestField++;
-        countList = 0;
-        indexList = 0;
+function ocultarPopup(evt) {
+if (this.popup != null) {
+    if (!this.popup.hidden) {
+    this.popup.hide();
     }
 }
+OpenLayers.Event.stop(evt);
+}
 
-  function envioDeFilasEnBloques(elemento, index, array) {
-    let objectJson = elemento;
-    let fila = index % 10;
-    var chkPersona = $('#chk-persona');
-    var chkFechaNac = $('#chk-fechaNac');
-    var chkDomicilio = $('#chk-domicilio');
-    var chkBarrio = $('#chk-barrio');
-    var chkManzana = $('#chk-manzana');
-    var chkLote = $('#chk-lote');
-    var chkSublote = $('#chk-sublote');
-    var chkAnios = $('#chk-anios');
-    var chkMeses = $('#chk-meses');
+function mostrarPoup(evt) {
+if (this.popup == null) {
+    this.popup = this.createPopup(this.closeBox);
+    map.addPopup(this.popup);
+    this.popup.show();
+} else {
+    this.popup.toggle();
+}
+OpenLayers.Event.stop(evt);
+}
 
-    if (!chkPersona.is(":checked")) {
-        delete objectJson.persona;
-    }
-
-    if (!chkFechaNac.is(":checked")) {
-        delete objectJson.fechanac;
-    }
-
-    if (!chkDomicilio.is(":checked")) {
-        delete objectJson.domicilio;
-    }
-
-    if (!chkBarrio.is(":checked")) {
-        delete objectJson.barrio;
-    }
-
-    if (!chkManzana.is(":checked")) {
-        delete objectJson.manzana;
-    }
-
-    if (!chkLote.is(":checked")) {
-        delete objectJson.lote;
-    }
-
-    if (!chkSublote.is(":checked")) {
-        delete objectJson.sublote;
-    }
-    rowsRequest[fila] = objectJson;
-
-    if (fila == 9) {
-        let request = new XMLHttpRequest();
-        request.open("POST", "Controladores/GeneradorPdf.php", true);
-        request.onreadystatechange = addPdf;
-        request.send(JSON.stringify(rowsRequest));
-        listaDeRequest.push(request);
-        rowsRequest = {};
-    }
-  }
-
-  function ocultarPopup(evt) {
-    if (this.popup != null) {
-      if (!this.popup.hidden) {
-        this.popup.hide();
-      }
-    }
-    OpenLayers.Event.stop(evt);
-  }
-
-  function mostrarPoup(evt) {
-    if (this.popup == null) {
-        this.popup = this.createPopup(this.closeBox);
-        map.addPopup(this.popup);
-        this.popup.show();
-    } else {
-        this.popup.toggle();
-    }
-    OpenLayers.Event.stop(evt);
-  }
-
-  function onClickOcultarPopup(element){
-    element.parentNode.parentNode.parentNode.style.display = 'none'
-  }
+function onClickOcultarPopup(element){
+element.parentNode.parentNode.parentNode.style.display = 'none'
+}

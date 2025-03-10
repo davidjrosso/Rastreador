@@ -89,7 +89,7 @@ class Movimiento implements JsonSerializable
 				$mov_estado = $ret["estado"];
 				$mov_fecha_creacion = $ret["fecha_creacion"];
 
-				$this->id_movimiento = $mov_id_movimiento;
+				$this->ID_Movimiento = $mov_id_movimiento;
 				$this->motivo_1 = $mov_motivo_1;
 				$this->motivo_2 = $mov_motivo_2;
 				$this->motivo_3 = $mov_motivo_3;
@@ -124,6 +124,29 @@ class Movimiento implements JsonSerializable
 			$mensaje_error
 		);
 		$is_multiple = (mysqli_num_rows($Ret) >= 1);
+		return $is_multiple;
+	}
+
+	public static function is_exist_movimiento_fecha(
+													 $coneccion, 
+													 $fecha,
+													 $id_persona
+													 )
+	{
+		$consulta = "select * 
+					 from movimiento 
+					 where fecha = '$fecha'
+					   and id_persona = $id_persona
+					   and estado = 1";
+		$mensaje_error = "Hubo un problema al consultar los registros para validar";
+		$ret = mysqli_query(
+					$coneccion->Conexion,
+					$consulta
+		) or die(
+			$mensaje_error
+		);
+		$ret_query = mysqli_fetch_assoc($ret);
+		$is_multiple = ((!empty($ret_query["id_movimiento"])) ? $ret_query["id_movimiento"] : 0);
 		return $is_multiple;
 	}
 

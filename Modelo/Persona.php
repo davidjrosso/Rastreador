@@ -356,7 +356,7 @@ public function setDomicilio($xDomicilio = null)
 			$response = curl_exec($ch);
 			$arr_obj_json = json_decode($response);
 			curl_close($ch);
-			$body_request = (($arr_obj_json[0]) ? " " . json_encode($arr_obj_json[0]) : "");
+			$body_request = ((isset($arr_obj_json[0])) ? " " . json_encode($arr_obj_json[0]) : "");
 			$body_request = str_replace("'", "", $body_request);
 			$detalles = $url . $body_request;
 			$accion = new Accion(
@@ -381,7 +381,6 @@ public function setDomicilio($xDomicilio = null)
 	$con->CloseConexion();
 }
 
-
 public function setCalle($xCalle)
 {
 	$this->Calle = $xCalle;
@@ -389,11 +388,25 @@ public function setCalle($xCalle)
 
 public function setNro($xNro)
 {
-	$nro_calle = null;
-	if (is_string($xNro) && preg_match('~ [0-9]+$~', $xNro, $out)) {
+	$nro_calle = trim($xNro);
+	$out = null;
+	$ret = null;
+	if (preg_match('~ [0-9]+$~', $nro_calle, $out)) {
 		$nro_calle = trim($out[0]);
-	};
-	$this->Nro = ((!is_null($nro_calle)) ? $nro_calle : $xNro);
+	} else {
+		if (preg_match('~ [0-9]+ ([aA-zZ]|[0-9])+~', $nro_calle, $ret)) {
+			$lista = explode(" ", trim($ret[0]));
+			$nro_calle = trim($lista[0]);
+		} else {
+			preg_match('~^[0-9]+$~', $nro_calle, $out);
+			if (!empty($out[0])) {
+				$nro_calle = trim($out[0]);
+			} else {
+				$nro_calle = null;
+			}
+		}
+	}
+	$this->Nro = ((!is_null($nro_calle)) ? $nro_calle : null);
 }
 
 public function setBarrio($xBarrio){

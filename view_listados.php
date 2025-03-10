@@ -81,11 +81,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
                   clear: "Borrar",
                   weekStart: 1,
               });
-              /*
-              $("#btn-enlace-driver").on("click", function (){
-                cargaMovimientosFormulario();
-              });
-              */
+
               $("#inpMostrar").on("change", function (event){
                 controlMovimiento(this);
               });
@@ -914,7 +910,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
               <div class="row">
                 <div class="col-4">
                   <?php 
-                    echo $Element->CBBarrioDrives();
+                    echo $Element->CBCSDrives();
                   ?>
                 </div>
                 <div class="col-8">

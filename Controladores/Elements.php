@@ -2458,17 +2458,17 @@ public function getMenuSeguridadUsuario($ID){
 
   ////////////////////////////////////////// DRIVE ///////////////////////////////////////////////////
 
-  public function CBBarrioDrives()
+  public function CBCSDrives()
   {
     $con = new Conexion();
     $con->OpenConexion();
-    $div = "<div class='list-group lista-barrio' 
+    $div = "<div class='list-group lista-centro-salud' 
                  id='list-tab' 
                  role='tablist' 
                  style='overflow: auto; border-bottom: 1px solid #cdcdcd; border-top: 1px solid #cdcdcd;'>";
     $consulta = "SELECT * 
-                 FROM barrios
-                 ORDER BY ID_Barrio";
+                 FROM centros_salud
+                 ORDER BY id_centro";
     $obj_query = mysqli_query(
                       $con->Conexion,
                       $consulta
@@ -2476,12 +2476,12 @@ public function getMenuSeguridadUsuario($ID){
     $count = 0;
     while ($Ret = mysqli_fetch_array($obj_query)) {
       $div .= "<a class='list-group-item list-group-item-action " . (($count == 0) ? "active": "") . " ' 
-                  id='list-" . str_replace(" ", "-",$Ret['Barrio']) . "-list' 
+                  id='list-" . $Ret['id_centro'] . "-list' 
                   data-toggle='list' 
-                  href='#list-" . str_replace(" ", "-",$Ret['Barrio']) . "' 
+                  href='#list-" . $Ret['id_centro'] . "' 
                   role='tab' 
-                  aria-controls='" . str_replace(" ", "-",$Ret['Barrio']) . "'>" . 
-                 $Ret['Barrio'] . 
+                  aria-controls='" . $Ret['id_centro'] . "'>" . 
+                 $Ret['centro_salud'] . 
               "</a>";
       $count++;
     }
@@ -2496,8 +2496,8 @@ public function getMenuSeguridadUsuario($ID){
     $con->OpenConexion();
     $div = "<div class='tab-content' id='nav-tabContent'>";
     $consulta = "SELECT * 
-                 FROM barrios
-                 ORDER BY ID_Barrio";
+                 FROM centros_salud
+                 ORDER BY id_centro";
     $obj_query = mysqli_query(
                       $con->Conexion,
                       $consulta
@@ -2507,29 +2507,32 @@ public function getMenuSeguridadUsuario($ID){
 		$Table = "<table class='table'>
                 <thead>
                   <tr>
-                    <th style='text-align: center;'>Archivo</th>
+                    <th style='text-align: center;'>Planilla</th>
                     <th style='max-width: 45px; padding-left: 4%'>Accion</th>
                   </tr>
               </thead>";
 
     while ($Ret = mysqli_fetch_array($obj_query)) {
         $div .= "<div class='tab-pane fade " . (($count == 0) ? "show active": "") . "' 
-                      id='list-" . str_replace(" ", "-",$Ret['Barrio']) . "' 
+                      id='list-" . $Ret['id_centro'] . "' 
                       role='tabpanel' 
-                      aria-labelledby='ist-" . str_replace(" ", "-",$Ret['Barrio']) . "-list'>"; 
+                      aria-labelledby='list-" . $Ret['id_centro'] . "-list'>"; 
         $div .= $Table;
 
         $consulta = "SELECT * 
                      FROM archivos
-                     WHERE barrio = " . $Ret['ID_Barrio'] . "
+                     WHERE centro_salud = " . $Ret['id_centro'] . "
                        AND estado = 1";
         $result = mysqli_query($con->Conexion,$consulta) or die("Problemas al mostrar los archivos");
         while ($row = mysqli_fetch_array($result)) {
             $div .= "<tr>
-                        <td>" . $row["archivo"] . "</td>
+                        <td>" . $row["planilla"] . "</td>
                         <td style='max-width: 45px;'> 
-                            <button class='btn btn-secondary'  
-                                    onClick='cargaMovimientosFormulario(" . $row['id_archivo'] . "," . $row['barrio'] . ")'>
+                            <button class='btn btn-secondary' 
+                                    onClick='cargaMovimientosExcel(" . 
+                                                                    $row['id_archivo'] . "," . 
+                                                                    $row['centro_salud'] . "
+                                                                  )'>
                               Enlace
                             </button>
                         </td>
