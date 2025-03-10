@@ -102,7 +102,7 @@
 			if ($planilla == "11 Años") {
 				$col = 'E';
 			} else if ($planilla == "C. INDICE PEDIATRIA") {
-				$col = 'AG';
+				$col = 'AH';
 			} else if ($planilla == "C. INDICE ENFERMERIA") {
 				$col = 'U';
 			} else {
@@ -237,7 +237,7 @@
 						}
 					}
 				} else if ($planilla == "C. INDICE PEDIATRIA") {
-					$value = (!empty($result->values[0][32])) ? $result->values[0][32] : null;
+					$value = (!empty($result->values[0][33])) ? $result->values[0][33] : null;
 					$fecha_movimiento = preg_match(
 						"/([0-9][0-9]|[1-9]).([0-9][0-9]|[1-9]).[2-9][0-9]/",
 								   $value,
@@ -255,7 +255,6 @@
 					$lista_motivos[0]["motivo"] = null;
 					for ($col = 0; $col <= $highestColumnIndex; $col++) {
 						$value = (!empty($result->values[$row][$col])) ? $result->values[$row][$col] : null;
-						$id_barrio = Barrio::get_id_by_name($con, "Castagnino");
 						switch ($col) {
 							case 0:
 								$lista = explode(" ", $value);
@@ -282,22 +281,26 @@
 								$direccion = $value;
 								break;
 							case 6:
-								$telefono = $value;
+								$barrio = $value;
+								$id_barrio = Barrio::get_id_by_name($con, "Castagnino");
+								if(!empty($barrio)) {
+									$id_barrio = Barrio::get_id_by_name($con, $barrio);
+								}
 								break;
 							case 7:
-								$obra_social = $value;
+								$telefono = $value;
 								break;
 							case 8:
-								$observacion .= " atencion : " . $value;
+								$obra_social = $value;
 								break;
 							case 9:
-								$observacion .= " dx " . $value;
+								$observacion .= " atencion : " . $value;
 								break;
 							case 10:
-								$observacion .= " vacunas : " . $value;
+								$observacion .= " dx " . $value;
 								break;
 							case 11:
-								$observacion .= " - " . $value;
+								$observacion .= " vacunas : " . $value;
 								break;
 							case 12:
 								$observacion .= " - " . $value;
@@ -305,7 +308,10 @@
 							case 13:
 								$observacion .= " - " . $value;
 								break;
-							case 32:
+							case 14:
+								$observacion .= " - " . $value;
+								break;
+							case 33:
 								$lista_motivos[0]["motivo"] = codigoExcelMotivo(trim($value));
 								break;
 							default :
