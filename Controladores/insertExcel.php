@@ -239,7 +239,7 @@
 				} else if ($planilla == "C. INDICE PEDIATRIA") {
 					$value = (!empty($result->values[0][33])) ? $result->values[0][33] : null;
 					$fecha_movimiento = preg_match(
-						"/([0-9][0-9]|[1-9]).([0-9][0-9]|[1-9]).[2-9][0-9]/",
+						"/([0-9][0-9]|[1-9]).([0-9][0-9]|[1-9]).[2-9][0-9][0-9][0-9]/",
 								   $value,
 								   $result_array
 								  );
