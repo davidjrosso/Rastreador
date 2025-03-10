@@ -120,6 +120,7 @@
 			$response_json = [];
 			$row_json = [];
 
+			$responsable = "WOLYNIEC Jorge - Area Local";
 
 			for ($row = $com; $row <= $highestRow; $row++) {
 				$observacion = "";
@@ -128,6 +129,7 @@
 				}
 				$highestColumnIndex = count($result->values[$row]) - 1;
 				if ($planilla == "EMBARAZADAS") {
+					$responsable = "WOLYNIEC Jorge - Area Local";
 					for ($col = 0; $col <= $highestColumnIndex; $col++) {
 						$value = (!empty($result->values[$row][$col])) ? $result->values[$row][$col] : null;
 						$id_barrio = Barrio::get_id_by_name($con, "Castagnino");
@@ -167,6 +169,7 @@
 						}
 					}
 				} else if ($planilla == "C. INDICE ENFERMERIA") {
+					$responsable = "DELLAROSSA Mónica. ENFERMERA.";
 					$lista_motivos = null;
 					for ($col = 0; $col <= $highestColumnIndex; $col++) {
 						$value = (!empty($result->values[$row][$col])) ? $result->values[$row][$col] : null;
@@ -237,6 +240,7 @@
 						}
 					}
 				} else if ($planilla == "C. INDICE PEDIATRIA") {
+					$responsable = "Constanza Bertone";
 					$value = (!empty($result->values[0][33])) ? $result->values[0][33] : null;
 					$fecha_movimiento = preg_match(
 						"/([0-9][0-9]|[1-9]).([0-9][0-9]|[1-9]).[2-9][0-9][0-9][0-9]/",
@@ -320,6 +324,7 @@
 						}
 					}
 				} else if ($planilla == "11 Años") {
+					$responsable = "DELLAROSSA Mónica. ENFERMERA.";
 					$observacion = "";
 					for ($col = 0; $col <= $highestColumnIndex; $col++) {
 						$value = (!empty($result->values[$row][$col])) ? $result->values[$row][$col] : null;
@@ -357,7 +362,7 @@
 					if (!$value["motivo"] || !$value["fecha"]) {
 						continue;
 					}
-					$responsable = "WOLYNIEC Jorge - Area Local";
+
 					$email = null; 
 					$ID_Usuario = 100;
 					$ID_Motivo_1 = Motivo::get_id_by_codigo($con, $value["motivo"]);
