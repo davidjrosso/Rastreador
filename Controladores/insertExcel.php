@@ -258,7 +258,7 @@
 						switch ($col) {
 							case 0:
 								$lista = explode(" ", $value);
-								$apellido = $lista[0];
+								$apellido = preg_replace("~,~", "", $lista[0]);
 								$nombre = implode( " ",array_slice($lista, 1));
 								break;
 							case 1:
