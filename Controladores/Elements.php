@@ -2468,7 +2468,8 @@ public function getMenuSeguridadUsuario($ID){
                  style='overflow: auto; border-bottom: 1px solid #cdcdcd; border-top: 1px solid #cdcdcd;'>";
     $consulta = "SELECT * 
                  FROM centros_salud
-                 where estado = 1
+                 where centro_salud = 'Sin Datos'
+                   and estado = 1
                  ORDER BY id_centro";
     $obj_query = mysqli_query(
                       $con->Conexion,
