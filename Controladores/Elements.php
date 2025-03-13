@@ -2469,6 +2469,8 @@ public function getMenuSeguridadUsuario($ID){
     $consulta = "SELECT * 
                  FROM centros_salud
                  WHERE centro_salud <> 'Sin Datos'
+                   AND (centro_salud LIKE '%CAPS%Nº%' 
+                        OR centro_salud LIKE '%Dengue%')
                    AND estado = 1
                  ORDER BY CAST(REGEXP_SUBSTR(centro_salud, '[0-9]+') AS INTEGER)  ASC";
     $obj_query = mysqli_query(
