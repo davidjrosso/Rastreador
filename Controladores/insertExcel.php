@@ -314,7 +314,7 @@
 										$valor_fecha = implode( "-", $lista_fecha);
 										$fecha_excel = strtotime($valor_fecha);
 										$fecha_movimiento  = date(format: 'Y-m-d',timestamp: $fecha_excel);
-										$lista_motivos[0]["fecha"] = $fecha_movimiento;
+										$motivo_row["fecha"] = $fecha_movimiento;
 									}
 									$motivo_row["motivo"] = codigoExcelMotivo(trim($value));
 									$lista_motivos[] = $motivo_row;
