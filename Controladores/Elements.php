@@ -2499,9 +2499,13 @@ public function getMenuSeguridadUsuario($ID){
     $con = new Conexion();
     $con->OpenConexion();
     $div = "<div class='tab-content' id='nav-tabContent'>";
-    $consulta = "SELECT * 
+    $consulta = "SELECT *
                  FROM centros_salud
-                 ORDER BY id_centro";
+                 WHERE centro_salud <> 'Sin Datos'
+                   AND (centro_salud LIKE '%CAPS%Nº%' 
+                        OR centro_salud LIKE '%Dengue%')
+                   AND estado = 1
+                 ORDER BY CAST(REGEXP_SUBSTR(centro_salud, '[0-9]+') AS INTEGER)  ASC";
     $obj_query = mysqli_query(
                       $con->Conexion,
                       $consulta
