@@ -100,12 +100,16 @@
 			}
 
 			if ($planilla == "11 Años") {
+				$responsable = "WOLYNIEC Jorge - Area Local";
 				$col = 'E';
 			} else if ($planilla == "C. INDICE PEDIATRIA") {
 				$col = 'AH';
+				$responsable = "Constanza Bertone";
 			} else if ($planilla == "C. INDICE ENFERMERIA") {
+				$responsable = "DELLAROSSA Mónica. ENFERMERA.";
 				$col = 'U';
 			} else {
+				$responsable = "WOLYNIEC Jorge - Area Local";
 				$col = 'K';
 			}
 
@@ -116,14 +120,12 @@
 			$Fecha =  date("Y-m-d");
 			$Fecha_Accion = date("Y-m-d");
 			$observacion = "";
-			$lista_motivos = null;
 			$response_json = [];
 			$row_json = [];
 
-			$responsable = "WOLYNIEC Jorge - Area Local";
-
 			for ($row = $com; $row <= $highestRow; $row++) {
 				$observacion = "";
+				$lista_motivos = null;
 				if (count($result->values[$row]) == 0) {
 					continue;
 				}
@@ -169,8 +171,6 @@
 						}
 					}
 				} else if ($planilla == "C. INDICE ENFERMERIA") {
-					$responsable = "DELLAROSSA Mónica. ENFERMERA.";
-					$lista_motivos = null;
 					for ($col = 0; $col <= $highestColumnIndex; $col++) {
 						$value = (!empty($result->values[$row][$col])) ? $result->values[$row][$col] : null;
 						$id_barrio = Barrio::get_id_by_name($con, "Castagnino");
@@ -240,23 +240,6 @@
 						}
 					}
 				} else if ($planilla == "C. INDICE PEDIATRIA") {
-					$responsable = "Constanza Bertone";
-					$value = (!empty($result->values[0][33])) ? $result->values[0][33] : null;
-					$fecha_movimiento = preg_match(
-						"/([0-9][0-9]|[1-9]).([0-9][0-9]|[1-9]).[2-9][0-9][0-9][0-9]/",
-								   $value,
-								   $result_array
-								  );
-					$lista_motivos[0]["fecha"] = null;
-					if (!empty($result_array[0])) {
-						$lista_fecha = explode("/", $result_array[0]);
-						$lista_fecha = array_reverse($lista_fecha);
-						$val_fecha = implode( "-", $lista_fecha);
-						$fecha_excel = strtotime($val_fecha);
-						$fecha_movimiento  = date(format: 'Y-m-d',timestamp: $fecha_excel);
-						$lista_motivos[0]["fecha"] = $fecha_movimiento;
-					}
-					$lista_motivos[0]["motivo"] = null;
 					for ($col = 0; $col <= $highestColumnIndex; $col++) {
 						$value = (!empty($result->values[$row][$col])) ? $result->values[$row][$col] : null;
 						switch ($col) {
@@ -315,11 +298,27 @@
 							case 14:
 								$observacion .= " - " . $value;
 								break;
-							case 33:
-								$lista_motivos[0]["motivo"] = codigoExcelMotivo(trim($value));
-								break;
+
 							default :
-								$observacion .= " - " . $value;
+								$valor_fecha = (!empty($result->values[0][$col])) ? $result->values[0][$col] : null;
+								$is_fecha = preg_match(
+											  "/([0-9][0-9]|[1-9]).([0-9][0-9]|[1-9]).[2-9][0-9][0-9][0-9]/",
+											  $valor_fecha,
+											 $result_array
+													  );
+								if ($col >= 33 && $is_fecha) {
+									$motivo_row["fecha"] = null;
+									if (!empty($result_array[0])) {
+										$lista_fecha = explode("/", $result_array[0]);
+										$lista_fecha = array_reverse($lista_fecha);
+										$valor_fecha = implode( "-", $lista_fecha);
+										$fecha_excel = strtotime($valor_fecha);
+										$fecha_movimiento  = date(format: 'Y-m-d',timestamp: $fecha_excel);
+										$lista_motivos[0]["fecha"] = $fecha_movimiento;
+									}
+									$motivo_row["motivo"] = codigoExcelMotivo(trim($value));
+									$lista_motivos[] = $motivo_row;
+								}
 								break;
 						}
 					}
