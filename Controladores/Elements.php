@@ -2389,7 +2389,7 @@ public function getMenuSeguridadUsuario($ID){
       $ConsultaResult = mysqli_query($Con3->Conexion,$ConsultaNombre)or die("Problemas al mostrar Personas");
     }
 
-    if((mysqli_num_rows($ConsultaResult) > 0) && (!empty($Nombre))){
+    if((mysqli_num_rows($ConsultaResult) > 0) && (!empty($Nombre))) {
       $Resultado = mysqli_fetch_array($ConsultaResult);
       $Select .= "<option value = '" . $Resultado["id_calle"] . "' selected = 'true'>" . $Resultado["calle_nombre"] . "</option>";
     } else {
@@ -2468,9 +2468,9 @@ public function getMenuSeguridadUsuario($ID){
                  style='overflow: auto; border-bottom: 1px solid #cdcdcd; border-top: 1px solid #cdcdcd;'>";
     $consulta = "SELECT * 
                  FROM centros_salud
-                 where centro_salud <> 'Sin Datos'
-                   and estado = 1
-                 ORDER BY id_centro";
+                 WHERE centro_salud <> 'Sin Datos'
+                   AND estado = 1
+                 ORDER BY CAST(REGEXP_SUBSTR(centro_salud, '[0-9]+') AS INTEGER)  ASC";
     $obj_query = mysqli_query(
                       $con->Conexion,
                       $consulta
@@ -2515,10 +2515,10 @@ public function getMenuSeguridadUsuario($ID){
               </thead>";
 
     while ($Ret = mysqli_fetch_array($obj_query)) {
-        $div .= "<div class='tab-pane fade " . (($count == 0) ? "show active": "") . "' 
-                      id='list-" . $Ret['id_centro'] . "' 
-                      role='tabpanel' 
-                      aria-labelledby='list-" . $Ret['id_centro'] . "-list'>"; 
+        $div .= "<div class='tab-pane fade " . (($count == 0) ? "show active": "") . "'
+                      id='list-" . $Ret['id_centro'] . "'
+                      role='tabpanel'
+                      aria-labelledby='list-" . $Ret['id_centro'] . "-list'>";
         $div .= $Table;
 
         $consulta = "SELECT * 
