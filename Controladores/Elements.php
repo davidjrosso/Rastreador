@@ -2567,7 +2567,7 @@ public function getMenuSeguridadUsuario($ID){
                     aria-labelledby='list-dengue-list'>";
       $div .= $Table;
       $div .= "<tr>
-                  <td>planilla</td>
+                  <td>laboratios</td>
                   <td style='max-width: 45px;'> 
                       <button class='btn btn-secondary' 
                               onClick='cargaMovimientosFormulario()'>
