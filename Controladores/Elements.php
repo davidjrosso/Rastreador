@@ -2479,16 +2479,26 @@ public function getMenuSeguridadUsuario($ID){
                       ) or die("Problemas al mostrar Personas");
     $count = 0;
     while ($Ret = mysqli_fetch_array($obj_query)) {
+      $centro_salud = preg_replace("~'~", "", $Ret['centro_salud']);
       $div .= "<a class='list-group-item list-group-item-action " . (($count == 0) ? "active": "") . " ' 
                   id='list-" . $Ret['id_centro'] . "-list' 
                   data-toggle='list' 
                   href='#list-" . $Ret['id_centro'] . "' 
                   role='tab' 
                   aria-controls='" . $Ret['id_centro'] . "'>" . 
-                 $Ret['centro_salud'] . 
+                  $centro_salud . 
               "</a>";
       $count++;
     }
+    $div .= "<a class='list-group-item list-group-item-action " . (($count == 0) ? "active": "") . " ' 
+                id='list-dengue-list' 
+                data-toggle='list' 
+                href='#list-dengue' 
+                role='tab' 
+                aria-controls='dengue'>
+              dengue
+            </a>";
+
     $div .= "</div>";
     $con->CloseConexion();
     return $div;
@@ -2550,6 +2560,26 @@ public function getMenuSeguridadUsuario($ID){
         $div .= "</div>";
         $count++;
     }
+
+      $div .= "<div class='tab-pane fade " . (($count == 0) ? "show active": "") . "'
+                    id='list-dengue'
+                    role='tabpanel'
+                    aria-labelledby='list-dengue-list'>";
+      $div .= $Table;
+      $div .= "<tr>
+                  <td>planilla</td>
+                  <td style='max-width: 45px;'> 
+                      <button class='btn btn-secondary' 
+                              onClick='cargaMovimientosFormulario()'>
+                        Enlace
+                      </button>
+                  </td>
+                </tr>";
+      $div .= "</table>";
+      $div .= "</div>";
+
+
+
     $div .= "</div>";
     $con->CloseConexion();
     return $div;

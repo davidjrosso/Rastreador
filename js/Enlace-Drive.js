@@ -44,3 +44,22 @@ import swal from '../node_modules/sweetalert2';
       error: dialogErrorCargaEnlace
     });
   }
+
+  export function cargaMovimientosFormulario(){
+    swal.fire({
+      title: "Proceso de carga de Excel",
+      text: "Los registros de casos estan siendo cargados al sistema",
+      icon: "warning",
+      showConfirmButton: true,
+      dangerMode: true,
+    });
+
+    $.ajax({
+      type: "POST",
+      cache: false,
+      url: "./Controladores/InsertFormularios.php",
+      async: true,
+      success: dialogCargaEnlace,
+      error: dialogErrorCargaEnlace
+    });
+  }
