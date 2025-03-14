@@ -100,20 +100,24 @@
 			}
 
 			if ($planilla == "11 Años") {
-				$responsable = "WOLYNIEC Jorge - Area Local";
+				$responsable_nombre = "WOLYNIEC Jorge - Area Local";
 				$col = 'E';
+				$range = $planilla . $fila . $col;
 			} else if ($planilla == "C. INDICE PEDIATRIA") {
-				$col = 'AH';
-				$responsable = "Constanza Bertone";
+				//$col = 'AH';
+				$responsable_nombre = "Constanza Bertone";
+				$range = $planilla;
 			} else if ($planilla == "C. INDICE ENFERMERIA") {
-				$responsable = "DELLAROSSA Mónica. ENFERMERA.";
+				$responsable_nombre = "DELLAROSSA Mónica. ENFERMERA.";
 				$col = 'U';
+				$range = $planilla . $fila . $col;
 			} else {
-				$responsable = "WOLYNIEC Jorge - Area Local";
+				$responsable_nombre = "WOLYNIEC Jorge - Area Local";
 				$col = 'K';
+				$range = $planilla . $fila . $col;
 			}
 
-			$range = $planilla . $fila . $col;
+			
 			$result = $service_sheets->spreadsheets_values->get($id_file, $range);
 			$highestRow = count($result->values) - 1;
 
@@ -125,13 +129,13 @@
 
 			for ($row = $com; $row <= $highestRow; $row++) {
 				$observacion = "";
-				$lista_motivos = null;
+				$lista_motivos = [];
 				if (count($result->values[$row]) == 0) {
 					continue;
 				}
 				$highestColumnIndex = count($result->values[$row]) - 1;
 				if ($planilla == "EMBARAZADAS") {
-					$responsable = "WOLYNIEC Jorge - Area Local";
+					$responsable_nombre= "WOLYNIEC Jorge - Area Local";
 					for ($col = 0; $col <= $highestColumnIndex; $col++) {
 						$value = (!empty($result->values[$row][$col])) ? $result->values[$row][$col] : null;
 						$id_barrio = Barrio::get_id_by_name($con, "Castagnino");
@@ -300,7 +304,7 @@
 								break;
 
 							default :
-								$valor_fecha = (!empty($result->values[0][$col])) ? $result->values[0][$col] : null;
+								$valor_fecha = (!empty($result->values[1][$col])) ? $result->values[1][$col] : null;
 								$is_fecha = preg_match(
 											  "/([0-9][0-9]|[1-9]).([0-9][0-9]|[1-9]).[2-9][0-9][0-9][0-9]/",
 											  $valor_fecha,
@@ -323,7 +327,7 @@
 						}
 					}
 				} else if ($planilla == "11 Años") {
-					$responsable = "DELLAROSSA Mónica. ENFERMERA.";
+					$responsable_nombre = "DELLAROSSA Mónica. ENFERMERA.";
 					$observacion = "";
 					for ($col = 0; $col <= $highestColumnIndex; $col++) {
 						$value = (!empty($result->values[$row][$col])) ? $result->values[$row][$col] : null;
@@ -373,7 +377,7 @@
 					$ID_TipoAccion = 1;
 	
 					if (!Responsable::is_registered(coneccion_base: $con, 
-													nombre: $responsable
+													nombre: $responsable_nombre
 						)) {
 						$responsable = new Responsable(
 							coneccion_base: $con,
@@ -384,7 +388,7 @@
 					} else {
 						$id_responsable = Responsable::get_id_responsable_by_name(
 																   coneccion_base: $con,
-																	  responsable: $responsable
+																	  responsable: $responsable_nombre
 						);
 						if (is_null($id_responsable)) {
 							continue;
@@ -423,6 +427,14 @@
 						$persona->setDomicilio($direccion);
 						$persona->save();
 						$id_persona = $persona->getID_Persona();
+						$detalles = "El usuario con ID: $ID_Usuario ha registrado un nueva persona. Datos: Persona: " . $persona->getID_Persona();
+						$accion = new Accion(
+							xaccountid: $ID_Usuario,
+							xFecha: $Fecha,
+							xDetalles: $detalles,
+							xID_TipoAccion: $ID_TipoAccion
+						);
+						$accion->save();
 					} else {
 						$id_persona = Persona::get_id_persona_by_dni($dni);
 						if (is_null($id_persona)) {
@@ -432,15 +444,6 @@
 					}
 	
 					$row_json["persona"] = $persona->jsonSerialize();
-					$detalles = "El usuario con ID: $ID_Usuario ha registrado un nueva persona. Datos: Persona: " . $persona->getID_Persona();
-					$accion = new Accion(
-						xaccountid: $ID_Usuario,
-						xFecha: $Fecha,
-						xDetalles: $detalles,
-						xID_TipoAccion: $ID_TipoAccion
-					);
-					$accion->save();
-
 					$exist_mov = Movimiento::is_exist_movimiento_fecha(
 																	   coneccion: $con,
 																	   fecha: $value["fecha"],
