@@ -1659,7 +1659,7 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
               //                     P.domicilio DESC, P.apellido DESC, M.fecha DESC, M.id_movimiento DESC";
             } else {
               $Consulta .= " order by B.Barrio DESC, P.domicilio DESC , P.manzana DESC, P.lote DESC, P.familia DESC,
-                                      P.domicilio DESC, P.apellido DESC, M.fecha ASC, M.id_movimiento ASC";
+                                      P.domicilio DESC, P.apellido DESC, P.id_persona ASC, M.fecha ASC, M.id_movimiento ASC";
             }
 
             $MensajeError = "No se pudieron consultar los Datos";
@@ -1712,7 +1712,6 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
 
             $Ejecutar_Consulta_general = mysqli_query($Con->Conexion, $Consulta) or die("Error al consultar datos");
             $Con->ResultSet = $Ejecutar_Consulta_general;
-
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

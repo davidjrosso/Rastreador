@@ -361,6 +361,7 @@
 						}
 					}
 				}
+
 				foreach ($lista_motivos as $key => $value) {
 					if (!$value["motivo"] || !$value["fecha"]) {
 						continue;
