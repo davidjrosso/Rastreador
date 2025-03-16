@@ -768,7 +768,7 @@ public static function get_id_persona_by_dni($documento)
 		$mensaje_error . " Consulta: " . $consulta
 	);
 	$row = mysqli_fetch_assoc($ret);
-	$id = $row["id_persona"];
+	$id = (empty($row["id_persona"])) ? null : $row["id_persona"];
 	$con->CloseConexion();
 	return $id;
 }

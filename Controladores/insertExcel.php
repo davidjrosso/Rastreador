@@ -364,6 +364,13 @@
 
 				foreach ($lista_motivos as $key => $value) {
 					if (!$value["motivo"] || !$value["fecha"]) {
+						$id_persona = (empty($dni)) ? null : Persona::get_id_persona_by_dni($dni);
+						if (!is_null($id_persona) && is_numeric($id_persona)) {
+							$persona = new Persona(ID_Persona: $id_persona);
+							$persona->setNro($direccion);
+							$persona->setDomicilio($direccion);
+							$persona->update();
+						}
 						continue;
 					}
 
@@ -442,8 +449,11 @@
 							continue;
 						}
 						$persona = new Persona(ID_Persona: $id_persona);
+						$persona->setNro($direccion);
+						$persona->setDomicilio($direccion);
+						$persona->update();
 					}
-	
+
 					$row_json["persona"] = $persona->jsonSerialize();
 					$exist_mov = Movimiento::is_exist_movimiento_fecha(
 																	   coneccion: $con,
