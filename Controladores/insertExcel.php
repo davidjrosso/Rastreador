@@ -64,6 +64,7 @@
 	}
 
     try {
+
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$con = new Conexion();
 			$con->OpenConexion();
@@ -361,7 +362,7 @@
 						}
 					}
 				}
-
+				$consulta_osm = true;
 				foreach ($lista_motivos as $key => $value) {
 					if (!$value["motivo"] || !$value["fecha"]) {
 						$id_persona = (empty($dni)) ? null : Persona::get_id_persona_by_dni($dni);
@@ -434,6 +435,7 @@
 						$persona->setNro($direccion);
 						$persona->setDomicilio($direccion);
 						$persona->save();
+						$consulta_osm = false;
 						$id_persona = $persona->getID_Persona();
 						$detalles = "El usuario con ID: $ID_Usuario ha registrado un nueva persona. Datos: Persona: " . $persona->getID_Persona();
 						$accion = new Accion(
@@ -449,9 +451,12 @@
 							continue;
 						}
 						$persona = new Persona(ID_Persona: $id_persona);
-						$persona->setNro($direccion);
-						$persona->setDomicilio($direccion);
-						$persona->update();
+						if ($consulta_osm) {
+							$persona->setNro($direccion);
+							$persona->setDomicilio($direccion);
+							$persona->update();
+							$consulta_osm = false;
+						}
 					}
 
 					$row_json["persona"] = $persona->jsonSerialize();
