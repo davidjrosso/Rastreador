@@ -135,7 +135,7 @@ class Persona implements JsonSerializable {
 								 where ID_Persona = " . $ID_Persona . " 
 								   and estado = 1";
 			$EjecutarConsultarPersona = mysqli_query(
-				$Con->Conexion, 
+				$Con->Conexion,
 				$ConsultarPersona) or die("Problemas al consultar filtro Persona");
 			$ret = mysqli_fetch_assoc($EjecutarConsultarPersona);
 	
@@ -145,10 +145,10 @@ class Persona implements JsonSerializable {
 			$dni = $ret["documento"];
 			$edad = $ret["edad"];
 			$meses = $ret["meses"];
-			if(is_null($ret["fecha_nac"]) || $ret["fecha_nac"] == "null"){
+			if(is_null($ret["fecha_nac"]) || $ret["fecha_nac"] == "null") {
 				$fecha_nacimiento = "No se cargo fecha de nacimiento";
 			} else {
-				$fecha_nacimiento = implode("/", array_reverse(explode("-",$ret["fecha_nac"])));    
+				$fecha_nacimiento = implode("/", array_reverse(explode("-",$ret["fecha_nac"])));
 			}
 			$nro_Carpeta = $ret["nro_carpeta"];
 			$nro_Legajo = $ret["nro_legajo"];
@@ -852,13 +852,21 @@ public function update()
 {
 	$Con = new Conexion();
 	$Con->OpenConexion();
+	$fecha = implode(
+		  "-",
+			  array_reverse(explode(
+									   "/",
+								  		  $this->getFecha_Nacimiento()
+												 )
+								  )
+					);
 	$Consulta = "update persona 
 				 set apellido = " . ((!is_null($this->getApellido())) ? "'" . $this->getApellido() . "'" : "null") . ", 
 				 	 nombre = " . ((!is_null($this->getNombre())) ? "'" . $this->getNombre() . "'" : "null") . ", 
 					 documento = " . ((!is_null($this->getDNI())) ? "'" . $this->getDNI() . "'" : "null") . ", 
 					 nro_legajo = " . ((!is_null($this->getNro_Legajo())) ? "'" . $this->getNro_Legajo() . "'" : "null") . ", 
 					 edad = " . ((!is_null($this->getEdad())) ? "'" . $this->getEdad() . "'" : "null") . ", 
-					 fecha_nac = " . ((!is_null($this->getFecha_Nacimiento())) ? "'" . $this->getFecha_Nacimiento() . "'" : "null") . ", 
+					 fecha_nac = " . ((!is_null($this->getFecha_Nacimiento())) ? "'" . $fecha . "'" : "null") . ", 
 					 telefono = " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono() . "'" : "null") . ", 
 					 mail = " . ((!is_null($this->getMail())) ? "'" . $this->getMail() . "'" : "null") . ", 
 					 nro_carpeta = " . ((!is_null($this->getNro_Carpeta())) ? "'" . $this->getNro_Carpeta() . "'" : "null") . ", 
