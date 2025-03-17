@@ -369,7 +369,7 @@
 							$persona = new Persona(ID_Persona: $id_persona);
 							$persona->setNro($direccion);
 							$persona->setDomicilio($direccion);
-							$persona->update();
+							$persona->update_direccion();
 						}
 						continue;
 					}
