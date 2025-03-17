@@ -136,7 +136,7 @@
 				}
 				$highestColumnIndex = count($result->values[$row]) - 1;
 				if ($planilla == "EMBARAZADAS") {
-					$responsable_nombre= "WOLYNIEC Jorge - Area Local";
+					$responsable_nombre= "Florencia Gil";
 					for ($col = 0; $col <= $highestColumnIndex; $col++) {
 						$value = (!empty($result->values[$row][$col])) ? $result->values[$row][$col] : null;
 						$id_barrio = Barrio::get_id_by_name($con, "Castagnino");
