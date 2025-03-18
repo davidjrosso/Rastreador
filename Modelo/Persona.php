@@ -1,5 +1,6 @@
 <?php
 require_once('Accion.php');
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Parametria.php';
 class Persona implements JsonSerializable {
 	//DECLARACION DE VARIABLES
 	private $Apellido;
@@ -246,10 +247,12 @@ public function setObra_Social($xObra_Social){
 
 public function setDomicilio($xDomicilio = null)
 {
+	$igual = true;
 	$id_calle = (!$xDomicilio) ? $this->getId_Calle() : null;
 	$numero_calle = (!$xDomicilio) ? trim($this->getNro()) : null;
 	$domicilio = ($xDomicilio) ? $xDomicilio : null;
 	$nombre_calle = null;
+
 	$con = new Conexion();
 	$con->OpenConexion();
 	if (!is_null($id_calle)) {
@@ -278,42 +281,76 @@ public function setDomicilio($xDomicilio = null)
 					    and estado = 1
 					 order by calle_nombre asc;";
 		$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
+
+		$nro_calle = trim($domicilio);
+		$out = null;
+		$ret = null;
+		if (preg_match('~ [0-9]+$~', $nro_calle, $out)) {
+			$nro_calle = trim($out[0]);
+		} else {
+			if (preg_match('~ [0-9]+ ([aA-zZ]|[0-9])+~', $nro_calle, $ret)) {
+				$lista = explode(" ", trim($ret[0]));
+				$nro_calle = trim($lista[0]);
+			} else {
+				preg_match('~^[0-9]+$~', $nro_calle, $out);
+				if (!empty($out[0])) {
+					$nro_calle = trim($out[0]);
+				} else {
+					$nro_calle = null;
+				}
+			}
+		}
+
 		if (mysqli_num_rows($query_object) > 0) {
 			$ret = mysqli_fetch_assoc($query_object);
-			$nombre_calle = $ret["calle_open"];
-			$this->Calle = $ret["id_calle"];
-			$domicilio = "$nombre_calle " . $this->getNro();
+			if ($ret["id_calle"] != $this->Calle
+				|| $nro_calle != $this->getNro()) {
+				$nombre_calle = $ret["calle_open"];
+				$this->Calle = $ret["id_calle"];
+				$this->Nro = (($nro_calle) ? $nro_calle : $this->getNro());
+				$domicilio = "$nombre_calle " . $this->getNro();
+			} else {
+				$igual = false;
+			}
+		} else {
+			$igual = false;
 		}
 		$domicilio = str_replace(array('á','é','í','ó','ú','ñ'), array('a','e','i','o','u','n'), $domicilio);
 	}
 
 	$Fecha = date("Y-m-d");
-	if ($domicilio) {
-		$ch = curl_init();
-		$url = "https://maps.googleapis.com/maps/api/geocode/json?address=" . str_replace(" ", "+", trim($domicilio)) . "+Rio+Tercero,Cordoba&key=AIzaSyAdiF1F7NoZbmAzBWfV6rxjJrGsr1Yvb1g";
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_HEADER  , 1);
-		$response = curl_exec($ch);
-		$response_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		$arr_obj_json = json_decode($response);
-		curl_close($ch);
-		if ($response_status == 200) {
-			$body_request = (($arr_obj_json) ? " " . json_encode($arr_obj_json->results[0]) : "");
+	if ($domicilio && !$igual) {
+		$up_query_go = Parametria::get_value_by_code($con, "UP_GOOGLE");
+		if ($up_query_go) {
+			$ch = curl_init();
+			$url = "https://maps.googleapis.com/maps/api/geocode/json?address=" . str_replace(" ", "+", trim($domicilio)) . "+Rio+Tercero,Cordoba&key=AIzaSyAdiF1F7NoZbmAzBWfV6rxjJrGsr1Yvb1g";
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_HEADER  , 1);
+			$response = curl_exec($ch);
+			$response_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			$arr_obj_json = json_decode($response);
+			curl_close($ch);
+			if ($response_status == 200) {
+				$body_request = (($arr_obj_json) ? " " . json_encode($arr_obj_json->results[0]) : "");
+			} else {
+				$body_request = "- El estado de la respuesta de google api es : " . $response_status;
+				$arr_obj_json = null;
+			}
+			$detalles = $url . $body_request;
+			$accion = new Accion(
+				xFecha : $Fecha,
+				xDetalles : $detalles,
+				xID_TipoAccion : 1
+			);
+			$accion->save();
+	
+			$center_rio_tercero_lat = -32.194998;
+			$center_rio_tercero_lon = -64.1684546;
 		} else {
-			$body_request = "- El estado de la respuesta de google api es : " . $response_status;
 			$arr_obj_json = null;
 		}
-		$detalles = $url . $body_request;
-		$accion = new Accion(
-			xFecha : $Fecha,
-			xDetalles : $detalles,
-			xID_TipoAccion : 1
-		);
-		$accion->save();
 
-		$center_rio_tercero_lat = -32.194998;
-		$center_rio_tercero_lon = -64.1684546;
 		if ($arr_obj_json && $arr_obj_json->results) {
 			if ((!is_null($arr_obj_json->results[0]->geometry->location->lat) 
 				|| !is_null($arr_obj_json->results[0]->geometry->location->lng))
@@ -718,6 +755,98 @@ public function getEscuela()
 public function getTrabajo()
 {
 	return $this->Trabajo;
+}
+
+
+public function igual_domicilio($domicilio){
+	$con = new Conexion();
+	$con->OpenConexion();
+	$igual = true;
+	$consulta = "select calle_open, id_calle
+				 from calle
+				 where lower(calle_nombre) like CONCAT(
+				 									'%',
+				 									REGEXP_REPLACE( 
+				 											REGEXP_REPLACE(
+				 															REGEXP_SUBSTR(
+				 																	lower('$domicilio'), 
+				 																	'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
+				 															),
+				 															'( )+',
+				 															'%'
+				 															),
+				 													'(\\\\.)',
+				 													''
+				  													),
+				 									'%'
+				 									)
+				 and estado = 1
+				 order by calle_nombre asc;";
+	$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
+
+	$nro_calle = trim($domicilio);
+	$out = null;
+	$ret = null;
+	if (preg_match('~ [0-9]+$~', $nro_calle, $out)) {
+		$nro_calle = trim($out[0]);
+	} else {
+		if (preg_match('~ [0-9]+ ([aA-zZ]|[0-9])+~', $nro_calle, $ret)) {
+			$lista = explode(" ", trim($ret[0]));
+			$nro_calle = trim($lista[0]);
+		} else {
+			preg_match('~^[0-9]+$~', $nro_calle, $out);
+			if (!empty($out[0])) {
+				$nro_calle = trim($out[0]);
+			} else {
+				$nro_calle = null;
+			}
+		}
+	}
+
+	if (mysqli_num_rows($query_object) > 0) {
+		$id_calle = (empty($ret["calle_open"])) ? 0 : $ret["calle_open"];
+		if ($id_calle != $this->getId_Calle()
+			|| $this->getNro() != $nro_calle) {
+			$igual = false;
+		}
+	}
+	return $igual;
+}
+
+
+public function igual_calle($domicilio){
+	$con = new Conexion();
+	$con->OpenConexion();
+	$igual = true;
+	$consulta = "select calle_open, id_calle
+				 from calle
+				 where lower(calle_nombre) like CONCAT(
+				 									'%',
+				 									REGEXP_REPLACE( 
+				 											REGEXP_REPLACE(
+				 															REGEXP_SUBSTR(
+				 																	lower('$domicilio'), 
+				 																	'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
+				 															),
+				 															'( )+',
+				 															'%'
+				 															),
+				 													'(\\\\.)',
+				 													''
+				  													),
+				 									'%'
+				 									)
+				 and estado = 1
+				 order by calle_nombre asc;";
+	$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
+	$ret = mysqli_fetch_assoc($query_object);
+	if (mysqli_num_rows($query_object) > 0) {
+		$id_calle = (empty($ret["calle_open"])) ? 0 : $ret["calle_open"];
+		if ($id_calle != $this->getId_Calle()) {
+			$igual = false;
+		}
+	}
+	return $igual;
 }
 
 public static function is_exist($coneccion, $id_persona)

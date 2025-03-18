@@ -368,8 +368,8 @@
 						$id_persona = (empty($dni)) ? null : Persona::get_id_persona_by_dni($dni);
 						if (!is_null($id_persona) && is_numeric($id_persona)) {
 							$persona = new Persona(ID_Persona: $id_persona);
-							$persona->setNro($direccion);
 							$persona->setDomicilio($direccion);
+							//$persona->setNro($direccion);
 							$persona->update_direccion();
 						}
 						continue;
@@ -452,9 +452,9 @@
 						}
 						$persona = new Persona(ID_Persona: $id_persona);
 						if ($consulta_osm) {
-							$persona->setNro($direccion);
 							$persona->setDomicilio($direccion);
-							$persona->update();
+							//$persona->setNro($direccion);
+							$persona->update_direccion();
 							$consulta_osm = false;
 						}
 					}
