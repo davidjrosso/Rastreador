@@ -2544,7 +2544,7 @@ public function getMenuSeguridadUsuario($ID){
         $result = mysqli_query($con->Conexion,$consulta) or die("Problemas al mostrar los archivos");
         while ($row = mysqli_fetch_array($result)) {
             $div .= "<tr>
-                        <td>" . $row["planilla"] . "</td>
+                        <td class='tabla-celda-planilla'>" . $row["planilla"] . "</td>
                         <td style='max-width: 45px;'> 
                             <button class='btn btn-secondary' 
                                     onClick='cargaMovimientosExcel(" . 

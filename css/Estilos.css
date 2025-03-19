@@ -630,3 +630,9 @@ div .nav-side-menu {
     height: 700px;
   }
 }
+
+.tabla-celda-planilla {
+  @media (700px < width <= 1400px) {
+    width: 400px;
+  }
+}
