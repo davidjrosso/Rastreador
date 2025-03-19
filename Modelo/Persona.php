@@ -247,7 +247,6 @@ public function setObra_Social($xObra_Social){
 
 public function setDomicilio($xDomicilio = null)
 {
-	$igual = true;
 	$id_calle = (!$xDomicilio) ? $this->getId_Calle() : null;
 	$numero_calle = (!$xDomicilio) ? trim($this->getNro()) : null;
 	$domicilio = ($xDomicilio) ? $xDomicilio : null;
@@ -303,23 +302,18 @@ public function setDomicilio($xDomicilio = null)
 
 		if (mysqli_num_rows($query_object) > 0) {
 			$ret = mysqli_fetch_assoc($query_object);
-			if ($ret["id_calle"] != $this->Calle
-				|| $nro_calle != $this->getNro()) {
+			if ($ret["id_calle"]) {
 				$nombre_calle = $ret["calle_open"];
 				$this->Calle = $ret["id_calle"];
 				$this->Nro = (($nro_calle) ? $nro_calle : $this->getNro());
 				$domicilio = "$nombre_calle " . $this->getNro();
-			} else {
-				$igual = false;
 			}
-		} else {
-			$igual = false;
 		}
 		$domicilio = str_replace(array('á','é','í','ó','ú','ñ'), array('a','e','i','o','u','n'), $domicilio);
 	}
 
 	$Fecha = date("Y-m-d");
-	if ($domicilio && !$igual) {
+	if ($domicilio) {
 		$up_query_go = Parametria::get_value_by_code($con, "UP_GOOGLE");
 		if ($up_query_go) {
 			$ch = curl_init();
@@ -416,6 +410,79 @@ public function setDomicilio($xDomicilio = null)
 			}
 		}
 	}
+	$this->Domicilio = $domicilio;
+	$con->CloseConexion();
+}
+
+public function setCalleNro($xDomicilio = null)
+{
+	$id_calle = (!$xDomicilio) ? $this->getId_Calle() : null;
+	$numero_calle = (!$xDomicilio) ? trim($this->getNro()) : null;
+	$domicilio = ($xDomicilio) ? $xDomicilio : null;
+	$nombre_calle = null;
+
+	$con = new Conexion();
+	$con->OpenConexion();
+	if (!is_null($id_calle)) {
+		$nombre_calle = $this->getNombre_Calle();
+		$domicilio = "$nombre_calle $numero_calle";
+		$domicilio = str_replace(array('á','é','í','ó','ú','ñ'), array('a','e','i','o','u','n'), $domicilio);
+	} else if ($domicilio) {
+		$consulta = "select calle_open, id_calle
+					 from calle
+					 where lower(calle_nombre) like CONCAT(
+															'%',
+															REGEXP_REPLACE( 
+																	REGEXP_REPLACE(
+																					REGEXP_SUBSTR(
+																							lower('$domicilio'), 
+																							'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
+																					),
+																					'( )+',
+																					'%'
+																					),
+																			'(\\\\.)',
+																			''
+																			),
+															'%'
+															)
+					    and estado = 1
+					 order by calle_nombre asc;";
+		$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
+
+		$nro_calle = trim($domicilio);
+		$out = null;
+		$ret = null;
+		if (preg_match('~ [0-9]+$~', $nro_calle, $out)) {
+			$nro_calle = trim($out[0]);
+		} else {
+			if (preg_match('~ [0-9]+ ([aA-zZ]|[0-9])+~', $nro_calle, $ret)) {
+				$lista = explode(" ", trim($ret[0]));
+				$nro_calle = trim($lista[0]);
+			} else {
+				preg_match('~^[0-9]+$~', $nro_calle, $out);
+				if (!empty($out[0])) {
+					$nro_calle = trim($out[0]);
+				} else {
+					$nro_calle = null;
+				}
+			}
+		}
+
+		if (mysqli_num_rows($query_object) > 0) {
+			$ret = mysqli_fetch_assoc($query_object);
+			if ($ret["id_calle"] != $this->Calle
+				|| $nro_calle != $this->getNro()) {
+				$nombre_calle = $ret["calle_open"];
+				$this->Calle = $ret["id_calle"];
+				$this->Nro = (($nro_calle) ? $nro_calle : $this->getNro());
+				$domicilio = "$nombre_calle " . $this->getNro();
+				$igual = false;
+			}
+		}
+		$domicilio = str_replace(array('á','é','í','ó','ú','ñ'), array('a','e','i','o','u','n'), $domicilio);
+	}
+
 	$this->Domicilio = $domicilio;
 	$con->CloseConexion();
 }

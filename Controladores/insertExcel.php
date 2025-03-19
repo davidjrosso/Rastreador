@@ -127,6 +127,11 @@
 			$observacion = "";
 			$response_json = [];
 			$row_json = [];
+			$request = [];
+			$row_request = [];
+			$multi_request_ch = curl_multi_init();
+			$active = null;
+			$server = 0;
 
 			for ($row = $com; $row <= $highestRow; $row++) {
 				$observacion = "";
@@ -368,9 +373,33 @@
 						$id_persona = (empty($dni)) ? null : Persona::get_id_persona_by_dni($dni);
 						if (!is_null($id_persona) && is_numeric($id_persona)) {
 							$persona = new Persona(ID_Persona: $id_persona);
-							$persona->setDomicilio($direccion);
-							//$persona->setNro($direccion);
-							$persona->update_direccion();
+							//$persona->setDomicilio($direccion);
+							$persona->setCalleNro($direccion);
+							if ($persona->getId_Calle()) {
+								$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
+								if ($server == 0) {
+									$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
+									$row_request["server"] = $server;
+									$server++;
+								} else if ($server == 1) {
+									$url = "https://photon.komoot.io/api/?q=" . $calle_url . "+" . $persona->getNro() . ",rio+tercero";
+									$row_request["server"] = $server;
+									$server++;
+								} else {
+									$url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=json&apiKey=b43e46b080e940b39d1bbee88b9cb320";
+									$row_request["server"] = $server;
+									$server = 0;
+								}
+								$row_request["url"] = $url;
+								$row_request["calle_url"] = $calle_url . "+" . $persona->getNro();
+								$ch = curl_init();
+								curl_setopt($ch, CURLOPT_URL, $row_request["url"]);
+								curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+								$row_request["channel"] = $ch;
+								$row_request["persona"] = $persona;
+								$request[] = $row_request;
+								$persona->update_direccion();
+							}
 						}
 						continue;
 					}
@@ -432,8 +461,31 @@
 							xMail:$email,
 							xID_Escuela: 2
 						);
-						$persona->setNro($direccion);
-						$persona->setDomicilio($direccion);
+						$persona->setCalleNro($direccion);
+						if ($persona->getId_Calle()) {
+							$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
+							if ($server == 0) {
+								$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
+								$row_request["server"] = $server;
+								$server++;
+							} else if ($server == 1) {
+								$url = "https://photon.komoot.io/api/?q=" . $calle_url . "+" . $persona->getNro() . ",rio+tercero";
+								$row_request["server"] = $server;
+								$server++;
+							} else {
+								$url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=json&apiKey=b43e46b080e940b39d1bbee88b9cb320";
+								$row_request["server"] = $server;
+								$server = 0;
+							}
+							$row_request["url"] = $url;
+							$row_request["calle_url"] = $calle_url . "+" . $persona->getNro();
+							$ch = curl_init();
+							curl_setopt($ch, CURLOPT_URL, $row_request["url"]);
+							curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+							$row_request["channel"] = $ch;
+							$row_request["persona"] = $persona;
+							$request[] = $row_request;
+						}
 						$persona->save();
 						$consulta_osm = false;
 						$id_persona = $persona->getID_Persona();
@@ -452,9 +504,33 @@
 						}
 						$persona = new Persona(ID_Persona: $id_persona);
 						if ($consulta_osm) {
-							$persona->setDomicilio($direccion);
-							//$persona->setNro($direccion);
-							$persona->update_direccion();
+							//$persona->setDomicilio($direccion);
+							$persona->setCalleNro($direccion);
+							if ($persona->getId_Calle()) {
+								$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
+								if ($server == 0) {
+									$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
+									$row_request["server"] = $server;
+									$server++;
+								} else if ($server == 1) {
+									$url = "https://photon.komoot.io/api/?q=" . $calle_url . "+" . $persona->getNro() . ",rio+tercero";
+									$row_request["server"] = $server;
+									$server++;
+								} else {
+									$url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=json&apiKey=b43e46b080e940b39d1bbee88b9cb320";
+									$row_request["server"] = $server;
+									$server = 0;
+								}
+								$row_request["url"] = $url;
+								$row_request["calle_url"] = $calle_url . "+" . $persona->getNro();
+								$ch = curl_init();
+								curl_setopt($ch, CURLOPT_URL, $row_request["url"]);
+								curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+								$row_request["channel"] = $ch;
+								$row_request["persona"] = $persona;
+								$request[] = $row_request;
+								$persona->update_direccion();
+							}
 							$consulta_osm = false;
 						}
 					}
@@ -533,6 +609,84 @@
 				}
 
 			}
+
+			$count = 0;
+			$row = [];
+			foreach ($request as $key => $value) {
+				$row["ch"] = $value["channel"];
+				$row["server"] = $value["server"];
+				$row["persona"] = $value["persona"];
+				if ($count < 2) {
+					curl_multi_add_handle($multi_request_ch, $row["ch"]);
+					$row_exec[] = $row;
+					$count++;
+				} else {
+					curl_multi_add_handle($multi_request_ch, $row["ch"]);
+					$row_exec[] = $row;
+					do {
+						$mrc = curl_multi_exec($multi_request_ch, $active);
+					} while ($mrc == CURLM_CALL_MULTI_PERFORM);
+		
+					while ($active && $mrc == CURLM_OK) {
+						if (curl_multi_select($multi_request_ch) != -1) {
+							do {
+								$mrc = curl_multi_exec($multi_request_ch, $active);
+							} while ($mrc == CURLM_CALL_MULTI_PERFORM);
+						}
+					}
+					$count = 0;
+					foreach ($row_exec as $indice => $valor) {
+						$ch = $valor["ch"];
+						$response_body = curl_multi_getcontent($ch );
+						curl_multi_remove_handle($multi_request_ch, $ch );
+						$arr_obj_json = json_decode($response_body);
+						if ($arr_obj_json &&  $valor["server"] == 0) {
+							if (!is_null($arr_obj_json[0]->lat) || !is_null($arr_obj_json[0]->lon)) {
+								$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
+								$valor["persona"]->setGeoreferencia($point);
+								$valor["persona"]->update_geo();
+							} else {
+								$valor["persona"]->setGeoreferencia(null);
+							}
+						} else if ($arr_obj_json &&  $valor["server"] == 1) {
+							if (!is_null($arr_obj_json->features[0]->geometry->coordinates[1]) || !is_null($arr_obj_json->features[0]->geometry->coordinates[0])) {
+								$point = "POINT(" . $arr_obj_json->features[0]->geometry->coordinates[1] . ", " . $arr_obj_json->features[0]->geometry->coordinates[0] . ")";
+								$valor["persona"]->setGeoreferencia($point);
+								$valor["persona"]->update_geo();
+							} else {
+								$valor["persona"]->setGeoreferencia(null);
+							}
+						} else if ($arr_obj_json &&  $valor["server"] == 2) {
+							if (!is_null($arr_obj_json->results[0]->lat) || !is_null($arr_obj_json->features[0]->lon)) {
+								$point = "POINT(" . $arr_obj_json->results[0]->lat . ", " . $arr_obj_json->results[0]->lon . ")";
+								$valor["persona"]->setGeoreferencia($point);
+								$valor["persona"]->update_geo();
+							} else {
+								$valor["persona"]->setGeoreferencia(null);
+							}
+						} else {
+							$url = "https://photon.komoot.io/api/?q=" . $value["calle_url"];
+							curl_setopt($ch, CURLOPT_URL, $url);
+							curl_setopt($ch, CURLOPT_FAILONERROR, true);
+							curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+							$response = curl_exec($ch);
+							$error = curl_error($ch);
+							$arr_obj_json = json_decode($response);
+							if (!is_null($arr_obj_json->features[0]->geometry->coordinates[1]) || !is_null($arr_obj_json->features[0]->geometry->coordinates[0])) {
+								$point = "POINT(" . $arr_obj_json->features[0]->geometry->coordinates[1] . ", " . $arr_obj_json->features[0]->geometry->coordinates[0] . ")";
+								$valor["persona"]->setGeoreferencia($point);
+								$valor["persona"]->update_geo();
+							} else {
+								$valor["persona"]->setGeoreferencia(null);
+							}
+						}
+						curl_close($ch);
+					}
+					$row_exec = [];
+					sleep(1);
+				}
+			}
+
 			$con->CloseConexion();
 
 			$mensaje = "El/Los formularios se ha cargado correctamente";
