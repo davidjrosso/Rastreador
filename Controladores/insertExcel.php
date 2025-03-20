@@ -384,7 +384,7 @@
 									$row_request["server"] = $server;
 									$server++;
 								} else if ($server == 1) {
-									$url = "https://photon.komoot.io/api/?q=" . $calle_url . "+" . $persona->getNro() . ",rio+tercero";
+									$url = "https://photon.komoot.io/api/?q=" . $calle_url . "+" . $persona->getNro() . ",+rio+tercero,+Cordoba&lon=-64.1684546&lat=-32.194998";
 									$row_request["server"] = $server;
 									$server++;
 								} else {
@@ -471,7 +471,7 @@
 								$row_request["server"] = $server;
 								$server++;
 							} else if ($server == 1) {
-								$url = "https://photon.komoot.io/api/?q=" . $calle_url . "+" . $persona->getNro() . ",rio+tercero";
+								$url = "https://photon.komoot.io/api/?q=" . $calle_url . "+" . $persona->getNro() . ",+rio+tercero,+Cordoba&lon=-64.1684546&lat=-32.194998";
 								$row_request["server"] = $server;
 								$server++;
 							} else {
@@ -518,7 +518,7 @@
 									$row_request["server"] = $server;
 									$server++;
 								} else if ($server == 1) {
-									$url = "https://photon.komoot.io/api/?q=" . $calle_url . "+" . $persona->getNro() . ",rio+tercero";
+									$url = "https://photon.komoot.io/api/?q=" . $calle_url . "+" . $persona->getNro() . ",+rio+tercero,+Cordoba&lon=-64.1684546&lat=-32.194998";
 									$row_request["server"] = $server;
 									$server++;
 								} else {
@@ -644,7 +644,7 @@
 					foreach ($row_exec as $indice => $valor) {
 						$ch = $valor["ch"];
 						$response_body = curl_multi_getcontent($ch );
-						curl_multi_remove_handle($multi_request_ch, $ch );
+						curl_multi_remove_handle($multi_request_ch, $ch);
 						$arr_obj_json = json_decode($response_body);
 						if ($arr_obj_json &&  $valor["server"] == 0) {
 							if (!is_null($arr_obj_json[0]->lat) || !is_null($arr_obj_json[0]->lon)) {
@@ -671,7 +671,7 @@
 								$valor["persona"]->setGeoreferencia(null);
 							}
 						} else {
-							$url = "https://photon.komoot.io/api/?q=" . $valor["calle_url"];
+							$url = "https://photon.komoot.io/api/?q=" . $valor["calle_url"] . ",+rio+tercero,+Cordoba";
 							curl_setopt($ch, CURLOPT_URL, $url);
 							curl_setopt($ch, CURLOPT_FAILONERROR, true);
 							curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -693,6 +693,68 @@
 				}
 			}
 
+			if ($row_exec) {
+				do {
+					$mrc = curl_multi_exec($multi_request_ch, $active);
+				} while ($mrc == CURLM_CALL_MULTI_PERFORM);
+	
+				while ($active && $mrc == CURLM_OK) {
+					if (curl_multi_select($multi_request_ch) != -1) {
+						do {
+							$mrc = curl_multi_exec($multi_request_ch, $active);
+						} while ($mrc == CURLM_CALL_MULTI_PERFORM);
+					}
+				}
+	
+				foreach ($row_exec as $indice => $valor) {
+					$ch = $valor["ch"];
+					$response_body = curl_multi_getcontent($ch );
+					curl_multi_remove_handle($multi_request_ch, $ch);
+					$arr_obj_json = json_decode($response_body);
+					if ($arr_obj_json &&  $valor["server"] == 0) {
+						if (!is_null($arr_obj_json[0]->lat) || !is_null($arr_obj_json[0]->lon)) {
+							$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
+							$valor["persona"]->setGeoreferencia($point);
+							$valor["persona"]->update_geo();
+						} else {
+							$valor["persona"]->setGeoreferencia(null);
+						}
+					} else if ($arr_obj_json &&  $valor["server"] == 1) {
+						if (!is_null($arr_obj_json->features[0]->geometry->coordinates[1]) || !is_null($arr_obj_json->features[0]->geometry->coordinates[0])) {
+							$point = "POINT(" . $arr_obj_json->features[0]->geometry->coordinates[1] . ", " . $arr_obj_json->features[0]->geometry->coordinates[0] . ")";
+							$valor["persona"]->setGeoreferencia($point);
+							$valor["persona"]->update_geo();
+						} else {
+							$valor["persona"]->setGeoreferencia(null);
+						}
+					} else if ($arr_obj_json &&  $valor["server"] == 2) {
+						if (!is_null($arr_obj_json->results[0]->lat) || !is_null($arr_obj_json->features[0]->lon)) {
+							$point = "POINT(" . $arr_obj_json->results[0]->lat . ", " . $arr_obj_json->results[0]->lon . ")";
+							$valor["persona"]->setGeoreferencia($point);
+							$valor["persona"]->update_geo();
+						} else {
+							$valor["persona"]->setGeoreferencia(null);
+						}
+					} else {
+						$url = "https://photon.komoot.io/api/?q=" . $valor["calle_url"] . ",+rio+tercero,+Cordoba";
+						curl_setopt($ch, CURLOPT_URL, $url);
+						curl_setopt($ch, CURLOPT_FAILONERROR, true);
+						curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+						$response = curl_exec($ch);
+						$error = curl_error($ch);
+						$arr_obj_json = json_decode($response);
+						if (!is_null($arr_obj_json->features[0]->geometry->coordinates[1]) || !is_null($arr_obj_json->features[0]->geometry->coordinates[0])) {
+							$point = "POINT(" . $arr_obj_json->features[0]->geometry->coordinates[1] . ", " . $arr_obj_json->features[0]->geometry->coordinates[0] . ")";
+							$valor["persona"]->setGeoreferencia($point);
+							$valor["persona"]->update_geo();
+						} else {
+							$valor["persona"]->setGeoreferencia(null);
+						}
+					}
+					curl_close($ch);
+				}
+			}
+			curl_multi_close($multi_request_ch);
 			$con->CloseConexion();
 
 			$mensaje = "El/Los formularios se ha cargado correctamente";

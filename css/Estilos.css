@@ -606,9 +606,17 @@ div .nav-side-menu {
   font-size: 21px;
 }
 
-.buttom-arrow {
+.button-arrow {
   float:left;
   margin-left: 16px;
+  padding: 0;
+  background-color: transparent;
+  border: 0;
+}
+
+.button-fullscreen {
+  float:left;
+  margin-left: 10px;
   padding: 0;
   background-color: transparent;
   border: 0;
@@ -635,4 +643,8 @@ div .nav-side-menu {
   @media (700px < width <= 1400px) {
     width: 400px;
   }
+}
+
+.ol-full-screen {
+  display: none;
 }
