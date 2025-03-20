@@ -124,7 +124,7 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
     let nroPaginaPdf = 0;
     let nroPaginaGeneradas = 0;
     let thTable = null;
-
+    let fullscreen = false;
 
     $(document).on("keydown", function (e) {
       NavegacionConTeclado(e);
@@ -230,8 +230,23 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
         $("#desplegable").toggle();
       });
 
+      $("button[class='close']").on("click", function (e) {
+        if (fullscreen) {
+          document.exitFullscreen();
+          fullscreen = false;
+        }
+      }); 
+
       $("#boton-fullscreen").on("click", function (e) {
-        $("button[title='Toggle full-screen']").click();
+        //$("button[title='Toggle full-screen']").click();
+        if (!fullscreen) {
+          $("#map-modal div[class='modal-content']")[0].requestFullscreen();
+          console.log("requestFullscreen");
+          fullscreen = true;
+        } else {
+          document.exitFullscreen();
+          fullscreen = false;
+        }
       });
     });
 
