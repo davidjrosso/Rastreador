@@ -416,6 +416,7 @@ public function setDomicilio($xDomicilio = null)
 
 public function setCalleNro($xDomicilio = null)
 {
+	$igual = true;
 	$id_calle = (!$xDomicilio) ? $this->getId_Calle() : null;
 	$numero_calle = (!$xDomicilio) ? trim($this->getNro()) : null;
 	$domicilio = ($xDomicilio) ? $xDomicilio : null;
@@ -485,6 +486,7 @@ public function setCalleNro($xDomicilio = null)
 
 	$this->Domicilio = $domicilio;
 	$con->CloseConexion();
+	return $igual;
 }
 
 public function setCalle($xCalle)
@@ -626,17 +628,21 @@ public function getId_Calle(){
 public function getNombre_Calle(){
 	$con = new Conexion();
 	$con->OpenConexion();
-	$consulta_calle = "select *
-					   from calle 
-					   where id_calle = " . $this->getId_Calle() . " 
-					     and estado = 1";
-	$result = mysqli_query($con->Conexion, $consulta_calle);
-	if (!$result) {
-		$mensaje_error_consultar = "No se pudo consultar la tabla calle";
-		throw new Exception($mensaje_error_consultar . $consulta_calle, 2);
+	$calle_open = null;
+	if (!empty($this->getId_Calle())) {
+		$consulta_calle = "select *
+						   from calle 
+						   where id_calle = " . $this->getId_Calle() . " 
+							 and estado = 1";
+		$result = mysqli_query($con->Conexion, $consulta_calle);
+		if (!$result) {
+			$mensaje_error_consultar = "No se pudo consultar la tabla calle";
+			throw new Exception($mensaje_error_consultar . $consulta_calle, 2);
+		}
+		$result_row = mysqli_fetch_assoc($result);
+		$calle_open = $result_row["calle_open"];
 	}
-	$result_row = mysqli_fetch_assoc($result);
-	return $result_row["calle_open"];
+	return $calle_open;
 }
 
 public function getNro(){

@@ -373,9 +373,11 @@
 						$id_persona = (empty($dni)) ? null : Persona::get_id_persona_by_dni($dni);
 						if (!is_null($id_persona) && is_numeric($id_persona)) {
 							$persona = new Persona(ID_Persona: $id_persona);
-							//$persona->setDomicilio($direccion);
-							$persona->setCalleNro($direccion);
-							if ($persona->getId_Calle()) {
+							$georeferencia = $persona->getGeoreferencia();
+							$modificacion = $persona->setCalleNro($direccion);
+							$calle = $persona->getNombre_Calle();
+							if (($persona->getId_Calle() && !$modificacion)
+								|| (!$georeferencia && $calle)) {
 								$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
 								if ($server == 0) {
 									$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
@@ -461,7 +463,7 @@
 							xMail:$email,
 							xID_Escuela: 2
 						);
-						$persona->setCalleNro($direccion);
+						$modificacion = $persona->setCalleNro($direccion);
 						if ($persona->getId_Calle()) {
 							$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
 							if ($server == 0) {
@@ -504,10 +506,13 @@
 						}
 						$persona = new Persona(ID_Persona: $id_persona);
 						if ($consulta_osm) {
-							//$persona->setDomicilio($direccion);
-							$persona->setCalleNro($direccion);
-							if ($persona->getId_Calle()) {
-								$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
+							$georeferencia = $persona->getGeoreferencia();
+							$modificacion = $persona->setCalleNro($direccion);
+							$calle = $persona->getNombre_Calle();
+							if (($persona->getId_Calle()
+								&& !$modificacion)
+								|| (!$georeferencia && $calle)) {
+								$calle_url = str_replace(" ", "+", $calle);
 								if ($server == 0) {
 									$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
 									$row_request["server"] = $server;
@@ -616,6 +621,7 @@
 				$row["ch"] = $value["channel"];
 				$row["server"] = $value["server"];
 				$row["persona"] = $value["persona"];
+				$row["calle_url"] = $value["calle_url"];
 				if ($count < 2) {
 					curl_multi_add_handle($multi_request_ch, $row["ch"]);
 					$row_exec[] = $row;
@@ -665,7 +671,7 @@
 								$valor["persona"]->setGeoreferencia(null);
 							}
 						} else {
-							$url = "https://photon.komoot.io/api/?q=" . $value["calle_url"];
+							$url = "https://photon.komoot.io/api/?q=" . $valor["calle_url"];
 							curl_setopt($ch, CURLOPT_URL, $url);
 							curl_setopt($ch, CURLOPT_FAILONERROR, true);
 							curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -683,7 +689,7 @@
 						curl_close($ch);
 					}
 					$row_exec = [];
-					sleep(1);
+					usleep(300000);
 				}
 			}
 
