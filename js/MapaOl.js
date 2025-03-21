@@ -4,8 +4,8 @@ import TileLayer from 'ol/layer/Tile.js';
 import * as olSource from 'ol/source';
 import Style from 'ol/style/Style.js';
 import Icon from 'ol/style/Icon.js';
-import Zoom from 'ol/control/Zoom.js';
 import FullScreen from 'ol/control/FullScreen.js';
+import Zoom from 'ol/control/Zoom.js';
 import {add} from 'ol/coordinate';
 import VectorLayer from 'ol/layer/Vector.js';
 import Text from 'ol/style/Text.js';
@@ -63,6 +63,7 @@ export class MapaOl {
             }),
         });
         this.#mapa.addControl(new FullScreen());
+        this.#mapa.addControl(new Zoom());
 
     }
 
