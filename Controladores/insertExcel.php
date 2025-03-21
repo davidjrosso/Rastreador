@@ -88,11 +88,11 @@
 			$service_sheets = new Google_Service_Sheets($client);
 
 			$id_file = $archivo->get_id_file();
-			$planilla = $archivo->get_planilla();
-			if (($planilla == "11 Años") || ($planilla == "EMBARAZADAS")) {
+			$seccion = $archivo->get_seccion();
+			if (($seccion == "11 Años") || ($seccion == "EMBARAZADAS")) {
 				$fila = '!A3:';
 				$com = 0;
-			} else if ($planilla == "C. INDICE PEDIATRIA") {
+			} else if ($seccion == "C. INDICE PEDIATRIA") {
 				$fila = '!A2:';
 				$com = 1;
 			} else {
@@ -100,22 +100,22 @@
 				$com = 0;
 			}
 
-			if ($planilla == "11 Años") {
+			if ($seccion == "11 Años") {
 				$responsable_nombre = "WOLYNIEC Jorge - Area Local";
 				$col = 'E';
-				$range = $planilla . $fila . $col;
-			} else if ($planilla == "C. INDICE PEDIATRIA") {
+				$range = $seccion . $fila . $col;
+			} else if ($seccion == "C. INDICE PEDIATRIA") {
 				//$col = 'AH';
 				$responsable_nombre = "Constanza Bertone";
-				$range = $planilla;
-			} else if ($planilla == "C. INDICE ENFERMERIA") {
+				$range = $seccion;
+			} else if ($seccion == "C. INDICE ENFERMERIA") {
 				$responsable_nombre = "DELLAROSSA Mónica. ENFERMERA.";
 				$col = 'U';
-				$range = $planilla . $fila . $col;
+				$range = $seccion . $fila . $col;
 			} else {
 				$responsable_nombre = "WOLYNIEC Jorge - Area Local";
 				$col = 'K';
-				$range = $planilla . $fila . $col;
+				$range = $seccion . $fila . $col;
 			}
 
 			
@@ -140,7 +140,7 @@
 					continue;
 				}
 				$highestColumnIndex = count($result->values[$row]) - 1;
-				if ($planilla == "EMBARAZADAS") {
+				if ($seccion == "EMBARAZADAS") {
 					$responsable_nombre= "Florencia Gil";
 					for ($col = 0; $col <= $highestColumnIndex; $col++) {
 						$value = (!empty($result->values[$row][$col])) ? $result->values[$row][$col] : null;
@@ -180,7 +180,7 @@
 								break;
 						}
 					}
-				} else if ($planilla == "C. INDICE ENFERMERIA") {
+				} else if ($seccion == "C. INDICE ENFERMERIA") {
 					for ($col = 0; $col <= $highestColumnIndex; $col++) {
 						$value = (!empty($result->values[$row][$col])) ? $result->values[$row][$col] : null;
 						$id_barrio = Barrio::get_id_by_name($con, "Castagnino");
@@ -249,7 +249,7 @@
 								break;
 						}
 					}
-				} else if ($planilla == "C. INDICE PEDIATRIA") {
+				} else if ($seccion == "C. INDICE PEDIATRIA") {
 					for ($col = 0; $col <= $highestColumnIndex; $col++) {
 						$value = (!empty($result->values[$row][$col])) ? $result->values[$row][$col] : null;
 						switch ($col) {
@@ -332,7 +332,7 @@
 								break;
 						}
 					}
-				} else if ($planilla == "11 Años") {
+				} else if ($seccion == "11 Años") {
 					$responsable_nombre = "DELLAROSSA Mónica. ENFERMERA.";
 					$observacion = "";
 					for ($col = 0; $col <= $highestColumnIndex; $col++) {
