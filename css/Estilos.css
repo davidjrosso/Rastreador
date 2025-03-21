@@ -622,6 +622,22 @@ div .nav-side-menu {
   border: 0;
 }
 
+.button-plus {
+  float:left;
+  margin-left: 10px;
+  padding: 0;
+  background-color: transparent;
+  border: 0;
+}
+
+.button-min {
+  float:left;
+  margin-left: 10px;
+  padding: 0;
+  background-color: transparent;
+  border: 0;
+}
+
 .recovery-email {
   text-decoration: none;
   color: #0b475d;
@@ -647,4 +663,8 @@ div .nav-side-menu {
 
 .ol-full-screen {
   display: none;
+}
+
+.ol-control button {
+  display:none;
 }
