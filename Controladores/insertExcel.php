@@ -376,8 +376,7 @@
 							$georeferencia = $persona->getGeoreferencia();
 							$modificacion = $persona->setCalleNro($direccion);
 							$calle = $persona->getNombre_Calle();
-							if (($persona->getId_Calle() && !$modificacion)
-								|| (!$georeferencia && $calle)) {
+							if (($persona->getId_Calle() && !$modificacion)) {
 								$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
 								if ($server == 0) {
 									$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
@@ -509,9 +508,8 @@
 							$georeferencia = $persona->getGeoreferencia();
 							$modificacion = $persona->setCalleNro($direccion);
 							$calle = $persona->getNombre_Calle();
-							if (($persona->getId_Calle()
-								&& !$modificacion)
-								|| (!$georeferencia && $calle)) {
+							if ($persona->getId_Calle()
+								&& !$modificacion) {
 								$calle_url = str_replace(" ", "+", $calle);
 								if ($server == 0) {
 									$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
