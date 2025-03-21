@@ -238,11 +238,11 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
       });
 
       $("#boton-min").on("click", function (e) {
-        $("button[class='ol-zoom-out']")[0].click();
+        $("button[class='ol-zoom-out']").click();
       });
 
       $("#boton-plus").on("click", function (e) {
-        $("button[class='ol-zoom-in']")[0].click();
+        $("button[class='ol-zoom-in']").click();
       });
 
       $("#boton-fullscreen").on("click", function (e) {
