@@ -23,6 +23,7 @@ export class MapaOl {
     #zoom;
     #center;
     #target;
+    #listaFeatures=[];
     #windowsOpened=[];
 
     constructor(
@@ -173,7 +174,7 @@ export class MapaOl {
       let point = new Point(pos);
       point = point.transform("EPSG:4326", "EPSG:3857");
 
-      let iconFeaturesText=[];
+      //let iconFeaturesText=[];
       let textLabel = new Feature({
         geometry: point,
         description: elemento.id_persona
@@ -202,14 +203,22 @@ export class MapaOl {
       }
 
       textLabel.setStyle(styleFunction);
-      iconFeaturesText.push(textLabel);
-      let vectorSourceText = new olSource.Vector({
-        features: iconFeaturesText
-      });
-      let vectorLayerText = new VectorLayer({
-        source: vectorSourceText
-      });
-      this.#mapa.addLayer(vectorLayerText);
+      //console.log(textLabel);
+      this.#listaFeatures.push(textLabel);
+      console.log(this.#listaFeatures);
+  }
+
+  layerAddToMapp(){
+    console.log(this.#listaFeatures);
+    console.log("por aca");
+    let vectorSourceText = new olSource.Vector({
+      features: this.#listaFeatures
+    });
+    let vectorLayerText = new VectorLayer({
+      source: vectorSourceText
+    });
+    this.#mapa.addLayer(vectorLayerText);
+    //this.#listaFeatures = [];
   }
 
     addIconLayer(lon, lat) {
