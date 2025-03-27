@@ -408,8 +408,8 @@
 								$row_request["channel"] = $ch;
 								$row_request["persona"] = $persona;
 								$request[] = $row_request;
-								$persona->update_direccion();
 							}
+							$persona->update_direccion();
 						}
 						continue;
 					}
