@@ -245,11 +245,31 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
         $("button[class='ol-zoom-in']").click();
       });
 
+      $("#boton-animation").on("click", function (e) {
+        animacionDeMapa(map, objectJsonTabla);
+      });
+
+      $("#boton-paused").on("click", function (e) {
+        animacionPaused(map);
+      });
+
+      $("#boton-stop").on("click", function (e) {
+        animacionStop(map);
+        carga(map, objectJsonTabla);
+      });
+
+      $("#boton-increment").on("click", function (e) {
+        map.incrementar();
+      });
+
+      $("#boton-decrement").on("click", function (e) {
+        map.decrementar();
+      });
+
       $("#boton-fullscreen").on("click", function (e) {
         //$("button[title='Toggle full-screen']").click();
         if (!fullscreen) {
           $("#map-modal div[class='modal-content']")[0].requestFullscreen();
-          console.log("requestFullscreen");
           fullscreen = true;
         } else {
           document.exitFullscreen();
@@ -2637,13 +2657,43 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
                 <path fill-rule="evenodd" d="M6.5 3a.5.5 0 0 1 .5.5V6h2.5a.5.5 0 0 1 0 1H7v2.5a.5.5 0 0 1-1 0V7H3.5a.5.5 0 0 1 0-1H6V3.5a.5.5 0 0 1 .5-.5"/>
               </svg>
           </button>
-          <button type="button" id="boton-min" class="button-min" aria-label="min"">
+          <button type="button" id="boton-min" class="button-min" aria-label="min">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-zoom-out" viewBox="0 0 16 16">
               <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11M13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0"/>
               <path d="M10.344 11.742q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1 6.5 6.5 0 0 1-1.398 1.4z"/>
               <path fill-rule="evenodd" d="M3 6.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5"/>
             </svg>
-          </button>  
+          </button>
+          <button type="button" id="boton-decrement" class="button-min" aria-label="decrement">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-rewind-circle" viewBox="0 0 16 16">
+              <path d="M7.729 5.055a.5.5 0 0 0-.52.038l-3.5 2.5a.5.5 0 0 0 0 .814l3.5 2.5A.5.5 0 0 0 8 10.5V8.614l3.21 2.293A.5.5 0 0 0 12 10.5v-5a.5.5 0 0 0-.79-.407L8 7.386V5.5a.5.5 0 0 0-.271-.445"/>
+              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8"/>
+            </svg>
+          </button>
+          <button type="button" id="boton-animation" class="button-min" aria-label="animation">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-square" viewBox="0 0 16 16">
+              <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+              <path d="M5.795 12.456A.5.5 0 0 1 5.5 12V4a.5.5 0 0 1 .832-.374l4.5 4a.5.5 0 0 1 0 .748l-4.5 4a.5.5 0 0 1-.537.082"/>
+            </svg>
+          </button>
+          <button type="button" id="boton-paused" class="button-min" aria-label="paused">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pause-circle" viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+              <path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0z"/>
+            </svg>
+          </button>
+          <button type="button" id="boton-stop" class="button-min" aria-label="stop">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-stop-btn" viewBox="0 0 16 16">
+              <path d="M6.5 5A1.5 1.5 0 0 0 5 6.5v3A1.5 1.5 0 0 0 6.5 11h3A1.5 1.5 0 0 0 11 9.5v-3A1.5 1.5 0 0 0 9.5 5z"/>
+              <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
+            </svg>
+          </button>
+          <button type="button" id="boton-increment" class="button-min" aria-label="increment">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-fast-forward-circle" viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+              <path d="M4.271 5.055a.5.5 0 0 1 .52.038L8 7.386V5.5a.5.5 0 0 1 .79-.407l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 8 10.5V8.614l-3.21 2.293A.5.5 0 0 1 4 10.5v-5a.5.5 0 0 1 .271-.445"/>
+            </svg>
+          </button>
         </div>
         <div class="modal-body" style="padding-top: 0px">
           <div id="basicMap" class="map"></div>
@@ -2843,13 +2893,13 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
     var tituloLote = document.getElementById("Contenido-Titulo-7");
 
     if (!map) {
-          map = init(
-                     <?php echo ($lat_person ? $lat_person : "null"); ?>,
-                     <?php echo ($lon_person ? $lon_person : "null"); ?>,
-                     null
-                    );
-          carga(map, objectJsonTabla);
-        };
+      map = initAnimation(
+                          <?php echo ($lat_person ? $lat_person : "null"); ?>,
+                          <?php echo ($lon_person ? $lon_person : "null"); ?>,
+                          null
+                        );
+      carga(map, objectJsonTabla);
+    };
 
   </script>
   <?php

@@ -4,6 +4,10 @@ import TileLayer from 'ol/layer/Tile.js';
 import * as olSource from 'ol/source';
 import Style from 'ol/style/Style.js';
 import Icon from 'ol/style/Icon.js';
+import * as olRender from 'ol/render';
+import * as olEasing from 'ol/easing';
+import {unByKey} from 'ol/Observable';
+import CircleStyle from 'ol/style/Circle.js';
 import FullScreen from 'ol/control/FullScreen.js';
 import Zoom from 'ol/control/Zoom.js';
 import {add} from 'ol/coordinate';
@@ -25,6 +29,7 @@ export class MapaOl {
     #target;
     #listaFeatures=[];
     #windowsOpened=[];
+    #handler;
 
     constructor(
         target,
@@ -174,7 +179,6 @@ export class MapaOl {
       let point = new Point(pos);
       point = point.transform("EPSG:4326", "EPSG:3857");
 
-      //let iconFeaturesText=[];
       let textLabel = new Feature({
         geometry: point,
         description: elemento.id_persona
@@ -203,23 +207,129 @@ export class MapaOl {
       }
 
       textLabel.setStyle(styleFunction);
-      //console.log(textLabel);
-      this.#listaFeatures.push(textLabel);
-      console.log(this.#listaFeatures);
-  }
+      //this.#listaFeatures.push(textLabel);
+      this.#mapa.getLayers().getArray()[1].getSource().addFeature(textLabel);
 
-  layerAddToMapp(){
-    console.log(this.#listaFeatures);
-    console.log("por aca");
-    let vectorSourceText = new olSource.Vector({
-      features: this.#listaFeatures
-    });
-    let vectorLayerText = new VectorLayer({
-      source: vectorSourceText
-    });
-    this.#mapa.addLayer(vectorLayerText);
-    //this.#listaFeatures = [];
-  }
+    }
+
+    addVectorLayer(){
+      let vectorSourceText = new olSource.Vector({
+        features: this.#listaFeatures
+      });
+      let vectorLayerText = new VectorLayer({
+        source: vectorSourceText
+      });
+      this.#mapa.addLayer(vectorLayerText);
+    }
+    
+    deleteFeatures() {
+      this.#mapa.getLayers().getArray()[1].getSource().clear();
+    }
+
+    addIconLayerAnimacion(
+                  lon,
+                  lat,
+                  desplazamientoY,
+                  desplazamientoX,
+                  elemento,
+                  simbolo,
+                  color
+    ) {
+      let pos = [parseFloat(lon), parseFloat(lat)];
+      pos = add(pos, [desplazamientoY, desplazamientoX]);
+      pos = olProj.transform(pos, "EPSG:3857", "EPSG:4326");
+      let point = new Point(pos);
+      point = point.transform("EPSG:4326", "EPSG:3857");
+
+      let textLabel = new Feature({
+        geometry: point,
+        description: elemento.id_persona
+      });
+
+      function styleFunction() {
+        return [
+          new Style({
+            fill: new Fill({
+              color: 'rgba(255,255,255,0.4)'
+            }),
+            stroke: new Stroke({
+              color: '#3399CC',
+              width: 1.25
+            }),
+            text: new Text({
+              font: (simbolo.length == 1) ? '19px Calibri,sans-serif' : '9px Calibri,sans-serif',
+              fill: new Fill({ color: color }),
+              stroke: new Stroke({
+                color: '#fff', width: 2
+              }),
+              text: (simbolo.length == 1) ? simbolo : he.decode("&#" + simbolo)
+            })
+          })
+        ];
+      }
+
+      textLabel.setStyle(styleFunction);
+      //this.#listaFeatures.push(textLabel);
+      this.#mapa.getLayers().getArray()[1].getSource().addFeature(textLabel);
+    }
+
+    flash(e) {
+      let feature = e.feature;
+      const start = Date.now();
+      const flashGeom = feature.getGeometry().clone();
+      const listenerKey = this.#mapa.getLayers().getArray()[1].on('postrender', animate.bind(this));
+
+      function animate(event) {
+        const frameState = event.frameState;
+        const elapsed = frameState.time - start;
+        if (elapsed >= 3000) {
+          unByKey(listenerKey);
+          return;
+        }
+        const vectorContext = olRender.getVectorContext(event);
+        const elapsedRatio = elapsed / 3000;
+        // radius will be 5 at start and 30 at end.
+        const radius = olEasing.easeOut(elapsedRatio) * 25 + 5;
+        const opacity = olEasing.easeOut(1 - elapsedRatio);
+    
+        const style = new Style({
+          image: new CircleStyle({
+            radius: radius,
+            stroke: new Stroke({
+              color: 'rgba(255, 0, 0, ' + opacity + ')',
+              width: 0.25 + opacity,
+            }),
+          }),
+        });
+    
+        vectorContext.setStyle(style);
+        vectorContext.drawGeometry(flashGeom);
+        this.#mapa.render();
+      }
+    }
+
+    addHandlerSource() {
+      let source = this.#mapa.getLayers().getArray()[1].getSource();
+      this.#handler = source.on('addfeature', this.flash.bind(this));
+    }
+
+    deleteHandlerSource() {
+      let source = this.#mapa.getLayers().getArray()[1].getSource();
+      source.un('addfeature', this.flash.bind(this));
+      unByKey(this.#handler);
+      this.#handler = null;
+    }
+
+    layerAddToMapp() {
+      let vectorSourceText = new olSource.Vector({
+        features: this.#listaFeatures
+      });
+      let vectorLayerText = new VectorLayer({
+        source: vectorSourceText
+      });
+      this.#mapa.addLayer(vectorLayerText);
+      this.#listaFeatures = [];
+    }
 
     addIconLayer(lon, lat) {
       let pos = [lon, lat];
@@ -239,8 +349,8 @@ export class MapaOl {
     isModifyPerson() {
       let value = null;
       value = this.#windowsOpened.reduce(
-                               (valor, refWindow) => valor || refWindow.isSave,
-                               false
+                                (valor, refWindow) => valor || refWindow.isSave,
+                                false
       )
       return value;
     }
