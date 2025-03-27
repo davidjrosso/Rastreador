@@ -278,6 +278,13 @@
 								$direccion = $value;
 								break;
 							case 6:
+								$barrio = $value;
+								$id_barrio = Barrio::get_id_by_name($con, "Castagnino");
+								if(!empty($barrio)) {
+									$id_barrio = Barrio::get_id_by_name($con, $barrio);
+								}
+								break;
+							case 7:
 								$departam = $value;
 								$is_departament = preg_match(
 									"~[0-9]+~",
@@ -285,13 +292,6 @@
 								   $result_array
 											);
 								$departam = ($is_departament) ? $result_array[0] : null;
-								break;
-							case 7:
-								$barrio = $value;
-								$id_barrio = Barrio::get_id_by_name($con, "Castagnino");
-								if(!empty($barrio)) {
-									$id_barrio = Barrio::get_id_by_name($con, $barrio);
-								}
 								break;
 							case 8:
 								$telefono = $value;
@@ -543,8 +543,8 @@
 								$row_request["channel"] = $ch;
 								$row_request["persona"] = $persona;
 								$request[] = $row_request;
-								$persona->update_direccion();
 							}
+							$persona->update_direccion();
 							$consulta_osm = false;
 						}
 					}
