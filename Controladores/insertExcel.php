@@ -278,29 +278,35 @@
 								$direccion = $value;
 								break;
 							case 6:
+								$departam = $value;
+								$is_departament = preg_match(
+									"~[0-9]+~",
+									$departam,
+								   $result_array
+											);
+								$departam = ($is_departament) ? $result_array[0] : null;
+								break;
+							case 7:
 								$barrio = $value;
 								$id_barrio = Barrio::get_id_by_name($con, "Castagnino");
 								if(!empty($barrio)) {
 									$id_barrio = Barrio::get_id_by_name($con, $barrio);
 								}
 								break;
-							case 7:
+							case 8:
 								$telefono = $value;
 								break;
-							case 8:
+							case 9:
 								$obra_social = $value;
 								break;
-							case 9:
+							case 10:
 								$observacion .= " atencion : " . $value;
 								break;
-							case 10:
+							case 11:
 								$observacion .= " dx " . $value;
 								break;
-							case 11:
-								$observacion .= " vacunas : " . $value;
-								break;
 							case 12:
-								$observacion .= " - " . $value;
+								$observacion .= " vacunas : " . $value;
 								break;
 							case 13:
 								$observacion .= " - " . $value;
@@ -308,7 +314,9 @@
 							case 14:
 								$observacion .= " - " . $value;
 								break;
-
+							case 15:
+								$observacion .= " - " . $value;
+								break;
 							default :
 								$valor_fecha = (!empty($result->values[1][$col])) ? $result->values[1][$col] : null;
 								$is_fecha = preg_match(
@@ -375,6 +383,7 @@
 							$persona = new Persona(ID_Persona: $id_persona);
 							$georeferencia = $persona->getGeoreferencia();
 							$modificacion = $persona->setCalleNro($direccion);
+							$persona->setFamilia($departam);
 							$calle = $persona->getNombre_Calle();
 							if (($persona->getId_Calle() && !$modificacion)) {
 								$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
@@ -463,6 +472,7 @@
 							xID_Escuela: 2
 						);
 						$modificacion = $persona->setCalleNro($direccion);
+						$persona->setFamilia($departam);
 						if ($persona->getId_Calle()) {
 							$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
 							if ($server == 0) {
@@ -507,6 +517,7 @@
 						if ($consulta_osm) {
 							$georeferencia = $persona->getGeoreferencia();
 							$modificacion = $persona->setCalleNro($direccion);
+							$persona->setFamilia($departam);
 							$calle = $persona->getNombre_Calle();
 							if ($persona->getId_Calle()
 								&& !$modificacion) {
