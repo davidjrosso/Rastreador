@@ -2526,7 +2526,7 @@ public function getMenuSeguridadUsuario($ID){
                 <thead>
                   <tr>
                     <th style='text-align: center;'>Planilla</th>
-                    <th style='max-width: 45px; padding-left: 4%'>Accion</th>
+                    <th style='max-width: 45px; padding-left: 4%'>Acción</th>
                   </tr>
               </thead>";
 
