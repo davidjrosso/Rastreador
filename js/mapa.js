@@ -160,12 +160,22 @@ function ordenCategoria(categoriaA, categoriaB) {
   }
 }
 
+/*
 export function animacionDeMapa(mapa, listReferencias) {
   if (mapa.isAnimated()) {
     mapa.restart();
   } else {
     mapa.deleteFeatures();
     mapa.animacion(listReferencias);
+  }
+}
+*/
+export function animacionDeMapa(mapa, listReferencias) {
+  if (mapa.isAnimated()) {
+    mapa.restart();
+  } else {
+    mapa.deleteFeatures();
+    mapa.animacionSort(listReferencias);
   }
 }
 

@@ -231,7 +231,7 @@ export class MapaOl {
                   lat,
                   desplazamientoY,
                   desplazamientoX,
-                  elemento,
+                  id_persona,
                   simbolo,
                   color
     ) {
@@ -243,7 +243,7 @@ export class MapaOl {
 
       let textLabel = new Feature({
         geometry: point,
-        description: elemento.id_persona
+        description: id_persona
       });
 
       function styleFunction() {

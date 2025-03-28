@@ -10,6 +10,7 @@
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Responsable.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Barrio.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Motivo.php';
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Parametria.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
 
 	use Google\Client;
@@ -21,6 +22,7 @@
 			$con = new Conexion();
 			$con->OpenConexion();
 			$private_key = Parametria::get_value_by_code($con, 'SECRET_KEY');
+			$file_id = Parametria::get_value_by_code($con, "FILE_DENGUE");
 
 			$client = new Google_Client();
 			$client->setAuthConfig(array("type" => TYPE_ACCOUNT,
@@ -32,8 +34,8 @@
 			$client->addScope([Google_Service_Drive::DRIVE_READONLY]);
 			$client->addScope([Google_Service_Sheets::SPREADSHEETS]);
 			$service_sheets = new Google_Service_Sheets($client);
-			$range = 'A1:T';
-			$result = $service_sheets->spreadsheets_values->get(FILE_ID, $range);
+			$range = 'A1:P';
+			$result = $service_sheets->spreadsheets_values->get($file_id, $range);
 
 			$Fecha =  date("Y-m-d");
 			$observacion = "";

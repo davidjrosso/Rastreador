@@ -246,7 +246,7 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
       });
 
       $("#boton-animation").on("click", function (e) {
-        animacionDeMapa(map, objectJsonTabla);
+        animacionDeMapa(map, objectJsonAnimacion);
       });
 
       $("#boton-paused").on("click", function (e) {
@@ -745,6 +745,36 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
       }
       $("#BarraDeNavVTabla").attr("value", filaIndice);
     }
+
+
+    function showTime(){
+      console.log("por aca");
+        var date = new Date();
+        var h = date.getHours(); // 0 - 23
+        var m = date.getMinutes(); // 0 - 59
+        var s = date.getSeconds(); // 0 - 59
+        var session = "AM";
+        
+        if(h == 0){
+            h = 12;
+        }
+        
+        if(h > 12){
+            h = h - 12;
+            session = "PM";
+        }
+        
+        h = (h < 10) ? "0" + h : h;
+        m = (m < 10) ? "0" + m : m;
+        s = (s < 10) ? "0" + s : s;
+        
+        var time = h + ":" + m + ":" + s + " " + session;
+        document.getElementById("MyClockDisplay").innerText = time;
+        document.getElementById("MyClockDisplay").textContent = time;
+        
+        setTimeout(showTime, 1000);
+        
+    }
   </script>
   <style>
     body {
@@ -1053,6 +1083,17 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
 
     div[id$="_popup_contentDiv"] {
       width: auto !important;
+    }
+
+    .clock {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      color: #17D4FE;
+      font-size: 60px;
+      font-family: Orbitron;
+      letter-spacing: 7px;
     }
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -2312,6 +2353,8 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
             $tagsTD = "";
             $tagsTD_imprimir = "";
 
+            $lista_animacion = [];
+
             while ($RetTodos = mysqli_fetch_assoc($tomar_movimientos)) {
                 $count++;
                 if (empty($RetTodos["id_movimiento"])) {
@@ -2540,6 +2583,14 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
                                                                                                           $RetTodos["tipo_categoria"],
                                                                                                           $RetTodos["fecha"]
                                                                                                           ];
+                                          $lista_animacion[] = [
+                                            $RetTodos["id_persona"],
+                                            $RetTodos["lat"],
+                                            $RetTodos["lon"],
+                                            $forma_motivo,
+                                            $RetTodos["color"],
+                                            $RetTodos["fecha"]
+                                          ];
                                   }
                                   $count++;
                                   $RetTodos = mysqli_fetch_assoc($tomar_movimientos);
@@ -2697,6 +2748,7 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
         </div>
         <div class="modal-body" style="padding-top: 0px">
           <div id="basicMap" class="map"></div>
+          <!--<div id="MyClockDisplay" class="clock" onload="showTime()"></div>-->
           <div id="desplegable" style="display: none; pointer-events: none; position: absolute; top: 3px; left: 20px; z-index: 1000">
             <?php
             foreach ($filtros as $value) {
@@ -2720,7 +2772,7 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
 
     <?php $_SESSION["meses"] = $mesesHeader; ?>
     var objectJsonTabla = <?php echo json_encode(value: array_values($jsonTable), flags: true); ?>;
-
+    var objectJsonAnimacion = <?php echo json_encode(value: array_values($lista_animacion), flags: true); ?>;
 
     function toggleZoom(porcentaje) {
       var Tabla = document.getElementById("tablaMovimientos");

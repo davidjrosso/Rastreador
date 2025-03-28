@@ -79,18 +79,19 @@ export class MapaAnimacion extends MapaOl {
     }
 
     ordenFecha(personaObjectA, personaObjectB) {
-    if (Date.parse(personaObjectA.fecha) < Date.parse(personaObjectB.fecha)) {
-        return -1;
-    } else if (Date.parse(personaObjectA.fecha) > Date.parse(personaObjectB.fecha)) {
-        return 1;
-    } else {
+        if (Date.parse(personaObjectA[5]) < Date.parse(personaObjectB[5])) {
+            return -1;
+        } else if (Date.parse(personaObjectA[5]) > Date.parse(personaObjectB[5])) {
+            return 1;
+        } else {
+            return 0;
+        }
         return 0;
-    }
-    return 0;
     }
 
     isAnimated(){
-        let isAnimation = (this.#ind < this.#listaAnimacion.length) ? true : false;
+        let lengthlist =  this.#listaAnimacion.length;
+        let isAnimation = (this.#ind < lengthlist && this.#ind > 0) ? true : false;
         return isAnimation;
     }
 
@@ -232,4 +233,48 @@ export class MapaAnimacion extends MapaOl {
       }.bind(this), this.#tiempo);
       super.viewPersonaGeoreferenciada();
     }
+
+    animacionSort(listReferencias) {
+      let pos = null;
+      let positionFormas = null;
+      let motivo = {};
+      super.addVectorLayer();
+      super.addHandlerSource();
+      listReferencias.sort(this.ordenFecha).forEach(function (elemento, indice, array) {
+        positionFormas = [parseFloat(elemento[2]), parseFloat(elemento[1])];
+        let offsetX = 0;
+        let offsetY = 0;
+        motivo["positionFormas"] = positionFormas;
+        motivo["offsetY"] = offsetY;
+        motivo["offsetX"] = offsetX;
+        motivo["id_persona"] = elemento[0];
+        motivo["categoriaForma"] = elemento[3];
+        motivo["color"] = elemento[4];
+        this.#listaAnimacion.push(motivo);
+        motivo = {};
+      }.bind(this));
+
+      let lengList = this.#listaAnimacion.length;
+      const superAddIconLayerAnimacion = super.addIconLayerAnimacion.bind(this);
+      this.#idIntervalo = setInterval(function () {
+        if (lengList <= this.#ind) {
+          this.#ind = 0;
+          clearInterval(this.#idIntervalo);
+          this.#idIntervalo = null;
+        } else {
+          superAddIconLayerAnimacion(
+            this.#listaAnimacion[this.#ind]["positionFormas"][0],
+            this.#listaAnimacion[this.#ind]["positionFormas"][1],
+            0,
+            0,
+            this.#listaAnimacion[this.#ind]["id_persona"],
+            this.#listaAnimacion[this.#ind]["categoriaForma"],
+            this.#listaAnimacion[this.#ind]["color"]
+          );
+          this.#ind++;
+        }
+      }.bind(this), this.#tiempo);
+      super.viewPersonaGeoreferenciada();
+    }
+
 }
