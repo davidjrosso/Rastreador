@@ -66,6 +66,7 @@ export function carga(map, listReferencias) {
   let pos = null;
   let posicionAnterior = null;
   let positionFormas = null;
+  let row = [];
   map.addVectorLayer();
   map.deleteHandlerSource();
   listReferencias.sort(ordenGeoreferencia).forEach(function (elemento, indice, array) {
@@ -137,6 +138,13 @@ export function carga(map, listReferencias) {
                     categoria,
                     lista_formas[categoria][0]
         );
+        row["id_persona"] = elemento.id_persona;
+        row["positionFormas"] = positionFormas;
+        row["categoriaForma"] = categoria;
+        row["color"] = lista_formas[categoria][0];
+        row["fecha"] = lista_formas[categoria][2];
+        map.addListaAnimacion(row);
+        row = [];
       });
     }
   });
@@ -160,22 +168,12 @@ function ordenCategoria(categoriaA, categoriaB) {
   }
 }
 
-/*
 export function animacionDeMapa(mapa, listReferencias) {
   if (mapa.isAnimated()) {
     mapa.restart();
   } else {
     mapa.deleteFeatures();
-    mapa.animacion(listReferencias);
-  }
-}
-*/
-export function animacionDeMapa(mapa, listReferencias) {
-  if (mapa.isAnimated()) {
-    mapa.restart();
-  } else {
-    mapa.deleteFeatures();
-    mapa.animacionSort(listReferencias);
+    mapa.animacion();
   }
 }
 
