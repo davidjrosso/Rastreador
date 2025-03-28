@@ -656,9 +656,7 @@ div .nav-side-menu {
 }
 
 .tabla-celda-planilla {
-  @media (700px < width <= 1400px) {
     width: 400px;
-  }
 }
 
 .ol-full-screen {
