@@ -20,14 +20,18 @@ if (map === null) {
 export function initAnimation(
                      lat = null, 
                      lon = null, 
-                     map = null
+                     map = null,
+                     fechaInicio = null,
+                     fechaFin  = null
 ){
 if (map === null) {
     map = new MapaAnimacion(
                      "basicMap",
                      15,
                      lat, 
-                     lon
+                     lon,
+                     fechaInicio,
+                     fechaFin
                     );
   }
   return map;

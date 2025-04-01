@@ -28,6 +28,19 @@ $_SESSION["reporte_grafico"] = true;
 $Con->CloseConexion();
 $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"] : null;
 
+if (isset($_REQUEST["Fecha_Desde"])) {
+  $Fecha_Inicio = implode("-", array_reverse(explode("/", $_REQUEST["Fecha_Desde"])));
+  $fecha_init_animacion = $Fecha_Inicio;
+} else {
+  $Fecha_Inicio = null;
+}
+if (isset($_REQUEST["Fecha_Hasta"])) {
+  $Fecha_Fin = implode("-", array_reverse(explode("/", $_REQUEST["Fecha_Hasta"])));
+  $fecha_end_animacion = $Fecha_Fin;
+} else {
+  $Fecha_Fin = null;
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -748,7 +761,6 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
 
 
     function showTime(){
-      console.log("por aca");
         var date = new Date();
         var h = date.getHours(); // 0 - 23
         var m = date.getMinutes(); // 0 - 59
@@ -775,6 +787,47 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
         setTimeout(showTime, 1000);
         
     }
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", () =>
+  requestAnimationFrame(updateTime)
+);
+
+function updateTime() {
+  document.documentElement.style.setProperty(
+    "--timer-day",
+    "'" + moment().format("dd") + "'"
+  );
+  document.documentElement.style.setProperty(
+    "--timer-hours",
+    "'" + moment().format("k") + "'"
+  );
+  document.documentElement.style.setProperty(
+    "--timer-minutes",
+    "'" + moment().format("mm") + "'"
+  );
+  document.documentElement.style.setProperty(
+    "--timer-seconds",
+    "'" + moment().format("ss") + "'"
+  );
+  requestAnimationFrame(updateTime);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+    
   </script>
   <style>
     body {
@@ -1096,6 +1149,105 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
       letter-spacing: 7px;
     }
 
+    .clock-digits {
+      margin-top: 0px;
+      margin-bottom: 0px;
+      margin-right: 7px;
+      display: inline-block;
+    }
+
+    .clock-day:before {
+      content: var(--timer-day);
+    }
+
+    .clock-hours:before {
+      content: var(--timer-hours);
+    }
+
+    .clock-minutes:before {
+      content: var(--timer-minutes);
+    }
+
+    .clock-seconds:before {
+      content: var(--timer-seconds);
+    }
+
+    .clock-container {
+      background-color: white;
+      border-radius: 5px;
+      display: inline-flex;
+      border: 1px solid black;
+      margin-left: 35px;
+      position: absolute;
+      left: 40%;
+      z-index: 1000;
+    }
+
+    .clock-col {
+      text-align: center;
+      min-width: 6  0px;
+      position: relative;
+      border: 0.5px solid black;
+    }
+
+    .clock-col:not(:last-child):before, .clock-col:not(:last-child):after {
+      content: "";
+      background-color: rgba(255, 255, 255, 0.3);
+      height: 5px;
+      width: 5px;
+      border-radius: 50%;
+      display: block;
+      position: absolute;
+      right: -42px;
+    }
+
+    .clock-col:not(:last-child):before {
+      top: 35%;
+    }
+
+    .clock-col:not(:last-child):after {
+      top: 50%;
+    }
+
+    .clock-timer:before {
+      color: #fff;
+      font-size: 4.2rem;
+      text-transform: uppercase;
+    }
+
+    .clock-label {
+      color: rgb(0, 0, 0);
+      text-transform: uppercase;
+      font-size: 0.7rem;
+      margin-top: 0px;
+      margin-bottom: 0px;
+      margin-left: 7px;
+      margin-right: 4px;
+      display: inline-block;
+    } 
+
+    @media (max-width: 825px) {
+      .clock-container {
+        flex-direction: column;
+        padding-top: 40px;
+        padding-bottom: 40px;
+      }
+
+      .clock-col + .clock-col {
+        margin-top: 20px;
+      }
+      .clock-col:before, .clock-col:after {
+        display: none !important;
+      }
+    }
+
+
+
+
+
+
+
+
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -1305,16 +1457,6 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
         </div>
         <?php
           if (!isset($_REQUEST["Anio"])) {
-            if (isset($_REQUEST["Fecha_Desde"])) {
-              $Fecha_Inicio = implode("-", array_reverse(explode("/", $_REQUEST["Fecha_Desde"])));
-            } else {
-              $Fecha_Inicio = null;
-            }
-            if (isset($_REQUEST["Fecha_Hasta"])) {
-              $Fecha_Fin = implode("-", array_reverse(explode("/", $_REQUEST["Fecha_Hasta"])));
-            } else {
-              $Fecha_Fin = null;
-            }
 
             $ID_Persona = (isset($_REQUEST["ID_Persona"])) ? $_REQUEST["ID_Persona"] : null;
             $Edad_Desde = (isset($_REQUEST["Edad_Desde"])) ? $_REQUEST["Edad_Desde"] : null;
@@ -2745,6 +2887,35 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
               <path d="M4.271 5.055a.5.5 0 0 1 .52.038L8 7.386V5.5a.5.5 0 0 1 .79-.407l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 8 10.5V8.614l-3.21 2.293A.5.5 0 0 1 4 10.5v-5a.5.5 0 0 1 .271-.445"/>
             </svg>
           </button>
+          <button type="button" id="boton-calendario" class="button-min" aria-label="increment">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-check" viewBox="0 0 16 16">
+              <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
+              <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+            </svg>
+          </button>
+          <div id="cronometro" class="clock-container">
+            <div class="clock-col">
+              <div class="clock-label">
+                Año
+              </div>
+              <p id="digit-anio" class="clock-day clock-timer clock-digits">
+              </p>
+            </div>
+            <div class="clock-col">
+              <div class="clock-label">
+                Mes
+              </div>
+              <p id="digit-mes" class="clock-hours clock-timer clock-digits">
+              </p>
+            </div>
+            <div class="clock-col">
+            <div class="clock-label">
+                Dia
+              </div>
+              <p id="digit-dia" class="clock-minutes clock-timer clock-digits">
+              </p>
+            </div>
+          </div>
         </div>
         <div class="modal-body" style="padding-top: 0px">
           <div id="basicMap" class="map"></div>
@@ -2948,7 +3119,9 @@ $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"]
       map = initAnimation(
                           <?php echo ($lat_person ? $lat_person : "null"); ?>,
                           <?php echo ($lon_person ? $lon_person : "null"); ?>,
-                          null
+                          null,
+                          '<?php echo ($fecha_init_animacion ? $fecha_init_animacion : "null"); ?>',
+                          '<?php echo ($fecha_end_animacion ? $fecha_end_animacion : "null"); ?>'
                         );
       carga(map, objectJsonTabla);
     };
