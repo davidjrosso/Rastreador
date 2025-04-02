@@ -638,6 +638,15 @@ div .nav-side-menu {
   border: 0;
 }
 
+.button-calendar {
+  position: absolute;
+  left: 38.8%;
+  padding: 0;
+  background-color: transparent;
+  border: 0;
+  margin-bottom: 1px;
+}
+
 .recovery-email {
   text-decoration: none;
   color: #0b475d;
@@ -666,3 +675,4 @@ div .nav-side-menu {
 .ol-control button {
   display:none;
 }
+
