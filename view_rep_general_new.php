@@ -29,8 +29,12 @@ $Con->CloseConexion();
 $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"] : null;
 
 if (isset($_REQUEST["Fecha_Desde"])) {
-  $Fecha_Inicio = implode("-", array_reverse(explode("/", $_REQUEST["Fecha_Desde"])));
+  $lista_animacion = explode("/", $_REQUEST["Fecha_Desde"]);
+  $Fecha_Inicio = implode("-", array_reverse($lista_animacion));
   $fecha_init_animacion = $Fecha_Inicio;
+  $anio_animacion = $lista_animacion[2];
+  $mes_animacion = $lista_animacion[1];
+  $dia_animacion = $lista_animacion[0];
 } else {
   $Fecha_Inicio = null;
 }
@@ -99,11 +103,6 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
       document.getElementById("expandir").hidden = false;
       document.getElementById("ContenidoMenu").hidden = true;
       $("#ContenerdorPrincipal").attr("style", "margin-left:5px;");
-      // var ContenidoMenu = document.getElementById("ContenidoMenu");
-      // ContenidoMenu.setAttribute("class","col-md-1");
-      // document.getElementById("sidebar").style.width = "3%"; //5
-
-      //document.getElementById("ContenidoTabla").style.marginLeft = "0";
       var ContenidoTabla = document.getElementById("ContenidoTabla");
       ContenidoTabla.setAttribute("class", "col-md-12");
 
@@ -248,6 +247,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
           document.exitFullscreen();
           fullscreen = false;
         }
+        map.stop();
       });
 
       $("#boton-min").on("click", function (e) {
@@ -758,76 +758,6 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
       }
       $("#BarraDeNavVTabla").attr("value", filaIndice);
     }
-
-
-    function showTime(){
-        var date = new Date();
-        var h = date.getHours(); // 0 - 23
-        var m = date.getMinutes(); // 0 - 59
-        var s = date.getSeconds(); // 0 - 59
-        var session = "AM";
-        
-        if(h == 0){
-            h = 12;
-        }
-        
-        if(h > 12){
-            h = h - 12;
-            session = "PM";
-        }
-        
-        h = (h < 10) ? "0" + h : h;
-        m = (m < 10) ? "0" + m : m;
-        s = (s < 10) ? "0" + s : s;
-        
-        var time = h + ":" + m + ":" + s + " " + session;
-        document.getElementById("MyClockDisplay").innerText = time;
-        document.getElementById("MyClockDisplay").textContent = time;
-        
-        setTimeout(showTime, 1000);
-        
-    }
-
-
-
-
-
-document.addEventListener("DOMContentLoaded", () =>
-  requestAnimationFrame(updateTime)
-);
-
-function updateTime() {
-  document.documentElement.style.setProperty(
-    "--timer-day",
-    "'" + moment().format("dd") + "'"
-  );
-  document.documentElement.style.setProperty(
-    "--timer-hours",
-    "'" + moment().format("k") + "'"
-  );
-  document.documentElement.style.setProperty(
-    "--timer-minutes",
-    "'" + moment().format("mm") + "'"
-  );
-  document.documentElement.style.setProperty(
-    "--timer-seconds",
-    "'" + moment().format("ss") + "'"
-  );
-  requestAnimationFrame(updateTime);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-    
   </script>
   <style>
     body {
@@ -1152,78 +1082,39 @@ function updateTime() {
     .clock-digits {
       margin-top: 0px;
       margin-bottom: 0px;
-      margin-right: 7px;
-      display: inline-block;
-    }
-
-    .clock-day:before {
-      content: var(--timer-day);
-    }
-
-    .clock-hours:before {
-      content: var(--timer-hours);
-    }
-
-    .clock-minutes:before {
-      content: var(--timer-minutes);
-    }
-
-    .clock-seconds:before {
-      content: var(--timer-seconds);
+      padding-right: 7px;
+      padding-left: 7px;
+      border: 0.1px solid black;
+      font-size: 0.85rem;
     }
 
     .clock-container {
       background-color: white;
       border-radius: 5px;
       display: inline-flex;
-      border: 1px solid black;
+      border: 0.5px solid black;
       margin-left: 35px;
       position: absolute;
-      left: 40%;
+      left: 37%;
       z-index: 1000;
     }
 
     .clock-col {
+      display: flex;
       text-align: center;
-      min-width: 6  0px;
+      min-width: 60px;
       position: relative;
-      border: 0.5px solid black;
-    }
-
-    .clock-col:not(:last-child):before, .clock-col:not(:last-child):after {
-      content: "";
-      background-color: rgba(255, 255, 255, 0.3);
-      height: 5px;
-      width: 5px;
-      border-radius: 50%;
-      display: block;
-      position: absolute;
-      right: -42px;
-    }
-
-    .clock-col:not(:last-child):before {
-      top: 35%;
-    }
-
-    .clock-col:not(:last-child):after {
-      top: 50%;
-    }
-
-    .clock-timer:before {
-      color: #fff;
-      font-size: 4.2rem;
-      text-transform: uppercase;
     }
 
     .clock-label {
+      align-content: center;
+      background: #f8f9fa;
       color: rgb(0, 0, 0);
       text-transform: uppercase;
       font-size: 0.7rem;
-      margin-top: 0px;
-      margin-bottom: 0px;
-      margin-left: 7px;
-      margin-right: 4px;
-      display: inline-block;
+      padding-left: 6px;
+      padding-right: 7px;
+      border: 0.1px solid black;
     } 
 
     @media (max-width: 825px) {
@@ -1240,13 +1131,6 @@ function updateTime() {
         display: none !important;
       }
     }
-
-
-
-
-
-
-
 
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -2893,12 +2777,15 @@ function updateTime() {
               <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
             </svg>
           </button>
-          <div id="cronometro" class="clock-container">
+          <div id="cronometro" class="clock-container" style="display: none;">
             <div class="clock-col">
               <div class="clock-label">
                 Año
               </div>
               <p id="digit-anio" class="clock-day clock-timer clock-digits">
+                <?php
+                  echo $anio_animacion;
+                ?>
               </p>
             </div>
             <div class="clock-col">
@@ -2906,6 +2793,9 @@ function updateTime() {
                 Mes
               </div>
               <p id="digit-mes" class="clock-hours clock-timer clock-digits">
+                <?php
+                  echo $mes_animacion;
+                ?>
               </p>
             </div>
             <div class="clock-col">
@@ -2913,6 +2803,9 @@ function updateTime() {
                 Dia
               </div>
               <p id="digit-dia" class="clock-minutes clock-timer clock-digits">
+                <?php
+                  echo $dia_animacion;
+                ?>
               </p>
             </div>
           </div>
@@ -2931,7 +2824,6 @@ function updateTime() {
       </div>
     </div>
   </div>
-
   <script>
     (function () {
       var tabla = document.getElementById("tabla-responsive");

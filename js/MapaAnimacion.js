@@ -152,7 +152,7 @@ export class MapaAnimacion extends MapaOl {
             this.#listaUbicacion = new WeakMap();
             this.#tiempo=1000;
             this.#ind=0;
-            $("#cronometro").text("");
+            $("#cronometro").css("display", "none");
         }
     }
 
@@ -230,6 +230,7 @@ export class MapaAnimacion extends MapaOl {
       super.addHandlerSource();
       this.#listaAnimacion = this.#listaAnimacion.sort(this.ordenFecha);
       let lengList = this.#listaAnimacion.length;
+      $("#cronometro").css("display", "inline-flex");
       const superAddIconLayerAnimacion = super.addIconLayerAnimacion.bind(this);
       this.#idIntervalo = setInterval(function () {
         if (this.#fechaInicio <= this.getFechaIndice() 
