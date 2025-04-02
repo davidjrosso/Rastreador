@@ -172,22 +172,33 @@ function ordenCategoria(categoriaA, categoriaB) {
   }
 }
 
-export function animacionDeMapa(mapa, listReferencias) {
+export function animacionCalendarDeMapa(mapa) {
   if (mapa.isAnimated()) {
+    mapa.setTipo("CL");
     mapa.restart();
   } else {
     mapa.deleteFeatures();
-    mapa.animacion();
+    mapa.animacionCalendar();
   }
 }
 
-export function animacionPaused(mapa, listReferencias) {
+export function animacionCronDeMapa(mapa) {
+  if (mapa.isAnimated()) {
+    mapa.setTipo("CR");
+    mapa.restart();
+  } else {
+    mapa.deleteFeatures();
+    mapa.animacionCron();
+  }
+}
+
+export function animacionPaused(mapa) {
   if (mapa.isAnimated()) {
     mapa.paused();
   }
 }
 
-export function animacionStop(mapa, listReferencias) {
+export function animacionStop(mapa) {
   if (mapa.isAnimated()) {
     mapa.stop();
   }

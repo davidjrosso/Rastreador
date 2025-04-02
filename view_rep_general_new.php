@@ -259,7 +259,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
       });
 
       $("#boton-animation").on("click", function (e) {
-        animacionDeMapa(map, objectJsonAnimacion);
+        animacionCalendarDeMapa(map);
       });
 
       $("#boton-paused").on("click", function (e) {
@@ -277,6 +277,14 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
 
       $("#boton-decrement").on("click", function (e) {
         map.decrementar();
+      });
+
+      $("#boton-calendario").on("click", function (e) {
+        animacionCalendarDeMapa(map);
+      });
+
+      $("#boton-cron").on("click", function (e) {
+        animacionCronDeMapa(map);
       });
 
       $("#boton-fullscreen").on("click", function (e) {
@@ -1084,6 +1092,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
       margin-bottom: 0px;
       padding-right: 7px;
       padding-left: 7px;
+      letter-spacing: 0.5px;
       border: 0.1px solid black;
       font-size: 0.85rem;
     }
@@ -1095,7 +1104,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
       border: 0.5px solid black;
       margin-left: 35px;
       position: absolute;
-      left: 37%;
+      left: 38%;
       z-index: 1000;
     }
 
@@ -2742,9 +2751,9 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             </svg>
           </button>
           <button type="button" id="boton-decrement" class="button-min" aria-label="decrement">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-rewind-circle" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-square" viewBox="0 0 16 16">
+              <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
               <path d="M7.729 5.055a.5.5 0 0 0-.52.038l-3.5 2.5a.5.5 0 0 0 0 .814l3.5 2.5A.5.5 0 0 0 8 10.5V8.614l3.21 2.293A.5.5 0 0 0 12 10.5v-5a.5.5 0 0 0-.79-.407L8 7.386V5.5a.5.5 0 0 0-.271-.445"/>
-              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8"/>
             </svg>
           </button>
           <button type="button" id="boton-animation" class="button-min" aria-label="animation">
@@ -2754,27 +2763,33 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             </svg>
           </button>
           <button type="button" id="boton-paused" class="button-min" aria-label="paused">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pause-circle" viewBox="0 0 16 16">
-              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-              <path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0z"/>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-square" viewBox="0 0 16 16">
+              <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+              <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5m5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5"/>
             </svg>
           </button>
           <button type="button" id="boton-stop" class="button-min" aria-label="stop">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-stop-btn" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-square" viewBox="0 0 16 16">
+              <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
               <path d="M6.5 5A1.5 1.5 0 0 0 5 6.5v3A1.5 1.5 0 0 0 6.5 11h3A1.5 1.5 0 0 0 11 9.5v-3A1.5 1.5 0 0 0 9.5 5z"/>
-              <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
             </svg>
           </button>
           <button type="button" id="boton-increment" class="button-min" aria-label="increment">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-fast-forward-circle" viewBox="0 0 16 16">
-              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-square" viewBox="0 0 16 16">
+              <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
               <path d="M4.271 5.055a.5.5 0 0 1 .52.038L8 7.386V5.5a.5.5 0 0 1 .79-.407l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 8 10.5V8.614l-3.21 2.293A.5.5 0 0 1 4 10.5v-5a.5.5 0 0 1 .271-.445"/>
             </svg>
           </button>
-          <button type="button" id="boton-calendario" class="button-min" aria-label="increment">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-check" viewBox="0 0 16 16">
+          <button type="button" id="boton-calendario" class="button-calendar" aria-label="calendar" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" class="bi bi-calendar-check" viewBox="0 0 16 16" style="margin-bottom: 5px;">
               <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
               <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+            </svg>
+          </button>
+          <button type="button" id="boton-cron" class="button-calendar" aria-label="cron"  style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" class="bi bi-stopwatch" viewBox="0 0 16 16" style="margin-bottom: 5px;">
+              <path d="M8.5 5.6a.5.5 0 1 0-1 0v2.9h-3a.5.5 0 0 0 0 1H8a.5.5 0 0 0 .5-.5z"/>
+              <path d="M6.5 1A.5.5 0 0 1 7 .5h2a.5.5 0 0 1 0 1v.57c1.36.196 2.594.78 3.584 1.64l.012-.013.354-.354-.354-.353a.5.5 0 0 1 .707-.708l1.414 1.415a.5.5 0 1 1-.707.707l-.353-.354-.354.354-.013.012A7 7 0 1 1 7 2.071V1.5a.5.5 0 0 1-.5-.5M8 3a6 6 0 1 0 .001 12A6 6 0 0 0 8 3"/>
             </svg>
           </button>
           <div id="cronometro" class="clock-container" style="display: none;">
@@ -2792,7 +2807,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
               <div class="clock-label">
                 Mes
               </div>
-              <p id="digit-mes" class="clock-hours clock-timer clock-digits">
+              <p id="digit-mes" class="clock-hours clock-timer clock-digits" style="letter-spacing: 1.5px">
                 <?php
                   echo $mes_animacion;
                 ?>
@@ -2802,7 +2817,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             <div class="clock-label">
                 Dia
               </div>
-              <p id="digit-dia" class="clock-minutes clock-timer clock-digits">
+              <p id="digit-dia" class="clock-minutes clock-timer clock-digits" style="letter-spacing: 1.5px">
                 <?php
                   echo $dia_animacion;
                 ?>
