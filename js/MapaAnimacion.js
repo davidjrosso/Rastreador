@@ -63,6 +63,11 @@ export class MapaAnimacion extends MapaOl {
                           break;
                         }
                       }
+                    } else {
+                      this.#ind = 0;
+                      clearInterval(this.#idIntervalo);
+                      this.#idIntervalo = null;
+                      this.#tiempo=1000;
                     }
                 }
                 this.incrementFechaIndice();
@@ -71,6 +76,7 @@ export class MapaAnimacion extends MapaOl {
                   this.#ind = 0;
                   clearInterval(this.#idIntervalo);
                   this.#idIntervalo = null;
+                  this.#tiempo=1000;
                 } else {
                   superAddIconLayerAnimacion(
                     this.#listaAnimacion[this.#ind]["positionFormas"][0],
@@ -81,8 +87,8 @@ export class MapaAnimacion extends MapaOl {
                     this.#listaAnimacion[this.#ind]["categoriaForma"],
                     this.#listaAnimacion[this.#ind]["color"]
                   );
-                  this.#ind++;
                   this.setFechaIndice(this.#listaAnimacion[this.#ind]["fecha"]);
+                  this.#ind++;
                 }
               }
               this.updateCronometro();
@@ -95,7 +101,6 @@ export class MapaAnimacion extends MapaOl {
             this.#ind = 0;
             clearInterval(this.#idIntervalo);
             this.#idIntervalo = null;
-            this.#listaAnimacion = [];
             this.#idIntervalo = null;
             this.#tiempo=1000;
             this.#listaUbicacion = new WeakMap();
@@ -131,6 +136,11 @@ export class MapaAnimacion extends MapaOl {
                             break;
                           }
                         }
+                      } else {
+                        this.#ind = 0;
+                        clearInterval(this.#idIntervalo);
+                        this.#idIntervalo = null;
+                        this.#tiempo=1000;
                       }
                   }
                   this.incrementFechaIndice();
@@ -139,6 +149,7 @@ export class MapaAnimacion extends MapaOl {
                     this.#ind = 0;
                     clearInterval(this.#idIntervalo);
                     this.#idIntervalo = null;
+                    this.#tiempo=1000;
                   } else {
                     superAddIconLayerAnimacion(
                       this.#listaAnimacion[this.#ind]["positionFormas"][0],
@@ -149,8 +160,8 @@ export class MapaAnimacion extends MapaOl {
                       this.#listaAnimacion[this.#ind]["categoriaForma"],
                       this.#listaAnimacion[this.#ind]["color"]
                     );
-                    this.#ind++;
                     this.setFechaIndice(this.#listaAnimacion[this.#ind]["fecha"]);
+                    this.#ind++;
                   }
                 }
             this.updateCronometro();
@@ -233,6 +244,11 @@ export class MapaAnimacion extends MapaOl {
                             break;
                           }
                         }
+                      } else {
+                        this.#ind = 0;
+                        clearInterval(this.#idIntervalo);
+                        this.#idIntervalo = null;
+                        this.#tiempo=1000;
                       }
                   }
                   this.incrementFechaIndice();
@@ -241,6 +257,7 @@ export class MapaAnimacion extends MapaOl {
                     this.#ind = 0;
                     clearInterval(this.#idIntervalo);
                     this.#idIntervalo = null;
+                    this.#tiempo=1000;
                   } else {
                     superAddIconLayerAnimacion(
                       this.#listaAnimacion[this.#ind]["positionFormas"][0],
@@ -251,8 +268,8 @@ export class MapaAnimacion extends MapaOl {
                       this.#listaAnimacion[this.#ind]["categoriaForma"],
                       this.#listaAnimacion[this.#ind]["color"]
                     );
-                    this.#ind++;
                     this.setFechaIndice(this.#listaAnimacion[this.#ind]["fecha"]);
+                    this.#ind++;
                   }
                 }
                 this.updateCronometro();
@@ -287,6 +304,11 @@ export class MapaAnimacion extends MapaOl {
       return this.#tipo;
     }
 
+    clearListaAnimacion() {
+      if (this.#listaAnimacion) {
+        this.#listaAnimacion = [];
+      }
+    }
 
     setFechaIndice(fecha) {
       this.#fechaIndice = Date.parse(fecha);
@@ -344,6 +366,11 @@ export class MapaAnimacion extends MapaOl {
                     break;
                   }
                 }
+              } else {
+                this.#ind = 0;
+                clearInterval(this.#idIntervalo);
+                this.#idIntervalo = null;
+                this.#tiempo=1000;
               }
         }
         this.incrementFechaIndice();
