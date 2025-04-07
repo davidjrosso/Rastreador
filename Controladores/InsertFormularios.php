@@ -64,10 +64,10 @@
 							$responsable = $value;
 							break;
 						case 3:
-							$apellido = $value;
+							$nombre = $value;
 							break;
 						case 4:
-							$nombre = $value;
+							$apellido = $value;
 							break;
 						case 5:
 							$dni = $value;
@@ -80,8 +80,20 @@
 						case 7:
 							$direccion = $value;
 							break;
+						/*
 						case 8:
 							$localidad = $value;
+							break;
+						*/
+						case 8:
+							$barrio = $value;
+							if (!is_null($barrio)) {
+								$barrio = trim($barrio);
+								$id_barrio = Barrio::get_id_by_name($con, $barrio);
+								
+							} else {
+								$id_barrio = null;
+							}
 							break;
 						case 9:
 							$telefono = $value;
@@ -113,16 +125,6 @@
 							break;
 						case 18:
 							$observacion .= " PCR para dengue : " . $value;
-							break;
-						case 19:
-							$barrio = $value;
-							if (!is_null($barrio)) {
-								$barrio = trim($barrio);
-								$id_barrio = Barrio::get_id_by_name($con, $barrio);
-								
-							} else {
-								$id_barrio = null;
-							}
 							break;
 						default :
 							break;
