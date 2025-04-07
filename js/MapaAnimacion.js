@@ -11,6 +11,7 @@ export class MapaAnimacion extends MapaOl {
     #fechaIndice;
     #cronometro;
     #tipo;
+    #estado = 0;
 
     constructor(
         target,
@@ -36,8 +37,10 @@ export class MapaAnimacion extends MapaOl {
     }
 
     incrementar() {
-        if (this.#idIntervalo) {
-            clearInterval(this.#idIntervalo);
+        if (this.isAnimated()) {
+            if (this.#idIntervalo) {
+              clearInterval(this.#idIntervalo);
+            }
             let lengList = this.#listaAnimacion.length;
             const superAddIconLayerAnimacion = super.addIconLayerAnimacion.bind(this);
             this.tiempo= this.#tiempo / 2;
@@ -67,6 +70,7 @@ export class MapaAnimacion extends MapaOl {
                       this.#ind = 0;
                       clearInterval(this.#idIntervalo);
                       this.#idIntervalo = null;
+                      this.#estado = 0;
                       this.#tiempo=1000;
                     }
                 }
@@ -76,7 +80,8 @@ export class MapaAnimacion extends MapaOl {
                   this.#ind = 0;
                   clearInterval(this.#idIntervalo);
                   this.#idIntervalo = null;
-                  this.#tiempo=1000;
+                  this.#estado = 0;
+                  this.#tiempo = 1000;
                 } else {
                   superAddIconLayerAnimacion(
                     this.#listaAnimacion[this.#ind]["positionFormas"][0],
@@ -101,16 +106,18 @@ export class MapaAnimacion extends MapaOl {
             this.#ind = 0;
             clearInterval(this.#idIntervalo);
             this.#idIntervalo = null;
-            this.#idIntervalo = null;
-            this.#tiempo=1000;
+            this.#estado = 0;
+            this.#tiempo = 1000;
             this.#listaUbicacion = new WeakMap();
         }
         this.#tiempo = this.#tiempo / 2;
     }
 
     decrementar() {
-        if (this.#idIntervalo) {
-            clearInterval(this.#idIntervalo);
+        if (this.isAnimated()) {
+            if (this.#idIntervalo) {
+              clearInterval(this.#idIntervalo);
+            }
             let lengList = this.#listaAnimacion.length;
             const superAddIconLayerAnimacion = super.addIconLayerAnimacion.bind(this);
             this.tiempo= this.#tiempo * 2 ;
@@ -140,7 +147,8 @@ export class MapaAnimacion extends MapaOl {
                         this.#ind = 0;
                         clearInterval(this.#idIntervalo);
                         this.#idIntervalo = null;
-                        this.#tiempo=1000;
+                        this.#tiempo = 1000;
+                        this.#estado = 0;
                       }
                   }
                   this.incrementFechaIndice();
@@ -149,7 +157,8 @@ export class MapaAnimacion extends MapaOl {
                     this.#ind = 0;
                     clearInterval(this.#idIntervalo);
                     this.#idIntervalo = null;
-                    this.#tiempo=1000;
+                    this.#tiempo = 1000;
+                    this.#estado = 0;
                   } else {
                     superAddIconLayerAnimacion(
                       this.#listaAnimacion[this.#ind]["positionFormas"][0],
@@ -185,7 +194,7 @@ export class MapaAnimacion extends MapaOl {
     }
 
     isAnimated(){
-        let isAnimation = (this.#idIntervalo) ? true : false;
+        let isAnimation = this.#estado > 0;
         return isAnimation;
     }
 
@@ -193,6 +202,7 @@ export class MapaAnimacion extends MapaOl {
         if (this.#idIntervalo) {
             clearInterval(this.#idIntervalo);
             this.#idIntervalo = null;
+            this.#estado = 2;
         }
     }
 
@@ -202,8 +212,9 @@ export class MapaAnimacion extends MapaOl {
             super.deleteFeatures();
             this.#listaAnimacion = [];
             this.#listaUbicacion = new WeakMap();
-            this.#tiempo=1000;
-            this.#ind=0;
+            this.#tiempo = 1000;
+            this.#ind = 0;
+            this.#estado = 0;
             $("#cronometro").css("display", "none");
             $("#boton-calendario").css("display", "none");
             $("#boton-cron").css("display", "none");
@@ -213,6 +224,7 @@ export class MapaAnimacion extends MapaOl {
     restart() {
         if (this.isAnimated()) {
             let lengList = this.#listaAnimacion.length;
+            this.#estado = 1;
             clearInterval(this.#idIntervalo);
             const superAddIconLayerAnimacion = super.addIconLayerAnimacion.bind(this);
             if (this.#tipo == "CR") {
@@ -248,7 +260,8 @@ export class MapaAnimacion extends MapaOl {
                         this.#ind = 0;
                         clearInterval(this.#idIntervalo);
                         this.#idIntervalo = null;
-                        this.#tiempo=1000;
+                        this.#estado = 0;
+                        this.#tiempo = 1000;
                       }
                   }
                   this.incrementFechaIndice();
@@ -257,7 +270,8 @@ export class MapaAnimacion extends MapaOl {
                     this.#ind = 0;
                     clearInterval(this.#idIntervalo);
                     this.#idIntervalo = null;
-                    this.#tiempo=1000;
+                    this.#estado = 0;
+                    this.#tiempo = 1000;
                   } else {
                     superAddIconLayerAnimacion(
                       this.#listaAnimacion[this.#ind]["positionFormas"][0],
@@ -338,6 +352,7 @@ export class MapaAnimacion extends MapaOl {
     animacionCron() {
       super.addVectorLayer();
       super.addHandlerSource(); 
+      this.#estado = 1;
       this.#listaAnimacion = this.#listaAnimacion.sort(this.ordenFecha);
       let lengList = this.#listaAnimacion.length;
       this.setTipo("CR");
@@ -370,7 +385,8 @@ export class MapaAnimacion extends MapaOl {
                 this.#ind = 0;
                 clearInterval(this.#idIntervalo);
                 this.#idIntervalo = null;
-                this.#tiempo=1000;
+                this.#estado = 0;
+                this.#tiempo = 1000;
               }
         }
         this.incrementFechaIndice();
@@ -385,6 +401,7 @@ export class MapaAnimacion extends MapaOl {
     animacionCalendar() {
         super.addVectorLayer();
         super.addHandlerSource();
+        this.#estado = 1;
         this.#listaAnimacion = this.#listaAnimacion.sort(this.ordenFecha)
         let lengList = this.#listaAnimacion.length;
         this.setTipo("CL");
@@ -396,6 +413,7 @@ export class MapaAnimacion extends MapaOl {
           if (lengList <= this.#ind) {
             this.#ind = 0;
             clearInterval(this.#idIntervalo);
+            this.#estado = 0;
             this.#idIntervalo = null;
           } else {
             superAddIconLayerAnimacion(
