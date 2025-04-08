@@ -231,8 +231,24 @@
 				   xID_OtraInstitucion: 1,
 							   xEstado: $estado
 						);
+				$motivo_movimiento = new MovimientoMotivo(
+											    connection: $con, 
+											 id_movimiento: $movimiento->getID_Movimiento(),
+												 id_motivo: $ID_Motivo_1,
+												nro_motivo: 1,
+													estado: 1
+														 );
+				$motivo_movimiento->save();
 				if ($internacion) {
 					$movimiento->setID_Motivo_2($ID_Motivo_2);
+					$motivo_movimiento = new MovimientoMotivo(
+													connection: $con, 
+												 id_movimiento: $movimiento->getID_Movimiento(),
+													 id_motivo: $ID_Motivo_1,
+													nro_motivo: 1,
+														estado: 1
+															);
+					$motivo_movimiento->save();
 				} else {
 					$ID_Motivo_2 = Motivo::get_id_by_name( $con, "Sin Motivo");
 					$movimiento->setID_Motivo_2($ID_Motivo_2);
