@@ -12,6 +12,7 @@
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Motivo.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Parametria.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/MovimientoMotivo.php';
 
 	use Google\Client;
 	use Google\Service\Drive;
@@ -231,6 +232,7 @@
 				   xID_OtraInstitucion: 1,
 							   xEstado: $estado
 						);
+				$movimiento->save();
 				$motivo_movimiento = new MovimientoMotivo(
 											    connection: $con, 
 											 id_movimiento: $movimiento->getID_Movimiento(),
@@ -253,7 +255,7 @@
 					$ID_Motivo_2 = Motivo::get_id_by_name( $con, "Sin Motivo");
 					$movimiento->setID_Motivo_2($ID_Motivo_2);
 				}
-				$movimiento->save();
+
 				$row_json["movimiento"] = $movimiento->jsonSerialize();
 				$detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Movimiento. Datos: ID: " . $movimiento->getID_Movimiento() . " Fecha: $Fecha_Accion - Persona: " . $persona->getID_Persona() . " - Motivo 1: $ID_Motivo_1 - Motivo 2: $ID_Motivo_2 - Observaciones: $observacion - Responsable: " . $responsable->get_id_responsable();
 				$accion = new Accion(
