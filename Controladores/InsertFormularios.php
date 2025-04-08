@@ -192,6 +192,10 @@
 						continue;
 					}
 					$persona = new Persona(ID_Persona: $id_persona);
+					$persona->setBarrio($id_barrio);
+					$persona->setNro($direccion);
+					$persona->setDomicilio($direccion);
+					$persona->update();
 				}
 				$row_json["persona"] = $persona->jsonSerialize();
 				$detalles = "El usuario con ID: $ID_Usuario ha registrado un nueva persona. Datos: Persona: " . $persona->getID_Persona();
