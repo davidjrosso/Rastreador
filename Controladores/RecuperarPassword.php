@@ -1,5 +1,6 @@
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Controladores/Conexion.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/sys_config.php';
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Account.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/UserToken.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Accion.php");

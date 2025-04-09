@@ -75,10 +75,16 @@ header("Content-Type: text/html;charset=utf-8");
 </body>
 <?php
 if(isset($_REQUEST["MensajeError"])){
-	$MensajeError = $_REQUEST["MensajeError"]; 
+	$mensaje_error = $_REQUEST["MensajeError"]; 
 	echo "<script type='text/javascript'>
-		  swal('".$MensajeError."','','warning');
-		</script>";			
+		  swal('" . $mensaje_error . "','','warning');
+		</script>";
+}
+if(isset($_REQUEST["Mensaje"])){
+	$mensaje = $_REQUEST["Mensaje"]; 
+	echo "<script type='text/javascript'>
+		  swal('" . $mensaje . "','','success');
+		</script>";
 }
 ?>
 <?php

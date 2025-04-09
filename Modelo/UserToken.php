@@ -1,6 +1,5 @@
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Controladores/Conexion.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Account.php");
 
 class UserToken implements JsonSerializable
 {
@@ -52,6 +51,27 @@ class UserToken implements JsonSerializable
 				$this->fecha_expiracion = $query_fecha_expiracion;
                 $this->estado = $query_estado;
 			}
+		} else if ($token) {
+			$consultar = "select *
+						  from users_tokens
+						  where token = '" . md5($token) . "'
+							and estado = 1";
+			$ejecutar_consultar = mysqli_query(
+				$this->coneccion_base->Conexion,
+				$consultar) or die("Problemas al consultar filtro token");
+			$ret = mysqli_fetch_assoc($ejecutar_consultar);
+			if (!is_null($ret)) {
+				$query_token = $ret["token"];
+				$query_account_id= $ret["accountid"];
+				$query_fecha_creacion = $ret["fecha_creacion"];
+				$query_fecha_expiracion = $ret["fecha_expiracion"];
+                $query_estado = $ret["estado"];
+				$this->token = $query_token;
+				$this->account_id = $query_account_id;
+				$this->fecha_creacion = $query_fecha_creacion;
+				$this->fecha_expiracion = $query_fecha_expiracion;
+                $this->estado = $query_estado;
+			}
 		}
 	}
 
@@ -72,7 +92,24 @@ class UserToken implements JsonSerializable
 		$exist = (mysqli_num_rows($ejecutar_consultar) >= 1);
 		return $exist;
 	}
-	
+
+	public static function is_token_valid(
+								 $coneccion,
+								 $token
+	)	{
+        $fecha = date("Y-m-d");
+		$consultar = "select *
+					  from users_tokens
+					  where '$fecha' between fecha_creacion and fecha_expiracion
+						and token = '" . md5($token) . "' 
+						and estado = 1";
+		$ejecutar_consultar = mysqli_query(
+		$coneccion->Conexion,
+		$consultar) or die("Problemas al consultar filtro de token");
+		$is_valid = (mysqli_num_rows($ejecutar_consultar) >= 1);
+		return $is_valid;
+	}
+
 	private function crypto_rand_secure($min, $max) {
 		$range = $max - $min;
 		if ($range < 0) return $min;
@@ -189,7 +226,7 @@ class UserToken implements JsonSerializable
 										accountid,
 										estado
 					)
-					VALUES ( " . ((!is_null($this->get_token())) ? "'" . $this->get_token() . "'" : "null") . ", 
+					VALUES ( " . ((!is_null($this->get_token())) ? "'" . md5($this->get_token()) . "'" : "null") . ", 
 							" . ((!is_null($this->get_fecha_creacion())) ? "'" . $this->get_fecha_creacion() . "'" : "null") . ", 
 							" . ((!is_null($this->get_fecha_expiracion())) ? "'" . $this->get_fecha_expiracion() . "'" : "null") . ", 
 							" . ((!is_null($this->get_account_id())) ? $this->get_account_id() : "null") . ",

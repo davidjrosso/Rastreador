@@ -4,7 +4,7 @@
 	require_once 'Conexion.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/sys_config.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Movimiento.php';
-	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Formulario.php';
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Formulario.php';	
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Parametria.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Persona.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Responsable.php';
