@@ -73,6 +73,7 @@ export function carga(map, listReferencias) {
   let row = [];
   map.addVectorLayer();
   map.deleteHandlerSource();
+  map.clearListaAnimacion();
   listReferencias.sort(ordenGeoreferencia).forEach(function (elemento, indice, array) {
     pos = [parseFloat(elemento.lon), parseFloat(elemento.lat)];
     let lista_formas = elemento.lista_formas_categorias;
