@@ -42,9 +42,10 @@ try {
                                 fecha_expiracion: $fecha_expiracion->format('Y-m-d'),
                                 estado: 1
                           );
+        $token = $user_token->get_token();
         $user_token->save();
 
-        $link = "http://" . $_SERVER['HTTP_HOST'] . "/Controladores/modificacioncontraseña.php/" . $user_token->get_token();
+        $link = "http://" . $_SERVER['HTTP_HOST'] . "/Controladores/modificacionpassword.php/" . $token;
 
         if ($account_id_username > 0) {
             $account_id = $account_id_username;
@@ -78,21 +79,20 @@ try {
         $client_secret = new Parametria(
             coneccion_base: $con,
             codigo: "CLIENT_SECRET"
-         );
+        );
         $parameter_refresh = new Parametria(
             coneccion_base: $con,
             codigo: "REFRESH_TOKEN_GMAIL"
-           );
+        );
         $parameter_acces = new Parametria(
             coneccion_base: $con,
             codigo: "ACCESS_TOKEN_GMAIL"
-         );
+        );
         $refresh_token = $parameter_refresh->get_valor();
         $access_token = $parameter_acces->get_valor();
-        $client_id     = '533474323983-5pdm8082unidoml3ttp7ptkbdc0qnifg.apps.googleusercontent.com';
         $redirect_uri  = "http://" . $_SERVER['HTTP_HOST'] . "/Controladores/actualizacionAutenticacion.php";
         $client = new Google_Client();
-        $client->setClientId($client_id);
+        $client->setClientId(CLIENT_ID_GMAIL);
         $client->setClientSecret($client_secret->get_valor());
         $client->setRedirectUri($redirect_uri);
         $client->addScope("https://www.googleapis.com/auth/gmail.send");
@@ -103,7 +103,7 @@ try {
             $client->refreshToken($refresh_token);
             $newtoken = $client->getAccessToken();
             $parameter_acces->set_valor($newtoken["access_token"]);
-            $parameter_acces->update();  
+            $parameter_acces->update();
             $client->setAccessToken($newtoken);
         } else {
             $client->setAccessToken($access_token);
@@ -113,7 +113,7 @@ try {
 
         $fromemail = "no-reply@rastreador.com";
 
-        $strRawMessage = "From: Email <$fromemail> \r\n";
+        $strRawMessage = "From: $fromemail \r\n";
         $strRawMessage .= "To: <$email_user>\r\n";
         $strRawMessage .= 'Subject: Recuperacion de Contrasena - Sistema Rastreador' . "\r\n";
         $strRawMessage .= "MIME-Version: 1.0\r\n";
