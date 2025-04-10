@@ -46,7 +46,7 @@ try {
         $token = $user_token->get_token();
         $user_token->save();
         $http_header = getallheaders();
-        $host = ($http_header["X-Forwarded-For"]) ?  $http_header["X-Forwarded-For"] : $http_header["Host"];
+        $host = Parametria::get_value_by_code($con, "ENV_HOST");
         $link = "https://" . $host . "/Controladores/modificacionpassword.php/" . $token;
 
         if ($account_id_username > 0) {
