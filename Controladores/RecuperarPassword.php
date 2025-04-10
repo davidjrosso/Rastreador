@@ -45,8 +45,8 @@ try {
                           );
         $token = $user_token->get_token();
         $user_token->save();
-
-        $link = "https://" . $_SERVER['SERVER_NAME'] . "/Controladores/modificacionpassword.php/" . $token;
+        $host = getallheaders()["Host"];
+        $link = "https://" . $host . "/Controladores/modificacionpassword.php/" . $token;
 
         if ($account_id_username > 0) {
             $account_id = $account_id_username;
