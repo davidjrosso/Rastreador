@@ -11,6 +11,7 @@
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Persona.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Responsable.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Barrio.php';
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Calle.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Motivo.php';
     require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/CentroSalud.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
@@ -327,7 +328,7 @@
 								if ($col >= 33 && $is_fecha) {
 									$motivo_row["fecha"] = null;
 									if (!empty($result_array[0])) {
-										$lista_fecha = explode("/", $result_array[0]);
+										$lista_dfecha = explode("/", $result_array[0]);
 										$lista_fecha = array_reverse($lista_fecha);
 										$valor_fecha = implode( "-", $lista_fecha);
 										$fecha_excel = strtotime($valor_fecha);
@@ -456,6 +457,10 @@
 						xID_TipoAccion: $ID_TipoAccion
 					);
 					$accion->save();
+
+					$row_json["existe_calle"] = Calle::existe_calle($direccion);
+					$row_json["domicilio"] = $direccion;
+
 					$Fecha_Nacimiento = (empty($Fecha_Nacimiento)) ? null : $Fecha_Nacimiento;
 					if (!Persona::is_registered($dni)) {
 						$persona = new Persona(
@@ -549,7 +554,6 @@
 						}
 					}
 
-					$row_json["persona"] = $persona->jsonSerialize();
 					$exist_mov = Movimiento::is_exist_movimiento_fecha(
 																	   coneccion: $con,
 																	   fecha: $value["fecha"],

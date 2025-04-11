@@ -9,6 +9,39 @@ class Calle {
 	private $calle_nombre;
 
 
+	public static function existe_calle($xDomicilio = null)
+	{
+		$existe = false;
+		$con = new Conexion();
+		$con->OpenConexion();
+		if ($xDomicilio) {
+			$consulta = "select *
+						 from calle
+						 where lower(calle_nombre) like CONCAT(
+																'%',
+																REGEXP_REPLACE( 
+																		REGEXP_REPLACE(
+																						REGEXP_SUBSTR(
+																								lower('$xDomicilio'), 
+																								'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
+																						),
+																						'( )+',
+																						'%'
+																						),
+																				'(\\\\.)',
+																				''
+																				),
+																'%'
+																)
+							and estado = 1
+						 order by calle_nombre asc;";
+			$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
+			$existe = (mysqli_num_rows($query_object) > 0);
+		}
+		$con->CloseConexion();
+		return $existe;
+	}
+
 	// METODOS SET
 	public function set_id_calle($id_calle){
 		$this->id_calle = $id_calle;
