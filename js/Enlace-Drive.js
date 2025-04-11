@@ -3,7 +3,7 @@ import swal from '../node_modules/sweetalert2';
 
   export function dialogCargaEnlace(data, status, request) {
     let response = JSON.parse(request.responseText).entries();
-    let mensaje = "<p> Los registros han sido cargados al sistema </p>";
+    let mensaje = "<p>Estos registros no han sido georefenciados</p>";
     let table = `<table style='border: 2px solid; border-collapse: collapse; border-color: #6984a3'>
                       <thead>
                         <th style='border: 2px solid; border-color: #6984a3; background-color: #e9eef3;'>Persona</th>
@@ -13,7 +13,7 @@ import swal from '../node_modules/sweetalert2';
     let count = false;
     response.forEach(function (element) {
       let personaObj = element[1].formulario.form.persona;
-      let existe_c = element[1].formulario.existe_calle;
+      let existe_c = element[1].formulario.existe_calle;  
       //if (existe_c == "false") {
         count = true;
         table += "<tr>";
@@ -32,7 +32,7 @@ import swal from '../node_modules/sweetalert2';
     table += `</table>`;  
     mensaje += (count) ? table : "";
     swal.fire({
-      title: "<strong>El proceso de carga de Excel finalizo</strong>",
+      title: "<strong>El proceso de carga finalizó</strong>",
       icon: "success",
       html: mensaje,
       showCloseButton: true,
