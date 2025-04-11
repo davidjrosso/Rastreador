@@ -3,7 +3,7 @@ import swal from '../node_modules/sweetalert2';
 
   export function dialogCargaEnlace(data, status, request) {
     let response = JSON.parse(request.responseText).entries();
-    let mensaje = "<p>Estos registros no han sido georefenciados</p>";
+    let mensaje = "<p>Estos registros no han sido georeferenciados</p>";
     let table = `<table style='border: 2px solid; border-collapse: collapse; border-color: #6984a3'>
                       <thead>
                         <th style='border: 2px solid; border-color: #6984a3; background-color: #e9eef3;'>Persona</th>
