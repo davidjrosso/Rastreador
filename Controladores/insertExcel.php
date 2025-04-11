@@ -320,7 +320,6 @@
 								break;
 							default :
 								$valor_fecha = (!empty($result->values[1][$col])) ? $result->values[1][$col] : null;
-								$row_json["fecha"] = $valor_fecha;
 								//$pattern = "/([0-9][0-9]|[1-9]).([0-9][0-9]|[1-9]).[2-9][0-9][0-9][0-9]/";
 								$pattern = "/([0-9][0-9]).([0-9][0-9]).[2-9][0-9][0-9][0-9]/";
 								$is_fecha = preg_match(
