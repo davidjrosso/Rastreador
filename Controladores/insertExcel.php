@@ -320,15 +320,18 @@
 								break;
 							default :
 								$valor_fecha = (!empty($result->values[1][$col])) ? $result->values[1][$col] : null;
+								$row_json["fecha"] = $valor_fecha;
+								//$pattern = "/([0-9][0-9]|[1-9]).([0-9][0-9]|[1-9]).[2-9][0-9][0-9][0-9]/";
+								$pattern = "/([0-9][0-9]).([0-9][0-9]).[2-9][0-9][0-9][0-9]/";
 								$is_fecha = preg_match(
-											  "/([0-9][0-9]|[1-9]).([0-9][0-9]|[1-9]).[2-9][0-9][0-9][0-9]/",
+											  $pattern,
 											  $valor_fecha,
 											 $result_array
 													  );
 								if ($col >= 33 && $is_fecha) {
 									$motivo_row["fecha"] = null;
 									if (!empty($result_array[0])) {
-										$lista_dfecha = explode("/", $result_array[0]);
+										$lista_fecha = explode("/", $result_array[0]);
 										$lista_fecha = array_reverse($lista_fecha);
 										$valor_fecha = implode( "-", $lista_fecha);
 										$fecha_excel = strtotime($valor_fecha);
