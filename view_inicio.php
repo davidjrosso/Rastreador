@@ -621,7 +621,7 @@ $Con->CloseConexion();
               <?php
               echo $CtrGeneral->getSolicitudes_Notificaciones();
             }
-            if($CantNot > 0){
+            if($CantSolUsr > 0){
               ?>
               <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Solcitud de Usuario</h3>
               <?php
