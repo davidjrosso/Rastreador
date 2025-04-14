@@ -18,6 +18,7 @@
 
 	use Google\Client;
 	use Google\Service\Sheets\SpreadSheet;
+	use Google\Service\Drive;
 
 	function codigoExcelMotivo($codigo){
 		switch ($codigo) {
@@ -73,23 +74,41 @@
 
             $id_archivo = $_POST["id_archivo"];
             $id_centro = $_POST["centro_salud"];
+
             $archivo = new Archivo(
 				   coneccion_base: $con,
 					   id_archivo: $id_archivo
 					);
-			$client = new Google_Client();
-			$client->setAuthConfig(array("type" => TYPE_ACCOUNT,
+			$file_id = $archivo->get_id_file();
+			$seccion = $archivo->get_seccion();
+			$private_key = Parametria::get_value_by_code($con, 'SECRET_KEY');
+
+			$client_drive = new Google_Client();
+			$client_drive->setAuthConfig(array("type" => TYPE_ACCOUNT,
 										 "client_id" => CLIENT_ID,
 										 "client_email" => CLIENT_EMAIL,
 										 "private_key" => $private_key, 
 										 "signing_algorithm" => "HS256"));
 
-			$client->addScope([Google_Service_Drive::DRIVE_READONLY]);
-			$client->addScope([Google_Service_Sheets::SPREADSHEETS]);
-			$service_sheets = new Google_Service_Sheets($client);
+			$client_drive->addScope([Google_Service_Drive::DRIVE]);
+			$client_drive->addScope([Google_Service_Sheets::SPREADSHEETS]);
+			$service = new Google_Service_Drive($client_drive);
+			$driveService = new Drive($client_drive);
 
-			$id_file = $archivo->get_id_file();
-			$seccion = $archivo->get_seccion();
+			$file = $service->files->get($file_id, ['alt' => 'media']);
+			$fileContent = $file->getBody()->getContents();
+
+			$file = new Google_Service_Drive_DriveFile();
+			$file->setName('FILE_TEMPORAL.xlsx');
+			$file->setMimeType('application/vnd.google-apps.spreadsheet');
+			$createdFile = $service->files->create($file, array(
+				'data' => $fileContent,
+				'uploadType' => 'multipart'
+			));
+			$id_spreadsheet = $createdFile->getId();
+
+			$service_sheets = new Google_Service_Sheets($client_drive);
+
 			if (($seccion == "11 Años") || ($seccion == "EMBARAZADAS")) {
 				$fila = '!A3:';
 				$com = 0;
@@ -119,8 +138,9 @@
 				$range = $seccion . $fila . $col;
 			}
 
-			
-			$result = $service_sheets->spreadsheets_values->get($id_file, $range);
+			$result = $service_sheets->spreadsheets_values->get($id_spreadsheet, $range);
+			$service->files->delete($id_spreadsheet);
+
 			$highestRow = count($result->values) - 1;
 
 			$Fecha =  date("Y-m-d");
