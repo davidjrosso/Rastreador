@@ -483,7 +483,7 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
                 ?>
                 <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Usuario</h3>
                 <?php
-                    echo $dt_general->get_solicitudes_usuario();
+                    echo $dt_general->get_solicitudes_usuario_auditoria();
                   }
             }
           ?>

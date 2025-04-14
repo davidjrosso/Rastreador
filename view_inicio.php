@@ -208,6 +208,21 @@ $Con->CloseConexion();
               });
         }
 
+        function VerificarModificarUsuario(xID_Solcitud){
+              swal({
+                title: "¿Está seguro?",
+                text: "¿Seguro de querer procesar esta solicitud?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+              })
+              .then((willDelete) => {
+                if (willDelete) {
+                  window.location.href = 'Controladores/ModificarUsuario.php?id_solcitud=' + xID_Solcitud;
+                }
+              });
+        }
+
         function CancelarUnificacion(xID_Peticion){
               swal({
                 title: "¿Está seguro?",
@@ -305,7 +320,7 @@ $Con->CloseConexion();
               });
         }
 
-        function CancelarEliminacionCategoria(xID){
+        function CancelarEliminacionCategoria(xID) {
               swal({
                 title: "¿Está seguro?",
                 text: "¿Seguro de querer borrar esta petición de eliminación?",
@@ -317,6 +332,22 @@ $Con->CloseConexion();
                 if (willDelete) {
                   window.location.href = 'Controladores/DeletePeticionEliminacionCategoria.php?ID='+xID;
                   //alert('SI');
+                } else {        
+                }
+              });
+        }
+
+        function CancelarSolciitudUsuario(xID) {
+              swal({
+                title: "¿Está seguro?",
+                text: "¿Seguro de querer borrar esta petición de usuario?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+              })
+              .then((willDelete) => {
+                if (willDelete) {
+                  window.location.href = 'Controladores/DeletePeticionSolicitudUsuario.php?ID=' + xID;
                 } else {        
                 }
               });
@@ -522,9 +553,15 @@ $Con->CloseConexion();
       $CantModCat = $CtrGeneral->getCantSolicitudes_Modificacion_Categoria();
       $CantDel = $CtrGeneral->getCantSolicitudes_EliminacionMotivo();
       $CantDelCat = $CtrGeneral->getCantSolicitudes_EliminacionCategoria();
+      $CantSolUsr = $CtrGeneral->get_cant_solicitudes_usuario();
       $CantNot = $Notificaciones["cant"];
 
-      if($CantModMot > 0 || $CantUnif > 0 || $CantModCat > 0 || $CantDel > 0 || $CantDelCat > 0 || $CantNot > 0 || $CantCrearCat > 0 || $CantCrearMot > 0){
+      if ($CantModMot > 0 || $CantUnif > 0 
+         || $CantModCat > 0 || $CantDel > 0 
+         || $CantDelCat > 0 || $CantNot > 0 
+         || $CantCrearCat > 0 || $CantCrearMot > 0
+         || $CantSolUsr > 0
+      ) {
       ?>
       <div class = "row">
         <div class="col-1"></div>
@@ -583,7 +620,13 @@ $Con->CloseConexion();
               <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Eliminar Notificaciones</h3>
               <?php
               echo $CtrGeneral->getSolicitudes_Notificaciones();
-            }            
+            }
+            if($CantNot > 0){
+              ?>
+              <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Solcitud de Usuario</h3>
+              <?php
+              echo $CtrGeneral->get_solicitudes_usuario();
+            }        
           ?>
         </div>  
         <div class="col-1"></div> 

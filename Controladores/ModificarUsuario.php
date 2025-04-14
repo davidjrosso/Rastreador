@@ -67,7 +67,8 @@ try {
 			if ($userpass) {
 				$solicitud = new Solicitud_Usuario(
 					usuario: $ID_Usuario,
-					descripcion: "contraseña " . $userpass,
+					descripcion: "Modificacion de contraseña ",
+					password: md5($userpass),
 					estado: 1,
 					tipo: 1
 				);

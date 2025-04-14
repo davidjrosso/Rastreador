@@ -2955,6 +2955,56 @@ class CtrGeneral{
 		return $Regis;
 	}
 
+	public function get_solicitudes_usuario_auditoria()
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "select U.id_solicitud, 
+							U.descripcion, 
+							U.fecha, 
+							U.tipo, 
+							U.estado 
+					 from solicitudes_usuarios U 
+					 where U.estado = 1 
+					order by U.fecha";
+		$MessageError = "Problemas al intentar mostrar Notificaciones";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$Regis = mysqli_num_rows($Con->ResultSet);
+		if ($Regis > 0) {
+			$Table = "<table id='solicitud-usuario' class='table-responsive table-bordered'>
+						<thead>
+						  <tr>
+						  	<th style='min-width:50px;'>Id</th>
+							<th style='min-width:100px;'>Fecha</th>
+							<th style='min-width:300px;'>Detalle</th>
+							<th style='min-width:100px;'>tipo</th>
+							<th style='min-width:100px;'>Estado</th>
+						  </tr>
+						</thead>";
+			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
+				$ret_fecha = explode(" ", $Ret["fecha"]);
+				$tipo = $Ret["tipo"];
+				$estado = $Ret["estado"];
+				$ret_id_solicitud = $Ret["id_solicitud"];
+				$fecha = implode("/", array_reverse(explode("-",$ret_fecha[0])));
+				$descripcion = $Ret["descripcion"];												
+				$Table .= "<tr>
+							 <td>" . $ret_id_solicitud . "</td>
+							 <td>" . $fecha . "</td>
+							 <td>" . $descripcion . "</td>
+							 <td>" . $tipo . "</td>
+							 <td>" . (($estado) ? "Pendiente": "Procesado") . "</td>
+						   </tr>";
+			}			
+			$Table .= "</table>";
+		} else {
+			$Table = "No existen solicitudes de unificación pendientes de aprobación.";
+		}
+		$Con->CloseConexion();
+		
+		return $Table;
+	}
+
 	public function get_solicitudes_usuario()
 	{
 		$Con = new Conexion();
@@ -2992,6 +3042,14 @@ class CtrGeneral{
 							 <td>" . $fecha . "</td>
 							 <td>" . $descripcion . "</td>
 							 <td>" . $tipo . "</td>
+							 <td>
+									<button class='btn btn-success' onClick='VerificarModificarUsuario(" . $ret_id_solicitud . ")'>
+										<i class='fa fa-check'></i>
+									</button>
+									<button class='btn btn-danger' onClick='CancelarSolciitudUsuario(" . $ret_id_solicitud . ")'>
+										<i class='fa fa-times'></i>
+									</button>
+							 </td>
 						   </tr>";
 			}			
 			$Table .= "</table>";
