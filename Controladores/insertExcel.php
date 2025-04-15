@@ -469,7 +469,7 @@
 										 id_responsable: $id_responsable
 						);
 					}
-	
+
 					$row_json["responsable"] = $responsable->jsonSerialize();
 					$detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo responsable. Datos: responsable: " . $responsable->get_responsable();
 					$accion = new Accion(
@@ -480,7 +480,7 @@
 					);
 					$accion->save();
 
-					$row_json["existe_calle"] = Calle::existe_calle($direccion);
+					$row_json["calle_rastreador"] = Calle::existe_calle($direccion);
 					$row_json["domicilio"] = $direccion;
 
 					$Fecha_Nacimiento = (empty($Fecha_Nacimiento)) ? null : $Fecha_Nacimiento;

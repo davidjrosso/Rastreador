@@ -13,8 +13,8 @@ import swal from '../node_modules/sweetalert2';
     let count = false;
     response.forEach(function (element) {
       let personaObj = element[1].formulario.form.persona;
-      let existe_c = element[1].formulario.existe_calle;  
-      //if (existe_c == "false") {
+      let existe_c = element[1].formulario.calle_rastreador;
+      if (!existe_c) {
         count = true;
         table += "<tr>";
         table += "<td style='border: 2px solid; width: 15rem; text-align: left; padding: 4px; border-color: #6984a3;'>" + 
@@ -27,8 +27,7 @@ import swal from '../node_modules/sweetalert2';
                   "</td>";
         table += "</tr>";
       }
-    //});
-    );
+    });
     table += `</table>`;  
     mensaje += (count) ? table : "";
     swal.fire({
@@ -59,8 +58,7 @@ import swal from '../node_modules/sweetalert2';
       title: "Proceso de carga de Excel",
       text: "Los registros estan siendo cargados al sistema",
       icon: "warning",
-      showConfirmButton: true,
-      dangerMode: true,
+      showConfirmButton: true
     });
     let dataRequest = new FormData();
 
@@ -85,8 +83,7 @@ import swal from '../node_modules/sweetalert2';
       title: "Proceso de carga de Excel",
       text: "Los registros de casos estan siendo cargados al sistema",
       icon: "warning",
-      showConfirmButton: true,
-      dangerMode: true,
+      showConfirmButton: true
     });
 
     $.ajax({

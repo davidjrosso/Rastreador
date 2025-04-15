@@ -11,7 +11,7 @@ class Calle {
 
 	public static function existe_calle($xDomicilio = null)
 	{
-		$existe = false;
+		$calle = null;
 		$con = new Conexion();
 		$con->OpenConexion();
 		if ($xDomicilio) {
@@ -36,10 +36,13 @@ class Calle {
 							and estado = 1
 						 order by calle_nombre asc;";
 			$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
-			$existe = (mysqli_num_rows($query_object) > 0);
+			if (mysqli_num_rows($query_object) > 0) {
+				$ret = mysqli_fetch_assoc($query_object);
+				$calle = $ret["calle_nombre"];
+			};
 		}
 		$con->CloseConexion();
-		return $existe;
+		return $calle;
 	}
 
 	// METODOS SET
