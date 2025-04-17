@@ -1060,7 +1060,8 @@ public function update_direccion()
 					 georeferencia = " . ((!is_null($this->getGeoreferencia())) ? $this->getGeoreferencia() : "null") . ", 
 					 calle = " . ((!is_null($this->getId_Calle())) ? $this->getId_Calle() : "null") . ", 
 					 nro = " . ((!is_null($this->getNro())) ? $this->getNro() : "null") . ", 
-					 familia = " . ((!is_null($this->getFamilia())) ? $this->getFamilia() : "null") . " 
+					 familia = " . ((!is_null($this->getFamilia())) ? $this->getFamilia() : "null") . ",
+					 ID_Barrio = " . ((!is_null($this->getId_Barrio())) ? $this->getId_Barrio() : "null") . ",  
 				 where id_persona = " . $this->getID_Persona();
 				 $mensaje_error_consulta = "No se pudo actualizar la Persona";
 				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
