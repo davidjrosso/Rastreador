@@ -958,20 +958,21 @@ public static function is_registered($documento)
 	return $is_multiple;
 }
 
-public static function get_id_persona_by_dni($documento)
+public static function get_id_persona_by_dni($coneccion, $documento)
 {
-	$con = new Conexion();
-	$con->OpenConexion();
-	$consulta = "select id_persona from persona where documento like '%" . $documento. "%' and estado = 1";
+	$consulta = "select id_persona 
+				 from persona 
+				 where documento like '%" . $documento. "%' 
+				   and estado = 1";
 	$mensaje_error = "Hubo un problema al consultar el id de la persona";
-	$ret = mysqli_query($con->Conexion,
-	$consulta
+	$ret = mysqli_query(
+				 $coneccion->Conexion,
+				 $consulta
 	) or die(
 		$mensaje_error . " Consulta: " . $consulta
 	);
 	$row = mysqli_fetch_assoc($ret);
 	$id = (empty($row["id_persona"])) ? null : $row["id_persona"];
-	$con->CloseConexion();
 	return $id;
 }
 

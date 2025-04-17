@@ -401,7 +401,9 @@
 				$consulta_osm = true;
 				foreach ($lista_motivos as $key => $value) {
 					if (!$value["motivo"] || !$value["fecha"]) {
-						$id_persona = (empty($dni)) ? null : Persona::get_id_persona_by_dni($dni);
+						$id_persona = (empty($dni)) ? null : Persona::get_id_persona_by_dni($con,
+																							$dni
+																							);
 						if (!is_null($id_persona) && is_numeric($id_persona)) {
 							$persona = new Persona(ID_Persona: $id_persona);
 							$georeferencia = $persona->getGeoreferencia();
@@ -536,7 +538,7 @@
 						);
 						$accion->save();
 					} else {
-						$id_persona = Persona::get_id_persona_by_dni($dni);
+						$id_persona = Persona::get_id_persona_by_dni($con, $dni);
 						if (is_null($id_persona)) {
 							continue;
 						}
@@ -545,6 +547,7 @@
 							$georeferencia = $persona->getGeoreferencia();
 							$modificacion = $persona->setCalleNro($direccion);
 							$persona->setFamilia($departam);
+							$persona->setBarrio($id_barrio);
 							$calle = $persona->getNombre_Calle();
 							if ($persona->getId_Calle()
 								&& !$modificacion) {

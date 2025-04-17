@@ -188,7 +188,10 @@
 					$persona->setDomicilio($direccion);
 					$persona->save();
 				} else {
-					$id_persona = Persona::get_id_persona_by_dni($dni);
+					$id_persona = Persona::get_id_persona_by_dni(
+																coneccion: $con,
+																documento: $dni
+																);
 					if (is_null($id_persona)) {
 						continue;
 					}
