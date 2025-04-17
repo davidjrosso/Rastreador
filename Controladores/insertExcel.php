@@ -653,8 +653,10 @@
 
 			}
 
+			$time_send = Parametria::get_value_by_code($con, 'TIME_SEND');
 			$count = 0;
 			$row = [];
+
 			foreach ($request as $key => $value) {
 				$row["ch"] = $value["channel"];
 				$row["server"] = $value["server"];
@@ -727,7 +729,7 @@
 						curl_close($ch);
 					}
 					$row_exec = [];
-					usleep(300000);
+					usleep($time_send);
 				}
 			}
 
@@ -793,7 +795,6 @@
 				}
 			}
 			curl_multi_close($multi_request_ch);
-			$con->CloseConexion();
 
 			$mensaje = "El/Los formularios se ha cargado correctamente";
 			echo json_encode($response_json);
@@ -802,6 +803,7 @@
 			header( 'HTTP/1.1 400 BAD REQUEST' );
 			echo $mensaje;
 		}
+		$con->CloseConexion();
 	} catch(Exception $e) {
 		$con->CloseConexion();
 		echo "Error Message: " . $e;
