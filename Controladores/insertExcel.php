@@ -93,18 +93,12 @@
 			$client_drive->addScope([Google_Service_Drive::DRIVE]);
 			$client_drive->addScope([Google_Service_Sheets::SPREADSHEETS]);
 			$service = new Google_Service_Drive($client_drive);
-			$driveService = new Drive($client_drive);
-
-			$file = $service->files->get($file_id, ['alt' => 'media']);
-			$fileContent = $file->getBody()->getContents();
 
 			$file = new Google_Service_Drive_DriveFile();
 			$file->setName('FILE_TEMPORAL.xlsx');
 			$file->setMimeType('application/vnd.google-apps.spreadsheet');
-			$createdFile = $service->files->create($file, array(
-				'data' => $fileContent,
-				'uploadType' => 'multipart'
-			));
+
+			$createdFile = $service->files->copy($file_id, $file);
 			$id_spreadsheet = $createdFile->getId();
 
 			$service_sheets = new Google_Service_Sheets($client_drive);
