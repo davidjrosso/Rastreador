@@ -316,62 +316,64 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
     function actualizacionDePosicionBarraDenavegacionH(e, element) {
       let value = (element) ? element : $("#BarraDeNavHTabla").val();
       let columnaActual = columnaIndice;
-      if (value < (columnaIndice - 0.5)) {
-        columnaIndice--;
-        headABorrar = $('thead tr > *:nth-child(' + columnaIndice + ')');
-        columnaABorrar = $('tbody tr > *:nth-child(' + columnaIndice + ')');
-        columnaABorrar.show();
-        headABorrar.show();
-        columnaABorrar.removeClass("hiddenColTablaAnimacion");
-        headABorrar.addClass("hiddenColTablaAnimacion");
-        columnaABorrar.removeClass("hiddenColTablaAnimacionfire");
-        headABorrar.removeClass("hiddenColTablaAnimacionfire");
-        columnaABorrar.addClass("showColTablaAnimacion");
-        headABorrar.addClass("showColTablaAnimacion");
-        columnaABorrar.addClass("showColTablaAnimacionfire");
-        headABorrar.addClass("showColTablaAnimacionfire");
-      } else if (value > (columnaIndice + 0.5)) {
-        headABorrar = $('thead tr > *:nth-child(' + columnaIndice + ')');
-        columnaABorrar = $('tbody tr > *:nth-child(' + columnaIndice + ')');
-        columnaABorrar.removeClass("showColTablaAnimacion");
-        headABorrar.removeClass("showColTablaAnimacion");
-        columnaABorrar.removeClass("showColTablaAnimacionfire");
-        headABorrar.removeClass("showColTablaAnimacionfire");
-        columnaABorrar.addClass("hiddenColTablaAnimacion");
-        headABorrar.addClass("hiddenColTablaAnimacion");
-        columnaABorrar.addClass("hiddenColTablaAnimacionfire");
-        headABorrar.addClass("hiddenColTablaAnimacionfire");
-        columnaIndice++;
-      } else if (((columnaIndice - 0.5) < value) && (value < columnaIndice)) {
-        headABorrar = $('thead tr > *:nth-child(' + (columnaIndice - 1) + ')');
-        columnaABorrar = $('tbody tr > *:nth-child(' + (columnaIndice - 1) + ')');
-        columnaABorrar.removeClass("showColTablaAnimacion");
-        headABorrar.removeClass("showColTablaAnimacion");
-        columnaABorrar.removeClass("showColTablaAnimacionfire");
-        headABorrar.removeClass("showColTablaAnimacionfire");
-        columnaABorrar.addClass("hiddenColTablaAnimacion");
-        headABorrar.addClass("hiddenColTablaAnimacion");
-        columnaABorrar.addClass("hiddenColTablaAnimacionfire");
-        headABorrar.addClass("hiddenColTablaAnimacionfire");
-      } else if ((value < (columnaIndice + 0.5)) && (columnaIndice < value)) {
-        headABorrar = $('thead tr > *:nth-child(' + columnaIndice + ')');
-        columnaABorrar = $('tbody tr > *:nth-child(' + columnaIndice + ')');
-        columnaABorrar.show();
-        headABorrar.show();
-        columnaABorrar.removeClass("hiddenColTablaAnimacion");
-        headABorrar.addClass("hiddenColTablaAnimacion");
-        columnaABorrar.removeClass("hiddenColTablaAnimacionfire");
-        headABorrar.removeClass("hiddenColTablaAnimacionfire");
-        columnaABorrar.addClass("showColTablaAnimacion");
-        headABorrar.addClass("showColTablaAnimacion");
-        columnaABorrar.addClass("showColTablaAnimacionfire");
-        headABorrar.addClass("showColTablaAnimacionfire");
-      }
+      if (!(value < columnaIndice && columnaIndice <= 10)) {
+        if (value < (columnaIndice - 0.5)) {
+          columnaIndice--;
+          headABorrar = $('thead tr > *:nth-child(' + columnaIndice + ')');
+          columnaABorrar = $('tbody tr > *:nth-child(' + columnaIndice + ')');
+          columnaABorrar.show();
+          headABorrar.show();
+          columnaABorrar.removeClass("hiddenColTablaAnimacion");
+          headABorrar.addClass("hiddenColTablaAnimacion");
+          columnaABorrar.removeClass("hiddenColTablaAnimacionfire");
+          headABorrar.removeClass("hiddenColTablaAnimacionfire");
+          columnaABorrar.addClass("showColTablaAnimacion");
+          headABorrar.addClass("showColTablaAnimacion");
+          columnaABorrar.addClass("showColTablaAnimacionfire");
+          headABorrar.addClass("showColTablaAnimacionfire");
+        } else if (value > (columnaIndice + 0.5)) {
+          headABorrar = $('thead tr > *:nth-child(' + columnaIndice + ')');
+          columnaABorrar = $('tbody tr > *:nth-child(' + columnaIndice + ')');
+          columnaABorrar.removeClass("showColTablaAnimacion");
+          headABorrar.removeClass("showColTablaAnimacion");
+          columnaABorrar.removeClass("showColTablaAnimacionfire");
+          headABorrar.removeClass("showColTablaAnimacionfire");
+          columnaABorrar.addClass("hiddenColTablaAnimacion");
+          headABorrar.addClass("hiddenColTablaAnimacion");
+          columnaABorrar.addClass("hiddenColTablaAnimacionfire");
+          headABorrar.addClass("hiddenColTablaAnimacionfire");
+          columnaIndice++;
+        } else if (((columnaIndice - 0.5) < value) && (value < columnaIndice)) {
+          headABorrar = $('thead tr > *:nth-child(' + (columnaIndice - 1) + ')');
+          columnaABorrar = $('tbody tr > *:nth-child(' + (columnaIndice - 1) + ')');
+          columnaABorrar.removeClass("showColTablaAnimacion");
+          headABorrar.removeClass("showColTablaAnimacion");
+          columnaABorrar.removeClass("showColTablaAnimacionfire");
+          headABorrar.removeClass("showColTablaAnimacionfire");
+          columnaABorrar.addClass("hiddenColTablaAnimacion");
+          headABorrar.addClass("hiddenColTablaAnimacion");
+          columnaABorrar.addClass("hiddenColTablaAnimacionfire");
+          headABorrar.addClass("hiddenColTablaAnimacionfire");
+        } else if ((value < (columnaIndice + 0.5)) && (columnaIndice < value)) {
+          headABorrar = $('thead tr > *:nth-child(' + columnaIndice + ')');
+          columnaABorrar = $('tbody tr > *:nth-child(' + columnaIndice + ')');
+          columnaABorrar.show();
+          headABorrar.show();
+          columnaABorrar.removeClass("hiddenColTablaAnimacion");
+          headABorrar.addClass("hiddenColTablaAnimacion");
+          columnaABorrar.removeClass("hiddenColTablaAnimacionfire");
+          headABorrar.removeClass("hiddenColTablaAnimacionfire");
+          columnaABorrar.addClass("showColTablaAnimacion");
+          headABorrar.addClass("showColTablaAnimacion");
+          columnaABorrar.addClass("showColTablaAnimacionfire");
+          headABorrar.addClass("showColTablaAnimacionfire");
+        }
 
-      if (Math.round(value) == Math.floor(value)) {
-        $("#BarraDeNavHTabla").val(Math.floor(value));
-      } else {
-        $("#BarraDeNavHTabla").val(Math.round(value));
+        if (Math.round(value) == Math.floor(value)) {
+          $("#BarraDeNavHTabla").val(Math.floor(value));
+        } else {
+          $("#BarraDeNavHTabla").val(Math.round(value));
+        }
       }
     }
 
@@ -2844,7 +2846,12 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
       var tabla = document.getElementById("tabla-responsive");
     })();
 
-    columnaIndice = <?php echo (($nro_column) ? ($nro_column - $nro_col_disponible + 10) : "10"); ?>;
+    <?php
+      $columna_indice = (($nro_column) ? ($nro_column - $nro_col_disponible + 10) : "10");
+      $columna_indice = (($columna_indice >= 10) ? $columna_indice : "10");
+    ?>
+
+    columnaIndice = <?php echo $columna_indice;?>;
     valInputRangePrev = columnaIndice;
     nroColumnaInicial = columnaIndice;
 
@@ -2983,7 +2990,6 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
         */
 
     }
-
 
     function enviarImprimir_222() {
       var tablaMovimientos = document.getElementById("tabla-responsive");
