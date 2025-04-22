@@ -71,16 +71,17 @@ export function carga(map, listReferencias) {
   let posicionAnterior = null;
   let positionFormas = null;
   let row = [];
+  let listaOrdenada = listReferencias.sort(ordenGeoreferencia); 
   map.addVectorLayer();
   map.deleteHandlerSource();
   map.clearListaAnimacion();
-  listReferencias.sort(ordenGeoreferencia).forEach(function (elemento, indice, array) {
+  listaOrdenada.forEach(function (elemento, indice, array) {
     pos = [parseFloat(elemento.lon), parseFloat(elemento.lat)];
     let lista_formas = elemento.lista_formas_categorias;
     if (lista_formas) {
       if (indice >= 1) {
         if (posicionAnterior && (posicionAnterior[0] === pos[0] && posicionAnterior[1] === pos[1])) {
-          pos = [pos[0] + ((-0.00006002) * nroLote, pos[1] + (0.000067060) * nroLote)];
+          pos = [pos[0] + ((-0.000067060) * nroLote), pos[1] + ((0.000067060) * nroLote)];
           nroLote++;
         } else {
           posicionAnterior = pos;
