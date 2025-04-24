@@ -614,6 +614,10 @@ div .nav-side-menu {
   border: 0;
 }
 
+.button-arrow:focus {
+  outline: 0px dotted;
+}
+
 .button-fullscreen {
   float:left;
   margin-left: 10px;
@@ -676,3 +680,12 @@ div .nav-side-menu {
   display:none;
 }
 
+.etFiltros {
+  color: #FFF;
+  background-color: #BBB;
+  border-radius: 20px;
+  padding: 8px;
+  font-size: 0.84rem;
+  display: inline-block;
+  margin: 3px;
+}

@@ -80,6 +80,7 @@ export class MapaOl {
 
     addPersonMapAddress(calle, nro) {
       let addres = "https://nominatim.openstreetmap.org/search?street=" + calle + "+" + nro + "&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com";
+      let direccion = calle + " " + nro;
       let request = $.ajax({
         url : addres,
         success : function (data, status, requestHttp) {
@@ -93,17 +94,54 @@ export class MapaOl {
                           imagen
                           );
               this.#mapa.getView().setCenter([lon, lat]);
+              $("#direccion-georeferencia").text(direccion);
+              $("#direccion-georeferencia").show();
             }
-        }.bind(this)
+        }.bind(this),
+        error: function (data, status, requestHttp) {
+          $("#direccion-georeferencia").text("Direccion no disponible");
+          $("#direccion-georeferencia").show();
+        }
       });
     }
 
+    searchStreetNumber(response) {
+      let calle = response.address.road;
+      let numero = response.address.house_number;
+      let direccion = null;
+      if (calle && numero) {
+        direccion = calle + " " + numero.toString();
+      } else {
+        direccion = "Direccion no disponible";
+      }
+      $("#direccion-georeferencia").text(direccion);
+      $("#direccion-georeferencia").show();
+    }
+
+    errorSearchAddress(response) {
+      $("#direccion-georeferencia").text("Direccion no disponible");
+      $("#direccion-georeferencia").show();
+    }
+
     setGeoreferenciacion() {
+        let succesSearchStreetNumber = this.searchStreetNumber;
+        let errorSearchAddress = this.errorSearchAddress;
         this.#mapa.on('click', function(event) {
           let point = this.getCoordinateFromPixel(event.pixel);
           let lonLat = olProj.toLonLat(point);
           let vectorLayer = this.getLayers();
+          let request = null;
           lonLat = olProj.transform(lonLat, "EPSG:4326", "EPSG:3857");
+          request = $.ajax({
+            type: "GET",
+            cache: false,
+            url: "https://nominatim.openstreetmap.org/reverse?lat=" + lonLat[1] + "&lon=" + lonLat[0] + "&format=jsonv2",
+            async: true,
+            processData: false,
+            contentType: false,
+            success: succesSearchStreetNumber,
+            error: errorSearchAddress
+          });
           vectorLayer.item(1).getSource().getFeatures()[0].setGeometry(new Point(lonLat));
           $("#lat").attr("value", lonLat[1]);
           $("#lon").attr("value", lonLat[0]);
