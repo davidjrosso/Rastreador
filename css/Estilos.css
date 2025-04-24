@@ -689,3 +689,19 @@ div .nav-side-menu {
   display: inline-block;
   margin: 3px;
 }
+
+#boton-fullscreen:focus {
+  outline: 0px dotted;
+}
+
+.tabla-direccion {
+  background-color: transparent;
+  border-collapse: separate;
+  /*border: 1px black solid;*/
+}
+
+.tabla-direccion td {
+  border: 1px black solid;
+  background-color: white;
+  /*border-radius: 10%;*/
+}

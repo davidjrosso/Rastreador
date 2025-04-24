@@ -53,6 +53,7 @@ $Con->CloseConexion();
     var map = null;
     var objectJsonPersona = {};
     var isSave = false;
+    let fullscreen = false;
 
     $(document).ready(function () {
       var date_input = $('input[name="Fecha_Nacimiento"]'); //our date input has the name "date"
@@ -134,6 +135,24 @@ $Con->CloseConexion();
 
       $("#boton-desplegale").on("click", function (e) {
         $("#desplegable").toggle();
+      });
+
+      $("button[class='close']").on("click", function (e) {
+        if (fullscreen) {
+          document.exitFullscreen();
+          fullscreen = false;
+        }
+        map.stop();
+      });
+
+      $("#boton-fullscreen").on("click", function (e) {
+        if (!fullscreen) {
+          $("#map-modal div[class='modal-content']")[0].requestFullscreen();
+          fullscreen = true;
+        } else {
+          document.exitFullscreen();
+          fullscreen = false;
+        }
       });
 
       if($("#NumeroDeCalle").val() && $("#ID_Calle").find(":selected").val()) {
@@ -468,12 +487,50 @@ $Con->CloseConexion();
               <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm8.5 2.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293z"/>
             </svg>
           </button>
+          <button type="button" id="boton-fullscreen" class="button-fullscreen" aria-label="fullscreen">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
+              </svg>
+          </button>
         </div>
         <div class="modal-body" style="padding-top: 0px">
           <div id="basicMap"></div>
         </div>
-        <div id="desplegable" style="display: none; pointer-events: none; position: absolute; top: 24px; left: 20px; z-index: 1000">
-          <span id="direccion-georeferencia"class='etFiltros'> <?php echo $Persona->getNombre_Calle() . " " . $Persona->getNro();?></span>
+        <div id="desplegable" style="display: none; pointer-events: none; position: absolute; top: 30px; left: 20px; z-index: 1000">
+          <table class="tabla-direccion">
+              <thead>
+                <th> </th>
+                <th> </th>
+              </thead>
+              <tbody> 
+                <tr>
+                  <td>
+                    Calle
+                  </td>
+                  <td  id="calle-georeferencia">
+                    <?php echo $Persona->getNombre_Calle();?>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Nro
+                  </td>
+                  <td id="nro-georeferencia">
+                    <?php echo $Persona->getNro();?>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Barrio
+                  </td>
+                  <td id="barrio-georeferencia">
+                    <?php echo $Persona->getBarrio();?>
+                  </td>
+                </tr>
+              </tbody>
+          </table>
+        
+          <!--<span id="direccion-georeferencia"class='etFiltros'> <?php echo $Persona->getNombre_Calle() . " " . $Persona->getNro();?></span>-->
         </div>
       </div>
     </div>

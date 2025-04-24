@@ -95,11 +95,16 @@ export class MapaOl {
                           );
               this.#mapa.getView().setCenter([lon, lat]);
               $("#direccion-georeferencia").text(direccion);
+              $("#calle-georeferencia").text(calle);
+              $("#nro-georeferencia").text(nro);
               $("#direccion-georeferencia").show();
             }
         }.bind(this),
         error: function (data, status, requestHttp) {
           $("#direccion-georeferencia").text("Direccion no disponible");
+          $("#calle-georeferencia").text("no disponible");
+          $("#nro-georeferencia").text("no disponible");
+          $("#barrio-georeferencia").text("no disponible");
           $("#direccion-georeferencia").show();
         }
       });
@@ -108,6 +113,7 @@ export class MapaOl {
     searchStreetNumber(response) {
       let calle = response.address.road;
       let numero = response.address.house_number;
+      let barrio = response.address.neighbourhood;
       let direccion = null;
       if (calle && numero) {
         direccion = calle + " " + numero.toString();
@@ -115,11 +121,17 @@ export class MapaOl {
         direccion = "Direccion no disponible";
       }
       $("#direccion-georeferencia").text(direccion);
+      $("#calle-georeferencia").text(calle);
+      $("#nro-georeferencia").text(numero);
+      $("#barrio-georeferencia").text(barrio);
       $("#direccion-georeferencia").show();
     }
 
     errorSearchAddress(response) {
       $("#direccion-georeferencia").text("Direccion no disponible");
+      $("#calle-georeferencia").text("no disponible");
+      $("#nro-georeferencia").text("no disponible");
+      $("#barrio-georeferencia").text("no disponible");
       $("#direccion-georeferencia").show();
     }
 
