@@ -697,11 +697,12 @@ div .nav-side-menu {
 .tabla-direccion {
   background-color: transparent;
   border-collapse: separate;
-  /*border: 1px black solid;*/
+  text-align: center;
 }
 
 .tabla-direccion td {
   border: 1px black solid;
   background-color: white;
-  /*border-radius: 10%;*/
+  padding-left: 0.3rem;
+  padding-right: 0.3rem;
 }

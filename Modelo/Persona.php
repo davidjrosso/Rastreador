@@ -400,8 +400,42 @@ public function setDomicilio($xDomicilio = null)
 			$accion->save();
 			if ($arr_obj_json) {
 				if (!is_null($arr_obj_json[0]->lat) || !is_null($arr_obj_json[0]->lon)) {
-					$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
-					$this->Georeferencia = $point;
+					if (!is_null($this->getNro()) && $this->getNro() > 1000) {
+						$ch = curl_init();
+						$url = "https://nominatim.openstreetmap.org/reverse?lat=" . $arr_obj_json[0]->lat . "&lon=" . $arr_obj_json[0]->lon . "&format=jsonv2&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com";
+						curl_setopt($ch, CURLOPT_URL, $url);
+						curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+						$response = curl_exec($ch);
+						$reverse_obj_json = json_decode($response);
+						curl_close($ch);
+						$address_number = $reverse_obj_json->address->house_number;
+						if (abs($address_number -  $this->getNro()) > 100 ) {
+							$ch = curl_init();
+							$url = "https://api.tomtom.com/search/2/geocode/Cordoba,+Rio+Tercero," .  str_replace(" ", "+", trim($domicilio)) . ".json?storeResult=false&lat=-32.194998&lon=-64.1684546&radius=300000&view=Unified&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
+							curl_setopt($ch, CURLOPT_URL, $url);
+							curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+							$response = curl_exec($ch);
+							$arr_obj_json = json_decode($response);
+							curl_close($ch);
+							if ($arr_obj_json) {
+								if (!is_null($arr_obj_json->results[0]) || !is_null($arr_obj_json->results[0])) {
+									$point = "POINT(" . $arr_obj_json->results[0]->position->lat . ", " . $arr_obj_json->results[0]->position->lon . ")";
+									$this->Georeferencia = $point;
+								} else {
+									$this->Georeferencia = null;
+								}
+							} else {
+								$this->Georeferencia = null;
+							}
+
+						} else {
+							$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
+							$this->Georeferencia = $point;
+						}
+					} else {
+						$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
+						$this->Georeferencia = $point;
+					}
 				} else {
 					$this->Georeferencia = null;
 				}

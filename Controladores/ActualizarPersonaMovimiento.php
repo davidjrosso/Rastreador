@@ -29,7 +29,7 @@ try {
         $consulta_persona = "(SELECT *
 				  FROM persona
                   where estado = 1". (($id_barrio) ? " AND id_barrio = $id_barrio" : "")  .
-                  (($id_calle) ? " AND id_calle = $id_calle" : "")  .
+                  (($id_calle) ? " AND calle = $id_calle" : "")  .
                   ") AS P";
     }
 
