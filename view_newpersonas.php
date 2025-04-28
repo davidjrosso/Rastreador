@@ -43,6 +43,8 @@ $Con->CloseConexion();
       var map = null;
       var objectJsonPersona = {};
       var nombreCalle;
+      let fullscreen = false;
+
        $(document).ready(function(){
               var date_input=$('input[name="Fecha_Nacimiento"]'); //our date input has the name "date"
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
@@ -85,6 +87,7 @@ $Con->CloseConexion();
                     
                   }
               });
+
               $("#NumeroDeCalle").on("input", function(e) {
                 let calle = $("#Calle").val();
                 let nro = $(this).val();
@@ -97,6 +100,29 @@ $Con->CloseConexion();
                   $("#mapa-sig").prop('disabled', true);
                 }
               });
+
+              $("#boton-desplegale").on("click", function (e) {
+                $("#desplegable").toggle();
+              });
+
+              $("button[class='close']").on("click", function (e) {
+                if (fullscreen) {
+                  document.exitFullscreen();
+                  fullscreen = false;
+                }
+                map.stop();
+              });
+
+              $("#boton-fullscreen").on("click", function (e) {
+                if (!fullscreen) {
+                  $("#map-modal div[class='modal-content']")[0].requestFullscreen();
+                  fullscreen = true;
+                } else {
+                  document.exitFullscreen();
+                  fullscreen = false;
+                }
+              });
+
               if (!map) {
                   map = init(
                              objectJsonPersona.lat, 
@@ -478,9 +504,77 @@ $Con->CloseConexion();
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
+          <button type="button" id="boton-desplegale" class="button-arrow" aria-label="desplegable">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-square" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm8.5 2.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293z"/>
+            </svg>
+          </button>
+          <button type="button" id="boton-fullscreen" class="button-fullscreen" aria-label="fullscreen">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
+              </svg>
+          </button>
+
+          <button type="button" id="boton-save" class="button-fullscreen" aria-label="save">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
+                <path d="M11 2H9v3h2z"/>
+                <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+              </svg>
+          </button>
+
         </div>
         <div class="modal-body" style="padding-top: 0px">
           <div id="basicMap"></div>
+        </div>
+        <div id="desplegable" style="display: none; pointer-events: none; position: absolute; top: 30px; left: 20px; z-index: 1000">
+          <table class="tabla-direccion">
+              <thead>
+                <th> </th>
+                <th> </th>
+                <th> </th>
+              </thead>
+              <tbody> 
+                <tr>
+                  <td>
+                    Calle
+                  </td>
+                  <td  id="calle-georeferencia">
+                  </td>
+                  <td  id="calle-buttom" style="display:none;">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                      </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Nro
+                  </td>
+                  <td id="nro-georeferencia">
+                  </td>
+                  <td  id="nro-buttom" style="display:none;">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                      </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Barrio
+                  </td>
+                  <td id="barrio-georeferencia">
+                  </td>
+                  <td  id="barrio-buttom" style="display:none;">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                      </div>
+                  </td>
+                </tr>
+              </tbody>
+          </table>
+          <button type="button" id="formulario-mapa" class="btn btn-primary btn-sm" style="width: 100%; display:none;" aria-label="formulario-mapa">
+            formulario
+          </button>
         </div>
       </div>
     </div>

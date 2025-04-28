@@ -529,8 +529,6 @@ $Con->CloseConexion();
                 </tr>
               </tbody>
           </table>
-        
-          <!--<span id="direccion-georeferencia"class='etFiltros'> <?php echo $Persona->getNombre_Calle() . " " . $Persona->getNro();?></span>-->
         </div>
       </div>
     </div>

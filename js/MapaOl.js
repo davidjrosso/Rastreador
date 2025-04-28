@@ -79,8 +79,9 @@ export class MapaOl {
     }
 
     addPersonMapAddress(calle, nro) {
-      let addres = "https://nominatim.openstreetmap.org/search?street=" + calle + "+" + nro + "&city=rio+tercero&format=jsonv2&limit=1&email=martinmonnittola@gmail.com";
+      let addres = "https://nominatim.openstreetmap.org/search?street=" + calle + "+" + nro + "&city=rio+tercero&format=jsonv2&limit=1&addressdetails=1&email=martinmonnittola@gmail.com";
       let direccion = calle + " " + nro;
+      let barrio = null;
       let request = $.ajax({
         url : addres,
         success : function (data, status, requestHttp) {
@@ -94,18 +95,18 @@ export class MapaOl {
                           imagen
                           );
               this.#mapa.getView().setCenter([lon, lat]);
-              $("#direccion-georeferencia").text(direccion);
+              barrio = requestHttp.responseJSON[0].address.neighbourhood;
               $("#calle-georeferencia").text(calle);
               $("#nro-georeferencia").text(nro);
-              $("#direccion-georeferencia").show();
+              $("#barrio-georeferencia").text(barrio);
+              $("#desplegable").show();
             }
         }.bind(this),
         error: function (data, status, requestHttp) {
-          $("#direccion-georeferencia").text("Direccion no disponible");
           $("#calle-georeferencia").text("no disponible");
           $("#nro-georeferencia").text("no disponible");
           $("#barrio-georeferencia").text("no disponible");
-          $("#direccion-georeferencia").show();
+          $("#desplegable").show();
         }
       });
     }
@@ -124,15 +125,15 @@ export class MapaOl {
       $("#calle-georeferencia").text(calle);
       $("#nro-georeferencia").text(numero);
       $("#barrio-georeferencia").text(barrio);
-      $("#direccion-georeferencia").show();
+      $("#desplegable").show();
     }
 
     errorSearchAddress(response) {
-      $("#direccion-georeferencia").text("Direccion no disponible");
+      $("#desplegable").text("Direccion no disponible");
       $("#calle-georeferencia").text("no disponible");
       $("#nro-georeferencia").text("no disponible");
       $("#barrio-georeferencia").text("no disponible");
-      $("#direccion-georeferencia").show();
+      $("#desplegable").show();
     }
 
     setGeoreferenciacion() {
