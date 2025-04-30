@@ -100,6 +100,9 @@ export function insercionDatosFormulario() {
     $("#control-calle").css("display", "none");
     $("#control-nro").css("display", "none");
     $("#control-barrio").css("display", "none");
+    $("#control-calle").prop("checked", false);
+    $("#control-nro").prop("checked", false);
+    $("#control-barrio").prop("checked", false);
     $("#formulario-save").css("display", "none");
     $("#formulario-cancel").css("display", "none");
     $("#formulario-succes").show();
@@ -109,6 +112,9 @@ export function clearDatosFormulario() {
     $("#control-calle").css("display", "none");
     $("#control-nro").css("display", "none");
     $("#control-barrio").css("display", "none");
+    $("#control-calle").prop("checked", false);
+    $("#control-nro").prop("checked", false);
+    $("#control-barrio").prop("checked", false);
     $("#formulario-save").css("display", "none");
     $("#formulario-cancel").css("display", "none");
     $("#formulario-succes").css("display", "none");
