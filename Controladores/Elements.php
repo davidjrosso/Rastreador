@@ -1660,7 +1660,9 @@ public function getMenuSeguridadUsuario($ID){
     $Consulta = mysqli_query($Con3->Conexion,"select * from barrios where estado = 1 order by Barrio")or die("Problemas al mostrar Barrios");
     $Select .= "<option value = '0' disabled = 'disabled' selected = 'true'>- Seleccione un Barrio -</option>";
     while ($Ret = mysqli_fetch_array($Consulta)) {
-      $Select .= "<option value = '".$Ret['ID_Barrio']."'>".$Ret['Barrio']."</option>";
+      $Select .= "<option value = '" . $Ret['ID_Barrio'] . "' id='barrio_" . $Ret['ID_Barrio'] . "'>" . 
+                    $Ret['Barrio'] . "
+                  </option>";
     }
     $Select .= "</select>";
     $Con3->CloseConexion();
@@ -1677,9 +1679,13 @@ public function getMenuSeguridadUsuario($ID){
     $Consulta = mysqli_query($Con3->Conexion,"select * from barrios where estado = 1 order by Barrio")or die("Problemas al mostrar Barrios");
     while ($Ret = mysqli_fetch_array($Consulta)) {
       if ($Ret['ID_Barrio'] == $xID_Barrio) {
-        $Select .= "<option value = '".$Ret['ID_Barrio']."' selected>".$Ret['Barrio']."</option>";
+        $Select .= "<option value = '" . $Ret['ID_Barrio'] . "' id='barrio_" . $Ret['ID_Barrio'] . "' selected>" . 
+                      $Ret['Barrio']."
+                    </option>";
       } else {
-        $Select .= "<option value = '".$Ret['ID_Barrio']."'>".$Ret['Barrio']."</option>";
+        $Select .= "<option value = '" . $Ret['ID_Barrio'] . "' id='barrio_" . $Ret['ID_Barrio'] . "'>" . 
+                      $Ret['Barrio'] . "
+                    </option>";
       }      
     }
     $Select .= "</select>";
@@ -2391,7 +2397,9 @@ public function getMenuSeguridadUsuario($ID){
 
     if((mysqli_num_rows($ConsultaResult) > 0) && (!empty($Nombre))) {
       $Resultado = mysqli_fetch_array($ConsultaResult);
-      $Select .= "<option value = '" . $Resultado["id_calle"] . "' selected = 'true'>" . $Resultado["calle_nombre"] . "</option>";
+      $Select .= "<option value = '" . $Resultado["id_calle"] . "' id='calle_" . $Resultado["id_calle"] . "' selected = 'true'>" . 
+                    $Resultado["calle_nombre"] . "
+                  </option>";
     } else {
         $Select .= "<option value = '0' disabled = 'disabled' selected = 'true'>- Seleccione una Calle -</option>";
     }
@@ -2401,7 +2409,9 @@ public function getMenuSeguridadUsuario($ID){
                  order by calle_nombre ASC";
     $ConsultaResult = mysqli_query($Con3->Conexion,$Consulta)or die("Problemas al mostrar Personas");
     while ($Ret = mysqli_fetch_array($ConsultaResult)) {
-      $Select .= "<option value = '".$Ret['id_calle']."'>".$Ret['calle_nombre']."</option>";
+      $Select .= "<option value = '" . $Ret['id_calle'] . "' id='calle_" . $Ret["id_calle"] . "'>" . 
+                   $Ret['calle_nombre'] . "
+                  </option>";
     }
     $Select .= "</select>";
     $Con3->CloseConexion();

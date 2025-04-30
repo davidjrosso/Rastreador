@@ -80,7 +80,6 @@ export class MapaOl {
 
     addPersonMapAddress(calle, nro) {
       let addres = "https://nominatim.openstreetmap.org/search?street=" + calle + "+" + nro + "&city=rio+tercero&format=jsonv2&limit=1&addressdetails=1&email=martinmonnittola@gmail.com";
-      let direccion = calle + " " + nro;
       let barrio = null;
       let request = $.ajax({
         url : addres,
@@ -115,13 +114,10 @@ export class MapaOl {
       let calle = response.address.road;
       let numero = response.address.house_number;
       let barrio = response.address.neighbourhood;
-      let direccion = null;
-      if (calle && numero) {
-        direccion = calle + " " + numero.toString();
-      } else {
-        direccion = "Direccion no disponible";
-      }
-      $("#direccion-georeferencia").text(direccion);
+      calle = (calle) ? calle.trim() : "no disponible";
+      numero = (numero) ? numero.trim() : "no disponible";
+      barrio = (barrio) ? barrio.trim() : "no disponible";
+
       $("#calle-georeferencia").text(calle);
       $("#nro-georeferencia").text(numero);
       $("#barrio-georeferencia").text(barrio);
@@ -129,7 +125,6 @@ export class MapaOl {
     }
 
     errorSearchAddress(response) {
-      $("#desplegable").text("Direccion no disponible");
       $("#calle-georeferencia").text("no disponible");
       $("#nro-georeferencia").text("no disponible");
       $("#barrio-georeferencia").text("no disponible");

@@ -48,6 +48,7 @@ $Con->CloseConexion();
     crossorigin="anonymous"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script src="./dist/mapa.js"></script>
+  <script src="./dist/control.js"></script>
 
   <script>
     var map = null;
@@ -87,6 +88,14 @@ $Con->CloseConexion();
                            objectJsonPersona.lon
                           );
         };
+      });
+
+      $("#boton-min").on("click", function (e) {
+        $("button[class='ol-zoom-out']").click();
+      });
+
+      $("#boton-plus").on("click", function (e) {
+        $("button[class='ol-zoom-in']").click();
       });
 
       $("#ID_Calle").on("input", function(e) {
@@ -142,7 +151,6 @@ $Con->CloseConexion();
           document.exitFullscreen();
           fullscreen = false;
         }
-        map.stop();
       });
 
       $("#boton-fullscreen").on("click", function (e) {
@@ -263,28 +271,28 @@ $Con->CloseConexion();
                 <form id="form-mod-persona" method="post" onKeydown="return event.key != 'Enter';" action="Controladores/ModificarPersona.php">
                   <input type="hidden" name="ID" value="<?php echo $Persona->getID_Persona(); ?>">
                   <div class="form-group row">
-                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Apellido: </label>
+                    <label for="apellido" class="col-md-2 col-form-label LblForm">Apellido: </label>
                     <div class="col-md-10">
-                      <input type="text" class="form-control" name="Apellido" id="inputPassword" autocomplete="off"
+                      <input type="text" class="form-control" name="Apellido" id="apellido" autocomplete="off"
                         value="<?php echo strtoupper($Persona->getApellido()); ?>">
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nombre: </label>
+                    <label for="nombre" class="col-md-2 col-form-label LblForm">Nombre: </label>
                     <div class="col-md-10">
-                      <input type="text" class="form-control" name="Nombre" id="inputPassword" autocomplete="off"
+                      <input type="text" class="form-control" name="Nombre" id="nombre" autocomplete="off"
                         value="<?php echo $Persona->getNombre(); ?>">
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Documento: </label>
+                    <label for="documento" class="col-md-2 col-form-label LblForm">Documento: </label>
                     <div class="col-md-10">
-                      <input type="text" class="form-control" name="DNI" id="inputPassword" autocomplete="off"
+                      <input type="text" class="form-control" name="DNI" id="documento" autocomplete="off"
                         value="<?php echo $Persona->getDNI(); ?>">
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputPassword" class="col-md-2 col-form-label LblForm" style="margin-bottom: -8px;">Fecha
+                    <label for="Fecha_Nacimiento" class="col-md-2 col-form-label LblForm" style="margin-bottom: -8px;">Fecha
                       de Nacimiento: </label>
                     <div class="col-md-10">
                       <input type="text" class="form-control" name="Fecha_Nacimiento" id="Fecha_Nacimiento"
@@ -298,28 +306,28 @@ $Con->CloseConexion();
                     Edad <br>
                   </div>
                   <div class="form-group row">
-                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Años: </label>
+                    <label for="Edad" class="col-md-2 col-form-label LblForm">Años: </label>
                     <div class="col-md-10">
                       <input type="text" class="form-control" name="Edad" id="Edad" autocomplete="off" readonly
                         value="<?php echo $Persona->getEdad(); ?>">
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Meses: </label>
+                    <label for="Meses" class="col-md-2 col-form-label LblForm">Meses: </label>
                     <div class="col-md-10">
                       <input type="text" class="form-control" name="Meses" id="Meses" autocomplete="off" readonly
                         value="<?php echo $Persona->getMeses(); ?>">
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
+                    <label for="nro_carpeta" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
                     <div class="col-md-10">
-                      <input type="text" class="form-control" name="Nro_Carpeta" id="inputPassword" autocomplete="off"
+                      <input type="text" class="form-control" name="Nro_Carpeta" id="nro_carpeta" autocomplete="off"
                         value="<?php echo $Persona->getNro_Carpeta(); ?>">
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
+                    <label for="Nro_Legajo" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
                     <div class="col-md-10">
                       <input type="text" class="form-control" name="Nro_Legajo" id="Nro_Legajo" autocomplete="off" <?php if ($Nro_Legajo != "null") {
                         echo "value = '" . $Persona->getNro_Legajo() . "'";
@@ -328,14 +336,14 @@ $Con->CloseConexion();
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Localidad: </label>
+                    <label for="localidad" class="col-md-2 col-form-label LblForm">Localidad: </label>
                     <div class="col-md-10">
-                      <input type="text" class="form-control" name="Localidad" id="inputPassword" autocomplete="off"
+                      <input type="text" class="form-control" name="Localidad" id="localidad" autocomplete="off"
                         value="<?php echo $Persona->getLocalidad(); ?>">
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Barrio: </label>
+                    <label for="ID_Barrio" class="col-md-2 col-form-label LblForm">Barrio: </label>
                     <div class="col-md-10">
                       <?php
                       $Element = new Elements();
@@ -344,7 +352,7 @@ $Con->CloseConexion();
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Domicilio: </label>
+                    <label for="NumeroDeCalle" class="col-md-2 col-form-label LblForm">Domicilio: </label>
                     <div class="col-md-6">
                       <?php
                       if (!empty($Persona->getId_Calle())) {
@@ -372,51 +380,51 @@ $Con->CloseConexion();
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Manzana: </label>
+                    <label for="manzana" class="col-md-2 col-form-label LblForm">Manzana: </label>
                     <div class="col-md-10">
-                      <input type="text" class="form-control" name="Manzana" id="inputPassword" autocomplete="off" <?php if ($Manzana != "null") {
+                      <input type="text" class="form-control" name="Manzana" id="manzana" autocomplete="off" <?php if ($Manzana != "null") {
                         echo "value = '" . $Persona->getManzana() . "'";
                       }
                       ; ?>>
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Lote: </label>
+                    <label for="lote" class="col-md-2 col-form-label LblForm">Lote: </label>
                     <div class="col-md-10">
-                      <input type="text" class="form-control" name="Lote" id="inputPassword" autocomplete="off"
+                      <input type="text" class="form-control" name="Lote" id="lote" autocomplete="off"
                         value="<?php echo $Persona->getLote(); ?>">
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Sub-lote: </label>
+                    <label for="familia" class="col-md-2 col-form-label LblForm">Sub-lote: </label>
                     <div class="col-md-10">
-                      <input type="text" class="form-control" name="Familia" id="inputPassword" autocomplete="off"
+                      <input type="text" class="form-control" name="Familia" id="familia" autocomplete="off"
                         value="<?php echo $Persona->getFamilia(); ?>">
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Telefono: </label>
+                    <label for="telefono" class="col-md-2 col-form-label LblForm">Telefono: </label>
                     <div class="col-md-10">
-                      <input type="text" class="form-control" name="Telefono" id="inputPassword" autocomplete="off"
+                      <input type="text" class="form-control" name="Telefono" id="telefono" autocomplete="off"
                         value="<?php echo $Persona->getTelefono(); ?>">
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Mail: </label>
+                    <label for="mail" class="col-md-2 col-form-label LblForm">Mail: </label>
                     <div class="col-md-10">
-                      <input type="text" class="form-control" name="Mail" id="inputPassword" autocomplete="off"
+                      <input type="text" class="form-control" name="Mail" id="mail" autocomplete="off"
                         value="<?php echo $Persona->getMail(); ?>">
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Obra Social(Si/No): </label>
+                    <label for="obra-social" class="col-md-2 col-form-label LblForm">Obra Social(Si/No): </label>
                     <div class="col-md-10">
-                      <input type="text" class="form-control" name="Obra_Social" id="inputPassword" autocomplete="off"
+                      <input type="text" class="form-control" name="Obra_Social" id="obra-social" autocomplete="off"
                         value="<?php echo $Persona->getObra_Social(); ?>">
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Escuela: </label>
+                    <label for="ID_Escuela" class="col-md-2 col-form-label LblForm">Escuela: </label>
                     <div class="col-md-10">
                       <?php
                       echo $Element->CBModEscuelas($Persona->getID_Escuela());
@@ -424,24 +432,24 @@ $Con->CloseConexion();
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Lugar de Trabajo: </label>
+                    <label for="trabajo" class="col-md-2 col-form-label LblForm">Lugar de Trabajo: </label>
                     <div class="col-md-10">
-                      <input type="text" class="form-control" name="Trabajo" id="inputPassword" autocomplete="off"
+                      <input type="text" class="form-control" name="Trabajo" id="trabajo" autocomplete="off"
                         value="<?php echo $Persona->getTrabajo(); ?>">
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputPassword" class="col-md-2 col-form-label LblForm">Observación: </label>
+                    <label for="observaciones" class="col-md-2 col-form-label LblForm">Observación: </label>
                     <div class="col-md-10">
-                      <textarea class="form-control" row="3" name="Observaciones"
+                      <textarea class="form-control" row="3" name="Observaciones" id="observaciones"
                         value="<?php echo $Persona->getObservaciones(); ?>"><?php echo $Persona->getObservaciones(); ?></textarea>
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Cambio de Domicilio:
+                    <label for="cambio-domicilio" class="col-md-2 col-form-label LblForm">Cambio de Domicilio:
                     </label>
                     <div class="col-md-10">
-                      <textarea class="form-control" row="3" name="Cambio_Domicilio"
+                      <textarea class="form-control" row="3" name="Cambio_Domicilio" id="cambio-domicilio"
                         value="<?php echo $Persona->getCambio_Domicilio(); ?>"><?php echo $Persona->getCambio_Domicilio(); ?></textarea>
                     </div>
                   </div>
@@ -492,11 +500,31 @@ $Con->CloseConexion();
                 <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
               </svg>
           </button>
+          <button type="button" id="boton-plus" class="button-plus clear-outline" aria-label="plus">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-zoom-in" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11M13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0"/>
+                <path d="M10.344 11.742q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1 6.5 6.5 0 0 1-1.398 1.4z"/>
+                <path fill-rule="evenodd" d="M6.5 3a.5.5 0 0 1 .5.5V6h2.5a.5.5 0 0 1 0 1H7v2.5a.5.5 0 0 1-1 0V7H3.5a.5.5 0 0 1 0-1H6V3.5a.5.5 0 0 1 .5-.5"/>
+              </svg>
+          </button>
+          <button type="button" id="boton-min" class="button-min clear-outline" aria-label="min">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-zoom-out" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11M13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0"/>
+              <path d="M10.344 11.742q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1 6.5 6.5 0 0 1-1.398 1.4z"/>
+              <path fill-rule="evenodd" d="M3 6.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5"/>
+            </svg>
+          </button>
+          <button type="button" id="boton-save" class="button-fullscreen" onclick="showControlFormulario();" aria-label="save">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
+                <path d="M11 2H9v3h2z"/>
+                <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+              </svg>
+          </button>
         </div>
         <div class="modal-body" style="padding-top: 0px">
           <div id="basicMap"></div>
         </div>
-        <div id="desplegable" style="display: none; pointer-events: none; position: absolute; top: 30px; left: 20px; z-index: 1000">
+        <div id="desplegable" style="display: none; position: absolute; top: 30px; left: 20px; z-index: 1000">
           <table class="tabla-direccion">
               <thead>
                 <th> </th>
@@ -510,6 +538,11 @@ $Con->CloseConexion();
                   <td  id="calle-georeferencia">
                     <?php echo $Persona->getNombre_Calle();?>
                   </td>
+                  <td id="calle-buttom" style="background-color: transparent; border: none; display: none;">
+                      <div>
+                        <input type="checkbox" class="desplegable-button--checked" value="" id="control-calle">
+                      </div>
+                  </td>
                 </tr>
                 <tr>
                   <td>
@@ -517,6 +550,11 @@ $Con->CloseConexion();
                   </td>
                   <td id="nro-georeferencia">
                     <?php echo $Persona->getNro();?>
+                  </td>
+                  <td id="nro-buttom" style="background-color: transparent; border: none; display: none;">
+                      <div>
+                        <input type="checkbox" class="desplegable-button--checked" value="" id="control-nro">
+                      </div>
                   </td>
                 </tr>
                 <tr>
@@ -526,9 +564,26 @@ $Con->CloseConexion();
                   <td id="barrio-georeferencia">
                     <?php echo $Persona->getBarrio();?>
                   </td>
+                  <td id="barrio-buttom" style="background-color: transparent; border: none; display: none;">
+                      <div>
+                        <input type="checkbox" class="desplegable-button--checked" value="" id="control-barrio">
+                      </div>
+                  </td>
                 </tr>
               </tbody>
           </table>
+          <button type="button" id="formulario-save" class="btn btn-danger btn-sm" 
+                  style="width: 44%; display: none;" onclick="insercionDatosFormulario();" aria-label="mapa-ok">
+            OK
+          </button>
+          <button type="button" id="formulario-cancel" class="btn btn-primary btn-sm" 
+                  style="width: 44%; display: none;" onclick="clearDatosFormulario();" aria-label="mapa-cancel">
+            Cancel
+          </button>
+          <button type="button" id="formulario-succes" class="btn btn-success btn-sm"
+                  style="width: 44%; display: none;" aria-label="mapa-succes">
+            Success
+          </button>
         </div>
       </div>
     </div>

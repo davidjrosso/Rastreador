@@ -39,6 +39,8 @@ $Con->CloseConexion();
   <script src="js/ValidarPersona.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script src="./dist/mapa.js"></script>
+  <script src="./dist/control.js"></script>
+
   <script>
       var map = null;
       var objectJsonPersona = {};
@@ -64,28 +66,13 @@ $Con->CloseConexion();
                   clear: "Borrar",
                   weekStart: 1,
               });
-              $("#map-modal").on("transitionend", function(e) {
-                if (!map) {
-                  map = init(
-                             objectJsonPersona.lat, 
-                             objectJsonPersona.lon,
-                             map
-                  );
-                  map.setGeoreferenciacion();
-                }
-                let nro = $("#NumeroDeCalle").val();
-                  if (!nombreCalle && !nro) {
-                    map.addPersonMap(
-                                   objectJsonPersona.lon,
-                                   objectJsonPersona.lat
-                                  );
-                  } else if (nombreCalle && nro) {
-                    map.addPersonMapAddress(
-                                            nombreCalle,
-                                            nro
-                                           );
-                    
-                  }
+
+              $("#boton-min").on("click", function (e) {
+                $("button[class='ol-zoom-out']").click();
+              });
+
+              $("#boton-plus").on("click", function (e) {
+                $("button[class='ol-zoom-in']").click();
               });
 
               $("#NumeroDeCalle").on("input", function(e) {
@@ -94,7 +81,28 @@ $Con->CloseConexion();
                 if (calle && nro) {
                   $("#mapa-sig").prop('disabled', false);
                   if($("#NumeroDeCalle").val() && $("#Calle").val()) {
-                  $("#mapa-sig").prop('disabled', false);
+                      $("#mapa-sig").prop('disabled', false);
+                      if (!map) {
+                        map = init(
+                                  objectJsonPersona.lat, 
+                                  objectJsonPersona.lon,
+                                  map
+                        );
+                        map.setGeoreferenciacion();
+                      }
+                      let nro = $("#NumeroDeCalle").val();
+                      if (!nombreCalle && !nro) {
+                        map.addPersonMap(
+                                      objectJsonPersona.lon,
+                                      objectJsonPersona.lat
+                                      );
+                      } else if (nombreCalle && nro) {
+                        map.addPersonMapAddress(
+                                                nombreCalle,
+                                                nro
+                                              );
+                        
+                      }
                   }
                 } else {
                   $("#mapa-sig").prop('disabled', true);
@@ -110,7 +118,6 @@ $Con->CloseConexion();
                   document.exitFullscreen();
                   fullscreen = false;
                 }
-                map.stop();
               });
 
               $("#boton-fullscreen").on("click", function (e) {
@@ -351,7 +358,7 @@ $Con->CloseConexion();
             <div class="form-group row" style="margin-bottom: 0.6rem;">
               <label for="BotonModalDireccion_1" class="col-md-2 col-form-label LblForm">Domicilio: </label>
               <div class="col-md-6" id = "Persona">
-              	 	<button type = "button" id="BotonModalDireccion_1" class = "btn btn-lg btn-primary btn-block" style="padding-top: 4px;padding-bottom: 4px;" data-toggle="modal" data-target="#ModalCalle">Seleccione una Calle</button>                  
+              	 	<button type = "button" id="BotonModalDireccion_1" class = "btn btn-lg btn-primary btn-block" style="padding-top: 4px;padding-bottom: 4px;" data-toggle="modal" data-target="#ModalCalle">Seleccione una Calle</button>
               </div>
               <div class="col-md-2">
                 <input type="number" class="form-control" style="margin-top: 1px;" name = "NumeroDeCalle" id="NumeroDeCalle" placeholder="Número" min="1" autocomplete="off">
@@ -514,19 +521,31 @@ $Con->CloseConexion();
                 <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
               </svg>
           </button>
-
-          <button type="button" id="boton-save" class="button-fullscreen" aria-label="save">
+          <button type="button" id="boton-plus" class="button-plus clear-outline" aria-label="plus">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-zoom-in" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11M13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0"/>
+                <path d="M10.344 11.742q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1 6.5 6.5 0 0 1-1.398 1.4z"/>
+                <path fill-rule="evenodd" d="M6.5 3a.5.5 0 0 1 .5.5V6h2.5a.5.5 0 0 1 0 1H7v2.5a.5.5 0 0 1-1 0V7H3.5a.5.5 0 0 1 0-1H6V3.5a.5.5 0 0 1 .5-.5"/>
+              </svg>
+          </button>
+          <button type="button" id="boton-min" class="button-min clear-outline" aria-label="min">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-zoom-out" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11M13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0"/>
+              <path d="M10.344 11.742q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1 6.5 6.5 0 0 1-1.398 1.4z"/>
+              <path fill-rule="evenodd" d="M3 6.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5"/>
+            </svg>
+          </button>
+          <button type="button" id="boton-save" class="button-fullscreen" onclick="showControlFormulario();" aria-label="save">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
                 <path d="M11 2H9v3h2z"/>
                 <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
               </svg>
           </button>
-
         </div>
         <div class="modal-body" style="padding-top: 0px">
           <div id="basicMap"></div>
         </div>
-        <div id="desplegable" style="display: none; pointer-events: none; position: absolute; top: 30px; left: 20px; z-index: 1000">
+        <div id="desplegable" style="display: none; position: absolute; top: 30px; left: 20px; z-index: 1000">
           <table class="tabla-direccion">
               <thead>
                 <th> </th>
@@ -540,9 +559,9 @@ $Con->CloseConexion();
                   </td>
                   <td  id="calle-georeferencia">
                   </td>
-                  <td  id="calle-buttom" style="display:none;">
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                  <td id="calle-buttom" style="background-color: transparent; border: none;">
+                      <div>
+                        <input type="checkbox" class="desplegable-button--checked" value="" id="control-calle">
                       </div>
                   </td>
                 </tr>
@@ -552,9 +571,9 @@ $Con->CloseConexion();
                   </td>
                   <td id="nro-georeferencia">
                   </td>
-                  <td  id="nro-buttom" style="display:none;">
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                  <td id="nro-buttom" style="background-color: transparent; border: none;">
+                      <div>
+                        <input type="checkbox" value="" id="control-nro">
                       </div>
                   </td>
                 </tr>
@@ -564,16 +583,24 @@ $Con->CloseConexion();
                   </td>
                   <td id="barrio-georeferencia">
                   </td>
-                  <td  id="barrio-buttom" style="display:none;">
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                  <td id="barrio-buttom" style="background-color: transparent; border: none;">
+                      <div>
+                        <input type="checkbox" value="" id="control-barrio">
                       </div>
                   </td>
                 </tr>
               </tbody>
           </table>
-          <button type="button" id="formulario-mapa" class="btn btn-primary btn-sm" style="width: 100%; display:none;" aria-label="formulario-mapa">
-            formulario
+          <button type="button" id="formulario-save" class="btn btn-danger btn-sm" style="width: 44%;" 
+                  onclick="insercionDatosFormulario();" aria-label="mapa-ok">
+            ok
+          </button>
+          <button type="button" id="formulario-cancel" class="btn btn-primary btn-sm" style="width: 44%;" 
+                  onclick="clearDatosFormulario();" aria-label="mapa-cancel">
+            cancel
+          </button>
+          <button type="button" id="formulario-succes" class="btn btn-success btn-sm" style="width: 44%; display: none;" aria-label="mapa-succes">
+            Success
           </button>
         </div>
       </div>

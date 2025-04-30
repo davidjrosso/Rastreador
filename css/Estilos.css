@@ -694,6 +694,14 @@ div .nav-side-menu {
   outline: 0px dotted;
 }
 
+#boton-save:focus {
+  outline: 0px dotted;
+}
+
+.clear-outline:focus {
+  outline: 0px dotted;
+}
+
 .tabla-direccion {
   background-color: transparent;
   border-collapse: separate;

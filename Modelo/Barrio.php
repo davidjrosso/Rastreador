@@ -44,6 +44,19 @@ class Barrio
 		return $id;
 	}
 
+	public static function get_id_by_subpalabra($coneccion, $name)
+	{
+		$consulta = "select ID_Barrio 
+					from barrios
+					where lower('" . $name ."') like lower(REPLACE(Barrio, ' ', '%'))
+					and estado = 1";
+		$rs = mysqli_query($coneccion->Conexion,
+						   $consulta) or die("Problemas al consultar las acciones.");
+		$ret = mysqli_fetch_assoc($rs);
+		$id = (!empty($ret["ID_Barrio"])) ? $ret["ID_Barrio"] : null;
+		return $id;
+	}
+
 	public function set_id_barrio($id_barrio)
 	{
 		$this->id_barrio = $id_barrio;
