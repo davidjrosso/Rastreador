@@ -593,13 +593,14 @@ $Con->CloseConexion();
           </table>
           <button type="button" id="formulario-save" class="btn btn-danger btn-sm" style="width: 44%;" 
                   onclick="insercionDatosFormulario();" aria-label="mapa-ok">
-            ok
+            OK
           </button>
           <button type="button" id="formulario-cancel" class="btn btn-primary btn-sm" style="width: 44%;" 
                   onclick="clearDatosFormulario();" aria-label="mapa-cancel">
-            cancel
+            Cancel
           </button>
-          <button type="button" id="formulario-succes" class="btn btn-success btn-sm" style="width: 44%; display: none;" aria-label="mapa-succes">
+          <button type="button" id="formulario-succes" class="btn btn-success btn-sm" 
+                  style="width: 44%; display: none;" aria-label="mapa-succes">
             Success
           </button>
         </div>

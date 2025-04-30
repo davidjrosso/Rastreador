@@ -1,8 +1,9 @@
 <?php 
 
 session_start(); 
-require_once "Controladores/Elements.php";
-require_once "Controladores/CtrGeneral.php";
+require_once ($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
+require_once ($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
+require_once ($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 header("Content-Type: text/html;charset=utf-8");
 
 /*     CONTROL DE USUARIOS                    */
@@ -13,11 +14,8 @@ if(!isset($_SESSION["Usuario"])){
 $Con = new Conexion();
 $Con->OpenConexion();
 $ID_Usuario = $_SESSION["Usuario"];
-$ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
-$MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
-$EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
-$Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
-$TipoUsuario = $Ret["ID_TipoUsuario"];
+$account = new Account(account_id: $ID_Usuario);
+$TipoUsuario = $account->get_id_tipo_usuario();
 $Con->CloseConexion();
 ?>
 <!DOCTYPE html>
@@ -43,6 +41,7 @@ $Con->CloseConexion();
   <script>
     var cantBarrios = 1;
     var cantMotivos = 3;
+    let listaMotivos = new Map();
     $(document).ready(function(){
               var date_input=$('input[name="Fecha_Desde"]');
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
@@ -170,7 +169,7 @@ $Con->CloseConexion();
       xmlhttp.send();
     }
     
-    function seleccionPersona(xNombre,xID){
+    function seleccionPersona(xNombre,xID) {
       var Persona = document.getElementById("Persona");
       var ID_Persona = document.getElementById("ID_Persona");
       Persona.innerHTML = "";
@@ -182,7 +181,36 @@ $Con->CloseConexion();
       SelMostrar.setAttribute('disabled', true);
     }
 
-    function seleccionMotivo(xMotivo,xID,xNumber){
+    function addMultipleMotivo(xMotivo,xID) {
+      listaMotivos.set(xMotivo, xID);
+    }
+
+    function seleccionMultipleMotivo() {
+      let motivoNumero = 1;
+      let idMotivo = null;
+      listaMotivos.forEach((value, key, map) => {
+          idMotivo = value;
+          if (motivoNumero < 3) {
+            if (motivoNumero == 1) {
+              $("#Motivo").html("");
+              $("#Motivo").html("<p>" + key + "<button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
+              $("#ID_Motivo").val(idMotivo);
+            } else {
+              $("#Motivo" + motivoNumero).html("");
+              $("#Motivo" + motivoNumero).html("<p>" + key + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
+              $("#ID_Motivo" + motivoNumero).val(idMotivo);
+            }
+          } else {
+            agregarMotivo();
+            $("#Motivo" + motivoNumero).html("");
+            $("#Motivo" + motivoNumero).html("<p>" + key + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
+            $("#ID_Motivo" + motivoNumero).val(idMotivo);
+          }
+          motivoNumero++;
+      }); 
+    }
+
+    function seleccionMotivo(xMotivo,xID,xNumber) {
       if(xNumber > 1){
         var Motivo = document.getElementById("Motivo"+xNumber);
         var ID_Motivo = document.getElementById("ID_Motivo"+xNumber);
@@ -237,7 +265,7 @@ $Con->CloseConexion();
           reiniciarFormulario();
           // window.location.href = 'Controladores/DeletePersona.php?ID='+xID;
           //alert('SI');
-        } else {        
+        } else {
         }
       });
     }
@@ -802,7 +830,8 @@ $Con->CloseConexion();
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
             </div>
           </div>
         </div>
@@ -842,7 +871,8 @@ $Con->CloseConexion();
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
             </div>
           </div>
         </div>
@@ -882,7 +912,8 @@ $Con->CloseConexion();
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
             </div>
           </div>
         </div>
@@ -922,7 +953,8 @@ $Con->CloseConexion();
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
             </div>
           </div>
         </div>
@@ -962,7 +994,8 @@ $Con->CloseConexion();
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
             </div>
           </div>
         </div>

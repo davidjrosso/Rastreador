@@ -44,6 +44,8 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
   <script>
     var cantBarrios = 1;
     var cantMotivos = 3;
+    let listaMotivos = new Map();
+
     $(document).ready(function(){
               var date_input=$('input[name="Fecha_Desde"]'); //our date input has the name "date"
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
@@ -197,6 +199,35 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
         Motivo.innerHTML = "<p>"+xMotivo+"</p>";
         ID_Motivo.setAttribute('value',xID);
       }
+    }
+
+    function addMultipleMotivo(xMotivo,xID) {
+      listaMotivos.set(xMotivo, xID);
+    }
+
+    function seleccionMultipleMotivo() {
+      let motivoNumero = 1;
+      let idMotivo = null;
+      listaMotivos.forEach((value, key, map) => {
+          idMotivo = value;
+          if (motivoNumero < 3) {
+            if (motivoNumero == 1) {
+              $("#Motivo").html("");
+              $("#Motivo").html("<p>" + key + "<button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
+              $("#ID_Motivo").val(idMotivo);
+            } else {
+              $("#Motivo" + motivoNumero).html("");
+              $("#Motivo" + motivoNumero).html("<p>" + key + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
+              $("#ID_Motivo" + motivoNumero).val(idMotivo);
+            }
+          } else {
+            agregarMotivo();
+            $("#Motivo" + motivoNumero).html("");
+            $("#Motivo" + motivoNumero).html("<p>" + key + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
+            $("#ID_Motivo" + motivoNumero).val(idMotivo);
+          }
+          motivoNumero++;
+      }); 
     }
 
     function seleccionCategoria(xCategoria,xID){
@@ -666,7 +697,8 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>           
             </div>
           </div>
         </div>
@@ -706,7 +738,8 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>            
             </div>
           </div>
         </div>
@@ -746,7 +779,8 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>             
             </div>
           </div>
         </div>
@@ -786,7 +820,8 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>          
             </div>
           </div>
         </div>
@@ -826,7 +861,8 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>           
             </div>
           </div>
         </div>
