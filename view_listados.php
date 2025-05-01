@@ -203,6 +203,8 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
 
     function addMultipleMotivo(xMotivo,xID) {
       listaMotivos.set(xMotivo, xID);
+      element.innerHTML = "&#10003";
+      element.style.width = "12ch";
     }
 
     function seleccionMultipleMotivo() {

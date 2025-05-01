@@ -181,8 +181,10 @@ $Con->CloseConexion();
       SelMostrar.setAttribute('disabled', true);
     }
 
-    function addMultipleMotivo(xMotivo,xID) {
+    function addMultipleMotivo(xMotivo, xID, element) {
       listaMotivos.set(xMotivo, xID);
+      element.innerHTML = "&#10003";
+      element.style.width = "12ch";
     }
 
     function seleccionMultipleMotivo() {
