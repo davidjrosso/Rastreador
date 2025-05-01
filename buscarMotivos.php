@@ -80,10 +80,10 @@ if (isset($consultaBusqueda)) {
 			      <td>' . $Cod_Categoria . '</td>';		
 			if(isset($_REQUEST["number"])&&$_REQUEST["number"] > 1){
 				$number = $_REQUEST["number"];
-				$mensaje .= '<td><button type = "button" class = "btn btn-outline-success" onClick="addMultipleMotivo(\'' . $Motivo . '\',' . $ID_Motivo.  ')">seleccionar</button></td>
+				$mensaje .= '<td><button type = "button" class = "btn btn-outline-success" onClick="addMultipleMotivo(\'' . $Motivo . '\',' . $ID_Motivo . ', this)">seleccionar</button></td>
 						    </tr>';
 			} else{
-				$mensaje .= '<td><button type = "button" class = "btn btn-outline-success" onClick="addMultipleMotivo(\'' . $Motivo . '\',' . $ID_Motivo . ')">seleccionar</button></td>
+				$mensaje .= '<td><button type = "button" class = "btn btn-outline-success" onClick="addMultipleMotivo(\'' . $Motivo . '\',' . $ID_Motivo . ', this)">seleccionar</button></td>
 						    </tr>';
 			}  
 
