@@ -266,7 +266,7 @@ export class MapaOl {
 
       textLabel.setStyle(styleFunction);
       //this.#listaFeatures.push(textLabel);
-      this.#mapa.getLayers().getArray()[1].getSource().addFeature(textLabel);
+      this.#mapa.getLayers().getArray()[2].getSource().addFeature(textLabel);
 
     }
 
@@ -281,7 +281,7 @@ export class MapaOl {
     }
     
     deleteFeatures() {
-      this.#mapa.getLayers().getArray()[1].getSource().clear();
+      this.#mapa.getLayers().getArray()[2].getSource().clear();
     }
 
     addIconLayerAnimacion(
@@ -328,14 +328,14 @@ export class MapaOl {
 
       textLabel.setStyle(styleFunction);
       //this.#listaFeatures.push(textLabel);
-      this.#mapa.getLayers().getArray()[1].getSource().addFeature(textLabel);
+      this.#mapa.getLayers().getArray()[2].getSource().addFeature(textLabel);
     }
 
     flash(e) {
       let feature = e.feature;
       const start = Date.now();
       const flashGeom = feature.getGeometry().clone();
-      const listenerKey = this.#mapa.getLayers().getArray()[1].on('postrender', animate.bind(this));
+      const listenerKey = this.#mapa.getLayers().getArray()[2].on('postrender', animate.bind(this));
 
       function animate(event) {
         const frameState = event.frameState;
@@ -367,12 +367,12 @@ export class MapaOl {
     }
 
     addHandlerSource() {
-      let source = this.#mapa.getLayers().getArray()[1].getSource();
+      let source = this.#mapa.getLayers().getArray()[2].getSource();
       this.#handler = source.on('addfeature', this.flash.bind(this));
     }
 
     deleteHandlerSource() {
-      let source = this.#mapa.getLayers().getArray()[1].getSource();
+      let source = this.#mapa.getLayers().getArray()[2].getSource();
       source.un('addfeature', this.flash.bind(this));
       unByKey(this.#handler);
       this.#handler = null;
