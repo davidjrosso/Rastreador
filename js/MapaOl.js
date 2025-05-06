@@ -65,7 +65,7 @@ export class MapaOl {
             attributions: [
               ATTRIBUTION,
             ],
-            url: '../images/tile/{z}/{z}_{x}_{y}.png'
+            url: '../images/tiles/{z}/{z}_{x}_{y}.png'
           }),
       });
 
