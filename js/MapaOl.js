@@ -193,8 +193,8 @@ export class MapaOl {
 
         vectorLayer = this.#mapa.getLayers();
 
-        if (vectorLayer.item(1)) {
-          vectorLayer.item(1).getSource().getFeatures()[0].setGeometry(point);
+        if (vectorLayer.item(2)) {
+          vectorLayer.item(2).getSource().getFeatures()[0].setGeometry(point);
         } else {
           let iconFeature = new Feature({
             geometry: point
