@@ -95,13 +95,14 @@ $Con->CloseConexion();
           document.getElementById("ResultadosPersonas").innerHTML=contenidosRecibidos;
           }
       }
-      xmlhttp.open('POST', 'buscarPersonas.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
+      xmlhttp.open('POST', 'buscarPersonas.php?valorBusqueda='+textoBusqueda, true);
       xmlhttp.send();
     }
 
-    function buscarMotivos(){
-      var xMotivo = document.getElementById('SearchMotivos').value;
-      var textoBusqueda = xMotivo;
+    function buscarMotivos() {
+      let xMotivo = document.getElementById('SearchMotivos').value;
+      let bodyJson = Object.fromEntries(listaMotivos);
+      let textoBusqueda = xMotivo;
       xmlhttp=new XMLHttpRequest();
       xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
@@ -109,13 +110,15 @@ $Con->CloseConexion();
           document.getElementById("ResultadosMotivos").innerHTML=contenidosRecibidos;
           }
       }
-      xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
-      xmlhttp.send();
+      xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda=' + textoBusqueda, true);
+      xmlhttp.setRequestHeader("Content-Type", "application/json;");
+      xmlhttp.send(JSON.stringify(bodyJson));
     }
 
     function buscarMotivos2(){
-      var xMotivo = document.getElementById('SearchMotivos2').value;
-      var textoBusqueda = xMotivo;
+      let xMotivo = document.getElementById('SearchMotivos2').value;
+      let bodyJson = Object.fromEntries(listaMotivos);
+      let textoBusqueda = xMotivo;
       xmlhttp=new XMLHttpRequest();
       xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
@@ -124,12 +127,14 @@ $Con->CloseConexion();
           }
       }
       xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda='+textoBusqueda+'&number=2', true); // Método post y url invocada
-      xmlhttp.send();
+      xmlhttp.setRequestHeader("Content-Type", "application/json;");
+      xmlhttp.send(JSON.stringify(bodyJson));
     }
 
     function buscarMotivos3(){
-      var xMotivo = document.getElementById('SearchMotivos3').value;
-      var textoBusqueda = xMotivo;
+      let xMotivo = document.getElementById('SearchMotivos3').value;
+      let bodyJson = Object.fromEntries(listaMotivos);
+      let textoBusqueda = xMotivo;
       xmlhttp=new XMLHttpRequest();
       xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
@@ -138,21 +143,24 @@ $Con->CloseConexion();
           }
       }
       xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda='+textoBusqueda+'&number=3', true); // Método post y url invocada
-      xmlhttp.send();
+      xmlhttp.setRequestHeader("Content-Type", "application/json;");
+      xmlhttp.send(JSON.stringify(bodyJson));
     }
 
     function buscarMotivos4(motivoNumero){
-      var xMotivo = document.getElementById('SearchMotivos' + motivoNumero).value;
-      var textoBusqueda = xMotivo;
+      let xMotivo = document.getElementById('SearchMotivos' + motivoNumero).value;
+      let bodyJson = Object.fromEntries(listaMotivos);
+      let textoBusqueda = xMotivo;
       xmlhttp=new XMLHttpRequest();
       xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
           contenidosRecibidos = xmlhttp.responseText;
           document.getElementById("ResultadosMotivos" + motivoNumero).innerHTML=contenidosRecibidos;
-          }
+        }
       }
       xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda='+textoBusqueda+'&number=' + motivoNumero, true); // Método post y url invocada
-      xmlhttp.send();
+      xmlhttp.setRequestHeader("Content-Type", "application/json;");
+      xmlhttp.send(JSON.stringify(bodyJson));
     }
 
     function buscarCategorias(){
@@ -182,9 +190,14 @@ $Con->CloseConexion();
     }
 
     function addMultipleMotivo(xMotivo, xID, element) {
-      listaMotivos.set(xMotivo, xID);
-      element.innerHTML = "&#10003";
-      element.style.width = "12ch";
+      if (!listaMotivos.has(xMotivo) && (listaMotivos.size <= 4)) {
+        listaMotivos.set(xMotivo, xID);
+        element.innerHTML = "&#10003";
+        element.style.width = "12ch";
+      } else if (listaMotivos.has(xMotivo)){
+        listaMotivos.delete(xMotivo);
+        element.innerHTML = "seleccionar";
+      }
     }
 
     function seleccionMultipleMotivo() {
@@ -194,22 +207,24 @@ $Con->CloseConexion();
           idMotivo = value;
           if (motivoNumero < 3) {
             if (motivoNumero == 1) {
-              $("#Motivo").html("");
               $("#Motivo").html("<p>" + key + "<button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
               $("#ID_Motivo").val(idMotivo);
             } else {
-              $("#Motivo" + motivoNumero).html("");
               $("#Motivo" + motivoNumero).html("<p>" + key + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
               $("#ID_Motivo" + motivoNumero).val(idMotivo);
             }
           } else {
             agregarMotivo();
-            $("#Motivo" + motivoNumero).html("");
             $("#Motivo" + motivoNumero).html("<p>" + key + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
             $("#ID_Motivo" + motivoNumero).val(idMotivo);
           }
           motivoNumero++;
-      }); 
+      });
+      for (let index = motivoNumero; index <= 5; index++) {
+        $("#Motivo" + index).html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'>Seleccione un Motivo</button>");
+        $("#ID_Motivo" + index).val(null);
+        
+      }
     }
 
     function seleccionMotivo(xMotivo,xID,xNumber) {
