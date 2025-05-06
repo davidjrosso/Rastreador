@@ -32,10 +32,10 @@ export class MapaOl {
     #handler;
 
     constructor(
-        target,
-        zoom = null,
-        lat = null,
-        lon = null
+      target,
+      zoom = null,
+      lat = null,
+      lon = null
     ) {
         this.#zoom = (zoom) ? zoom : 15;
         this.#target = target;
@@ -57,8 +57,20 @@ export class MapaOl {
                 '?apikey=d03b42dcdc084e7cbab176997685b1ce'
             }),
         });
+
+        const customMapLayer = new TileLayer({
+          preload: Infinity,
+          source: new OSM({
+            cacheSize: Infinity,
+            attributions: [
+              ATTRIBUTION,
+            ],
+            url: '../images/tile/{z}/{z}_{x}_{y}.png'
+          }),
+      });
+
         this.#mapa = new Map({
-            layers: [openCycleMapLayer],
+            layers: [openCycleMapLayer, customMapLayer],
             controls : [],
             target: this.#target,
             view: new View({

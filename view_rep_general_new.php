@@ -288,7 +288,6 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
       });
 
       $("#boton-fullscreen").on("click", function (e) {
-        //$("button[title='Toggle full-screen']").click();
         if (!fullscreen) {
           $("#map-modal div[class='modal-content']")[0].requestFullscreen();
           fullscreen = true;
@@ -921,16 +920,6 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
 
     .SinMovimientos td {
       background-color: #ccc;
-    }
-
-    .etFiltros {
-      color: #FFF;
-      background-color: #BBB;
-      border-radius: 20px;
-      padding: 8px;
-      font-size: 0.84rem;
-      display: inline-block;
-      margin: 3px;
     }
 
     .nombreCategoria {
