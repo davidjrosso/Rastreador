@@ -25,6 +25,9 @@ header('Content-Type: text/html; charset=utf-8');
 //Variable de búsqueda
 $consultaBusqueda = $_REQUEST['valorBusqueda'];
 
+$json_string = file_get_contents('php://input');
+$lista_motivo = json_decode($json_string, true);
+
 //Filtro anti-XSS
 $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
 $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
@@ -66,27 +69,31 @@ if (isset($consultaBusqueda)) {
 			    </tr>
 			  </thead>
 			  <tbody>';
+		$valores_motivos = array_values($lista_motivo);
 
-		//La variable $resultado contiene el array que se genera en la consulta, así que obtenemos los datos y los mostramos en un bucle
 		while($resultados = mysqli_fetch_array($consulta)) {
 			$ID_Motivo = $resultados["id_motivo"];			
 			$Motivo = $resultados['motivo'];
-			$Cod_Categoria = $resultados['cod_categoria'];					
+			$Cod_Categoria = $resultados['cod_categoria'];
+			$mensaje .= '<tr>
+							<th scope="row">' . $Motivo . '</th>
+							<td>' . $Cod_Categoria . '</td>';
 
-			//Output
-			$mensaje .= '
-			    <tr>
-			      <th scope="row">' . $Motivo . '</th>
-			      <td>' . $Cod_Categoria . '</td>';		
-			if(isset($_REQUEST["number"])&&$_REQUEST["number"] > 1){
-				$number = $_REQUEST["number"];
-				$mensaje .= '<td><button type = "button" class = "btn btn-outline-success" onClick="addMultipleMotivo(\'' . $Motivo . '\',' . $ID_Motivo . ', this)">seleccionar</button></td>
-						    </tr>';
-			} else{
-				$mensaje .= '<td><button type = "button" class = "btn btn-outline-success" onClick="addMultipleMotivo(\'' . $Motivo . '\',' . $ID_Motivo . ', this)">seleccionar</button></td>
-						    </tr>';
-			}  
-
+			if (in_array($ID_Motivo, $valores_motivos)) {
+				$mensaje .= '<td>
+								<button type = "button" style=\'width:12ch\' class = "btn btn-outline-success" onClick="addMultipleMotivo(\'' . $Motivo . '\',' . $ID_Motivo . ', this)">
+									&#10003
+								</button>
+							</td>
+						</tr>';
+			} else {
+				$mensaje .= '<td>
+								<button type = "button" class = "btn btn-outline-success" onClick="addMultipleMotivo(\'' . $Motivo . '\',' . $ID_Motivo . ', this)">
+									seleccionar
+								</button>
+							</td>
+						</tr>';
+			}
 		};//Fin while $resultados
 
 		$mensaje .= '</tbody>

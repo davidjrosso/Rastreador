@@ -201,10 +201,15 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
       }
     }
 
-    function addMultipleMotivo(xMotivo,xID) {
-      listaMotivos.set(xMotivo, xID);
-      element.innerHTML = "&#10003";
-      element.style.width = "12ch";
+    function addMultipleMotivo(xMotivo, xID, element) {
+      if (!listaMotivos.has(xMotivo) && (listaMotivos.size <= 4)) {
+        listaMotivos.set(xMotivo, xID);
+        element.innerHTML = "&#10003";
+        element.style.width = "12ch";
+      } else if (listaMotivos.has(xMotivo)){
+        listaMotivos.delete(xMotivo);
+        element.innerHTML = "seleccionar";
+      }
     }
 
     function seleccionMultipleMotivo() {
@@ -214,22 +219,24 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
           idMotivo = value;
           if (motivoNumero < 3) {
             if (motivoNumero == 1) {
-              $("#Motivo").html("");
               $("#Motivo").html("<p>" + key + "<button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
               $("#ID_Motivo").val(idMotivo);
             } else {
-              $("#Motivo" + motivoNumero).html("");
               $("#Motivo" + motivoNumero).html("<p>" + key + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
               $("#ID_Motivo" + motivoNumero).val(idMotivo);
             }
           } else {
             agregarMotivo();
-            $("#Motivo" + motivoNumero).html("");
             $("#Motivo" + motivoNumero).html("<p>" + key + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
             $("#ID_Motivo" + motivoNumero).val(idMotivo);
           }
           motivoNumero++;
-      }); 
+      });
+      for (let index = motivoNumero; index <= 5; index++) {
+        $("#Motivo" + index).html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'>Seleccione un Motivo</button>");
+        $("#ID_Motivo" + index).val(null);
+        
+      }
     }
 
     function seleccionCategoria(xCategoria,xID){
