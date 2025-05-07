@@ -233,8 +233,13 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
           motivoNumero++;
       });
       for (let index = motivoNumero; index <= 5; index++) {
-        $("#Motivo" + index).html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'>Seleccione un Motivo</button>");
-        $("#ID_Motivo" + index).val(null);
+        if (index == 1) {
+          $("#Motivo").html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo'>Seleccione un Motivo</button>");
+          $("#ID_Motivo").val(null);
+        } else {
+          $("#Motivo" + index).html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo" + index + "'>Seleccione un Motivo</button>");
+          $("#ID_Motivo" + index).val(null);
+        }
         
       }
     }
