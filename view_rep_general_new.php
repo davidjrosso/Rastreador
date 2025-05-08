@@ -1067,71 +1067,6 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
       width: auto !important;
     }
 
-    .clock {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translateX(-50%) translateY(-50%);
-      color: #17D4FE;
-      font-size: 60px;
-      font-family: Orbitron;
-      letter-spacing: 7px;
-    }
-
-    .clock-digits {
-      margin-top: 0px;
-      margin-bottom: 0px;
-      padding-right: 7px;
-      padding-left: 7px;
-      letter-spacing: 0.5px;
-      border: 0.1px solid black;
-      font-size: 0.85rem;
-    }
-
-    .clock-container {
-      background-color: white;
-      border-radius: 5px;
-      display: inline-flex;
-      border: 0.5px solid black;
-      margin-left: 35px;
-      position: absolute;
-      left: 38%;
-      z-index: 1000;
-    }
-
-    .clock-col {
-      display: flex;
-      text-align: center;
-      min-width: 60px;
-      position: relative;
-    }
-
-    .clock-label {
-      align-content: center;
-      background: #f8f9fa;
-      color: rgb(0, 0, 0);
-      text-transform: uppercase;
-      font-size: 0.7rem;
-      padding-left: 6px;
-      padding-right: 7px;
-      border: 0.1px solid black;
-    } 
-
-    @media (max-width: 825px) {
-      .clock-container {
-        flex-direction: column;
-        padding-top: 40px;
-        padding-bottom: 40px;
-      }
-
-      .clock-col + .clock-col {
-        margin-top: 20px;
-      }
-      .clock-col:before, .clock-col:after {
-        display: none !important;
-      }
-    }
-
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
     /*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -2785,32 +2720,23 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
           </button>
           <div id="cronometro" class="clock-container" style="display: none;">
             <div class="clock-col">
-              <div class="clock-label">
-                Año
-              </div>
-              <p id="digit-anio" class="clock-day clock-timer clock-digits">
+              <p id="digit-dia" class="clock-minutes clock-timer clock-digits clock-digits-left-right" style="letter-spacing: 1.5px">
                 <?php
-                  echo $anio_animacion;
+                  echo $dia_animacion;
                 ?>
               </p>
             </div>
             <div class="clock-col">
-              <div class="clock-label">
-                Mes
-              </div>
-              <p id="digit-mes" class="clock-hours clock-timer clock-digits" style="letter-spacing: 1.5px">
+              <p id="digit-mes" class="clock-hours clock-timer clock-digits clock-digits-inner" style="letter-spacing: 1.5px">
                 <?php
                   echo $mes_animacion;
                 ?>
               </p>
             </div>
             <div class="clock-col">
-            <div class="clock-label">
-                Dia
-              </div>
-              <p id="digit-dia" class="clock-minutes clock-timer clock-digits" style="letter-spacing: 1.5px">
+              <p id="digit-anio" class="clock-day clock-timer clock-digits clock-digits-left-right">
                 <?php
-                  echo $dia_animacion;
+                  echo $anio_animacion;
                 ?>
               </p>
             </div>
