@@ -36,14 +36,14 @@ export class MapaAnimacion extends MapaOl {
         this.#tipo = "CL";
     }
 
-    incrementar() {
+    incrementar(incremento) {
         if (this.isAnimated()) {
             if (this.#idIntervalo) {
               clearInterval(this.#idIntervalo);
             }
             let lengList = this.#listaAnimacion.length;
             const superAddIconLayerAnimacion = super.addIconLayerAnimacion.bind(this);
-            this.tiempo= this.#tiempo / 2;
+            this.#tiempo= this.#tiempo / incremento;
             this.#idIntervalo = setInterval(function () {
               if (this.#tipo == "CR") {
                 if (this.#fechaInicio <= this.getFechaIndice() 
@@ -109,18 +109,18 @@ export class MapaAnimacion extends MapaOl {
             this.#estado = 0;
             this.#tiempo = 1000;
             this.#listaUbicacion = new WeakMap();
+            this.#tiempo = this.#tiempo / incremento;
         }
-        this.#tiempo = this.#tiempo / 2;
     }
 
-    decrementar() {
+    decrementar(decremento) {
         if (this.isAnimated()) {
             if (this.#idIntervalo) {
               clearInterval(this.#idIntervalo);
             }
             let lengList = this.#listaAnimacion.length;
             const superAddIconLayerAnimacion = super.addIconLayerAnimacion.bind(this);
-            this.tiempo= this.#tiempo * 2 ;
+            this.#tiempo = this.#tiempo * decremento;
             this.#idIntervalo = setInterval(function () {
                 if (this.#tipo == "CR") {
                   if (this.#fechaInicio <= this.getFechaIndice() 
@@ -178,8 +178,9 @@ export class MapaAnimacion extends MapaOl {
             $("#digit-mes").text(this.getCronometroMes());
             $("#digit-dia").text(this.getCronometroDia());
           }.bind(this), this.#tiempo);
+        } else {
+          this.#tiempo = this.#tiempo * decremento;
         }
-        this.#tiempo = this.#tiempo * 2;
     }
 
     ordenFecha(personaObjectA, personaObjectB) {
@@ -203,6 +204,7 @@ export class MapaAnimacion extends MapaOl {
             clearInterval(this.#idIntervalo);
             this.#idIntervalo = null;
             this.#estado = 2;
+            this.#tiempo=1000;
         }
     }
 
@@ -296,6 +298,17 @@ export class MapaAnimacion extends MapaOl {
 
     addListaAnimacion(element) {
       this.#listaAnimacion.push(element);
+    }
+
+    addListaUbicacion(lon, lat) {
+      let clave = {lon: lat};
+      let count = 0;
+      if (this.#listaUbicacion.has(clave)) {
+        count = this.#listaUbicacion.get(clave);
+        this.#listaUbicacion.set(clave, count + 1);
+      } else {
+        this.#listaUbicacion.set(clave, 0);
+      }
     }
 
     getListaAnimacion(element) {
