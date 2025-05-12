@@ -425,7 +425,7 @@ class Account implements JsonSerializable
 						hintquestion = " . ((!is_null($this->get_hint_question())) ? "'" . $this->get_hint_question() . "'" : "null") . ", 
 						hintanswer = " . ((!is_null($this->get_hint_answer())) ? "'" . $this->get_hint_answer() . "'" : "null") . ", 
 						expired = " . ((!is_null($this->get_expired())) ? "'" . $this->get_expired() . "'" : "null") . ", 
-						expireddate = " . ((!is_null($this->get_expired_date()->format('Y/m/d'))) ? "'" . $this->get_expired_date()->format('Y/m/d') . "'" : "null") . ", 
+						expireddate = " . ((!is_null($this->get_expired_date()->format('Y-m-d'))) ? "'" . $this->get_expired_date()->format('Y-m-d') . "'" : "null") . ", 
 						tries = " . ((!is_null($this->get_tries())) ? "'" . $this->get_tries() . "'" : "null") . ", 
 						lasttrieddate = " . ((!is_null($this->get_last_tried_date())) ? "'" . $this->get_last_tried_date() . "'" : "null") . ", 
 						matricula = " . ((!is_null($this->get_matricula())) ? "'" . $this->get_matricula() . "'" : "null") . ", 
