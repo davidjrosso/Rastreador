@@ -83,6 +83,10 @@ import swal from '../node_modules/sweetalert2';
                          `</div>`;
     mensaje += (countDomicilio) ? tableDomicilio : "";
     mensaje += (countGeoreferencia) ? tableGeoreferencia : "";
+
+    if (!countGeoreferencia && !countDomicilio) {
+      mensaje += "Los registros se han cargado correctamente al sistema";
+    }
     swal.fire({
       title: "<strong>El proceso de carga finalizó</strong>",
       icon: "success",
