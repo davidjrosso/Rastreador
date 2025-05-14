@@ -1,6 +1,26 @@
-<?php 
+<?php
+	/*
+	*
+	* This file is part of Rastreador3.
+	*
+	* Rastreador3 is free software; you can redistribute it and/or modify
+	* it under the terms of the GNU General Public License as published by
+	* the Free Software Foundation; either version 2 of the License, or
+	* (at your option) any later version.
+	*
+	* Rastreador3 is distributed in the hope that it will be useful,
+	* but WITHOUT ANY WARRANTY; without even the implied warranty of
+	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	* GNU General Public License for more details.
+	*
+	* You should have received a copy of the GNU General Public License
+	* along with Rastreador3; if not, write to the Free Software
+	* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+	*/
+
 	session_start();
-	header('Content-Type: application/json'); 
+	//header('Content-Type: application/json'); 
+	header('Content-Type: text/event-stream');
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Conexion.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/sys_config.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Movimiento.php';
@@ -57,7 +77,7 @@
 				break;
 			case 'VSD':
 				$result = "VSD";
-				break;			
+				break;
 			default:
 				$result = "";
 				break;
@@ -66,7 +86,7 @@
 	}
 
     try {
-
+		ob_implicit_flush(true);
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$con = new Conexion();
 			$con->OpenConexion();
@@ -140,7 +160,8 @@
 			$Fecha =  date("Y-m-d");
 			$Fecha_Accion = date("Y-m-d");
 			$observacion = "";
-			$response_json = [];
+			$domicilios_json = [];
+			$georefencias_json = [];
 			$row_json = [];
 			$request = [];
 			$row_request = [];
@@ -382,7 +403,7 @@
 								$lista_fecha = array_reverse($lista_fecha);
 								$value = implode( "-", $lista_fecha);
 								$fecha_excel = strtotime($value);
-								$Fecha_Nacimiento  = date(format: 'Y-m-d',timestamp: $fecha_excel);
+								$Fecha_Nacimiento  = date(format: 'Y-m-d', timestamp: $fecha_excel);
 							case 4:
 								$motivo = Motivo::get_id_by_name($con, $value);
 								break;
@@ -426,6 +447,7 @@
 								curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 								$row_request["channel"] = $ch;
 								$row_request["persona"] = $persona;
+								$row_request["direccion"] = $direccion;
 								$request[] = $row_request;
 							}
 							$persona->update_direccion();
@@ -518,6 +540,7 @@
 							curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 							$row_request["channel"] = $ch;
 							$row_request["persona"] = $persona;
+							$row_request["direccion"] = $direccion;
 							$request[] = $row_request;
 						}
 						$persona->save();
@@ -536,6 +559,7 @@
 						if (is_null($id_persona)) {
 							continue;
 						}
+
 						$persona = new Persona(ID_Persona: $id_persona);
 						if ($consulta_osm) {
 							$georeferencia = $persona->getGeoreferencia();
@@ -566,6 +590,7 @@
 								curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 								$row_request["channel"] = $ch;
 								$row_request["persona"] = $persona;
+								$row_request["direccion"] = $direccion;
 								$request[] = $row_request;
 							}
 							$persona->update_direccion();
@@ -642,20 +667,23 @@
 					$formulario->save();
 					$row_json["form"] = $formulario->jsonSerialize();
 					$row_json["estado"] = 1;
-					$response_json[]["formulario"] = $row_json;
+					$domicilios_json[]["formulario"] = $row_json;
 				}
 
 			}
 
 			$time_send = Parametria::get_value_by_code($con, 'TIME_SEND');
+			$cant_request = count($request);
 			$count = 0;
+			$num_send = 0;
 			$row = [];
-
+			$geo_row = null;
 			foreach ($request as $key => $value) {
 				$row["ch"] = $value["channel"];
 				$row["server"] = $value["server"];
 				$row["persona"] = $value["persona"];
 				$row["calle_url"] = $value["calle_url"];
+				$row["direccion"] = $value["direccion"];
 				if ($count < 2) {
 					curl_multi_add_handle($multi_request_ch, $row["ch"]);
 					$row_exec[] = $row;
@@ -687,6 +715,8 @@
 								$valor["persona"]->update_geo();
 							} else {
 								$valor["persona"]->setGeoreferencia(null);
+								$geo_row["persona"] = $valor["persona"];
+								$geo_row["direccion"] = $valor["direccion"];
 							}
 						} else if ($arr_obj_json &&  $valor["server"] == 1) {
 							if (!is_null($arr_obj_json->features[0]->geometry->coordinates[1]) || !is_null($arr_obj_json->features[0]->geometry->coordinates[0])) {
@@ -695,6 +725,8 @@
 								$valor["persona"]->update_geo();
 							} else {
 								$valor["persona"]->setGeoreferencia(null);
+								$geo_row["persona"] = $valor["persona"];
+								$geo_row["direccion"] = $valor["direccion"];
 							}
 						} else if ($arr_obj_json &&  $valor["server"] == 2) {
 							if (!is_null($arr_obj_json->results[0]->lat) || !is_null($arr_obj_json->features[0]->lon)) {
@@ -703,6 +735,8 @@
 								$valor["persona"]->update_geo();
 							} else {
 								$valor["persona"]->setGeoreferencia(null);
+								$geo_row["persona"] = $valor["persona"];
+								$geo_row["direccion"] = $valor["direccion"];
 							}
 						} else {
 							$url = "https://photon.komoot.io/api/?q=" . $valor["calle_url"] . ",+rio+tercero,+Cordoba";
@@ -718,13 +752,23 @@
 								$valor["persona"]->update_geo();
 							} else {
 								$valor["persona"]->setGeoreferencia(null);
+								$geo_row["persona"] = $valor["persona"];
+								$geo_row["direccion"] = $valor["direccion"];
 							}
 						}
 						curl_close($ch);
 					}
 					$row_exec = [];
+					if ($num_send % 3 == 2) {
+						$json_progress["progreso"] = $num_send/$cant_request;
+						echo json_encode($json_progress) . ";";
+						ob_flush();
+					}
 					usleep($time_send);
+					$georefencias_json[] = $geo_row;
+					$geo_row = null;
 				}
+				$num_send++;
 			}
 
 			if ($row_exec) {
@@ -752,6 +796,7 @@
 							$valor["persona"]->update_geo();
 						} else {
 							$valor["persona"]->setGeoreferencia(null);
+							$geo_row["persona"] = $valor["persona"];
 						}
 					} else if ($arr_obj_json &&  $valor["server"] == 1) {
 						if (!is_null($arr_obj_json->features[0]->geometry->coordinates[1]) || !is_null($arr_obj_json->features[0]->geometry->coordinates[0])) {
@@ -760,6 +805,7 @@
 							$valor["persona"]->update_geo();
 						} else {
 							$valor["persona"]->setGeoreferencia(null);
+							$geo_row["persona"] = $valor["persona"];
 						}
 					} else if ($arr_obj_json &&  $valor["server"] == 2) {
 						if (!is_null($arr_obj_json->results[0]->lat) || !is_null($arr_obj_json->features[0]->lon)) {
@@ -768,6 +814,7 @@
 							$valor["persona"]->update_geo();
 						} else {
 							$valor["persona"]->setGeoreferencia(null);
+							$geo_row["persona"] = $valor["persona"];
 						}
 					} else {
 						$url = "https://photon.komoot.io/api/?q=" . $valor["calle_url"] . ",+rio+tercero,+Cordoba";
@@ -783,41 +830,27 @@
 							$valor["persona"]->update_geo();
 						} else {
 							$valor["persona"]->setGeoreferencia(null);
+							$geo_row["persona"] = $valor["persona"];
 						}
 					}
 					curl_close($ch);
+					$georefencias_json[] = $geo_row;
+					$geo_row = null;
 				}
 			}
 			curl_multi_close($multi_request_ch);
-
-			$mensaje = "El/Los formularios se ha cargado correctamente";
-			echo json_encode($response_json);
+			$json_body["domicilios"] = $domicilios_json;
+			$json_body["georeferencias"] = $georefencias_json;
+			echo json_encode($json_body);
 		} else {
 			$mensaje = "El metodo es incorrecto";
-			header( 'HTTP/1.1 400 BAD REQUEST' );
+			header( 'HTTP/1.1 400 BAD REQUEST');
 			echo $mensaje;
 		}
 		$con->CloseConexion();
+		ob_end_flush();
 	} catch(Exception $e) {
 		$con->CloseConexion();
+		ob_end_flush();
 		echo "Error Message: " . $e;
   	}
-
-	/*
-	*
-	* This file is part of Rastreador3.
-	*
-	* Rastreador3 is free software; you can redistribute it and/or modify
-	* it under the terms of the GNU General Public License as published by
-	* the Free Software Foundation; either version 2 of the License, or
-	* (at your option) any later version.
-	*
-	* Rastreador3 is distributed in the hope that it will be useful,
-	* but WITHOUT ANY WARRANTY; without even the implied warranty of
-	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	* GNU General Public License for more details.
-	*
-	* You should have received a copy of the GNU General Public License
-	* along with Rastreador3; if not, write to the Free Software
-	* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-	*/

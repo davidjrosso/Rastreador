@@ -788,3 +788,60 @@ div .nav-side-menu {
     display: none !important;
   }
 }
+
+:root {
+  --swal2-width: auto !important;
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 120px;
+  position: relative;
+}
+
+.gear {
+  width: 100px;
+  height: 100px;
+  top: 40%;
+  position: absolute;
+}
+
+#gear1 {
+  left: 44%;
+  transform: translate(-50%, -50%);
+  transform-origin: center;
+  animation: rotate-clockwise 4s linear infinite;
+}
+
+#gear2 {
+  left: 58%;
+  transform: translate(-50%, -50%) rotate(10deg);
+  transform-origin: center;
+  animation: rotate-counterclockwise 4s linear infinite;
+}
+
+.gear img {
+  width: 100%;
+  height: 100%;
+  filter: brightness(0) saturate(100%) invert(44%) sepia(92%) saturate(3154%) hue-rotate(353deg) brightness(101%) contrast(101%);
+}
+
+@keyframes rotate-clockwise {
+  from {
+      transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+      transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes rotate-counterclockwise {
+  from {
+      transform: translate(-50%, -50%) rotate(10deg);
+  }
+  to {
+      transform: translate(-50%, -50%) rotate(-346deg);
+  }
+}
