@@ -575,7 +575,7 @@
 									$row_request["server"] = $server;
 									$server++;
 								} else if ($server == 1) {
-									$url = "https://photon.komoot.io/api/?q=" . $calle_url . "+" . $persona->getNro() . ",+rio+tercero,+Cordoba&lon=-64.1684546&lat=-32.194998";
+									$url = "https://api.tomtom.com/search/2/geocode/" . $calle_url . "+" . $persona->getNro() . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&lat=-32.194998&lon=-64.1684546&radius=300000&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
 									$row_request["server"] = $server;
 									$server++;
 								} else {
@@ -719,8 +719,8 @@
 								$geo_row["direccion"] = $valor["direccion"];
 							}
 						} else if ($arr_obj_json &&  $valor["server"] == 1) {
-							if (!is_null($arr_obj_json->features[0]->geometry->coordinates[1]) || !is_null($arr_obj_json->features[0]->geometry->coordinates[0])) {
-								$point = "POINT(" . $arr_obj_json->features[0]->geometry->coordinates[1] . ", " . $arr_obj_json->features[0]->geometry->coordinates[0] . ")";
+							if (!is_null($arr_obj_json->results[0]->position->lat) || !is_null($arr_obj_json->features[0]->position->lon)) {
+								$point = "POINT(" . $arr_obj_json->results[0]->position->lat . ", " . $arr_obj_json->results[0]->position->lon . ")";
 								$valor["persona"]->setGeoreferencia($point);
 								$valor["persona"]->update_geo();
 							} else {
@@ -739,15 +739,16 @@
 								$geo_row["direccion"] = $valor["direccion"];
 							}
 						} else {
-							$url = "https://photon.komoot.io/api/?q=" . $valor["calle_url"] . ",+rio+tercero,+Cordoba";
+							$url = "https://api.tomtom.com/search/2/geocode/" . $valor["calle_url"] . "+" . $persona->getNro() . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
 							curl_setopt($ch, CURLOPT_URL, $url);
 							curl_setopt($ch, CURLOPT_FAILONERROR, true);
 							curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 							$response = curl_exec($ch);
 							$error = curl_error($ch);
 							$arr_obj_json = json_decode($response);
-							if (!is_null($arr_obj_json->features[0]->geometry->coordinates[1]) || !is_null($arr_obj_json->features[0]->geometry->coordinates[0])) {
-								$point = "POINT(" . $arr_obj_json->features[0]->geometry->coordinates[1] . ", " . $arr_obj_json->features[0]->geometry->coordinates[0] . ")";
+
+							if (!is_null($arr_obj_json->results[0]->position->lat) || !is_null($arr_obj_json->features[0]->position->lon)) {
+								$point = "POINT(" . $arr_obj_json->results[0]->position->lat . ", " . $arr_obj_json->results[0]->position->lon . ")";
 								$valor["persona"]->setGeoreferencia($point);
 								$valor["persona"]->update_geo();
 							} else {
@@ -799,8 +800,8 @@
 							$geo_row["persona"] = $valor["persona"];
 						}
 					} else if ($arr_obj_json &&  $valor["server"] == 1) {
-						if (!is_null($arr_obj_json->features[0]->geometry->coordinates[1]) || !is_null($arr_obj_json->features[0]->geometry->coordinates[0])) {
-							$point = "POINT(" . $arr_obj_json->features[0]->geometry->coordinates[1] . ", " . $arr_obj_json->features[0]->geometry->coordinates[0] . ")";
+						if (!is_null($arr_obj_json->results[0]->position->lat) || !is_null($arr_obj_json->features[0]->position->lon)) {
+							$point = "POINT(" . $arr_obj_json->results[0]->position->lat . ", " . $arr_obj_json->results[0]->position->lon . ")";
 							$valor["persona"]->setGeoreferencia($point);
 							$valor["persona"]->update_geo();
 						} else {
@@ -817,15 +818,16 @@
 							$geo_row["persona"] = $valor["persona"];
 						}
 					} else {
-						$url = "https://photon.komoot.io/api/?q=" . $valor["calle_url"] . ",+rio+tercero,+Cordoba";
+						$url = "https://api.tomtom.com/search/2/geocode/" . $valor["calle_url"] . "+" . $persona->getNro() . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
 						curl_setopt($ch, CURLOPT_URL, $url);
 						curl_setopt($ch, CURLOPT_FAILONERROR, true);
 						curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 						$response = curl_exec($ch);
 						$error = curl_error($ch);
 						$arr_obj_json = json_decode($response);
-						if (!is_null($arr_obj_json->features[0]->geometry->coordinates[1]) || !is_null($arr_obj_json->features[0]->geometry->coordinates[0])) {
-							$point = "POINT(" . $arr_obj_json->features[0]->geometry->coordinates[1] . ", " . $arr_obj_json->features[0]->geometry->coordinates[0] . ")";
+
+						if (!is_null($arr_obj_json->results[0]->position->lat) || !is_null($arr_obj_json->features[0]->position->lon)) {
+							$point = "POINT(" . $arr_obj_json->results[0]->position->lat . ", " . $arr_obj_json->results[0]->position->lon . ")";
 							$valor["persona"]->setGeoreferencia($point);
 							$valor["persona"]->update_geo();
 						} else {
