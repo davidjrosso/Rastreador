@@ -709,7 +709,9 @@
 						curl_multi_remove_handle($multi_request_ch, $ch);
 						$arr_obj_json = json_decode($response_body);
 						if ($arr_obj_json &&  $valor["server"] == 0) {
-							if (!is_null($arr_obj_json[0]->lat) || !is_null($arr_obj_json[0]->lon)) {
+							if (!empty($arr_obj_json[0]) 
+								&& (!is_null($arr_obj_json[0]->lat)
+									|| !is_null($arr_obj_json[0]->lon))) {
 								$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
 								$valor["persona"]->setGeoreferencia($point);
 								$valor["persona"]->update_geo();
@@ -719,7 +721,9 @@
 								$geo_row["direccion"] = $valor["direccion"];
 							}
 						} else if ($arr_obj_json &&  $valor["server"] == 1) {
-							if (!is_null($arr_obj_json->results[0]->position->lat) || !is_null($arr_obj_json->features[0]->position->lon)) {
+							if (!empty($arr_obj_json->results) 
+								&& (!is_null($arr_obj_json->results[0]->position->lat) 
+									|| !is_null($arr_obj_json->features[0]->position->lon))) {
 								$point = "POINT(" . $arr_obj_json->results[0]->position->lat . ", " . $arr_obj_json->results[0]->position->lon . ")";
 								$valor["persona"]->setGeoreferencia($point);
 								$valor["persona"]->update_geo();
@@ -729,7 +733,9 @@
 								$geo_row["direccion"] = $valor["direccion"];
 							}
 						} else if ($arr_obj_json &&  $valor["server"] == 2) {
-							if (!is_null($arr_obj_json->results[0]->lat) || !is_null($arr_obj_json->features[0]->lon)) {
+							if ( !empty($arr_obj_json->results) 
+								 && (!is_null($arr_obj_json->results[0]->lat) 
+									 || !is_null($arr_obj_json->features[0]->lon))) {
 								$point = "POINT(" . $arr_obj_json->results[0]->lat . ", " . $arr_obj_json->results[0]->lon . ")";
 								$valor["persona"]->setGeoreferencia($point);
 								$valor["persona"]->update_geo();
@@ -747,7 +753,9 @@
 							$error = curl_error($ch);
 							$arr_obj_json = json_decode($response);
 
-							if (!is_null($arr_obj_json->results[0]->position->lat) || !is_null($arr_obj_json->features[0]->position->lon)) {
+							if (!empty($arr_obj_json->results)
+								&& (!is_null($arr_obj_json->results[0]->position->lat) 
+									|| !is_null($arr_obj_json->features[0]->position->lon))) {
 								$point = "POINT(" . $arr_obj_json->results[0]->position->lat . ", " . $arr_obj_json->results[0]->position->lon . ")";
 								$valor["persona"]->setGeoreferencia($point);
 								$valor["persona"]->update_geo();
@@ -800,7 +808,9 @@
 							$geo_row["persona"] = $valor["persona"];
 						}
 					} else if ($arr_obj_json &&  $valor["server"] == 1) {
-						if (!is_null($arr_obj_json->results[0]->position->lat) || !is_null($arr_obj_json->features[0]->position->lon)) {
+						if (!empty($arr_obj_json->results)
+							&& (!is_null($arr_obj_json->results[0]->position->lat) 
+								|| !is_null($arr_obj_json->features[0]->position->lon))) {
 							$point = "POINT(" . $arr_obj_json->results[0]->position->lat . ", " . $arr_obj_json->results[0]->position->lon . ")";
 							$valor["persona"]->setGeoreferencia($point);
 							$valor["persona"]->update_geo();
@@ -826,7 +836,9 @@
 						$error = curl_error($ch);
 						$arr_obj_json = json_decode($response);
 
-						if (!is_null($arr_obj_json->results[0]->position->lat) || !is_null($arr_obj_json->features[0]->position->lon)) {
+						if (!empty($arr_obj_json->results)
+							&& (!is_null($arr_obj_json->results[0]->position->lat) 
+								|| !is_null($arr_obj_json->features[0]->position->lon))) {
 							$point = "POINT(" . $arr_obj_json->results[0]->position->lat . ", " . $arr_obj_json->results[0]->position->lon . ")";
 							$valor["persona"]->setGeoreferencia($point);
 							$valor["persona"]->update_geo();
