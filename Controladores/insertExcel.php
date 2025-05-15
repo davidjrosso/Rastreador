@@ -432,7 +432,7 @@
 									$row_request["server"] = $server;
 									$server++;
 								} else if ($server == 1) {
-									$url = "https://photon.komoot.io/api/?q=" . $calle_url . "+" . $persona->getNro() . ",+rio+tercero,+Cordoba&lon=-64.1684546&lat=-32.194998";
+									$url = "https://api.tomtom.com/search/2/geocode/" . $calle_url . "+" . $persona->getNro() . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&lat=-32.194998&lon=-64.1684546&radius=300000&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
 									$row_request["server"] = $server;
 									$server++;
 								} else {
@@ -525,9 +525,9 @@
 								$row_request["server"] = $server;
 								$server++;
 							} else if ($server == 1) {
-								$url = "https://photon.komoot.io/api/?q=" . $calle_url . "+" . $persona->getNro() . ",+rio+tercero,+Cordoba&lon=-64.1684546&lat=-32.194998";
-								$row_request["server"] = $server;
-								$server++;
+								$url = "https://api.tomtom.com/search/2/geocode/" . $calle_url . "+" . $persona->getNro() . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&lat=-32.194998&lon=-64.1684546&radius=300000&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
+                                $row_request["server"] = $server;
+                                $server++;
 							} else {
 								$url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=json&apiKey=b43e46b080e940b39d1bbee88b9cb320";
 								$row_request["server"] = $server;
