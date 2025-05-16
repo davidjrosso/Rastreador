@@ -166,6 +166,7 @@
 			$request = [];
 			$row_request = [];
 			$multi_request_ch = curl_multi_init();
+			$progress = 0;
 			$active = null;
 			$server = 0;
 
@@ -414,6 +415,7 @@
 					}
 				}
 				$consulta_osm = true;
+
 				foreach ($lista_motivos as $key => $value) {
 					if (!$value["motivo"] || !$value["fecha"]) {
 						$id_persona = (empty($dni)) ? null : Persona::get_id_persona_by_dni($con,
@@ -670,6 +672,13 @@
 						$row_json["form"]["persona"] = $persona->jsonSerialize();
 						$domicilios_json[]["formulario"] = $row_json;
 					}
+
+					if ($row % 10 == 9) {
+						$progress = $row / (2 * $highestRow);
+						$json_progress["progreso"] = $progress;
+						echo json_encode($json_progress) . ";";
+						ob_flush();
+					}
 				}
 			}
 
@@ -770,7 +779,7 @@
 					}
 					$row_exec = [];
 					if ($num_send % 3 == 2) {
-						$json_progress["progreso"] = $num_send/$cant_request;
+						$json_progress["progreso"] = $progress + ($num_send) / (2 * $cant_request);
 						echo json_encode($json_progress) . ";";
 						ob_flush();
 					}
