@@ -19,7 +19,7 @@ import swal from '../node_modules/sweetalert2';
                             <p>Estos registros no han coincidido con alguna calle</p>` + 
                             table;
     let tableGeoreferencia = table;
-    
+
     response.domicilios.entries().forEach(function (element) {
       let personaObj = element[1].formulario.form.persona;
       let existe_c = element[1].formulario.calle_rastreador;
@@ -36,8 +36,8 @@ import swal from '../node_modules/sweetalert2';
         }
         tableDomicilio += "<tr>";
         tableDomicilio += "<td style='border: 2px solid; width: 15rem; text-align: left; padding: 4px; border-color: #6984a3;'>" + 
-                            "<a href='view_modpersonas.php?ID=" + personaObj.ID_Persona +"' target=_blank>" + 
-                            apellido+ ", " + nombre
+                            "<a href='view_modpersonas.php?ID=" + personaObj.ID_Persona + "' target=_blank>" + 
+                            apellido + ", " + nombre
                             "</a>" +
                           "</td>";
         tableDomicilio += "<td style='border: 2px solid; width: 15rem; text-align: left; padding: 4px; border-color: #6984a3;'>" + 

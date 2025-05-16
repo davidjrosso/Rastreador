@@ -451,6 +451,11 @@
 								$request[] = $row_request;
 							}
 							$persona->update_direccion();
+
+							$row_json["calle_rastreador"] = Calle::existe_calle($direccion);
+							$row_json["domicilio"] = $direccion;
+							$row_json["form"]["persona"] = $persona->jsonSerialize();
+							$domicilios_json[]["formulario"] = $row_json;
 						}
 						continue;
 					}
@@ -579,7 +584,7 @@
 									$row_request["server"] = $server;
 									$server++;
 								} else {
-									$url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=json&apiKey=b43e46b080e940b39d1bbee88b9cb320";
+									$url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" . $calle_url . "+" . $persona->getNro() . ",+Cordoba,+Rio+Tercero&city=rio+tercero&format=json&apiKey=b43e46b080e940b39d1bbee88b9cb320";
 									$row_request["server"] = $server;
 									$server = 0;
 								}
@@ -605,18 +610,9 @@
 																	  );
 					if ($exist_mov) {
 						$movimiento =  new Movimiento(
-														coneccion_base: $con,
-														xID_Movimiento: $exist_mov
-														);
-						$id_movimiento = $movimiento->getID_Movimiento();
-						$motivo_mov = MovimientoMotivo::exist_movimiento_motivo(
-																   connection: $con,
-																   movimiento: $id_movimiento,
-																       motivo: $ID_Motivo_1
-																			  );
-						if ($motivo_mov) {
-							continue;
-						}
+													  coneccion_base: $con,
+													  xID_Movimiento: $exist_mov
+													);
 					} else {
 						$movimiento = new Movimiento(
 							coneccion_base: $con, 
@@ -655,21 +651,26 @@
 					);
 					$accion->save();
 					$email = null;
-					$formulario = new Formulario(
-							   coneccion_base: $con,
-										fecha: $Fecha_Accion,
-										email: $email,
-									  persona: $persona->getID_Persona(),
-								   movimiento: $movimiento->getID_Movimiento(),
-								  responsable: $responsable->get_id_responsable(),
-									   estado: $estado
-					);
-					$formulario->save();
-					$row_json["form"] = $formulario->jsonSerialize();
-					$row_json["estado"] = 1;
-					$domicilios_json[]["formulario"] = $row_json;
-				}
 
+					if (!$exist_mov) {
+						$formulario = new Formulario(
+								coneccion_base: $con,
+											fecha: $Fecha_Accion,
+											email: $email,
+										persona: $persona->getID_Persona(),
+									movimiento: $movimiento->getID_Movimiento(),
+									responsable: $responsable->get_id_responsable(),
+										estado: $estado
+						);
+						$formulario->save();
+						$row_json["form"] = $formulario->jsonSerialize();
+						$row_json["estado"] = 1;
+						$domicilios_json[]["formulario"] = $row_json;
+					} else {
+						$row_json["form"]["persona"] = $persona->jsonSerialize();
+						$domicilios_json[]["formulario"] = $row_json;
+					}
+				}
 			}
 
 			$time_send = Parametria::get_value_by_code($con, 'TIME_SEND');
