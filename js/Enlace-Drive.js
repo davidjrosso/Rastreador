@@ -51,8 +51,10 @@ import swal from '../node_modules/sweetalert2';
 
     response.georeferencias.entries().forEach(function (element) {
       let personaObj = null;
+      let direccion = null;
       if (element[1]) {
         personaObj = element[1].persona;
+        direccion = element[1].direccion;
         countGeoreferencia = true;
         if (personaObj.Apellido) {
           apellido = personaObj.Apellido;
@@ -65,12 +67,12 @@ import swal from '../node_modules/sweetalert2';
         }
         tableGeoreferencia += "<tr>";
         tableGeoreferencia += "<td style='border: 2px solid; width: 15rem; text-align: left; padding: 4px; border-color: #6984a3;'>" + 
-                                "<a href='view_modpersonas.php?ID=" + personaObj.ID_Persona +"' target=_blank>" + 
-                                  apellido+ ", " + nombre
+                                "<a href='view_modpersonas.php?ID=" + personaObj.ID_Persona + "' target=_blank>" + 
+                                  apellido + ", " + nombre
                                 "</a>" +
                               "</td>";
         tableGeoreferencia += "<td style='border: 2px solid; width: 15rem; text-align: left; padding: 4px; border-color: #6984a3;'>" + 
-                                element.direccion + 
+                                direccion + 
                               "</td>";
         tableGeoreferencia += "</tr>";
       }
@@ -121,10 +123,10 @@ import swal from '../node_modules/sweetalert2';
   export function cargaMovimientosExcel(idArchivo, idCentroSalud) {
     let animacion = `<div class="loader-container">
                        <div class="gear" id="gear1">
-                         <img src="https://assets.codepen.io/6093409/gear.svg.png" alt="an illustration of a gear" />
+                         <img src="../images/icons/gear.png" alt="an illustration of a gear" />
                        </div>
                        <div class="gear" id="gear2">
-                         <img src="https://assets.codepen.io/6093409/gear.svg.png" alt="an illustration of a gear" />
+                         <img src="../images/icons/gear.png" alt="an illustration of a gear" />
                        </div>
                      </div>
                      <progress id="bar-progress" max="100" value="0">70%</progress>`;

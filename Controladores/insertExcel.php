@@ -816,6 +816,7 @@
 						} else {
 							$valor["persona"]->setGeoreferencia(null);
 							$geo_row["persona"] = $valor["persona"];
+							$geo_row["direccion"] = $valor["direccion"];
 						}
 					} else if ($arr_obj_json &&  $valor["server"] == 1) {
 						if (!empty($arr_obj_json->results)
@@ -827,6 +828,7 @@
 						} else {
 							$valor["persona"]->setGeoreferencia(null);
 							$geo_row["persona"] = $valor["persona"];
+							$geo_row["direccion"] = $valor["direccion"];
 						}
 					} else if ($arr_obj_json &&  $valor["server"] == 2) {
 						if (!is_null($arr_obj_json->results[0]->lat) || !is_null($arr_obj_json->features[0]->lon)) {
@@ -836,6 +838,7 @@
 						} else {
 							$valor["persona"]->setGeoreferencia(null);
 							$geo_row["persona"] = $valor["persona"];
+							$geo_row["direccion"] = $valor["direccion"];
 						}
 					} else {
 						$url = "https://api.tomtom.com/search/2/geocode/" . $valor["calle_url"] . "+" . $persona->getNro() . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
@@ -855,6 +858,7 @@
 						} else {
 							$valor["persona"]->setGeoreferencia(null);
 							$geo_row["persona"] = $valor["persona"];
+							$geo_row["direccion"] = $valor["direccion"];
 						}
 					}
 					curl_close($ch);
