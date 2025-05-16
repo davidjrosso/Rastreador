@@ -123,10 +123,10 @@ import swal from '../node_modules/sweetalert2';
   export function cargaMovimientosExcel(idArchivo, idCentroSalud) {
     let animacion = `<div class="loader-container">
                        <div class="gear" id="gear1">
-                         <img src="../images/icons/gear.png" alt="an illustration of a gear" />
+                         <img src="/images/icons/gear.webp" alt="an illustration of a gear" />
                        </div>
                        <div class="gear" id="gear2">
-                         <img src="../images/icons/gear.png" alt="an illustration of a gear" />
+                         <img src="/images/icons/gear.webp" alt="an illustration of a gear" />
                        </div>
                      </div>
                      <progress id="bar-progress" max="100" value="0">70%</progress>`;
