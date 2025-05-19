@@ -1,4 +1,4 @@
-import swal from '../node_modules/sweetalert2';
+  import swal from '../node_modules/sweetalert2';
 
 
   export function dialogCargaEnlace(data, status, request) {
@@ -6,6 +6,9 @@ import swal from '../node_modules/sweetalert2';
     let nombre = null;
     let listProgress = request.responseText.split(";");
     let response = JSON.parse(listProgress.pop());
+
+    $("#liveToast").hide();
+
     let mensaje = "";
     let table = `<table style='border: 2px solid; border-collapse: collapse; border-color: #6984a3; display: inline-table'>
                     <thead>
@@ -116,7 +119,8 @@ import swal from '../node_modules/sweetalert2';
     let lastElement = listProgress.pop();
     let progreso = JSON.parse(listProgress.pop()).progreso;
     if (progreso) {
-      $("#bar-progress").val((progreso * 100));
+      $("#bar-progress").val(progreso * 100);
+      $("#progress-toast").text(parseInt(progreso * 100));
     }
   }
 
@@ -136,6 +140,10 @@ import swal from '../node_modules/sweetalert2';
       text: "Los registros estan siendo cargados al sistema",
       icon: "warning",
       showConfirmButton: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $("#liveToast").show();
+      }
     });
     let dataRequest = new FormData();
 

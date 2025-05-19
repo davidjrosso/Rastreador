@@ -715,6 +715,10 @@ div .nav-side-menu {
   padding-right: 0.3rem;
 }
 
+select[class~="form-control"] {
+  appearance: auto;
+}
+
 .clock {
   position: absolute;
   top: 50%;
