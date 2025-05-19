@@ -42,6 +42,8 @@ $Con->CloseConexion();
   <meta charset="utf-8">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+  <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
@@ -265,7 +267,7 @@ $Con->CloseConexion();
       }
     }
 
-    function seleccionCategoria(xCategoria,xID){
+    function seleccionCategoria(xCategoria,xID) {
       var Categoria = document.getElementById("Categoria");
       var ID_Categoria = document.getElementById("ID_Categoria");
       Categoria.innerHTML = "";
@@ -273,25 +275,25 @@ $Con->CloseConexion();
       ID_Categoria.setAttribute('value',xID);
     }
 
-    function agregarBarrio(){
+    function agregarBarrio() {
       cantBarrios++;
       var divContenedor = document.getElementById('contenedorBarrios');
       var divBarrio = document.createElement("div");
       divBarrio.setAttribute('class','form-group row');
       var labelBarrio = document.createElement("label");
       labelBarrio.setAttribute('class','col-md-2 col-form-label LblForm');
-      labelBarrio.innerText = 'Barrio '+cantBarrios+':';
+      labelBarrio.innerText = 'Barrio ' + cantBarrios + ':';
       var divSelectBarrio = document.createElement("div");
       divSelectBarrio.setAttribute('class','col-md-10');
       var select = `<?php $Element = new Elements(); echo $Element->CBRepBarrios(); ?>`;
-      divSelectBarrio.innerHTML = select;      
+      divSelectBarrio.innerHTML = select;
       divBarrio.appendChild(labelBarrio);
       divBarrio.appendChild(divSelectBarrio);
       divContenedor.appendChild(divBarrio);
 
     }
 
-    function resetearForm(){
+    function resetearForm() {
       swal({
         title: "¿Está seguro?",
         text: "¿Seguro de querer resetear el formulario?",
@@ -560,7 +562,7 @@ $Con->CloseConexion();
                 </div>
             </div>
             <div class="form-group row" style="margin-bottom: 0.6rem;">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Persona: </label>
+              <label for="Persona" class="col-md-2 col-form-label LblForm">Persona: </label>
               <div class="col-md-10" id = "Persona">
               	 	<button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalPersona">Seleccione una Persona</button>                  
               </div>
@@ -655,9 +657,9 @@ $Con->CloseConexion();
               </div>
             </div>-->
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Categoría: </label>
+              <label for="modal-categoria" class="col-md-2 col-form-label LblForm">Categoría: </label>
               <div class="col-md-10" id = "Categoria">
-                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalCategoria">Seleccione una Categoria</button>  
+                <button id="modal-categoria" type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalCategoria">Seleccione una Categoria</button>  
               </div>
             </div>
 
@@ -896,7 +898,7 @@ $Con->CloseConexion();
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
-                    </div>                    
+                    </div>
                   </div>
                   <div class="col"></div>
                 </div>
@@ -1080,7 +1082,18 @@ $Con->CloseConexion();
         </div>
       </div>
       <!-- FIN MODAL SELECCION CATEGORIA -->
-          <!-- FIN SECCION DE MODALES -->
+      <!-- FIN SECCION DE MODALES -->
+
+      <!-- TOAST PROGRESO ENLACE -->
+      <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100;">
+        <div id="liveToast" class="toast hide" style="width:auto;" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-body">
+            Enlace Progreso : <span id="progress-toast">0</span> %
+            <!--<button type="button" class="btn-close" aria-label="Close"></button>-->
+          </div>
+        </div>
+      </div>
+      <!-- FIN TOAST PROGRESO ENLACE -->
   </div>
 </div>
 </div>
