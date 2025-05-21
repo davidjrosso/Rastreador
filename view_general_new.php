@@ -774,7 +774,7 @@ $Con->CloseConexion();
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header" style="justify-content: center;">
-              <h1>Enlaces Drive</h1>
+              <h1>Enlaces</h1>
             </div>
             <div class="modal-body">
               <div class="row">
