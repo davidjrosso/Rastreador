@@ -135,7 +135,7 @@
                      </div>
                      <progress id="bar-progress" max="100" value="0">70%</progress>`;
     swal.fire({
-      title: "Proceso de carga de Excel",
+      title: "Proceso de carga",
       html: animacion,
       text: "Los registros estan siendo cargados al sistema",
       icon: "warning",
