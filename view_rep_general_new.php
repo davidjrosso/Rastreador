@@ -285,7 +285,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
       });
 
       $("#boton-multi-decrement").on("click", function (e) {
-        map.decrementar(8);
+        map.decAnimacion(3);
       });
 
       $("#boton-calendario").on("click", function (e) {

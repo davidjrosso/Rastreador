@@ -265,7 +265,6 @@ export class MapaOl {
       }
 
       textLabel.setStyle(styleFunction);
-      //this.#listaFeatures.push(textLabel);
       this.#mapa.getLayers().getArray()[2].getSource().addFeature(textLabel);
 
     }
@@ -329,6 +328,23 @@ export class MapaOl {
       textLabel.setStyle(styleFunction);
       //this.#listaFeatures.push(textLabel);
       this.#mapa.getLayers().getArray()[2].getSource().addFeature(textLabel);
+    }
+
+    revIconLayerAnimacion(
+                  lon,
+                  lat,
+                  desplazamientoY,
+                  desplazamientoX
+    ) {
+      let pos = [parseFloat(lon), parseFloat(lat)];
+      let px = this.#mapa.getPixelFromCoordinate(pos);
+      const feature = this.#mapa.forEachFeatureAtPixel(px, function (feature) {
+        return feature;
+      },
+      {
+        hitTolerance: 1,
+      });
+      this.#mapa.getLayers().getArray()[2].getSource().removeFeature(feature);
     }
 
     flash(e) {

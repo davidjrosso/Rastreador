@@ -183,6 +183,70 @@ export class MapaAnimacion extends MapaOl {
         }
     }
 
+    decAnimacion(decremento) {
+        if (this.isAnimated()) {
+            if (this.#idIntervalo) {
+              clearInterval(this.#idIntervalo);
+            }
+            let lengList = this.#listaAnimacion.length;
+            const superRevIconLayerAnimacion = super.revIconLayerAnimacion.bind(this);
+            this.#tiempo = this.#tiempo * decremento;
+            this.#idIntervalo = setInterval(function () {
+                if (this.#tipo == "CR") {
+                  if (this.#fechaInicio <= this.getFechaIndice() 
+                    && this.#fechaFin > this.getFechaIndice()) {
+                      if (lengList > this.#ind && this.#ind >= 0) {
+                        for (let i = this.#ind; i >= 0; i--) {
+                          let fecha = Date.parse(this.#listaAnimacion[this.#ind]["fecha"]);
+                          if (fecha == this.getFechaIndice()) {
+                            superRevIconLayerAnimacion(
+                              this.#listaAnimacion[this.#ind - 1]["positionFormas"][0],
+                              this.#listaAnimacion[this.#ind - 1]["positionFormas"][1],
+                              0,
+                              0
+                            );
+                            this.#ind--;
+                          } else {
+                            break;
+                          }
+                        }
+                      } else {
+                        this.#ind = 0;
+                        clearInterval(this.#idIntervalo);
+                        this.#idIntervalo = null;
+                        this.#tiempo = 1000;
+                        this.#estado = 0;
+                      }
+                  }
+                  this.decrementFechaIndice();
+                } else {
+                  if (this.#ind <= 0) {
+                    this.#ind = 0;
+                    clearInterval(this.#idIntervalo);
+                    this.#idIntervalo = null;
+                    this.#tiempo = 1000;
+                    this.#estado = 0;
+                  } else {
+                    superRevIconLayerAnimacion(
+                      this.#listaAnimacion[this.#ind - 1]["positionFormas"][0],
+                      this.#listaAnimacion[this.#ind - 1]["positionFormas"][1],
+                      0,
+                      0
+                    );
+                    this.setFechaIndice(this.#listaAnimacion[this.#ind - 1]["fecha"]);
+                    this.#ind--;
+                  }
+                }
+            this.updateCronometro();
+            $("#digit-anio").text(this.getCronometroAnio());
+            $("#digit-mes").text(this.getCronometroMes());
+            $("#digit-dia").text(this.getCronometroDia());
+          }.bind(this), this.#tiempo);
+        } else {
+          this.#tiempo = this.#tiempo * decremento;
+        }
+    }
+
     ordenFecha(personaObjectA, personaObjectB) {
         if (Date.parse(personaObjectA.fecha) < Date.parse(personaObjectB.fecha)) {
             return -1;
@@ -317,6 +381,10 @@ export class MapaAnimacion extends MapaOl {
 
     incrementFechaIndice() {
       this.#fechaIndice += (1000 * 60 * 60 * 24);
+    }
+
+    decrementFechaIndice() {
+      this.#fechaIndice -= (1000 * 60 * 60 * 24);
     }
 
     getFechaIndice() {

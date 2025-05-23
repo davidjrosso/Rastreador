@@ -145,7 +145,8 @@ export function carga(map, listReferencias) {
                     lista_formas[categoria][0]
         );
         row["id_persona"] = elemento.id_persona;
-        row["positionFormas"] = positionFormas;
+        row["positionFormas"] = [positionFormas[0] + offsetY,
+                                 positionFormas[1] + offsetX];
         row["categoriaForma"] = categoria;
         row["color"] = lista_formas[categoria][0];
         row["fecha"] = lista_formas[categoria][2];
