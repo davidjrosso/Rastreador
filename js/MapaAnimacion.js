@@ -41,6 +41,7 @@ export class MapaAnimacion extends MapaOl {
             if (this.#idIntervalo) {
               clearInterval(this.#idIntervalo);
             }
+            let rango = this.#fechaFin - this.#fechaInicio;
             let lengList = this.#listaAnimacion.length;
             const superAddIconLayerAnimacion = super.addIconLayerAnimacion.bind(this);
             this.#tiempo= this.#tiempo / incremento;
@@ -61,6 +62,14 @@ export class MapaAnimacion extends MapaOl {
                             this.#listaAnimacion[this.#ind]["categoriaForma"],
                             this.#listaAnimacion[this.#ind]["color"]
                           );
+                          $("#barra-temporal-motivos").prop(
+                                                            "data-prev-value", 
+                                                            ((this.getFechaIndice() - this.#fechaInicio) / rango) * 100
+                          );
+                          $("#barra-temporal-motivos").prop(
+                                                            "value",
+                                                            ((this.getFechaIndice() - this.#fechaInicio) / rango) * 100
+                          );
                           this.#ind++;
                         } else {
                           break;
@@ -71,7 +80,10 @@ export class MapaAnimacion extends MapaOl {
                       clearInterval(this.#idIntervalo);
                       this.#idIntervalo = null;
                       this.#estado = 0;
+                      this.#fechaIndice = this.#fechaInicio;
                       this.#tiempo=1000;
+                      $("#barra-temporal-motivos").prop("data-prev-value", 100);
+                      $("#barra-temporal-motivos").prop("value", 100);
                     }
                 }
                 this.incrementFechaIndice();
@@ -82,6 +94,8 @@ export class MapaAnimacion extends MapaOl {
                   this.#idIntervalo = null;
                   this.#estado = 0;
                   this.#tiempo = 1000;
+                  $("#barra-temporal-motivos").prop("data-prev-value", 100);
+                  $("#barra-temporal-motivos").prop("value", 100);
                 } else {
                   superAddIconLayerAnimacion(
                     this.#listaAnimacion[this.#ind]["positionFormas"][0],
@@ -93,6 +107,14 @@ export class MapaAnimacion extends MapaOl {
                     this.#listaAnimacion[this.#ind]["color"]
                   );
                   this.setFechaIndice(this.#listaAnimacion[this.#ind]["fecha"]);
+                  $("#barra-temporal-motivos").prop(
+                                                    "data-prev-value", 
+                                                    ((this.getFechaIndice() - this.#fechaInicio) / rango) * 100
+                  );
+                  $("#barra-temporal-motivos").prop(
+                                                    "value",
+                                                    ((this.getFechaIndice() - this.#fechaInicio) / rango) * 100
+                  );
                   this.#ind++;
                 }
               }
@@ -108,8 +130,11 @@ export class MapaAnimacion extends MapaOl {
             this.#idIntervalo = null;
             this.#estado = 0;
             this.#tiempo = 1000;
+            this.#fechaIndice = this.#fechaInicio;
             this.#listaUbicacion = new WeakMap();
             this.#tiempo = this.#tiempo / incremento;
+            $("#barra-temporal-motivos").prop("data-prev-value", 100);
+            $("#barra-temporal-motivos").prop("value", 100);
         }
     }
 
@@ -118,6 +143,7 @@ export class MapaAnimacion extends MapaOl {
             if (this.#idIntervalo) {
               clearInterval(this.#idIntervalo);
             }
+            let rango = this.#fechaFin - this.#fechaInicio;
             let lengList = this.#listaAnimacion.length;
             const superAddIconLayerAnimacion = super.addIconLayerAnimacion.bind(this);
             this.#tiempo = this.#tiempo * decremento;
@@ -138,6 +164,14 @@ export class MapaAnimacion extends MapaOl {
                               this.#listaAnimacion[this.#ind]["categoriaForma"],
                               this.#listaAnimacion[this.#ind]["color"]
                             );
+                            $("#barra-temporal-motivos").prop(
+                                                              "data-prev-value", 
+                                                              ((this.getFechaIndice() - this.#fechaInicio) / rango) * 100
+                            );
+                            $("#barra-temporal-motivos").prop(
+                                                              "value",
+                                                              ((this.getFechaIndice() - this.#fechaInicio) / rango) * 100
+                            );
                             this.#ind++;
                           } else {
                             break;
@@ -149,6 +183,9 @@ export class MapaAnimacion extends MapaOl {
                         this.#idIntervalo = null;
                         this.#tiempo = 1000;
                         this.#estado = 0;
+                        this.#fechaIndice = this.#fechaInicio;
+                        $("#barra-temporal-motivos").prop("data-prev-value", 100);
+                        $("#barra-temporal-motivos").prop("value", 100);
                       }
                   }
                   this.incrementFechaIndice();
@@ -159,6 +196,8 @@ export class MapaAnimacion extends MapaOl {
                     this.#idIntervalo = null;
                     this.#tiempo = 1000;
                     this.#estado = 0;
+                    $("#barra-temporal-motivos").prop("data-prev-value", 100);
+                    $("#barra-temporal-motivos").prop("value", 100);
                   } else {
                     superAddIconLayerAnimacion(
                       this.#listaAnimacion[this.#ind]["positionFormas"][0],
@@ -170,6 +209,14 @@ export class MapaAnimacion extends MapaOl {
                       this.#listaAnimacion[this.#ind]["color"]
                     );
                     this.setFechaIndice(this.#listaAnimacion[this.#ind]["fecha"]);
+                    $("#barra-temporal-motivos").prop(
+                                                      "data-prev-value", 
+                                                      ((this.getFechaIndice() - this.#fechaInicio) / rango) * 100
+                    );
+                    $("#barra-temporal-motivos").prop(
+                                                      "value",
+                                                      ((this.getFechaIndice() - this.#fechaInicio) / rango) * 100
+                    );
                     this.#ind++;
                   }
                 }
@@ -188,6 +235,7 @@ export class MapaAnimacion extends MapaOl {
             if (this.#idIntervalo) {
               clearInterval(this.#idIntervalo);
             }
+            let rango = this.#fechaFin - this.#fechaInicio;
             let lengList = this.#listaAnimacion.length;
             const superRevIconLayerAnimacion = super.revIconLayerAnimacion.bind(this);
             this.#tiempo = this.#tiempo * decremento;
@@ -197,13 +245,22 @@ export class MapaAnimacion extends MapaOl {
                     && this.#fechaFin > this.getFechaIndice()) {
                       if (lengList > this.#ind && this.#ind >= 0) {
                         for (let i = this.#ind; i >= 0; i--) {
-                          let fecha = Date.parse(this.#listaAnimacion[this.#ind]["fecha"]);
+                          let fecha = Date.parse(this.#listaAnimacion[this.#ind - 1]["fecha"]);
                           if (fecha == this.getFechaIndice()) {
                             superRevIconLayerAnimacion(
                               this.#listaAnimacion[this.#ind - 1]["positionFormas"][0],
                               this.#listaAnimacion[this.#ind - 1]["positionFormas"][1],
                               0,
-                              0
+                              0,
+                              this.#listaAnimacion[this.#ind - 1]["feature"]
+                            );
+                            $("#barra-temporal-motivos").prop(
+                                                              "data-prev-value", 
+                                                              ((this.getFechaIndice() - this.#fechaInicio) / rango) * 100
+                            );
+                            $("#barra-temporal-motivos").prop(
+                                                              "value",
+                                                              ((this.getFechaIndice() - this.#fechaInicio) / rango) * 100
                             );
                             this.#ind--;
                           } else {
@@ -216,6 +273,9 @@ export class MapaAnimacion extends MapaOl {
                         this.#idIntervalo = null;
                         this.#tiempo = 1000;
                         this.#estado = 0;
+                        this.#fechaIndice = this.#fechaInicio;
+                        $("#barra-temporal-motivos").prop("data-prev-value", 0);
+                        $("#barra-temporal-motivos").prop("value", 0);
                       }
                   }
                   this.decrementFechaIndice();
@@ -226,14 +286,25 @@ export class MapaAnimacion extends MapaOl {
                     this.#idIntervalo = null;
                     this.#tiempo = 1000;
                     this.#estado = 0;
+                    $("#barra-temporal-motivos").prop("data-prev-value", 0);
+                    $("#barra-temporal-motivos").prop("value", 0);
                   } else {
                     superRevIconLayerAnimacion(
                       this.#listaAnimacion[this.#ind - 1]["positionFormas"][0],
                       this.#listaAnimacion[this.#ind - 1]["positionFormas"][1],
                       0,
-                      0
+                      0,
+                      this.#listaAnimacion[this.#ind - 1]["feature"]
                     );
                     this.setFechaIndice(this.#listaAnimacion[this.#ind - 1]["fecha"]);
+                    $("#barra-temporal-motivos").prop(
+                                                      "data-prev-value", 
+                                                      ((this.getFechaIndice() - this.#fechaInicio) / rango) * 100
+                    );
+                    $("#barra-temporal-motivos").prop(
+                                                      "value",
+                                                      ((this.getFechaIndice() - this.#fechaInicio) / rango) * 100
+                    );
                     this.#ind--;
                   }
                 }
@@ -244,6 +315,75 @@ export class MapaAnimacion extends MapaOl {
           }.bind(this), this.#tiempo);
         } else {
           this.#tiempo = this.#tiempo * decremento;
+        }
+    }
+
+    dec(fecha) {
+        if (this.#idIntervalo) {
+          clearInterval(this.#idIntervalo);
+        }
+        const superRevIconLayerAnimacion = super.revIconLayerAnimacion.bind(this);
+        let lengList = this.#listaAnimacion.length;        
+        this.#fechaIndice = this.#fechaInicio + (this.#fechaFin - this.#fechaInicio) * (fecha / 100);
+        for (let i = this.#ind; i >= 0; i--) {
+          let fechaMovimiento = null;
+          if (!this.#listaAnimacion[this.#ind]) {
+            this.#ind--;
+            continue;
+          }
+          fechaMovimiento = Date.parse(this.#listaAnimacion[this.#ind]["fecha"]);
+          if (this.getFechaIndice() <= fechaMovimiento) {
+            superRevIconLayerAnimacion(
+              this.#listaAnimacion[this.#ind]["positionFormas"][0],
+              this.#listaAnimacion[this.#ind]["positionFormas"][1],
+              0,
+              0,
+              this.#listaAnimacion[this.#ind]["feature"]
+            );
+            this.#ind--;
+          } else {
+            break;
+          }
+        }
+        this.updateCronometro();
+        $("#digit-anio").text(this.getCronometroAnio());
+        $("#digit-mes").text(this.getCronometroMes());
+        $("#digit-dia").text(this.getCronometroDia());
+    }
+
+    incr(fecha) {
+        if (this.isAnimated()) {
+          if (this.#idIntervalo) {
+            clearInterval(this.#idIntervalo);
+          }
+          let lengList = this.#listaAnimacion.length;
+          const superAddIconLayerAnimacion = super.addIconLayerAnimacion.bind(this);
+          this.#fechaIndice = this.#fechaInicio + (this.#fechaFin - this.#fechaInicio) * (fecha / 100);
+          for (let i = this.#ind; i <= lengList; i++) {
+            if (!this.#listaAnimacion[this.#ind - 1]) {
+              this.#ind++;
+              continue;
+            }
+            let fechaMotivo = Date.parse(this.#listaAnimacion[this.#ind - 1]["fecha"]);
+            if (fechaMotivo <= this.getFechaIndice()) {
+              superAddIconLayerAnimacion( 
+                this.#listaAnimacion[this.#ind - 1]["positionFormas"][0],
+                this.#listaAnimacion[this.#ind - 1]["positionFormas"][1],
+                0,
+                0,
+                this.#listaAnimacion[this.#ind - 1]["id_persona"],
+                this.#listaAnimacion[this.#ind - 1]["categoriaForma"],
+                this.#listaAnimacion[this.#ind - 1]["color"]
+              );
+              this.#ind++;
+            } else {
+              break;
+            }
+          }
+          this.updateCronometro();
+          $("#digit-anio").text(this.getCronometroAnio());
+          $("#digit-mes").text(this.getCronometroMes());
+          $("#digit-dia").text(this.getCronometroDia());
         }
     }
 
@@ -279,18 +419,23 @@ export class MapaAnimacion extends MapaOl {
             this.#listaAnimacion = [];
             this.#listaUbicacion = new WeakMap();
             this.#tiempo = 1000;
+            this.#fechaIndice = this.#fechaInicio;
             this.#ind = 0;
             this.#estado = 0;
+            this.#fechaIndice = this.#fechaInicio;
             $("#cronometro").css("display", "none");
             $("#boton-calendario").css("display", "none");
             $("#boton-cron").css("display", "none");
         }
+        $("#barra-temporal-motivos").prop("data-prev-value", 0);
+        $("#barra-temporal-motivos").prop("value", 0);
     }
 
     restart() {
         if (this.isAnimated()) {
             let lengList = this.#listaAnimacion.length;
             this.#estado = 1;
+            let rango = this.#fechaFin - this.#fechaInicio;
             clearInterval(this.#idIntervalo);
             const superAddIconLayerAnimacion = super.addIconLayerAnimacion.bind(this);
             if (this.#tipo == "CR") {
@@ -317,6 +462,14 @@ export class MapaAnimacion extends MapaOl {
                               this.#listaAnimacion[this.#ind]["categoriaForma"],
                               this.#listaAnimacion[this.#ind]["color"]
                             );
+                            $("#barra-temporal-motivos").prop(
+                                                              "data-prev-value", 
+                                                              ((this.getFechaIndice() - this.#fechaInicio) / rango) * 100
+                            );
+                            $("#barra-temporal-motivos").prop(
+                                                              "value",
+                                                              ((this.getFechaIndice() - this.#fechaInicio) / rango) * 100
+                            );
                             this.#ind++;
                           } else {
                             break;
@@ -328,6 +481,8 @@ export class MapaAnimacion extends MapaOl {
                         this.#idIntervalo = null;
                         this.#estado = 0;
                         this.#tiempo = 1000;
+                        $("#barra-temporal-motivos").prop("data-prev-value", 100);
+                        $("#barra-temporal-motivos").prop("value", 100);
                       }
                   }
                   this.incrementFechaIndice();
@@ -338,6 +493,9 @@ export class MapaAnimacion extends MapaOl {
                     this.#idIntervalo = null;
                     this.#estado = 0;
                     this.#tiempo = 1000;
+                    this.#fechaIndice = this.#fechaInicio;
+                    $("#barra-temporal-motivos").prop("data-prev-value", 100);
+                    $("#barra-temporal-motivos").prop("value", 100);
                   } else {
                     superAddIconLayerAnimacion(
                       this.#listaAnimacion[this.#ind]["positionFormas"][0],
@@ -349,6 +507,14 @@ export class MapaAnimacion extends MapaOl {
                       this.#listaAnimacion[this.#ind]["color"]
                     );
                     this.setFechaIndice(this.#listaAnimacion[this.#ind]["fecha"]);
+                    $("#barra-temporal-motivos").prop(
+                                                      "data-prev-value", 
+                                                      ((this.getFechaIndice() - this.#fechaInicio) / rango) * 100
+                    );
+                    $("#barra-temporal-motivos").prop(
+                                                      "value",
+                                                      ((this.getFechaIndice() - this.#fechaInicio) / rango) * 100
+                    );
                     this.#ind++;
                   }
                 }
@@ -434,12 +600,21 @@ export class MapaAnimacion extends MapaOl {
       super.addVectorLayer();
       super.addHandlerSource(); 
       this.#estado = 1;
+      let rango = this.#fechaFin - this.#fechaInicio;
       this.#listaAnimacion = this.#listaAnimacion.sort(this.ordenFecha);
       let lengList = this.#listaAnimacion.length;
       this.setTipo("CR");
       $("#cronometro").css("display", "inline-flex");
       $("#boton-calendario").css("display", "inline-block");
       $("#boton-cron").css("display", "none");
+      $("#barra-temporal-motivos").prop(
+                                        "data-prev-value", 
+                                        ((this.getFechaIndice() - this.#fechaInicio) / rango) * 100
+      );
+        $("#barra-temporal-motivos").prop(
+                                        "value",
+                                        ((this.getFechaIndice() - this.#fechaInicio) / rango) * 100
+      );
       const superAddIconLayerAnimacion = super.addIconLayerAnimacion.bind(this);
       this.#idIntervalo = setInterval(function () {
         if (this.#fechaInicio <= this.getFechaIndice() 
@@ -458,6 +633,14 @@ export class MapaAnimacion extends MapaOl {
                       this.#listaAnimacion[this.#ind]["color"]
                     );
                     this.#ind++;
+                    $("#barra-temporal-motivos").prop(
+                                                      "data-prev-value", 
+                                                      ((this.getFechaIndice() - this.#fechaInicio) / rango) * 100
+                    );
+                     $("#barra-temporal-motivos").prop(
+                                                      "value",
+                                                      ((this.getFechaIndice() - this.#fechaInicio) / rango) * 100
+                    );
                   } else {
                     break;
                   }
@@ -468,6 +651,9 @@ export class MapaAnimacion extends MapaOl {
                 this.#idIntervalo = null;
                 this.#estado = 0;
                 this.#tiempo = 1000;
+                this.#fechaIndice = this.#fechaInicio;
+                $("#barra-temporal-motivos").prop("data-prev-value", 100);
+                $("#barra-temporal-motivos").prop("value", 100);
               }
         }
         this.incrementFechaIndice();
@@ -483,12 +669,21 @@ export class MapaAnimacion extends MapaOl {
         super.addVectorLayer();
         super.addHandlerSource();
         this.#estado = 1;
+        let rango = this.#fechaFin - this.#fechaInicio;
         this.#listaAnimacion = this.#listaAnimacion.sort(this.ordenFecha)
         let lengList = this.#listaAnimacion.length;
         this.setTipo("CL");
         $("#cronometro").css("display", "inline-flex");
         $("#boton-calendario").css("display", "none");
         $("#boton-cron").css("display", "inline-block");
+        $("#barra-temporal-motivos").prop(
+                                          "data-prev-value", 
+                                          ((this.getFechaIndice() - this.#fechaInicio) / rango) * 100
+        );
+          $("#barra-temporal-motivos").prop(
+                                          "value",
+                                          ((this.getFechaIndice() - this.#fechaInicio) / rango) * 100
+        );
         const superAddIconLayerAnimacion = super.addIconLayerAnimacion.bind(this);
         this.#idIntervalo = setInterval(function () {
           if (lengList <= this.#ind) {
@@ -496,6 +691,9 @@ export class MapaAnimacion extends MapaOl {
             clearInterval(this.#idIntervalo);
             this.#estado = 0;
             this.#idIntervalo = null;
+            this.#fechaIndice = this.#fechaInicio;
+            $("#barra-temporal-motivos").prop("data-prev-value", 100);
+            $("#barra-temporal-motivos").prop("value", 100);
           } else {
             superAddIconLayerAnimacion(
               this.#listaAnimacion[this.#ind]["positionFormas"][0],
@@ -506,9 +704,19 @@ export class MapaAnimacion extends MapaOl {
               this.#listaAnimacion[this.#ind]["categoriaForma"],
               this.#listaAnimacion[this.#ind]["color"]
             );
-            this.#ind++;
+
+            $("#barra-temporal-motivos").prop(
+                                              "data-prev-value", 
+                                              ((this.getFechaIndice() - this.#fechaInicio) / rango) * 100
+            );
+            $("#barra-temporal-motivos").prop(
+                                              "value",
+                                              ((this.getFechaIndice() - this.#fechaInicio) / rango) * 100
+            );
+
             this.setFechaIndice(this.#listaAnimacion[this.#ind]["fecha"]);
             this.updateCronometro();
+            this.#ind++;
           }
 
           $("#digit-anio").text(this.getCronometroAnio());

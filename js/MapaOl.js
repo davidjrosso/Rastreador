@@ -266,7 +266,7 @@ export class MapaOl {
 
       textLabel.setStyle(styleFunction);
       this.#mapa.getLayers().getArray()[2].getSource().addFeature(textLabel);
-
+      return textLabel;
     }
 
     addVectorLayer(){
@@ -328,23 +328,27 @@ export class MapaOl {
       textLabel.setStyle(styleFunction);
       //this.#listaFeatures.push(textLabel);
       this.#mapa.getLayers().getArray()[2].getSource().addFeature(textLabel);
+      return textLabel;
     }
 
     revIconLayerAnimacion(
                   lon,
                   lat,
                   desplazamientoY,
-                  desplazamientoX
+                  desplazamientoX,
+                  feature
     ) {
       let pos = [parseFloat(lon), parseFloat(lat)];
       let px = this.#mapa.getPixelFromCoordinate(pos);
-      const feature = this.#mapa.forEachFeatureAtPixel(px, function (feature) {
-        return feature;
-      },
-      {
-        hitTolerance: 1,
+      let featuresList = [];
+      const features = this.#mapa.forEachFeatureAtPixel(px, function (feature) {
+        featuresList.push(feature);
       });
-      this.#mapa.getLayers().getArray()[2].getSource().removeFeature(feature);
+      if (featuresList) {
+        featuresList.forEach(feature => {
+          this.#mapa.getLayers().getArray()[2].getSource().removeFeature(feature);
+        });
+      }
     }
 
     flash(e) {
@@ -362,7 +366,6 @@ export class MapaOl {
         }
         const vectorContext = olRender.getVectorContext(event);
         const elapsedRatio = elapsed / 3000;
-        // radius will be 5 at start and 30 at end.
         const radius = olEasing.easeOut(elapsedRatio) * 25 + 5;
         const opacity = olEasing.easeOut(1 - elapsedRatio);
     

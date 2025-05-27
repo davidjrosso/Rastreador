@@ -71,6 +71,7 @@ export function carga(map, listReferencias) {
   let posicionAnterior = null;
   let positionFormas = null;
   let row = [];
+  let feature = null;
   let listaOrdenada = listReferencias.sort(ordenGeoreferencia); 
   map.addVectorLayer();
   map.deleteHandlerSource();
@@ -135,7 +136,7 @@ export function carga(map, listReferencias) {
           offsetY = -0.00006002;
           //positionFormas = positionFormas.add(-8.3, 4.5);
         }
-        map.addIconLayerR(
+        feature = map.addIconLayerR(
                     positionFormas[0],
                     positionFormas[1],
                     offsetY,
@@ -150,6 +151,7 @@ export function carga(map, listReferencias) {
         row["categoriaForma"] = categoria;
         row["color"] = lista_formas[categoria][0];
         row["fecha"] = lista_formas[categoria][2];
+        row["feature"] = feature;
         map.addListaAnimacion(row);
         row = [];
       });
@@ -204,5 +206,8 @@ export function animacionPaused(mapa) {
 export function animacionStop(mapa) {
   if (mapa.isAnimated()) {
     mapa.stop();
+  } else {
+    $("#barra-temporal-motivos").prop("data-prev-value", 0);
+    $("#barra-temporal-motivos").prop("value", 0);
   }
 }

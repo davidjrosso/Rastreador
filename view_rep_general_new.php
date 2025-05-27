@@ -305,6 +305,21 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
           fullscreen = false;
         }
       });
+
+      $("#barra-temporal-motivos").on("input", function (e) {
+        let valPercent = (e.target.value - parseInt($(this).prop('min'))) / 
+                      (parseInt($(this).prop('max')) - parseInt($(this).prop('min')));
+        let styleInput = {"background-image" : "-webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(" + valPercent + ", #29907f), color-stop(" + valPercent + ", #f5f6f8));"}
+        $(this).css(styleInput);
+        let prv_value = $(this).prop("data-prev-value");
+        let value = e.target.value;
+        if (prv_value <= value) {
+          map.incr(value);
+        } else {
+          map.dec(value);
+        }
+        $(this).prop("data-prev-value", value);
+      });
     });
 
     function fireKey(el) {
@@ -799,6 +814,12 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
 
     input[type="range"]::-webkit-slider-runnable-track {
       background-color: #add8e6;
+      border-radius: 0.5rem;
+      height: 0.8rem;
+    }
+
+    input[type="range"]::-webkit-progress-value {
+      background-color: black !important;
       border-radius: 0.5rem;
       height: 0.8rem;
     }
@@ -2617,7 +2638,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
   <input type="range" class="fixed-bottom form-range input--transform-rotate180" 
          step="0.2" value="<?php echo (($nro_column) ? ($nro_column - $nro_col_disponible + 10) : "10") ?>" min="10"
          max="<?php echo (($nro_column) ? $nro_column + 8 : "") ?>"
-    id="BarraDeNavHTabla">
+         id="BarraDeNavHTabla">
   <!--<input type="range" class="fixed-bottom form-range" step="1" value="1" min="1" id="BarraDeNavVTabla">-->
 
   <div class="modal fade modal--show-overall" id="configModal" tabindex="-1" role="dialog"
@@ -2781,7 +2802,6 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             }
             ?>
           </div>
-
           <div id="lista-personas-georeferencia">
             <div class="dropdown-menu">
               <h6 class="dropdown-header">Dropdown header</h6>
@@ -2789,7 +2809,8 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
               <a class="dropdown-item" href="#">Another action</a>
             </div>
           </div>
-
+          <input id="barra-temporal-motivos" type="range" value="0" min="0" max="100" data-prev-value="0"
+                 style="position: absolute; bottom: 3px; z-index: 1000; box-sizing: content-box; margin-left: 0%; width: 96%" >
         </div>
       </div>
     </div>
