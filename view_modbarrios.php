@@ -1,7 +1,26 @@
 <?php 
+/*
+ *
+ * This file is part of Rastreador3.
+ *
+ * Rastreador3 is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Rastreador3 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Rastreador3; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 session_start(); 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . '/Modelo/Barrio.php');
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 header("Content-Type: text/html;charset=utf-8");
 
@@ -33,9 +52,9 @@ $tipo_usuario = $account->get_id_tipo_usuario();
   <script src="./dist/mapa.js"></script>
   <script>
     let map = null;
-    let objectJsonPersona = {};
+    let objectJsonBarrio = {};
     let fullscreen = false;
-
+    let nombreCalle = null;
     $(document).ready(function(){
           $("#boton-min").on("click", function (e) {
             $("button[class='ol-zoom-out']").click();
@@ -45,35 +64,27 @@ $tipo_usuario = $account->get_id_tipo_usuario();
             $("button[class='ol-zoom-in']").click();
           });
 
+          $("#mapa-sig").on("click", function (e) {
+            let calle = $("#Calle").val();
+            let nro = $("#NumeroDeCalle").val();
+            if (!nombreCalle || !nro) {
+              map.addPersonMap(
+                            objectJsonBarrio.lat,
+                            objectJsonBarrio.lon
+                            );
+            } else if (nombreCalle && nro) {
+              map.addPersonMapAddress(
+                                      nombreCalle,
+                                      nro
+                                    );
+            }
+          });
+
           $("#NumeroDeCalle").on("input", function(e) {
             let calle = $("#Calle").val();
             let nro = $(this).val();
             if (calle && nro) {
               $("#mapa-sig").prop('disabled', false);
-              if($("#NumeroDeCalle").val() && $("#Calle").val()) {
-                  $("#mapa-sig").prop('disabled', false);
-                  if (!map) {
-                    map = init(
-                              objectJsonPersona.lat, 
-                              objectJsonPersona.lon,
-                              map
-                    );
-                    map.setGeoreferenciacion();
-                  }
-                  let nro = $("#NumeroDeCalle").val();
-                  if (!nombreCalle && !nro) {
-                    map.addPersonMap(
-                                  objectJsonPersona.lon,
-                                  objectJsonPersona.lat
-                                  );
-                  } else if (nombreCalle && nro) {
-                    map.addPersonMapAddress(
-                                            nombreCalle,
-                                            nro
-                                          );
-                    
-                  }
-              }
             } else {
               $("#mapa-sig").prop('disabled', true);
             }
@@ -102,12 +113,21 @@ $tipo_usuario = $account->get_id_tipo_usuario();
 
           if (!map) {
               map = init(
-                          objectJsonPersona.lat, 
-                          objectJsonPersona.lon,
+                          objectJsonBarrio.lat, 
+                          objectJsonBarrio.lon,
                           map
               );
               map.setGeoreferenciacion();
-            }
+
+              if (objectJsonBarrio.lon && objectJsonBarrio.lat) {
+                map.addPersonMap(
+                  objectJsonBarrio.lon,
+                  objectJsonBarrio.lat
+                );
+              } else {
+                $("#mapa-sig").prop('disabled', true);
+              }
+          }
 
       });
 
@@ -164,20 +184,16 @@ $tipo_usuario = $account->get_id_tipo_usuario();
         <div class = "row">
           <?php  
             if(isset($_REQUEST["ID"]) && $_REQUEST["ID"]!=null){
-              $ID_Barrio = $_REQUEST["ID"];
 
               $Con = new Conexion();
               $Con->OpenConexion();
+              $ID_Barrio = $_REQUEST["ID"];
 
-              $ConsultarDatos = "select * from barrios where ID_Barrio = $ID_Barrio";
-              $MensajeErrorDatos = "No se pudo consultar los Datos del Barrio";
-
-              $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
-
-              $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
-
-              $ID_Barrio = $Ret["ID_Barrio"];
-              $Barrio = $Ret["Barrio"];
+		          $barrio = new Barrio(coneccion: $Con, id_barrio: $ID_Barrio);
+              $ID_Barrio = $barrio->get_id_barrio();
+              $Barrio = $barrio->get_barrio();
+              $geo_lat_barrio = $barrio->get_lat_georeferencia();
+              $geo_lon_barrio = $barrio->get_lon_georeferencia();
 
               ?>
             <div class = "col-10">
@@ -204,9 +220,10 @@ $tipo_usuario = $account->get_id_tipo_usuario();
                     <input type="number" class="form-control" style="margin-top: 1px; padding-right: 0px;" name = "NumeroDeCalle" id="NumeroDeCalle" placeholder="Número" min="1" autocomplete="off">
                   </div>
                   <div class="col-md-2">
-                    <button id="mapa-sig" type="button" class="btn btn-secondary" disabled data-toggle="modal"
-                      style="background-color: #ffc6b1; color: black; border-color: white; " data-target="#map-modal">S.
-                      I. G.</button>
+                    <button id="mapa-sig" type="button" class="btn btn-secondary" data-toggle="modal"
+                      style="background-color: #ffc6b1; color: black; border-color: white; " data-target="#map-modal">
+                      S.I. G.
+                    </button>
                   </div>
               </div>
                 <div class="form-group row" style="margin-top: 36px;">
@@ -215,8 +232,8 @@ $tipo_usuario = $account->get_id_tipo_usuario();
                     <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_barrios.php'">Atras</button>
                   </div>
                 </div>
-                <input type="hidden" id="lat" name="lat" value="">
-                <input type="hidden" id="lon" name="lon" value="">
+                <input type="hidden" id="lat" name="lat" value="<?php echo $geo_lat_barrio?>">
+                <input type="hidden" id="lon" name="lon" value="<?php echo $geo_lon_barrio?>">
                 <input type="hidden" name="Calle" id="Calle" value = "">
             </form>
             <div class="row">
@@ -391,25 +408,11 @@ if(isset($_REQUEST['MensajeError'])){
 </script>";
 }
 ?>
-<?php
-/*
- *
- * This file is part of Rastreador3.
- *
- * Rastreador3 is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Rastreador3 is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Rastreador3; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- */
-?>
+
+<script>
+  objectJsonBarrio.lat = <?php echo $geo_lat_barrio?>;
+  objectJsonBarrio.lon = <?php echo $geo_lon_barrio?>;
+</script>
+
 </body>
 </html>

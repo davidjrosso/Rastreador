@@ -22,7 +22,12 @@ class Barrio
 			$this->georeferencia = $georeferencia;
 			$this->estado = ($estado) ? $estado : 1;
 		} else {
-			$consulta = "select * 
+			$consulta = "select ID_Barrio,
+								Barrio,
+								georeferencia,
+								ST_X(georeferencia) as lat,
+								ST_Y(georeferencia) as lon,
+								estado
 						 from barrios
 						 where ID_Barrio = $id_barrio";
 			$rs = mysqli_query($this->coneccion->Conexion,
@@ -30,7 +35,7 @@ class Barrio
 			$ret = mysqli_fetch_assoc($rs);
 			$this->id_barrio = (!empty($ret["ID_Barrio"])) ? $ret["ID_Barrio"] : null;
 			$this->barrio = (!empty($ret["Barrio"])) ? $ret["Barrio"] : null;
-			$this->georeferencia = (!empty($ret["georeferencia"])) ? $ret["georeferencia"] : null;
+			$this->georeferencia = (!empty($ret["georeferencia"])) ? "POINT(" . $ret["lat"] . "," . $ret["lon"] . ")" : null;
 			$this->estado = (!empty($ret["estado"])) ? $ret["estado"] : 0;
 		}
 	}
@@ -106,6 +111,22 @@ class Barrio
 	public function get_georeferencia()
 	{
 		return $this->georeferencia;
+	}
+
+	public function get_lat_georeferencia()
+	{
+		$list_coord = [];
+		$check = preg_match_all("~-[0-9]+\.[0-9]*~", $this->georeferencia, $list_coord);
+		$lat = (!empty($list_coord[0][0])) ? $list_coord[0][0] : null;
+		return $lat;
+	}
+
+	public function get_lon_georeferencia()
+	{
+		$list_coord = [];
+		$check = preg_match_all("~-[0-9]+\.[0-9]*~", $this->georeferencia, $list_coord);
+		$lon = (!empty($list_coord[0][1])) ? $list_coord[0][1] : null;
+		return $lon;
 	}
 
 	public function get_estado()

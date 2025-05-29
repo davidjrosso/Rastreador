@@ -29,6 +29,8 @@ $ID_Usuario = $_SESSION["Usuario"];
 $ID_Barrio = $_REQUEST["ID"];
 $barrio_nombre = ucwords($_REQUEST["Barrio"]);
 
+$georeferencia_point = null;
+
 if (!empty($_REQUEST["lat"])) {
 	$lat_point = $_REQUEST["lat"];
 	$georeferencia_point = "POINT(" . $lat_point;
