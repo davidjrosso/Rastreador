@@ -173,7 +173,7 @@ $tipo_usuario = $account->get_id_tipo_usuario();
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
-        <p>Movimientos</p>
+        <p>Modificación Barrio</p>
       </div>
       <div class="col"></div>
     </div><br>
