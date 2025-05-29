@@ -38,14 +38,6 @@
     let fullscreen = false;
 
     $(document).ready(function(){
-          var date_input=$('input[name="date"]'); //our date input has the name "date"
-          var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-          date_input.datepicker({
-              format: 'dd/mm/yyyy',
-              container: container,
-              todayHighlight: true,
-              autoclose: true,
-          });
           $("#boton-min").on("click", function (e) {
             $("button[class='ol-zoom-out']").click();
           });
@@ -306,7 +298,7 @@
             </div>
             <div class="modal-body" style="padding-top: 0px">
               <div id="basicMap"></div>
-              <div id="desplegable" style="display: none; position: absolute; top: 30px; left: 20px; z-index: 1000">
+              <div id="desplegable" style="display: none; position: absolute; top: 9px; left: 20px; z-index: 1000">
                 <table class="tabla-direccion">
                     <thead>
                       <th> </th>
@@ -319,6 +311,7 @@
                           Calle
                         </td>
                         <td  id="calle-georeferencia">
+                          no disponible
                         </td>
                         <td id="calle-buttom" style="background-color: transparent; border: none;">
                             <div>
@@ -331,6 +324,7 @@
                           Nro
                         </td>
                         <td id="nro-georeferencia">
+                          no disponible
                         </td>
                         <td id="nro-buttom" style="background-color: transparent; border: none;">
                             <div>
@@ -343,6 +337,7 @@
                           Barrio
                         </td>
                         <td id="barrio-georeferencia">
+                          no disponible 
                         </td>
                         <td id="barrio-buttom" style="background-color: transparent; border: none;">
                             <div>
