@@ -1,6 +1,4 @@
 <?php 
-session_start();
-require_once 'Conexion.php';
 /*
  *
  * This file is part of Rastreador3.
@@ -20,10 +18,28 @@ require_once 'Conexion.php';
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+session_start();
+require_once($_SERVER["DOCUMENT_ROOT"] . '/Controladores/Conexion.php');
+require_once($_SERVER["DOCUMENT_ROOT"] . '/Modelo/Barrio.php');
+require_once($_SERVER["DOCUMENT_ROOT"] . '/Modelo/Accion.php');
+
+
 $ID_Usuario = $_SESSION["Usuario"];
 
 $ID_Barrio = $_REQUEST["ID"];
-$Barrio = ucwords($_REQUEST["Barrio"]);
+$barrio_nombre = ucwords($_REQUEST["Barrio"]);
+
+if (!empty($_REQUEST["lat"])) {
+	$lat_point = $_REQUEST["lat"];
+	$georeferencia_point = "POINT(" . $lat_point;
+
+	if (!empty($_REQUEST["lon"])){
+		$lon_point = $_REQUEST["lon"];
+		$georeferencia_point .= "," . $lon_point . ")";
+	} else {
+		$georeferencia_point = null;
+	}
+}
 
 $Fecha = date("Y-m-d");
 $ID_TipoAccion = 2;
@@ -32,38 +48,35 @@ $Con = new Conexion();
 $Con->OpenConexion();
 
 try {
-	$ConsultarRegistrosIguales = "select * from barrios where Barrio = '$Barrio' and ID_Barrio != $ID_Barrio and estado = 1";
-	if(!$Ret = mysqli_query($Con->Conexion,$ConsultarRegistrosIguales)){
-		throw new Exception("Error al consultar registros. Consulta: ".$ConsultarRegistrosIguales, 0);		
-	}
-	$Resultado = mysqli_num_rows($Ret);
-	if($Resultado > 0){
+	$Con = new Conexion();
+	$Con->OpenConexion();
+	$existe = Barrio::existe_barrio(coneccion: $Con, name: $barrio_nombre);
+	$id_barrio_control = Barrio::get_id_by_name(coneccion: $Con, name: $barrio_nombre);
+	if ($existe > 0 && $id_barrio_control != $ID_Barrio) {
 		$Con->CloseConexion();
 		$Mensaje = "Ya existe un Barrio con ese Nombre";
-		header('Location: ../view_modbarrios.php?ID='.$ID_Barrio.'&MensajeError='.$Mensaje);
-	}else{
-		$ConsultarDatosViejos = "select * from barrios where ID_Barrio = $ID_Barrio and estado = 1";
-		$ErrorDatosViejos = "No se pudieron consultar los datos";
-		if(!$RetDatosViejos = mysqli_query($Con->Conexion,$ConsultarDatosViejos)){
-			throw new Exception("Error al intentar registrar. Consulta: ".$ConsultarDatosViejos, 1);
-		}		
-		$TomarDatosViejos = mysqli_fetch_assoc($RetDatosViejos);
-		$BarrioViejo = $TomarDatosViejos["Barrio"];
+		header('Location: ../view_modbarrios.php?ID=' . $ID_Barrio . '&MensajeError=' . $Mensaje);
+	} else {
+		$barrio = new Barrio(coneccion: $Con, id_barrio: $ID_Barrio);
+
+		$barrio_viejo = $barrio->get_barrio();
+
+		$barrio->set_barrio($barrio_nombre);
+		$barrio->set_georeferencia($georeferencia_point);
+		$barrio->update($Con);
+
+		$Detalles = "El usuario con ID: $ID_Usuario ha modificado un Barrio. Datos: Dato Anterior: $barrio_viejo , Dato Nuevo: $barrio_nombre";
+		$accion = new Accion(
+			xaccountid: $ID_Usuario,
+			xFecha : $Fecha,
+			xDetalles: $Detalles,
+			xID_TipoAccion: $ID_TipoAccion	 
+		);
+		$accion->save();
 		
-
-		$Consulta = "update barrios set Barrio = '$Barrio' where ID_Barrio = $ID_Barrio and estado = 1";
-		if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
-			throw new Exception("Error al intentar registrar. Consulta: ".$ConsultarRegistrosIguales, 2);
-		}
-
-		$Detalles = "El usuario con ID: $ID_Usuario ha modificado un Barrio. Datos: Dato Anterior: $BarrioViejo , Dato Nuevo: $Barrio";
-		$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
-		if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
-			throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 3);
-		}
 		$Con->CloseConexion();
 		$Mensaje = "El Barrio se modificó Correctamente";
-		header('Location: ../view_modbarrios.php?ID='.$ID_Barrio.'&Mensaje='.$Mensaje);
+		header('Location: ../view_modbarrios.php?ID=' . $ID_Barrio . '&Mensaje=' . $Mensaje);
 	}
 } catch (Exception $e) {
 	echo "Error: ".$e->getMessage();

@@ -812,9 +812,9 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
       opacity: 70%;
     }
 
-    input[type="range"]::-webkit-slider-runnable-track {
+    #barra-temporal-motivos::-webkit-slider-runnable-track {
       border-radius: 0.5rem;
-      height: 0.59rem;
+      height: 1.1rem;
     }
 
     #BarraDeNavHTabla::-webkit-slider-runnable-track {
@@ -822,8 +822,11 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
       height: 0.8rem;
     }
 
-    input[type="range"]::-webkit-slider-thumb {
+     #BarraDeNavHTabla::-webkit-slider-thumb {
+      appearance: none;
       margin-top: -3.999999999999999px;
+      background-color: #b9c3d0;
+      border-radius: 0.1rem;
       height: 1.4rem;
       width: 1.9rem;
     }
@@ -1512,25 +1515,29 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             if(count((Array)$Barrio) > 1){
               $filtroBarrios = 'Barrios:';
               foreach($Barrio as $key => $valueBarrio){
-                if($key == $Barrio->array_key_first){
+                if ($key == $Barrio->array_key_first) {
                   $persona_query .= " and (";
                 }
-                if($valueBarrio > 0){
-                  if($key === count($Barrio) - 1){
+                if ($valueBarrio > 0) {
+                  if ($key === count($Barrio) - 1) {
                     $persona_query .= " ID_Barrio = $valueBarrio )";
-                  }else{
+                  } else {
                     $persona_query .= " ID_Barrio = $valueBarrio or";
                   }
 
-                  $ConsultarBarrio = "select Barrio 
+                  $ConsultarBarrio = "select Barrio,
+                                             ST_X(georeferencia) as lat,
+                                             ST_Y(georeferencia) as lon
                                       from barrios 
                                       where ID_Barrio = " . $valueBarrio." limit 1";
 
                   $EjecutarConsultarBarrio = mysqli_query($Con->Conexion,$ConsultarBarrio) or die("Problemas al consultar filtro Barrios");
                   $RetConsultarBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);
-                  if($key == $Barrio->array_key_first){
+                  if ($key == $Barrio->array_key_first) {
                     $filtroBarrios .= " " . $RetConsultarBarrio['Barrio'];
-                  }else{
+                    $geo_lat_barrio = $RetConsultarBarrio['lat'];
+                    $geo_lon_barrio = $RetConsultarBarrio['lon'];
+                  } else {
                     $filtroBarrios .= " - " . $RetConsultarBarrio['Barrio'];
                   }
                 }
@@ -1539,13 +1546,17 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             } else {
               if ($Barrio[0] > 0) {
                 $persona_query .= " and ID_Barrio = $Barrio[0]";
-                $ConsultarBarrio = "select Barrio 
+                $ConsultarBarrio = "select Barrio,
+                                           ST_X(georeferencia) as lat,
+                                           ST_Y(georeferencia) as lon
                                     from barrios 
                                     where ID_Barrio = " . $Barrio[0]." limit 1";
                 $EjecutarConsultarBarrio = mysqli_query($Con->Conexion,$ConsultarBarrio) or die("Problemas al consultar filtro Barrios");
                 $RetConsultarBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);
                 $filtros[] = "Barrio: " . $RetConsultarBarrio['Barrio'];
                 $filtrosSeleccionados["ID_Barrio"] = $Barrio[0];
+                $geo_lat_barrio = $RetConsultarBarrio['lat'];
+                $geo_lon_barrio = $RetConsultarBarrio['lon'];
               }
             }
 
@@ -2995,8 +3006,8 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
 
     if (!map) {
       map = initAnimation(
-                          <?php echo ($lat_person ? $lat_person : "null"); ?>,
-                          <?php echo ($lon_person ? $lon_person : "null"); ?>,
+                          <?php echo ($geo_lat_barrio ? $geo_lat_barrio : "null"); ?>,
+                          <?php echo ($geo_lon_barrio ? $geo_lon_barrio : "null"); ?>,
                           null,
                           '<?php echo ($fecha_init_animacion ? $fecha_init_animacion : "null"); ?>',
                           '<?php echo ($fecha_end_animacion ? $fecha_end_animacion : "null"); ?>'

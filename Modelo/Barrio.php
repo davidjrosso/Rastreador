@@ -114,7 +114,7 @@ class Barrio
 	}
 
 	public function update($coneccion) {
-		$consulta = "update accounts 
+		$consulta = "update barrios 
 					set Barrio = " . ((!is_null($this->get_barrio())) ? "'" . $this->get_barrio() . "'" : "null") . ", 
 						georeferencia = " . ((!is_null($this->get_georeferencia())) ? $this->get_georeferencia() : "null") . ",
 						estado = " . ((!is_null($this->get_estado())) ? $this->get_estado() : "null") . " 
