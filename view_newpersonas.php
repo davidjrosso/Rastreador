@@ -1,23 +1,21 @@
 <?php 
-session_start(); 
-require_once "Controladores/Elements.php";
-require_once "Controladores/CtrGeneral.php";
-header("Content-Type: text/html;charset=utf-8");
+  session_start(); 
+  require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
+  require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
+  require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
+  header("Content-Type: text/html;charset=utf-8");
 
-/*     CONTROL DE USUARIOS                    */
-if(!isset($_SESSION["Usuario"])){
-    header("Location: Error_Session.php");
-}
+  /*     CONTROL DE USUARIOS                    */
+  if(!isset($_SESSION["Usuario"])){
+      header("Location: Error_Session.php");
+  }
 
-$Con = new Conexion();
-$Con->OpenConexion();
-$ID_Usuario = $_SESSION["Usuario"];
-$ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
-$MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
-$EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
-$Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
-$TipoUsuario = $Ret["ID_TipoUsuario"];
-$Con->CloseConexion();
+  $Con = new Conexion();
+  $Con->OpenConexion();
+  $id_usuario = $_SESSION["Usuario"];
+  $account = new Account(account_id: $id_usuario);
+  $tipo_usuario = $account->get_id_tipo_usuario();
+  $Con->CloseConexion();
 ?>
 <!DOCTYPE html>
 <html>
@@ -262,7 +260,7 @@ $Con->CloseConexion();
 <div class = "row">
 <?php
   $Element = new Elements();
-  echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_PERSONA);
+  echo $Element->menuDeNavegacion($tipo_usuario, $id_usuario, $Element::PAGINA_PERSONA);
   ?>
   <div class = "col-md-9">
     <div class="row">
@@ -460,7 +458,6 @@ $Con->CloseConexion();
           <!-- Fin Carga -->
 
           <!-- Modal de Carga de Calle-->
-
       <div class="modal fade bd-example-modal-lg" id="ModalCalle" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
