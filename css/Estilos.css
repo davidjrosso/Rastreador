@@ -801,6 +801,7 @@ select[class~="form-control"] {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 370px;
   height: 120px;
   position: relative;
 }
@@ -813,14 +814,14 @@ select[class~="form-control"] {
 }
 
 #gear1 {
-  left: 44%;
+  left: 42%;
   transform: translate(-50%, -50%);
   transform-origin: center;
   animation: rotate-clockwise 4s linear infinite;
 }
 
 #gear2 {
-  left: 58%;
+  left: 61%;
   transform: translate(-50%, -50%) rotate(10deg);
   transform-origin: center;
   animation: rotate-counterclockwise 4s linear infinite;
