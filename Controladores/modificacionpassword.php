@@ -31,7 +31,7 @@ try {
 		} else {
 			$user_token = new UserToken(coneccion_base: $con, token: $token);
 			$account_id = $user_token->get_account_id();
-			$has8characters = (mb_strlen($userpass) == 8);
+			$has8characters = (mb_strlen($userpass) >= 8);
 			$hasAlpha = preg_match('~[a-zA-Z]+~', $userpass);
 			$hasNum = preg_match('~[0-9]+~', $userpass);
 			$hasNonAlphaNum = preg_match('~[\!\@#$%\?&\*\(\)_\-\+=]+~', $userpass);
