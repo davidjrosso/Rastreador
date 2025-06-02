@@ -715,6 +715,10 @@ div .nav-side-menu {
   padding-right: 0.3rem;
 }
 
+.list-group-item + .list-group-item {
+    border-top-width: 1px !important;
+}
+
 select[class~="form-control"] {
   appearance: auto;
 }
