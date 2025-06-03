@@ -427,9 +427,14 @@
 							$modificacion = $persona->setCalleNro($direccion);
 							$persona->setFamilia($departam);
 							$calle = $persona->getNombre_Calle();
+							$nro_calle = $persona->getNro();
+
 							if (($persona->getId_Calle() && !$modificacion)) {
 								$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
-								if ($server == 0 && $nro_calle < 1000) {
+
+								if ($server == 0 && $nro_calle >= 1000) $server++;
+
+								if ($server == 0) {
 									$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
 									$row_request["server"] = $server;
 									$server++;
@@ -525,9 +530,14 @@
 						);
 						$modificacion = $persona->setCalleNro($direccion);
 						$persona->setFamilia($departam);
+						$nro_calle = $persona->getNro();
+						
 						if ($persona->getId_Calle()) {
 							$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
-							if ($server == 0 && $nro_calle < 1000) {
+
+							if ($server == 0 && $nro_calle >= 1000) $server++;
+
+							if ($server == 0) {
 								$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
 								$row_request["server"] = $server;
 								$server++;
@@ -575,10 +585,14 @@
 							$persona->setBarrio($id_barrio);
 							$calle = $persona->getNombre_Calle();
 							$nro_calle = $persona->getNro();
+
 							if ($persona->getId_Calle()
 								&& !$modificacion) {
 								$calle_url = str_replace(" ", "+", $calle);
-								if ($server == 0 && $nro_calle < 1000) {
+
+								if ($server == 0 && $nro_calle >= 1000) $server++;
+
+								if ($server == 0) {
 									$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
 									$row_request["server"] = $server;
 									$server++;
