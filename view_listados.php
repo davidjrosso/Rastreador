@@ -227,8 +227,6 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
     function addMultipleMotivo(xMotivo, xID, element) {
       if (!listaMotivos.has(xMotivo) && (listaMotivos.size <= 4)) {
         listaMotivos.set(xMotivo, xID);
-        console.log(listaMotivos);
-        console.log(element);
         element.innerHTML = "&#10003";
         element.style.width = "12ch";
       } else if (listaMotivos.has(xMotivo)){

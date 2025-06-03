@@ -1,12 +1,12 @@
 <?php
 session_start();
-require_once "Controladores/Elements.php";
-require_once "Controladores/CtrGeneral.php";
-require_once "Controladores/Conexion.php";
-require_once "Modelo/Persona.php";
-require_once "Modelo/Motivo.php";
-require_once "sys_config.php";
-require_once 'dompdf/autoload.inc.php';
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
+require_once ($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
+require_once ($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
+require_once ($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
+require_once ($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Motivo.php");
+require_once ($_SERVER["DOCUMENT_ROOT"] . "/sys_config.php");
+require_once ($_SERVER["DOCUMENT_ROOT"] . "/dompdf/autoload.inc.php");
 
 header("Content-Type: text/html;charset=utf-8");
 
