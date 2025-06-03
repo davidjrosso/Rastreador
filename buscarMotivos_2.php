@@ -42,8 +42,8 @@ if (isset($consultaBusqueda)) {
 			  <thead class="thead-dark">
 			    <tr>
 			      <th scope="col">Motivo</th>
-			      <th scope="col">Cod_Categoria</th>	
-			      <th scope="col">Accion</th>	
+			      <th scope="col">Código</th>	
+			      <th scope="col">Acción</th>	
 			    </tr>
 			  </thead>
 			  <tbody>';
@@ -52,13 +52,13 @@ if (isset($consultaBusqueda)) {
 		while($resultados = mysqli_fetch_array($consulta)) {
 			$ID_Motivo = $resultados["id_motivo"];			
 			$Motivo = $resultados['motivo'];
-			$Cod_Categoria = $resultados['cod_categoria'];					
+			$codigo = $resultados['codigo'];					
 
 			//Output
 			$mensaje .= '
 			    <tr>
-			      <th scope="row">'.$Motivo.'</th>
-			      <td>'.$Cod_Categoria.'</td>		
+			      <th scope="row">' . $Motivo . '</th>
+			      <td>' . $codigo . '</td>		
 			      <td><button type = "button" class = "btn btn-outline-success" onClick="seleccionMotivo_2(\''.$Motivo.'\','.$ID_Motivo.')" data-dismiss="modal">seleccionar</button></td>
 			    </tr>';
 
