@@ -103,9 +103,10 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
       xmlhttp.send();
     }
 
-    function buscarMotivos(){
-      var xMotivo = document.getElementById('SearchMotivos').value;
-      var textoBusqueda = xMotivo;
+    function buscarMotivos() {
+      let xMotivo = document.getElementById('SearchMotivos').value;
+      let bodyJson = Object.fromEntries(listaMotivos);
+      let textoBusqueda = xMotivo;
       xmlhttp=new XMLHttpRequest();
       xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
@@ -113,13 +114,15 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
           document.getElementById("ResultadosMotivos").innerHTML=contenidosRecibidos;
           }
       }
-      xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
-      xmlhttp.send();
+      xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda=' + textoBusqueda, true);
+      xmlhttp.setRequestHeader("Content-Type", "application/json;");
+      xmlhttp.send(JSON.stringify(bodyJson));
     }
 
     function buscarMotivos2(){
-      var xMotivo = document.getElementById('SearchMotivos2').value;
-      var textoBusqueda = xMotivo;
+      let xMotivo = document.getElementById('SearchMotivos2').value;
+      let bodyJson = Object.fromEntries(listaMotivos);
+      let textoBusqueda = xMotivo;
       xmlhttp=new XMLHttpRequest();
       xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
@@ -128,12 +131,14 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
           }
       }
       xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda='+textoBusqueda+'&number=2', true); // Método post y url invocada
-      xmlhttp.send();
+      xmlhttp.setRequestHeader("Content-Type", "application/json;");
+      xmlhttp.send(JSON.stringify(bodyJson));
     }
 
     function buscarMotivos3(){
-      var xMotivo = document.getElementById('SearchMotivos3').value;
-      var textoBusqueda = xMotivo;
+      let xMotivo = document.getElementById('SearchMotivos3').value;
+      let bodyJson = Object.fromEntries(listaMotivos);
+      let textoBusqueda = xMotivo;
       xmlhttp=new XMLHttpRequest();
       xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
@@ -142,12 +147,30 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
           }
       }
       xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda='+textoBusqueda+'&number=3', true); // Método post y url invocada
-      xmlhttp.send();
+      xmlhttp.setRequestHeader("Content-Type", "application/json;");
+      xmlhttp.send(JSON.stringify(bodyJson));
+    }
+
+    function buscarMotivos4(motivoNumero){
+      let xMotivo = document.getElementById('SearchMotivos' + motivoNumero).value;
+      let bodyJson = Object.fromEntries(listaMotivos);
+      let textoBusqueda = xMotivo;
+      xmlhttp=new XMLHttpRequest();
+      xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+          contenidosRecibidos = xmlhttp.responseText;
+          document.getElementById("ResultadosMotivos" + motivoNumero).innerHTML=contenidosRecibidos;
+        }
+      }
+      xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda='+textoBusqueda+'&number=' + motivoNumero, true); // Método post y url invocada
+      xmlhttp.setRequestHeader("Content-Type", "application/json;");
+      xmlhttp.send(JSON.stringify(bodyJson));
     }
 
     function buscarMotivosGeneral(id_Motivo){
-      var xMotivo = document.getElementById("SearchMotivos" + id_Motivo).value;
-      var textoBusqueda = xMotivo;
+      let xMotivo = document.getElementById("SearchMotivos" + id_Motivo).value;
+      let bodyJson = Object.fromEntries(listaMotivos);
+      let textoBusqueda = xMotivo;
       xmlhttp=new XMLHttpRequest();
       xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
@@ -156,7 +179,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
         }
       }
       xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda='+textoBusqueda + '&number=' + id_Motivo, true); // Método post y url invocada
-      xmlhttp.send();
+      xmlhttp.send(JSON.stringify(bodyJson));
     }
 
     function buscarCategorias(){
@@ -204,6 +227,8 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
     function addMultipleMotivo(xMotivo, xID, element) {
       if (!listaMotivos.has(xMotivo) && (listaMotivos.size <= 4)) {
         listaMotivos.set(xMotivo, xID);
+        console.log(listaMotivos);
+        console.log(element);
         element.innerHTML = "&#10003";
         element.style.width = "12ch";
       } else if (listaMotivos.has(xMotivo)){
