@@ -48,6 +48,7 @@ if ($fecha_actual > $fecha_update) {
                                                      from persona 
                                                      where fecha_nac is not null
                                                        and fecha_nac <> 'null'
+                                                       and fecha_nac <> ''
                                                        and estado = 1)";
   $mensaje_error_datos_personas = "No se pudieron consultar los datos de las personas registradas en el sistema";
   $ejecutar_consultar_datos_personas = mysqli_query(
