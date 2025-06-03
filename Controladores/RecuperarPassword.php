@@ -66,7 +66,7 @@ try {
                         </head>
                         <body>
                             <p>Hola $nombre_user $apellido_user, <br>
-                               Hemos recibido una petición para restablecer usuario y/o contraseña de tu cuenta.</p>
+                               Hemos recibido una petición para restablecer el usuario y/o contraseña de tu cuenta.</p>
                             <p>Si hiciste esta petición, haz clic en el siguiente enlace.</p>
                             <p> Usuario : " . $username_mensaje . " <br>
                                 <strong>Enlace para restablecer tu usuario y/o contraseña</strong><br>
