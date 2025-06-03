@@ -59,7 +59,7 @@ if ($fecha_actual > $fecha_update) {
                       $consultar_datos_personas
                     ) or die($mensaje_error_datos_personas);
   $value->set_valor(date("Y-m-d"));
-  $value->update();
+  $value->update($Con);
 }
 $Con->CloseConexion();
 
