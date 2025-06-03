@@ -131,7 +131,9 @@ class Persona implements JsonSerializable {
 		} else {
 			$Con = new Conexion();
 			$Con->OpenConexion();
-			$ConsultarPersona = "select *
+			$ConsultarPersona = "select *,
+										ST_X(georeferencia) as lat,
+										ST_Y(georeferencia) as lon
 								 from persona 
 								 where ID_Persona = " . $ID_Persona . " 
 								   and estado = 1";
@@ -171,7 +173,7 @@ class Persona implements JsonSerializable {
 			$trabajo = $ret["Trabajo"];
 			$calle = $ret["calle"];
 			$nro = $ret["nro"];
-			$georefencia = (isset($ret["georefencia"])) ? $ret["georefencia"] : null;
+			$georefencia = (isset($ret["georeferencia"])) ? "POINT(" . $ret["lat"] . "," . $ret["lon"] . ")" : null;
 			$this->ID_Persona = $ID_Persona;
 			$this->Apellido = ($xApellido) ? $xApellido : $apellido;
 			$this->Nombre = ($xNombre) ? $xNombre : $nombre;
@@ -519,6 +521,8 @@ public function setCalleNro($xDomicilio = null)
 	}
 
 	$this->Domicilio = $domicilio;
+
+	$igual = $igual && !is_null($this->getGeoreferencia());
 	$con->CloseConexion();
 	return $igual;
 }

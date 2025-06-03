@@ -19,7 +19,7 @@
 	*/
 
 	session_start();
-	//header('Content-Type: application/json'); 
+	//header('Content-Type: application/json');
 	header('Content-Type: text/event-stream');
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Conexion.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/sys_config.php';
@@ -429,7 +429,7 @@
 							$calle = $persona->getNombre_Calle();
 							if (($persona->getId_Calle() && !$modificacion)) {
 								$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
-								if ($server == 0) {
+								if ($server == 0 && $nro_calle < 1000) {
 									$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
 									$row_request["server"] = $server;
 									$server++;
@@ -527,7 +527,7 @@
 						$persona->setFamilia($departam);
 						if ($persona->getId_Calle()) {
 							$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
-							if ($server == 0) {
+							if ($server == 0 && $nro_calle < 1000) {
 								$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
 								$row_request["server"] = $server;
 								$server++;
@@ -574,10 +574,11 @@
 							$persona->setFamilia($departam);
 							$persona->setBarrio($id_barrio);
 							$calle = $persona->getNombre_Calle();
+							$nro_calle = $persona->getNro();
 							if ($persona->getId_Calle()
 								&& !$modificacion) {
 								$calle_url = str_replace(" ", "+", $calle);
-								if ($server == 0) {
+								if ($server == 0 && $nro_calle < 1000) {
 									$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
 									$row_request["server"] = $server;
 									$server++;
