@@ -1,8 +1,29 @@
 <?php
+/*
+ *
+ * This file is part of Rastreador3.
+ *
+ * Rastreador3 is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Rastreador3 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Rastreador3; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
+
 session_start(); 
-require_once "Controladores/Elements.php";
-require_once "Controladores/CtrGeneral.php";
-require_once "Controladores/Conexion.php";
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Parametria.php");
 header("Content-Type: text/html;charset=utf-8");
 
 /*     CONTROL DE USUARIOS                    */
@@ -12,13 +33,33 @@ if(!isset($_SESSION["Usuario"])){
 
 $Con = new Conexion();
 $Con->OpenConexion();
-$ID_Usuario = $_SESSION["Usuario"];
-$ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
-$MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
-$EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
-$Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
-$TipoUsuario = $Ret["ID_TipoUsuario"];
+$id_usuario = $_SESSION["Usuario"];
+$account = new Account(account_id: $id_usuario);
+$tipo_usuario = $account->get_id_tipo_usuario();
+
+$fecha_actual = new DateTime(date("Y-m-d"));
+$fecha_update = new DateTime(Parametria::get_value_by_code($Con, "UPDATE_FECHA_PERSONA"));
+if ($fecha_actual > $fecha_update) {
+  $consultar_datos_personas = "UPDATE persona p
+                               SET edad = (SELECT TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE())
+                                           FROM persona
+                                           where id_persona = p.id_persona),
+                                   meses = (SELECT MOD(TIMESTAMPDIFF(MONTH, fecha_nac, CURDATE()), 12)
+                                           FROM persona
+                                           where id_persona = p.id_persona)
+                               WHERE  id_persona in (select id_persona
+                                                     from persona 
+                                                     where fecha_nac is not null
+                                                       and fecha_nac <> 'null'
+                                                       and estado = 1)";
+  $mensaje_error_datos_personas = "No se pudieron consultar los datos de las personas registradas en el sistema";
+  $ejecutar_consultar_datos_personas = mysqli_query(
+                      $Con->Conexion,
+                      $consultar_datos_personas
+                    ) or die($mensaje_error_datos_personas);
+}
 $Con->CloseConexion();
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -359,12 +400,12 @@ $Con->CloseConexion();
 <body>
 <div class = "row">
 <?php  
-  if($TipoUsuario == 1){  
+  if($tipo_usuario == 1){  
   ?>
   <div class = "col-md-2">
     <div class="nav-side-menu">
       <?php $Element = new Elements();
-            echo $Element->CBSessionNombreUsuario($ID_Usuario);
+            echo $Element->CBSessionNombreUsuario($id_usuario);
       ?>
       <div class="brand">General</div>
         <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
@@ -412,12 +453,12 @@ $Con->CloseConexion();
   </div>
   <?php 
     }
-    if($TipoUsuario == 2 || $TipoUsuario > 3){
+    if($tipo_usuario == 2 || $tipo_usuario > 3){
   ?>
   <div class = "col-md-2">
 <div class="nav-side-menu">
       <?php $Element = new Elements();
-            echo $Element->CBSessionNombreUsuario($ID_Usuario);
+            echo $Element->CBSessionNombreUsuario($id_usuario);
       ?>
     <div class="brand">General</div>
     <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
@@ -453,12 +494,12 @@ $Con->CloseConexion();
   </div>
   <?php
   }  
-  if($TipoUsuario == 3){    
+  if($tipo_usuario == 3){    
   ?>
   <div class = "col-md-2">
 <div class="nav-side-menu">
       <?php $Element = new Elements();
-            echo $Element->CBSessionNombreUsuario($ID_Usuario);
+            echo $Element->CBSessionNombreUsuario($id_usuario);
       ?>
     <div class="brand">General</div>
     <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
@@ -543,7 +584,7 @@ $Con->CloseConexion();
       <?php        
     }
     ?>
-    <?php if($TipoUsuario == 1){ 
+    <?php if($tipo_usuario == 1){ 
       // $CtrGeneral = new CtrGeneral();
       // SOLICITUDES
       $CantUnif = $CtrGeneral->getCantSolicitudes_Unificacion();
@@ -667,24 +708,6 @@ if(isset($_REQUEST['Mensaje'])){
 }
 ?>
 <?php
-/*
- *
- * This file is part of Rastreador3.
- *
- * Rastreador3 is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Rastreador3 is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Rastreador3; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- */
 ?>
 </body>
 </html>
