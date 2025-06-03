@@ -148,15 +148,14 @@ class Parametria implements JsonSerializable {
         ];
     }
 
-    public function update() 
+    public function update($coneccion) 
     {
         $consulta = "update parametrias 
                         set valor = " . ((!is_null($this->get_valor())) ? "'" . $this->get_valor() . "'" : "null") . "
                         where codigo = '" . $this->get_codigo() . "'";
                         $mensaje_error_consulta = "No se pudo actualizar la Parametria";
-                        if (!$Ret = mysqli_query($this->coneccion_base->Conexion, $consulta)) {
-                        throw new Exception($mensaje_error_consulta . $consulta, 2);
+                        if (!$Ret = mysqli_query($coneccion->Conexion, $consulta)) {
+                            throw new Exception($mensaje_error_consulta . $consulta, 2);
                     }
-                    $this->coneccion_base->CloseConexion();
     }
 }

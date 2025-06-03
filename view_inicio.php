@@ -38,7 +38,8 @@ $account = new Account(account_id: $id_usuario);
 $tipo_usuario = $account->get_id_tipo_usuario();
 
 $fecha_actual = new DateTime(date("Y-m-d"));
-$fecha_update = new DateTime(Parametria::get_value_by_code($Con, "UPDATE_FECHA_PERSONA"));
+$value = new Parametria(coneccion_base: $Con, codigo: "UPDATE_FECHA_PERSONA");
+$fecha_update = new DateTime($value->get_valor());
 if ($fecha_actual > $fecha_update) {
   $consultar_datos_personas = "UPDATE persona p
                                SET edad = (SELECT TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE())
@@ -57,6 +58,8 @@ if ($fecha_actual > $fecha_update) {
                       $Con->Conexion,
                       $consultar_datos_personas
                     ) or die($mensaje_error_datos_personas);
+  $value->set_valor(date("Y-m-d"));
+  $value->update();
 }
 $Con->CloseConexion();
 
