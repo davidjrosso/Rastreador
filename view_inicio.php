@@ -42,8 +42,8 @@ $value = new Parametria(coneccion_base: $Con, codigo: "UPDATE_FECHA_PERSONA");
 $fecha_update = new DateTime($value->get_valor());
 if ($fecha_actual > $fecha_update) {
   $consultar_datos_personas = "UPDATE persona p
-                               SET edad = TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE()),
-                                   meses = MOD(TIMESTAMPDIFF(MONTH, fecha_nac, CURDATE()), 12)
+                               SET edad = IF(fecha_nac >= CURDATE() , 0, TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE())),
+                                   meses = IF(fecha_nac >= CURDATE(), 0, MOD(TIMESTAMPDIFF(MONTH, fecha_nac, CURDATE()), 12))
                                WHERE  id_persona in (select id_persona
                                                      from persona 
                                                      where fecha_nac is not null
