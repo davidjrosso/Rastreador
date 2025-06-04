@@ -58,9 +58,11 @@ $Con->CloseConexion();
   <script src="./dist/control.js"></script>
 
   <script>
-    var cantBarrios = 1;
-    var cantMotivos = 3;
+    let cantBarrios = 1;
+    let cantMotivos = 3;
     let listaMotivos = new Map();
+    let time = null;
+    let idTime = null;
     $(document).ready(function(){
               var date_input=$('input[name="Fecha_Desde"]');
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
@@ -102,6 +104,66 @@ $Con->CloseConexion();
                 controlMovimiento(this);
               });
               $("#width-display").prop("value", window.screen.availWidth);
+
+              $("#Edad_Desde").on("mouseenter", function () {
+                $("#edad-desde-dato").html(toastMessage());
+                time = setTimeout(function () {
+                    $("#edad-desde-toast").show();
+                    idTime = setTimeout(function () {
+                        $("#edad-desde-toast").hide();
+                    }, 3200);
+                }, 1000);
+              }).on("mouseleave", function () {
+                $("#edad-desde-toast").hide();
+                clearTimeout(time);
+              }).on("input", function () {
+                $("#edad-desde-dato").html(toastMessage());
+              });
+
+              $("#Edad_Hasta").on("mouseenter", function () {
+                $("#edad-hasta-dato").html(toastMessage());
+                time = setTimeout(function () {
+                    $("#edad-hasta-toast").show();
+                    idTime = setTimeout(function () {
+                        $("#edad-hasta-toast").hide();
+                    }, 3200);
+                }, 1000);
+              }).on("mouseleave", function () {
+                $("#edad-hasta-toast").hide();
+                clearTimeout(time);
+              }).on("input", function () {
+                $("#edad-hasta-dato").html(toastMessage());
+              });;
+
+              $("#Meses_Desde").on("mouseenter", function () {
+                $("#meses-desde-dato").html(toastMessage());
+                time = setTimeout(function () {
+                    $("#meses-desde-toast").show();
+                    idTime = setTimeout(function () {
+                        $("#meses-desde-toast").hide();
+                    }, 3200);
+                }, 1000);
+              }).on("mouseleave", function () {
+                $("#meses-desde-toast").hide();
+                clearTimeout(time);
+              }).on("input", function () {
+                $("#meses-desde-dato").html(toastMessage());
+              });
+
+              $("#Meses_Hasta").on("mouseenter", function () {
+                $("#meses-hasta-dato").html(toastMessage());
+                time = setTimeout(function () {
+                    $("#meses-hasta-toast").show();
+                    idTime = setTimeout(function () {
+                        $("#meses-hasta-toast").hide();
+                    }, 3200);
+                }, 1000);
+              }).on("mouseleave", function () {
+                $("#meses-hasta-toast").hide();
+                clearTimeout(time);
+              }).on("input", function () {
+                $("#meses-hasta-dato").html(toastMessage());
+              });
           });
    
     function buscarPersonas(){
@@ -116,6 +178,25 @@ $Con->CloseConexion();
       }
       xmlhttp.open('POST', 'buscarPersonas.php?valorBusqueda='+textoBusqueda, true);
       xmlhttp.send();
+    }
+
+    function toastMessage(){
+      let edadHasta = $("#Edad_Hasta").prop("value");
+      let edadDesde = $("#Edad_Desde").prop("value");
+      let mesesDesde = $("#Meses_Desde").prop("value");
+      let mesesHasta = $("#Meses_Hasta").prop("value");
+      let dato = "Personas desde " + edadDesde + " años y " + mesesDesde + " meses a " +
+                  edadHasta + " años y " + mesesHasta + " meses";
+      if (!edadHasta) {
+        if (!mesesDesde) {
+          dato = dato + " hasta " +
+                  edadDesde + " años y " + mesesHasta + " meses ";
+        } else {
+          dato = dato + " hasta " +
+                  edadHasta + " años y " + mesesHasta + " meses ";
+        }
+      }
+      return dato;
     }
 
     function buscarMotivos() {
@@ -570,30 +651,58 @@ $Con->CloseConexion();
             <div class="row LblForm col-md-2" style="margin-bottom: 1.04%; font-size: 1.031rem">
               Edad <br>
             </div>
-            <div class="form-group row">
-                  <label for="Edad_Desde" class="col-md-2 col-form-label LblForm">Desde (años): </label>
-                  <div class="col-md-10">
-                      <input type="number" name="Edad_Desde" id="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarMeses(this)">
-                      <input type="hidden" name="ID_Persona" id = "ID_Persona" value = "0">
+            <div class="form-group row" style="position: relative;">
+              <label for="Edad_Desde" class="col-md-2 col-form-label LblForm">Desde (años): </label>
+              <div class="col-md-10">
+                  <input type="number" name="Edad_Desde" id="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarMeses(this)">
+                  <input type="hidden" name="ID_Persona" id="ID_Persona" value="0">
+              </div>
+              <div class="position-absolute" style="z-index: 1100; width: auto; right: -20%; top: -83%">
+                <div id="edad-desde-toast" class="toast hide dat-toast" style="width:auto;" role="alert" aria-live="assertive" aria-atomic="true">
+                  <div class="toast-body">
+                    <span id="edad-desde-dato">0</span>
                   </div>
-            </div> 
-            <div class="form-group row">
-                <label for="Edad_Hasta" class="col-md-2 col-form-label LblForm">Hasta (años): </label>
-                <div class="col-md-10">
-                    <input type="number" name="Edad_Hasta" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarMeses(this)">
                 </div>
+              </div>
             </div> 
-            <div class="form-group row">
-                  <label for="Meses_Desde" class="col-md-2 col-form-label LblForm">Desde (Meses): </label>
-                  <div class="col-md-10">
-                      <input type="number" name="Meses_Desde" id="Meses_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarEdad(this)">
+            <div class="form-group row" style="position: relative;">
+              <label for="Edad_Hasta" class="col-md-2 col-form-label LblForm">Hasta (años): </label>
+              <div class="col-md-10">
+                  <input type="number" name="Edad_Hasta" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarMeses(this)">
+              </div>  
+              <div class="position-absolute" style="z-index: 1100; width: auto; right: -20%; top: -83%" data-bs-delay="10">
+                <div id="edad-hasta-toast" class="toast hide dat-toast" style="width:auto;" role="alert" aria-live="assertive" aria-atomic="true">
+                  <div class="toast-body">
+                    <span id="edad-hasta-dato">0</span>
                   </div>
-            </div> 
-            <div class="form-group row">
-                <label for="Meses_Hasta" class="col-md-2 col-form-label LblForm">Hasta (Meses): </label>
-                <div class="col-md-10">
-                    <input type="number" name="Meses_Hasta" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" max="11">
                 </div>
+              </div>
+            </div> 
+            <div class="form-group row" style="position: relative;">
+              <label for="Meses_Desde" class="col-md-2 col-form-label LblForm">Desde (Meses): </label>
+              <div class="col-md-10">
+                  <input type="number" name="Meses_Desde" id="Meses_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarEdad(this)">
+              </div>
+              <div class="position-absolute" style="z-index: 1100; width: auto; right: -20%; top: -83%">
+                <div id="meses-desde-toast" class="toast hide dat-toast" style="width:auto;" role="alert" aria-live="assertive" aria-atomic="true">
+                  <div class="toast-body">
+                    <span id="meses-desde-dato">0</span>
+                  </div>
+                </div>
+              </div>
+            </div> 
+            <div class="form-group row" style="position: relative;">
+              <label for="Meses_Hasta" class="col-md-2 col-form-label LblForm">Hasta (Meses):</label>
+              <div class="col-md-10">
+                  <input type="number" name="Meses_Hasta" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" max="11">
+              </div>
+              <div class="position-absolute" style="z-index: 1100; width: auto; right: -20%; top: -83%">
+                <div id="meses-hasta-toast" class="toast hide dat-toast" style="width:auto;" role="alert" aria-live="assertive" aria-atomic="true">
+                  <div class="toast-body">
+                    <span id="meses-hasta-dato">0</span>
+                  </div>
+                </div>
+              </div>
             </div> 
             <div class="form-group row">
               <label for="ID_Barrio" class="col-md-2 col-form-label LblForm">Barrio: </label>
@@ -1094,6 +1203,7 @@ $Con->CloseConexion();
         </div>
       </div>
       <!-- FIN TOAST PROGRESO ENLACE -->
+
   </div>
 </div>
 </div>
