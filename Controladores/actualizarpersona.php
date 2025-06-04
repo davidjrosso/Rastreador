@@ -6,6 +6,9 @@ try {
 	$flag = set_time_limit(1000);
 	$id_calle = (isset($_REQUEST["id_calle"])) ? $_REQUEST["id_calle"] : null;
 	$id_barrio = (isset($_REQUEST["id_barrio"])) ? $_REQUEST["id_barrio"] : null;
+	$id_motivo = (isset($_REQUEST["motivo"])) ? $_REQUEST["motivo"] : null;
+	$fecha_desde = (isset($_REQUEST["fecha_desde"])) ? $_REQUEST["fecha_desde"] : null;
+	$fecha_desde = (isset($_REQUEST["fecha_hasta"])) ? $_REQUEST["fecha_hasta"] : null;
 	$georeferencia = (isset($_REQUEST["georeferencia"])) ? $_REQUEST["georeferencia"] : null;
 
 	$Con = new Conexion();

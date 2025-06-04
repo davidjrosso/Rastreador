@@ -167,7 +167,7 @@ try {
 		);
 		$accion->save();
 		$Mensaje = "La persona fue registrada Correctamente";
-		header('Location: ../view_newpersonas.php?Mensaje='.$Mensaje);
+		header('Location: ../view_newpersonas.php?Mensaje=' . $Mensaje);
 	}
 	
 } catch (Exception $e) {

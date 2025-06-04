@@ -105,7 +105,7 @@ try {
             $client->refreshToken($refresh_token);
             $newtoken = $client->getAccessToken();
             $parameter_acces->set_valor($newtoken["access_token"]);
-            $parameter_acces->update();
+            $parameter_acces->update($con);
             $client->setAccessToken($newtoken);
         } else {
             $client->setAccessToken($access_token);

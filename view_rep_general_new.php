@@ -1,4 +1,23 @@
 <?php
+  /*
+   *
+   * This file is part of Rastreador3.
+   *
+   * Rastreador3 is free software; you can redistribute it and/or modify
+   * it under the terms of the GNU General Public License as published by
+   * the Free Software Foundation; either version 2 of the License, or
+   * (at your option) any later version.
+   *
+   * Rastreador3 is distributed in the hope that it will be useful,
+   * but WITHOUT ANY WARRANTY; without even the implied warranty of
+   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   * GNU General Public License for more details.
+   *
+   * You should have received a copy of the GNU General Public License
+   * along with Rastreador3; if not, write to the Free Software
+   * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+   */
+
 session_start();
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
 require_once ($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
@@ -278,6 +297,11 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
 
       $("#boton-multi-increment").on("click", function (e) {
         map.incrementar(8);
+      });
+
+      $("#boton-lista-personas").on("click", function (e) {
+        $("#lista-personas-georeferencia").toggle();
+        listarPersonasGeoreferencia(objectJsonTabla);
       });
 
       $("#boton-multi-decrement").on("click", function (e) {
@@ -768,6 +792,37 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
       }
       tabla.scrollLeft(0);
     }
+
+    function listarPersonasGeoreferencia(listaPersonas) {
+      let count = 0;
+      let lista = $(".dropdown-menu");
+      if (lista.length <= 1) {
+        let personas = listaPersonas.sort(function (elementA, elementB) {
+          if (elementA.persona < elementB.persona) {
+            return -1;
+          }
+          if (elementA.persona > elementB.persona) {
+            return 1;
+          }
+          return 0;
+        });
+        personas.forEach(elemento => {
+          let obj = $("<li id='" + elemento.persona + "' class='dropdown-item'>" + 
+                      count++ + " " + elemento.persona + "</li>"
+                    );
+          lista.append(obj);
+          if (!elemento.lat || !elemento.lon) {
+              obj.css("background-color","rgb(229 233 232)");
+          }
+
+          obj.on("click", function () {
+          if (elemento.lat && elemento.lon) {
+            map.addPersonMap(elemento.lat, elemento.lon);
+          }
+          });
+        });
+      }
+    };
 
     function navegacionConBarVNav(e) {
       var value = parseInt(e.target.value);
@@ -2748,12 +2803,12 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
               <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
             </svg>
           </button> -->
-          <!--<button type="button" id="boton-lista-personas" class="button-plus" aria-label="plus">
+          <button type="button" id="boton-lista-personas" class="button-plus" aria-label="plus">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
               <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
               <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
             </svg>
-          </button>-->
+          </button>
           <button type="button" id="boton-calendario" class="button-calendar" aria-label="calendar" style="display: none;">
             <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" class="bi bi-calendar-check" viewBox="0 0 16 16" style="margin-bottom: 5px;">
               <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
@@ -2800,11 +2855,9 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             }
             ?>
           </div>
-          <div id="lista-personas-georeferencia">
-            <div class="dropdown-menu">
-              <h6 class="dropdown-header">Dropdown header</h6>
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
+          <div id="lista-personas-georeferencia" class="dropdown" style="position: absolute; top: 1px; display: none;"  aria-labelledby="dropdownMenuButton1">
+            <div class="dropdown-menu" style="display: block; top: 1px; max-height: 325px; overflow-y: auto; overflow-x: hidden; width: 255px;">
+              <h6 class="dropdown-header">personas</h6>
             </div>
           </div>
           <input id="barra-temporal-motivos" type="range" value="0" min="0" max="100" data-prev-value="0"
@@ -3002,36 +3055,17 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
 
     if (!map) {
       map = initAnimation(
-                          <?php echo ($geo_lat_barrio ? $geo_lat_barrio : "null"); ?>,
-                          <?php echo ($geo_lon_barrio ? $geo_lon_barrio : "null"); ?>,
+                          <?php echo (!empty($geo_lat_barrio) ? $geo_lat_barrio : "null"); ?>,
+                          <?php echo (!empty($geo_lon_barrio) ? $geo_lon_barrio : "null"); ?>,
                           null,
-                          '<?php echo ($fecha_init_animacion ? $fecha_init_animacion : "null"); ?>',
-                          '<?php echo ($fecha_end_animacion ? $fecha_end_animacion : "null"); ?>'
+                          '<?php echo (!empty($fecha_init_animacion) ? $fecha_init_animacion : "null"); ?>',
+                          '<?php echo (!empty($fecha_end_animacion) ? $fecha_end_animacion : "null"); ?>'
                         );
       carga(map, objectJsonTabla);
     };
 
   </script>
   <?php
-
-  /*
-   *
-   * This file is part of Rastreador3.
-   *
-   * Rastreador3 is free software; you can redistribute it and/or modify
-   * it under the terms of the GNU General Public License as published by
-   * the Free Software Foundation; either version 2 of the License, or
-   * (at your option) any later version.
-   *
-   * Rastreador3 is distributed in the hope that it will be useful,
-   * but WITHOUT ANY WARRANTY; without even the implied warranty of
-   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   * GNU General Public License for more details.
-   *
-   * You should have received a copy of the GNU General Public License
-   * along with Rastreador3; if not, write to the Free Software
-   * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-   */
   ?>
 </body>
 

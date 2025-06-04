@@ -190,14 +190,24 @@ export class MapaOl {
         let pos = [parseFloat(lat), parseFloat(lon)];
         let point = new Point(pos);
         let vectorLayer = null;
-
+        let icon = null;
+        let list = null;
         vectorLayer = this.#mapa.getLayers();
 
-        if (vectorLayer.item(2)) {
-          vectorLayer.item(2).getSource().getFeatures()[0].setGeometry(point);
+        if (vectorLayer.item(4)) {
+          list = vectorLayer.item(4).getSource().getFeatures();
+          icon = list.at(-1);
+        } else {
+          list = vectorLayer.item(2).getSource().getFeatures();
+          icon = list.at(-1);
+        }
+
+        if (icon && icon.values_.descripcion == "icono") {
+           icon.setGeometry(point);
         } else {
           let iconFeature = new Feature({
-            geometry: point
+            geometry: point,
+            descripcion: "icono"
           });
           iconFeatures.push(iconFeature);
           let vectorSource = new olSource.Vector({
@@ -220,6 +230,8 @@ export class MapaOl {
           });
           this.#mapa.addLayer(vectorLayer);
         }
+        
+        this.#mapa.getView().setCenter(pos);
     }
 
     addIconLayerR(

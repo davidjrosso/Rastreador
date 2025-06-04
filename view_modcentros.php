@@ -1,23 +1,19 @@
 <?php 
 session_start(); 
-require_once "Controladores/Elements.php";
-require_once "Controladores/CtrGeneral.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Elements.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/CtrGeneral.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/CentroSalud.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Account.php';
 header("Content-Type: text/html;charset=utf-8");
 
-/*     CONTROL DE USUARIOS                    */
+
 if(!isset($_SESSION["Usuario"])){
     header("Location: Error_Session.php");
 }
 
-$Con = new Conexion();
-$Con->OpenConexion();
 $ID_Usuario = $_SESSION["Usuario"];
-$ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
-$MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
-$EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
-$Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
-$TipoUsuario = $Ret["ID_TipoUsuario"];
-$Con->CloseConexion();
+$usuario = new Account(account_id: $ID_Usuario); 
+$TipoUsuario = $usuario->get_id_tipo_usuario();
 ?>
 <!DOCTYPE html>
 <html>
@@ -27,21 +23,19 @@ $Con->CloseConexion();
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-  <!--<link href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-  <!--<script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script> -->
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
-
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-  <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="./dist/alerta.js"></script>
   <script>
+
+    var cantArchivo = 0;
        $(document).ready(function(){
-              var date_input=$('input[name="date"]'); //our date input has the name "date"
+              var date_input=$('input[name="date"]');
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
               date_input.datepicker({
                   format: 'dd/mm/yyyy',
@@ -51,18 +45,42 @@ $Con->CloseConexion();
               });
           });
 
-       function CalcularPrecio(){
-        //var Combus = document.getElementById("Combustible").value;
-        var Litros = document.getElementById("Litros").value;
-        var Combustible = document.getElementById("Combustible");
-        var PrecioxL = Combustible.options[Combustible.selectedIndex].getAttribute("name");
-        
-        var Total = parseFloat(PrecioxL) * parseFloat(Litros);
+          function validarNombreArchivo() {
+          }
 
-        var Precio = document.getElementById("Precio");
-        Precio.setAttribute("value",parseFloat(Total).toFixed(2));
-        //Terminar esta parte cuando termine lo demas.
-       }
+    function agregarArchivo(){
+      cantArchivo++;
+      var divContenedor = document.getElementById('contenedor-archivos');
+      var divBarrio = document.createElement("div");
+      divBarrio.setAttribute('class','form-group row');
+      var labelBarrio = document.createElement("label");
+      labelBarrio.setAttribute('class','col-md-2 col-form-label LblForm');
+      labelBarrio.innerText = 'Barrio ' + cantArchivo + ':';
+      var divSelectBarrio = document.createElement("div");
+      divSelectBarrio.setAttribute('class','col-md-10');
+      var select = `<?php $Element = new Elements(); echo $Element->CBRepBarrios(); ?>`;
+      divSelectBarrio.innerHTML = select;      
+      divBarrio.appendChild(labelBarrio);
+      divBarrio.appendChild(divSelectBarrio);
+      divContenedor.appendChild(divBarrio);
+    }
+
+    function agregarPlanilla(){
+      cantBarrios++;
+      var divContenedor = document.getElementById('contenedor-planillas');
+      var divBarrio = document.createElement("div");
+      divBarrio.setAttribute('class','form-group row');
+      var labelBarrio = document.createElement("label");
+      labelBarrio.setAttribute('class','col-md-2 col-form-label LblForm');
+      labelBarrio.innerText = 'Barrio '+cantBarrios+':';
+      var divSelectBarrio = document.createElement("div");
+      divSelectBarrio.setAttribute('class','col-md-10');
+      var select = `<?php $Element = new Elements(); echo $Element->CBRepBarrios(); ?>`;
+      divSelectBarrio.innerHTML = select;      
+      divBarrio.appendChild(labelBarrio);
+      divBarrio.appendChild(divSelectBarrio);
+      divContenedor.appendChild(divBarrio);
+    }
 
   </script>
 
@@ -88,42 +106,94 @@ $Con->CloseConexion();
         <div class = "row">
           <?php  
             if(isset($_REQUEST["ID"]) && $_REQUEST["ID"]!=null){
-              $ID_Centro = $_REQUEST["ID"];
+              $id_centro = $_REQUEST["ID"];
 
-              $Con = new Conexion();
-              $Con->OpenConexion();
+              $con = new Conexion();
+              $con->OpenConexion();
+              $centro_salud = new CentroSalud(
+                                              coneccion_base: $con, 
+                                              id_centro: $id_centro
+                                            );
 
-              $ConsultarDatos = "select * from centros_salud where id_centro = $ID_Centro";
-              $MensajeErrorDatos = "No se pudo consultar los Datos del Responsable";
+              $id_centro = $centro_salud->get_id_centro();
+              $centro_salud_nombre = $centro_salud->get_centro_salud();
 
-              $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
+              $consulta = "select * from archivos where centro_salud = $id_centro";
+              $mensaje = "Error al consultar los registros de archivos";
+              $result = mysqli_query($con->Conexion,$consulta) or die($mensaje);
 
-              $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
-
-              $ID_Centro = $Ret["id_centro"];
-              $Centro_Salud = $Ret["centro_salud"];
-
-              ?>
+            ?>
             <div class = "col-10">
-            <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/ModificarCentroSalud.php">
+            <form method="post" onKeydown="return event.key != 'Enter';" action = "Controladores/ModificarCentroSalud.php">
                 <!-- <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Id: </label>
                   <div class="col-md-10">
                     <label for="inputPassword" class="col-md-2 col-form-label LblForm">< ?php echo $ID_Centro; ?></label>
                   </div>
                 </div> -->
-                <input type="hidden" name="ID" value = "<?php echo $ID_Centro; ?>">
+                <input type="hidden" name="ID" value = "<?php echo $id_centro; ?>">
                 <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Centro Salud: </label>
+                  <label for="Centro_Salud" class="col-md-2 col-form-label LblForm">Centro Salud: </label>
                   <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Centro_Salud" id="inputPassword" autocomplete="off" value = "<?php echo $Centro_Salud; ?>">
+                    <input type="text" class="form-control" name = "Centro_Salud" id="Centro_Salud" 
+                           autocomplete="off" value = "<?php echo $centro_salud_nombre; ?>"
+                           onclick="validarNombreArchivo()" >
                   </div>
+                </div>
+                <?php 
+                  $max_count = mysqli_num_rows($result);
+                  $count = 0;
+                  while($row = mysqli_fetch_array($result)) {
+                    if ($count == 0) {
+                ?>
+                <div class="form-group row">
+                  <label for="archivo" class="col-md-2 col-form-label LblForm">Archivo: </label>
+                  <div class="col-md-8">
+                    <input type="text" class="form-control" name = "archivo" id="archivo" autocomplete="off" value = "<?php echo $row["archivo"]; ?>">
+                  </div>
+                  <div class="col-md-1">
+                    <button type="button" class="btn btn-primary" onClick="agregarArchivo()" id="agregar-archivo-id">+</button>
+                  </div>
+                  <div class="col-md-1">
+                    <button type="button" class="btn btn-primary" onClick="agregarArchivo()" id="agregar-archivo-id">&#xF2A7;</button>
+                  </div>
+                </div>
+                <?php
+                    }
+                ?>
+                <div class="form-group row">
+                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Planilla: </label>
+                  <div class="col-md-7">
+                    <input type="text" class="form-control" name = "planilla" id="planilla" autocomplete="off" value = "<?php echo $row["planilla"]; ?>">
+                  </div>
+                  <?php
+                    if ($count + 1 == $max_count) {
+                  ?>
+                  <div class="col-md-1">
+                    <button type="button" class="btn btn-primary" onClick="agregarPlanilla()" id="agregar-planilla-id">+</button>
+                  </div>
+                  <div class="col-md-1">
+                    <button type="button" class="btn btn-primary" onClick="agregarPlanilla()" id="agregar-planilla-id">&#xF2A7;</button>
+                  </div>
+                  <?php
+                    }
+                  ?>
+                  <div class="col-md-1">
+                    <button type="button" class="btn btn-primary" onClick="georeferenciaPersonasExcel(<?php echo $row["id_archivo"];?>, <?php echo $id_centro;?>)" id="georeferencia-personas-planilla">&#xF2A7;</button>
+                  </div>
+                </div>
+                <div id="contenedor-planilla">
+                </div>
+                <?php
+                  $count++;
+                }
+                ?>
+                <div id="contenedor-archivos">
                 </div>
                 <div class="form-group row">
                   <div class="offset-md-2 col-md-10">
                     <button type="submit" class="btn btn-outline-success">Guardar</button>
                     <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_centros.php'">Atras</button>
-                    
                   </div>
                 </div>
             </form>
@@ -135,7 +205,7 @@ $Con->CloseConexion();
             </div>
             </div>
               <?php  
-            }else{
+            } else {
               $Mensaje = "No se pudo consultar los Datos porque no se pudo obtener el ID del Motivo";
               echo $Mensaje;
             }

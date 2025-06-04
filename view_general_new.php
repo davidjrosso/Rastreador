@@ -19,9 +19,9 @@
  */
 
 session_start(); 
-require_once ($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once ($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once ($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 header("Content-Type: text/html;charset=utf-8");
 
 if(!isset($_SESSION["Usuario"])){

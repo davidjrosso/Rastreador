@@ -1,8 +1,9 @@
 <?php 
 session_start(); 
-require_once "Controladores/Elements.php";
-require_once "Controladores/CtrGeneral.php";
-require_once "Controladores/Conexion.php";
+require_once ($_SERVER["DOCUMENT_ROOT"] . "Controladores/Elements.php");
+require_once ($_SERVER["DOCUMENT_ROOT"] . "Controladores/CtrGeneral.php");
+require_once ($_SERVER["DOCUMENT_ROOT"] . "Controladores/Conexion.php");
+require_once ($_SERVER["DOCUMENT_ROOT"] . "Modelo/Account.php");
 header("Content-Type: text/html;charset=utf-8");
 
 /*     CONTROL DE USUARIOS                    */
@@ -13,11 +14,8 @@ if(!isset($_SESSION["Usuario"])){
 $Con = new Conexion();
 $Con->OpenConexion();
 $ID_Usuario = $_SESSION["Usuario"];
-$ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
-$MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
-$EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
-$Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
-$TipoUsuario = $Ret["ID_TipoUsuario"];
+$account = new Account(account_id: $ID_Usuario);
+$TipoUsuario = $account->get_id_tipo_usuario();
 $Con->CloseConexion();
 ?>
 <!DOCTYPE html>
@@ -28,16 +26,12 @@ $Con->CloseConexion();
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-  <!--<link href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-  <!--<script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script> -->
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-  <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>   
   <script src="js/FileSaver.js"></script> 
   <script src="js/jquery.wordexport.js"></script> 

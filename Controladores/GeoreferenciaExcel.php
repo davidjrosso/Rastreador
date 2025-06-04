@@ -410,7 +410,6 @@
 							$valor["persona"]->setGeoreferencia(null);
 						}
 
-						
 					}
 					curl_close($ch);
 				}
