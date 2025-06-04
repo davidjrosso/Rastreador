@@ -4,6 +4,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
 require_once ($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
 require_once ($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
 require_once ($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 require_once ($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Motivo.php");
 require_once ($_SERVER["DOCUMENT_ROOT"] . "/sys_config.php");
 require_once ($_SERVER["DOCUMENT_ROOT"] . "/dompdf/autoload.inc.php");
@@ -16,16 +17,11 @@ if (!isset($_SESSION["Usuario"])) {
   header("Location: Error_Session.php");
 }
 
-$Con = new Conexion();
-$Con->OpenConexion();
 $ID_Usuario = $_SESSION["Usuario"];
-$ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
-$MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
-$EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion, $ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
-$Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
-$TipoUsuario = $Ret["ID_TipoUsuario"];
+
+$usuario = new Account(account_id: $ID_Usuario);
+$TipoUsuario = $usuario->get_id_tipo_usuario();
 $_SESSION["reporte_grafico"] = true;
-$Con->CloseConexion();
 $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"] : null;
 
 if (isset($_REQUEST["Fecha_Desde"])) {
@@ -1468,7 +1464,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
               if ($Meses_Desde !== null && $Meses_Desde !== "" && $Meses_Hasta !== null && $Meses_Hasta !== "") {
                 $persona_query .= " and meses <= $Meses_Hasta and edad = 0 ";
                 if ($Meses_Desde != null) {
-                  $Consulta .= " and meses >= $Meses_Desde";
+                  $persona_query .= " and meses >= $Meses_Desde";
                   $filtros[] = "Meses: Desde " . $Meses_Desde . " hasta " . $Meses_Hasta;
                 } else {
                   $filtros[] = "Meses: Desde 0 hasta " . $Meses_Hasta;
