@@ -1,22 +1,23 @@
 <?php
+
 /*
-  *
-  * This file is part of Rastreador3.
-  *
-  * Rastreador3 is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License as published by
-  * the Free Software Foundation; either version 2 of the License, or
-  * (at your option) any later version.
-  *
-  * Rastreador3 is distributed in the hope that it will be useful,
-  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  * GNU General Public License for more details.
-  *
-  * You should have received a copy of the GNU General Public License
-  * along with Rastreador3; if not, write to the Free Software
-  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-  */
+*
+* This file is part of Rastreador3.
+*
+* Rastreador3 is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* Rastreador3 is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Rastreador3; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+*/
 
 session_start();
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
@@ -297,6 +298,11 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
 
       $("#boton-multi-increment").on("click", function (e) {
         map.incrementar(8);
+      });
+
+      $("#boton-lista-personas").on("click", function (e) {
+        $("#lista-personas-georeferencia").toggle();
+        listarPersonasGeoreferencia(objectJsonTabla);
       });
 
       $("#boton-multi-decrement").on("click", function (e) {
@@ -787,6 +793,37 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
       }
       tabla.scrollLeft(0);
     }
+
+    function listarPersonasGeoreferencia(listaPersonas) {
+      let count = 0;
+      let lista = $(".dropdown-menu");
+      if (lista.length <= 1) {
+        let personas = listaPersonas.sort(function (elementA, elementB) {
+          if (elementA.persona < elementB.persona) {
+            return -1;
+          }
+          if (elementA.persona > elementB.persona) {
+            return 1;
+          }
+          return 0;
+        });
+        personas.forEach(elemento => {
+          let obj = $("<li id='" + elemento.persona + "' class='dropdown-item'>" + 
+                      count++ + " " + elemento.persona + "</li>"
+                    );
+          lista.append(obj);
+          if (!elemento.lat || !elemento.lon) {
+              obj.css("background-color","rgb(229 233 232)");
+          }
+
+          obj.on("click", function () {
+          if (elemento.lat && elemento.lon) {
+            map.addPersonMap(elemento.lat, elemento.lon);
+          }
+          });
+        });
+      }
+    };
 
     function navegacionConBarVNav(e) {
       var value = parseInt(e.target.value);
@@ -2819,11 +2856,9 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             }
             ?>
           </div>
-          <div id="lista-personas-georeferencia">
-            <div class="dropdown-menu">
-              <h6 class="dropdown-header">Dropdown header</h6>
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
+          <div id="lista-personas-georeferencia" class="dropdown" style="position: absolute; top: 1px; display: none;"  aria-labelledby="dropdownMenuButton1">
+            <div class="dropdown-menu" style="display: block; top: 1px; max-height: 325px; overflow-y: auto; overflow-x: hidden; width: 255px;">
+              <h6 class="dropdown-header">personas</h6>
             </div>
           </div>
           <input id="barra-temporal-motivos" type="range" value="0" min="0" max="100" data-prev-value="0"
@@ -3021,11 +3056,11 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
 
     if (!map) {
       map = initAnimation(
-                          <?php echo ($geo_lat_barrio ? $geo_lat_barrio : "null"); ?>,
-                          <?php echo ($geo_lon_barrio ? $geo_lon_barrio : "null"); ?>,
+                          <?php echo (!empty($geo_lat_barrio) ? $geo_lat_barrio : "null"); ?>,
+                          <?php echo (!empty($geo_lon_barrio) ? $geo_lon_barrio : "null"); ?>,
                           null,
-                          '<?php echo ($fecha_init_animacion ? $fecha_init_animacion : "null"); ?>',
-                          '<?php echo ($fecha_end_animacion ? $fecha_end_animacion : "null"); ?>'
+                          '<?php echo (!empty($fecha_init_animacion) ? $fecha_init_animacion : "null"); ?>',
+                          '<?php echo (!empty($fecha_end_animacion) ? $fecha_end_animacion : "null"); ?>'
                         );
       carga(map, objectJsonTabla);
     };

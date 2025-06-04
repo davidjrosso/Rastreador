@@ -61,38 +61,38 @@ class Solicitud_Usuario{
     }
 
     public function save() {
-    $Con = new Conexion();
-    $Con->OpenConexion();
-    $fecha = date(format: "Y-m-d");
-    $Insert_Solicitud = "insert into solicitudes_usuarios( 
-        fecha,
-        descripcion,
-        password,
-        tipo,
-        usuario,
-        estado
-        ) values(
-            '" . (($this->get_fecha()) ? $this->get_fecha() : $fecha) . "',
-            '" . $this->get_descripcion() . "',
-            " . (($this->get_password()) ? "'" . $this->get_password() . "'" : 'null') . ",
-            " . $this->get_tipo() . ",
-            " . $this->get_usuario() . ",
-            " . $this->get_estado() . "
-        )";
-    $MensajeError = "No se pudo enviar la solicitud";
-    mysqli_query($Con->Conexion,$Insert_Solicitud) or die($MensajeError);
-    $Con->CloseConexion(); 
+        $Con = new Conexion();
+        $Con->OpenConexion();
+        $fecha = date(format: "Y-m-d");
+        $Insert_Solicitud = "insert into solicitudes_usuarios( 
+                                                            fecha,
+                                                            descripcion,
+                                                            password,
+                                                            tipo,
+                                                            usuario,
+                                                            estado
+                                                            ) values(
+                                                                '" . (($this->get_fecha()) ? $this->get_fecha() : $fecha) . "',
+                                                                '" . $this->get_descripcion() . "',
+                                                                " . (($this->get_password()) ? "'" . $this->get_password() . "'" : 'null') . ",
+                                                                " . $this->get_tipo() . ",
+                                                                " . $this->get_usuario() . ",
+                                                                " . $this->get_estado() . "
+                                                            )";
+        $MensajeError = "No se pudo enviar la solicitud";
+        mysqli_query($Con->Conexion,$Insert_Solicitud) or die($MensajeError);
+        $Con->CloseConexion(); 
     }
 
     public function delete() {
-    $Con = new Conexion();
-    $Con->OpenConexion();
-    $delete_solicitud = "update solicitudes_usuarios 
-    set estado = 0 
-    where id_solicitud = " . $this->get_id_solicitud();
-    $MensajeError = "No se pudo enviar la solicitud";
-    mysqli_query($Con->Conexion,$delete_solicitud) or die($MensajeError);
-    $Con->CloseConexion(); 
+        $Con = new Conexion();
+        $Con->OpenConexion();
+        $delete_solicitud = "update solicitudes_usuarios 
+                             set estado = 0 
+                             where id_solicitud = " . $this->get_id_solicitud();
+        $MensajeError = "No se pudo enviar la solicitud";
+        mysqli_query($Con->Conexion,$delete_solicitud) or die($MensajeError);
+        $Con->CloseConexion();
     }
 
     //METODOS SET

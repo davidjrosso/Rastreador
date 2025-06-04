@@ -3020,6 +3020,7 @@ class CtrGeneral{
 		$MessageError = "Problemas al intentar mostrar Notificaciones";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
+		$Table = "";
 		if ($Regis > 0) {
 			$Table = "<table id='solicitud-usuario' class='table-responsive table-bordered'>
 						<thead>
@@ -3053,8 +3054,6 @@ class CtrGeneral{
 						   </tr>";
 			}			
 			$Table .= "</table>";
-		} else {
-			$Table = "No existen solicitudes de unificación pendientes de aprobación.";
 		}
 		$Con->CloseConexion();
 		

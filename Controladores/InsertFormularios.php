@@ -34,6 +34,7 @@
 
 			$client->addScope([Google_Service_Drive::DRIVE_READONLY]);
 			$client->addScope([Google_Service_Sheets::SPREADSHEETS]);
+
 			$service_sheets = new Google_Service_Sheets($client);
 			$range = 'A1:P';
 			$result = $service_sheets->spreadsheets_values->get($file_id, $range);
