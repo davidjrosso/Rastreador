@@ -2857,7 +2857,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             ?>
           </div>
           <div id="lista-personas-georeferencia" class="dropdown" style="position: absolute; top: 1px; display: none;"  aria-labelledby="dropdownMenuButton1">
-            <div class="dropdown-menu" style="display: block; top: 1px; max-height: 325px; overflow-y: auto; overflow-x: hidden; width: 255px;">
+            <div class="dropdown-menu" style="display: block; top: 1px; max-height: 325px; overflow-y: auto; overflow-x: hidden; width: 255px; font-size: 0.90rem;">
               <h6 class="dropdown-header" style="text-align: center">Personas</h6>
             </div>
           </div>
