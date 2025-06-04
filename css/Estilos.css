@@ -723,6 +723,11 @@ select[class~="form-control"] {
   appearance: auto;
 }
 
+.dat-toast {
+  color: white !important;
+  background-color: rgb(0 1 2 / 61%) !important;
+}
+
 .clock {
   position: absolute;
   top: 50%;
