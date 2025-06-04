@@ -302,7 +302,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
 
       $("#boton-lista-personas").on("click", function (e) {
         $("#lista-personas-georeferencia").toggle();
-        listarPersonasGeoreferencia(objectJsonTabla);
+        listarPersonasGeoreferencia(map, objectJsonTabla);
       });
 
       $("#boton-multi-decrement").on("click", function (e) {
@@ -794,9 +794,10 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
       tabla.scrollLeft(0);
     }
 
-    function listarPersonasGeoreferencia(listaPersonas) {
+    function listarPersonasGeoreferencia(map, listaPersonas) {
       let count = 0;
       let lista = $(".dropdown-menu");
+      map.removIcon();
       if (lista.length <= 1) {
         let personas = listaPersonas.sort(function (elementA, elementB) {
           if (elementA.persona < elementB.persona) {

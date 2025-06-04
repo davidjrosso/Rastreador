@@ -185,6 +185,29 @@ export class MapaOl {
       });
     }
 
+    removIcon() {
+        let vectorLayer = null;
+        let icon = null;
+        let list = null;
+        vectorLayer = this.#mapa.getLayers();
+
+        if (vectorLayer.item(4)) {
+          list = vectorLayer.item(4).getSource().getFeatures();
+          icon = list.at(-1);
+          if (icon && icon.values_.descripcion == "icono") {
+            //vectorLayer.item(4).getSource().removeFeature(icon);
+            this.#mapa.removeLayer(vectorLayer.item(4));
+          }
+        } else {
+          list = vectorLayer.item(2).getSource().getFeatures();
+          icon = list.at(-1);
+          if (icon && icon.values_.descripcion == "icono") {
+            //vectorLayer.item(2).getSource().removeFeature(icon);
+            this.#mapa.removeLayer(vectorLayer.item(2));
+          }
+        }
+    }
+
     addIcon(lon, lat, imagen) {
         let iconFeatures=[];
         let pos = [parseFloat(lat), parseFloat(lon)];
@@ -209,6 +232,11 @@ export class MapaOl {
             geometry: point,
             descripcion: "icono"
           });
+
+          if (vectorLayer.item(4)) {
+            this.#mapa.removeLayer(vectorLayer.item(4));
+          }
+
           iconFeatures.push(iconFeature);
           let vectorSource = new olSource.Vector({
             features: iconFeatures
