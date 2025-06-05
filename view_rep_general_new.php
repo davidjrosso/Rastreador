@@ -1514,7 +1514,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
               if ($Meses_Hasta !== null && $Meses_Hasta !== "") {
                 $persona_query .= " and (edad < $Edad_Hasta or meses <= $Meses_Hasta)";
                 if ($Meses_Desde != null) {
-                  $Consulta .= " and meses >= $Meses_Desde ";
+                  $persona_query .= " and meses >= $Meses_Desde ";
                   $filtros[] = "Meses: Desde " . $Meses_Desde . " hasta " . $Meses_Hasta;
                 } else {
                   $filtros[] = "Meses: Desde 0 hasta " . $Meses_Hasta;
@@ -1845,6 +1845,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             <?php
           
             $tomarRetTodos = array();
+
             $Ejecutar_Consulta_general = mysqli_query($Con->Conexion, $Consulta) or die("Error al consultar datos");
             $Con->ResultSet = $Ejecutar_Consulta_general;
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
