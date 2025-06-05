@@ -1,7 +1,8 @@
 <?php 
 session_start(); 
-require_once "Controladores/Elements.php";
-require_once "Controladores/CtrGeneral.php";
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 header("Content-Type: text/html;charset=utf-8");
 
 /*     CONTROL DE USUARIOS                    */
@@ -9,16 +10,10 @@ if(!isset($_SESSION["Usuario"])){
     header("Location: Error_Session.php");
 }
 
-$Con = new Conexion();
-$Con->OpenConexion();
-$CtrGeneral = new CtrGeneral();
 $ID_Usuario = $_SESSION["Usuario"];
-$ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
-$MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
-$EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
-$Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
-$TipoUsuario = $Ret["ID_TipoUsuario"];
-$Con->CloseConexion();
+$usuario = new Account(account_id: $ID_Usuario);
+$TipoUsuario = $usuario->get_id_tipo_usuario();
+$CtrGeneral = new CtrGeneral();
 ?>
 <!DOCTYPE html>
 <html>
@@ -40,35 +35,23 @@ $Con->CloseConexion();
   <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script>
-       $(document).ready(function(){
-              var date_input=$('input[name="date"]'); //our date input has the name "date"
-              var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-              date_input.datepicker({
-                  format: 'dd/mm/yyyy',
-                  container: container,
-                  todayHighlight: true,
-                  autoclose: true,
-              });
-          });
+    function CalcularPrecio(){
+    //var Combus = document.getElementById("Combustible").value;
+    var Litros = document.getElementById("Litros").value;
+    var Combustible = document.getElementById("Combustible");
+    var PrecioxL = Combustible.options[Combustible.selectedIndex].getAttribute("name");
+    
+    var Total = parseFloat(PrecioxL) * parseFloat(Litros);
 
-       function CalcularPrecio(){
-        //var Combus = document.getElementById("Combustible").value;
-        var Litros = document.getElementById("Litros").value;
-        var Combustible = document.getElementById("Combustible");
-        var PrecioxL = Combustible.options[Combustible.selectedIndex].getAttribute("name");
-        
-        var Total = parseFloat(PrecioxL) * parseFloat(Litros);
-
-        var Precio = document.getElementById("Precio");
-        Precio.setAttribute("value",parseFloat(Total).toFixed(2));
-        //Terminar esta parte cuando termine lo demas.
-       }
+    var Precio = document.getElementById("Precio");
+    Precio.setAttribute("value",parseFloat(Total).toFixed(2));
+    //Terminar esta parte cuando termine lo demas.
+    }
 
   </script>
-
 </head>
 <body>
-<div class = "row">
+<div class="row">
 <?php
   $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_CATEGORIA);
@@ -108,11 +91,11 @@ $Con->CloseConexion();
 
               $Table = "<table id='ImagenDeCategoria' class='table'><thead><tr><th></th><th>Detalles de la Categoria</th></tr></thead>";
 
-              $Table .= "<tr><td>Código</td><td>".$Cod_Categoria."</td></tr>";
-              $Table .= "<tr><td>Categoria</td><td>".$Categoria."</td></tr>";
-              $Table .= "<tr><td>Forma</td><td style='color:".$Color."'>".$Forma_Categoria."</td></tr>";
-              $Table .= "<tr><td>Color</td><td bgcolor='".$Color."'></td></tr>";
-              $Table .= "<tr><td>Permisos</td><td>".$CtrGeneral->getCategorias_Roles_ID($ID_Categoria)."</td></tr>";
+              $Table .= "<tr><td>Código</td><td>" . $Cod_Categoria . "</td></tr>";
+              $Table .= "<tr><td>Denominación</td><td>" . $Categoria . "</td></tr>";
+              $Table .= "<tr><td>Forma</td><td style='color:" . $Color . "'>" . $Forma_Categoria . "</td></tr>";
+              $Table .= "<tr><td>Color</td><td bgcolor='" . $Color . "'></td></tr>";
+              $Table .= "<tr><td>Permisos</td><td>" . $CtrGeneral->getCategorias_Roles_ID($ID_Categoria) . "</td></tr>";
               $Table .= "</table>";
 
               echo $Table;

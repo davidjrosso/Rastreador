@@ -1,7 +1,8 @@
 <?php 
 session_start(); 
-require_once "Controladores/Elements.php";
-require_once "Controladores/CtrGeneral.php";
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 header("Content-Type: text/html;charset=utf-8");
 
 /*     CONTROL DE USUARIOS                    */
@@ -9,15 +10,10 @@ if(!isset($_SESSION["Usuario"])){
     header("Location: Error_Session.php");
 }
 
-$Con = new Conexion();
-$Con->OpenConexion();
 $ID_Usuario = $_SESSION["Usuario"];
-$ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
-$MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
-$EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
-$Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
-$TipoUsuario = $Ret["ID_TipoUsuario"];
-$Con->CloseConexion();
+$usuario = new Account(account_id: $ID_Usuario);
+$TipoUsuario = $usuario->get_id_tipo_usuario();
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -40,34 +36,22 @@ $Con->CloseConexion();
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script>
-       $(document).ready(function(){
-              var date_input=$('input[name="date"]'); //our date input has the name "date"
-              var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-              date_input.datepicker({
-                  format: 'dd/mm/yyyy',
-                  container: container,
-                  todayHighlight: true,
-                  autoclose: true,
-              });
+    function Verificar(xID){
+          swal({
+            title: "¿Está seguro?",
+            text: "¿Seguro de querer eliminar esta categoría?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+              window.location.href = 'Controladores/pedireliminarcategoria.php?ID='+xID;
+              //alert('SI');
+            } else {        
+            }
           });
-
-       function Verificar(xID){
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer eliminar esta categoría?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'Controladores/pedireliminarcategoria.php?ID='+xID;
-                  //alert('SI');
-                } else {        
-                }
-              });
-        }
-
+    }
   </script>
 
 </head>
