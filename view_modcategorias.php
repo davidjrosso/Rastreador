@@ -139,12 +139,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                 </div> -->
                 <input type="hidden" name="ID" value = "<?php echo $ID_Categoria; ?>">
                 <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Código: </label>
-                  <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Codigo" id="inputPassword" autocomplete="off" readonly value = "<?php echo $Cod_Categoria; ?>">
-                  </div>
-                </div>
-                <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Denominación: </label>
                   <div class="col-md-10">
                     <input type="text" class="form-control" name = "Categoria" id="inputPassword" autocomplete="off" value = "<?php echo $Categoria; ?>">
@@ -155,6 +149,25 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   <div class="col-md-10">                   
                     <?php $Element = new Elements();
                     echo $Element->CBModFormas_Categoria($ID_Forma);?>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Código: </label>
+                  <div class="col-md-10">
+                    <input type="text" class="form-control" name = "Codigo" id="inputPassword" autocomplete="off" readonly value = "<?php echo $Cod_Categoria; ?>">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label id="grupousuarios" for="grupousuarios" class="col-md-2 col-form-label LblForm">Permisos : </label>                  
+                  <div class="col-md-10">
+                    <?php 
+                      $Element = new Elements();
+                      if(isset($Permisos)){    
+                        echo $Element->CBCategorias_Roles_ID($ID_Categoria);
+                      } else {
+                        echo $Element->CBTipos_Usuario();
+                      }
+                    ?>                  
                   </div>
                 </div>
                 <div class="form-group row">
@@ -219,19 +232,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                         </div>
                     </div>
                   </div>                 
-                </div>
-                <div class="form-group row">
-                  <label id="grupousuarios" for="grupousuarios" class="col-md-2 col-form-label LblForm">Permisos : </label>                  
-                  <div class="col-md-10">
-                    <?php 
-                      $Element = new Elements();
-                      if(isset($Permisos)){    
-                        echo $Element->CBCategorias_Roles_ID($ID_Categoria);
-                      } else {
-                        echo $Element->CBTipos_Usuario();
-                      }
-                    ?>                  
-                  </div>
                 </div>
                 <div class="form-group row">
                   <div class="offset-md-2 col-md-10">
