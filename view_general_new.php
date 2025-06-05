@@ -109,9 +109,9 @@ $Con->CloseConexion();
                 $("#edad-desde-dato").html(toastMessage());
                 time = setTimeout(function () {
                     $("#edad-desde-toast").show();
-                    idTime = setTimeout(function () {
+                    /*idTime = setTimeout(function () {
                         $("#edad-desde-toast").hide();
-                    }, 3200);
+                    }, 3200);*/
                 }, 1000);
               }).on("mouseleave", function () {
                 $("#edad-desde-toast").hide();
@@ -124,9 +124,9 @@ $Con->CloseConexion();
                 $("#edad-hasta-dato").html(toastMessage());
                 time = setTimeout(function () {
                     $("#edad-hasta-toast").show();
-                    idTime = setTimeout(function () {
+                    /*idTime = setTimeout(function () {
                         $("#edad-hasta-toast").hide();
-                    }, 3200);
+                    }, 3200);*/
                 }, 1000);
               }).on("mouseleave", function () {
                 $("#edad-hasta-toast").hide();
@@ -139,9 +139,9 @@ $Con->CloseConexion();
                 $("#meses-desde-dato").html(toastMessage());
                 time = setTimeout(function () {
                     $("#meses-desde-toast").show();
-                    idTime = setTimeout(function () {
+                    /*idTime = setTimeout(function () {
                         $("#meses-desde-toast").hide();
-                    }, 3200);
+                    }, 3200);*/
                 }, 1000);
               }).on("mouseleave", function () {
                 $("#meses-desde-toast").hide();
@@ -154,9 +154,9 @@ $Con->CloseConexion();
                 $("#meses-hasta-dato").html(toastMessage());
                 time = setTimeout(function () {
                     $("#meses-hasta-toast").show();
-                    idTime = setTimeout(function () {
+                    /*idTime = setTimeout(function () {
                         $("#meses-hasta-toast").hide();
-                    }, 3200);
+                    }, 3200);*/
                 }, 1000);
               }).on("mouseleave", function () {
                 $("#meses-hasta-toast").hide();
