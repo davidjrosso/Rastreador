@@ -91,11 +91,11 @@ $CtrGeneral = new CtrGeneral();
 
               $Table = "<table id='ImagenDeCategoria' class='table'><thead><tr><th></th><th>Detalles de la Categoria</th></tr></thead>";
 
-              $Table .= "<tr><td>Código</td><td>" . $Cod_Categoria . "</td></tr>";
               $Table .= "<tr><td>Denominación</td><td>" . $Categoria . "</td></tr>";
+              $Table .= "<tr><td>Código</td><td>" . $Cod_Categoria . "</td></tr>";
               $Table .= "<tr><td>Forma</td><td style='color:" . $Color . "'>" . $Forma_Categoria . "</td></tr>";
-              $Table .= "<tr><td>Color</td><td bgcolor='" . $Color . "'></td></tr>";
               $Table .= "<tr><td>Permisos</td><td>" . $CtrGeneral->getCategorias_Roles_ID($ID_Categoria) . "</td></tr>";
+              $Table .= "<tr><td>Color</td><td bgcolor='" . $Color . "'></td></tr>";
               $Table .= "</table>";
 
               echo $Table;
