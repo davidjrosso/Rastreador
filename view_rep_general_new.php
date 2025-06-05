@@ -21,13 +21,13 @@
 
 session_start();
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once ($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once ($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
-require_once ($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-require_once ($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Motivo.php");
-require_once ($_SERVER["DOCUMENT_ROOT"] . "/sys_config.php");
-require_once ($_SERVER["DOCUMENT_ROOT"] . "/dompdf/autoload.inc.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Motivo.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/sys_config.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/dompdf/autoload.inc.php");
 
 header("Content-Type: text/html;charset=utf-8");
 
@@ -796,10 +796,13 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
 
     function listarPersonasGeoreferencia(map, listaPersonas) {
       let count = 0;
+      let ids = new Set();
       let lista = $(".dropdown-menu");
+      let uniqueSchedulesList = listaPersonas.filter(({ id }) => !ids.has(id) && ids.add(id));
       map.removIcon();
+
       if (lista.length <= 1) {
-        let personas = listaPersonas.sort(function (elementA, elementB) {
+        let personas = Array.from(ids).sort(function (elementA, elementB) {
           if (elementA.persona < elementB.persona) {
             return -1;
           }
@@ -1509,7 +1512,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
               $persona_query .= " and edad >= $Edad_Desde and edad <= $Edad_Hasta";
               $filtros[] = "Edad: Desde " . $Edad_Desde . " hasta " . $Edad_Hasta;
               if ($Meses_Hasta !== null && $Meses_Hasta !== "") {
-                $Consulta .= " and (edad < $Edad_Hasta or meses <= $Meses_Hasta)";
+                $persona_query .= " and (edad < $Edad_Hasta or meses <= $Meses_Hasta)";
                 if ($Meses_Desde != null) {
                   $Consulta .= " and meses >= $Meses_Desde ";
                   $filtros[] = "Meses: Desde " . $Meses_Desde . " hasta " . $Meses_Hasta;
@@ -1842,7 +1845,6 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             <?php
           
             $tomarRetTodos = array();
-
             $Ejecutar_Consulta_general = mysqli_query($Con->Conexion, $Consulta) or die("Error al consultar datos");
             $Con->ResultSet = $Ejecutar_Consulta_general;
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
