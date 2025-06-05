@@ -220,7 +220,7 @@ export class MapaOl {
         if (vectorLayer.item(4)) {
           list = vectorLayer.item(4).getSource().getFeatures();
           icon = list.at(-1);
-        } else {
+        } else if (vectorLayer.item(2)){
           list = vectorLayer.item(2).getSource().getFeatures();
           icon = list.at(-1);
         }
