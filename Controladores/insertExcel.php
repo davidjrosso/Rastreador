@@ -323,6 +323,7 @@
 								break;
 							case 7:
 								$departam = $value;
+								$result_array = [];
 								$is_departament = preg_match(
 									"~[0-9]+~",
 									$departam,
@@ -425,7 +426,7 @@
 							$persona = new Persona(ID_Persona: $id_persona);
 							$georeferencia = $persona->getGeoreferencia();
 							$modificacion = $persona->setCalleNro($direccion);
-							$persona->setFamilia($departam);
+							if (is_numeric($departam)) $persona->setFamilia($departam);
 							$calle = $persona->getNombre_Calle();
 							$nro_calle = $persona->getNro();
 
@@ -529,7 +530,7 @@
 							xID_Escuela: 2
 						);
 						$modificacion = $persona->setCalleNro($direccion);
-						$persona->setFamilia($departam);
+						if (is_numeric($departam)) $persona->setFamilia($departam);
 						$nro_calle = $persona->getNro();
 						
 						if ($persona->getId_Calle()) {
@@ -581,7 +582,7 @@
 						if ($consulta_osm) {
 							$georeferencia = $persona->getGeoreferencia();
 							$modificacion = $persona->setCalleNro($direccion);
-							$persona->setFamilia($departam);
+							if (is_numeric($departam)) $persona->setFamilia($departam);
 							$persona->setBarrio($id_barrio);
 							$calle = $persona->getNombre_Calle();
 							$nro_calle = $persona->getNro();
