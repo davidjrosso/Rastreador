@@ -799,7 +799,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
       let lista = $(".dropdown-menu");
       let list = listaPersonas.filter(function (obj) {
           let flag = false;
-          if (ids.has(obj.id_persona)) {
+          if (!ids.has(obj.id_persona)) {
             ids.add(obj.id_persona);
             flag = true;
           }
