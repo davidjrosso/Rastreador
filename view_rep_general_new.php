@@ -2482,7 +2482,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
                   $jsonTable[$clave]["meses"] = $RetTodos["meses"];
   
                   foreach ($arr as $key => $value) {
-                      $Table .= "<td name='DatosResultados' id=$IndexCelda style='min-width: 190px'>
+                      $Table .= "<td name='DatosResultados' style='min-width: 190px'>
                                  </td>";
                   }
                   continue;
@@ -2598,7 +2598,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
                         $nroMotivosEnFecha = 0;
                         $td_hidden = " margin-left: -300px; border-right-width: 0px; border-left-width: 0px;";
                         $div_hidden = "z-index: -1;";
-                        $tagsTD .= "<td name='DatosResultados' id=$IndexCelda style='min-width: 190px; " . $value["td_hidden"] . "'>
+                        $tagsTD .= "<td name='DatosResultados' style='min-width: 190px; " . $value["td_hidden"] . "'>
                                       <div class = 'row' style='margin:0'>";
                           while (!empty($RetTodos) && $view == $RetTodos["id_persona"]) {
 
