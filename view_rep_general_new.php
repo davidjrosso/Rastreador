@@ -1,5 +1,4 @@
 <?php
-
 /*
 *
 * This file is part of Rastreador3.
@@ -798,11 +797,18 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
       let count = 0;
       let ids = new Set();
       let lista = $(".dropdown-menu");
-      let uniqueSchedulesList = listaPersonas.filter(({ id }) => !ids.has(id) && ids.add(id));
+      let list = listaPersonas.filter(function (obj) {
+          let flag = false;
+          if (ids.has(obj.id_persona)) {
+            ids.add(obj.id_persona);
+            flag = true;
+          }
+          return flag; 
+      });
       map.removIcon();
 
       if (lista.length <= 1) {
-        let personas = Array.from(ids).sort(function (elementA, elementB) {
+        let personas = list.sort(function (elementA, elementB) {
           if (elementA.persona < elementB.persona) {
             return -1;
           }
