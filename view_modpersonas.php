@@ -83,10 +83,12 @@ $Con->CloseConexion();
                      map
                   );
           map.setGeoreferenciacion();
-          map.addPersonMap(
-                           objectJsonPersona.lat, 
-                           objectJsonPersona.lon
-                          );
+          if (objectJsonPersona.lat && objectJsonPersona.lon) {
+            map.addPersonMap(
+                             objectJsonPersona.lat,
+                             objectJsonPersona.lon
+                            );
+          }
         };
       });
 
