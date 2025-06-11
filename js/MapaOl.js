@@ -146,6 +146,7 @@ export class MapaOl {
     setGeoreferenciacion() {
         let succesSearchStreetNumber = this.searchStreetNumber;
         let errorSearchAddress = this.errorSearchAddress;
+        let addPerson = this.addPersonMap.bind(this);
         this.#mapa.on('click', function(event) {
           let point = this.getCoordinateFromPixel(event.pixel);
           let lonLat = olProj.toLonLat(point);
@@ -162,7 +163,11 @@ export class MapaOl {
             success: succesSearchStreetNumber,
             error: errorSearchAddress
           });
-          vectorLayer.item(2).getSource().getFeatures()[0].setGeometry(new Point(lonLat));
+          if (vectorLayer.item(2)) {
+            vectorLayer.item(2).getSource().getFeatures()[0].setGeometry(new Point(lonLat));
+          } else {
+            addPerson(lonLat[1], lonLat[0]);
+          }
           $("#lat").attr("value", lonLat[1]);
           $("#lon").attr("value", lonLat[0]);
         });
