@@ -10,6 +10,7 @@ class Archivo
 	private $seccion;
     private $id_file;
     private $responsable;
+	private $configuracion;
 	private $estado;
 	private $coneccion_base;
 
@@ -23,6 +24,7 @@ class Archivo
 		$planilla=null,
 		$seccion=null,
 		$responsable=null,
+		$configuracion=null,
 		$estado=null
 	){
 		$this->coneccion_base = $coneccion_base;
@@ -36,6 +38,8 @@ class Archivo
 			$this->planilla = $planilla;
 			$this->seccion = $seccion;
 			$this->responsable = $responsable;
+			$this->configuracion = $configuracion;
+
 		} else {
 			$consultar = "select *
 						  from archivos 
@@ -55,12 +59,14 @@ class Archivo
 				$row_planilla = $ret["planilla"];
 				$row_seccion = $ret["seccion"];
 				$row_responsable = $ret["responsable"];
+				$row_configuracion = $ret["configuracion"];
 				
 				$this->id_archivo = $row_id_archivo;
 				$this->archivo = $row_archivo;
 				$this->estado = $row_estado;
 				$this->planilla = $row_planilla;
 				$this->responsable = $row_responsable;
+				$this->configuracion = $row_configuracion;
 				$this->seccion = $row_seccion;
 				$this->enlace = $row_enlace;
 				$this->id_file = $row_id_file;
@@ -114,6 +120,11 @@ class Archivo
 		$this->responsable = $responsable;
 	}
 
+	public function set_configuracion($configuracion)
+	{
+		$this->configuracion = $configuracion;
+	}
+
 	public function set_seccion($seccion)
 	{
 		$this->seccion = $seccion;
@@ -162,6 +173,11 @@ class Archivo
 		return $this->responsable;
 	}
 
+	public function get_configuracion()
+	{
+		return $this->configuracion;
+	}
+
 	public function get_seccion()
 	{
 		return $this->seccion;
@@ -178,6 +194,7 @@ class Archivo
 			'archivo' => $this->archivo,
 			'planilla' => $this->planilla,
 			'responsable' => $this->responsable,
+			'configuracion' => $this->configuracion,
 			'seccion' => $this->seccion,
 			'estado' => $this->estado,
 			'enlace' => $this->enlace,
@@ -193,6 +210,7 @@ class Archivo
 						planilla = " . ((!is_null($this->get_planilla())) ? "'" . $this->get_planilla() . "'" : "null") . ", 
 						seccion = " . ((!is_null($this->get_seccion())) ? "'" . $this->get_seccion() . "'" : "null") . ", 
 						centro_salud = " . ((!is_null($this->get_centro_salud())) ? "'" . $this->get_centro_salud() . "'" : "null") . ",
+						configuracion = " . ((!is_null($this->get_configuracion())) ? "'" . $this->get_configuracion() . "'" : "null") . ",
 						responsable = " . ((!is_null($this->get_responsable())) ? $this->get_responsable() : "null") . "
 					where id_archivo = " . $this->get_id_archivo();
 		$mensaje_error = "No se pudo actualizar el archivo";
@@ -209,6 +227,7 @@ class Archivo
 										enlace, 
 										planilla,
 										responsable,
+										configuracion,
 										seccion,
 										centro_salud,
 										estado
@@ -217,6 +236,7 @@ class Archivo
 							" . ((!is_null($this->get_enlace())) ? "'" . $this->get_enlace() . "'" : "null") . ", 
 							" . ((!is_null($this->get_planilla())) ? "'" . $this->get_planilla() . "'" : "null") . ", 
 							" . ((!is_null($this->get_responsable())) ? $this->get_responsable() : "null") . ",
+							" . ((!is_null($this->get_configuracion())) ? "'" . $this->get_configuracion() . "'" : "null") . ",
 							" . ((!is_null($this->get_seccion())) ? "'" . $this->get_seccion() . "'" : "null") . ", 
 							" . ((!is_null($this->get_centro_salud())) ? $this->get_centro_salud() : "null") . ",
 							" . ((!is_null($this->get_estado())) ? "'" . $this->get_estado() . "'" : "null") . "
