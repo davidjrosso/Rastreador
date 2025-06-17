@@ -187,7 +187,8 @@
 				$datos = $dni;
 				break;
 			case "observacion":
-				$datos = $col_header . " : " . $valor;
+				$observ = (!empty($valor)) ? $valor : "no hay datos"; 
+				$datos = $col_header . " : " . $observ;
 				break;
 			case "direccion":
 				$direccion_datos = explode("/", $valor);
@@ -232,7 +233,7 @@
 				$datos = $valor;
 				break;
 			default :
-				$valor_fecha = (!empty($col_header)) ?$col_header : null;
+				$valor_fecha = (!empty($col_header)) ? $col_header : null;
 				//$pattern = "/([0-9][0-9]|[1-9]).([0-9][0-9]|[1-9]).[2-9][0-9][0-9][0-9]/";
 				$pattern = "/([0-9][0-9]).([0-9][0-9]).[2-9][0-9][0-9][0-9]/";
 				$is_fecha = preg_match(
@@ -253,7 +254,8 @@
 					}
 					$datos["motivo"]  = $motivo;
 				} else {
-					
+					$observ = (!empty($valor)) ? $valor : "no hay datos"; 
+					$datos = $col_header . " : " . $observ;
 				}
 				break;
 		}
@@ -287,17 +289,22 @@
 				$value = (!empty($rows_excel[$row][$col])) ? $rows_excel[$row][$col] : null;
 				$col_excel = colExcel($col);
 				$col_header = (!empty($rows_excel[$indixe_col_h][$col])) ? $rows_excel[$indixe_col_h][$col] : null;
+				$col_config = (isset($config_datos[$col_excel])) ? $config_datos[$col_excel] : null;
 				$valor = objetoExcel(
-									obj: $config_datos[$col_excel], 
-									valor: $value, 
-									connection: $connection, 
+									obj: $col_config,
+									valor: $value,
+									connection: $connection,
 									col_header: $col_header
 									);
-				if ($col_excel == "default") {
-					if (isset($valor["observacion"])) {
-						$lista_valores["observacion"] .= $valor["observacion"];
-					} else if (isset($valor["motivo"])) {
+				if ($col_config == "observacion") {
+						$lista_valores["observacion"] .= " - " . $valor;
+				} else if ($col_config == "motivo") {
 						$lista_valores["motivos"][] = $valor;
+				} else if ($col_config == "default") {
+					if (is_array($valor)) {
+						$lista_valores["motivos"][] = $valor;
+					} else {
+						$lista_valores["observacion"] .= " - " . $valor;
 					}
 				} else {
 					$lista_valores[$config_datos[$col_excel]] = $valor;
@@ -379,8 +386,7 @@
 			$result = $service_sheets->spreadsheets_values->get($id_spreadsheet, $range);
 			$service->files->delete($id_spreadsheet);
 
-			$highestRow = count($result->values) - 1;
-
+			$highestRow = count(value: $result) - 1;
 			$Fecha =  date("Y-m-d");
 			$Fecha_Accion = date("Y-m-d");
 			$observacion = "";
