@@ -64,107 +64,79 @@ $Con->CloseConexion();
     let time = null;
     let idTime = null;
     $(document).ready(function(){
-              var date_input=$('input[name="Fecha_Desde"]');
-              var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-              date_input.datepicker({
-                  format: 'dd/mm/yyyy',
-                  container: container,
-                  todayHighlight: true,
-                  autoclose: true,
-                  closeText: 'Cerrar',
-                  days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
-                  daysShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
-                  daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
-                  months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-                  monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
-                  today: "Hoy",
-                  monthsTitle: "Meses",
-                  clear: "Borrar",
-                  weekStart: 1,
-              });
-              var date_input2=$('input[name="Fecha_Hasta"]');
-              var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-              date_input2.datepicker({
-                  format: 'dd/mm/yyyy',
-                  container: container,
-                  todayHighlight: true,
-                  autoclose: true,
-                  closeText: 'Cerrar',
-                  days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
-                  daysShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
-                  daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
-                  months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-                  monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
-                  today: "Hoy",
-                  monthsTitle: "Meses",
-                  clear: "Borrar",
-                  weekStart: 1,
-              });
-              $("#inpMostrar").on("change", function (event){
-                controlMovimiento(this);
-              });
-              $("#width-display").prop("value", window.screen.availWidth);
+        var date_input=$('input[name="Fecha_Desde"]');
+        var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+        date_input.datepicker({
+            format: 'dd/mm/yyyy',
+            container: container,
+            todayHighlight: true,
+            autoclose: true,
+            closeText: 'Cerrar',
+            days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
+            daysShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
+            daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+            months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+            monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+            today: "Hoy",
+            monthsTitle: "Meses",
+            clear: "Borrar",
+            weekStart: 1,
+        });
+        var date_input2=$('input[name="Fecha_Hasta"]');
+        var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+        date_input2.datepicker({
+            format: 'dd/mm/yyyy',
+            container: container,
+            todayHighlight: true,
+            autoclose: true,
+            closeText: 'Cerrar',
+            days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
+            daysShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
+            daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+            months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+            monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+            today: "Hoy",
+            monthsTitle: "Meses",
+            clear: "Borrar",
+            weekStart: 1,
+        });
+        $("#inpMostrar").on("change", function (event){
+          controlMovimiento(this);
+        });
+        $("#width-display").prop("value", window.screen.availWidth);
 
-              $("#Edad_Desde").on("mouseenter", function () {
-                $("#edad-desde-dato").html(toastMessage());
-                time = setTimeout(function () {
-                    $("#edad-desde-toast").show();
-                    /*idTime = setTimeout(function () {
-                        $("#edad-desde-toast").hide();
-                    }, 3200);*/
-                }, 1000);
-              }).on("mouseleave", function () {
-                $("#edad-desde-toast").hide();
-                clearTimeout(time);
-              }).on("input", function () {
-                $("#edad-desde-dato").html(toastMessage());
-              });
+        $("#Edad_Hasta").on("mouseenter", function () {
+          let val = $(this).val();
+          if (val) {
+            $("#edad-hasta-dato").html(toastMessage("años"));
+            time = setTimeout(function () {
+                $("#edad-hasta-toast").show();
+            }, 1000);
+          }
+        }).on("mouseleave", function () {
+          $("#edad-hasta-toast").hide();
+          clearTimeout(time);
+        }).on("input", function () {
+          $("#edad-hasta-dato").html(toastMessage("años"));
+          $("#edad-hasta-toast").show();
+        });
 
-              $("#Edad_Hasta").on("mouseenter", function () {
-                $("#edad-hasta-dato").html(toastMessage());
-                time = setTimeout(function () {
-                    $("#edad-hasta-toast").show();
-                    /*idTime = setTimeout(function () {
-                        $("#edad-hasta-toast").hide();
-                    }, 3200);*/
-                }, 1000);
-              }).on("mouseleave", function () {
-                $("#edad-hasta-toast").hide();
-                clearTimeout(time);
-              }).on("input", function () {
-                $("#edad-hasta-dato").html(toastMessage());
-              });;
-
-              $("#Meses_Desde").on("mouseenter", function () {
-                $("#meses-desde-dato").html(toastMessage());
-                time = setTimeout(function () {
-                    $("#meses-desde-toast").show();
-                    /*idTime = setTimeout(function () {
-                        $("#meses-desde-toast").hide();
-                    }, 3200);*/
-                }, 1000);
-              }).on("mouseleave", function () {
-                $("#meses-desde-toast").hide();
-                clearTimeout(time);
-              }).on("input", function () {
-                $("#meses-desde-dato").html(toastMessage());
-              });
-
-              $("#Meses_Hasta").on("mouseenter", function () {
-                $("#meses-hasta-dato").html(toastMessage());
-                time = setTimeout(function () {
-                    $("#meses-hasta-toast").show();
-                    /*idTime = setTimeout(function () {
-                        $("#meses-hasta-toast").hide();
-                    }, 3200);*/
-                }, 1000);
-              }).on("mouseleave", function () {
-                $("#meses-hasta-toast").hide();
-                clearTimeout(time);
-              }).on("input", function () {
-                $("#meses-hasta-dato").html(toastMessage());
-              });
-          });
+        $("#Meses_Hasta").on("mouseenter", function () {
+          let val = $(this).val();
+          if (val) {
+            $("#meses-hasta-dato").html(toastMessage("meses"));
+            time = setTimeout(function () {
+                $("#meses-hasta-toast").show();
+            }, 1000);
+          }
+        }).on("mouseleave", function () {
+          $("#meses-hasta-toast").hide();
+          clearTimeout(time);
+        }).on("input", function () {
+          $("#meses-hasta-dato").html(toastMessage("meses"));
+          $("#meses-hasta-toast").show();
+        });
+    });
    
     function buscarPersonas(){
       var xNombre = document.getElementById('SearchPersonas').value;
@@ -180,21 +152,17 @@ $Con->CloseConexion();
       xmlhttp.send();
     }
 
-    function toastMessage(){
+    function toastMessage(val){
       let edadHasta = $("#Edad_Hasta").prop("value");
       let edadDesde = $("#Edad_Desde").prop("value");
       let mesesDesde = $("#Meses_Desde").prop("value");
       let mesesHasta = $("#Meses_Hasta").prop("value");
-      let dato = "Personas desde " + edadDesde + " años y " + mesesDesde + " meses a " +
-                  edadHasta + " años y " + mesesHasta + " meses";
-      if (!edadHasta) {
-        if (!mesesDesde) {
-          dato = dato + " hasta " +
-                  edadDesde + " años y " + mesesHasta + " meses ";
-        } else {
-          dato = dato + " hasta " +
-                  edadHasta + " años y " + mesesHasta + " meses ";
-        }
+      let dato = null;
+      if (edadHasta && val == "años") {
+        dato = edadHasta + " años y 364 días ";
+      }
+      if (mesesHasta && val == "meses") {
+        dato = mesesHasta + " meses y x dias";
       }
       return dato;
     }
