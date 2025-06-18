@@ -333,7 +333,7 @@
 			$seccion = $archivo->get_seccion();
 			$id_responsable = $archivo->get_responsable();
 			$id_centro_salud = $archivo->get_centro_salud();
-			$centro_salud = new CentroSalud(id_centro: $id_centro_salud);
+			$centro_salud = new CentroSalud(id_centro: $id_centro_salud, coneccion_base: $con);
 			$id_barrio_centro = $centro_salud->get_id_barrio();
 			$config_datos = $archivo->get_configuracion();
 			$list_conf_datos = explode("|", $config_datos);
