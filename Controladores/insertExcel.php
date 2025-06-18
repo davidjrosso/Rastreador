@@ -40,6 +40,7 @@
 	use Google\Service\Sheets\SpreadSheet;
 	use Google\Service\Drive;
 
+
 	function codigoExcelMotivo($codigo){
 		switch ($codigo) {
 			case 'CDAD':
@@ -84,7 +85,6 @@
 		}
 		return $result;
 	}
-
 
 	function colExcel($col){
 		switch ($col) {
@@ -262,7 +262,7 @@
 		return $datos;
 	}
 
-	function rows_persona($rows_excel, $config_datos, $com, $connection) {
+	function rows_persona($rows_excel, $config_datos, $connection) {
 		$lista_personas = array();
 		$highestRow = count(value: $rows_excel) - 1;
 		$list_ignore_row = explode("-", $config_datos["ignore"]);
@@ -364,13 +364,10 @@
 
 			if (($seccion == "11 Años") || ($seccion == "EMBARAZADAS")) {
 				$fila = '!A3:';
-				$com = 0;
 			} else if ($seccion == "C. INDICE PEDIATRIA") {
 				$fila = '!A2:';
-				$com = 2;
 			} else {
 				$fila = '!A4:';
-				$com = 0;
 			}
 
 			if ($seccion == "11 Años") {
@@ -400,7 +397,7 @@
 			$active = null;
 			$server = 0;
 
-			$lista_personas = rows_persona($result, $lista_datos, $com, $con);
+			$lista_personas = rows_persona($result, $lista_datos, $con);
 
 			foreach ($lista_personas as $row => $dato) {
 				$consulta_osm = true;
@@ -410,7 +407,7 @@
 				$nombre = $nombre_apellido["nombre"];
 				$apellido = $nombre_apellido["apellido"];
 				$Fecha_Nacimiento = $dato["fecha_nacimiento"];
-				$direccion = $dato["direccion"]["direccion"];
+				$direccion = (isset($dato["direccion"]["direccion"])) ? $dato["direccion"]["direccion"] : null;
 				$departam = (isset($dato["departamento"])) ? $dato["departamento"] : null;
 				$departam = (!empty($dato["direccion"]["departamento"])) ? $dato["direccion"]["departamento"] : $departam;
 				$hc = $dato["hc"];
@@ -465,7 +462,7 @@
 						$persona->update_direccion();
 
 						$row_json["calle_rastreador"] = Calle::existe_calle($direccion);
-						$row_json["domicilio"] = $direccion;
+						$row_json["domicilio"] = (empty($direccion)) ? "" : $direccion;
 						$row_json["form"]["persona"] = $persona->jsonSerialize();
 						$domicilios_json[]["formulario"] = $row_json;
 					} else {
@@ -526,11 +523,11 @@
 								xID_TipoAccion: $ID_TipoAccion
 							);
 							$accion->save();
-							$row_json["calle_rastreador"] = Calle::existe_calle($direccion);
-							$row_json["domicilio"] = $direccion;
 							$row_json["form"]["persona"] = $persona->jsonSerialize();
 							$domicilios_json[]["formulario"] = $row_json;
 						} 
+						$row_json["calle_rastreador"] = Calle::existe_calle($direccion);
+						$row_json["domicilio"] = (empty($direccion)) ? "" : $direccion;
 					}
 					if ($row % 10 == 9) {
 						$progress = $row / (2 * $highestRow);
