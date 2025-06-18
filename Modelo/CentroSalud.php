@@ -4,6 +4,7 @@ class CentroSalud implements JsonSerializable
 	//DECLARACION DE VARIABLES
 	private $id_centro;
 	private $centro_salud;
+	private $id_barrio;
 	private $estado;
 	private $coneccion_base;
 
@@ -11,12 +12,14 @@ class CentroSalud implements JsonSerializable
 			$coneccion_base=null,
 			$id_centro=null,
 			$centro_salud=null,
+			$id_barrio=null,
 			$estado=null
 	) {
 		$this->coneccion_base = $coneccion_base;
 		if (!$id_centro) {
 			$this->id_centro = $id_centro;
 			$this->centro_salud = $centro_salud;
+			$this->id_barrio = $id_barrio;
 			$this->estado = $estado;
 		} else {
 			$consultar = "select *
@@ -30,10 +33,12 @@ class CentroSalud implements JsonSerializable
 			if (!is_null($ret)) {
 				$row_id_centro = $ret["id_centro"];
 				$row_centro_salud = $ret["centro_salud"];
+				$row_id_barrio = $ret["id_barrio"];
 				$row_estado = $ret["estado"];
 
 				$this->id_centro = $row_id_centro;
 				$this->centro_salud = $row_centro_salud;
+				$this->id_barrio = $row_id_barrio;
 				$this->estado = $row_estado;
 			}
 		}
@@ -81,6 +86,9 @@ class CentroSalud implements JsonSerializable
 	public function set_centro_salud($centro_salud){
 		$this->centro_salud = $centro_salud;
 	}
+	public function set_id_barrio($id_barrio){
+		$this->id_barrio = $id_barrio;
+	}
 
 	public function set_estado($estado){
 		$this->estado = $estado;
@@ -97,6 +105,9 @@ class CentroSalud implements JsonSerializable
 
 	public function get_centro_salud(){
 		return $this->centro_salud;
+	}
+	public function get_id_barrio(){
+		return $this->id_barrio;
 	}
 
 	public function get_estado(){

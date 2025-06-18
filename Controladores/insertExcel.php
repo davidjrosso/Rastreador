@@ -29,6 +29,7 @@
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Formulario.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Parametria.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Persona.php';
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/CentroSalud.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Responsable.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Barrio.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Calle.php';
@@ -204,8 +205,7 @@
 				}
 				break;
 			case "barrio":
-				$barrio = $valor;
-				$id_barrio = Barrio::get_id_by_name($connection, "Castagnino");
+				$barrio = ($valor) ? $valor : null;
 				if(!empty($barrio)) {
 					$datos = Barrio::get_id_by_name($connection, $barrio);
 				}
@@ -332,6 +332,9 @@
 			$file_id = $archivo->get_id_file();
 			$seccion = $archivo->get_seccion();
 			$id_responsable = $archivo->get_responsable();
+			$id_centro_salud = $archivo->get_centro_salud();
+			$centro_salud = new CentroSalud(id_centro: $id_centro_salud);
+			$id_barrio_centro = $centro_salud->get_id_barrio();
 			$config_datos = $archivo->get_configuracion();
 			$list_conf_datos = explode("|", $config_datos);
 			$lista_datos = array();	
@@ -413,7 +416,7 @@
 				$hc = $dato["hc"];
 				$obra_social = (!empty($dato["obra_social"])) ? $dato["obra_social"] : null;
 				$telefono = (!empty($dato["telefono"])) ? $dato["telefono"] : null;
-				$id_barrio = (!empty($dato["barrio"])) ? $dato["barrio"] : null;
+				$id_barrio = (!empty($dato["barrio"])) ? $dato["barrio"] : $id_barrio_centro;
 				$estado = 1;
 				$ID_TipoAccion = 1;
 				$email = null;
