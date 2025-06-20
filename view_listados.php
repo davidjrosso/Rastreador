@@ -29,6 +29,8 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
   <meta charset="utf-8">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+  <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
@@ -45,6 +47,8 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
     var cantBarrios = 1;
     var cantMotivos = 3;
     let listaMotivos = new Map();
+    let time = null;
+    let idTime = null;
 
     $(document).ready(function(){
               var date_input=$('input[name="Fecha_Desde"]'); //our date input has the name "date"
@@ -86,6 +90,38 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
 
               $("#inpMostrar").on("change", function (event){
                 controlMovimiento(this);
+              });
+
+              $("#Edad_Hasta").on("mouseenter", function () {
+                  let val = $(this).val();
+                  if (val) {
+                    $("#edad-hasta-dato").html(toastMessage("años"));
+                    time = setTimeout(function () {
+                        $("#edad-hasta-toast").show();
+                    }, 1000);
+                  }
+                }).on("mouseleave", function () {
+                  $("#edad-hasta-toast").hide();
+                  clearTimeout(time);
+                }).on("input", function () {
+                  $("#edad-hasta-dato").html(toastMessage("años"));
+                  $("#edad-hasta-toast").show();
+                });
+
+                $("#Meses_Hasta").on("mouseenter", function () {
+                  let val = $(this).val();
+                  if (val) {
+                    $("#meses-hasta-dato").html(toastMessage("meses"));
+                    time = setTimeout(function () {
+                        $("#meses-hasta-toast").show();
+                    }, 1000);
+                  }
+                }).on("mouseleave", function () {
+                  $("#meses-hasta-toast").hide();
+                  clearTimeout(time);
+                }).on("input", function () {
+                  $("#meses-hasta-dato").html(toastMessage("meses"));
+                  $("#meses-hasta-toast").show();
               });
           });
 
@@ -182,7 +218,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
       xmlhttp.send(JSON.stringify(bodyJson));
     }
 
-    function buscarCategorias(){
+    function buscarCategorias() {
       var xCategoria = document.getElementById('SearchCategorias').value;
       var textoBusqueda = xCategoria;
       xmlhttp=new XMLHttpRequest();
@@ -196,7 +232,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
       xmlhttp.send();
     }
     
-    function seleccionPersona(xNombre,xID){
+    function seleccionPersona(xNombre,xID) {
       var Persona = document.getElementById("Persona");
       var ID_Persona = document.getElementById("ID_Persona");
       Persona.innerHTML = "";
@@ -208,7 +244,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
       SelMostrar.setAttribute('disabled', true);
     }
 
-    function seleccionMotivo(xMotivo,xID,xNumber){
+    function seleccionMotivo(xMotivo,xID,xNumber) {
       if(xNumber > 1){
         var Motivo = document.getElementById("Motivo"+xNumber);
         var ID_Motivo = document.getElementById("ID_Motivo"+xNumber);
@@ -323,6 +359,22 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
       var formatConfig = document.getElementById('formatConfig');
       ID_Config.value = formatConfig.value;
     }
+
+    function toastMessage(val) {
+      let edadHasta = $("#Edad_Hasta").prop("value");
+      let edadDesde = $("#Edad_Desde").prop("value");
+      let mesesDesde = $("#Meses_Desde").prop("value");
+      let mesesHasta = $("#Meses_Hasta").prop("value");
+      let dato = null;
+      if (edadHasta && val == "años") {
+        dato = edadHasta + " años y 364 días ";
+      }
+      if (mesesHasta && val == "meses") {
+        dato = mesesHasta + " meses y x dias";
+      }
+      return dato;
+    }
+
 
     function disabledMeses(xBool){
       meses_desde = document.getElementById('Meses_Desde');
@@ -469,10 +521,17 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
                       </script>
                   </div>
             </div> 
-            <div class="form-group row">
+            <div class="form-group row" style="position: relative;">
                 <label for="inputPassword" class="col-md-2 col-form-label LblForm">Hasta (Años): </label>
                 <div class="col-md-10">
                     <input type="number" name="Edad_Hasta" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarMeses(this)" value="<?= (isset($datosNav["Edad_Hasta"])) ? $datosNav["Edad_Hasta"] : '' ?>">
+                </div>
+                <div class="position-absolute" style="z-index: 1100; width: auto; right: -20%; top: -83%" data-bs-delay="10">
+                  <div id="edad-hasta-toast" class="toast hide dat-toast" style="width:auto;" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-body">
+                      <span id="edad-hasta-dato">0</span>
+                    </div>
+                  </div>
                 </div>
             </div> 
             <div class="form-group row">
@@ -481,10 +540,17 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
                       <input type="number" name="Meses_Desde" id="Meses_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarEdad(this)" value="<?= (isset($datosNav["Meses_Desde"])) ? $datosNav["Meses_Desde"] : '' ?>">
                   </div>
             </div> 
-            <div class="form-group row">
+            <div class="form-group row" style="position: relative;">
                 <label for="inputPassword" class="col-md-2 col-form-label LblForm">Hasta (Meses): </label>
                 <div class="col-md-10">
                     <input type="number" name="Meses_Hasta" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" max="11" onkeyup="habilitarEdad(this)" value="<?= (isset($datosNav["Meses_Hasta"])) ? $datosNav["Meses_Hasta"] : '' ?>">
+                </div>
+                <div class="position-absolute" style="z-index: 1100; width: auto; right: -20%; top: -83%">
+                  <div id="meses-hasta-toast" class="toast hide dat-toast" style="width:auto;" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-body">
+                      <span id="meses-hasta-dato">0</span>
+                    </div>
+                  </div>
                 </div>
             </div>
             <div class="form-group row">

@@ -620,7 +620,7 @@ $Con->CloseConexion();
               Edad <br>
             </div>
             <div class="form-group row" style="position: relative;">
-              <label for="Edad_Desde" class="col-md-2 col-form-label LblForm">Desde (años): </label>
+              <label for="Edad_Desde" class="col-md-2 col-form-label LblForm">Desde (Años): </label>
               <div class="col-md-10">
                   <input type="number" name="Edad_Desde" id="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarMeses(this)">
                   <input type="hidden" name="ID_Persona" id="ID_Persona" value="0">
@@ -634,7 +634,7 @@ $Con->CloseConexion();
               </div>
             </div> 
             <div class="form-group row" style="position: relative;">
-              <label for="Edad_Hasta" class="col-md-2 col-form-label LblForm">Hasta (años): </label>
+              <label for="Edad_Hasta" class="col-md-2 col-form-label LblForm">Hasta (Años): </label>
               <div class="col-md-10">
                   <input type="number" name="Edad_Hasta" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarMeses(this)">
               </div>  
