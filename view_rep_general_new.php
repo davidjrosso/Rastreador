@@ -25,6 +25,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Motivo.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Categoria.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/sys_config.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/dompdf/autoload.inc.php");
 
@@ -1400,6 +1401,34 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             }
 
             $ID_Categoria = (isset($_REQUEST["ID_Categoria"])) ? $_REQUEST["ID_Categoria"] : null;
+            $CategoriasOpciones = [
+              "ID_Categoria" => $ID_Categoria
+            ];
+            if (isset($_REQUEST["ID_Categoria2"])) {
+              $ID_Categoria2 = $_REQUEST["ID_Categoria2"];
+              $CategoriasOpciones["ID_Categoria2"] = $ID_Categoria2;
+            } else {
+              $ID_Categoria2 = 0;
+            }
+            if (isset($_REQUEST["ID_Categoria3"])) {
+              $ID_Categoria3 = $_REQUEST["ID_Categoria3"];
+              $CategoriasOpciones["ID_Categoria3"] = $ID_Categoria3;
+            } else {
+              $ID_Categoria3 = 0;
+            }
+            if (isset($_REQUEST["ID_Categoria4"])) {
+              $ID_Categoria4 = $_REQUEST["ID_Categoria4"];
+              $CategoriasOpciones["ID_Categoria4"] = $ID_Categoria4;
+            } else {
+              $ID_Categoria4 = 0;
+            }
+            if (isset($_REQUEST["ID_Categoria5"])) {
+              $ID_Categoria5 = $_REQUEST["ID_Categoria5"];
+              $CategoriasOpciones["ID_Categoria5"] = $ID_Categoria5;
+            } else {
+              $ID_Categoria5 = 0;
+            }
+
             $ID_Escuela = (isset($_REQUEST["ID_Escuela"])) ? $_REQUEST["ID_Escuela"] : null;
             $Trabajo = (isset($_REQUEST["Trabajo"])) ? $_REQUEST["Trabajo"] : null;
             $Mostrar = (isset($_REQUEST["Mostrar"])) ? $_REQUEST["Mostrar"] : 0;
@@ -1416,6 +1445,13 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
                                            }
                                     );
             $CantOpMotivos = count($motivos);
+
+            $categorias = array_filter($CategoriasOpciones, 
+                                 function ($x) {
+                                              return !empty($x); 
+                                           }
+                                    );
+            $CantOpCategorias = count($categorias);
 
             $Con = new Conexion();
             $Con->OpenConexion();
@@ -1434,7 +1470,22 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
                                         "Motivos: "
                                          );
 
+            $filtro_categoria = array_reduce($categorias,
+                                       function ($categorias, $valor){
+                                                    $con = new Conexion();
+                                                    $con->OpenConexion();
+                                                    $ret_categoria = new Categoria(
+                                                                                   xID_Categoria: $valor,
+                                                                                   xConecction: $con
+                                                                                );
+                                                    $con->CloseConexion();
+                                                    return $categorias . " - " . $ret_categoria->getCategoria();
+                                                 },
+                                        "Categorias: "
+                                         );
+
             $listaDeMotivos = "(" . implode(",", array_filter($MotivosOpciones)) . ")";
+            $listaDeCategorias = "(" . implode(",", array_filter($CategoriasOpciones)) . ")";
 
             $consultaGeneralPermisos = "CREATE TEMPORARY TABLE GIN " ;
             $consultaUsuarioPermisos = "CREATE TEMPORARY TABLE INN ";
@@ -1640,21 +1691,13 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
               $filtrosSeleccionados["Trabajo"] = $Trabajo;                
             }
 
-            if($ID_Categoria > 0){
-              $categoria_query .= " WHERE id_categoria = $ID_Categoria";
-
-              $ConsultarCategoria = "select categoria
-                                    from categoria
-                                    where id_categoria = " . $ID_Categoria." limit 1";
-
-              $EjecutarConsultarCategoria = mysqli_query($Con->Conexion,$ConsultarCategoria) or die("Problemas al consultar filtro Categoria");
-              $RetConsultarCategoria = mysqli_fetch_assoc($EjecutarConsultarCategoria);
-              $filtros[] = "Categoria: " . $RetConsultarCategoria['categoria'];
-              $filtrosSeleccionados["ID_Categoria"] = $ID_Categoria;
+            if (count(array_filter($CategoriasOpciones))) {
+              $categoria_query .= " WHERE id_categoria in $listaDeCategorias";
+              $filtros[] = $filtro_categoria;
             }
 
             if($ID_CentroSalud > 0){
-              $movimiento_query  .= " AND id_centro = $ID_CentroSalud";
+              $movimiento_query .= " AND id_centro = $ID_CentroSalud";
               $ConsultarCentroSalud = "select centro_salud 
                                         from centros_salud 
                                         where id_centro = " . $ID_CentroSalud." limit 1";
@@ -1665,7 +1708,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             }
 
             if($ID_OtraInstitucion > 0){
-              $movimiento_query  .= " and ID_OtraInstitucion = $ID_OtraInstitucion";
+              $movimiento_query .= " and ID_OtraInstitucion = $ID_OtraInstitucion";
               $ConsultarOtraInstitucion = "select Nombre 
                                             from otras_instituciones 
                                             where ID_OtraInstitucion = " . $ID_OtraInstitucion." limit 1";
@@ -1676,7 +1719,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             }
 
             if($ID_Responsable > 0){
-              $movimiento_query  .= " and id_resp = $ID_Responsable";
+              $movimiento_query .= " and id_resp = $ID_Responsable";
               $ConsultarResponsable = "select responsable 
                                         from responsable 
                                         where id_resp = " . $ID_Responsable." limit 1";
