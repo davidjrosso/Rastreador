@@ -61,11 +61,13 @@ $Con->CloseConexion();
     let cantBarrios = 1;
     let cantMotivos = 3;
     let listaMotivos = new Map();
+    let listaCategorias = new Map();
+    let cantCategoria = 1;
     let time = null;
     let idTime = null;
     $(document).ready(function(){
         var date_input=$('input[name="Fecha_Desde"]');
-        var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+        var container=$('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
         date_input.datepicker({
             format: 'dd/mm/yyyy',
             container: container,
@@ -138,7 +140,7 @@ $Con->CloseConexion();
         });
     });
    
-    function buscarPersonas(){
+    function buscarPersonas() {
       var xNombre = document.getElementById('SearchPersonas').value;
       var textoBusqueda = xNombre;
       xmlhttp=new XMLHttpRequest();
@@ -152,7 +154,7 @@ $Con->CloseConexion();
       xmlhttp.send();
     }
 
-    function toastMessage(val){
+    function toastMessage(val) {
       let edadHasta = $("#Edad_Hasta").prop("value");
       let edadDesde = $("#Edad_Desde").prop("value");
       let mesesDesde = $("#Meses_Desde").prop("value");
@@ -268,6 +270,17 @@ $Con->CloseConexion();
       }
     }
 
+    function addMultipleCategoria(xCategoria, xID, element) {
+      if (!listaCategorias.has(xCategoria) && (listaCategorias.size <= 4)) {
+        listaCategorias.set(xCategoria, xID);
+        element.innerHTML = "&#10003";
+        element.style.width = "12ch";
+      } else if (listaCategorias.has(xCategoria)){
+        listaCategorias.delete(xCategoria);
+        element.innerHTML = "seleccionar";
+      }
+    }
+
     function seleccionMultipleMotivo() {
       let motivoNumero = 1;
       let idMotivo = null;
@@ -295,6 +308,38 @@ $Con->CloseConexion();
         } else {
           $("#Motivo" + index).html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo" + index + "'>Seleccione un Motivo</button>");
           $("#ID_Motivo" + index).val(null);
+        }
+        
+      }
+    }
+
+    function seleccionMultipleCategoria() {
+      let categoriaNumero = 1;
+      let idCategoria = null;
+      listaCategorias.forEach((value, key, map) => {
+          idCategoria = value;
+          if (categoriaNumero <= 1) {
+            if (categoriaNumero == 1) {
+              $("#Categoria").html("<p>" + key + "<button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalCategoria'><i class='fa fa-cog text-secondary'></i></button></p>");
+              $("#ID_Categoria").val(idCategoria);
+            } else {
+              $("#Categoria" + categoriaNumero).html("<p>" + key + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalCategoria'><i class='fa fa-cog text-secondary'></i></button></p>");
+              $("#ID_Categoria" + categoriaNumero).val(idCategoria);
+            }
+          } else {
+            agregarCategoria();
+            $("#Categoria" + categoriaNumero).html("<p>" + key + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalCategoria'><i class='fa fa-cog text-secondary'></i></button></p>");
+            $("#ID_Categoria" + categoriaNumero).val(idCategoria);
+          }
+          categoriaNumero++;
+      });
+      for (let index = categoriaNumero; index <= 5; index++) {
+        if (index == 1) {
+          $("#Categoria").html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalCategoria'>Seleccione una Categoria</button>");
+          $("#ID_Categoria").val(null);
+        } else {
+          $("#Categoria" + index).html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalCategoria'>Seleccione una Categoria</button>");
+          $("#ID_Categoria" + index).val(null);
         }
         
       }
@@ -504,7 +549,7 @@ $Con->CloseConexion();
 
     }
 
-      function habilitarMeses(xElemento){
+      function habilitarMeses(xElemento) {
         let edadHasta = $("#Edad_Hasta");
         let mesesDesde = $("#Meses_Desde");
         let mesesHasta = $("#Meses_Hasta");
@@ -524,7 +569,7 @@ $Con->CloseConexion();
         }
       }
 
-      function habilitarEdad(xElemento){
+      function habilitarEdad(xElemento) {
         let edadHasta = $("#Edad_Hasta");
         let valueElem = xElemento.value;
         let idInput = xElemento.id;
@@ -539,7 +584,7 @@ $Con->CloseConexion();
         }
       }
 
-      function agregarMotivo(){
+      function agregarMotivo() {
       if (cantMotivos <= 4) {
         cantMotivos++;
         var divContenedor = document.getElementById('contenedorMotivos');
@@ -560,6 +605,32 @@ $Con->CloseConexion();
         var divInput = document.createElement("input");
         divInput.setAttribute("id", "ID_Motivo" + cantMotivos);
         divInput.setAttribute("name", "ID_Motivo" + cantMotivos);
+        divInput.setAttribute("type", "hidden");
+        divInputsGenerales.appendChild(divInput);
+      }
+    }
+
+    function agregarCategoria() {
+      if (cantCategoria <= 4) {
+        cantCategoria++;
+        let divContenedor = document.getElementById('contenedorCategoria');
+        let divCategoria = document.createElement("div");
+        divCategoria.setAttribute('class','form-group row');
+        let labelCategoria = document.createElement("label");
+        labelCategoria.setAttribute('class','col-md-2 col-form-label LblForm');
+        labelCategoria.innerText = 'Categoria '+ cantCategoria +':';
+        let divBotonCategoria = document.createElement("div");
+        divBotonCategoria.setAttribute("id", "Categoria" + cantCategoria);
+        divBotonCategoria.setAttribute('class','col-md-10');
+        let boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalCategoria'>Seleccione un Categoria</button>";
+        divBotonCategoria.innerHTML = boton;      
+        divCategoria.appendChild(labelCategoria);
+        divCategoria.appendChild(divBotonCategoria);
+        divContenedor.appendChild(divCategoria);
+        let divInputsGenerales = document.getElementById('InputsGenerales');
+        let divInput = document.createElement("input");
+        divInput.setAttribute("id", "ID_Categoria" + cantCategoria);
+        divInput.setAttribute("name", "ID_Categoria" + cantCategoria);
         divInput.setAttribute("type", "hidden");
         divInputsGenerales.appendChild(divInput);
       }
@@ -735,11 +806,15 @@ $Con->CloseConexion();
             </div>-->
             <div class="form-group row">
               <label for="modal-categoria" class="col-md-2 col-form-label LblForm">Categoría: </label>
-              <div class="col-md-10" id = "Categoria">
+              <div class="col-md-9" id = "Categoria">
                 <button id="modal-categoria" type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalCategoria">Seleccione una Categoria</button>  
               </div>
+              <div class="col-md-1">
+                  <button type="button" class="btn btn-primary" onClick="agregarCategoria()" id="agregarCategoriaID">+</button>
+              </div>
             </div>
-
+            <div id="contenedorCategoria">              
+            </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 1: </label>
               <div class="col-md-10" id = "Motivo">
@@ -1153,7 +1228,8 @@ $Con->CloseConexion();
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleCategoria()" data-dismiss="modal">OK</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
             </div>
           </div>
         </div>
