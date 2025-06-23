@@ -1,79 +1,5 @@
 <?php
-//Archivo de conexión a la base de datos
-require('Controladores/Conexion.php');
-header('Content-Type: text/html; charset=utf-8');
-
-//Variable de búsqueda
-$consultaBusqueda = $_REQUEST['valorBusqueda'];
-
-//Filtro anti-XSS
-$caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
-$caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
-$consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consultaBusqueda);
-
-//Variable vacía (para evitar los E_NOTICE)
-$mensaje = "";
-
-
-//Comprueba si $consultaBusqueda está seteado
-if (isset($consultaBusqueda)) {
-
-	$Con = new Conexion();
-	$Con->OpenConexion();
-	//Selecciona todo de la tabla mmv001 
-	//donde el nombre sea igual a $consultaBusqueda, 
-	//o el apellido sea igual a $consultaBusqueda, 
-	//o $consultaBusqueda sea igual a nombre + (espacio) + apellido
-
-	$consulta = mysqli_query($Con->Conexion, "SELECT * FROM categoria WHERE categoria LIKE '%$consultaBusqueda%' and estado = 1");
-
-
-	//Obtiene la cantidad de filas que hay en la consulta
-	$filas = mysqli_num_rows($consulta);
-
-	//Si no existe ninguna fila que sea igual a $consultaBusqueda, entonces mostramos el siguiente mensaje
-	if ($filas === 0) {
-		$mensaje = "<p>No hay ningún registro con ese dato</p>";
-	} else {
-		//Si existe alguna fila que sea igual a $consultaBusqueda, entonces mostramos el siguiente mensaje
-		//echo 'Resultados para <strong>'.$consultaBusqueda.'</strong>';
-
-		$mensaje .= '<table class="table">
-			  <thead class="thead-dark">
-			    <tr>
-			      <th scope="col">Categoria</th>
-			      <th scope="col">Cod_Categoria</th>	
-			      <th scope="col">Accion</th>	
-			    </tr>
-			  </thead>
-			  <tbody>';
-
-		//La variable $resultado contiene el array que se genera en la consulta, así que obtenemos los datos y los mostramos en un bucle
-		while($resultados = mysqli_fetch_array($consulta)) {
-			$ID_Categoria = $resultados["id_categoria"];			
-			$Categoria = $resultados['categoria'];
-			$Cod_Categoria = $resultados['cod_categoria'];					
-
-			//Output
-			$mensaje .= '
-			    <tr>
-			      <th scope="row">'.$Categoria.'</th>
-			      <td>'.$Cod_Categoria.'</td>		
-			      <td><button type = "button" class = "btn btn-outline-success" onClick="seleccionCategoria(\''.$Categoria.'\','.$ID_Categoria.')" data-dismiss="modal">seleccionar</button></td>
-			    </tr>';
-
-
-
-
-		};//Fin while $resultados
-
-		$mensaje .= '</tbody>
-			</table>';
-
-	}; //Fin else $filas
-	$Con->CloseConexion();
-
-};//Fin isset $consultaBusqueda
+//Fin isset $consultaBusqueda
 /*
  *
  * This file is part of Rastreador3.
@@ -93,6 +19,78 @@ if (isset($consultaBusqueda)) {
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-//Devolvemos el mensaje que tomará jQuery
+require('Controladores/Conexion.php');
+header('Content-Type: text/html; charset=utf-8');
+
+//Variable de búsqueda
+$consultaBusqueda = $_REQUEST['valorBusqueda'];
+
+$json_string = file_get_contents('php://input');
+$lista_categoria = json_decode($json_string, true);
+
+//Filtro anti-XSS
+$caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
+$caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
+$consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consultaBusqueda);
+
+$mensaje = "";
+
+if (isset($consultaBusqueda)) {
+
+	$Con = new Conexion();
+	$Con->OpenConexion();
+
+	$consulta = mysqli_query($Con->Conexion, "SELECT * FROM categoria WHERE categoria LIKE '%$consultaBusqueda%' and estado = 1");
+
+	$filas = mysqli_num_rows($consulta);
+
+	if ($filas === 0) {
+		$mensaje = "<p>No hay ningún registro con ese dato</p>";
+	} else {
+		$mensaje .= '<table class="table">
+			  <thead class="thead-dark">
+			    <tr>
+			      <th scope="col">Categoría</th>
+			      <th scope="col">Cod_Categoria</th>	
+			      <th scope="col">Acción</th>	
+			    </tr>
+			  </thead>
+			  <tbody>';
+
+		$valores_categorias = ($lista_categoria) ? array_values(array: $lista_categoria) : [];
+
+		while($resultados = mysqli_fetch_array($consulta)) {
+			$ID_Categoria = $resultados["id_categoria"];			
+			$Categoria = $resultados['categoria'];
+			$Cod_Categoria = $resultados['cod_categoria'];
+			$mensaje .= '<tr>
+							<th scope="row">' . $Categoria . '</th>
+							<td>' . $Cod_Categoria . '</td>';
+
+			if (in_array($ID_Categoria, $valores_categorias)) {
+				$mensaje .= '<td>
+								<button type = "button" style=\'width:12ch\' class = "btn btn-outline-success" onClick="addMultipleCategoria(\'' . $Categoria . '\',' . $ID_Categoria . ', this)">
+									&#10003
+								</button>
+							</td>
+						</tr>';
+			} else {
+				$mensaje .= '<td>
+								<button type = "button" class = "btn btn-outline-success" onClick="addMultipleCategoria(\'' . $Categoria . '\',' . $ID_Categoria . ', this)">
+									seleccionar
+								</button>
+							</td>
+						</tr>';
+			}
+		};
+
+		$mensaje .= '</tbody>
+			</table>';
+
+	};
+	$Con->CloseConexion();
+
+};
+
 echo $mensaje;
 ?>

@@ -69,7 +69,7 @@ if (isset($consultaBusqueda)) {
 			    </tr>
 			  </thead>
 			  <tbody>';
-		$valores_motivos = ($lista_motivo) ? array_values($lista_motivo) : [];
+		$valores_motivos = ($lista_motivo) ? array_values(array: $lista_motivo) : [];
 
 		while($resultados = mysqli_fetch_array($consulta)) {
 			$ID_Motivo = $resultados["id_motivo"];			
@@ -94,15 +94,14 @@ if (isset($consultaBusqueda)) {
 							</td>
 						</tr>';
 			}
-		};//Fin while $resultados
+		};
 
 		$mensaje .= '</tbody>
 			</table>';
 
-	}; //Fin else $filas
+	};
 	$Con->CloseConexion();
 
-};//Fin isset $consultaBusqueda
+};
 
-//Devolvemos el mensaje que tomará jQuery
 echo $mensaje;
