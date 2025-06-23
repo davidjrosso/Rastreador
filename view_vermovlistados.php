@@ -1,27 +1,45 @@
 <?php 
+/*
+ *
+ * This file is part of Rastreador3.
+ *
+ * Rastreador3 is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Rastreador3 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Rastreador3; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
+
 session_start(); 
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Controladores/Elements.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Controladores/CtrGeneral.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Persona.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/DtoMovimiento.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Categoria.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 header("Content-Type: text/html;charset=utf-8");
 
 /*     CONTROL DE USUARIOS                    */
 if(!isset($_SESSION["Usuario"])){
     header("Location: Error_Session.php");
 }
-$Con = new Conexion();
-$Con->OpenConexion();
+
 $ID_Usuario = $_SESSION["Usuario"];
-$ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
-$MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
-$EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
-$Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
-$TipoUsuario = $Ret["ID_TipoUsuario"];
+$usuario = new Account(account_id: $ID_Usuario);
+$TipoUsuario = $usuario->get_id_tipo_usuario();
+
 $_SESSION["reporte_listado"] = true;
 $_SESSION["reporte_grafico"] = false;
 $ID_Config = $_REQUEST["ID_Config"];
-$Con->CloseConexion();
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -65,7 +83,7 @@ $Con->CloseConexion();
         var Litros = document.getElementById("Litros").value;
         var Combustible = document.getElementById("Combustible");
         var PrecioxL = Combustible.options[Combustible.selectedIndex].getAttribute("name");
-        
+
         var Total = parseFloat(PrecioxL) * parseFloat(Litros);
 
         var Precio = document.getElementById("Precio");
@@ -236,7 +254,36 @@ $Con->CloseConexion();
               } else {
                 $ID_Motivo5 = 1;
               }
-              $ID_Categoria = $_REQUEST["ID_Categoria"]; 
+
+              $ID_Categoria = (isset($_REQUEST["ID_Categoria"])) ? $_REQUEST["ID_Categoria"] : null;
+              $CategoriasOpciones = [
+                "ID_Categoria" => $ID_Categoria
+              ];
+              if (isset($_REQUEST["ID_Categoria2"])) {
+                $ID_Categoria2 = $_REQUEST["ID_Categoria2"];
+                $CategoriasOpciones["ID_Categoria2"] = $ID_Categoria2;
+              } else {
+                $ID_Categoria2 = 0;
+              }
+              if (isset($_REQUEST["ID_Categoria3"])) {
+                $ID_Categoria3 = $_REQUEST["ID_Categoria3"];
+                $CategoriasOpciones["ID_Categoria3"] = $ID_Categoria3;
+              } else {
+                $ID_Categoria3 = 0;
+              }
+              if (isset($_REQUEST["ID_Categoria4"])) {
+                $ID_Categoria4 = $_REQUEST["ID_Categoria4"];
+                $CategoriasOpciones["ID_Categoria4"] = $ID_Categoria4;
+              } else {
+                $ID_Categoria4 = 0;
+              }
+              if (isset($_REQUEST["ID_Categoria5"])) {
+                $ID_Categoria5 = $_REQUEST["ID_Categoria5"];
+                $CategoriasOpciones["ID_Categoria5"] = $ID_Categoria5;
+              } else {
+                $ID_Categoria5 = 0;
+              }
+
               $ID_Escuela = $_REQUEST["ID_Escuela"];
               if (isset($_REQUEST["Trabajo"])) {
                 $Trabajo = $_REQUEST["Trabajo"];
@@ -248,6 +295,27 @@ $Con->CloseConexion();
               $ID_OtraInstitucion = $_REQUEST["ID_OtraInstitucion"];
               $ID_Responsable = $_REQUEST["ID_Responsable"];
 
+              $categorias = array_filter($CategoriasOpciones, 
+                                  function ($x) {
+                                                return !empty($x); 
+                                            }
+                                      );
+              $CantOpCategorias = count($categorias);
+              $filtro_categoria = array_reduce($categorias,
+                                        function ($categorias, $valor){
+                                                      $con = new Conexion();
+                                                      $con->OpenConexion();
+                                                      $ret_categoria = new Categoria(
+                                                                                    xID_Categoria: $valor,
+                                                                                    xConecction: $con
+                                                                                  );
+                                                      $con->CloseConexion();
+                                                      return $categorias . " - " . $ret_categoria->getCategoria();
+                                                  },
+                                          "Categorias: "
+                                          );
+              $listaDeCategorias = "(" . implode(",", array_filter($CategoriasOpciones)) . ")";
+              
               $listaDeMotivos = "(".implode(",",array_filter($MotivosOpciones)).")";
 
           	  $Consulta = "SELECT M.id_movimiento, M.fecha, M.id_persona, MONTH(M.fecha) as 'Mes',
@@ -447,17 +515,9 @@ $Con->CloseConexion();
               $filtrosSeleccionados["Trabajo"] = $Trabajo;                
             }
 
-            if($ID_Categoria > 0){
-              $categoria_query .= " WHERE id_categoria = $ID_Categoria";
-
-              $ConsultarCategoria = "select categoria
-                                    from categoria
-                                    where id_categoria = " . $ID_Categoria." limit 1";
-
-              $EjecutarConsultarCategoria = mysqli_query($Con->Conexion,$ConsultarCategoria) or die("Problemas al consultar filtro Categoria");
-              $RetConsultarCategoria = mysqli_fetch_assoc($EjecutarConsultarCategoria);
-              $filtros[] = "Categoria: " . $RetConsultarCategoria['categoria'];
-              $filtrosSeleccionados["ID_Categoria"] = $ID_Categoria;
+            if (count(array_filter($CategoriasOpciones))) {
+              $categoria_query .= " WHERE id_categoria in $listaDeCategorias";
+              $filtros[] = $filtro_categoria;
             }
 
             if($ID_CentroSalud > 0){
@@ -2298,24 +2358,6 @@ $Con->CloseConexion();
   }
 </script>
 <?php
-/*
- *
- * This file is part of Rastreador3.
- *
- * Rastreador3 is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Rastreador3 is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Rastreador3; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- */
 ?>
 <!-- <script>
     function guardarFiltrosSeleccionados() {
