@@ -286,7 +286,7 @@ $Con->CloseConexion();
       let idMotivo = null;
       listaMotivos.forEach((value, key, map) => {
           idMotivo = value;
-          if (motivoNumero < 3) {
+          if (motivoNumero <= 1) {
             if (motivoNumero == 1) {
               $("#Motivo").html("<p>" + key + "<button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
               $("#ID_Motivo").val(idMotivo);
@@ -889,8 +889,6 @@ $Con->CloseConexion();
               <div class="offset-md-2 col-md-10">
                 <div class="offset-md-2 col-md-10" id = "InputsGenerales">
                     <input type="hidden" name="ID_Motivo" id = "ID_Motivo" value = "0">
-                    <input type="hidden" name="ID_Motivo2" id = "ID_Motivo2" value = "0">
-                    <input type="hidden" name="ID_Motivo3" id = "ID_Motivo3" value = "0">
                     <input type="hidden" name="ID_Categoria" id = "ID_Categoria" value = "0">
                     <input type="hidden" name="width-display" id = "width-display" value = "0">
                     <button type="submit" class="btn btn-outline-success">Aceptar</button>

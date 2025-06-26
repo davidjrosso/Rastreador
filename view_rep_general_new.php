@@ -1379,14 +1379,22 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             $Nro_Legajo = (isset($_REQUEST["Nro_Legajo"])) ? $_REQUEST["Nro_Legajo"] : null;
 
             $ID_Motivo = (isset($_REQUEST["ID_Motivo"])) ? $_REQUEST["ID_Motivo"] : null;
-            $ID_Motivo2 = (isset($_REQUEST["ID_Motivo2"])) ? $_REQUEST["ID_Motivo2"] : null;
-            $ID_Motivo3 = (isset($_REQUEST["ID_Motivo3"])) ? $_REQUEST["ID_Motivo3"] : null;
             $MotivosOpciones = [
-              "ID_Motivo" => $ID_Motivo,
-              "ID_Motivo2" => $ID_Motivo2,
-              "ID_Motivo3" => $ID_Motivo3,
+              "ID_Motivo" => $ID_Motivo
             ];
 
+            if (isset($_REQUEST["ID_Motivo2"])) {
+              $ID_Motivo2 = $_REQUEST["ID_Motivo2"];
+              $MotivosOpciones["ID_Motivo2"] = $ID_Motivo2;
+            } else {
+              $ID_Motivo2 = 0;
+            }
+            if (isset($_REQUEST["ID_Motivo3"])) {
+              $ID_Motivo3 = $_REQUEST["ID_Motivo3"];
+              $MotivosOpciones["ID_Motivo3"] = $ID_Motivo3;
+            } else {
+              $ID_Motivo3 = 0;
+            }
             if (isset($_REQUEST["ID_Motivo4"])) {
               $ID_Motivo4 = $_REQUEST["ID_Motivo4"];
               $MotivosOpciones["ID_Motivo4"] = $ID_Motivo4;
