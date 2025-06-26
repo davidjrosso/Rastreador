@@ -26,10 +26,10 @@ class Elements
   const PAGINA_UNIFICACION_BARRIO = 17;
   const PAGINA_UNIFICACION_OTRA_INSTITUCION = 18;
   const PAGINA_UNIFICACION_CALLE = 19;
+  const PAGINA_UNIFICACION_CATEGORIA = 27;
   const PAGINA_AUDITORIA_ACCION = 24;
   const PAGINA_AUDITORIA_SOLICITUD = 25;
   const PAGINA_AUDITORIA_NOTIFICACION = 26;
-  
 
 	//Instanciando la Conexion
 	public function __construct(){
@@ -920,7 +920,7 @@ public function getMenuSeguridad($ID){
   public function getMenuUnificacionUsuario($ID)
   {
     switch ($ID) {
-      case 13:
+      case self::PAGINA_UNIFICACION_PERSONA:
           $menu = '<div class="menu-list">
   
             <ul id="menu-content" class="menu-content collapse out">
@@ -930,6 +930,9 @@ public function getMenuSeguridad($ID){
                 <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
                   <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
                 </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifcategorias.php\'">
+                  <a href="view_unifcategorias.php"><i class="fa fa-file-text fa-lg"></i>  Categorias</a>
+                </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifcentros.php\'">
                   <a href="view_unifcentros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
                 </li>
@@ -947,7 +950,7 @@ public function getMenuSeguridad($ID){
                 </li>
             </ul>
         </div>';break;
-      case 14:
+      case self::PAGINA_UNIFICACION_MOTIVO:
           $menu = '<div class="menu-list">
   
             <ul id="menu-content" class="menu-content collapse out">
@@ -957,6 +960,9 @@ public function getMenuSeguridad($ID){
                 <li class="collapsed active" onClick = "location.href = \'view_unifmotivos.php\'">
                   <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
                 </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifcategorias.php\'">
+                  <a href="view_unifcategorias.php"><i class="fa fa-file-text fa-lg"></i>  Categorias</a>
+                </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifcentros.php\'">
                   <a href="view_unifcentros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
                 </li>
@@ -974,7 +980,7 @@ public function getMenuSeguridad($ID){
                 </li>
             </ul>
         </div>';break;
-        case 15:
+        case self::PAGINA_UNIFICACION_CENTRO_SALUD:
             $menu = '<div class="menu-list">
   
             <ul id="menu-content" class="menu-content collapse out">
@@ -983,6 +989,9 @@ public function getMenuSeguridad($ID){
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
                   <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifcategorias.php\'">
+                  <a href="view_unifcategorias.php"><i class="fa fa-file-text fa-lg"></i>  Categorias</a>
                 </li>
                 <li class="collapsed active" onClick = "location.href = \'view_unifcentros.php\'">
                   <a href="view_unifcentros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
@@ -1001,7 +1010,7 @@ public function getMenuSeguridad($ID){
                 </li>
             </ul>
         </div>';break;
-        case 16:
+        case self::PAGINA_UNIFICACION_ESCUELA:
             $menu = '<div class="menu-list">
   
             <ul id="menu-content" class="menu-content collapse out">
@@ -1010,6 +1019,9 @@ public function getMenuSeguridad($ID){
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
                   <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifcategorias.php\'">
+                  <a href="view_unifcategorias.php"><i class="fa fa-file-text fa-lg"></i>  Categorias</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifcentros.php\'">
                   <a href="view_unifcentros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
@@ -1028,7 +1040,7 @@ public function getMenuSeguridad($ID){
                 </li>
             </ul>
         </div>';break;
-        case 17:
+        case self::PAGINA_UNIFICACION_BARRIO:
             $menu =  '<div class="menu-list">
   
             <ul id="menu-content" class="menu-content collapse out">
@@ -1037,6 +1049,9 @@ public function getMenuSeguridad($ID){
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
                   <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifcategorias.php\'">
+                  <a href="view_unifcategorias.php"><i class="fa fa-file-text fa-lg"></i>  Categorias</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifcentros.php\'">
                   <a href="view_unifcentros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
@@ -1055,7 +1070,7 @@ public function getMenuSeguridad($ID){
                 </li>
             </ul>
         </div>';break;
-        case 18:
+        case self::PAGINA_UNIFICACION_OTRA_INSTITUCION:
             $menu =  '<div class="menu-list">
                         <ul id="menu-content" class="menu-content collapse out">
                             <li onClick = "location.href = \'view_unifpersonas.php\'">
@@ -1063,6 +1078,9 @@ public function getMenuSeguridad($ID){
                             </li>
                             <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
                               <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
+                            </li>
+                            <li class="collapsed" onClick = "location.href = \'view_unifcategorias.php\'">
+                              <a href="view_unifcategorias.php"><i class="fa fa-file-text fa-lg"></i>  Categorias</a>
                             </li>
                             <li class="collapsed" onClick = "location.href = \'view_unifcentros.php\'">
                               <a href="view_unifcentros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
@@ -1082,7 +1100,7 @@ public function getMenuSeguridad($ID){
                         </ul>
                     </div>';
             break;
-        case 19:
+        case self::PAGINA_UNIFICACION_CALLE:
             $menu =  '<div class="menu-list">
   
             <ul id="menu-content" class="menu-content collapse out">
@@ -1091,6 +1109,9 @@ public function getMenuSeguridad($ID){
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
                   <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifcategorias.php\'">
+                  <a href="view_unifcategorias.php"><i class="fa fa-file-text fa-lg"></i>  Categorias</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifcentros.php\'">
                   <a href="view_unifcentros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
@@ -1110,6 +1131,37 @@ public function getMenuSeguridad($ID){
             </ul>
         </div>';
         break;
+        case self::PAGINA_UNIFICACION_CATEGORIA:
+            $menu =  '<div class="menu-list">
+  
+            <ul id="menu-content" class="menu-content collapse out">
+                <li onClick = "location.href = \'view_unifpersonas.php\'">
+                  <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
+                  <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
+                </li>
+                <li class="collapsed active" onClick = "location.href = \'view_unifcategorias.php\'">
+                  <a href="view_unifcategorias.php"><i class="fa fa-file-text fa-lg"></i>  Categorias</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifcentros.php\'">
+                  <a href="view_unifcentros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
+                  <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
+                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
+                  <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
+                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+                </li>
+            </ul>
+        </div>';
+        break;
       default:
           $menu =  '<div class="menu-list">
   
@@ -1119,6 +1171,9 @@ public function getMenuSeguridad($ID){
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
                   <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifcategorias.php\'">
+                  <a href="view_unifcategorias.php"><i class="fa fa-file-text fa-lg"></i> Categorias</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifcentros.php\'">
                   <a href="view_unifcentros.php"><i class="fa  fa-file-text fa-lg"></i> Centros Salud</a>
