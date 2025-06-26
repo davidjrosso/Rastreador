@@ -59,7 +59,7 @@ $Con->CloseConexion();
 
   <script>
     let cantBarrios = 1;
-    let cantMotivos = 3;
+    let cantMotivos = 1;
     let listaMotivos = new Map();
     let listaCategorias = new Map();
     let cantCategoria = 1;
@@ -817,20 +817,8 @@ $Con->CloseConexion();
             </div>
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 1: </label>
-              <div class="col-md-10" id = "Motivo">
+              <div class="col-md-9" id = "Motivo">
                 <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo">Seleccione un Motivo</button>   
-              </div>
-            </div>
-            <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 2: </label>
-              <div class="col-md-10" id = "Motivo2">
-                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo2">Seleccione un Motivo</button>   
-              </div>
-            </div>
-            <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 3: </label>
-              <div class="col-md-9" id = "Motivo3">
-                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo3">Seleccione un Motivo</button>   
               </div>
               <div class="col-md-1">
                   <button type="button" class="btn btn-primary" onClick="agregarMotivo()" id="agregarMotivoID">+</button>
