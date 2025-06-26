@@ -43,7 +43,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
   <script src="./dist/control.js"></script>
   <script>
     var cantBarrios = 1;
-    var cantMotivos = 3;
+    var cantMotivos = 1;
     let listaMotivos = new Map();
     let listaCategorias = new Map();
     let cantCategoria = 1;
@@ -287,7 +287,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
       let idMotivo = null;
       listaMotivos.forEach((value, key, map) => {
           idMotivo = value;
-          if (motivoNumero < 3) {
+          if (motivoNumero <= 1) {
             if (motivoNumero == 1) {
               $("#Motivo").html("<p>" + key + "<button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
               $("#ID_Motivo").val(idMotivo);
@@ -346,7 +346,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
       }
     }
 
-    function seleccionCategoria(xCategoria,xID){
+    function seleccionCategoria(xCategoria, xID){
       var Categoria = document.getElementById("Categoria");
       var ID_Categoria = document.getElementById("ID_Categoria");
       Categoria.innerHTML = "";
@@ -664,18 +664,6 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
                   <button type="button" class="btn btn-primary" onClick="agregarMotivo()" id="agregarMotivoID">+</button>
               </div>
             </div>
-            <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 2: </label>
-              <div class="col-md-10" id = "Motivo2">
-                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo2">Seleccione un Motivo</button>   
-              </div>
-            </div>
-            <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 3: </label>
-              <div class="col-md-10" id = "Motivo3">
-                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo3">Seleccione un Motivo</button>   
-              </div>
-            </div>
             <div id="contenedorMotivos">              
             </div>
             <div class="form-group row">
@@ -759,8 +747,6 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
             <div class="form-group row">
               <div class="offset-md-2 col-md-10" id = "InputsGenerales">
                 <input type="hidden" name="ID_Motivo" id = "ID_Motivo" value = "0">
-                <input type="hidden" name="ID_Motivo2" id = "ID_Motivo2" value = "0">
-                <input type="hidden" name="ID_Motivo3" id = "ID_Motivo3" value = "0">
                 <input type="hidden" name="ID_Categoria" id = "ID_Categoria" value = "0">
                 <input type="hidden" name="ID_Config" id="ID_Config" value="table">
                 <button type="submit" class="btn btn-outline-success">Aceptar</button>

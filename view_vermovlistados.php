@@ -23,6 +23,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/Controladores/Elements.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Controladores/CtrGeneral.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Persona.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/DtoMovimiento.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Motivo.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Categoria.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 header("Content-Type: text/html;charset=utf-8");
@@ -234,14 +235,22 @@ $ID_Config = $_REQUEST["ID_Config"];
               $Nro_Legajo = $_REQUEST["Nro_Legajo"];
               
               $ID_Motivo = $_REQUEST["ID_Motivo"];
-              $ID_Motivo2 = $_REQUEST["ID_Motivo2"];
-              $ID_Motivo3 = $_REQUEST["ID_Motivo3"];
               $MotivosOpciones = [
-                "ID_Motivo" => $ID_Motivo,
-                "ID_Motivo2" => $ID_Motivo2,
-                "ID_Motivo3" => $ID_Motivo3,
+                "ID_Motivo" => $ID_Motivo
               ];
 
+              if (isset($_REQUEST["ID_Motivo2"])) {
+                $ID_Motivo2 = $_REQUEST["ID_Motivo2"];
+                $MotivosOpciones["ID_Motivo2"] = $ID_Motivo2;
+              } else {
+                $ID_Motivo2 = 0;
+              }
+              if (isset($_REQUEST["ID_Motivo3"])) {
+                $ID_Motivo3 = $_REQUEST["ID_Motivo3"];
+                $MotivosOpciones["ID_Motivo3"] = $ID_Motivo3;
+              } else {
+                $ID_Motivo3 = 0;
+              }
               if (isset($_REQUEST["ID_Motivo4"])) {
                 $ID_Motivo4 = $_REQUEST["ID_Motivo4"];
                 $MotivosOpciones["ID_Motivo4"] = $ID_Motivo4;
@@ -294,6 +303,27 @@ $ID_Config = $_REQUEST["ID_Config"];
               $ID_CentroSalud = $_REQUEST["ID_CentroSalud"];
               $ID_OtraInstitucion = $_REQUEST["ID_OtraInstitucion"];
               $ID_Responsable = $_REQUEST["ID_Responsable"];
+
+              $motivos = array_filter($MotivosOpciones, 
+                                  function ($x) {
+                                                return !empty($x); 
+                                            }
+                                      );
+              $CantOpMotivos = count($motivos);
+
+              $filtro_motivo = array_reduce($motivos, 
+                                        function ($motivos, $valor){
+                                                      $con = new Conexion();
+                                                      $con->OpenConexion();
+                                                      $ret_motivo = new Motivo(
+                                                                              coneccion_base: $con, 
+                                                                              id_motivo: $valor
+                                                                              );
+                                                      $con->CloseConexion();
+                                                      return $motivos . " - " . $ret_motivo->get_motivo();
+                                                  },
+                                          "Motivos: "
+                                          );
 
               $categorias = array_filter($CategoriasOpciones, 
                                   function ($x) {
@@ -556,6 +586,7 @@ $ID_Config = $_REQUEST["ID_Config"];
             if (count(array_filter($MotivosOpciones))) {
               $motivo_query = "(" . $motivo_query;
               $motivo_query .= " id_motivo in $listaDeMotivos)";
+              $filtros[] = $filtro_motivo;
             } else {
               $motivo_query = "motivo";
             }
