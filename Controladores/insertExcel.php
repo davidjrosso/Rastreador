@@ -241,8 +241,15 @@
 								$valor_fecha,
 								$result_array
 										);
-				$motivo = codigoExcelMotivo(trim($valor));;
-				if ($is_fecha && $motivo) {
+
+				$motivos_valor = preg_split("~[\s\-|]+~", trim($valor));
+				$is_all_motivo = array_reduce(
+					$motivos_valor,
+				 function ($acum, $element){
+								return $acum && codigoExcelMotivo(trim($element));
+							},
+				   true);
+				if ($is_fecha && $is_all_motivo) {
 					$datos["fecha"] = null;
 					if (!empty($result_array[0])) {
 						$lista_fecha = explode("/", $result_array[0]);
@@ -252,7 +259,7 @@
 						$fecha_movimiento  = date(format: 'Y-m-d',timestamp: $fecha_excel);
 						$datos["fecha"] = $fecha_movimiento;
 					}
-					$datos["motivo"]  = $motivo;
+					$datos["motivo"]  = $motivos_valor;
 				} else {
 					$observ = (!empty($valor)) ? $valor : "no hay datos"; 
 					$datos = $col_header . " : " . $observ;
@@ -299,10 +306,18 @@
 				if ($col_config == "observacion") {
 						$lista_valores["observacion"] .= " - " . $valor;
 				} else if ($col_config == "motivo") {
-						$lista_valores["motivos"][] = $valor;
+						foreach ($valor["motivo"] as $val_motivo) {
+							$row_motivo["fecha"] = $valor["fecha"];
+							$row_motivo["motivo"] = $val_motivo;
+							$lista_valores["motivos"][] = $row_motivo;
+						}
 				} else if ($col_config == "default") {
 					if (is_array($valor)) {
-						$lista_valores["motivos"][] = $valor;
+						foreach ($valor["motivo"] as $val_motivo) {
+							$row_motivo["fecha"] = $valor["fecha"];
+							$row_motivo["motivo"] = $val_motivo;
+							$lista_valores["motivos"][] = $row_motivo;
+						}
 					} else {
 						$lista_valores["observacion"] .= " - " . $valor;
 					}
@@ -421,6 +436,7 @@
 				$ID_TipoAccion = 1;
 				$email = null;
 				$ID_Usuario = 100;
+				$is_calle_rastreador = Calle::existe_calle($direccion);
 
 				if (!$lista_motivos) {
 					$id_persona = (empty($dni)) ? null : Persona::get_id_persona_by_dni($con,
@@ -434,7 +450,7 @@
 						$calle = $persona->getNombre_Calle();
 						$nro_calle = $persona->getNro();
 
-						if (($persona->getId_Calle() && !$modificacion)) {
+						if (($is_calle_rastreador && !$modificacion)) {
 							$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
 
 							if ($server == 0 && $nro_calle >= 1000) $server++;
@@ -461,10 +477,13 @@
 							$row_request["persona"] = $persona;
 							$row_request["direccion"] = $direccion;
 							$request[] = $row_request;
-						}
-						$persona->update_direccion();
 
-						$row_json["calle_rastreador"] = Calle::existe_calle($direccion);
+							$persona->update_direccion();
+						}
+						$persona->update_familia();
+						$persona->update_barrio();
+
+						$row_json["calle_rastreador"] = $is_calle_rastreador;
 						$row_json["domicilio"] = (empty($direccion)) ? "" : $direccion;
 						$row_json["form"]["persona"] = $persona->jsonSerialize();
 						$domicilios_json[]["formulario"] = $row_json;
@@ -487,7 +506,7 @@
 							if (is_numeric($departam)) $persona->setFamilia($departam);
 							$nro_calle = $persona->getNro();
 							
-							if ($persona->getId_Calle()) {
+							if ($is_calle_rastreador) {
 								$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
 
 								if ($server == 0 && $nro_calle >= 1000) $server++;
@@ -527,10 +546,10 @@
 							);
 							$accion->save();
 							$row_json["form"]["persona"] = $persona->jsonSerialize();
-							$domicilios_json[]["formulario"] = $row_json;
 						} 
-						$row_json["calle_rastreador"] = Calle::existe_calle($direccion);
+						$row_json["calle_rastreador"] = $is_calle_rastreador;
 						$row_json["domicilio"] = (empty($direccion)) ? "" : $direccion;
+						$domicilios_json[]["formulario"] = $row_json;
 					}
 					if ($row % 10 == 9) {
 						$progress = $row / (2 * $highestRow);
@@ -545,6 +564,7 @@
 						$id_persona = (empty($dni)) ? null : Persona::get_id_persona_by_dni($con,
 																							$dni
 																							);
+
 						if (!is_null($id_persona) && is_numeric($id_persona)) {
 							$persona = new Persona(ID_Persona: $id_persona);
 							$georeferencia = $persona->getGeoreferencia();
@@ -553,7 +573,7 @@
 							$calle = $persona->getNombre_Calle();
 							$nro_calle = $persona->getNro();
 
-							if (($persona->getId_Calle() && !$modificacion)) {
+							if (($is_calle_rastreador && !$modificacion)) {
 								$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
 
 								if ($server == 0 && $nro_calle >= 1000) $server++;
@@ -580,10 +600,13 @@
 								$row_request["persona"] = $persona;
 								$row_request["direccion"] = $direccion;
 								$request[] = $row_request;
+								
+								$persona->update_direccion();
 							}
-							$persona->update_direccion();
+							$persona->update_familia();
+							$persona->update_barrio();	
 
-							$row_json["calle_rastreador"] = Calle::existe_calle($direccion);
+							$row_json["calle_rastreador"] = $is_calle_rastreador;
 							$row_json["domicilio"] = $direccion;
 							$row_json["form"]["persona"] = $persona->jsonSerialize();
 							$domicilios_json[]["formulario"] = $row_json;
@@ -605,8 +628,7 @@
 					);
 
 					$row_json["responsable"] = $responsable->jsonSerialize();
-
-					$row_json["calle_rastreador"] = Calle::existe_calle($direccion);
+					$row_json["calle_rastreador"] = $is_calle_rastreador;
 					$row_json["domicilio"] = $direccion;
 
 					$Fecha_Nacimiento = (empty($Fecha_Nacimiento)) ? null : $Fecha_Nacimiento;
@@ -628,7 +650,7 @@
 						if (is_numeric($departam)) $persona->setFamilia($departam);
 						$nro_calle = $persona->getNro();
 						
-						if ($persona->getId_Calle()) {
+						if ($is_calle_rastreador) {
 							$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
 
 							if ($server == 0 && $nro_calle >= 1000) $server++;
@@ -682,8 +704,7 @@
 							$calle = $persona->getNombre_Calle();
 							$nro_calle = $persona->getNro();
 
-							if ($persona->getId_Calle()
-								&& !$modificacion) {
+							if ($is_calle_rastreador && !$modificacion) {
 								$calle_url = str_replace(" ", "+", $calle);
 
 								if ($server == 0 && $nro_calle >= 1000) $server++;
@@ -710,8 +731,11 @@
 								$row_request["persona"] = $persona;
 								$row_request["direccion"] = $direccion;
 								$request[] = $row_request;
+
+								$persona->update_direccion();
 							}
-							$persona->update_direccion();
+							$persona->update_familia();
+							$persona->update_barrio();
 							$consulta_osm = false;
 						}
 					}

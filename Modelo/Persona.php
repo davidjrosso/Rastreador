@@ -493,14 +493,17 @@ public function setCalleNro($xDomicilio = null)
 		$ret = null;
 		if (preg_match('~ [0-9]+$~', $nro_calle, $out)) {
 			$nro_calle = trim($out[0]);
+			$igual = $igual && ($this->getNroCalle() == $nro_calle);
 		} else {
 			if (preg_match('~ [0-9]+ ([aA-zZ]|[0-9])+~', $nro_calle, $ret)) {
 				$lista = explode(" ", trim($ret[0]));
 				$nro_calle = trim($lista[0]);
+				$igual = $igual && ($this->getNroCalle() == $nro_calle);
 			} else {
 				preg_match('~^[0-9]+$~', $nro_calle, $out);
 				if (!empty($out[0])) {
 					$nro_calle = trim($out[0]);
+					$igual = $igual && ($this->getNro() == $nro_calle);
 				} else {
 					$nro_calle = null;
 				}
@@ -1082,6 +1085,34 @@ public function update_nro()
 	$Con->OpenConexion();
 	$Consulta = "update persona 
 				 set nro = " . ((!is_null($this->getNro())) ? $this->getNro() : "null") . " 
+				 where id_persona = " . $this->getID_Persona();
+				 $MensajeErrorConsultar = "No se pudo actualizar la Persona ";
+				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+					throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+				}
+				 $Con->CloseConexion();
+}
+
+public function update_familia()
+{
+	$Con = new Conexion();
+	$Con->OpenConexion();
+	$Consulta = "update persona 
+				 set familia = " . ((!is_null($this->getFamilia())) ? intval($this->getFamilia()) : "null") . " 
+				 where id_persona = " . $this->getID_Persona();
+				 $MensajeErrorConsultar = "No se pudo actualizar la Persona ";
+				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+					throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+				}
+				 $Con->CloseConexion();
+}
+
+public function update_barrio()
+{
+	$Con = new Conexion();
+	$Con->OpenConexion();
+	$Consulta = "update persona 
+				 set ID_Barrio = " . ((!is_null($this->getId_Barrio())) ? $this->getId_Barrio() : "null") . " 
 				 where id_persona = " . $this->getID_Persona();
 				 $MensajeErrorConsultar = "No se pudo actualizar la Persona ";
 				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
