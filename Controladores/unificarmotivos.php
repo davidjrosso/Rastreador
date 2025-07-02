@@ -1,5 +1,4 @@
 <?php 
-require_once 'Conexion.php';
 /*
  *
  * This file is part of Rastreador3.
@@ -18,6 +17,7 @@ require_once 'Conexion.php';
  * along with Rastreador3; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Conexion.php';
 
 $ID_Solicitud = $_REQUEST["ID_Solicitud"];
 $ID_Motivo_1 = $_REQUEST["ID_Motivo_1"];

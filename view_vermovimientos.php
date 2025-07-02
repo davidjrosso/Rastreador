@@ -1,8 +1,32 @@
 <?php 
+/*
+ *
+ * This file is part of Rastreador3.
+ *
+ * Rastreador3 is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Rastreador3 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Rastreador3; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
+
 session_start(); 
-require_once "Controladores/Elements.php";
-require_once "Controladores/CtrGeneral.php";
-require_once "Modelo/DtoMovimiento.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Conexion.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Elements.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/CtrGeneral.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Movimiento.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Responsable.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Account.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/MovimientoMotivo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/DtoMovimiento.php';
 header("Content-Type: text/html;charset=utf-8");
 
 /*     CONTROL DE USUARIOS                    */
@@ -10,15 +34,9 @@ if(!isset($_SESSION["Usuario"])){
     header("Location: Error_Session.php");
 }
 
-$Con = new Conexion();
-$Con->OpenConexion();
 $ID_Usuario = $_SESSION["Usuario"];
-$ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
-$MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
-$EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
-$Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
-$TipoUsuario = $Ret["ID_TipoUsuario"];
-$Con->CloseConexion();
+$usuario = new Account(account_id: $ID_Usuario);
+$TipoUsuario = $usuario->get_id_tipo_usuario();
 ?>
 <!DOCTYPE html>
 <html>
@@ -83,13 +101,13 @@ $Con->CloseConexion();
           <!-- Search -->
         <div class = "row">
           <?php  
-            if(isset($_REQUEST["ID"]) && $_REQUEST["ID"]!=null){
+            if (isset($_REQUEST["ID"]) && $_REQUEST["ID"] != null) {
               $ID_Movimiento = $_REQUEST["ID"];
 
               $Con = new Conexion();
               $Con->OpenConexion();
 
-              $consultaGeneral = "CREATE TEMPORARY TABLE MTPERM select DISTINCT(MT.id_motivo), MT.motivo 
+              $consultaGeneral = "CREATE TEMPORARY TABLE MTPERM SELECT DISTINCT(MT.id_motivo), MT.motivo 
                                    from motivo MT inner join categoria C on (MT.cod_categoria = C.cod_categoria) 
                                      inner join categorias_roles CR on (CR.id_categoria = CR.id_categoria)" ;
               $MessageError = "Problemas al crear la tabla temporaria de usuarios";
@@ -101,37 +119,11 @@ $Con->CloseConexion();
                                         R.responsable, M.id_resp_2,
                                         M.id_resp_3, M.id_resp_4,
                                         C.centro_salud, I.Nombre,
-                                        M.motivo_1,
-                                        M.motivo_1 not in (SELECT id_motivo
-                                                           FROM MTPERM) as mt1,
-                                        (SELECT motivo
-                                         FROM motivo
-                                         WHERE id_motivo = M.motivo_1) as Mot1,
-                                        M.motivo_2, 
-                                        M.motivo_2 not in (SELECT id_motivo
-                                                           FROM MTPERM) as mt2,
-                                        (SELECT motivo
-                                         FROM motivo
-                                         WHERE id_motivo = M.motivo_2) as Mot2,
-                                        M.motivo_3,
-                                        M.motivo_3 not in (SELECT id_motivo
-                                                           FROM MTPERM) as mt3,
-                                        (SELECT motivo
-                                         FROM motivo
-                                         WHERE id_motivo = M.motivo_3) as Mot3, 
-                                        M.motivo_4,
-                                        M.motivo_4 not in (SELECT id_motivo
-                                                           FROM MTPERM) as mt4,
-                                        (SELECT motivo
-                                         FROM motivo
-                                         WHERE id_motivo = M.motivo_4) as Mot4,
-                                        M.motivo_5,
-                                        M.motivo_5 not in (SELECT id_motivo
-                                                           FROM MTPERM) as mt5,
-                                        (SELECT motivo
-                                         FROM motivo
-                                         WHERE id_motivo = M.motivo_5) as Mot5
+                                        MT.motivo as Mot
                                  from movimiento M 
+                                      INNER JOIN movimiento_motivo MEMT ON (M.id_movimiento = MEMT.id_movimiento)
+                                      INNER JOIN motivo MT ON (MEMT.id_motivo = MT.id_motivo)
+                                      INNER JOIN MTPERM ME ON (MT.id_motivo = ME.id_motivo)
                                       INNER JOIN persona P ON (M.id_persona = P.id_persona)
                                       INNER JOIN responsable R ON (M.id_resp = R.id_resp) 
                                       LEFT JOIN centros_salud C ON (M.id_centro = C.id_centro)
@@ -143,95 +135,6 @@ $Con->CloseConexion();
 
               $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
 
-              $ID_Movimiento = $Ret["id_movimiento"];
-              $ID_Motivo_1 = $Ret["motivo_1"];
-              $tieneRolMT1 = $Ret["mt1"];
-              $nombreRolMT1 = $Ret["Mot1"];
-              $ID_Motivo_2 = $Ret["motivo_2"];
-              $tieneRolMT2 = $Ret["mt2"];
-              $nombreRolMT2 = $Ret["Mot2"];
-              $ID_Motivo_3 = $Ret["motivo_3"];
-              $tieneRolMT3 = $Ret["mt3"];
-              $nombreRolMT3 = $Ret["Mot3"];
-              $ID_Motivo_4 = $Ret["motivo_4"];
-              $tieneRolMT4 = $Ret["mt4"];
-              $nombreRolMT4 = $Ret["Mot4"];
-              $ID_Motivo_5 = $Ret["motivo_5"];
-              $tieneRolMT5 = $Ret["mt5"];
-              $nombreRolMT5 = $Ret["Mot5"];
-
-              if($tieneRolMT1 == "1"){
-                $ConsultarMotivo1 = "select MT.motivo 
-                                     from motivo MT inner join categoria C on (MT.cod_categoria = C.cod_categoria) 
-                                          inner join categorias_roles CR on (CR.id_categoria = CR.id_categoria) 
-                                     where MT.id_motivo = $ID_Motivo_1 
-                                     and (CR.id_tipousuario = $TipoUsuario or MT.id_motivo = 1)
-                                     and CR.estado = 1";
-                $MensajeErrorMotivo1 = "No se pudo consultar el Motivo 1";
-                $EjecutarConsultarMotivo1 = mysqli_query($Con->Conexion,$ConsultarMotivo1) or die($MensajeErrorMotivo1);
-                $RetMotivo1 = mysqli_fetch_assoc($EjecutarConsultarMotivo1);
-                $Motivo_1 = (isset($RetMotivo1["motivo"])?$RetMotivo1["motivo"]:"");
-              } else {
-                $Motivo_1 = $nombreRolMT1;
-              }
-              if($tieneRolMT2 == "1"){
-                $ConsultarMotivo2 = "select MT.motivo 
-                                   from motivo MT inner join categoria C on (MT.cod_categoria = C.cod_categoria) 
-                                     inner join categorias_roles CR on (CR.id_categoria = CR.id_categoria) 
-                                   where MT.id_motivo = $ID_Motivo_2
-                                   and (CR.id_tipousuario = $TipoUsuario or MT.id_motivo = 1)
-                                     and CR.estado = 1";
-                $MensajeErrorMotivo2 = "No se pudo consultar el Motivo 2";
-                $EjecutarConsultarMotivo2 = mysqli_query($Con->Conexion,$ConsultarMotivo2) or die($MensajeErrorMotivo2);
-                $RetMotivo2 = mysqli_fetch_assoc($EjecutarConsultarMotivo2);
-                $Motivo_2 = (isset($RetMotivo2["motivo"])?$RetMotivo2["motivo"]:"");
-              } else {
-                $Motivo_2 = $nombreRolMT2;
-              }
-              if($tieneRolMT3 == "1"){
-                  $ConsultarMotivo3 = "select MT.motivo 
-                                      from motivo MT inner join categoria C on (MT.cod_categoria = C.cod_categoria) 
-                                        inner join categorias_roles CR on (CR.id_categoria = CR.id_categoria) 
-                                      where MT.id_motivo = $ID_Motivo_3 
-                                        and (CR.id_tipousuario = $TipoUsuario or MT.id_motivo = 1)
-                                        and CR.estado = 1";
-                  $MensajeErrorMotivo3 = "No se pudo consultar el Motivo 3";
-                  $EjecutarConsultarMotivo3 = mysqli_query($Con->Conexion,$ConsultarMotivo3) or die($MensajeErrorMotivo3);
-                  $RetMotivo3 = mysqli_fetch_assoc($EjecutarConsultarMotivo3);
-                  $Motivo_3 = (isset($RetMotivo3["motivo"])?$RetMotivo3["motivo"]:"");
-              } else {
-                $Motivo_3 = $nombreRolMT3;
-              }
-              if($tieneRolMT4 == "1"){
-                  $ConsultarMotivo4 = "select MT.motivo 
-                                      from motivo MT inner join categoria C on (MT.cod_categoria = C.cod_categoria) 
-                                        inner join categorias_roles CR on (CR.id_categoria = CR.id_categoria) 
-                                      where MT.id_motivo = $ID_Motivo_4 
-                                        and (CR.id_tipousuario = $TipoUsuario or MT.id_motivo = 1)
-                                        and CR.estado = 1";
-                  $MensajeErrorMotivo4 = "No se pudo consultar el Motivo 4";
-                  $EjecutarConsultarMotivo4 = mysqli_query($Con->Conexion,$ConsultarMotivo4) or die($MensajeErrorMotivo4);
-                  $RetMotivo4 = mysqli_fetch_assoc($EjecutarConsultarMotivo4);
-                  $Motivo_4 = (isset($RetMotivo4["motivo"])?$RetMotivo4["motivo"]:"");
-              } else {
-                $Motivo_4 = $nombreRolMT4;
-              }
-
-              if($tieneRolMT5 == "1"){
-                  $ConsultarMotivo5 = "select MT.motivo 
-                                      from motivo MT inner join categoria C on (MT.cod_categoria = C.cod_categoria) 
-                                        inner join categorias_roles CR on (CR.id_categoria = CR.id_categoria) 
-                                      where MT.id_motivo = $ID_Motivo_5 
-                                        and (CR.id_tipousuario = $TipoUsuario or MT.id_motivo = 1)
-                                        and CR.estado = 1";
-                  $MensajeErrorMotivo5 = "No se pudo consultar el Motivo 5";
-                  $EjecutarConsultarMotivo5 = mysqli_query($Con->Conexion,$ConsultarMotivo5) or die($MensajeErrorMotivo5);
-                  $RetMotivo5 = mysqli_fetch_assoc($EjecutarConsultarMotivo5);
-                  $Motivo_5 = (isset($RetMotivo5["motivo"])?$RetMotivo5["motivo"]:"");
-              } else {
-                $Motivo_5 = $nombreRolMT5;
-              }
-
               $Fecha = $Fecha_Nacimiento = implode("-", array_reverse(explode("-",$Ret["fecha"])));
               $Apellido = $Ret["apellido"];
               $Nombre = $Ret["nombre"];
@@ -242,57 +145,126 @@ $Con->CloseConexion();
               $ID_Resp_4 = $Ret["id_resp_4"];
               $Centro_Salud = (!empty($Ret["centro_salud"])) ? $Ret["centro_salud"] : null;
               $OtraInstitucion = (!empty($Ret["Nombre"])) ? $Ret["Nombre"] : null;
+              $id_motivo = $Ret["Mot"];
 
-              $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Motivo_4,$Motivo_5,$Observaciones,$Responsable,$Centro_Salud,$OtraInstitucion);
+              $DtoMovimiento = new DtoMovimiento(
+                                                 xID_Movimiento: $ID_Movimiento,
+                                                 xFecha: $Fecha,
+                                                 xApellido: $Apellido,
+                                                 xNombre: $Nombre,
+                                                 xMotivo_1: $id_motivo ,
+                                                 xObservaciones: $Observaciones,
+                                                 xResponsable: $Responsable,
+                                                 xCentroSalud: $Centro_Salud,
+                                                 xOtraInstitucion: $OtraInstitucion
+                                                );
+              $count_motivo = 2;
+              while ($Ret = mysqli_fetch_assoc($EjecutarConsultarDatos)) {
+                if ($count_motivo == 2) $DtoMovimiento->setMotivo_2($Ret["Mot"]);
+                if ($count_motivo == 3) $DtoMovimiento->setMotivo_3($Ret["Mot"]);
+                if ($count_motivo == 4) $DtoMovimiento->setMotivo_4($Ret["Mot"]);
+                if ($count_motivo == 5) $DtoMovimiento->setMotivo_5($Ret["Mot"]);
+                $count_motivo++;
+              }
 
+              if ($ID_Resp_2 != null) {
+                $responsable = new Responsable(
+                                              coneccion_base: $Con,
+                                              id_responsable: $ID_Resp_2
+                                              );
+                $Responsable_2 = $responsable->get_responsable();
+              }
 
+              if ($ID_Resp_3 != null) {
+                $responsable = new Responsable(
+                                              coneccion_base: $Con,
+                                              id_responsable: $ID_Resp_3
+                                              );
+                $Responsable_3 = $responsable->get_responsable();
+              }
+
+              if ($ID_Resp_4 != null) {
+                $responsable = new Responsable(
+                                              coneccion_base: $Con,
+                                              id_responsable: $ID_Resp_4
+                                              );
+                $Responsable_4 = $responsable->get_responsable();
+              }
+
+              $Table = "<table class='table'>
+                          <thead>
+                            <tr>
+                              <th></th>
+                              <th>Detalles del Movimiento</th>
+                            </tr>
+                          </thead>";
+
+              $Table .= "<tr>
+                            <td>Fecha</td>
+                            <td>" . $DtoMovimiento->getFecha() . "</td>
+                         </tr>";
+              $Table .= "<tr>
+                            <td>Apellido</td>
+                            <td>" . $DtoMovimiento->getApellido() . "</td>
+                         </tr>";
+              $Table .= "<tr>
+                            <td>Nombre</td>
+                            <td>" . $DtoMovimiento->getNombre() . "</td>
+                          </tr>";
+              $Table .= "<tr>
+                            <td>Motivo 1</td>
+                            <td>" . $DtoMovimiento->getMotivo_1() . "</td>
+                         </tr>";
+              $Table .= "<tr>
+                            <td>Motivo 2</td>
+                            <td>" . $DtoMovimiento->getMotivo_2() . "</td>
+                         </tr>";
+              $Table .= "<tr>
+                            <td>Motivo 3</td>
+                            <td>" . $DtoMovimiento->getMotivo_3() . "</td>
+                         </tr>";
+              $Table .= "<tr>
+                            <td>Motivo 4</td>
+                            <td>" . $DtoMovimiento->getMotivo_4() . "</td>
+                         </tr>";
+              $Table .= "<tr>
+                            <td>Motivo 5</td>
+                            <td>" . $DtoMovimiento->getMotivo_5() . "</td>
+                         </tr>";
+              $Table .= "<tr>
+                            <td>Observaciones</td>
+                            <td>" . $DtoMovimiento->getObservaciones() . "</td>
+                         </tr>";
+              $Table .= "<tr>
+                            <td>Responsable</td>
+                            <td>" . $DtoMovimiento->getResponsable() . "</td>
+                         </tr>";
               if($ID_Resp_2 != null){
-                $Consultar_Resp2 = "select responsable from responsable where id_resp = $ID_Resp_2 limit 1";
-                $MensajeErrorResp2= "No se pudo consultar los datos del responsable 2";
-                $Ejecutar_Resp2 = mysqli_query($Con->Conexion, $Consultar_Resp2) or die($MensajeErrorResp2);
-                $RetResp2 = mysqli_fetch_assoc($Ejecutar_Resp2);
-                $Responsable_2 = $RetResp2["responsable"];
-              }
-
-              if($ID_Resp_3 != null){
-                $Consultar_Resp3 = "select responsable from responsable where id_resp = $ID_Resp_3 limit 1";
-                $MensajeErrorResp3= "No se pudo consultar los datos del responsable 3";
-                $Ejecutar_Resp3 = mysqli_query($Con->Conexion, $Consultar_Resp3) or die($MensajeErrorResp3);
-                $RetResp3 = mysqli_fetch_assoc($Ejecutar_Resp3);
-                $Responsable_3 = $RetResp3["responsable"];
-              }
-
-              if($ID_Resp_4 != null){
-                $Consultar_Resp4 = "select responsable from responsable where id_resp = $ID_Resp_4 limit 1";
-                $MensajeErrorResp4= "No se pudo consultar los datos del responsable 4";
-                $Ejecutar_Resp4 = mysqli_query($Con->Conexion, $Consultar_Resp4) or die($MensajeErrorResp4);
-                $RetResp4 = mysqli_fetch_assoc($Ejecutar_Resp4);
-                $Responsable_4 = $RetResp4["responsable"];
-              }
-
-              $Table = "<table class='table'><thead><tr><th></th><th>Detalles del Movimiento</th></tr></thead>";
-
-              $Table .= "<tr><td>Fecha</td><td>".$DtoMovimiento->getFecha()."</td></tr>";
-              $Table .= "<tr><td>Apellido</td><td>".$DtoMovimiento->getApellido()."</td></tr>";
-              $Table .= "<tr><td>Nombre</td><td>".$DtoMovimiento->getNombre()."</td></tr>";
-              $Table .= "<tr><td>Motivo 1</td><td>".$DtoMovimiento->getMotivo_1()."</td></tr>";
-              $Table .= "<tr><td>Motivo 2</td><td>".$DtoMovimiento->getMotivo_2()."</td></tr>";
-              $Table .= "<tr><td>Motivo 3</td><td>".$DtoMovimiento->getMotivo_3()."</td></tr>";
-              $Table .= "<tr><td>Motivo 4</td><td>".$DtoMovimiento->getMotivo_4()."</td></tr>";
-              $Table .= "<tr><td>Motivo 5</td><td>".$DtoMovimiento->getMotivo_5()."</td></tr>";
-              $Table .= "<tr><td>Observaciones</td><td>".$DtoMovimiento->getObservaciones()."</td></tr>";
-              $Table .= "<tr><td>Responsable</td><td>".$DtoMovimiento->getResponsable()."</td></tr>";
-              if($ID_Resp_2 != null){
-                $Table .= "<tr><td>Responsable 2</td><td>".$Responsable_2."</td></tr>";
+                $Table .= "<tr>
+                              <td>Responsable 2</td>
+                              <td>" . $Responsable_2 . "</td>
+                           </tr>";
               }
               if($ID_Resp_3 != null){
-                $Table .= "<tr><td>Responsable 3</td><td>".$Responsable_3."</td></tr>";
+                $Table .= "<tr>
+                              <td>Responsable 3</td>
+                              <td>" . $Responsable_3 . "</td>
+                           </tr>";
               }
               if($ID_Resp_4 != null){
-                $Table .= "<tr><td>Responsable 4</td><td>".$Responsable_4."</td></tr>";
+                $Table .= "<tr>
+                              <td>Responsable 4</td>
+                              <td>" . $Responsable_4 . "</td>
+                           </tr>";
               }
-              $Table .= "<tr><td>Centro de Salud</td><td>".$DtoMovimiento->getCentroSalud()."</td></tr>";
-              $Table .= "<tr><td>Institucion</td><td>".$DtoMovimiento->getOtraInstitucion()."</td></tr>";
+              $Table .= "<tr>
+                            <td>Centro de Salud</td>
+                            <td>" . $DtoMovimiento->getCentroSalud() . "</td>
+                         </tr>";
+              $Table .= "<tr>
+                            <td>Institucion</td>
+                            <td>" . $DtoMovimiento->getOtraInstitucion() . "</td>
+                         </tr>";
 
               $Table .= "</table>";
 
@@ -301,7 +273,7 @@ $Con->CloseConexion();
               $Con->CloseConexion();
               
 
-            }else{
+            } else {
               $Mensaje = "No se pudo consultar los Datos porque no se pudo obtener el ID del Movimiento";
               echo $Mensaje;
             }
@@ -311,33 +283,12 @@ $Con->CloseConexion();
             <div class="col-10">
               
             </div>
-            <div class="col-2">
-              
+            <div class="col-2">       
               <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_movimientos.php'">Atras</button>
             </div>
         </div>
   </div>
 </div>
 </div>
-<?php
-/*
- *
- * This file is part of Rastreador3.
- *
- * Rastreador3 is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Rastreador3 is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Rastreador3; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- */
-?>
 </body>
 </html>

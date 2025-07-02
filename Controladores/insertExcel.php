@@ -235,7 +235,7 @@
 			default :
 				$valor_fecha = (!empty($col_header)) ? $col_header : null;
 				//$pattern = "/([0-9][0-9]|[1-9]).([0-9][0-9]|[1-9]).[2-9][0-9][0-9][0-9]/";
-				$pattern = "/([0-9][0-9]).([0-9][0-9]).[2-9][0-9][0-9][0-9]/";
+				$pattern = "/(([0-9][0-9]).([0-9][0-9]).[2-9][0-9][0-9][0-9]|([0-9][0-9]).([0-9][0-9]).[0-9][0-9])/";
 				$is_fecha = preg_match(
 								$pattern,
 								$valor_fecha,
@@ -750,6 +750,19 @@
 													  coneccion_base: $con,
 													  xID_Movimiento: $exist_mov
 													);
+						$exist_motivo_movimiento = MovimientoMotivo::exist_movimiento_motivo(
+																	connection: $con,
+																	movimiento: $movimiento->getID_Movimiento(),
+																	motivo: $ID_Motivo_1
+													);
+						if (!$exist_motivo_movimiento) {
+							$motivo_movimiento = new MovimientoMotivo(
+																	connection: $con,
+																	id_movimiento: $movimiento->getID_Movimiento(),
+																	id_motivo: $ID_Motivo_1
+																	);
+							$motivo_movimiento->save();
+						}
 					} else {
 						$movimiento = new Movimiento(
 							coneccion_base: $con, 
@@ -770,10 +783,9 @@
 						$movimiento->save();
 
 						$motivo_movimiento = new MovimientoMotivo(
-													  connection: $con, 
+													  connection: $con,
 												   id_movimiento: $movimiento->getID_Movimiento(),
 												   	   id_motivo: $ID_Motivo_1,
-													  nro_motivo: 1,
 													  	  estado: 1
 																 );
 						$motivo_movimiento->save();

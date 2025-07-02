@@ -1,10 +1,4 @@
 <?php 
-session_start();
-require_once 'Conexion.php';
-require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Movimiento.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/MovimientoMotivo.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Persona.php");
-
 /*
  *
  * This file is part of Rastreador3.
@@ -23,8 +17,13 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Persona.php");
  * along with Rastreador3; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
+session_start();
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Conexion.php';
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Movimiento.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/MovimientoMotivo.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Persona.php");
 
- $Arr_ID_Responsable = $_REQUEST["ID_Responsable"];
+$Arr_ID_Responsable = $_REQUEST["ID_Responsable"];
 
 $ID_Usuario = $_SESSION["Usuario"];
 
@@ -37,6 +36,7 @@ $ID_Motivo_2 = (!empty($_REQUEST["ID_Motivo_2"]) ? $_REQUEST["ID_Motivo_2"] : nu
 $ID_Motivo_3 = (!empty($_REQUEST["ID_Motivo_3"]) ? $_REQUEST["ID_Motivo_3"] : null);
 $ID_Motivo_4 = (!empty($_REQUEST["ID_Motivo_4"]) ? $_REQUEST["ID_Motivo_4"] : null);
 $ID_Motivo_5 = (!empty($_REQUEST["ID_Motivo_5"]) ? $_REQUEST["ID_Motivo_5"] : null);
+$lista_motivos = array($ID_Motivo_1);
 $Observaciones = $_REQUEST["Observaciones"];
 $ID_Responsable = $Arr_ID_Responsable[0];
 $ID_Centro = $_REQUEST["ID_Centro"];
@@ -47,16 +47,24 @@ $ID_Responsable_3 = (isset($Arr_ID_Responsable[2])) ? $Arr_ID_Responsable[2] : '
 $ID_Responsable_4 = (isset($Arr_ID_Responsable[3])) ? $Arr_ID_Responsable[3] : 'null';
 
 if($ID_Motivo_2 == null){
-	$ID_Motivo_2 = 1;
+	$ID_Motivo_2 = 1; 
+} else {
+	$lista_motivos[] = $ID_Motivo_2;
 }
 if($ID_Motivo_3 == null){
 	$ID_Motivo_3 = 1;
+} else {
+	$lista_motivos[] = $ID_Motivo_3;
 }
 if($ID_Motivo_4 == null){
 	$ID_Motivo_4 = 1;
+} else {
+	$lista_motivos[] = $ID_Motivo_4;
 }
 if($ID_Motivo_5 == null){
 	$ID_Motivo_5 = 1;
+} else {
+	$lista_motivos[] = $ID_Motivo_5;
 }
 
 if(empty($ID_Responsable[0])){
@@ -67,16 +75,16 @@ if(empty($ID_Centro)){
 	$ID_Centro = 'null';
 }
 
-$Con = new Conexion();
-$Con->OpenConexion();
+$con = new Conexion();
+$con->OpenConexion();
 
-if (Persona::is_exist($Con, $ID_Persona)) {
+if (Persona::is_exist($con, $ID_Persona)) {
 	$persona = new Persona($ID_Persona);
 }
 
-if (Movimiento::is_exist($Con, $ID_Movimiento)) {
+if (Movimiento::is_exist($con, $ID_Movimiento)) {
 	$movimiento_sin_modificar = new Movimiento(
-								coneccion_base: $Con, 
+								coneccion_base: $con, 
 								xID_Movimiento: $ID_Movimiento
 	);
 	$fecha_previa = $movimiento_sin_modificar->getFecha();
@@ -84,7 +92,7 @@ if (Movimiento::is_exist($Con, $ID_Movimiento)) {
 	$persona = new Persona(ID_Persona: $id_persona_previa);
 
 	$movimiento = new Movimiento(
-		coneccion_base: $Con, 
+		coneccion_base: $con, 
 		xFecha: $Fecha,
 		Fecha_Creacion: $Fecha_Creacion,
 		xID_Persona: $ID_Persona,
@@ -105,206 +113,36 @@ if (Movimiento::is_exist($Con, $ID_Movimiento)) {
 	$movimiento->setID_Movimiento($ID_Movimiento);
 	$movimiento->udpate();
 
-	$motivo_nro = MovimientoMotivo::exist_movimiento_nro(
-		connection: $Con,
-		movimiento: $ID_Movimiento,
-		nro: 1
-	);
-	if ($ID_Motivo_1 > 1) {
-		$motivo = MovimientoMotivo::exist_movimiento_motivo(
-			connection: $Con,
-			movimiento: $ID_Movimiento,
-			motivo: $ID_Motivo_1
-		);
-		if (!$motivo_nro && !$motivo) {
+	$consulta = "SELECT * 
+				 FROM movimiento_motivo
+				 WHERE id_movimiento = $ID_Movimiento
+				   AND estado = 1";
+	$rs = mysqli_query($con->Conexion,$consulta) or die("Problemas al consultar las acciones.");
+
+	while ($ret = mysqli_fetch_assoc($rs)) {
+		if (!in_array($ret["id_motivo"], $lista_motivos)) {
 			$movimiento_motivo = new MovimientoMotivo(
-														  connection: $Con,
-													   id_movimiento: $ID_Movimiento,
-														   id_motivo: $ID_Motivo_1
-			);
-			$movimiento_motivo->save();
-		} else if ($motivo_nro && !$motivo){
-			$movimiento_motivo = new MovimientoMotivo(
-														connection: $Con,
+													connection: $con,
 													id_movimiento: $ID_Movimiento,
-														nro_motivo: 1,
-															estado: 1
-			);
-			$movimiento_motivo->set_id_motivo($ID_Motivo_1);
-			$movimiento_motivo->update_motivo();
-		}
-	} else {
-		if ($motivo_nro) {
-			$movimiento_motivo = new MovimientoMotivo(
-														  connection: $Con,
-													   id_movimiento: $ID_Movimiento,
-														   nro_motivo: 1
+													id_motivo: $ret
 			);
 			$movimiento_motivo->delete();
 		}
 	}
-	
-	$motivo_nro = MovimientoMotivo::exist_movimiento_nro(
-		connection: $Con,
-		movimiento: $ID_Movimiento,
-		nro: 2
-	);
-	if ($ID_Motivo_2 > 1) {
+
+	foreach ($lista_motivos as $value) {
 		$motivo = MovimientoMotivo::exist_movimiento_motivo(
-			connection: $Con,
+			connection: $con,
 			movimiento: $ID_Movimiento,
-			motivo: $ID_Motivo_2
+			motivo: $value
 		);
-		if (!$motivo_nro && !$motivo) {
+		if (!$motivo) {
 			$movimiento_motivo = new MovimientoMotivo(
-														connection: $Con,
+													connection: $con,
 													id_movimiento: $ID_Movimiento,
-														id_motivo: $ID_Motivo_2,
-														nro_motivo: 2,
-															estado: 1
+													id_motivo: $value
 			);
 			$movimiento_motivo->save();
-		} else if ($motivo_nro && !$motivo){
-			$movimiento_motivo = new MovimientoMotivo(
-														connection: $Con,
-													id_movimiento: $ID_Movimiento,
-														nro_motivo: 2,
-															estado: 1
-			);
-			$movimiento_motivo->set_id_motivo($ID_Motivo_2);
-			$movimiento_motivo->update_motivo();
-		}
-	} else {
-		if ($motivo_nro) {
-			$movimiento_motivo = new MovimientoMotivo(
-														  connection: $Con,
-													   id_movimiento: $ID_Movimiento,
-													   nro_motivo: 2
-			);
-			$movimiento_motivo->delete();
-		}
-	}
-	
-	$motivo_nro = MovimientoMotivo::exist_movimiento_nro(
-		connection: $Con,
-		movimiento: $ID_Movimiento,
-		nro: 3
-	);
-	if ($ID_Motivo_3 > 1) {
-		$motivo = MovimientoMotivo::exist_movimiento_motivo(
-			connection: $Con,
-			movimiento: $ID_Movimiento,
-			motivo: $ID_Motivo_3
-		);
-		if (!$motivo_nro && !$motivo) {
-			$movimiento_motivo = new MovimientoMotivo(
-														connection: $Con,
-													id_movimiento: $ID_Movimiento,
-														id_motivo: $ID_Motivo_3,
-														nro_motivo: 3,
-															estado: 1
-			);
-			$movimiento_motivo->save();
-		} else if ($motivo_nro && !$motivo){
-			$movimiento_motivo = new MovimientoMotivo(
-														connection: $Con,
-													id_movimiento: $ID_Movimiento,
-														nro_motivo: 3,
-															estado: 1
-			);
-			$movimiento_motivo->set_id_motivo($ID_Motivo_3);
-			$movimiento_motivo->update_motivo();
-		}
-	} else {
-		if ($motivo_nro) {
-			$movimiento_motivo = new MovimientoMotivo(
-														  connection: $Con,
-													   id_movimiento: $ID_Movimiento,
-													   nro_motivo: 3
-			);
-			$movimiento_motivo->delete();
-		}
-	}
-	
-	$motivo_nro = MovimientoMotivo::exist_movimiento_nro(
-		connection: $Con,
-		movimiento: $ID_Movimiento,
-		nro: 4
-	);
-	if ($ID_Motivo_4 > 1) {
-		$motivo = MovimientoMotivo::exist_movimiento_motivo(
-			connection: $Con,
-			movimiento: $ID_Movimiento,
-			motivo: $ID_Motivo_4
-		);
-		if (!$motivo_nro && !$motivo) {
-			$movimiento_motivo = new MovimientoMotivo(
-													   connection: $Con,
-													id_movimiento: $ID_Movimiento,
-														id_motivo: $ID_Motivo_4,
-													   nro_motivo: 4,
-														   estado: 1
-			);
-			$movimiento_motivo->save();
-		} else if ($motivo_nro && !$motivo){
-			$movimiento_motivo = new MovimientoMotivo(
-														connection: $Con,
-													id_movimiento: $ID_Movimiento,
-														nro_motivo: 4,
-															estado: 1
-			);
-			$movimiento_motivo->set_id_motivo($ID_Motivo_4);
-			$movimiento_motivo->update_motivo();
-		}
-	} else {
-		if ($motivo_nro) {
-			$movimiento_motivo = new MovimientoMotivo(
-														connection: $Con,
-													 id_movimiento: $ID_Movimiento,
-													    nro_motivo: 4
-			);
-			$movimiento_motivo->delete();
-		}
-	}
-	
-	$motivo_nro = MovimientoMotivo::exist_movimiento_nro(
-		connection: $Con,
-		movimiento: $ID_Movimiento,
-		nro: 5
-	);
-	if ($ID_Motivo_5 > 1) {
-		$motivo = MovimientoMotivo::exist_movimiento_motivo(
-			connection: $Con,
-			movimiento: $ID_Movimiento,
-			motivo: $ID_Motivo_5
-		);
-		if (!$motivo_nro && !$motivo) {
-			$movimiento_motivo = new MovimientoMotivo(
-														connection: $Con,
-													id_movimiento: $ID_Movimiento,
-														id_motivo: $ID_Motivo_5,
-														nro_motivo: 5,
-															estado: 1
-			);
-			$movimiento_motivo->save();
-		} else if ($motivo_nro && !$motivo){
-			$movimiento_motivo = new MovimientoMotivo(
-														connection: $Con,
-													id_movimiento: $ID_Movimiento,
-														nro_motivo: 5,
-															estado: 1
-			);
-			$movimiento_motivo->set_id_motivo($ID_Motivo_5);
-			$movimiento_motivo->update_motivo();
-		}
-	} else {
-		if ($motivo_nro) {
-			$movimiento_motivo = new MovimientoMotivo(
-														connection: $Con,
-													   id_movimiento: $ID_Movimiento,
-													   nro_motivo: 5
-			);
-			$movimiento_motivo->delete();
 		}
 	}
 	
@@ -330,12 +168,11 @@ $detalle_not = 'Se modifico el movimiento vinculado a : '. $apellido . ', '. $no
 $expira = date("Y-m-d", strtotime($fecha_accion . " + 15 days"));
 
 $consulta_not = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$detalle_not','$Fecha', '$expira',1)";
-if(!$RetNot = mysqli_query($Con->Conexion,$consulta_not)){
+if(!$RetNot = mysqli_query($con->Conexion,$consulta_not)){
 	throw new Exception("Error al intentar registrar Notificacion. Consulta: " . $ConsultaNot, 3);
 }
 
-$Con->CloseConexion();
+$con->CloseConexion();
 
 $Mensaje = "El Movimiento se modifico correctamente";
-header('Location: ../view_movimientos.php?Mensaje='.$Mensaje);
-?>
+header('Location: ../view_movimientos.php?Mensaje=' . $Mensaje);

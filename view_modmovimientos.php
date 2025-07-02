@@ -1,8 +1,32 @@
 <?php 
+/*
+ *
+ * This file is part of Rastreador3.
+ *
+ * Rastreador3 is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Rastreador3 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Rastreador3; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
+
 session_start(); 
-require_once "Controladores/Elements.php";
-require_once "Controladores/CtrGeneral.php";
-require_once "Modelo/DtoMovimiento.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Conexion.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Elements.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/CtrGeneral.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Movimiento.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Responsable.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Account.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/MovimientoMotivo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/DtoMovimiento.php';
 header("Content-Type: text/html;charset=utf-8");
 
 /*     CONTROL DE USUARIOS                    */
@@ -10,15 +34,9 @@ if(!isset($_SESSION["Usuario"])){
     header("Location: Error_Session.php");
 }
 
-$Con = new Conexion();
-$Con->OpenConexion();
 $ID_Usuario = $_SESSION["Usuario"];
-$ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
-$MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
-$EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
-$Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
-$TipoUsuario = $Ret["ID_TipoUsuario"];
-$Con->CloseConexion();
+$usuario = new Account(account_id: $ID_Usuario);
+$TipoUsuario = $usuario->get_id_tipo_usuario();
 ?>
 <!DOCTYPE html>
 <html>
@@ -28,16 +46,12 @@ $Con->CloseConexion();
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-  <!--<link href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-  <!--<script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script> -->
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-  <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
   <script src="js/bootstrap-datepicker.min.js"></script> <!-- ESTO ES NECESARIO PARA QUE ANDE EN ESPAÑOL -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="js/ValidarMovimiento.js"></script>
@@ -250,9 +264,11 @@ $Con->CloseConexion();
 
               $ConsultarDatos = "select M.id_movimiento, M.fecha, M.id_centro, P.id_persona, P.apellido, 
                                         P.nombre, M.observaciones, R.id_resp, M.id_resp_2, M.id_resp_3, M.id_resp_4,
-                                        R.responsable, C.centro_salud, I.ID_OtraInstitucion,I.Nombre, M.motivo_1,
-                                        M.motivo_2, M.motivo_3, M.motivo_4, M.motivo_5 
+                                        R.responsable, C.centro_salud, I.ID_OtraInstitucion, I.Nombre, MT.id_motivo,
+                                        MT.motivo
                                  from movimiento M 
+                                      INNER JOIN movimiento_motivo MEMT ON (M.id_movimiento = MEMT.id_movimiento)
+                                      INNER JOIN motivo MT ON (MEMT.id_motivo = MT.id_motivo)
                                       INNER JOIN persona P ON (M.id_persona = P.id_persona)
                                       INNER JOIN responsable R ON (M.id_resp = R.id_resp) 
                                       LEFT JOIN centros_salud C ON (M.id_centro = C.id_centro)
@@ -266,11 +282,7 @@ $Con->CloseConexion();
               $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
 
               $ID_Movimiento = $Ret["id_movimiento"];
-              $ID_Motivo_1 = $Ret["motivo_1"];
-              $ID_Motivo_2 = $Ret["motivo_2"];
-              $ID_Motivo_3 = $Ret["motivo_3"];
-              $ID_Motivo_4 = $Ret["motivo_4"];
-              $ID_Motivo_5 = $Ret["motivo_5"];
+              $id_motivo = $Ret["id_motivo"];
               $Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
               $Apellido = $Ret["apellido"];
               $Nombre = $Ret["nombre"];
@@ -291,16 +303,22 @@ $Con->CloseConexion();
                                                 xFecha: $Fecha,
                                                 xApellido: $Apellido,
                                                 xNombre: $Nombre,
-                                                xMotivo_1: $ID_Motivo_1,
-                                                xMotivo_2: $ID_Motivo_2,
-                                                xMotivo_3: $ID_Motivo_3,
-                                                xMotivo_4: $ID_Motivo_4,
-                                                xMotivo_5: $ID_Motivo_5,
+                                                xMotivo_1: $id_motivo,
                                                 xObservaciones: $Observaciones,
                                                 xResponsable: $Responsable,
                                                 xCentroSalud: $Centro_Salud,
                                                 xOtraInstitucion: $OtraInstitucion
-                );
+              );
+
+              $count_motivo = 2;
+              while ($Ret = mysqli_fetch_assoc($EjecutarConsultarDatos)) {
+                if ($count_motivo == 2) $DtoMovimiento->setMotivo_2($Ret["id_motivo"]);
+                if ($count_motivo == 3) $DtoMovimiento->setMotivo_3($Ret["id_motivo"]);
+                if ($count_motivo == 4) $DtoMovimiento->setMotivo_4($Ret["id_motivo"]);
+                if ($count_motivo == 5) $DtoMovimiento->setMotivo_5($Ret["id_motivo"]);
+                $count_motivo++;
+              }
+
               $Con->CloseConexion();
               ?>
             <div class = "col-10">
@@ -465,20 +483,20 @@ $Con->CloseConexion();
                 <div class="form-group row">
                   <div class="offset-md-2 col-md-10" id = "InputsGenerales">
                     <input type="hidden" name="ID_Persona" id = "ID_Persona" value = "<?php echo $ID_Persona; ?>">
-                    <input type="hidden" name="ID_Motivo_1" id = "ID_Motivo_1" value = "<?php echo $ID_Motivo_1; ?>">
-                    <input type="hidden" name="ID_Motivo_2" id = "ID_Motivo_2" value = "<?php echo $ID_Motivo_2; ?>">
-                    <input type="hidden" name="ID_Motivo_3" id = "ID_Motivo_3" value = "<?php echo $ID_Motivo_3; ?>">
+                    <input type="hidden" name="ID_Motivo_1" id = "ID_Motivo_1" value = "<?php echo $DtoMovimiento->getMotivo_1();?>">
+                    <input type="hidden" name="ID_Motivo_2" id = "ID_Motivo_2" value = "<?php echo $DtoMovimiento->getMotivo_2();?>">
+                    <input type="hidden" name="ID_Motivo_3" id = "ID_Motivo_3" value = "<?php echo $DtoMovimiento->getMotivo_3();?>">
                     <?php
                       if($DtoMovimiento->getMotivo_4() != "" && $DtoMovimiento->getMotivo_4() != 1){
                     ?>
-                    <input type="hidden" name="ID_Motivo_4" id = "ID_Motivo_4" value = "<?php echo $ID_Motivo_4; ?>">
+                    <input type="hidden" name="ID_Motivo_4" id = "ID_Motivo_4" value = "<?php echo $DtoMovimiento->getMotivo_4();?>">
                     <?php
                       }
                     ?>
                     <?php
                       if($DtoMovimiento->getMotivo_5() != "" && $DtoMovimiento->getMotivo_5() != 1){
                     ?>
-                    <input type="hidden" name="ID_Motivo_5" id = "ID_Motivo_5" value = "<?php echo $ID_Motivo_5; ?>">
+                    <input type="hidden" name="ID_Motivo_5" id = "ID_Motivo_5" value = "<?php echo $DtoMovimiento->getMotivo_5();?>">
                     <?php
                       }
                     ?>
@@ -747,25 +765,5 @@ $Con->CloseConexion();
   </div>
 </div>
 </div>
-<?php
-/*
- *
- * This file is part of Rastreador3.
- *
- * Rastreador3 is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Rastreador3 is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Rastreador3; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- */
-?>
 </body>
 </html>
