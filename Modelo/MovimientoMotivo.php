@@ -92,7 +92,8 @@ class MovimientoMotivo
 
 	public function save() 
 	{
-		$consulta = "insert into movimiento_motivo(id_movimiento, 
+		$consulta = "insert into movimiento_motivo(
+												   id_movimiento, 
 												   id_motivo, 
 												   estado
                                                    ) 
@@ -102,14 +103,16 @@ class MovimientoMotivo
 		if (!$RetAccion = mysqli_query($this->connection->Conexion,$consulta)) {
 			throw new Exception("Error al intentar insertar el movimiento_motivo. Consulta: ". $consulta, 3);
 		}
+		$this->id_movimiento_motivo = mysqli_insert_id($this->connection->Conexion);
 	}
 
     public function update() 
 	{
 		$consulta = "update movimiento_motivo
-                            set estado = " . $this->estado . "
-                            where id_movimiento = " . $this->id_movimiento . "
-                              and id_motivo = " . $this->id_motivo;
+                            set estado = " . $this->estado . ",
+								id_movimiento = " . $this->id_movimiento . ",
+								id_motivo = " . $this->id_motivo . "
+                            where id_movimiento_motivo = " . $this->id_movimiento_motivo;
 		if (!$RetAccion = mysqli_query($this->connection->Conexion,$consulta)) {
 			throw new Exception("Error al intentar actualizar el movimiento_motivo. Consulta: ". $consulta, 3);
 		}
@@ -119,8 +122,7 @@ class MovimientoMotivo
 	{
 		$consulta = "update movimiento_motivo
                             set estado = 0
-                            where id_movimiento = " . $this->id_movimiento . "
-                              and id_motivo = " . $this->id_motivo;
+                            where id_movimiento_motivo = " . $this->id_movimiento_motivo;
 		if (!$RetAccion = mysqli_query($this->connection->Conexion,$consulta)) {
 			throw new Exception("Error al intentar borrar el movimiento_motivo. Consulta: ". $consulta, 3);
 		}
