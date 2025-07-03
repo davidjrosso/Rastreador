@@ -419,6 +419,7 @@
 
 			foreach ($lista_personas as $row => $dato) {
 				$consulta_osm = true;
+				$calle_info = true;
 				$lista_motivos = (!empty($dato["motivos"])) ? $dato["motivos"] : [];
 				$dni = $dato["dni"];
 				$nombre_apellido = $dato["nombre_apellido"];
@@ -483,10 +484,12 @@
 						$persona->update_familia();
 						$persona->update_barrio();
 
-						$row_json["calle_rastreador"] = $is_calle_rastreador;
-						$row_json["domicilio"] = (empty($direccion)) ? "" : $direccion;
-						$row_json["form"]["persona"] = $persona->jsonSerialize();
-						$domicilios_json[]["formulario"] = $row_json;
+						if ($calle_info) {
+							$row_json["calle_rastreador"] = $is_calle_rastreador;
+							$row_json["domicilio"] = (empty($direccion)) ? "" : $direccion;
+							$row_json["form"]["persona"] = $persona->jsonSerialize();
+							$domicilios_json[]["formulario"] = $row_json;
+						}
 					} else {
 						if (!Persona::is_registered($dni)) {
 							$persona = new Persona(
@@ -547,9 +550,11 @@
 							$accion->save();
 							$row_json["form"]["persona"] = $persona->jsonSerialize();
 						} 
-						$row_json["calle_rastreador"] = $is_calle_rastreador;
-						$row_json["domicilio"] = (empty($direccion)) ? "" : $direccion;
-						$domicilios_json[]["formulario"] = $row_json;
+						if ($calle_info) {
+							$row_json["calle_rastreador"] = $is_calle_rastreador;
+							$row_json["domicilio"] = (empty($direccion)) ? "" : $direccion;
+							$domicilios_json[]["formulario"] = $row_json;
+						}
 					}
 					if ($row % 10 == 9) {
 						$progress = $row / (2 * $highestRow);
@@ -605,11 +610,12 @@
 							}
 							$persona->update_familia();
 							$persona->update_barrio();	
-
-							$row_json["calle_rastreador"] = $is_calle_rastreador;
-							$row_json["domicilio"] = $direccion;
-							$row_json["form"]["persona"] = $persona->jsonSerialize();
-							$domicilios_json[]["formulario"] = $row_json;
+							if ($calle_info) {
+								$row_json["calle_rastreador"] = $is_calle_rastreador;
+								$row_json["domicilio"] = $direccion;
+								$row_json["form"]["persona"] = $persona->jsonSerialize();
+								$domicilios_json[]["formulario"] = $row_json;
+							}
 						}
 						continue;
 					}
@@ -627,9 +633,11 @@
 										id_responsable: $id_responsable
 					);
 
-					$row_json["responsable"] = $responsable->jsonSerialize();
-					$row_json["calle_rastreador"] = $is_calle_rastreador;
-					$row_json["domicilio"] = $direccion;
+					if ($calle_info) {
+						$row_json["responsable"] = $responsable->jsonSerialize();
+						$row_json["calle_rastreador"] = $is_calle_rastreador;
+						$row_json["domicilio"] = $direccion;
+					}
 
 					$Fecha_Nacimiento = (empty($Fecha_Nacimiento)) ? null : $Fecha_Nacimiento;
 					if (!Persona::is_registered($dni)) {
@@ -649,7 +657,7 @@
 						$modificacion = $persona->setCalleNro($direccion);
 						if (is_numeric($departam)) $persona->setFamilia($departam);
 						$nro_calle = $persona->getNro();
-						
+
 						if ($is_calle_rastreador) {
 							$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
 
@@ -814,10 +822,16 @@
 						$formulario->save();
 						$row_json["form"] = $formulario->jsonSerialize();
 						$row_json["estado"] = 1;
-						$domicilios_json[]["formulario"] = $row_json;
+						if ($calle_info) {
+							$domicilios_json[]["formulario"] = $row_json;
+							$calle_info = false;
+						}
 					} else {
 						$row_json["form"]["persona"] = $persona->jsonSerialize();
-						$domicilios_json[]["formulario"] = $row_json;
+						if ($calle_info) {
+							$domicilios_json[]["formulario"] = $row_json;
+							$calle_info = false;
+						}
 					}
 
 					if ($row % 10 == 9) {
