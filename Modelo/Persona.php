@@ -1107,6 +1107,20 @@ public function update_familia()
 				 $Con->CloseConexion();
 }
 
+public function update_NroCarpeta()
+{
+	$Con = new Conexion();
+	$Con->OpenConexion();
+	$Consulta = "update persona 
+				 set nro_carpeta = " . ((!is_null($this->getNro_Carpeta())) ? intval($this->getNro_Carpeta()) : "null") . " 
+				 where id_persona = " . $this->getID_Persona();
+				 $MensajeErrorConsultar = "No se pudo actualizar la Persona";
+				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+					throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+				}
+				 $Con->CloseConexion();
+}
+
 public function update_barrio()
 {
 	$Con = new Conexion();

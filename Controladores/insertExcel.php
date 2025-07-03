@@ -427,6 +427,7 @@
 				$apellido = $nombre_apellido["apellido"];
 				$Fecha_Nacimiento = $dato["fecha_nacimiento"];
 				$direccion = (isset($dato["direccion"]["direccion"])) ? $dato["direccion"]["direccion"] : null;
+				$manzana = (!empty($dato["manzana"])) ? $dato["manzana"] : null;
 				$departam = (isset($dato["departamento"])) ? $dato["departamento"] : null;
 				$departam = (!empty($dato["direccion"]["departamento"])) ? $dato["direccion"]["departamento"] : $departam;
 				$hc = $dato["hc"];
@@ -448,6 +449,8 @@
 						$georeferencia = $persona->getGeoreferencia();
 						$modificacion = $persona->setCalleNro($direccion);
 						if (is_numeric($departam)) $persona->setFamilia($departam);
+						$persona->setManzana($manzana);
+						$persona->setNro_Carpeta($hc);
 						$calle = $persona->getNombre_Calle();
 						$nro_calle = $persona->getNro();
 
@@ -482,6 +485,7 @@
 							$persona->update_direccion();
 						}
 						$persona->update_familia();
+						$persona->update_NroCarpeta();
 						$persona->update_barrio();
 
 						if ($calle_info) {
@@ -489,9 +493,10 @@
 							$row_json["domicilio"] = (empty($direccion)) ? "" : $direccion;
 							$row_json["form"]["persona"] = $persona->jsonSerialize();
 							$domicilios_json[]["formulario"] = $row_json;
+							$row_json = [];
 						}
 					} else {
-						if (!Persona::is_registered($dni)) {
+						if (!empty($dni) && !Persona::is_registered($dni)) {
 							$persona = new Persona(
 								xApellido : $apellido,
 								xNombre : $nombre,
@@ -500,6 +505,7 @@
 								xNro_Carpeta:$hc,
 								xEstado : $estado,
 								xObra_Social : $obra_social,
+								xManzana: $manzana,
 								xFecha_Nacimiento: $Fecha_Nacimiento,
 								xTelefono : $telefono,
 								xMail:$email,
@@ -550,10 +556,11 @@
 							$accion->save();
 							$row_json["form"]["persona"] = $persona->jsonSerialize();
 						} 
-						if ($calle_info) {
+						if (!empty($dni) && $calle_info) {
 							$row_json["calle_rastreador"] = $is_calle_rastreador;
 							$row_json["domicilio"] = (empty($direccion)) ? "" : $direccion;
 							$domicilios_json[]["formulario"] = $row_json;
+							$row_json = [];
 						}
 					}
 					if ($row % 10 == 9) {
@@ -575,6 +582,8 @@
 							$georeferencia = $persona->getGeoreferencia();
 							$modificacion = $persona->setCalleNro($direccion);
 							if (is_numeric($departam)) $persona->setFamilia($departam);
+							$persona->setManzana($manzana);
+							$persona->setNro_Carpeta($hc);
 							$calle = $persona->getNombre_Calle();
 							$nro_calle = $persona->getNro();
 
@@ -609,12 +618,14 @@
 								$persona->update_direccion();
 							}
 							$persona->update_familia();
+							$persona->update_NroCarpeta();
 							$persona->update_barrio();	
 							if ($calle_info) {
 								$row_json["calle_rastreador"] = $is_calle_rastreador;
 								$row_json["domicilio"] = $direccion;
 								$row_json["form"]["persona"] = $persona->jsonSerialize();
 								$domicilios_json[]["formulario"] = $row_json;
+								$row_json = [];
 							}
 						}
 						continue;
@@ -633,7 +644,7 @@
 										id_responsable: $id_responsable
 					);
 
-					if ($calle_info) {
+					if (!empty($dni) && $calle_info) {
 						$row_json["responsable"] = $responsable->jsonSerialize();
 						$row_json["calle_rastreador"] = $is_calle_rastreador;
 						$row_json["domicilio"] = $direccion;
@@ -649,6 +660,7 @@
 							xNro_Carpeta:$hc,
 							xEstado : $estado,
 							xObra_Social : $obra_social,
+							xManzana: $manzana,
 							xFecha_Nacimiento: $Fecha_Nacimiento,
 							xTelefono : $telefono,
 							xMail:$email,
@@ -708,6 +720,8 @@
 							$georeferencia = $persona->getGeoreferencia();
 							$modificacion = $persona->setCalleNro($direccion);
 							if (is_numeric($departam)) $persona->setFamilia($departam);
+							$persona->setManzana($manzana);
+							$persona->setNro_Carpeta($hc);
 							$persona->setBarrio($id_barrio);
 							$calle = $persona->getNombre_Calle();
 							$nro_calle = $persona->getNro();
@@ -743,6 +757,7 @@
 								$persona->update_direccion();
 							}
 							$persona->update_familia();
+							$persona->update_NroCarpeta();
 							$persona->update_barrio();
 							$consulta_osm = false;
 						}
@@ -822,15 +837,17 @@
 						$formulario->save();
 						$row_json["form"] = $formulario->jsonSerialize();
 						$row_json["estado"] = 1;
-						if ($calle_info) {
+						if (!empty($dni) && $calle_info) {
 							$domicilios_json[]["formulario"] = $row_json;
 							$calle_info = false;
+							$row_json = [];
 						}
 					} else {
 						$row_json["form"]["persona"] = $persona->jsonSerialize();
-						if ($calle_info) {
+						if (!empty($dni) && $calle_info) {
 							$domicilios_json[]["formulario"] = $row_json;
 							$calle_info = false;
+							$row_json = [];
 						}
 					}
 
@@ -866,7 +883,7 @@
 					do {
 						$mrc = curl_multi_exec($multi_request_ch, $active);
 					} while ($mrc == CURLM_CALL_MULTI_PERFORM);
-		
+
 					while ($active && $mrc == CURLM_OK) {
 						if (curl_multi_select($multi_request_ch) != -1) {
 							do {
