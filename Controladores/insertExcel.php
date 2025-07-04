@@ -165,6 +165,17 @@
 		return $result;
 	}
 
+	function col_to_number($colum_excel) 
+	{
+		$num_col = 0;
+		$valor = substr($colum_excel, 0, -1);
+		$list_char = str_split($valor);
+		foreach ($list_char as $caracter) {
+			$num_col += (ord($caracter) - 65);
+		}
+		return $num_col;
+	}
+
 	function objetoExcel($obj, $valor, $connection, $col_header=null){
 		$datos = array();
 		switch ($obj) {
@@ -275,11 +286,14 @@
 		$list_ignore_row = explode("-", $config_datos["ignore"]);
 		$break_row = (isset($config_datos["break"])) ? $config_datos["break"] : null;
 		$indixe_col_h = (isset($config_datos["col"])) ? $config_datos["col"] : null;
+		$dni_col = (isset($config_datos["dni_col"])) ? $config_datos["dni_col"] : null;
+		$nombre_col = (isset($config_datos["nombre_col"])) ? $config_datos["nombre_col"] : null;
 		$com = (isset($config_datos["row"])) ? $config_datos["row"] : null;
 
 		for ($row = $com; $row <= $highestRow; $row++) {
 			if (count($rows_excel->values[$row]) == 0 
-				|| !$rows_excel->values[$row][0]
+				|| (!is_null($nombre_col) && empty($rows_excel->values[$row][$nombre_col]))
+				|| (!is_null($dni_col) && empty($rows_excel->values[$row][$dni_col]))
 				|| in_array($rows_excel->values[$row][0], $list_ignore_row)) {
 				continue;
 			}
@@ -356,6 +370,8 @@
 			foreach ($list_conf_datos as $value) {
 				$row_data = explode("-", $value);
 				$lista_datos[$row_data[0]] = $row_data[1];
+				if ($row_data[1] == "dni") $lista_datos["dni_col"] = col_to_number($row_data[0]);
+				if ($row_data[1] == "nombre_apellido") $lista_datos["nombre_col"] = col_to_number($row_data[0]);
 			}
 
 			$private_key = Parametria::get_value_by_code($con, 'SECRET_KEY');
@@ -449,8 +465,8 @@
 						$georeferencia = $persona->getGeoreferencia();
 						$modificacion = $persona->setCalleNro($direccion);
 						if (is_numeric($departam)) $persona->setFamilia($departam);
+						if (!empty($hc)) $persona->setNro_Carpeta($hc);
 						$persona->setManzana($manzana);
-						$persona->setNro_Carpeta($hc);
 						$calle = $persona->getNombre_Calle();
 						$nro_calle = $persona->getNro();
 
@@ -582,8 +598,8 @@
 							$georeferencia = $persona->getGeoreferencia();
 							$modificacion = $persona->setCalleNro($direccion);
 							if (is_numeric($departam)) $persona->setFamilia($departam);
+							if (!empty($hc)) $persona->setNro_Carpeta($hc);
 							$persona->setManzana($manzana);
-							$persona->setNro_Carpeta($hc);
 							$calle = $persona->getNombre_Calle();
 							$nro_calle = $persona->getNro();
 
@@ -720,8 +736,8 @@
 							$georeferencia = $persona->getGeoreferencia();
 							$modificacion = $persona->setCalleNro($direccion);
 							if (is_numeric($departam)) $persona->setFamilia($departam);
+							if (!empty($hc)) $persona->setNro_Carpeta($hc);
 							$persona->setManzana($manzana);
-							$persona->setNro_Carpeta($hc);
 							$persona->setBarrio($id_barrio);
 							$calle = $persona->getNombre_Calle();
 							$nro_calle = $persona->getNro();

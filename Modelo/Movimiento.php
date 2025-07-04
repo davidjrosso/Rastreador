@@ -334,6 +334,7 @@ class Movimiento implements JsonSerializable
 			throw new Exception($mensaje_error . $consulta, 2);
 		}
 	}
+
 	public function save(){
 		$consulta = "insert into movimiento(
 											fecha,
