@@ -797,6 +797,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
     function listarPersonasGeoreferencia(map, listaPersonas) {
       let count = 0;
       let ids = new Set();
+      let cantLista = $(".dropdown-menu > li").size();
       let lista = $(".dropdown-menu");
       let list = listaPersonas.filter(function (obj) {
           let flag = false;
@@ -807,8 +808,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
           return flag; 
       });
       map.removIcon();
-
-      if (lista.length <= 1) {
+      if (cantLista <= 1) {
         let personas = list.sort(function (elementA, elementB) {
           if (elementA.persona < elementB.persona) {
             return -1;
