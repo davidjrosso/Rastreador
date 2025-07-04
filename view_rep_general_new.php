@@ -795,7 +795,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
     }
 
     function listarPersonasGeoreferencia(map, listaPersonas) {
-      let count = 0;
+      let count = 1;
       let ids = new Set();
       let cantLista = $(".dropdown-menu > li").size();
       let lista = $(".dropdown-menu");
