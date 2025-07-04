@@ -466,6 +466,7 @@
 						$modificacion = $persona->setCalleNro($direccion);
 						if (is_numeric($departam)) $persona->setFamilia($departam);
 						if (!empty($hc)) $persona->setNro_Carpeta($hc);
+						if (is_numeric($id_barrio)) $persona->setBarrio($id_barrio);
 						$persona->setManzana($manzana);
 						$calle = $persona->getNombre_Calle();
 						$nro_calle = $persona->getNro();
@@ -599,6 +600,7 @@
 							$modificacion = $persona->setCalleNro($direccion);
 							if (is_numeric($departam)) $persona->setFamilia($departam);
 							if (!empty($hc)) $persona->setNro_Carpeta($hc);
+							if (is_numeric($id_barrio)) $persona->setBarrio($id_barrio);
 							$persona->setManzana($manzana);
 							$calle = $persona->getNombre_Calle();
 							$nro_calle = $persona->getNro();
@@ -737,8 +739,8 @@
 							$modificacion = $persona->setCalleNro($direccion);
 							if (is_numeric($departam)) $persona->setFamilia($departam);
 							if (!empty($hc)) $persona->setNro_Carpeta($hc);
+							if (is_numeric($id_barrio)) $persona->setBarrio($id_barrio);
 							$persona->setManzana($manzana);
-							$persona->setBarrio($id_barrio);
 							$calle = $persona->getNombre_Calle();
 							$nro_calle = $persona->getNro();
 
