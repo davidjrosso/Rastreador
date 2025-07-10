@@ -33,6 +33,7 @@
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Responsable.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Barrio.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Calle.php';
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/CalleBarrio.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Motivo.php';
     require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/CentroSalud.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
@@ -210,6 +211,7 @@
 					$is_departament = preg_match(
 						"~[0-9]+~",
 						$direccion_datos[1],
+
 						$result_array
 								);
 					$datos["departamento"] = ($is_departament) ? $result_array[0] : null;
@@ -436,6 +438,8 @@
 			foreach ($lista_personas as $row => $dato) {
 				$consulta_osm = true;
 				$calle_info = true;
+				$geo_lat = null;
+				$geo_lon = null;
 				$lista_motivos = (!empty($dato["motivos"])) ? $dato["motivos"] : [];
 				$dni = $dato["dni"];
 				$nombre_apellido = $dato["nombre_apellido"];
@@ -455,6 +459,17 @@
 				$email = null;
 				$ID_Usuario = 100;
 				$is_calle_rastreador = Calle::existe_calle($direccion);
+				$is_calle_con_barrio = Calle::existe_calle_con_barrio(
+																	  domicilio: $direccion, 
+																	  id_bario: $id_barrio,
+																	  connection: $con
+																	 );
+				$id_calle = Calle::get_id_by_nombre($direccion);
+				if ($is_calle_con_barrio) $id_calle = Calle::get_id_by_nombre_barrio(
+																				domicilio: $direccion,
+																				id_bario: $id_barrio,
+																				connection: $con
+																				);
 
 				if (!$lista_motivos) {
 					$id_persona = (empty($dni)) ? null : Persona::get_id_persona_by_dni($con,
@@ -462,8 +477,15 @@
 																						);
 					if (!is_null($id_persona) && is_numeric($id_persona)) {
 						$persona = new Persona(ID_Persona: $id_persona);
-						$georeferencia = $persona->getGeoreferencia();
-						$modificacion = $persona->setCalleNro($direccion);
+						if ($is_calle_con_barrio && is_numeric($id_barrio)) {
+							$modificacion = $persona->setCalleNroConBarrio(
+																		   domicilio: $direccion, 
+																		   id_barrio: $id_barrio,
+																		   coneccion: $con
+																		  );
+						} else {
+							$modificacion = $persona->setCalleNro($direccion);
+						}
 						if (is_numeric($departam)) $persona->setFamilia($departam);
 						if (!empty($hc)) $persona->setNro_Carpeta($hc);
 						if (is_numeric($id_barrio)) $persona->setBarrio($id_barrio);
@@ -473,21 +495,46 @@
 
 						if (($is_calle_rastreador && !$modificacion)) {
 							$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
+							$calle_obj = new Calle(id_calle: $id_calle);
+							$geocoder = $calle_obj->get_geocoder();
 
-							if ($server == 0 && $nro_calle >= 1000) $server++;
+							$id_geo = CalleBarrio::existe_georeferencia(
+																		id_calle: $id_calle,
+																		num_calle: $nro_calle , 
+																		connection: $con
+																		);
+							if ($id_geo) {
+								$georeferencia_obj = new CalleBarrio(id_geo: $id_geo, connection: $con);
+								$georeferencia_obj->set_pendiente_by_min_max_punto();
+								$geo_lat = $georeferencia_obj->geo_lat_by_number($nro_calle);
+								$geo_lon = $georeferencia_obj->geo_lon_by_number($nro_calle);
+							}
 
-							if ($server == 0) {
-								$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
-								$row_request["server"] = $server;
-								$server++;
-							} else if ($server == 1) {
-								$url = "https://api.tomtom.com/search/2/geocode/" . $calle_url . "+" . $persona->getNro() . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&lat=-32.194998&lon=-64.1684546&radius=300000&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
-								$row_request["server"] = $server;
-								$server++;
+							if (is_null($geocoder)) {
+								if ($server == 0 && $nro_calle >= 1000) $server++;
+
+								if ($server == 0) {
+									$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
+									$row_request["server"] = $server;
+									$server++;
+								} else if ($server == 1) {
+									$url = "https://api.tomtom.com/search/2/geocode/" . $calle_url . "+" . $persona->getNro() . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&lat=-32.194998&lon=-64.1684546&radius=300000&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
+									$row_request["server"] = $server;
+									$server++;
+								} else {
+									$url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" . $calle_url . "+" . $persona->getNro() . "+5850&city=rio+tercero&format=json&apiKey=b43e46b080e940b39d1bbee88b9cb320";
+									$row_request["server"] = $server;
+									$server = 0;
+								}
 							} else {
-								$url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=json&apiKey=b43e46b080e940b39d1bbee88b9cb320";
-								$row_request["server"] = $server;
-								$server = 0;
+								if ($geocoder == 0) {
+									$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
+								} else if ($geocoder == 1) {
+									$url = "https://api.tomtom.com/search/2/geocode/" . $calle_url . "+" . $persona->getNro() . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&lat=-32.194998&lon=-64.1684546&radius=300000&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
+								} else {
+									$url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" . $calle_url . "+" . $persona->getNro() . "+5850&city=rio+tercero&format=json&apiKey=b43e46b080e940b39d1bbee88b9cb320";
+								}
+								$row_request["server"] = $geocoder;
 							}
 							$row_request["url"] = $url;
 							$row_request["calle_url"] = $calle_url . "+" . $persona->getNro();
@@ -497,6 +544,8 @@
 							$row_request["channel"] = $ch;
 							$row_request["persona"] = $persona;
 							$row_request["direccion"] = $direccion;
+							$row_request["geo_calle_lat"] = $geo_lat;
+							$row_request["geo_calle_lon"] = $geo_lon;
 							$request[] = $row_request;
 
 							$persona->update_direccion();
@@ -528,27 +577,61 @@
 								xMail:$email,
 								xID_Escuela: 2
 							);
-							$modificacion = $persona->setCalleNro($direccion);
+							if ($is_calle_con_barrio && is_numeric($id_barrio)) {
+								$modificacion = $persona->setCalleNroConBarrio(
+																			   domicilio: $direccion, 
+																			   id_barrio: $id_barrio,
+																			   coneccion: $con
+																			  );
+							} else {
+								$modificacion = $persona->setCalleNro($direccion);
+							}
 							if (is_numeric($departam)) $persona->setFamilia($departam);
 							$nro_calle = $persona->getNro();
 							
 							if ($is_calle_rastreador) {
 								$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
 
-								if ($server == 0 && $nro_calle >= 1000) $server++;
+								$calle_obj = new Calle(id_calle: $id_calle);
+								$geocoder = $calle_obj->get_geocoder();
 
-								if ($server == 0) {
-									$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
-									$row_request["server"] = $server;
-									$server++;
-								} else if ($server == 1) {
-									$url = "https://api.tomtom.com/search/2/geocode/" . $calle_url . "+" . $persona->getNro() . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&lat=-32.194998&lon=-64.1684546&radius=300000&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
-									$row_request["server"] = $server;
-									$server++;
+								$id_geo = CalleBarrio::existe_georeferencia(
+																			id_calle: $id_calle,
+																			num_calle: $nro_calle , 
+																			connection: $con
+																			);
+								if ($id_geo) {
+									$georeferencia_obj = new CalleBarrio(id_geo: $id_geo, connection: $con);
+									$georeferencia_obj->set_pendiente_by_min_max_punto();
+									$geo_lat = $georeferencia_obj->geo_lat_by_number($nro_calle);
+									$geo_lon = $georeferencia_obj->geo_lon_by_number($nro_calle);
+								}
+
+								if (is_null($geocoder)) {
+									if ($server == 0 && $nro_calle >= 1000) $server++;
+
+									if ($server == 0) {
+										$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
+										$row_request["server"] = $server;
+										$server++;
+									} else if ($server == 1) {
+										$url = "https://api.tomtom.com/search/2/geocode/" . $calle_url . "+" . $persona->getNro() . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&lat=-32.194998&lon=-64.1684546&radius=300000&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
+										$row_request["server"] = $server;
+										$server++;
+									} else {
+										$url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" . $calle_url . "+" . $persona->getNro() . "+5850&city=rio+tercero&format=json&apiKey=b43e46b080e940b39d1bbee88b9cb320";
+										$row_request["server"] = $server;
+										$server = 0;
+									}
 								} else {
-									$url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=json&apiKey=b43e46b080e940b39d1bbee88b9cb320";
-									$row_request["server"] = $server;
-									$server = 0;
+									if ($geocoder == 0) {
+										$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
+									} else if ($geocoder == 1) {
+										$url = "https://api.tomtom.com/search/2/geocode/" . $calle_url . "+" . $persona->getNro() . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&lat=-32.194998&lon=-64.1684546&radius=300000&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
+									} else {
+										$url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" . $calle_url . "+" . $persona->getNro() . "+5850&city=rio+tercero&format=json&apiKey=b43e46b080e940b39d1bbee88b9cb320";
+									}
+									$row_request["server"] = $geocoder;
 								}
 								$row_request["url"] = $url;
 								$row_request["calle_url"] = $calle_url . "+" . $persona->getNro();
@@ -558,6 +641,8 @@
 								$row_request["channel"] = $ch;
 								$row_request["persona"] = $persona;
 								$row_request["direccion"] = $direccion;
+								$row_request["geo_calle_lat"] = $geo_lat;
+								$row_request["geo_calle_lon"] = $geo_lon;
 								$request[] = $row_request;
 							}
 							$persona->save();
@@ -597,7 +682,15 @@
 						if (!is_null($id_persona) && is_numeric($id_persona)) {
 							$persona = new Persona(ID_Persona: $id_persona);
 							$georeferencia = $persona->getGeoreferencia();
-							$modificacion = $persona->setCalleNro($direccion);
+							if ($is_calle_con_barrio && is_numeric($id_barrio)) {
+								$modificacion = $persona->setCalleNroConBarrio(
+																			   domicilio: $direccion, 
+																			   id_barrio: $id_barrio,
+																			   coneccion: $con
+																			  );
+							} else {
+								$modificacion = $persona->setCalleNro($direccion);
+							}
 							if (is_numeric($departam)) $persona->setFamilia($departam);
 							if (!empty($hc)) $persona->setNro_Carpeta($hc);
 							if (is_numeric($id_barrio)) $persona->setBarrio($id_barrio);
@@ -608,20 +701,46 @@
 							if (($is_calle_rastreador && !$modificacion)) {
 								$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
 
-								if ($server == 0 && $nro_calle >= 1000) $server++;
+								$calle_obj = new Calle(id_calle: $id_calle);
+								$geocoder = $calle_obj->get_geocoder();
 
-								if ($server == 0) {
-									$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
-									$row_request["server"] = $server;
-									$server++;
-								} else if ($server == 1) {
-									$url = "https://api.tomtom.com/search/2/geocode/" . $calle_url . "+" . $persona->getNro() . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&lat=-32.194998&lon=-64.1684546&radius=300000&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
-									$row_request["server"] = $server;
-									$server++;
+								$id_geo = CalleBarrio::existe_georeferencia(
+																			id_calle: $id_calle,
+																			num_calle: $nro_calle , 
+																			connection: $con
+																			);
+								if ($id_geo) {
+									$georeferencia_obj = new CalleBarrio(id_geo: $id_geo, connection: $con);
+									$georeferencia_obj->set_pendiente_by_min_max_punto();
+									$geo_lat = $georeferencia_obj->geo_lat_by_number($nro_calle);
+									$geo_lon = $georeferencia_obj->geo_lon_by_number($nro_calle);
+								}
+
+								if (is_null($geocoder)) {
+									if ($server == 0 && $nro_calle >= 1000) $server++;
+
+									if ($server == 0) {
+										$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
+										$row_request["server"] = $server;
+										$server++;
+									} else if ($server == 1) {
+										$url = "https://api.tomtom.com/search/2/geocode/" . $calle_url . "+" . $persona->getNro() . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&lat=-32.194998&lon=-64.1684546&radius=300000&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
+										$row_request["server"] = $server;
+										$server++;
+									} else {
+										$url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" . $calle_url . "+" . $persona->getNro() . "+5850&city=rio+tercero&format=json&apiKey=b43e46b080e940b39d1bbee88b9cb320";
+										$row_request["server"] = $server;
+										$server = 0;
+									}
 								} else {
-									$url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=json&apiKey=b43e46b080e940b39d1bbee88b9cb320";
-									$row_request["server"] = $server;
-									$server = 0;
+									if ($geocoder == 0) {
+										$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
+									} else if ($geocoder == 1) {
+										$url = "https://api.tomtom.com/search/2/geocode/" . $calle_url . "+" . $persona->getNro() . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&lat=-32.194998&lon=-64.1684546&radius=300000&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
+									} else {
+										$url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" . $calle_url . "+" . $persona->getNro() . "+5850&city=rio+tercero&format=json&apiKey=b43e46b080e940b39d1bbee88b9cb320";
+									}
+									$row_request["server"] = $geocoder;
 								}
 								$row_request["url"] = $url;
 								$row_request["calle_url"] = $calle_url . "+" . $persona->getNro();
@@ -631,6 +750,8 @@
 								$row_request["channel"] = $ch;
 								$row_request["persona"] = $persona;
 								$row_request["direccion"] = $direccion;
+								$row_request["geo_calle_lat"] = $geo_lat;
+								$row_request["geo_calle_lon"] = $geo_lon;
 								$request[] = $row_request;
 								
 								$persona->update_direccion();
@@ -684,27 +805,61 @@
 							xMail:$email,
 							xID_Escuela: 2
 						);
-						$modificacion = $persona->setCalleNro($direccion);
+						if ($is_calle_con_barrio && is_numeric($id_barrio)) {
+							$modificacion = $persona->setCalleNroConBarrio(
+																		   domicilio: $direccion, 
+																		   id_barrio: $id_barrio,
+																		   coneccion: $con
+																		  );
+						} else {
+							$modificacion = $persona->setCalleNro($direccion);
+						}
 						if (is_numeric($departam)) $persona->setFamilia($departam);
 						$nro_calle = $persona->getNro();
 
 						if ($is_calle_rastreador) {
 							$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
 
-							if ($server == 0 && $nro_calle >= 1000) $server++;
+							$calle_obj = new Calle(id_calle: $id_calle);
+							$geocoder = $calle_obj->get_geocoder();
 
-							if ($server == 0) {
-								$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
-								$row_request["server"] = $server;
-								$server++;
-							} else if ($server == 1) {
-								$url = "https://api.tomtom.com/search/2/geocode/" . $calle_url . "+" . $persona->getNro() . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&lat=-32.194998&lon=-64.1684546&radius=300000&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
-                                $row_request["server"] = $server;
-                                $server++;
+							$id_geo = CalleBarrio::existe_georeferencia(
+																		id_calle: $id_calle,
+																		num_calle: $nro_calle , 
+																		connection: $con
+																		);
+							if ($id_geo) {
+								$georeferencia_obj = new CalleBarrio(id_geo: $id_geo, connection: $con);
+								$georeferencia_obj->set_pendiente_by_min_max_punto();
+								$geo_lat = $georeferencia_obj->geo_lat_by_number($nro_calle);
+								$geo_lon = $georeferencia_obj->geo_lon_by_number($nro_calle);
+							}
+
+							if (is_null($geocoder)) {
+								if ($server == 0 && $nro_calle >= 1000) $server++;
+
+								if ($server == 0) {
+									$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
+									$row_request["server"] = $server;
+									$server++;
+								} else if ($server == 1) {
+									$url = "https://api.tomtom.com/search/2/geocode/" . $calle_url . "+" . $persona->getNro() . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&lat=-32.194998&lon=-64.1684546&radius=300000&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
+									$row_request["server"] = $server;
+									$server++;
+								} else {
+									$url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" . $calle_url . "+" . $persona->getNro() . "+5850&city=rio+tercero&format=json&apiKey=b43e46b080e940b39d1bbee88b9cb320";
+									$row_request["server"] = $server;
+									$server = 0;
+								}
 							} else {
-								$url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=json&apiKey=b43e46b080e940b39d1bbee88b9cb320";
-								$row_request["server"] = $server;
-								$server = 0;
+								if ($geocoder == 0) {
+									$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
+								} else if ($geocoder == 1) {
+									$url = "https://api.tomtom.com/search/2/geocode/" . $calle_url . "+" . $persona->getNro() . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&lat=-32.194998&lon=-64.1684546&radius=300000&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
+								} else {
+									$url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" . $calle_url . "+" . $persona->getNro() . "+5850&city=rio+tercero&format=json&apiKey=b43e46b080e940b39d1bbee88b9cb320";
+								}
+								$row_request["server"] = $geocoder;
 							}
 							$row_request["url"] = $url;
 							$row_request["calle_url"] = $calle_url . "+" . $persona->getNro();
@@ -714,6 +869,8 @@
 							$row_request["channel"] = $ch;
 							$row_request["persona"] = $persona;
 							$row_request["direccion"] = $direccion;
+							$row_request["geo_calle_lat"] = $geo_lat;
+							$row_request["geo_calle_lon"] = $geo_lon;
 							$request[] = $row_request;
 						}
 						$persona->save();
@@ -736,7 +893,15 @@
 						$persona = new Persona(ID_Persona: $id_persona);
 						if ($consulta_osm) {
 							$georeferencia = $persona->getGeoreferencia();
-							$modificacion = $persona->setCalleNro($direccion);
+							if ($is_calle_con_barrio && is_numeric($id_barrio)) {
+								$modificacion = $persona->setCalleNroConBarrio(
+																			   domicilio: $direccion, 
+																			   id_barrio: $id_barrio,
+																			   coneccion: $con
+																			  );
+							} else {
+								$modificacion = $persona->setCalleNro($direccion);
+							}
 							if (is_numeric($departam)) $persona->setFamilia($departam);
 							if (!empty($hc)) $persona->setNro_Carpeta($hc);
 							if (is_numeric($id_barrio)) $persona->setBarrio($id_barrio);
@@ -747,20 +912,46 @@
 							if ($is_calle_rastreador && !$modificacion) {
 								$calle_url = str_replace(" ", "+", $calle);
 
-								if ($server == 0 && $nro_calle >= 1000) $server++;
+								$calle_obj = new Calle(id_calle: $id_calle);
+								$geocoder = $calle_obj->get_geocoder();
 
-								if ($server == 0) {
-									$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
-									$row_request["server"] = $server;
-									$server++;
-								} else if ($server == 1) {
-									$url = "https://api.tomtom.com/search/2/geocode/" . $calle_url . "+" . $persona->getNro() . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&lat=-32.194998&lon=-64.1684546&radius=300000&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
-									$row_request["server"] = $server;
-									$server++;
+								$id_geo = CalleBarrio::existe_georeferencia(
+																			id_calle: $id_calle,
+																			num_calle: $nro_calle , 
+																			connection: $con
+																			);
+								if ($id_geo) {
+									$georeferencia_obj = new CalleBarrio(id_geo: $id_geo, connection: $con);
+									$georeferencia_obj->set_pendiente_by_min_max_punto();
+									$geo_lat = $georeferencia_obj->geo_lat_by_number($nro_calle);
+									$geo_lon = $georeferencia_obj->geo_lon_by_number($nro_calle);
+								}
+
+								if (is_null($geocoder)) {
+									if ($server == 0 && $nro_calle >= 1000) $server++;
+
+									if ($server == 0) {
+										$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
+										$row_request["server"] = $server;
+										$server++;
+									} else if ($server == 1) {
+										$url = "https://api.tomtom.com/search/2/geocode/" . $calle_url . "+" . $persona->getNro() . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&lat=-32.194998&lon=-64.1684546&radius=300000&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
+										$row_request["server"] = $server;
+										$server++;
+									} else {
+										$url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" . $calle_url . "+" . $persona->getNro() . "+5850&city=rio+tercero&format=json&apiKey=b43e46b080e940b39d1bbee88b9cb320";
+										$row_request["server"] = $server;
+										$server = 0;
+									}
 								} else {
-									$url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" . $calle_url . "+" . $persona->getNro() . ",+Cordoba,+Rio+Tercero&city=rio+tercero&format=json&apiKey=b43e46b080e940b39d1bbee88b9cb320";
-									$row_request["server"] = $server;
-									$server = 0;
+									if ($geocoder == 0) {
+										$url = "https://nominatim.openstreetmap.org/search?street=" . $calle_url . "+" . $persona->getNro() . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
+									} else if ($geocoder == 1) {
+										$url = "https://api.tomtom.com/search/2/geocode/" . $calle_url . "+" . $persona->getNro() . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&lat=-32.194998&lon=-64.1684546&radius=300000&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
+									} else {
+										$url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" . $calle_url . "+" . $persona->getNro() . "+5850&city=rio+tercero&format=json&apiKey=b43e46b080e940b39d1bbee88b9cb320";
+									}
+									$row_request["server"] = $geocoder;
 								}
 								$row_request["url"] = $url;
 								$row_request["calle_url"] = $calle_url . "+" . $persona->getNro();
@@ -770,6 +961,8 @@
 								$row_request["channel"] = $ch;
 								$row_request["persona"] = $persona;
 								$row_request["direccion"] = $direccion;
+								$row_request["geo_calle_lat"] = $geo_lat;
+								$row_request["geo_calle_lon"] = $geo_lon;
 								$request[] = $row_request;
 
 								$persona->update_direccion();
@@ -891,6 +1084,8 @@
 				$row["persona"] = $value["persona"];
 				$row["calle_url"] = $value["calle_url"];
 				$row["direccion"] = $value["direccion"];
+				$row["geo_calle_lat"] = (!is_null($value["geo_calle_lat"])) ? $value["geo_calle_lat"] : null;
+				$row["geo_calle_lon"] = (!is_null($value["geo_calle_lon"])) ? $value["geo_calle_lon"] : null;
 				if ($count < 2) {
 					curl_multi_add_handle($multi_request_ch, $row["ch"]);
 					$row_exec[] = $row;
@@ -943,7 +1138,14 @@
 							if ( !empty($arr_obj_json->results) 
 								 && (!is_null($arr_obj_json->results[0]->lat) 
 									 || !is_null($arr_obj_json->features[0]->lon))) {
-								$point = "POINT(" . $arr_obj_json->results[0]->lat . ", " . $arr_obj_json->results[0]->lon . ")";
+								if (!empty($valor["geo_calle_lat"]) && !empty($valor["geo_calle_lon"])) {
+									$lat = $valor["geo_calle_lat"];
+									$lon = $valor["geo_calle_lon"];
+								} else {									
+									$lat = sprintf("%.17f", $arr_obj_json->results[0]->lat);
+									$lon = sprintf( "%.17f", $arr_obj_json->results[0]->lon);
+								}
+								$point = "POINT(" . $lat . ", " .  $lon . ")";
 								$valor["persona"]->setGeoreferencia($point);
 								$valor["persona"]->update_geo();
 							} else {
@@ -952,25 +1154,72 @@
 								$geo_row["direccion"] = $valor["direccion"];
 							}
 						} else {
-							$url = "https://api.tomtom.com/search/2/geocode/" . $valor["calle_url"] . "+" . $persona->getNro() . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
+							if ($valor["server"] == 0) {
+								$url = "https://nominatim.openstreetmap.org/search?street=" . $valor["calle_url"] . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
+							} else if ($valor["server"] == 1) {
+								$url = "https://api.tomtom.com/search/2/geocode/" . $valor["calle_url"] . ",rio+tercero,Cordoba.json?storeResult=false&view=Unified&lat=-32.194998&lon=-64.1684546&radius=300000&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
+							} else {
+								$url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" . $valor["calle_url"] . "+5850&city=rio+tercero&format=json&apiKey=b43e46b080e940b39d1bbee88b9cb320";
+							}
+							$ch = curl_init();
 							curl_setopt($ch, CURLOPT_URL, $url);
 							curl_setopt($ch, CURLOPT_FAILONERROR, true);
 							curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 							$response = curl_exec($ch);
 							$error = curl_error($ch);
 							$arr_obj_json = json_decode($response);
+							sleep(2);
 
-							if (!empty($arr_obj_json->results)
-								&& (!is_null($arr_obj_json->results[0]->position->lat) 
-									|| !is_null($arr_obj_json->features[0]->position->lon))) {
-								$point = "POINT(" . $arr_obj_json->results[0]->position->lat . ", " . $arr_obj_json->results[0]->position->lon . ")";
-								$valor["persona"]->setGeoreferencia($point);
-								$valor["persona"]->update_geo();
+							if ($arr_obj_json &&  $valor["server"] == 0) {
+								if (!empty($arr_obj_json[0]) 
+									&& (!is_null($arr_obj_json[0]->lat)
+										|| !is_null($arr_obj_json[0]->lon))) {
+									$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
+									$valor["persona"]->setGeoreferencia($point);
+									$valor["persona"]->update_geo();
+								} else {
+									$valor["persona"]->setGeoreferencia(null);
+									$geo_row["persona"] = $valor["persona"];
+									$geo_row["direccion"] = $valor["direccion"];
+								}
+							} else if ($arr_obj_json &&  $valor["server"] == 1) {
+								if (!empty($arr_obj_json->results) 
+									&& (!is_null($arr_obj_json->results[0]->position->lat) 
+										|| !is_null($arr_obj_json->features[0]->position->lon))) {
+									$point = "POINT(" . $arr_obj_json->results[0]->position->lat . ", " . $arr_obj_json->results[0]->position->lon . ")";
+									$valor["persona"]->setGeoreferencia($point);
+									$valor["persona"]->update_geo();
+								} else {
+									$valor["persona"]->setGeoreferencia(null);
+									$geo_row["persona"] = $valor["persona"];
+									$geo_row["direccion"] = $valor["direccion"];
+								}
+							} else if ($arr_obj_json &&  $valor["server"] == 2) {
+								if ( !empty($arr_obj_json->results) 
+									&& (!is_null($arr_obj_json->results[0]->lat) 
+										|| !is_null($arr_obj_json->features[0]->lon))) {
+
+									if (!empty($valor["geo_calle_lat"]) && !empty($valor["geo_calle_lon"])) {
+										$lat = $valor["geo_calle_lat"];
+										$lon = $valor["geo_calle_lon"];
+									} else {									
+										$lat = sprintf("%.17f", $arr_obj_json->results[0]->lat);
+										$lon = sprintf( "%.17f", $arr_obj_json->results[0]->lon);
+									}
+									$point = "POINT(" . $lat . ", " .  $lon . ")";
+									$valor["persona"]->setGeoreferencia($point);
+									$valor["persona"]->update_geo();
+								} else {
+									$valor["persona"]->setGeoreferencia(null);
+									$geo_row["persona"] = $valor["persona"];
+									$geo_row["direccion"] = $valor["direccion"];
+								}
 							} else {
 								$valor["persona"]->setGeoreferencia(null);
 								$geo_row["persona"] = $valor["persona"];
 								$geo_row["direccion"] = $valor["direccion"];
 							}
+
 						}
 						curl_close($ch);
 					}
@@ -1028,8 +1277,12 @@
 							$geo_row["direccion"] = $valor["direccion"];
 						}
 					} else if ($arr_obj_json &&  $valor["server"] == 2) {
-						if (!is_null($arr_obj_json->results[0]->lat) || !is_null($arr_obj_json->features[0]->lon)) {
-							$point = "POINT(" . $arr_obj_json->results[0]->lat . ", " . $arr_obj_json->results[0]->lon . ")";
+						if ( !empty($arr_obj_json->results) 
+							&& (!is_null($arr_obj_json->results[0]->lat) 
+								|| !is_null($arr_obj_json->features[0]->lon))) {
+							$lat = sprintf("%.17f", $arr_obj_json->results[0]->lat);
+							$lon = sprintf( "%.17f", $arr_obj_json->results[0]->lon);
+							$point = "POINT(" . $lat . ", " .  $lon . ")";
 							$valor["persona"]->setGeoreferencia($point);
 							$valor["persona"]->update_geo();
 						} else {
@@ -1038,7 +1291,7 @@
 							$geo_row["direccion"] = $valor["direccion"];
 						}
 					} else {
-						$url = "https://api.tomtom.com/search/2/geocode/" . $valor["calle_url"] . "+" . $persona->getNro() . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
+						$url = "https://api.tomtom.com/search/2/geocode/" . $valor["calle_url"] . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
 						curl_setopt($ch, CURLOPT_URL, $url);
 						curl_setopt($ch, CURLOPT_FAILONERROR, true);
 						curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

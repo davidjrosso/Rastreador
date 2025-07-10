@@ -7,7 +7,61 @@ class Calle {
 	private $estado;
 	private $calle_open;
 	private $calle_nombre;
+	private $geocoder;
 
+	public function __construct(
+		$calle_nombre = null,
+		$codigo_calle = null,
+		$id_calle = null,
+		$calle_open = null,
+		$calle_abreviado = null,
+		$geocoder = null,
+		$estado = null
+	){
+
+		if (!$id_calle) {
+			$this->id_calle = $id_calle;
+			$this->calle_abreviado = $calle_abreviado;
+			$this->calle_open = $calle_open;
+			$this->codigo_calle = $codigo_calle;
+			$this->calle_nombre = $calle_nombre;
+			$this->estado = $estado;
+			$this->geocoder = $geocoder;
+		} else {
+			$Con = new Conexion();
+			$Con->OpenConexion();
+			$consultar = "select *
+						from calle 
+						where id_calle = $id_calle
+							and estado = 1
+						order by calle_nombre ASC";
+			$ejecutar_consultar_calle = mysqli_query(
+				$Con->Conexion, 
+				$consultar) or die("Problemas al consultar filtro Calle");
+			if (!$ejecutar_consultar_calle) {
+				throw new Exception("Problemas al intentar Consultar Registros de Calle", 0);
+			}
+			$ret = mysqli_fetch_assoc($ejecutar_consultar_calle);
+
+			$id_calle = $ret["id_calle"];
+			$codigo_calle = $ret["codigo_calle"];
+			$calle_nombre = $ret["calle_nombre"];
+			$calle_open = $ret["calle_open"];
+			$estado = $ret["estado"];
+			$calle_abreviado = $ret["calle_abreviado"];
+			$geocoder = $ret["geocoder"];
+
+			$this->id_calle = $id_calle;
+			$this->codigo_calle = $codigo_calle;
+			$this->calle_open = $calle_open;
+			$this->calle_nombre = $calle_nombre;
+			$this->estado = $estado;
+			$this->calle_abreviado = $calle_abreviado;
+			$this->geocoder = $geocoder;
+
+			$Con->CloseConexion();
+		}
+	}
 
 	public static function existe_calle($xDomicilio = null)
 	{
@@ -45,6 +99,110 @@ class Calle {
 		return $calle;
 	}
 
+	public static function existe_calle_con_barrio_nro(
+														$calle=null,
+														$id_bario=null,
+														$nro_calle=null,
+														$connection=null
+														)
+	{
+		$calle = null;
+		if ($calle && $id_bario && $nro_calle) {
+			$consulta = "SELECT *
+						 FROM calle c INNER JOIN calles_barrios cs ON (c.id_calle = cs.id_calle)
+						 WHERE lower(calle_nombre) LIKE CONCAT(
+																'%',
+																REGEXP_REPLACE( 
+																		REGEXP_REPLACE(
+																						REGEXP_SUBSTR(
+																								lower('$calle'), 
+																								'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
+																						),
+																						'( )+',
+																						'%'
+																						),
+																				'(\\\\.)',
+																				''
+																				),
+																'%'
+																)
+						  AND $nro_calle BETWEEN cs.min_num AND cs.max_num
+						  AND id_barrio = $id_bario
+						  AND c.estado = 1
+						  AND cs.estado = 1
+						 ORDER BY c.calle_nombre ASC;";
+			$query_object = mysqli_query($connection->Conexion, $consulta) or die("Error al consultar datos");
+			if (mysqli_num_rows($query_object) > 0) {
+				$ret = mysqli_fetch_assoc($query_object);
+				$calle = $ret["calle_nombre"];
+			};
+		}
+		return $calle;
+	}
+
+
+	public static function existe_calle_con_barrio(
+													$domicilio=null,
+													$id_bario=null,
+													$connection=null
+												  )
+	{
+		$calle = null;
+		$nro_calle = null;
+
+		if ($domicilio) {
+			$nro_calle = trim($domicilio);
+			$out = null;
+			$ret = null;
+			if (preg_match('~ [0-9]+$~', $nro_calle, $out)) {
+				$nro_calle = trim($out[0]);
+			} else {
+				if (preg_match('~ [0-9]+ ([aA-zZ]|[0-9])+~', $nro_calle, $ret)) {
+					$lista = explode(" ", trim($ret[0]));
+					$nro_calle = trim($lista[0]);
+				} else {
+					preg_match('~^[0-9]+$~', $nro_calle, $out);
+					if (!empty($out[0])) {
+						$nro_calle = trim($out[0]);
+					} else {
+						$nro_calle = null;
+					}
+				}
+			}
+		}
+
+		if ($domicilio && $id_bario && $nro_calle) {
+			$consulta = "SELECT *
+						 FROM calle c INNER JOIN calles_barrios cs ON (c.id_calle = cs.id_calle)
+						 WHERE lower(calle_nombre) LIKE CONCAT(
+																'%',
+																REGEXP_REPLACE( 
+																		REGEXP_REPLACE(
+																						REGEXP_SUBSTR(
+																								lower('$domicilio'), 
+																								'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
+																						),
+																						'( )+',
+																						'%'
+																						),
+																				'(\\\\.)',
+																				''
+																				),
+																'%'
+																)
+						  AND $nro_calle BETWEEN cs.min_num AND cs.max_num
+						  AND id_barrio = $id_bario
+						  AND c.estado = 1
+						  AND cs.estado = 1
+						 ORDER BY c.calle_nombre ASC;";
+			$query_object = mysqli_query($connection->Conexion, $consulta) or die("Error al consultar datos");
+			if (mysqli_num_rows($query_object) > 0) {
+				$ret = mysqli_fetch_assoc($query_object);
+				$calle = $ret["calle_nombre"];
+			};
+		}
+		return $calle;
+	}
 
 	public static function get_id_by_nombre($xDomicilio = null)
 	{
@@ -82,6 +240,69 @@ class Calle {
 		return $calle;
 	}
 
+	public static function get_id_by_nombre_barrio(
+													$domicilio=null,
+													$id_bario=null,
+													$connection=null
+												  )
+	{
+		$calle = null;
+		$nro_calle = null;
+
+		if ($domicilio) {
+			$nro_calle = trim($domicilio);
+			$out = null;
+			$ret = null;
+			if (preg_match('~ [0-9]+$~', $nro_calle, $out)) {
+				$nro_calle = trim($out[0]);
+			} else {
+				if (preg_match('~ [0-9]+ ([aA-zZ]|[0-9])+~', $nro_calle, $ret)) {
+					$lista = explode(" ", trim($ret[0]));
+					$nro_calle = trim($lista[0]);
+				} else {
+					preg_match('~^[0-9]+$~', $nro_calle, $out);
+					if (!empty($out[0])) {
+						$nro_calle = trim($out[0]);
+					} else {
+						$nro_calle = null;
+					}
+				}
+			}
+		}
+
+		if ($domicilio && $id_bario && $nro_calle) {
+			$consulta = "SELECT *
+						 FROM calle c INNER JOIN calles_barrios cs ON (c.id_calle = cs.id_calle)
+						 WHERE lower(calle_nombre) LIKE CONCAT(
+																'%',
+																REGEXP_REPLACE( 
+																		REGEXP_REPLACE(
+																						REGEXP_SUBSTR(
+																								lower('$domicilio'), 
+																								'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
+																						),
+																						'( )+',
+																						'%'
+																						),
+																				'(\\\\.)',
+																				''
+																				),
+																'%'
+																)
+						  AND $nro_calle BETWEEN cs.min_num AND cs.max_num
+						  AND id_barrio = $id_bario
+						  AND c.estado = 1
+						  AND cs.estado = 1
+						 ORDER BY c.calle_nombre ASC;";
+			$query_object = mysqli_query($connection->Conexion, $consulta) or die("Error al consultar datos");
+			if (mysqli_num_rows($query_object) > 0) {
+				$ret = mysqli_fetch_assoc($query_object);
+				$calle = $ret["id_calle"];
+			};
+		}
+		return $calle;
+	}
+
 	// METODOS SET
 	public function set_id_calle($id_calle){
 		$this->id_calle = $id_calle;
@@ -105,6 +326,10 @@ class Calle {
 
 	public function set_calle_nombre($calle_nombre){
 		$this->calle_nombre = $calle_nombre;
+	}
+
+	public function set_geocoder($geocoder){
+		$this->geocoder = $geocoder;
 	}
 
 	// METODOS GET
@@ -132,54 +357,8 @@ class Calle {
 		return $this->calle_nombre;
 	}
 
-	public function __construct(
-		$calle_nombre = null,
-		$codigo_calle = null,
-		$id_calle = null,
-		$calle_open = null,
-		$calle_abreviado = null,
-		$estado = null
-	) {
-
-		if (!$id_calle) {
-			$this->estado = $estado;
-			$this->calle_abreviado = $calle_abreviado;
-			$this->calle_open = $calle_open;
-			$this->id_calle = $id_calle;
-			$this->codigo_calle = $codigo_calle;
-			$this->calle_nombre = $calle_nombre;
-		} else {
-			$Con = new Conexion();
-			$Con->OpenConexion();
-			$consultar = "select *
-						from calle 
-						where id_calle = $id_calle
-							and estado = 1
-						order by calle_nombre ASC";
-			$ejecutar_consultar_calle = mysqli_query(
-				$Con->Conexion, 
-				$consultar) or die("Problemas al consultar filtro Calle");
-			if (!$ejecutar_consultar_calle) {
-				throw new Exception("Problemas al intentar Consultar Registros de Calle", 0);
-			}
-			$ret = mysqli_fetch_assoc($ejecutar_consultar_calle);
-
-			$id_calle = $ret["id_calle"];
-			$codigo_calle = $ret["codigo_calle"];
-			$calle_nombre = $ret["calle_nombre"];
-			$calle_open = $ret["calle_open"];
-			$estado = $ret["estado"];
-			$calle_abreviado = $ret["calle_abreviado"];
-
-			$this->id_calle = $id_calle;
-			$this->codigo_calle = $codigo_calle;
-			$this->calle_open = $calle_open;
-			$this->calle_nombre = $calle_nombre;
-			$this->estado = $estado;
-			$this->calle_abreviado = $calle_abreviado;
-
-			$Con->CloseConexion();
-		}
+	public function get_geocoder(){
+		return $this->geocoder;
 	}
 
 	public function update(){
@@ -191,9 +370,10 @@ class Calle {
 						id_calle = " . ((!is_null($this->get_id_calle())) ? "'" . $this->get_id_calle() . "'" : "null") . ", 
 						calle_abreviado = " . ((!is_null($this->get_calle_abreviado())) ? "'" . $this->get_calle_abreviado() . "'" : "null") . ", 
 						estado = " . ((!is_null($this->get_estado())) ? "'" . $this->get_estado() . "'" : "null") . ", 
-						calle_open = " . ((!is_null($this->get_calle_open())) ? "'" . $this->get_calle_open() . "'" : "null") . "
+						calle_open = " . ((!is_null($this->get_calle_open())) ? "'" . $this->get_calle_open() . "'" : "null") . ",
+						geocoder = " . ((!is_null($this->get_geocoder())) ? "'" . $this->get_geocoder() . "'" : "null") . "
 					where id_calle = " . $this->get_id_calle();
-					$MensajeErrorConsultar = "No se pudo actualizar la Persona";
+					$MensajeErrorConsultar = "No se pudo actualizar la Calle";
 		if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
 			throw new Exception($MensajeErrorConsultar . $Consulta, 2);
 		}
