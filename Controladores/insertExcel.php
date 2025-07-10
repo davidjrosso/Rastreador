@@ -1215,9 +1215,17 @@
 									$geo_row["direccion"] = $valor["direccion"];
 								}
 							} else {
-								$valor["persona"]->setGeoreferencia(null);
-								$geo_row["persona"] = $valor["persona"];
-								$geo_row["direccion"] = $valor["direccion"];
+								if (!empty($valor["geo_calle_lat"]) && !empty($valor["geo_calle_lon"])) {
+									$lat = $valor["geo_calle_lat"];
+									$lon = $valor["geo_calle_lon"];
+									$point = "POINT(" . $lat . ", " .  $lon . ")";
+									$valor["persona"]->setGeoreferencia($point);
+									$valor["persona"]->update_geo();
+								} else {
+									$valor["persona"]->setGeoreferencia(null);
+									$geo_row["persona"] = $valor["persona"];
+									$geo_row["direccion"] = $valor["direccion"];
+								}
 							}
 
 						}
@@ -1280,8 +1288,13 @@
 						if ( !empty($arr_obj_json->results) 
 							&& (!is_null($arr_obj_json->results[0]->lat) 
 								|| !is_null($arr_obj_json->features[0]->lon))) {
-							$lat = sprintf("%.17f", $arr_obj_json->results[0]->lat);
-							$lon = sprintf( "%.17f", $arr_obj_json->results[0]->lon);
+							if (!empty($valor["geo_calle_lat"]) && !empty($valor["geo_calle_lon"])) {
+								$lat = $valor["geo_calle_lat"];
+								$lon = $valor["geo_calle_lon"];
+							} else {									
+								$lat = sprintf("%.17f", $arr_obj_json->results[0]->lat);
+								$lon = sprintf( "%.17f", $arr_obj_json->results[0]->lon);
+							}
 							$point = "POINT(" . $lat . ", " .  $lon . ")";
 							$valor["persona"]->setGeoreferencia($point);
 							$valor["persona"]->update_geo();
@@ -1306,9 +1319,17 @@
 							$valor["persona"]->setGeoreferencia($point);
 							$valor["persona"]->update_geo();
 						} else {
-							$valor["persona"]->setGeoreferencia(null);
-							$geo_row["persona"] = $valor["persona"];
-							$geo_row["direccion"] = $valor["direccion"];
+							if (!empty($valor["geo_calle_lat"]) && !empty($valor["geo_calle_lon"])) {
+								$lat = $valor["geo_calle_lat"];
+								$lon = $valor["geo_calle_lon"];
+								$point = "POINT(" . $lat . ", " .  $lon . ")";
+								$valor["persona"]->setGeoreferencia($point);
+								$valor["persona"]->update_geo();
+							} else {
+								$valor["persona"]->setGeoreferencia(null);
+								$geo_row["persona"] = $valor["persona"];
+								$geo_row["direccion"] = $valor["direccion"];
+							}
 						}
 					}
 					curl_close($ch);
