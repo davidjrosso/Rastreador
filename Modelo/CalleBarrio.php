@@ -92,11 +92,23 @@ class CalleBarrio
 	public static function existe_georeferencia($id_calle, $num_calle, $connection)
 	{
 		$id_geo = null;
-		if ($id_calle &&$num_calle ) {
+		if ($id_calle && $num_calle) {
 			$consulta = "select *
 						 from calles_barrios
 						 where id_calle = $id_calle
                            and $num_calle between min_num and max_num
+						   and estado = 1;";
+			$query_object = mysqli_query($connection->Conexion, $consulta) or die("Error al consultar datos");
+			if (mysqli_num_rows($query_object) > 0) {
+				$ret = mysqli_fetch_assoc($query_object);
+				$id_geo = $ret["id_geo"];
+			};
+		} else if ($id_calle && !$num_calle) {
+			$consulta = "select *
+						 from calles_barrios
+						 where id_calle = $id_calle
+                           and min_num = 0
+						   and max_num = 0
 						   and estado = 1;";
 			$query_object = mysqli_query($connection->Conexion, $consulta) or die("Error al consultar datos");
 			if (mysqli_num_rows($query_object) > 0) {
@@ -161,9 +173,11 @@ class CalleBarrio
         $punto_min_num_lon = $this->get_lon_punto_min_num();
         $max_num = $this->get_max_num();
         $min_num = $this->get_min_num();
-        $pendiente_lat = ($punto_max_num_lat - $punto_min_num_lat)/($max_num - $min_num);
-        $pendiente_lon = ($punto_max_num_lon - $punto_min_num_lon)/($max_num - $min_num);
-		$this->pendiente = "POINT($pendiente_lat,$pendiente_lon)";
+		if ($max_num & $min_num) {
+			$pendiente_lat = ($punto_max_num_lat - $punto_min_num_lat)/($max_num - $min_num);
+			$pendiente_lon = ($punto_max_num_lon - $punto_min_num_lon)/($max_num - $min_num);
+			$this->pendiente = "POINT($pendiente_lat,$pendiente_lon)";
+		}
 	}
 
 	public function set_punto($punto)
@@ -336,19 +350,25 @@ class CalleBarrio
 
     public function geo_lat_by_number($number)
     {
-        $pendiente = $this->get_pendiente_lat();
         $point = $this->get_punto_lat();
         $min_num = $this->get_min_num();
-        $lat = $pendiente * ($number - $min_num) + $point;
+		$lat = $point;
+		if ($number && $this->get_pendiente()) {
+			$pendiente = $this->get_pendiente_lat();
+			$lat += $pendiente * ($number - $min_num);
+		}
         return $lat;
     }
 
     public function geo_lon_by_number($number)
     {
-        $pendiente = $this->get_pendiente_lon();
         $point = $this->get_punto_lon();
         $min_num = $this->get_min_num();
-        $lon = $pendiente * ($number - $min_num) + $point;
+		$lon = $point;
+		if ($number && $this->get_pendiente()) {
+			$pendiente = $this->get_pendiente_lon();
+			$lon += $pendiente * ($number - $min_num);
+		}
         return $lon;
     }
 

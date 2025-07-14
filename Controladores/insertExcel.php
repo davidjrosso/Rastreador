@@ -43,7 +43,8 @@
 	use Google\Service\Drive;
 
 
-	function codigoExcelMotivo($codigo){
+	function codigoExcelMotivo($codigo)
+	{
 		switch ($codigo) {
 			case 'CDAD':
 				$result = "CDAD";
@@ -88,7 +89,8 @@
 		return $result;
 	}
 
-	function colExcel($col){
+	function colExcel($col)
+	{
 		switch ($col) {
 			case 0:
 				$result = "A1";
@@ -166,6 +168,28 @@
 		return $result;
 	}
 
+	function nro_from_domicilio($domiclio) 
+	{
+		$domiclio = trim($domiclio);
+		$out = null;
+		$ret = null;
+		if (preg_match('~ [0-9]+$~', $domiclio, $out)) {
+			$nro_calle = trim($out[0]);
+		} else {
+			if (preg_match('~ [0-9]+ ([aA-zZ]|[0-9])+~', $domiclio, $ret)) {
+				$lista = explode(" ", trim($ret[0]));
+				$nro_calle = trim($lista[0]);
+			} else {
+				preg_match('~^[0-9]+$~', $domiclio, $out);
+				if (!empty($out[0])) {
+					$nro_calle = trim($out[0]);
+				} else {
+					$nro_calle = null;
+				}
+			}
+		}
+		return $nro_calle;
+	}
 	function col_to_number($colum_excel) 
 	{
 		$num_col = 0;
@@ -177,7 +201,8 @@
 		return $num_col;
 	}
 
-	function objetoExcel($obj, $valor, $connection, $col_header=null){
+	function objetoExcel($obj, $valor, $connection, $col_header=null)
+	{
 		$datos = array();
 		switch ($obj) {
 			case "nombre_apellido":
@@ -205,7 +230,8 @@
 				break;
 			case "direccion":
 				$direccion_datos = explode("/", $valor);
-				$datos["direccion"] = $direccion_datos[0];
+				$direccion = preg_replace("~\([aA-zZ0-9 ]*\)~", "", $direccion_datos[0]);
+				$datos["direccion"] = $direccion;
 				if (count($direccion_datos) > 1) {
 					$result_array = [];
 					$is_departament = preg_match(
@@ -282,7 +308,8 @@
 		return $datos;
 	}
 
-	function rows_persona($rows_excel, $config_datos, $connection) {
+	function rows_persona($rows_excel, $config_datos, $connection) 
+	{
 		$lista_personas = array();
 		$highestRow = count(value: $rows_excel) - 1;
 		$list_ignore_row = explode("-", $config_datos["ignore"]);
@@ -447,6 +474,7 @@
 				$apellido = $nombre_apellido["apellido"];
 				$Fecha_Nacimiento = $dato["fecha_nacimiento"];
 				$direccion = (isset($dato["direccion"]["direccion"])) ? $dato["direccion"]["direccion"] : null;
+				$nro_calle = nro_from_domicilio($direccion);
 				$manzana = (!empty($dato["manzana"])) ? $dato["manzana"] : null;
 				$departam = (isset($dato["departamento"])) ? $dato["departamento"] : null;
 				$departam = (!empty($dato["direccion"]["departamento"])) ? $dato["direccion"]["departamento"] : $departam;
@@ -489,12 +517,13 @@
 						if (is_numeric($departam)) $persona->setFamilia($departam);
 						if (!empty($hc)) $persona->setNro_Carpeta($hc);
 						if (is_numeric($id_barrio)) $persona->setBarrio($id_barrio);
+						$persona->setNro($nro_calle);
 						$persona->setManzana($manzana);
-						$calle = $persona->getNombre_Calle();
-						$nro_calle = $persona->getNro();
 
-						if (($is_calle_rastreador && !$modificacion)) {
+						if (($is_calle_rastreador || $is_calle_con_barrio)
+							 && !$modificacion) {
 							$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
+
 							$calle_obj = new Calle(id_calle: $id_calle);
 							$geocoder = $calle_obj->get_geocoder();
 
@@ -555,7 +584,7 @@
 						$persona->update_barrio();
 
 						if ($calle_info) {
-							$row_json["calle_rastreador"] = $is_calle_rastreador;
+							$row_json["calle_rastreador"] = ($is_calle_con_barrio) ? $is_calle_con_barrio : $is_calle_rastreador;
 							$row_json["domicilio"] = (empty($direccion)) ? "" : $direccion;
 							$row_json["form"]["persona"] = $persona->jsonSerialize();
 							$domicilios_json[]["formulario"] = $row_json;
@@ -587,9 +616,9 @@
 								$modificacion = $persona->setCalleNro($direccion);
 							}
 							if (is_numeric($departam)) $persona->setFamilia($departam);
-							$nro_calle = $persona->getNro();
-							
-							if ($is_calle_rastreador) {
+							$persona->setNro($nro_calle);
+
+							if ($is_calle_rastreador || $is_calle_con_barrio) {
 								$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
 
 								$calle_obj = new Calle(id_calle: $id_calle);
@@ -659,7 +688,7 @@
 							$row_json["form"]["persona"] = $persona->jsonSerialize();
 						} 
 						if (!empty($dni) && $calle_info) {
-							$row_json["calle_rastreador"] = $is_calle_rastreador;
+							$row_json["calle_rastreador"] = ($is_calle_con_barrio) ? $is_calle_con_barrio : $is_calle_rastreador;
 							$row_json["domicilio"] = (empty($direccion)) ? "" : $direccion;
 							$domicilios_json[]["formulario"] = $row_json;
 							$row_json = [];
@@ -694,11 +723,11 @@
 							if (is_numeric($departam)) $persona->setFamilia($departam);
 							if (!empty($hc)) $persona->setNro_Carpeta($hc);
 							if (is_numeric($id_barrio)) $persona->setBarrio($id_barrio);
+							$persona->setNro($nro_calle);
 							$persona->setManzana($manzana);
-							$calle = $persona->getNombre_Calle();
-							$nro_calle = $persona->getNro();
 
-							if (($is_calle_rastreador && !$modificacion)) {
+							if (($is_calle_rastreador || $is_calle_con_barrio)
+								 && !$modificacion) {
 								$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
 
 								$calle_obj = new Calle(id_calle: $id_calle);
@@ -760,7 +789,7 @@
 							$persona->update_NroCarpeta();
 							$persona->update_barrio();	
 							if ($calle_info) {
-								$row_json["calle_rastreador"] = $is_calle_rastreador;
+								$row_json["calle_rastreador"] = ($is_calle_con_barrio) ? $is_calle_con_barrio : $is_calle_rastreador;
 								$row_json["domicilio"] = $direccion;
 								$row_json["form"]["persona"] = $persona->jsonSerialize();
 								$domicilios_json[]["formulario"] = $row_json;
@@ -785,7 +814,7 @@
 
 					if (!empty($dni) && $calle_info) {
 						$row_json["responsable"] = $responsable->jsonSerialize();
-						$row_json["calle_rastreador"] = $is_calle_rastreador;
+						$row_json["calle_rastreador"] = ($is_calle_con_barrio) ? $is_calle_con_barrio : $is_calle_rastreador;
 						$row_json["domicilio"] = $direccion;
 					}
 
@@ -815,9 +844,9 @@
 							$modificacion = $persona->setCalleNro($direccion);
 						}
 						if (is_numeric($departam)) $persona->setFamilia($departam);
-						$nro_calle = $persona->getNro();
+						$persona->setNro($nro_calle);
 
-						if ($is_calle_rastreador) {
+						if ($is_calle_rastreador || $is_calle_con_barrio) {
 							$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
 
 							$calle_obj = new Calle(id_calle: $id_calle);
@@ -905,12 +934,12 @@
 							if (is_numeric($departam)) $persona->setFamilia($departam);
 							if (!empty($hc)) $persona->setNro_Carpeta($hc);
 							if (is_numeric($id_barrio)) $persona->setBarrio($id_barrio);
+							$persona->setNro($nro_calle);
 							$persona->setManzana($manzana);
-							$calle = $persona->getNombre_Calle();
-							$nro_calle = $persona->getNro();
 
-							if ($is_calle_rastreador && !$modificacion) {
-								$calle_url = str_replace(" ", "+", $calle);
+							if (($is_calle_rastreador || $is_calle_con_barrio)
+								 && !$modificacion) {
+								$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
 
 								$calle_obj = new Calle(id_calle: $id_calle);
 								$geocoder = $calle_obj->get_geocoder();
@@ -1110,50 +1139,32 @@
 						$response_body = curl_multi_getcontent($ch );
 						curl_multi_remove_handle($multi_request_ch, $ch);
 						$arr_obj_json = json_decode($response_body);
+
 						if ($arr_obj_json &&  $valor["server"] == 0) {
 							if (!empty($arr_obj_json[0]) 
 								&& (!is_null($arr_obj_json[0]->lat)
 									|| !is_null($arr_obj_json[0]->lon))) {
-								$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
-								$valor["persona"]->setGeoreferencia($point);
-								$valor["persona"]->update_geo();
-							} else {
-								$valor["persona"]->setGeoreferencia(null);
-								$geo_row["persona"] = $valor["persona"];
-								$geo_row["direccion"] = $valor["direccion"];
+								$lat = $arr_obj_json[0]->lat;
+								$lon = $arr_obj_json[0]->lon;
 							}
 						} else if ($arr_obj_json &&  $valor["server"] == 1) {
 							if (!empty($arr_obj_json->results) 
 								&& (!is_null($arr_obj_json->results[0]->position->lat) 
 									|| !is_null($arr_obj_json->features[0]->position->lon))) {
-								$point = "POINT(" . $arr_obj_json->results[0]->position->lat . ", " . $arr_obj_json->results[0]->position->lon . ")";
-								$valor["persona"]->setGeoreferencia($point);
-								$valor["persona"]->update_geo();
-							} else {
-								$valor["persona"]->setGeoreferencia(null);
-								$geo_row["persona"] = $valor["persona"];
-								$geo_row["direccion"] = $valor["direccion"];
+								$lat = $arr_obj_json->results[0]->position->lat;
+								$lon = $arr_obj_json->results[0]->position->lon;
 							}
 						} else if ($arr_obj_json &&  $valor["server"] == 2) {
 							if ( !empty($arr_obj_json->results) 
-								 && (!is_null($arr_obj_json->results[0]->lat) 
-									 || !is_null($arr_obj_json->features[0]->lon))) {
-								if (!empty($valor["geo_calle_lat"]) && !empty($valor["geo_calle_lon"])) {
-									$lat = $valor["geo_calle_lat"];
-									$lon = $valor["geo_calle_lon"];
-								} else {									
-									$lat = sprintf("%.17f", $arr_obj_json->results[0]->lat);
-									$lon = sprintf( "%.17f", $arr_obj_json->results[0]->lon);
-								}
-								$point = "POINT(" . $lat . ", " .  $lon . ")";
-								$valor["persona"]->setGeoreferencia($point);
-								$valor["persona"]->update_geo();
-							} else {
-								$valor["persona"]->setGeoreferencia(null);
-								$geo_row["persona"] = $valor["persona"];
-								$geo_row["direccion"] = $valor["direccion"];
+								&& (!is_null($arr_obj_json->results[0]->lat) 
+									|| !is_null($arr_obj_json->features[0]->lon))) {
+
+								$lat = sprintf("%.17f", $arr_obj_json->results[0]->lat);
+								$lon = sprintf( "%.17f", $arr_obj_json->results[0]->lon);
 							}
-						} else {
+						} 
+						
+						if (empty($lat) || empty($lon)) {
 							if ($valor["server"] == 0) {
 								$url = "https://nominatim.openstreetmap.org/search?street=" . $valor["calle_url"] . "&city=rio+tercero&format=jsonv2&limit=1&email=desarrollo.automation.test@gmail.com";
 							} else if ($valor["server"] == 1) {
@@ -1171,66 +1182,47 @@
 							sleep(2);
 
 							if ($arr_obj_json &&  $valor["server"] == 0) {
+
 								if (!empty($arr_obj_json[0]) 
 									&& (!is_null($arr_obj_json[0]->lat)
 										|| !is_null($arr_obj_json[0]->lon))) {
-									$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
-									$valor["persona"]->setGeoreferencia($point);
-									$valor["persona"]->update_geo();
-								} else {
-									$valor["persona"]->setGeoreferencia(null);
-									$geo_row["persona"] = $valor["persona"];
-									$geo_row["direccion"] = $valor["direccion"];
+									$lat = $arr_obj_json[0]->lat;
+									$lon = $arr_obj_json[0]->lon;
 								}
 							} else if ($arr_obj_json &&  $valor["server"] == 1) {
+
 								if (!empty($arr_obj_json->results) 
 									&& (!is_null($arr_obj_json->results[0]->position->lat) 
 										|| !is_null($arr_obj_json->features[0]->position->lon))) {
-									$point = "POINT(" . $arr_obj_json->results[0]->position->lat . ", " . $arr_obj_json->results[0]->position->lon . ")";
-									$valor["persona"]->setGeoreferencia($point);
-									$valor["persona"]->update_geo();
-								} else {
-									$valor["persona"]->setGeoreferencia(null);
-									$geo_row["persona"] = $valor["persona"];
-									$geo_row["direccion"] = $valor["direccion"];
+									$lat = $arr_obj_json->results[0]->position->lat;
+									$lon = $arr_obj_json->results[0]->position->lon;
 								}
 							} else if ($arr_obj_json &&  $valor["server"] == 2) {
+
 								if ( !empty($arr_obj_json->results) 
 									&& (!is_null($arr_obj_json->results[0]->lat) 
 										|| !is_null($arr_obj_json->features[0]->lon))) {
-
-									if (!empty($valor["geo_calle_lat"]) && !empty($valor["geo_calle_lon"])) {
-										$lat = $valor["geo_calle_lat"];
-										$lon = $valor["geo_calle_lon"];
-									} else {									
-										$lat = sprintf("%.17f", $arr_obj_json->results[0]->lat);
-										$lon = sprintf( "%.17f", $arr_obj_json->results[0]->lon);
-									}
-									$point = "POINT(" . $lat . ", " .  $lon . ")";
-									$valor["persona"]->setGeoreferencia($point);
-									$valor["persona"]->update_geo();
-								} else {
-									$valor["persona"]->setGeoreferencia(null);
-									$geo_row["persona"] = $valor["persona"];
-									$geo_row["direccion"] = $valor["direccion"];
-								}
-							} else {
-								if (!empty($valor["geo_calle_lat"]) && !empty($valor["geo_calle_lon"])) {
-									$lat = $valor["geo_calle_lat"];
-									$lon = $valor["geo_calle_lon"];
-									$point = "POINT(" . $lat . ", " .  $lon . ")";
-									$valor["persona"]->setGeoreferencia($point);
-									$valor["persona"]->update_geo();
-								} else {
-									$valor["persona"]->setGeoreferencia(null);
-									$geo_row["persona"] = $valor["persona"];
-									$geo_row["direccion"] = $valor["direccion"];
+									$lat = sprintf("%.17f", $arr_obj_json->results[0]->lat);
+									$lon = sprintf( "%.17f", $arr_obj_json->results[0]->lon);
 								}
 							}
-
 						}
+
+						if (!empty($valor["geo_calle_lat"]) && !empty($valor["geo_calle_lon"])) {
+							$lat = $valor["geo_calle_lat"];
+							$lon = $valor["geo_calle_lon"];
+						}
+
+						$point = (!empty($lat) && !empty($lon)) ? "POINT(" . $lat . ", " .  $lon . ")" : null;
+						if (empty($point)) {
+							$geo_row["persona"] = $valor["persona"];
+							$geo_row["direccion"] = $valor["direccion"];
+						}
+						$valor["persona"]->setGeoreferencia($point);
+						$valor["persona"]->update_geo();
 						curl_close($ch);
 					}
+
 					$row_exec = [];
 					if ($num_send % 3 == 2) {
 						$json_progress["progreso"] = $progress + ($num_send) / (2 * $cant_request);
@@ -1262,48 +1254,32 @@
 					$response_body = curl_multi_getcontent($ch );
 					curl_multi_remove_handle($multi_request_ch, $ch);
 					$arr_obj_json = json_decode($response_body);
+
 					if ($arr_obj_json &&  $valor["server"] == 0) {
-						if (!is_null($arr_obj_json[0]->lat) || !is_null($arr_obj_json[0]->lon)) {
-							$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
-							$valor["persona"]->setGeoreferencia($point);
-							$valor["persona"]->update_geo();
-						} else {
-							$valor["persona"]->setGeoreferencia(null);
-							$geo_row["persona"] = $valor["persona"];
-							$geo_row["direccion"] = $valor["direccion"];
+						if (!empty($arr_obj_json[0]) 
+							&& (!is_null($arr_obj_json[0]->lat)
+								|| !is_null($arr_obj_json[0]->lon))) {
+							$lat = $arr_obj_json[0]->lat;
+							$lon = $arr_obj_json[0]->lon;
 						}
 					} else if ($arr_obj_json &&  $valor["server"] == 1) {
-						if (!empty($arr_obj_json->results)
+						if (!empty($arr_obj_json->results) 
 							&& (!is_null($arr_obj_json->results[0]->position->lat) 
 								|| !is_null($arr_obj_json->features[0]->position->lon))) {
-							$point = "POINT(" . $arr_obj_json->results[0]->position->lat . ", " . $arr_obj_json->results[0]->position->lon . ")";
-							$valor["persona"]->setGeoreferencia($point);
-							$valor["persona"]->update_geo();
-						} else {
-							$valor["persona"]->setGeoreferencia(null);
-							$geo_row["persona"] = $valor["persona"];
-							$geo_row["direccion"] = $valor["direccion"];
+							$lat = $arr_obj_json->results[0]->position->lat;
+							$lon = $arr_obj_json->results[0]->position->lon;
 						}
 					} else if ($arr_obj_json &&  $valor["server"] == 2) {
 						if ( !empty($arr_obj_json->results) 
 							&& (!is_null($arr_obj_json->results[0]->lat) 
 								|| !is_null($arr_obj_json->features[0]->lon))) {
-							if (!empty($valor["geo_calle_lat"]) && !empty($valor["geo_calle_lon"])) {
-								$lat = $valor["geo_calle_lat"];
-								$lon = $valor["geo_calle_lon"];
-							} else {									
-								$lat = sprintf("%.17f", $arr_obj_json->results[0]->lat);
-								$lon = sprintf( "%.17f", $arr_obj_json->results[0]->lon);
-							}
-							$point = "POINT(" . $lat . ", " .  $lon . ")";
-							$valor["persona"]->setGeoreferencia($point);
-							$valor["persona"]->update_geo();
-						} else {
-							$valor["persona"]->setGeoreferencia(null);
-							$geo_row["persona"] = $valor["persona"];
-							$geo_row["direccion"] = $valor["direccion"];
+
+							$lat = sprintf("%.17f", $arr_obj_json->results[0]->lat);
+							$lon = sprintf( "%.17f", $arr_obj_json->results[0]->lon);
 						}
-					} else {
+					} 
+
+					if (empty($lat) || empty($lon)) {
 						$url = "https://api.tomtom.com/search/2/geocode/" . $valor["calle_url"] . "+,rio+tercero,Cordoba.json?storeResult=false&view=Unified&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
 						curl_setopt($ch, CURLOPT_URL, $url);
 						curl_setopt($ch, CURLOPT_FAILONERROR, true);
@@ -1315,23 +1291,24 @@
 						if (!empty($arr_obj_json->results)
 							&& (!is_null($arr_obj_json->results[0]->position->lat) 
 								|| !is_null($arr_obj_json->features[0]->position->lon))) {
-							$point = "POINT(" . $arr_obj_json->results[0]->position->lat . ", " . $arr_obj_json->results[0]->position->lon . ")";
-							$valor["persona"]->setGeoreferencia($point);
-							$valor["persona"]->update_geo();
-						} else {
-							if (!empty($valor["geo_calle_lat"]) && !empty($valor["geo_calle_lon"])) {
-								$lat = $valor["geo_calle_lat"];
-								$lon = $valor["geo_calle_lon"];
-								$point = "POINT(" . $lat . ", " .  $lon . ")";
-								$valor["persona"]->setGeoreferencia($point);
-								$valor["persona"]->update_geo();
-							} else {
-								$valor["persona"]->setGeoreferencia(null);
-								$geo_row["persona"] = $valor["persona"];
-								$geo_row["direccion"] = $valor["direccion"];
-							}
+							$lat = $arr_obj_json->results[0]->position->lat; 
+							$lon = $arr_obj_json->results[0]->position->lon;
 						}
 					}
+
+					if (!empty($valor["geo_calle_lat"]) && !empty($valor["geo_calle_lon"])) {
+						$lat = $valor["geo_calle_lat"];
+						$lon = $valor["geo_calle_lon"];
+					}
+
+					$point = (!empty($lat) && !empty($lon)) ? "POINT(" . $lat . ", " .  $lon . ")" : null;
+					if (empty($point)) {
+						$geo_row["persona"] = $valor["persona"];
+						$geo_row["direccion"] = $valor["direccion"];
+					}
+					$valor["persona"]->setGeoreferencia($point);
+					$valor["persona"]->update_geo();
+
 					curl_close($ch);
 					$georefencias_json[] = $geo_row;
 					$geo_row = null;

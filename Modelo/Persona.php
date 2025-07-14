@@ -520,7 +520,6 @@ public function setCalleNro($xDomicilio = null)
 				|| $nro_calle != $this->getNro()) {
 				$nombre_calle = $ret["calle_open"];
 				$this->Calle = $ret["id_calle"];
-				$this->Nro = (($nro_calle) ? $nro_calle : $this->getNro());
 				$domicilio = "$nombre_calle " . $this->getNro();
 				$igual = false;
 			}
@@ -614,7 +613,6 @@ public function setCalleNroConBarrio(
 				|| $nro_calle != $this->getNro()) {
 				$nombre_calle = $ret["calle_open"];
 				$this->Calle = $ret["id_calle"];
-				$this->Nro = (($nro_calle) ? $nro_calle : $this->getNro());
 				$domicilio_info = "$nombre_calle " . $this->getNro();
 				$igual = false;
 			}
@@ -820,7 +818,7 @@ public function getCalle(){
 public function getNroCalle()
 {
 	$LongString = strlen($this->Domicilio);
-	if($LongString > 1){
+	if ($LongString > 1) {
 	  $StringDelimitado = chunk_split($this->Domicilio,$LongString - 4,"-");
 	  $PartesDireccion = explode("-", $StringDelimitado);
 	  $NroDomActual = (int) filter_var($PartesDireccion[1], FILTER_SANITIZE_NUMBER_INT);

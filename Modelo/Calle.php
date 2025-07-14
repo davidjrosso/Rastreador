@@ -200,6 +200,34 @@ class Calle {
 				$ret = mysqli_fetch_assoc($query_object);
 				$calle = $ret["calle_nombre"];
 			};
+		} else if ($domicilio && $id_bario && !$nro_calle) {
+			$consulta = "SELECT *
+						 FROM calle c INNER JOIN calles_barrios cs ON (c.id_calle = cs.id_calle)
+						 WHERE lower(calle_nombre) LIKE CONCAT(
+																'%',
+																REGEXP_REPLACE( 
+																		REGEXP_REPLACE(
+																						REGEXP_SUBSTR(
+																								lower('$domicilio'), 
+																								'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
+																						),
+																						'( )+',
+																						'%'
+																						),
+																				'(\\\\.)',
+																				''
+																				),
+																'%'
+																)
+						  AND id_barrio = $id_bario
+						  AND c.estado = 1
+						  AND cs.estado = 1
+						 ORDER BY c.calle_nombre ASC;";
+			$query_object = mysqli_query($connection->Conexion, $consulta) or die("Error al consultar datos");
+			if (mysqli_num_rows($query_object) > 0) {
+				$ret = mysqli_fetch_assoc($query_object);
+				$calle = $ret["calle_nombre"];
+			};
 		}
 		return $calle;
 	}
@@ -290,6 +318,34 @@ class Calle {
 																'%'
 																)
 						  AND $nro_calle BETWEEN cs.min_num AND cs.max_num
+						  AND id_barrio = $id_bario
+						  AND c.estado = 1
+						  AND cs.estado = 1
+						 ORDER BY c.calle_nombre ASC;";
+			$query_object = mysqli_query($connection->Conexion, $consulta) or die("Error al consultar datos");
+			if (mysqli_num_rows($query_object) > 0) {
+				$ret = mysqli_fetch_assoc($query_object);
+				$calle = $ret["id_calle"];
+			};
+		} else if ($domicilio && $id_bario && !$nro_calle) {
+			$consulta = "SELECT *
+						 FROM calle c INNER JOIN calles_barrios cs ON (c.id_calle = cs.id_calle)
+						 WHERE lower(calle_nombre) LIKE CONCAT(
+																'%',
+																REGEXP_REPLACE( 
+																		REGEXP_REPLACE(
+																						REGEXP_SUBSTR(
+																								lower('$domicilio'), 
+																								'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
+																						),
+																						'( )+',
+																						'%'
+																						),
+																				'(\\\\.)',
+																				''
+																				),
+																'%'
+																)
 						  AND id_barrio = $id_bario
 						  AND c.estado = 1
 						  AND cs.estado = 1
