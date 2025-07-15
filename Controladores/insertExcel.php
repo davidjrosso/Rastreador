@@ -394,6 +394,9 @@
 			$centro_salud = new CentroSalud(id_centro: $id_centro_salud, coneccion_base: $con);
 			$id_barrio_centro = $centro_salud->get_id_barrio();
 			$config_datos = $archivo->get_configuracion();
+			$private_key = Parametria::get_value_by_code($con, 'SECRET_KEY');
+			$time_send = Parametria::get_value_by_code($con, 'TIME_SEND');
+			$con->CloseConexion();
 			$list_conf_datos = explode("|", $config_datos);
 			$lista_datos = array();	
 			foreach ($list_conf_datos as $value) {
@@ -402,9 +405,6 @@
 				if ($row_data[1] == "dni") $lista_datos["dni_col"] = col_to_number($row_data[0]);
 				if ($row_data[1] == "nombre_apellido") $lista_datos["nombre_col"] = col_to_number($row_data[0]);
 			}
-
-			$private_key = Parametria::get_value_by_code($con, 'SECRET_KEY');
-
 			$client_drive = new Google_Client();
 			$client_drive->setAuthConfig(array("type" => TYPE_ACCOUNT,
 										 "client_id" => CLIENT_ID,
@@ -486,6 +486,7 @@
 				$ID_TipoAccion = 1;
 				$email = null;
 				$ID_Usuario = 100;
+				$con->OpenConexion();
 				$is_calle_rastreador = Calle::existe_calle($direccion);
 				$is_calle_con_barrio = Calle::existe_calle_con_barrio(
 																	  domicilio: $direccion, 
@@ -1099,8 +1100,7 @@
 					}
 				}
 			}
-
-			$time_send = Parametria::get_value_by_code($con, 'TIME_SEND');
+			$con->CloseConexion();
 			$cant_request = count($request);
 			$count = 0;
 			$num_send = 0;
@@ -1133,6 +1133,8 @@
 							} while ($mrc == CURLM_CALL_MULTI_PERFORM);
 						}
 					}
+
+					$con->OpenConexion();
 					$count = 0;
 					foreach ($row_exec as $indice => $valor) {
 						$ch = $valor["ch"];
@@ -1222,7 +1224,7 @@
 						$valor["persona"]->update_geo();
 						curl_close($ch);
 					}
-
+					$con->CloseConexion();
 					$row_exec = [];
 					if ($num_send % 3 == 2) {
 						$json_progress["progreso"] = $progress + ($num_send) / (2 * $cant_request);
@@ -1248,7 +1250,8 @@
 						} while ($mrc == CURLM_CALL_MULTI_PERFORM);
 					}
 				}
-	
+
+				$con->OpenConexion();
 				foreach ($row_exec as $indice => $valor) {
 					$ch = $valor["ch"];
 					$response_body = curl_multi_getcontent($ch );
@@ -1313,6 +1316,7 @@
 					$georefencias_json[] = $geo_row;
 					$geo_row = null;
 				}
+				$con->CloseConexion();
 			}
 			curl_multi_close($multi_request_ch);
 			$json_body["domicilios"] = $domicilios_json;
@@ -1323,7 +1327,6 @@
 			header( 'HTTP/1.1 400 BAD REQUEST');
 			echo $mensaje;
 		}
-		$con->CloseConexion();
 		ob_end_flush();
 	} catch(Exception $e) {
 		$con->CloseConexion();
