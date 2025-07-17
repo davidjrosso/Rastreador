@@ -41,7 +41,6 @@
 	use Google\Client;
 	use Google\Service\Sheets\SpreadSheet;
 	use Google\Service\Drive;
-	use Google\Cloud\Storage\StorageClient;
 	use PhpOffice\PhpSpreadsheet\Spreadsheet as SpreadsheetFile;
 	use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -399,6 +398,7 @@
 			$private_key = Parametria::get_value_by_code($con, 'SECRET_KEY');
 			$time_send = Parametria::get_value_by_code($con, 'TIME_SEND');
 			$con->CloseConexion();
+			$con = null;
 			$list_conf_datos = explode("|", $config_datos);
 			$lista_datos = array();	
 			foreach ($list_conf_datos as $value) {
@@ -502,6 +502,7 @@
 				$ID_TipoAccion = 1;
 				$email = null;
 				$ID_Usuario = 100;
+				$con = new Conexion();
 				$con->OpenConexion();
 				$is_calle_rastreador = Calle::existe_calle($direccion);
 				$is_calle_con_barrio = Calle::existe_calle_con_barrio(
@@ -1117,6 +1118,7 @@
 				}
 			}
 			$con->CloseConexion();
+			$con = null;
 			$cant_request = count($request);
 			$count = 0;
 			$num_send = 0;
@@ -1149,7 +1151,7 @@
 							} while ($mrc == CURLM_CALL_MULTI_PERFORM);
 						}
 					}
-
+					$con = new Conexion();
 					$con->OpenConexion();
 					$count = 0;
 					foreach ($row_exec as $indice => $valor) {
@@ -1241,6 +1243,7 @@
 						curl_close($ch);
 					}
 					$con->CloseConexion();
+					$con = null;
 					$row_exec = [];
 					if ($num_send % 3 == 2) {
 						$json_progress["progreso"] = $progress + ($num_send) / (2 * $cant_request);
@@ -1267,6 +1270,7 @@
 					}
 				}
 
+				$con = new Conexion();
 				$con->OpenConexion();
 				foreach ($row_exec as $indice => $valor) {
 					$ch = $valor["ch"];
@@ -1333,6 +1337,7 @@
 					$geo_row = null;
 				}
 				$con->CloseConexion();
+				$con = null;
 			}
 			curl_multi_close($multi_request_ch);
 			$json_body["domicilios"] = $domicilios_json;
@@ -1345,7 +1350,9 @@
 		}
 		ob_end_flush();
 	} catch(Exception $e) {
-		$con->CloseConexion();
+		if ($con) {
+			$con->CloseConexion();
+		}
 		ob_end_flush();
 		echo "Error Message: " . $e;
   	}
