@@ -121,6 +121,7 @@
     if (progreso) {
       $("#bar-progress").val(progreso * 100);
       $("#progress-toast").text(parseInt(progreso * 100));
+      $("#bar-progress-modal").text(parseInt(progreso * 100));
     }
   }
 
@@ -296,6 +297,30 @@
       error: dialogErrorGeoreferenciaExcel
     });
   }
+
+  export function modalCargaDeMovimiento() {
+    let animacion = `<div class="loader-container">
+                       <div class="gear" id="gear1">
+                         <img src="/images/icons/gear.webp" alt="an illustration of a gear" />
+                       </div>
+                       <div class="gear" id="gear2">
+                         <img src="/images/icons/gear.webp" alt="an illustration of a gear" />
+                       </div>
+                     </div>
+                     <progress id="bar-progress-modal" max="100" value="0">70%</progress>`;
+    swal.fire({
+      title: "Proceso de carga",
+      html: animacion,
+      text: "Los registros estan siendo cargados al sistema",
+      icon: "warning",
+      showConfirmButton: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $("#liveToast").show();
+      }
+    });
+  }
+
 
   function upperLetraPalabra(palabra) {
     let lista = palabra.trim().split(" ");
