@@ -27,13 +27,13 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
   <meta charset="utf-8">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
+  <script src="https://code.jquery.com/jquery-1.9.1.min.js" integrity="sha256-wS9gmOZBqsqWxgIVgA8Y9WcQOa7PgSIX+rPA0VL2rbQ=" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
   <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-  <script src="https://code.jquery.com/jquery-1.9.1.min.js" integrity="sha256-wS9gmOZBqsqWxgIVgA8Y9WcQOa7PgSIX+rPA0VL2rbQ=" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
@@ -525,28 +525,28 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
           <p class = "Titulos">Parámetros</p>
           <form method = "post" onKeydown="return event.key != 'Enter';" action = "view_vermovlistados.php" onSubmit = "return ValidarGeneral();">
             <div class="form-group row">
-                <label for="inputPassword" class="col-md-2 col-form-label LblForm">Fecha desde *: </label>
+                <label for="Fecha_Desde" class="col-md-2 col-form-label LblForm">Fecha desde *: </label>
                 <div class="col-md-10">
                     <input type="text" name="Fecha_Desde" id = "Fecha_Desde" class="form-control" autocomplete="off" value = "<?= (isset($datosNav["Fecha_Desde"])) ? $datosNav["Fecha_Desde"] : implode("/", array_reverse(explode("-",date('Y-m-d',strtotime(date('Y-m-d')."- 1 year"))))) ?>">
                 </div>
             </div> 
             <div class="form-group row">
-                <label for="inputPassword" class="col-md-2 col-form-label LblForm">Fecha hasta *: </label>
+                <label for="Fecha_Hasta" class="col-md-2 col-form-label LblForm">Fecha hasta *: </label>
                 <div class="col-md-10">
                     <input type="text" name="Fecha_Hasta" id = "Fecha_Hasta" class="form-control" autocomplete="off" value = "<?= (isset($datosNav["Fecha_Hasta"])) ? $datosNav["Fecha_Hasta"] : implode("/", array_reverse(explode("-",date('Y-m-d')))) ?>">
                 </div>
             </div>
             <div class="form-group row" style="margin-bottom: 0.6rem;">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Persona: </label>
+              <label for="btn-persona" class="col-md-2 col-form-label LblForm">Persona: </label>
               <div class="col-md-10" id = "Persona">
-              	 	<button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalPersona">Seleccione una Persona</button>                  
+              	 	<button type = "button" id="btn-persona" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalPersona">Seleccione una Persona</button>                  
               </div>
             </div>
             <div class="row LblForm col-md-2" style="margin-bottom: 1.04%; font-size: 1.031rem">
               Edad <br>
             </div>
             <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Desde (Años): </label>
+                  <label for="Edad_Desde" class="col-md-2 col-form-label LblForm">Desde (Años): </label>
                   <div class="col-md-10">
                       <input type="number" name="Edad_Desde" id="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarMeses(this)" value="<?= (isset($datosNav["Edad_Desde"])) ? $datosNav["Edad_Desde"] : '' ?>">                      
                       <input type="hidden" name="ID_Persona" id = "ID_Persona" value = "0">
@@ -562,7 +562,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
                   </div>
             </div> 
             <div class="form-group row" style="position: relative;">
-                <label for="inputPassword" class="col-md-2 col-form-label LblForm">Hasta (Años): </label>
+                <label for="Edad_Hasta" class="col-md-2 col-form-label LblForm">Hasta (Años): </label>
                 <div class="col-md-10">
                     <input type="number" name="Edad_Hasta" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarMeses(this)" value="<?= (isset($datosNav["Edad_Hasta"])) ? $datosNav["Edad_Hasta"] : '' ?>">
                 </div>
@@ -575,13 +575,13 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
                 </div>
             </div> 
             <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Desde (Meses): </label>
+                  <label for="Meses_Desde" class="col-md-2 col-form-label LblForm">Desde (Meses): </label>
                   <div class="col-md-10">
                       <input type="number" name="Meses_Desde" id="Meses_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarEdad(this)" value="<?= (isset($datosNav["Meses_Desde"])) ? $datosNav["Meses_Desde"] : '' ?>">
                   </div>
             </div> 
             <div class="form-group row" style="position: relative;">
-                <label for="inputPassword" class="col-md-2 col-form-label LblForm">Hasta (Meses): </label>
+                <label for="Meses_Hasta" class="col-md-2 col-form-label LblForm">Hasta (Meses): </label>
                 <div class="col-md-10">
                     <input type="number" name="Meses_Hasta" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" max="11" onkeyup="habilitarEdad(this)" value="<?= (isset($datosNav["Meses_Hasta"])) ? $datosNav["Meses_Hasta"] : '' ?>">
                 </div>
@@ -594,7 +594,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
                 </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Barrio: </label>
+              <label for="ID_Barrio" class="col-md-2 col-form-label LblForm">Barrio: </label>
               <div class="col-md-9">
                 <?php  
                 $Element = new Elements();
@@ -614,27 +614,27 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
             <div id="contenedorBarrios">              
             </div> 
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Domicilio/Familia: </label>
+              <label for="domicilio" class="col-md-2 col-form-label LblForm">Domicilio/Familia: </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "Domicilio" id="inputPassword" autocomplete="off" value="<?= (isset($datosNav["Domicilio"])) ? $datosNav["Domicilio"] : '' ?>">
+                <input type="text" class="form-control" name = "Domicilio" id="domicilio" autocomplete="off" value="<?= (isset($datosNav["Domicilio"])) ? $datosNav["Domicilio"] : '' ?>">
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Manzana: </label>
+              <label for="manzana" class="col-md-2 col-form-label LblForm">Manzana: </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "Manzana" id="inputPassword" autocomplete="off" value="<?= (isset($datosNav["Manzana"])) ? $datosNav["Manzana"] : '' ?>">
+                <input type="text" class="form-control" name = "Manzana" id="manzana" autocomplete="off" value="<?= (isset($datosNav["Manzana"])) ? $datosNav["Manzana"] : '' ?>">
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Lote: </label>
+              <label for="lote" class="col-md-2 col-form-label LblForm">Lote: </label>
               <div class="col-md-10">
-                <input type="number" class="form-control" name = "Lote" id="inputPassword" autocomplete="off" value="<?= (isset($datosNav["Lote"])) ? $datosNav["Lote"] : '' ?>">
+                <input type="number" class="form-control" name = "Lote" id="lote" autocomplete="off" value="<?= (isset($datosNav["Lote"])) ? $datosNav["Lote"] : '' ?>">
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Sub-lote: </label>
+              <label for="familia" class="col-md-2 col-form-label LblForm">Sub-lote: </label>
               <div class="col-md-10">
-                <input type="number" class="form-control" name = "Familia" id="inputPassword" autocomplete="off" value="<?= (isset($datosNav["Familia"])) ? $datosNav["Familia"] : '' ?>">
+                <input type="number" class="form-control" name = "Familia" id="familia" autocomplete="off" value="<?= (isset($datosNav["Familia"])) ? $datosNav["Familia"] : '' ?>">
               </div>
             </div>
 
@@ -645,9 +645,9 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
               </div>
             </div>-->
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Categoría: </label>
+              <label for="btn-categoria" class="col-md-2 col-form-label LblForm">Categoría: </label>
               <div class="col-md-9" id = "Categoria">
-                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalCategoria">Seleccione una Categoria</button>  
+                <button type = "button" id="btn-categoria" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalCategoria">Seleccione una Categoria</button>  
               </div>
               <div class="col-md-1">
                   <button type="button" class="btn btn-primary" onClick="agregarCategoria()" id="agregarCategoriaID">+</button>
@@ -656,9 +656,9 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
             <div id="contenedorCategoria">              
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 1: </label>
+              <label for="btn-motivo" class="col-md-2 col-form-label LblForm">Motivo 1: </label>
               <div class="col-md-9" id = "Motivo">
-                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo">Seleccione un Motivo</button>   
+                <button type = "button" id="btn-motivo" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo">Seleccione un Motivo</button>   
               </div>
                 <div class="col-md-1">
                   <button type="button" class="btn btn-primary" onClick="agregarMotivo()" id="agregarMotivoID">+</button>
@@ -667,7 +667,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
             <div id="contenedorMotivos">              
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Centro Salud: </label>
+              <label for="ID_Centro" class="col-md-2 col-form-label LblForm">Centro Salud: </label>
               <div class="col-md-10">
                 <?php  
                 $Element = new Elements();
@@ -681,20 +681,20 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
+              <label for="Nro_Carpeta" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Nro_Carpeta" id="Nro_Carpeta" autocomplete="off" value="<?= (isset($datosNav["Nro_Carpeta"])) ? $datosNav["Nro_Carpeta"] : '' ;?>">
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
+              <label for="Nro_Legajo" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Nro_Legajo" id="Nro_Legajo" autocomplete="off" value="<?= (isset($datosNav["Nro_Legajo"])) ? $datosNav["Nro_Legajo"] : '' ;?>">
               </div>
             </div>
             
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Otras Instituciones: </label>
+              <label for="ID_OtraInstitucion" class="col-md-2 col-form-label LblForm">Otras Instituciones: </label>
               <div class="col-md-10">
                 <?php  
                 $Element = new Elements();
@@ -708,7 +708,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Escuela: </label>
+              <label for="ID_Escuela" class="col-md-2 col-form-label LblForm">Escuela: </label>
               <div class="col-md-10">
                 <?php  
                 $Element = new Elements();
@@ -722,7 +722,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Responsable: </label>
+              <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable: </label>
               <div class="col-md-10">
                 <?php  
                 $Element = new Elements();
@@ -736,7 +736,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Mostrar Personas: </label>
+              <label for="inpMostrar" class="col-md-2 col-form-label LblForm">Mostrar Personas: </label>
               <div class="col-md-10">
                 <select class="form-control" name="Mostrar" id="inpMostrar">
                 	<option value="0" selected>Con Movimientos</option>
