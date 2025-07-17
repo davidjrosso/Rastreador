@@ -41,7 +41,9 @@
 	use Google\Client;
 	use Google\Service\Sheets\SpreadSheet;
 	use Google\Service\Drive;
-
+	use Google\Cloud\Storage\StorageClient;
+	use PhpOffice\PhpSpreadsheet\Spreadsheet as SpreadsheetFile;
+	use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 	function codigoExcelMotivo($codigo)
 	{
@@ -411,7 +413,6 @@
 										 "client_email" => CLIENT_EMAIL,
 										 "private_key" => $private_key, 
 										 "signing_algorithm" => "HS256"));
-
 			$client_drive->addScope([Google_Service_Drive::DRIVE]);
 			$client_drive->addScope([Google_Service_Sheets::SPREADSHEETS]);
 			$service = new Google_Service_Drive($client_drive);
@@ -420,9 +421,24 @@
 			$file->setName('FILE_TEMPORAL.xlsx');
 			$file->setMimeType('application/vnd.google-apps.spreadsheet');
 
+			$file_drive = $service->files->get($file_id, ["alt" => "media"]);
+			$body = $file_drive->getBody();
+			$content = $body->getContents();
+
+			$file_temp = tmpfile();
+			$info = stream_get_meta_data($file_temp);
+			$tmp_file_name = $info['uri'];
+			$flag = fwrite($file_temp, $content);
+			$tmp_file_name_xlsx = str_replace(".tmp", ".xlsx", $tmp_file_name);
+			$flag = rename($tmp_file_name, $tmp_file_name_xlsx);
+			$file_type = \PhpOffice\PhpSpreadsheet\IOFactory::identify($tmp_file_name_xlsx);
+
+			$reader_file = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($file_type);
+			$spreadsheet = $reader_file->load($tmp_file_name_xlsx);
+			$schdeules = $spreadsheet->getActiveSheet()->toArray();
+
 			$createdFile = $service->files->copy($file_id, $file);
 			$id_spreadsheet = $createdFile->getId();
-
 			$service_sheets = new Google_Service_Sheets($client_drive);
 
 			if (($seccion == "11 Años") || ($seccion == "EMBARAZADAS")) {
