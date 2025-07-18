@@ -321,10 +321,10 @@
 		$com = (isset($config_datos["row"])) ? $config_datos["row"] : null;
 
 		for ($row = $com; $row <= $highestRow; $row++) {
-			if (count($rows_excel->values[$row]) == 0 
-				|| (!is_null($nombre_col) && empty($rows_excel->values[$row][$nombre_col]))
-				|| (!is_null($dni_col) && empty($rows_excel->values[$row][$dni_col]))
-				|| in_array($rows_excel->values[$row][0], $list_ignore_row)) {
+			if (count($rows_excel[$row]) == 0 
+				|| (!is_null($nombre_col) && empty($rows_excel[$row][$nombre_col]))
+				|| (!is_null($dni_col) && empty($rows_excel[$row][$dni_col]))
+				|| in_array($rows_excel[$row][0], $list_ignore_row)) {
 				continue;
 			}
 
@@ -349,7 +349,8 @@
 									);
 				if ($col_config == "observacion") {
 						$lista_valores["observacion"] .= " - " . $valor;
-				} else if ($col_config == "motivo") {
+				} else if ($col_config == "motivo" && isset($valor["motivo"])
+						   && (count($valor["motivo"]) > 1)) {
 						foreach ($valor["motivo"] as $val_motivo) {
 							$row_motivo["fecha"] = $valor["fecha"];
 							$row_motivo["motivo"] = $val_motivo;
@@ -435,11 +436,8 @@
 
 			$reader_file = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($file_type);
 			$spreadsheet = $reader_file->load($tmp_file_name_xlsx);
-			$schdeules = $spreadsheet->getActiveSheet()->toArray();
-
-			$createdFile = $service->files->copy($file_id, $file);
-			$id_spreadsheet = $createdFile->getId();
-			$service_sheets = new Google_Service_Sheets($client_drive);
+			$result = $spreadsheet->getActiveSheet()->toArray();
+			$flag = fclose($file_temp);
 
 			if (($seccion == "11 Años") || ($seccion == "EMBARAZADAS")) {
 				$fila = '!A3:';
@@ -458,9 +456,6 @@
 			} else {
 				$range = $seccion;
 			}
-
-			$result = $service_sheets->spreadsheets_values->get($id_spreadsheet, $range);
-			$service->files->delete($id_spreadsheet);
 
 			$highestRow = count(value: $result) - 1;
 			$Fecha =  date("Y-m-d");
