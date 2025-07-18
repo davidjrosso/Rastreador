@@ -18,11 +18,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-//Archivo de conexión a la base de datos
 require('Controladores/Conexion.php');
 header('Content-Type: text/html; charset=utf-8');
 
-//Variable de búsqueda
 $consultaBusqueda = $_REQUEST['valorBusqueda'];
 
 $json_string = file_get_contents('php://input');
@@ -36,29 +34,23 @@ $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consulta
 //Variable vacía (para evitar los E_NOTICE)
 $mensaje = "";
 
-
-//Comprueba si $consultaBusqueda está seteado
 if (isset($consultaBusqueda)) {
 
 	$Con = new Conexion();
 	$Con->OpenConexion();
-	//Selecciona todo de la tabla mmv001 
-	//donde el nombre sea igual a $consultaBusqueda, 
-	//o el apellido sea igual a $consultaBusqueda, 
-	//o $consultaBusqueda sea igual a nombre + (espacio) + apellido
 
-	$consulta = mysqli_query($Con->Conexion, "SELECT * FROM motivo WHERE motivo LIKE '%$consultaBusqueda%' and estado = 1");
+	$query = "SELECT * 
+			  FROM motivo 
+			  WHERE motivo LIKE '%$consultaBusqueda%' 
+			  	and estado = 1
+			  ORDER BY tipo_motivo ASC, orden DESC";
+	$consulta = mysqli_query($Con->Conexion, $query);
 
-
-	//Obtiene la cantidad de filas que hay en la consulta
 	$filas = mysqli_num_rows($consulta);
 
-	//Si no existe ninguna fila que sea igual a $consultaBusqueda, entonces mostramos el siguiente mensaje
 	if ($filas === 0) {
 		$mensaje = "<p>No hay ningún registro con ese dato</p>";
 	} else {
-		//Si existe alguna fila que sea igual a $consultaBusqueda, entonces mostramos el siguiente mensaje
-		//echo 'Resultados para <strong>'.$consultaBusqueda.'</strong>';
 
 		$mensaje .= '<table class="table">
 			  <thead class="thead-dark">
