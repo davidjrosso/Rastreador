@@ -457,7 +457,7 @@
 				$range = $seccion;
 			}
 
-			$highestRow = count(value: $result) - 1;
+			$highestRow = count($result) - 1;
 			$Fecha =  date("Y-m-d");
 			$Fecha_Accion = date("Y-m-d");
 			$observacion = "";
@@ -467,11 +467,14 @@
 			$request = [];
 			$row_request = [];
 			$multi_request_ch = curl_multi_init();
+			$persona_rows = 0;
 			$progress = 0;
 			$active = null;
 			$server = 0;
 
 			$lista_personas = rows_persona($result, $lista_datos, $con);
+
+			$persona_rows = count($lista_personas) - 1;
 
 			foreach ($lista_personas as $row => $dato) {
 				$consulta_osm = true;
@@ -708,7 +711,7 @@
 						}
 					}
 					if ($row % 10 == 9) {
-						$progress = $row / (2 * $highestRow);
+						$progress = $row / (2 * $persona_rows);
 						$json_progress["progreso"] = $progress;
 						echo json_encode($json_progress) . ";";
 						ob_flush();
@@ -1105,7 +1108,7 @@
 					}
 
 					if ($row % 10 == 9) {
-						$progress = $row / (2 * $highestRow);
+						$progress = $row / (2 * $persona_rows);
 						$json_progress["progreso"] = $progress;
 						echo json_encode($json_progress) . ";";
 						ob_flush();
