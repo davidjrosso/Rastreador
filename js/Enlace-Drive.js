@@ -121,7 +121,7 @@
     if (progreso) {
       $("#bar-progress").val(progreso * 100);
       $("#progress-toast").text(parseInt(progreso * 100));
-      $("#bar-progress-modal").text(parseInt(progreso * 100));
+      $("#bar-progress-modal").val(parseInt(progreso * 100));
     }
   }
 
@@ -299,6 +299,7 @@
   }
 
   export function modalCargaDeMovimiento() {
+    let progreso = $("#progress-toast").text()
     let animacion = `<div class="loader-container">
                        <div class="gear" id="gear1">
                          <img src="/images/icons/gear.webp" alt="an illustration of a gear" />
@@ -307,7 +308,7 @@
                          <img src="/images/icons/gear.webp" alt="an illustration of a gear" />
                        </div>
                      </div>
-                     <progress id="bar-progress-modal" max="100" value="0">70%</progress>`;
+                     <progress id="bar-progress-modal" max="100" value="` + progreso + `">70%</progress>`;
     swal.fire({
       title: "Proceso de carga",
       html: animacion,
