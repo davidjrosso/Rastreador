@@ -49,11 +49,11 @@ $ID_Config = $_REQUEST["ID_Config"];
   <meta charset="utf-8">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
-  <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="dist/reporte.js"></script>
@@ -61,6 +61,7 @@ $ID_Config = $_REQUEST["ID_Config"];
       let fechaDesde = null;
       let fechaHasta = null;
       let filtroSeleccionados = null;
+      let listaOrden = new Map();
       $(document).ready(function(){
               var date_input=$('input[name="date"]');
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
@@ -77,6 +78,10 @@ $ID_Config = $_REQUEST["ID_Config"];
               let floorPag = Math.floor((nroFilasTabla + 2) / 16);
               nroPaginaPdf = 0;
               thTable = $("thead > tr > th");
+
+              $("tbody ul li buttom").on("click", function () {
+                $()
+              });
       });
 
       function CalcularPrecio(){
@@ -158,12 +163,12 @@ $ID_Config = $_REQUEST["ID_Config"];
   </script>  
 </head>
 <body>
-<div class = "row">
-<?php
-  $Element = new Elements();
-  echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_REPORTE_LISTADO);
+<div class = "row menu-col-2">
+  <?php
+    $Element = new Elements();
+    echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_REPORTE_LISTADO);
   ?>
-  <div class = "col-md-9">
+  <div class = "col-md-10">
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
@@ -177,7 +182,7 @@ $ID_Config = $_REQUEST["ID_Config"];
           <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_listados.php'">Atras</button>
           <button type="button" class="btn btn-secondary" onclick="enviarImprimirPdf();"> Imprimir</button>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-7">
         <?php
         $Con = new Conexion();
         $Con->OpenConexion();
@@ -803,7 +808,8 @@ $ID_Config = $_REQUEST["ID_Config"];
         }
         ?>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
+            <button type = "button" class = "btn btn-secondary" data-toggle="modal" data-target="#orden-modal">Orden</button>
             <button type = "button" class = "btn btn-secondary" data-toggle="modal" data-target="#configModal">Config</button>
             <button type="button" class="btn btn-secondary" onClick="htmlExcel('tabla-movimiento-general', 'excel');">Excel</button>
         </div>
@@ -1504,10 +1510,11 @@ $ID_Config = $_REQUEST["ID_Config"];
                 }
 
 
-                $TableMov = "<table id='tabla-movimiento-general'class='table'>
-                              <tr rowspan='2' class='thead-dark'>
-                                <th rowspan='2' class='trFecha' style='min-width: 150px;'>Fecha</th>
-                                <th rowspan='2' class='trPersona'>Persona</th>";
+                $TableMov = "<table id='tabla-movimiento-general' class='table'>
+                              <thead>
+                                <tr rowspan='2' class='thead-dark'>
+                                  <th rowspan='2' class='trFecha' style='min-width: 150px;'>Fecha</th>
+                                  <th rowspan='2' class='trPersona'>Persona</th>";
                 $TableMov .= $MotivosTh;
 
                 $TableMov .= "  <th rowspan='2' class='trDNI'>DNI</th>
@@ -1538,7 +1545,8 @@ $ID_Config = $_REQUEST["ID_Config"];
                 $TableMov .= " <tr class='thead-dark'>
                                   <th scope='col' class='trEdad' style='text-align: center;border-top: 0px solid #dee2e6;'>Años</th>
                                   <th scope='col' class='trMeses' style='text-align: center;border-top: 0px solid #dee2e6;'>Meses</th>
-                                </tr>";
+                                </tr>
+                              </thead>";
                 $jsonTable["header_movimientos_general"] = $header_movimientos_general;
                 $TableMovPrint = $TableMov;
               }
@@ -2185,6 +2193,254 @@ $ID_Config = $_REQUEST["ID_Config"];
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="orden-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="class_modal-dialog modal-dialog" role="document"  id="id_modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" style="margin-left: auto;">Selección de orden</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul type=none>
+          <li>
+            <button type="button" id="boton-disable-0" class="btn buttom-order-list btn-outline-light"
+                    onclick="orderOption(0, 1)">
+              ASC
+            </button>
+            <button type="button" id="boton-asc-0" style="display: none;" class="btn buttom-order-list btn-outline-success"
+                    onclick="orderOption(0, -1)">
+              ASC
+            </button>
+            <button type="button" id="boton-desc-0" style="display: none;" class="btn buttom-order-list btn-outline-danger"
+                    onclick="orderOption(0, 0)">
+              DES
+            </button>
+             Fecha
+          </li>
+          
+          <li>
+            <button type="button" id="boton-disable-2" class="btn buttom-order-list btn-outline-light"
+                    onclick="orderOption(2, 1)">
+              ASC
+            </button>
+            <button type="button" id="boton-asc-2" style="display: none;" class="btn buttom-order-list btn-outline-success" 
+                    onclick="orderOption(2, -1)">
+              ASC
+            </button>
+            <button type="button" id="boton-desc-2" style="display: none;" class="btn buttom-order-list btn-outline-danger" 
+                    onclick="orderOption(2, 0)">
+              DES
+            </button>
+             Motivos
+          </li>
+          <li>
+            <button type="button" id="boton-disable-1" class="btn buttom-order-list btn-outline-light"
+                    onclick="orderOption(1, 1)">
+              ASC
+            </button>
+            <button type="button" id="boton-asc-1" style="display: none;" class="btn buttom-order-list btn-outline-success"
+                    onclick="orderOption(1, -1)">
+              ASC
+            </button>
+            <button type="button" id="boton-desc-1" class="btn buttom-order-list btn-outline-danger"
+                    style="display: none;"  onclick="orderOption(1, 0)">
+              DES
+            </button>
+            Persona
+          </li> 
+          <li>
+            <button type="button" id="boton-disable-5" class="btn buttom-order-list btn-outline-light"
+                    onclick="orderOption(5, 1)">
+              ASC
+            </button>
+            <button type="button" id="boton-asc-5" style="display: none;" class="btn buttom-order-list btn-outline-success"
+                    onclick="orderOption(5, -1)">
+              ASC
+            </button>
+            <button type="button" id="boton-desc-5" style="display: none;" class="btn buttom-order-list btn-outline-danger"
+                    onclick="orderOption(5, 0)">
+              DES
+            </button>
+            DNI 
+          </li>
+          <li>
+            <button type="button" id="boton-disable-6" class="btn buttom-order-list btn-outline-light"
+                    onclick="orderOption(6, 1)">
+              ASC
+            </button>
+            <button type="button" id="boton-asc-6" style="display: none;" class="btn buttom-order-list btn-outline-success"
+                    onclick="orderOption(6, -1)">
+              ASC
+            </button>
+            <button type="button" id="boton-desc-6" style="display: none;" class="btn buttom-order-list btn-outline-danger"
+                    onclick="orderOption(6, 0)">
+              DES
+            </button>
+            Fecha Nac. 
+          </li>
+          <li>
+            <button type="button" id="boton-disable-7" class="btn buttom-order-list btn-outline-light"
+                    onclick="orderOption(7, 1)">
+              ASC
+            </button>
+            <button type="button" id="boton-asc-7" style="display: none;" class="btn buttom-order-list btn-outline-success"
+                    onclick="orderOption(7, -1)">
+              ASC
+            </button>
+            <button type="button" id="boton-desc-7" style="display: none;" class="btn buttom-order-list btn-outline-danger"
+                    onclick="orderOption(7, 0)">
+              DES
+            </button>
+            Edad
+          </li>
+          <li>
+            <button type="button" id="boton-disable-8" class="btn buttom-order-list btn-outline-light"
+                    onclick="orderOption(8, 1)">
+              ASC
+            </button>
+            <button type="button" id="boton-asc-8" style="display: none;" class="btn buttom-order-list btn-outline-success"
+                    onclick="orderOption(8, -1)">
+              ASC
+            </button>
+            <button type="button" id="boton-desc-8" style="display: none;" class="btn buttom-order-list btn-outline-danger"
+                    onclick="orderOption(8, 0)">
+              DES
+            </button>
+            Meses 
+          </li>
+          <li>
+            <button type="button" id="boton-disable-9" class="btn buttom-order-list btn-outline-light"
+                    onclick="orderOption(9, 1)">
+              ASC
+            </button>
+            <button type="button" id="boton-asc-9" style="display: none;" class="btn buttom-order-list btn-outline-success"
+                    onclick="orderOption(9, -1)">
+              ASC
+            </button>
+            <button type="button" id="boton-desc-9" style="display: none;" class="btn buttom-order-list btn-outline-danger"
+                    onclick="orderOption(9, 0)">
+              DES
+            </button>
+            Obra Social
+          </li>
+          <li>
+            <button type="button" id="boton-disable-10" class="btn buttom-order-list btn-outline-light"
+                    onclick="orderOption(10, 1)">
+              ASC
+            </button>
+            <button type="button" id="boton-asc-10" style="display: none;" class="btn buttom-order-list btn-outline-success"
+                    onclick="orderOption(10, -1)">
+              ASC
+            </button>
+            <button type="button" id="boton-desc-10" style="display: none;" class="btn buttom-order-list btn-outline-danger"
+                    onclick="orderOption(10, 0)">
+              DES
+            </button>
+            Domicilio
+          </li>
+          <li>
+            <button type="button" id="boton-disable-11" class="btn buttom-order-list btn-outline-light"
+                    onclick="orderOption(11, 1)">
+              ASC
+            </button>
+            <button type="button" id="boton-asc-11" style="display: none;" class="btn buttom-order-list btn-outline-success"
+                    onclick="orderOption(11, -1)">
+              ASC
+            </button>
+            <button type="button" id="boton-desc-11" style="display: none;" class="btn buttom-order-list btn-outline-danger"
+                    onclick="orderOption(11, 0)">
+              DES
+            </button>
+            Barrio
+          </li>
+          <li>
+            <button type="button" id="boton-disable-12" class="btn buttom-order-list btn-outline-light"
+                    onclick="orderOption(12, 1)">
+              ASC
+            </button>
+            <button type="button" id="boton-asc-12" style="display: none;" class="btn buttom-order-list btn-outline-success"
+                    onclick="orderOption(12, -1)">
+              ASC
+            </button>
+            <button type="button" id="boton-desc-12" style="display: none;" class="btn buttom-order-list btn-outline-danger"
+                    onclick="orderOption(12, 0)">
+              DES
+            </button>
+            Localidad
+          </li>
+          <li>
+            <button type="button" id="boton-disable-13" class="btn buttom-order-list btn-outline-light"
+                    onclick="orderOption(13, 1)">
+              ASC
+            </button>
+            <button type="button" id="boton-asc-13" style="display: none;" class="btn buttom-order-list btn-outline-success"
+                    onclick="orderOption(13, -1)">
+              ASC
+            </button>
+            <button type="button" id="boton-desc-13" style="display: none;" class="btn buttom-order-list btn-outline-danger"
+                    onclick="orderOption(13, 0)">
+              DES
+            </button>
+            Observaciones
+          </li>
+          <li>
+            <button type="button" id="boton-disable-14" class="btn buttom-order-list btn-outline-light"
+                    onclick="orderOption(14, 1)">
+              ASC
+            </button>
+            <button type="button" id="boton-asc-14" style="display: none;" class="btn buttom-order-list btn-outline-success"
+                    onclick="orderOption(14, -1)">
+              ASC
+            </button>
+            <button type="button" id="boton-desc-14" style="display: none;" class="btn buttom-order-list btn-outline-danger"
+                    onclick="orderOption(14, 0)">
+              DES
+            </button>
+            Responsable
+          </li>
+          <li>
+            <button type="button" id="boton-disable-15" class="btn buttom-order-list btn-outline-light"
+                    onclick="orderOption(15, 1)">
+              ASC
+            </button>
+            <button type="button" id="boton-asc-15" style="display: none;" class="btn buttom-order-list btn-outline-success"
+                    onclick="orderOption(15, -1)">
+              ASC
+            </button>
+            <button type="button" id="boton-desc-15" style="display: none;" class="btn buttom-order-list btn-outline-danger"
+                    onclick="orderOption(15, 0)">
+              DES
+            </button>
+            Centro de salud
+          </li>
+          <li>
+            <button type="button" id="boton-disable-16" class="btn buttom-order-list btn-outline-light"
+                    onclick="orderOption(16, 1)">
+              ASC
+            </button>
+            <button type="button" id="boton-asc-16" style="display: none;" class="btn buttom-order-list btn-outline-success"
+                    onclick="orderOption(16, -1)">
+              ASC
+            </button>
+            <button type="button" id="boton-desc-16" style="display: none;" class="btn buttom-order-list btn-outline-danger"
+                    onclick="orderOption(16, 0)">
+              DES
+            </button>
+            Otras instituciones
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer modal-footer-flex-center">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" onClick="ordenResultados()" data-dismiss="modal">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
         // <input type="checkbox" id="chkPersona"> Persona 
         // <input type="checkbox" id="chkDNI"> DNI 
@@ -2199,41 +2455,161 @@ $ID_Config = $_REQUEST["ID_Config"];
   fechaDesde = "<?php echo $Fecha_Inicio;?>";
   fechaHasta = "<?php echo $Fecha_Fin;?>";
   filtroSeleccionados = <?php echo json_encode($filtros); ?>;
+
+  function orderOption(idOption, orden) {
+    if (listaOrden.has(idOption)) listaOrden.delete(idOption);
+    if (orden != 0) listaOrden.set(idOption, orden);
+
+    if (orden == 0) {
+      $("#boton-asc-" + idOption).hide();
+      $("#boton-desc-" + idOption).hide();
+      $("#boton-disable-" + idOption).show();
+    } else if (orden == 1) {
+      $("#boton-asc-" + idOption).show();
+      $("#boton-desc-" + idOption).hide();
+      $("#boton-disable-" + idOption).hide();
+    } else {
+      $("#boton-asc-" + idOption).hide();
+      $("#boton-desc-" + idOption).show();
+      $("#boton-disable-" + idOption).hide();
+    }
+  }
+
+  function lessThan(a, b, indice) {
+    ret_valor = false;
+    if ((indice >= 7 && indice <= 8) 
+        || indice == 5) {
+      ret_valor = (parseInt(a) < parseInt(b));
+
+    } else if (indice == 0 || indice == 6) {
+      ret_valor = (Date.parse(a) < Date.parse(b));
+    } else {
+      ret_valor = (a < b);
+    }
+    return ret_valor;
+  }
+
+  function moreThan(a, b, indice) {
+    let ret_valor = false;
+    let elementA = null;
+    let elementB = null;
+
+    if ((indice >= 7 && indice <= 8) 
+        || indice == 5) {
+      ret_valor = (parseInt(a) > parseInt(b));
+
+    } else if (indice == 0 || indice == 6) {
+      elementA = a.split("-");
+      elementB = b.split("-");
+      elementB.reverse();
+      elementA.reverse();
+      elementA = elementA.join("-");
+      elementB = elementB.join("-");
+
+      ret_valor = (Date.parse(elementA) > Date.parse(elementB));
+    } else {
+      ret_valor = (a > b);
+    }
+    return ret_valor;
+  }
+
+  function orderListOption(elementoA, elementoB, listInd, listVal) {
+      let listaFilas = [].concat(listInd);
+      let listaValores = [].concat(listVal);
+      let result = 0;
+      let elem = null;
+      let listaIndices = (listInd) ? listInd.slice(1) : [];
+      let lista = (listVal) ? listVal.slice(1) : [];
+      let indice = (listaFilas) ? listaFilas.shift() : null;
+      let orden = (listaValores) ? listaValores.shift() : null;
+      let nodeInnerA = elementoA.children[indice];
+      let nodeInnerB = elementoB.children[indice];
+      nodeInnerA = (nodeInnerA) ? nodeInnerA.outerText : null;
+      nodeInnerB = (nodeInnerB) ? nodeInnerB.outerText : null;
+
+      if (lista.length > 0) {
+        if (moreThan(nodeInnerA, nodeInnerA, indice)) {
+          result = (-1) * orden;
+        } else if (lessThan(nodeInnerA, nodeInnerB, indice)) {
+          result = 1 * orden;
+        } else {
+          result = orderListOption(elementoA, elementoB, listaIndices, lista);
+        }
+      }
+      return result;
+  }
+
+  function ordenResultados() {
+    let filasTabla = $("#tabla-movimiento-general tbody > tr");
+    filasTabla = jQuery.unique(filasTabla);
+    let filas = filasTabla.get();
+    $("#tabla-movimiento-general tbody").empty();
+
+    let listElement = Array.from(listaOrden.keys());
+    let listValues = Array.from(listaOrden.values());
+    filas.sort(function (elementoA, elementoB) {
+        let listaFilas = [].concat(listElement);
+        let listaAsign = [].concat(listValues);
+        let result = 0;
+        let listaIndices = (listElement) ? listElement.slice(1) : [];
+        let listaVal = (listValues) ? listValues.slice(1) : [];
+        let indice = (listaFilas) ? listaFilas.shift() : null;
+        let orden = (listaAsign) ? listaAsign.shift() : null;
+        let nodeInnerA = elementoA.children[indice];
+        let nodeInnerB = elementoB.children[indice];
+        nodeInnerA = (nodeInnerA) ? nodeInnerA.outerText : null;
+        nodeInnerB = (nodeInnerB) ? nodeInnerB.outerText : null;
+        if (listaOrden) {
+          if (moreThan(nodeInnerA, nodeInnerB, indice)) {
+            result = (-1) * orden;
+          } else if (lessThan(nodeInnerA, nodeInnerB, indice)) {
+            result = 1  * orden;
+          } else {
+            result = orderListOption(elementoA, elementoB, listaIndices, listaVal);
+          }
+        }
+        return result;
+    });
+    
+    $("#tabla-movimiento-general tbody").append(filas);
+
+  }
+
   function configResultados() {
-    var chkFecha = document.getElementById('chkFecha').checked;
-    var chkMotivos = document.getElementById('chkMotivos').checked;
-    var chkPersona = document.getElementById('chkPersona').checked;
-    var chkDNI = document.getElementById('chkDNI').checked;
-    var chkFechaNac = document.getElementById('chkFechaNac').checked;
-    var chkEdad = document.getElementById('chkEdad').checked;
-    var chkMeses = document.getElementById('chkMeses').checked;
-    var chkObraSocial = document.getElementById('chkObraSocial').checked;
-    var chkDomicilio = document.getElementById('chkDomicilio').checked;
-    var chkBarrio = document.getElementById('chkBarrio').checked;
-    var chkLocalidad= document.getElementById('chkLocalidad').checked;
+    let chkFecha = document.getElementById('chkFecha').checked;
+    let chkMotivos = document.getElementById('chkMotivos').checked;
+    let chkPersona = document.getElementById('chkPersona').checked;
+    let chkDNI = document.getElementById('chkDNI').checked;
+    let chkFechaNac = document.getElementById('chkFechaNac').checked;
+    let chkEdad = document.getElementById('chkEdad').checked;
+    let chkMeses = document.getElementById('chkMeses').checked;
+    let chkObraSocial = document.getElementById('chkObraSocial').checked;
+    let chkDomicilio = document.getElementById('chkDomicilio').checked;
+    let chkBarrio = document.getElementById('chkBarrio').checked;
+    let chkLocalidad= document.getElementById('chkLocalidad').checked;
 
 
-    var chkObservaciones= document.getElementById('chkObservaciones').checked;
-    var chkResponsable= document.getElementById('chkResponsable').checked;
-    var chkCentrosSalud= document.getElementById('chkCentrosSalud').checked;
-    var chkOtrasInstituciones = document.getElementById('chkOtrasInstituciones').checked;
+    let chkObservaciones= document.getElementById('chkObservaciones').checked;
+    let chkResponsable= document.getElementById('chkResponsable').checked;
+    let chkCentrosSalud= document.getElementById('chkCentrosSalud').checked;
+    let chkOtrasInstituciones = document.getElementById('chkOtrasInstituciones').checked;
 
-    var trFecha = document.getElementsByClassName('trFecha');
-    var trMotivos= document.getElementsByClassName('trMotivos');
-    var trPersona = document.getElementsByClassName('trPersona');
-    var trDNI= document.getElementsByClassName('trDNI');
-    var trFechaNac= document.getElementsByClassName('trFechaNac');
-    var trEdad = document.getElementsByClassName('trEdad');
-    var trMeses = document.getElementsByClassName('trMeses');
-    var trObraSocial = document.getElementsByClassName('trObraSocial');
-    var trDomicilio = document.getElementsByClassName('trDomicilio');
-    var trBarrio = document.getElementsByClassName('trBarrio');
-    var trLocalidad = document.getElementsByClassName('trLocalidad');
+    let trFecha = document.getElementsByClassName('trFecha');
+    let trMotivos= document.getElementsByClassName('trMotivos');
+    let trPersona = document.getElementsByClassName('trPersona');
+    let trDNI= document.getElementsByClassName('trDNI');
+    let trFechaNac= document.getElementsByClassName('trFechaNac');
+    let trEdad = document.getElementsByClassName('trEdad');
+    let trMeses = document.getElementsByClassName('trMeses');
+    let trObraSocial = document.getElementsByClassName('trObraSocial');
+    let trDomicilio = document.getElementsByClassName('trDomicilio');
+    let trBarrio = document.getElementsByClassName('trBarrio');
+    let trLocalidad = document.getElementsByClassName('trLocalidad');
 
-    var trObservaciones= document.getElementsByClassName('trObservaciones');
-    var trResponsable= document.getElementsByClassName('trResponsable');
-    var trCentrosSalud= document.getElementsByClassName('trCentrosSalud');
-    var trOtrasInstituciones = document.getElementsByClassName('trOtrasInstituciones');
+    let trObservaciones= document.getElementsByClassName('trObservaciones');
+    let trResponsable= document.getElementsByClassName('trResponsable');
+    let trCentrosSalud= document.getElementsByClassName('trCentrosSalud');
+    let trOtrasInstituciones = document.getElementsByClassName('trOtrasInstituciones');
 
     if(!chkFecha){
       for (let i = 0; i < trFecha.length; i++) {        
@@ -2387,6 +2763,7 @@ $ID_Config = $_REQUEST["ID_Config"];
       }
     }
   }
+
 </script>
 <?php
 ?>
