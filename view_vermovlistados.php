@@ -2482,7 +2482,17 @@ $ID_Config = $_REQUEST["ID_Config"];
 
     if ((indice >= 7 && indice <= 8) 
         || indice == 5) {
-      ret_valor = (parseInt(a) < parseInt(b));
+      elementA = parseInt(a.trim());
+      elementB = parseInt(b.trim());
+      if (isNaN(elementA) && !isNaN(elementB)) {
+        ret_valor = true;  
+      } else if (!isNaN(elementA) && isNaN(elementB)) {
+        ret_valor = false;
+      } else if (isNaN(elementA) && isNaN(elementB)) {
+        ret_valor = (a < b);
+      } else {
+        ret_valor = (elementA < elementB);
+      }
 
     } else if (indice == 0 || indice == 6) {
       elementA = a.split("-");
@@ -2505,7 +2515,17 @@ $ID_Config = $_REQUEST["ID_Config"];
 
     if ((indice >= 7 && indice <= 8) 
         || indice == 5) {
-      ret_valor = (parseInt(a) > parseInt(b));
+      elementA = parseInt(a.trim());
+      elementB = parseInt(b.trim());
+      if (isNaN(elementA) && !isNaN(elementB)) {
+        ret_valor = false;  
+      } else if (!isNaN(elementA) && isNaN(elementB)) {
+        ret_valor = true;
+      } else if (isNaN(elementA) && isNaN(elementB)) {
+        ret_valor = (a > b);
+      } else {
+        ret_valor = (elementA > elementB);
+      }
 
     } else if (indice == 0 || indice == 6) {
       elementA = a.split("-");
