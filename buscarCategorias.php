@@ -42,7 +42,7 @@ if (isset($consultaBusqueda)) {
 
 	$query = "SELECT * 
 			  FROM categoria 
-			  WHERE categoria LIKE '%$consultaBusqueda%' 
+			  WHERE categoria LIKE '%$consultaBusqueda%'
 			    and estado = 1
 			  ORDER BY tipo_categoria ASC, orden DESC";
 	$consulta = mysqli_query($Con->Conexion, $query);
@@ -98,4 +98,3 @@ if (isset($consultaBusqueda)) {
 };
 
 echo $mensaje;
-?>

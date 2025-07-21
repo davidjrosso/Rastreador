@@ -10,12 +10,9 @@ if(!isset($_SESSION["Usuario"])){
     header("Location: Error_Session.php");
 }
 
-$Con = new Conexion();
-$Con->OpenConexion();
 $ID_Usuario = $_SESSION["Usuario"];
 $account = new Account(account_id: $ID_Usuario);
 $TipoUsuario = $account->get_id_tipo_usuario();
-$Con->CloseConexion();
 
 $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
 
