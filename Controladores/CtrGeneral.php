@@ -1277,7 +1277,7 @@ class CtrGeneral{
 					 FROM categoria C, formas_categorias F
 					 WHERE C.ID_Forma = F.ID_Forma
 					   AND C.estado = 1
-					 ORDER BY C.tipo_categoria DESC, C.orden ASC";
+					 ORDER BY C.tipo_categoria ASC, C.orden ASC";
 		$MessageError = "Problemas al intentar mostrar Categorias";
 		$Table = "<table class='table'><thead><tr><th>Categoría</th><th>Forma</th><th>Color</th><th colspan='3'></th></tr></thead>";//<th>Codigo</th> <td>".$Ret["cod_categoria"]."</td>
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -1299,7 +1299,7 @@ class CtrGeneral{
 					 WHERE C.ID_Forma = F.ID_Forma
 					   AND C.id_categoria = $ID
 					   AND C.estado = 1
-					 ORDER BY C.tipo_categoria DESC, C.orden ASC";
+					 ORDER BY C.tipo_categoria ASC, C.orden ASC";
 		$MessageError = "Problemas al intentar mostrar Categorias por ID";
 		$Table = "<table class='table'><thead><tr><th>Categoría</th><th>Forma</th><th>Color</th><th colspan='3'></th></tr></thead>";//<th>Codigo</th>  <td>".$Ret["cod_categoria"]."</td>
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -1321,7 +1321,7 @@ class CtrGeneral{
 					 WHERE C.ID_Forma = F.ID_Forma
 					   AND C.cod_categoria LIKE '%$Codigo%'
 					   AND C.estado = 1
-					   ORDER BY C.tipo_categoria DESC, C.orden ASC";
+					   ORDER BY C.tipo_categoria ASC, C.orden ASC";
 		$MessageError = "Problemas al intentar mostrar Categorias por Codigo";
 		$Table = "<table class='table'><thead><tr><th>Categoría</th><th>Forma</th><th>Color</th><th colspan='3'></th></tr></thead>";//<th>Codigo</th>  <td>".$Ret["cod_categoria"]."</td>
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -1343,7 +1343,7 @@ class CtrGeneral{
 					 WHERE C.ID_Forma = F.ID_Forma
 					   AND C.categoria LIKE '%$Categoria%'
 					   AND C.estado = 1
-					   ORDER BY C.tipo_categoria DESC, C.orden ASC";
+					   ORDER BY C.tipo_categoria ASC, C.orden ASC";
 		$MessageError = "Problemas al intentar mostrar Categorias por Categoría";
 		$Table = "<table class='table'><thead><tr><th>Categoría</th><th>Forma</th><th>Color</th><th colspan='3'></th></tr></thead>";//<th>Codigo</th>  <td>".$Ret["cod_categoria"]."</td>
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
