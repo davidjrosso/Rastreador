@@ -1147,9 +1147,24 @@ class CtrGeneral{
 	public function getMotivosxID($ID){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select M.id_motivo, M.motivo, M.codigo, C.categoria from motivo M, categoria C where M.cod_categoria = C.cod_categoria and M.id_motivo = $ID and M.estado = 1 and C.estado = 1 and M.id_motivo > 1 order by M.id_motivo";
+		$Consulta = "SELECT M.id_motivo, M.motivo, M.codigo, C.categoria 
+					 FROM motivo M 
+						INNER JOIN categoria C ON (M.cod_categoria = C.cod_categoria)
+					 WHERE M.id_motivo = $ID 
+					   AND M.estado = 1 
+					   AND C.estado = 1 
+					   AND M.id_motivo > 1 
+					 ORDER BY M.tipo_motivo DESC, M.orden ASC";
 		$MessageError = "Problemas al intentar mostrar Motivos por ID";
-		$Table = "<table class='table'><thead><tr><th>Motivo</th><th>Codigo</th><th>Categoría</th><th colspan='2'></th></tr></thead>";
+		$Table = "<table class='table'>
+					<thead>
+					  <tr>
+					  	<th>Motivo</th>
+						<th>Codigo</th>
+						<th>Categoría</th>
+						<th colspan='2'></th>
+					  </tr>
+					</thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Table .= "<tr><td>".$Ret["motivo"]."</td><td>".$Ret["codigo"]."</td><td>".$Ret["categoria"]."</td><td><a href = 'view_modmotivos.php?ID=".$Ret["id_motivo"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_motivo"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
@@ -1163,7 +1178,14 @@ class CtrGeneral{
 	public function getMotivosxMotivo($Motivo){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select M.id_motivo, M.motivo, M.codigo, C.categoria from motivo M, categoria C where M.cod_categoria = C.cod_categoria and M.motivo like '%$Motivo%' and M.estado = 1 and C.estado = 1 and M.id_motivo > 1 order by M.id_motivo";
+		$Consulta = "SELECT M.id_motivo, M.motivo, M.codigo, C.categoria 
+					 FROM motivo M 
+						INNER JOIN categoria C ON (M.cod_categoria = C.cod_categoria)
+					 WHERE M.motivo like '%$Motivo%' 
+					   AND M.estado = 1 
+					   AND C.estado = 1 
+					   AND M.id_motivo > 1
+					 ORDER BY M.tipo_motivo DESC, M.orden ASC";
 		$MessageError = "Problemas al intentar mostrar Motivos por Motivo";
 		$Table = "<table class='table'><thead><tr><th>Motivo</th><th>Codigo</th><th>Categoría</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -1179,7 +1201,14 @@ class CtrGeneral{
 	public function getMotivosxCodigo($Codigo){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select M.id_motivo, M.motivo, M.codigo, C.categoria from motivo M, categoria C where M.cod_categoria = C.cod_categoria and M.cod_categoria like '%$Codigo%' and M.estado = 1 and C.estado = 1 and M.id_motivo > 1 order by M.id_motivo";
+		$Consulta = "SELECT M.id_motivo, M.motivo, M.codigo, C.categoria
+					 FROM motivo M
+						INNER JOIN categoria C ON (M.cod_categoria = C.cod_categoria)
+					 WHERE M.cod_categoria LIKE '%$Codigo%'
+					   AND M.estado = 1
+					   AND C.estado = 1
+					   AND M.id_motivo > 1 
+					 ORDER BY M.tipo_motivo DESC, M.orden ASC";
 		$MessageError = "Problemas al intentar mostrar Motivos por Codigo";
 		$Table = "<table class='table'><thead><tr><th>Motivo</th><th>Codigo</th><th>Categoría</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -1195,7 +1224,14 @@ class CtrGeneral{
 	public function getMotivosxNumero($Numero){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select M.id_motivo, M.motivo,  M.codigo, C.categoria  from motivo M, categoria C where M.cod_categoria = C.cod_categoria and M.num_motivo like '%$Numero%' and M.estado = 1 and C.estado = 1 and M.id_motivo > 1 order by M.id_motivo";
+		$Consulta = "SELECT M.id_motivo, M.motivo, M.codigo, C.categoria
+					 FROM motivo M
+						INNER JOIN categoria C ON (M.cod_categoria = C.cod_categoria)
+					 WHERE M.num_motivo LIKE '%$Numero%' 
+					   AND M.estado = 1 
+					   AND C.estado = 1 
+					   AND M.id_motivo > 1
+					 ORDER BY M.tipo_motivo DESC, M.orden ASC";
 		$MessageError = "Problemas al intentar mostrar Motivos por Numero";
 		$Table = "<table class='table'><thead><tr><th>Motivo</th><th>Codigo</th><th>Categoría</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -1211,7 +1247,14 @@ class CtrGeneral{
 	public function getMotivosxCategoria($Categoria){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select M.id_motivo, M.motivo,  M.codigo, C.categoria  from motivo M, categoria C where M.cod_categoria = C.cod_categoria and C.categoria like '%$Categoria%' and M.estado = 1 and C.estado = 1 and M.id_motivo > 1 order by M.id_motivo";
+		$Consulta = "SELECT M.id_motivo, M.motivo, M.codigo, C.categoria
+					 FROM motivo M
+						INNER JOIN categoria C ON (M.cod_categoria = C.cod_categoria)
+					 WHERE C.categoria LIKE '%$Categoria%' 
+					   AND M.estado = 1
+					   AND C.estado = 1
+					   AND M.id_motivo > 1
+					   ORDER BY M.tipo_motivo DESC, M.orden ASC";
 		$MessageError = "Problemas al intentar mostrar Motivos por Categoría";
 		$Table = "<table class='table'><thead><tr><th>Motivo</th><th>Codigo</th><th>Categoría</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -1229,7 +1272,12 @@ class CtrGeneral{
 	public function getCategorias(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select C.id_categoria, C.cod_categoria, C.categoria, F.Forma_Categoria, C.color from categoria C, formas_categorias F where C.ID_Forma = F.ID_Forma and C.estado = 1 order by C.id_categoria";
+		$Consulta = "SELECT C.id_categoria, C.cod_categoria, C.categoria,
+							F.Forma_Categoria, C.color 
+					 FROM categoria C, formas_categorias F
+					 WHERE C.ID_Forma = F.ID_Forma
+					   AND C.estado = 1
+					 ORDER BY C.tipo_categoria DESC, C.orden ASC";
 		$MessageError = "Problemas al intentar mostrar Categorias";
 		$Table = "<table class='table'><thead><tr><th>Categoría</th><th>Forma</th><th>Color</th><th colspan='3'></th></tr></thead>";//<th>Codigo</th> <td>".$Ret["cod_categoria"]."</td>
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -1245,7 +1293,13 @@ class CtrGeneral{
 	public function getCategoriasxID($ID){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select C.id_categoria, C.cod_categoria, C.categoria, F.Forma_Categoria, C.color from categoria C, formas_categorias F where C.ID_Forma = F.ID_Forma and C.id_categoria = $ID and C.estado = 1 order by C.id_categoria";
+		$Consulta = "SELECT C.id_categoria, C.cod_categoria, C.categoria,
+							F.Forma_Categoria, C.color 
+					 FROM categoria C, formas_categorias F
+					 WHERE C.ID_Forma = F.ID_Forma
+					   AND C.id_categoria = $ID
+					   AND C.estado = 1
+					 ORDER BY C.tipo_categoria DESC, C.orden ASC";
 		$MessageError = "Problemas al intentar mostrar Categorias por ID";
 		$Table = "<table class='table'><thead><tr><th>Categoría</th><th>Forma</th><th>Color</th><th colspan='3'></th></tr></thead>";//<th>Codigo</th>  <td>".$Ret["cod_categoria"]."</td>
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -1261,7 +1315,13 @@ class CtrGeneral{
 	public function getCategoriasxCodigo($Codigo){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select C.id_categoria, C.cod_categoria, C.categoria, F.Forma_Categoria, C.color from categoria C, formas_categorias F where C.ID_Forma = F.ID_Forma and C.cod_categoria like '%$Codigo%' and C.estado = 1 order by C.id_categoria";
+		$Consulta = "SELECT C.id_categoria, C.cod_categoria, C.categoria,
+							F.Forma_Categoria, C.color 
+					 FROM categoria C, formas_categorias F
+					 WHERE C.ID_Forma = F.ID_Forma
+					   AND C.cod_categoria LIKE '%$Codigo%'
+					   AND C.estado = 1
+					   ORDER BY C.tipo_categoria DESC, C.orden ASC";
 		$MessageError = "Problemas al intentar mostrar Categorias por Codigo";
 		$Table = "<table class='table'><thead><tr><th>Categoría</th><th>Forma</th><th>Color</th><th colspan='3'></th></tr></thead>";//<th>Codigo</th>  <td>".$Ret["cod_categoria"]."</td>
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -1277,7 +1337,13 @@ class CtrGeneral{
 	public function getCategoriasxCategoria($Categoria){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select C.id_categoria, C.cod_categoria, C.categoria, F.Forma_Categoria, C.color from categoria C, formas_categorias F where C.ID_Forma = F.ID_Forma and C.categoria like '%$Categoria%' and C.estado = 1 order by C.id_categoria";
+		$Consulta = "SELECT C.id_categoria, C.cod_categoria, C.categoria,
+							F.Forma_Categoria, C.color 
+					 FROM categoria C, formas_categorias F
+					 WHERE C.ID_Forma = F.ID_Forma
+					   AND C.categoria LIKE '%$Categoria%'
+					   AND C.estado = 1
+					   ORDER BY C.tipo_categoria DESC, C.orden ASC";
 		$MessageError = "Problemas al intentar mostrar Categorias por Categoría";
 		$Table = "<table class='table'><thead><tr><th>Categoría</th><th>Forma</th><th>Color</th><th colspan='3'></th></tr></thead>";//<th>Codigo</th>  <td>".$Ret["cod_categoria"]."</td>
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
