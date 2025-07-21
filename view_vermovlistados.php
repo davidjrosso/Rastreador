@@ -2207,11 +2207,11 @@ $ID_Config = $_REQUEST["ID_Config"];
         <ul type=none>
           <li>
             <button type="button" id="boton-disable-0" class="btn buttom-order-list btn-outline-light"
-                    onclick="orderOption(0, 1)">
+                    onclick="orderOption(0, -1)">
               ASC
             </button>
             <button type="button" id="boton-asc-0" style="display: none;" class="btn buttom-order-list btn-outline-success"
-                    onclick="orderOption(0, -1)">
+                    onclick="orderOption(0, 1)">
               ASC
             </button>
             <button type="button" id="boton-desc-0" style="display: none;" class="btn buttom-order-list btn-outline-danger"
@@ -2223,11 +2223,11 @@ $ID_Config = $_REQUEST["ID_Config"];
           
           <li>
             <button type="button" id="boton-disable-2" class="btn buttom-order-list btn-outline-light"
-                    onclick="orderOption(2, 1)">
+                    onclick="orderOption(2, -1)">
               ASC
             </button>
             <button type="button" id="boton-asc-2" style="display: none;" class="btn buttom-order-list btn-outline-success" 
-                    onclick="orderOption(2, -1)">
+                    onclick="orderOption(2, 1)">
               ASC
             </button>
             <button type="button" id="boton-desc-2" style="display: none;" class="btn buttom-order-list btn-outline-danger" 
@@ -2238,11 +2238,11 @@ $ID_Config = $_REQUEST["ID_Config"];
           </li>
           <li>
             <button type="button" id="boton-disable-1" class="btn buttom-order-list btn-outline-light"
-                    onclick="orderOption(1, 1)">
+                    onclick="orderOption(1, -1)">
               ASC
             </button>
             <button type="button" id="boton-asc-1" style="display: none;" class="btn buttom-order-list btn-outline-success"
-                    onclick="orderOption(1, -1)">
+                    onclick="orderOption(1, 1)">
               ASC
             </button>
             <button type="button" id="boton-desc-1" class="btn buttom-order-list btn-outline-danger"
@@ -2253,11 +2253,11 @@ $ID_Config = $_REQUEST["ID_Config"];
           </li> 
           <li>
             <button type="button" id="boton-disable-5" class="btn buttom-order-list btn-outline-light"
-                    onclick="orderOption(5, 1)">
+                    onclick="orderOption(5, -1)">
               ASC
             </button>
             <button type="button" id="boton-asc-5" style="display: none;" class="btn buttom-order-list btn-outline-success"
-                    onclick="orderOption(5, -1)">
+                    onclick="orderOption(5, 1)">
               ASC
             </button>
             <button type="button" id="boton-desc-5" style="display: none;" class="btn buttom-order-list btn-outline-danger"
@@ -2268,11 +2268,11 @@ $ID_Config = $_REQUEST["ID_Config"];
           </li>
           <li>
             <button type="button" id="boton-disable-6" class="btn buttom-order-list btn-outline-light"
-                    onclick="orderOption(6, 1)">
+                    onclick="orderOption(6, -1)">
               ASC
             </button>
             <button type="button" id="boton-asc-6" style="display: none;" class="btn buttom-order-list btn-outline-success"
-                    onclick="orderOption(6, -1)">
+                    onclick="orderOption(6, 1)">
               ASC
             </button>
             <button type="button" id="boton-desc-6" style="display: none;" class="btn buttom-order-list btn-outline-danger"
@@ -2283,11 +2283,11 @@ $ID_Config = $_REQUEST["ID_Config"];
           </li>
           <li>
             <button type="button" id="boton-disable-7" class="btn buttom-order-list btn-outline-light"
-                    onclick="orderOption(7, 1)">
+                    onclick="orderOption(7, -1)">
               ASC
             </button>
             <button type="button" id="boton-asc-7" style="display: none;" class="btn buttom-order-list btn-outline-success"
-                    onclick="orderOption(7, -1)">
+                    onclick="orderOption(7, 1)">
               ASC
             </button>
             <button type="button" id="boton-desc-7" style="display: none;" class="btn buttom-order-list btn-outline-danger"
@@ -2298,11 +2298,11 @@ $ID_Config = $_REQUEST["ID_Config"];
           </li>
           <li>
             <button type="button" id="boton-disable-8" class="btn buttom-order-list btn-outline-light"
-                    onclick="orderOption(8, 1)">
+                    onclick="orderOption(8, -1)">
               ASC
             </button>
             <button type="button" id="boton-asc-8" style="display: none;" class="btn buttom-order-list btn-outline-success"
-                    onclick="orderOption(8, -1)">
+                    onclick="orderOption(8, 1)">
               ASC
             </button>
             <button type="button" id="boton-desc-8" style="display: none;" class="btn buttom-order-list btn-outline-danger"
@@ -2313,11 +2313,11 @@ $ID_Config = $_REQUEST["ID_Config"];
           </li>
           <li>
             <button type="button" id="boton-disable-9" class="btn buttom-order-list btn-outline-light"
-                    onclick="orderOption(9, 1)">
+                    onclick="orderOption(9, -1)">
               ASC
             </button>
             <button type="button" id="boton-asc-9" style="display: none;" class="btn buttom-order-list btn-outline-success"
-                    onclick="orderOption(9, -1)">
+                    onclick="orderOption(9, 1)">
               ASC
             </button>
             <button type="button" id="boton-desc-9" style="display: none;" class="btn buttom-order-list btn-outline-danger"
@@ -2328,11 +2328,11 @@ $ID_Config = $_REQUEST["ID_Config"];
           </li>
           <li>
             <button type="button" id="boton-disable-10" class="btn buttom-order-list btn-outline-light"
-                    onclick="orderOption(10, 1)">
+                    onclick="orderOption(10, -1)">
               ASC
             </button>
             <button type="button" id="boton-asc-10" style="display: none;" class="btn buttom-order-list btn-outline-success"
-                    onclick="orderOption(10, -1)">
+                    onclick="orderOption(10, 1)">
               ASC
             </button>
             <button type="button" id="boton-desc-10" style="display: none;" class="btn buttom-order-list btn-outline-danger"
@@ -2343,11 +2343,11 @@ $ID_Config = $_REQUEST["ID_Config"];
           </li>
           <li>
             <button type="button" id="boton-disable-11" class="btn buttom-order-list btn-outline-light"
-                    onclick="orderOption(11, 1)">
+                    onclick="orderOption(11, -1)">
               ASC
             </button>
             <button type="button" id="boton-asc-11" style="display: none;" class="btn buttom-order-list btn-outline-success"
-                    onclick="orderOption(11, -1)">
+                    onclick="orderOption(11, 1)">
               ASC
             </button>
             <button type="button" id="boton-desc-11" style="display: none;" class="btn buttom-order-list btn-outline-danger"
@@ -2358,11 +2358,11 @@ $ID_Config = $_REQUEST["ID_Config"];
           </li>
           <li>
             <button type="button" id="boton-disable-12" class="btn buttom-order-list btn-outline-light"
-                    onclick="orderOption(12, 1)">
+                    onclick="orderOption(12, -1)">
               ASC
             </button>
             <button type="button" id="boton-asc-12" style="display: none;" class="btn buttom-order-list btn-outline-success"
-                    onclick="orderOption(12, -1)">
+                    onclick="orderOption(12, 1)">
               ASC
             </button>
             <button type="button" id="boton-desc-12" style="display: none;" class="btn buttom-order-list btn-outline-danger"
@@ -2373,11 +2373,11 @@ $ID_Config = $_REQUEST["ID_Config"];
           </li>
           <li>
             <button type="button" id="boton-disable-13" class="btn buttom-order-list btn-outline-light"
-                    onclick="orderOption(13, 1)">
+                    onclick="orderOption(13, -1)">
               ASC
             </button>
             <button type="button" id="boton-asc-13" style="display: none;" class="btn buttom-order-list btn-outline-success"
-                    onclick="orderOption(13, -1)">
+                    onclick="orderOption(13, 1)">
               ASC
             </button>
             <button type="button" id="boton-desc-13" style="display: none;" class="btn buttom-order-list btn-outline-danger"
@@ -2388,11 +2388,11 @@ $ID_Config = $_REQUEST["ID_Config"];
           </li>
           <li>
             <button type="button" id="boton-disable-14" class="btn buttom-order-list btn-outline-light"
-                    onclick="orderOption(14, 1)">
+                    onclick="orderOption(14, -1)">
               ASC
             </button>
             <button type="button" id="boton-asc-14" style="display: none;" class="btn buttom-order-list btn-outline-success"
-                    onclick="orderOption(14, -1)">
+                    onclick="orderOption(14, 1)">
               ASC
             </button>
             <button type="button" id="boton-desc-14" style="display: none;" class="btn buttom-order-list btn-outline-danger"
@@ -2403,11 +2403,11 @@ $ID_Config = $_REQUEST["ID_Config"];
           </li>
           <li>
             <button type="button" id="boton-disable-15" class="btn buttom-order-list btn-outline-light"
-                    onclick="orderOption(15, 1)">
+                    onclick="orderOption(15, -1)">
               ASC
             </button>
             <button type="button" id="boton-asc-15" style="display: none;" class="btn buttom-order-list btn-outline-success"
-                    onclick="orderOption(15, -1)">
+                    onclick="orderOption(15, 1)">
               ASC
             </button>
             <button type="button" id="boton-desc-15" style="display: none;" class="btn buttom-order-list btn-outline-danger"
@@ -2418,11 +2418,11 @@ $ID_Config = $_REQUEST["ID_Config"];
           </li>
           <li>
             <button type="button" id="boton-disable-16" class="btn buttom-order-list btn-outline-light"
-                    onclick="orderOption(16, 1)">
+                    onclick="orderOption(16, -1)">
               ASC
             </button>
             <button type="button" id="boton-asc-16" style="display: none;" class="btn buttom-order-list btn-outline-success"
-                    onclick="orderOption(16, -1)">
+                    onclick="orderOption(16, 1)">
               ASC
             </button>
             <button type="button" id="boton-desc-16" style="display: none;" class="btn buttom-order-list btn-outline-danger"
@@ -2464,7 +2464,7 @@ $ID_Config = $_REQUEST["ID_Config"];
       $("#boton-asc-" + idOption).hide();
       $("#boton-desc-" + idOption).hide();
       $("#boton-disable-" + idOption).show();
-    } else if (orden == 1) {
+    } else if (orden == -1) {
       $("#boton-asc-" + idOption).show();
       $("#boton-desc-" + idOption).hide();
       $("#boton-disable-" + idOption).hide();
@@ -2476,13 +2476,22 @@ $ID_Config = $_REQUEST["ID_Config"];
   }
 
   function lessThan(a, b, indice) {
-    ret_valor = false;
+    let ret_valor = false;
+    let elementA = null;
+    let elementB = null;
+
     if ((indice >= 7 && indice <= 8) 
         || indice == 5) {
       ret_valor = (parseInt(a) < parseInt(b));
 
     } else if (indice == 0 || indice == 6) {
-      ret_valor = (Date.parse(a) < Date.parse(b));
+      elementA = a.split("-");
+      elementB = b.split("-");
+      elementB.reverse();
+      elementA.reverse();
+      elementA = elementA.join("-");
+      elementB = elementB.join("-");
+      ret_valor = (Date.parse(elementA) < Date.parse(elementB));
     } else {
       ret_valor = (a < b);
     }
