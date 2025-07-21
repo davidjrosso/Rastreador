@@ -2527,7 +2527,7 @@ $ID_Config = $_REQUEST["ID_Config"];
       nodeInnerA = (nodeInnerA) ? nodeInnerA.outerText : null;
       nodeInnerB = (nodeInnerB) ? nodeInnerB.outerText : null;
 
-      if (lista.length > 0) {
+      if (listInd.length > 0) {
         if (moreThan(nodeInnerA, nodeInnerA, indice)) {
           result = (-1) * orden;
         } else if (lessThan(nodeInnerA, nodeInnerB, indice)) {
