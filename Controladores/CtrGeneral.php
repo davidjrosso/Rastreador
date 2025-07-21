@@ -1131,7 +1131,13 @@ class CtrGeneral{
 	public function getMotivos(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select M.id_motivo, M.motivo, M.codigo, C.categoria from motivo M, categoria C where M.cod_categoria = C.cod_categoria and M.estado = 1 and C.estado = 1 and M.id_motivo > 1 order by M.id_motivo";
+		$Consulta = "SELECT M.id_motivo, M.motivo, M.codigo, C.categoria 
+					 FROM motivo M 
+						INNER JOIN categoria C ON (M.cod_categoria = C.cod_categoria)
+					 WHERE M.estado = 1
+					   AND C.estado = 1
+					   AND M.id_motivo > 1
+					   ORDER BY M.tipo_motivo ASC, M.orden ASC";
 		$MessageError = "Problemas al intentar mostrar Motivos";
 		$Table = "<table class='table'><thead><tr><th>Motivo</th><th>Código</th><th>Categoría</th><th colspan='2'></th></tr></thead>";//<th>Número</th>  <td>".$Ret["num_motivo"]."</td>
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -1154,7 +1160,7 @@ class CtrGeneral{
 					   AND M.estado = 1 
 					   AND C.estado = 1 
 					   AND M.id_motivo > 1 
-					 ORDER BY M.tipo_motivo DESC, M.orden ASC";
+					 ORDER BY M.tipo_motivo ASC, M.orden ASC";
 		$MessageError = "Problemas al intentar mostrar Motivos por ID";
 		$Table = "<table class='table'>
 					<thead>
@@ -1185,7 +1191,7 @@ class CtrGeneral{
 					   AND M.estado = 1 
 					   AND C.estado = 1 
 					   AND M.id_motivo > 1
-					 ORDER BY M.tipo_motivo DESC, M.orden ASC";
+					 ORDER BY M.tipo_motivo ASC, M.orden ASC";
 		$MessageError = "Problemas al intentar mostrar Motivos por Motivo";
 		$Table = "<table class='table'><thead><tr><th>Motivo</th><th>Codigo</th><th>Categoría</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -1208,7 +1214,7 @@ class CtrGeneral{
 					   AND M.estado = 1
 					   AND C.estado = 1
 					   AND M.id_motivo > 1 
-					 ORDER BY M.tipo_motivo DESC, M.orden ASC";
+					 ORDER BY M.tipo_motivo ASC, M.orden ASC";
 		$MessageError = "Problemas al intentar mostrar Motivos por Codigo";
 		$Table = "<table class='table'><thead><tr><th>Motivo</th><th>Codigo</th><th>Categoría</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -1231,7 +1237,7 @@ class CtrGeneral{
 					   AND M.estado = 1 
 					   AND C.estado = 1 
 					   AND M.id_motivo > 1
-					 ORDER BY M.tipo_motivo DESC, M.orden ASC";
+					 ORDER BY M.tipo_motivo ASC, M.orden ASC";
 		$MessageError = "Problemas al intentar mostrar Motivos por Numero";
 		$Table = "<table class='table'><thead><tr><th>Motivo</th><th>Codigo</th><th>Categoría</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -1254,7 +1260,7 @@ class CtrGeneral{
 					   AND M.estado = 1
 					   AND C.estado = 1
 					   AND M.id_motivo > 1
-					   ORDER BY M.tipo_motivo DESC, M.orden ASC";
+					   ORDER BY M.tipo_motivo ASC, M.orden ASC";
 		$MessageError = "Problemas al intentar mostrar Motivos por Categoría";
 		$Table = "<table class='table'><thead><tr><th>Motivo</th><th>Codigo</th><th>Categoría</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
