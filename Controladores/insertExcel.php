@@ -471,9 +471,11 @@
 			$progress = 0;
 			$active = null;
 			$server = 0;
-
+			$con = new Conexion();
+			$con->OpenConexion();
 			$lista_personas = rows_persona($result, $lista_datos, $con);
-
+			$con->CloseConexion();
+			$con = null;
 			$persona_rows = count($lista_personas) - 1;
 
 			foreach ($lista_personas as $row => $dato) {
