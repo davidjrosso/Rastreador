@@ -27,7 +27,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Parametria.php");
 header("Content-Type: text/html;charset=utf-8");
 
 /*     CONTROL DE USUARIOS                    */
-if(!isset($_SESSION["Usuario"])){
+if (!isset($_SESSION["Usuario"])) {
     header("Location: Error_Session.php");
 }
 
@@ -69,16 +69,12 @@ $Con->CloseConexion();
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-  <!--<link href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-  <!--<script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script> -->
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-  <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script>
@@ -123,9 +119,7 @@ $Con->CloseConexion();
                     case 'ESCUELAS': window.location.href = 'Controladores/unificarescuelas.php?ID_Escuela_1='+xID_Registro_1+'&ID_Escuela_2='+xID_Registro_2+'&ID_Solicitud='+xID_Solicitud; break;
                     case 'BARRIOS': window.location.href = 'Controladores/unificarbarrios.php?ID_Barrio_1='+xID_Registro_1+'&ID_Barrio_2='+xID_Registro_2+'&ID_Solicitud='+xID_Solicitud; break;
                     default: swal("Algo salio mal consulte con el equipo de desarrollo","","warning");break;                   
-                  }                  
-                  //alert('SI');
-                } else {        
+                  }
                 }
               });
         }
@@ -233,7 +227,6 @@ $Con->CloseConexion();
               .then((willDelete) => {
                 if (willDelete) {
                   window.location.href = 'Controladores/DeleteMotivo.php?ID='+xID_Motivo;
-                } else {        
                 }
               });
         }
@@ -249,10 +242,6 @@ $Con->CloseConexion();
               .then((willDelete) => {
                 if (willDelete) {
                   window.location.href = 'Controladores/DeleteCategoria.php?ID='+xID_Categoria;
-                  //alert('SI');
-                } else {
-                  console.log("por aca");
-                  console.log(willDelete);        
                 }
               });
         }
@@ -299,8 +288,6 @@ $Con->CloseConexion();
               .then((willDelete) => {
                 if (willDelete) {
                   window.location.href = 'Controladores/DeletePeticion.php?ID='+xID_Peticion;
-                  //alert('SI');
-                } else {        
                 }
               });
         }
@@ -376,9 +363,7 @@ $Con->CloseConexion();
               .then((willDelete) => {
                 if (willDelete) {
                   window.location.href = 'Controladores/DeletePeticionModificacionCategoria.php?ID=' + xID;
-                  //alert('SI');
-                } else {        
-                }
+                } 
               });
         }
 
@@ -393,8 +378,6 @@ $Con->CloseConexion();
               .then((willDelete) => {
                 if (willDelete) {
                   window.location.href = 'Controladores/DeletePeticionEliminacion.php?ID='+xID;
-                  //alert('SI');
-                } else {        
                 }
               });
         }
@@ -439,7 +422,7 @@ $Con->CloseConexion();
 <div class = "row">
 <?php
   $Element = new Elements();
-  if($tipo_usuario == 1){  
+  if ($tipo_usuario == 1) {
   ?>
   <div class = "col-md-2">
     <div class="nav-side-menu">
@@ -492,7 +475,7 @@ $Con->CloseConexion();
   </div>
   <?php 
     }
-    if($tipo_usuario == 2 || $tipo_usuario > 3){
+    if ($tipo_usuario == 2 || $tipo_usuario > 3) {
   ?>
   <div class = "col-md-2">
 <div class="nav-side-menu">
@@ -533,7 +516,7 @@ $Con->CloseConexion();
   </div>
   <?php
   }  
-  if($tipo_usuario == 3){    
+  if ($tipo_usuario == 3) {    
   ?>
   <div class = "col-md-2">
 <div class="nav-side-menu">
@@ -608,10 +591,9 @@ $Con->CloseConexion();
     <?php 
     $CtrGeneral = new CtrGeneral();
 
-    // NOTIFICACIONES
     $Notificaciones = $CtrGeneral->getNotificaciones();
 
-    if($Notificaciones["cant"] > 0){
+    if ($Notificaciones["cant"] > 0) {
       ?>
       <div class="alert alert-warning alert-dismissible fade show" role="alert" style="position: absolute; top: 5px; right: 5px;">
         <h5 class="alert-heading">¡Notificación!</h5>
@@ -623,9 +605,7 @@ $Con->CloseConexion();
       <?php        
     }
     ?>
-    <?php if($tipo_usuario == 1){ 
-      // $CtrGeneral = new CtrGeneral();
-      // SOLICITUDES
+    <?php if ($tipo_usuario == 1) { 
       $CantUnif = $CtrGeneral->getCantSolicitudes_Unificacion();
       $CantModMot = $CtrGeneral->getCantSolicitudes_Modificacion_Motivo();
       $CantCrearMot = $CtrGeneral->getCantSolicitudes_Crear_Motivo();
@@ -653,62 +633,62 @@ $Con->CloseConexion();
           <h3 class="bg-secondary text-light" style="text-align: center; padding: 10px;">Solicitudes por autorizar</h3>
           <?php 
             // $CtrGeneral = new CtrGeneral();
-            if($CantUnif > 0){
+            if ($CantUnif > 0) {
               ?>
                 <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Unificar Motivos</h3>
               <?php
               echo $CtrGeneral->getSolicitudes_Unificacion();
             }
             
-            if($CantCrearMot > 0){
+            if ($CantCrearMot > 0 ){
               ?>
                 <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Crear Motivos</h3>
               <?php
               echo $CtrGeneral->getSolicitudes_Crear_Motivo();
             }
-            if($CantModMot > 0){
+            if ($CantModMot > 0) {
               ?>
               <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Modificar Motivos</h3>
               <?php
               echo $CtrGeneral->getSolicitudes_Modificacion_Motivo();
             }
-            if($CantCrearCat > 0){
+            if ($CantCrearCat > 0) {
               ?>
               <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Crear Categorías</h3>
               <?php              
               echo $CtrGeneral->getSolicitudes_Crear_Categoria();
             }
-            if($CantModCat > 0){
+            if ($CantModCat > 0) {
               ?>
               <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Modificar Categorías</h3>
               <?php              
               echo $CtrGeneral->getSolicitudes_Modificacion_Categoria();
             }
-            if($CantSolMod > 0){
+            if ($CantSolMod > 0) {
               ?>
               <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Modificar Responsables</h3>
               <?php              
               echo $CtrGeneral->getSolicitudes_Modificacion();
             }
-            if($CantDel > 0){
+            if ($CantDel > 0) {
               ?>
               <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Eliminar Motivos</h3>
               <?php
               echo $CtrGeneral->getSolicitudes_EliminacionMotivo();
             }
-            if($CantDelCat > 0){
+            if ($CantDelCat > 0) {
               ?>
               <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Eliminar Categorias</h3>
               <?php
               echo $CtrGeneral->getSolicitudes_EliminacionCategoria();
             }
-            if($CantNot > 0){
+            if ($CantNot > 0) {
               ?>
               <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Eliminar Notificaciones</h3>
               <?php
               echo $CtrGeneral->getSolicitudes_Notificaciones();
             }
-            if($CantSolUsr > 0){
+            if ($CantSolUsr > 0) {
               ?>
               <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Solcitud de Usuario</h3>
               <?php
@@ -718,7 +698,7 @@ $Con->CloseConexion();
         </div>  
         <div class="col-1"></div> 
       </div>     
-  <?php }else{ ?>
+  <?php } else { ?>
       <div class = "row">
         <div class="col"></div>
         <div class="col-4 Contenedor-Imagen-Inicio">
@@ -727,7 +707,7 @@ $Con->CloseConexion();
         <div class="col"></div>          
       </div>
   <?php }
-      } else{ ?>
+      } else { ?>
     <div class = "row">
       <div class="col"></div>
       <div class="col-4 Contenedor-Imagen-Inicio">
@@ -747,10 +727,10 @@ $Con->CloseConexion();
   </div>
 </div>
 <?php  
-if(isset($_REQUEST['Mensaje'])){
+if (isset($_REQUEST['Mensaje']) ){
   echo "<script type='text/javascript'>
-    swal('".$_REQUEST['Mensaje']."','','success');
-</script>";
+          swal('".$_REQUEST['Mensaje']."','','success');
+        </script>";
 }
 ?>
 <?php
