@@ -130,7 +130,14 @@ $Con->CloseConexion();
               });
         }
 
-        function VerificarCrearMotivo(xID,xFecha,xMotivo,xCodigo,xNum_Motivo,xCategoria){
+        function VerificarCrearMotivo(
+                                      xID,
+                                      xFecha,
+                                      xMotivo,
+                                      xCodigo,
+                                      xNum_Motivo,
+                                      xCategoria
+        ){
               swal({
                 title: "¿Está seguro?",
                 text: "¿Seguro de querer crear este motivo?",
@@ -145,7 +152,14 @@ $Con->CloseConexion();
               });
         }
 
-       function VerificarModificarMotivo(xID,xFecha,xMotivo,xCodigo,xNum_Motivo,xID_Motivo){
+       function VerificarModificarMotivo(
+                                         xID,
+                                         xFecha,
+                                         xMotivo,
+                                         xCodigo,
+                                         xNum_Motivo,
+                                         xID_Motivo
+       ){
               swal({
                 title: "¿Está seguro?",
                 text: "¿Seguro de querer modificar este motivo?",
@@ -156,8 +170,21 @@ $Con->CloseConexion();
               .then((willDelete) => {
                 if (willDelete) {
                   window.location.href = 'Controladores/ModificarMotivo.php?ID='+xID+'&Fecha='+xFecha+'&Motivo='+xMotivo+'&Codigo='+xCodigo+'&Num_Motivo='+xNum_Motivo+'&ID_Motivo='+xID_Motivo;                
-                  //alert('SI');
-                } else {        
+                }
+              });
+        }
+
+       function VerificarModificacion(id, valor){
+              swal({
+                title: "¿Está seguro?",
+                text: "¿Seguro de querer modificar este Responsable?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+              })
+              .then((willDelete) => {
+                if (willDelete) {
+                  window.location.href = 'Controladores/ModificarResponsable.php?ID=' + id + '&Responsable=' + valor;
                 }
               });
         }
@@ -174,7 +201,6 @@ $Con->CloseConexion();
               .then((willDelete) => {
                 if (willDelete) {
                   window.location.href = 'Controladores/InsertCategoria.php?ID='+xID+'&Fecha='+xFecha+'&Codigo='+xCodigo+'&Categoria='+xCategoria+'&ID_Forma='+xID_Forma+'&ID_Categoria='+xID+'&Color='+ColorBase;
-                } else {
                 }
               });
         }
@@ -192,8 +218,6 @@ $Con->CloseConexion();
               .then((willDelete) => {
                 if (willDelete) {
                   window.location.href = 'Controladores/ModificarCategoria.php?ID='+xID+'&Fecha='+xFecha+'&Codigo='+xCodigo+'&Categoria='+xCategoria+'&ID_Forma='+xID_Forma+'&ID_Categoria='+xID_Categoria+'&CodigoColor='+NuevoColorBase;
-                  //alert('SI');
-                } else {        
                 }
               });
         }
@@ -233,7 +257,7 @@ $Con->CloseConexion();
               });
         }
 
-        function VerificarEliminarNotificacion(xID_Notificacion){
+        function VerificarEliminarNotificacion(xID_Notificacion) {
               swal({
                 title: "¿Está seguro?",
                 text: "¿Seguro de querer eliminar esta notificación?",
@@ -281,7 +305,7 @@ $Con->CloseConexion();
               });
         }
 
-        function CancelarModificacionMotivo(xID){
+        function CancelarModificacionMotivo(xID) {
               swal({
                 title: "¿Está seguro?",
                 text: "¿Seguro de querer borrar esta petición de modificación?",
@@ -292,11 +316,25 @@ $Con->CloseConexion();
               .then((willDelete) => {
                 if (willDelete) {
                   window.location.href = 'Controladores/DeletePeticionModificacionMotivo.php?ID='+xID;
-                  //alert('SI');
-                } else {        
                 }
               });
         }
+
+        function CancelarModificacion(xID) {
+              swal({
+                title: "¿Está seguro?",
+                text: "¿Seguro de querer borrar esta petición de modificación?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+              })
+              .then((willDelete) => {
+                if (willDelete) {
+                  window.location.href = 'Controladores/DeletePeticionModificacion.php?ID=' + xID;
+                }
+              });
+        }
+
         function CancelarCrearMotivo(xID){
               swal({
                 title: "¿Está seguro?",
@@ -337,7 +375,7 @@ $Con->CloseConexion();
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/DeletePeticionModificacionCategoria.php?ID='+xID;
+                  window.location.href = 'Controladores/DeletePeticionModificacionCategoria.php?ID=' + xID;
                   //alert('SI');
                 } else {        
                 }
@@ -399,54 +437,55 @@ $Con->CloseConexion();
 </head>
 <body>
 <div class = "row">
-<?php  
+<?php
+  $Element = new Elements();
   if($tipo_usuario == 1){  
   ?>
   <div class = "col-md-2">
     <div class="nav-side-menu">
-      <?php $Element = new Elements();
+      <?php
             echo $Element->CBSessionNombreUsuario($id_usuario);
       ?>
       <div class="brand">General</div>
         <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
         <div class="menu-list">
   
-            <?php $Element = new Elements();
-            $Element->getMenuGeneral(0);?>
+            <?php
+            $Element->getMenuGeneral($Element::PAGINA_INICIO);?>
         </div>
         <div class="brand">Actualizaciones</div>
         <div class="menu-list">
   
-            <?php $Element = new Elements();
-            $Element->getMenuActualizaciones(0);?>
+            <?php
+            $Element->getMenuActualizaciones($Element::PAGINA_INICIO);?>
         </div>
         <div class="brand">Reportes</div>
         <div class="menu-list">
   
-            <?php $Element = new Elements();
-            $Element->getMenuReportes(0);?>
+            <?php
+            $Element->getMenuReportes($Element::PAGINA_INICIO);?>
         </div>
         <div class="brand">Unificación</div>
         <div class="menu-list">
   
-            <?php $Element = new Elements();
-            $Element->getMenuUnificacion(0);?>
+            <?php
+            $Element->getMenuUnificacion($Element::PAGINA_INICIO);?>
         </div>
         <div class="brand">Seguridad</div>
         <div class="menu-list">
   
-            <?php $Element = new Elements();
-            $Element->getMenuSeguridad(0);?>
+            <?php
+            $Element->getMenuSeguridad($Element::PAGINA_INICIO);?>
         </div>
         <div class="brand">Auditoria</div>
         <div class="menu-list">
-            <?php $Element = new Elements();
-          $Element->getMenuNotificacion(0);?>
+            <?php
+          $Element->getMenuNotificacion($Element::PAGINA_INICIO);?>
         </div>
         <div class="brand">Documentación</div>
         <div class="menu-list">
-            <?php $Element = new Elements();
-            $Element->getMenuHistorial(0);?>
+            <?php
+            $Element->getMenuHistorial($Element::PAGINA_INICIO);?>
         </div>
         <div class="brand btn-Salir" onClick = "location.href = 'Controladores/CtrLogout.php'">Salir</div>
     </div>
@@ -457,7 +496,7 @@ $Con->CloseConexion();
   ?>
   <div class = "col-md-2">
 <div class="nav-side-menu">
-      <?php $Element = new Elements();
+      <?php
             echo $Element->CBSessionNombreUsuario($id_usuario);
       ?>
     <div class="brand">General</div>
@@ -465,29 +504,29 @@ $Con->CloseConexion();
   
         <div class="menu-list">
   
-            <?php $Element = new Elements();
-            $Element->getMenuGeneral(0);?>
+            <?php
+            $Element->getMenuGeneral($Element::PAGINA_INICIO);?>
         </div>
         <div class="brand">Actualizaciones</div>
         <div class="menu-list">
   
-            <?php $Element = new Elements();
-            $Element->getMenuActualizaciones(0);?>
+            <?php
+            $Element->getMenuActualizaciones($Element::PAGINA_INICIO);?>
         </div>
         <div class="brand">Reportes</div>
         <div class="menu-list">
-            <?php $Element = new Elements();
-            $Element->getMenuReportes(0);?>
+            <?php
+            $Element->getMenuReportes($Element::PAGINA_INICIO);?>
         </div>
         <div class="brand">Auditoria</div>
         <div class="menu-list">
-            <?php $Element = new Elements();
-          $Element->getMenuNotificacion(0);?>
+            <?php
+          $Element->getMenuNotificacion($Element::PAGINA_INICIO);?>
         </div>
         <div class="brand">Documentación</div>
         <div class="menu-list">
-            <?php $Element = new Elements();
-            $Element->getMenuHistorial(0);?>
+            <?php
+            $Element->getMenuHistorial($Element::PAGINA_INICIO);?>
         </div>
         <div class="brand btn-Salir" onClick = "location.href = 'Controladores/CtrLogout.php'">Salir</div>
     </div>
@@ -498,7 +537,7 @@ $Con->CloseConexion();
   ?>
   <div class = "col-md-2">
 <div class="nav-side-menu">
-      <?php $Element = new Elements();
+      <?php
             echo $Element->CBSessionNombreUsuario($id_usuario);
       ?>
     <div class="brand">General</div>
@@ -506,36 +545,36 @@ $Con->CloseConexion();
   
         <div class="menu-list">
   
-            <?php $Element = new Elements();
-            $Element->getMenuGeneral(0);?>
+            <?php
+            $Element->getMenuGeneral($Element::PAGINA_INICIO);?>
         </div>
         <div class="brand">Actualizaciones</div>
         <div class="menu-list">
   
-            <?php $Element = new Elements();
-            $Element->getMenuActualizaciones(0);?>
+            <?php
+            $Element->getMenuActualizaciones($Element::PAGINA_INICIO);?>
         </div>
         <div class="brand">Reportes</div>
         <div class="menu-list">
   
-            <?php $Element = new Elements();
-            $Element->getMenuReportes(0);?>
+            <?php
+            $Element->getMenuReportes($Element::PAGINA_INICIO);?>
         </div>
         <div class="brand">Unificación</div>
         <div class="menu-list">
   
-            <?php $Element = new Elements();
-            $Element->getMenuUnificacion(0);?>
+            <?php
+            $Element->getMenuUnificacion($Element::PAGINA_INICIO);?>
         </div>
         <div class="brand">Auditoria</div>
         <div class="menu-list">
-            <?php $Element = new Elements();
-          $Element->getMenuNotificacion(0);?>
+            <?php
+          $Element->getMenuNotificacion($Element::PAGINA_INICIO);?>
         </div>
         <div class="brand">Documentación</div>
         <div class="menu-list">
-            <?php $Element = new Elements();
-            $Element->getMenuHistorial(0);?>
+            <?php
+            $Element->getMenuHistorial($Element::PAGINA_INICIO);?>
         </div>
         <div class="brand btn-Salir" onClick = "location.href = 'Controladores/CtrLogout.php'">Salir</div>
     </div>
@@ -595,13 +634,14 @@ $Con->CloseConexion();
       $CantDel = $CtrGeneral->getCantSolicitudes_EliminacionMotivo();
       $CantDelCat = $CtrGeneral->getCantSolicitudes_EliminacionCategoria();
       $CantSolUsr = $CtrGeneral->get_cant_solicitudes_usuario();
+      $CantSolMod = $CtrGeneral->get_cant_solicitudes_modificacion();
       $CantNot = $Notificaciones["cant"];
 
       if ($CantModMot > 0 || $CantUnif > 0 
          || $CantModCat > 0 || $CantDel > 0 
          || $CantDelCat > 0 || $CantNot > 0 
          || $CantCrearCat > 0 || $CantCrearMot > 0
-         || $CantSolUsr > 0
+         || $CantSolUsr > 0 || $CantSolMod > 0
       ) {
       ?>
       <div class = "row">
@@ -643,6 +683,12 @@ $Con->CloseConexion();
               <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Modificar Categorías</h3>
               <?php              
               echo $CtrGeneral->getSolicitudes_Modificacion_Categoria();
+            }
+            if($CantSolMod > 0){
+              ?>
+              <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Modificar Responsables</h3>
+              <?php              
+              echo $CtrGeneral->getSolicitudes_Modificacion();
             }
             if($CantDel > 0){
               ?>

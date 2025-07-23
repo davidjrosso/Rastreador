@@ -20,54 +20,38 @@
 session_start();
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Accion.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Responsable.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/SolicitudModificacion.php");
 
 $id_usuario = $_SESSION["Usuario"];
 
 $id_solicitud = $_REQUEST["ID"];
-$responsable = ucfirst($_REQUEST["Responsable"]);
 
 $fecha = date("Y-m-d");
-$id_tipo_accion = 2;
-
-$con = new Conexion();
-$con->OpenConexion();
+$id_tipo_accion = 3;
+$detalles = "El usuario con ID: $id_usuario ha dado de baja una Peticion. Datos: Peticion: $id_solicitud";
 
 try {
-	if($id_solicitud > 0){
-		$solicitud = new SolicitudModificacion(
-												coneccion_base: $con,
-												id_solicitud: $id_solicitud
-		);
-		$id_responsable = $solicitud->get_id_registro();
-		$solicitud->delete();
-		$ResponsableDatosViejos = new Responsable(
-												coneccion_base: $con,
-												id_responsable: $id_responsable
+	$con = new Conexion();
+	$con->OpenConexion();
 
-											   );		
-		$ResponsableViejo = $ResponsableDatosViejos->get_responsable();
+    $solicitud = new SolicitudModificacion(
+                                            coneccion_base: $con,
+                                            id_solicitud: $id_solicitud
+                                          );
+    $solicitud->delete();
 
-		$ResponsableDatosViejos->set_responsable($responsable);
-		$ResponsableDatosViejos->update();
+    $accion = new Accion(
+        xaccountid: $id_usuario,
+        xFecha: $fecha,
+        xDetalles: $detalles,
+        xID_TipoAccion: $id_tipo_accion
+    );
+    $accion->save();
 
-		$detalles = "El usuario con ID: $id_usuario ha modificado un Responsable. Datos: Dato Anterior: $ResponsableViejo , Dato Nuevo: $responsable";
-
-		$accion = new Accion(
-			xaccountid: $id_usuario,
-			xFecha : $fecha,
-			xDetalles: $detalles,
-			xID_TipoAccion: $id_tipo_accion	 
-		);		
-
-		$accion->save();
-
-		$mensaje = "El Responsable se modificó Correctamente";
-		header('Location: ../view_inicio.php?&Mensaje=' . $mensaje);
-	}
+	$con->CloseConexion();
+	$Mensaje = "La solicitud fue eliminada Correctamente";
+	header('Location: ../view_inicio.php?Mensaje=' . $Mensaje);
 } catch (Exception $e) {
 	echo "Error: ".$e->getMessage();
 }
-
-?>

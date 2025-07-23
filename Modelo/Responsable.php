@@ -62,6 +62,27 @@ class Responsable implements JsonSerializable
 		return $exist;
 	}
 
+	public static function is_registered_name_with_id_responsable(
+																  $coneccion_base, 
+																  $nombre,
+																  $id_responsable 
+																  )
+	{
+		$consulta = "select id_resp 
+					 from responsable 
+					 where responsable like '%" . $nombre. "%'
+					   and id_resp != $id_responsable
+					   and estado = 1";
+		$mensaje_error = "Hubo un problema al consultar los registros para validar";
+		$ret = mysqli_query($coneccion_base->Conexion,
+			$consulta
+		) or die(
+			$mensaje_error . " Consulta: " . $consulta
+		);
+		$exist = (mysqli_num_rows($ret) >= 1);
+		return $exist;
+	}
+
 	public static function get_id_responsable_by_name($coneccion_base, $responsable)
 	{
 		$consulta = "select id_resp 
@@ -78,6 +99,23 @@ class Responsable implements JsonSerializable
 		$id = $row["id_resp"];
 		return $id;
 	}
+
+	public static function existe_id_responsable($coneccion_base, $id_responsable)
+	{
+		$consulta = "select id_resp 
+					 from responsable 
+					 where id_resp = $id_responsable
+					   and estado = 1";
+		$mensaje_error = "Hubo un problema al consultar los registros para validar";
+		$ret = mysqli_query($coneccion_base->Conexion,
+			$consulta
+		) or die(
+			$mensaje_error . " Consulta: " . $consulta
+		);
+		$exist = (mysqli_num_rows($ret) >= 1);
+		return $exist;
+	}
+
 	//METODOS SET
 	public function set_id_responsable($id_responsable)
 	{
@@ -139,10 +177,10 @@ class Responsable implements JsonSerializable
 		$consulta = "update responsable 
 					set responsable = " . ((!is_null($this->get_responsable())) ? "'" . $this->get_responsable() . "'" : "null") . ", 
 						accountid = " . ((!is_null($this->get_account_id())) ? "'" . $this->get_account_id() . "'" : "null") . ", 
-						estado = " . ((!is_null($this->get_estado())) ? "'" . $this->get_estado() . "'" : "null") . "
+						estado = " . ((!is_null($this->get_estado())) ? $this->get_estado() : "null") . "
 					where id_resp = " . $this->get_id_responsable();
 		$mensaje_error = "No se pudo actualizar la Responsable";
-		$ret = mysqli_query($this->coneccion_base, $consulta);
+		$ret = mysqli_query($this->coneccion_base->Conexion, $consulta);
 		if (!$ret) {
 			throw new Exception($mensaje_error . $consulta, 2);
 		}

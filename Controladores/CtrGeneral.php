@@ -1,6 +1,8 @@
 <?php  
-require_once("Conexion.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Controladores/Conexion.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Accion.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Responsable.php");
+
 
 class CtrGeneral{
 	//Instanciando la Conexion
@@ -3025,6 +3027,87 @@ class CtrGeneral{
 		$Regis = mysqli_num_rows($Con->ResultSet);
 		$Con->CloseConexion();		
 		return $Regis;
+	}
+
+	public function get_cant_solicitudes_modificacion()
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "select id_solicitud 
+					 from solicitudes_modificacion 
+					 where estado = 1";
+		$MessageError = "Problemas al intentar consultar cantidad de solicitudes de modificacion";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$Regis = mysqli_num_rows($Con->ResultSet);
+		$Con->CloseConexion();		
+		return $Regis;
+	}
+
+	public function getSolicitudes_Modificacion()
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "select S.id_solicitud, 
+							S.fecha, 
+							S.valor, 
+							S.id_tipo, 
+							S.id_registro, 
+							S.id_usuario, 
+							U.username
+					 from solicitudes_modificacion S, 
+					 	  accounts U 
+					 where S.id_usuario = U.accountid 
+					   and S.estado = 1 
+					 order by S.fecha";
+		$MessageError = "Problemas al intentar mostrar Solicitudes";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$Regis = mysqli_num_rows($Con->ResultSet);
+		if($Regis > 0){
+			$Table = "<table class='table-responsive table-bordered'>
+						<thead>
+							<tr>
+								<th style='min-width:50px;'>Id</th>
+								<th style='min-width:100px;'>Fecha</th>
+								<th style='min-width:300px;'>Responsable</th>
+								<th style='min-width:100px;'>Usuario</th>
+								<th style='min-width:100px;'>Valor</th>
+								<th style='min-width:100px;'>Acción</th>
+							</tr>
+						</thead>";
+			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
+				$ID = $Ret["id_solicitud"];
+				$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
+				$id_registro = $Ret["id_registro"];
+				$Usuario = $Ret["username"];	
+				$valor = $Ret["valor"];
+				$responsable = new Responsable(
+											   coneccion_base: $Con,
+											   id_responsable: $id_registro
+											  );
+				$responsable_nombre = $responsable->get_responsable();
+				$Table .= "<tr>
+							<td>" . $ID . "</td>
+							<td>" . $Fecha . "</td>
+							<td>" . $responsable_nombre . "</td>
+							<td>" . $Usuario . "</td>
+							<td>" . $valor . "</td>
+							<td>
+							  <button class='btn btn-success' onClick='VerificarModificacion(" . $ID . ",\"" . $valor . "\")'>
+							  	<i class='fa fa-check'></i>
+							  </button>
+							  <button class='btn btn-danger' onClick='CancelarModificacion(" . $ID . ")'>
+							  	<i class='fa fa-times'></i>
+							  </button>
+							</td>
+						   </tr>";
+			}
+			$Table .= "</table>";
+		}else{
+			$Table = "No existen solicitudes de Modificacion pendientes de aprobación.";
+		}
+		$Con->CloseConexion();
+		
+		return $Table;
 	}
 
 	public function get_solicitudes_usuario_auditoria()

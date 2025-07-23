@@ -2701,7 +2701,7 @@ public function getMenuSeguridadUsuario($ID){
                     self::CBSessionNombreUsuario($ID_Usuario) . 
                     "<div class='brand'>General</div>
                        <i class='fa fa-bars fa-2x toggle-btn' data-toggle='collapse' data-target='#menu-content'></i>
-                          <div class='menu-list'>" .        
+                          <div class='menu-list'>" .
                             self::getMenuGeneralUsuario($pagina) . 
                           "</div>
                           <div class='brand'>Actualizaciones</div>
