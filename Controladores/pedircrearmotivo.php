@@ -1,7 +1,10 @@
 <?php
 session_start(); 
-require_once 'Conexion.php';
-require_once '../Modelo/Solicitud_ModificarMotivo.php';
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Motivo.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_ModificarMotivo.php");
+
+
 /*
  *
  * This file is part of Rastreador3.
