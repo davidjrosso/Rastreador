@@ -1372,16 +1372,39 @@ class CtrGeneral{
 	public function getResponsables(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_resp, responsable 
-					 from responsable 
-					 where estado = 1 
-					   and id_resp <> 64
-					 order by id_resp";
+		$Consulta = "SELECT id_resp, responsable 
+					 FROM responsable 
+					 WHERE estado = 1 
+					   AND id_resp <> 64
+					 ORDER BY id_resp";
 		$MessageError = "Problemas al intentar mostrar Responsables";
-		$Table = "<table class='table'><thead><tr><th>Responsable</th><th colspan='2'></th></tr></thead>";
+		$Table = "<table class='table'>
+				    <thead>
+					  <tr>
+					  	<th>
+							Responsable
+						</th>
+						<th colspan='2'>
+						</th>
+					  </tr>
+					</thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["responsable"]."</td><td><a href = 'view_modresponsables.php?ID=".$Ret["id_resp"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_resp"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr>
+						 <td>" . 
+							$Ret["responsable"] . "
+						 </td>
+						 <td>
+							<a href = 'view_modresponsables.php?ID=" . $Ret["id_resp"] . "'>
+								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+							</a>
+						 </td>
+						 <td>
+							 <a onClick = 'Verificar(" . $Ret["id_resp"] . ")'>
+								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
+							 </a>
+						  </td>
+					   </tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -1394,10 +1417,32 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select id_resp, responsable from responsable where id_resp = $ID and estado = 1 order by id_resp";
 		$MessageError = "Problemas al intentar mostrar Responsables por ID";
-		$Table = "<table class='table'><thead><tr><th>Responsable</th><th colspan='2'></th></tr></thead>";
+		$Table = "<table class='table'>
+					<thead>
+					  <tr>
+					  	<th>
+							Responsable
+						</th>
+						<th colspan='2'>
+						</th>
+					  </tr>
+					</thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["responsable"]."</td><td><a href = 'view_modresponsables.php?ID=".$Ret["id_resp"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_resp"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr>
+						 <td>" . $Ret["responsable"] . "
+						 </td>
+						 <td>
+						 	<a href = 'view_modresponsables.php?ID=" . $Ret["id_resp"] . "'>
+								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+							</a>
+						 </td>
+						 <td>
+						 	<a onClick = 'Verificar(" . $Ret["id_resp"] . ")'>
+								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
+							</a>
+						 </td>
+					   </tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -3026,6 +3071,20 @@ class CtrGeneral{
 		return $Table;
 	}
 
+	public function getCantSolicitudes_EliminacionResponsable()
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "SELECT id_solicitud 
+					 FROM solicitudes_modificacion 
+					 WHERE estado = 1
+					   AND id_tipo = 3";
+		$MessageError = "Problemas al intentar consultar cantidad de solicitudes de modificacion";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$Regis = mysqli_num_rows($Con->ResultSet);
+		$Con->CloseConexion();		
+		return $Regis;
+	}
 	public function getCantSolicitudes_EliminacionCategoria()
 	{
 		$Con = new Conexion();
@@ -3092,6 +3151,72 @@ class CtrGeneral{
 			$Table .= "</table>";
 		}else{
 			$Table = "No existen solicitudes de eliminar categoria pendientes de aprobación.";
+		}
+		$Con->CloseConexion();
+		
+		return $Table;
+	}
+
+	public function getEliminacion_Responsable()
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "select S.id_solicitud, 
+							S.fecha, 
+							S.valor, 
+							S.id_tipo, 
+							S.id_registro, 
+							S.id_usuario, 
+							U.username
+					 from solicitudes_modificacion S, 
+					 	  accounts U 
+					 where S.id_usuario = U.accountid 
+					   and S.estado = 1
+					   and S.id_tipo = 3
+					 order by S.fecha";
+		$MessageError = "Problemas al intentar mostrar Solicitudes";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$Regis = mysqli_num_rows($Con->ResultSet);
+		if($Regis > 0){
+			$Table = "<table class='table-responsive table-bordered'>
+						<thead>
+							<tr>
+								<th style='min-width:50px;'>Id</th>
+								<th style='min-width:100px;'>Fecha</th>
+								<th style='min-width:300px;'>Responsable</th>
+								<th style='min-width:100px;'>Usuario</th>
+								<th style='min-width:100px;'>Acción</th>
+							</tr>
+						</thead>";
+			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
+				$ID = $Ret["id_solicitud"];
+				$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
+				$id_registro = $Ret["id_registro"];
+				$Usuario = $Ret["username"];	
+				$valor = $Ret["valor"];
+				$responsable = new Responsable(
+											   coneccion_base: $Con,
+											   id_responsable: $id_registro
+											  );
+				$responsable_nombre = $responsable->get_responsable();
+				$Table .= "<tr>
+							<td>" . $ID . "</td>
+							<td>" . $Fecha . "</td>
+							<td>" . $responsable_nombre . "</td>
+							<td>" . $Usuario . "</td>
+							<td>
+							  <button class='btn btn-success' onClick='VerificarModificacion(" . $ID . ",\"" . $valor . "\")'>
+							  	<i class='fa fa-check'></i>
+							  </button>
+							  <button class='btn btn-danger' onClick='CancelarModificacion(" . $ID . ")'>
+							  	<i class='fa fa-times'></i>
+							  </button>
+							</td>
+						   </tr>";
+			}
+			$Table .= "</table>";
+		}else{
+			$Table = "No existen solicitudes de Modificacion pendientes de aprobación.";
 		}
 		$Con->CloseConexion();
 		
@@ -3231,9 +3356,10 @@ class CtrGeneral{
 	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_solicitud 
-					 from solicitudes_modificacion 
-					 where estado = 1";
+		$Consulta = "SELECT id_solicitud 
+					 FROM solicitudes_modificacion 
+					 WHERE estado = 1
+					   AND id_tipo IN (1, 2)";
 		$MessageError = "Problemas al intentar consultar cantidad de solicitudes de modificacion";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
@@ -3256,6 +3382,7 @@ class CtrGeneral{
 					 	  accounts U 
 					 where S.id_usuario = U.accountid 
 					   and S.estado = 1 
+					   and S.id_tipo IN (1, 2)
 					 order by S.fecha";
 		$MessageError = "Problemas al intentar mostrar Solicitudes";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);

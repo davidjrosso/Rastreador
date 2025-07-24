@@ -164,11 +164,11 @@ class SolicitudModificacion
                                                           estado
                                                           ) values(
                                                               '" . (($this->get_fecha()) ? $this->get_fecha() : $fecha) . "',
-                                                               " . (($this->get_valor()) ? "'" . $this->get_valor() . "'" : 'null') . ",
-                                                               " . $this->get_id_tipo() . ",
-                                                               " . $this->get_id_usuario() . ",
-                                                               " . $this->get_id_registro() . ",
-                                                               " . $this->get_estado() . "
+                                                               " . (($this->get_valor()) ? "'" . $this->get_valor() . "'" : "null") . ",
+                                                               " . (($this->get_id_tipo()) ? $this->get_id_tipo() : "null") . ",
+                                                               " . (($this->get_id_usuario()) ? $this->get_id_usuario() : "null"). ",
+                                                               " . (($this->get_id_registro()) ? $this->get_id_registro() : "null"). ",
+                                                               " . (($this->get_estado()) ? $this->get_estado() : "null"). "
                                                             )";
         $mensaje_error = "No se pudo enviar la solicitud";
         mysqli_query($this->coneccion_base->Conexion,$consulta) or die($mensaje_error);

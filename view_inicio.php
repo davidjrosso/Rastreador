@@ -612,6 +612,7 @@ $Con->CloseConexion();
       $CantModCat = $CtrGeneral->getCantSolicitudes_Modificacion_Categoria();
       $CantDel = $CtrGeneral->getCantSolicitudes_EliminacionMotivo();
       $CantDelCat = $CtrGeneral->getCantSolicitudes_EliminacionCategoria();
+      $CantDelResp = $CtrGeneral->getCantSolicitudes_EliminacionResponsable();
       $CantSolUsr = $CtrGeneral->get_cant_solicitudes_usuario();
       $CantSolMod = $CtrGeneral->get_cant_solicitudes_modificacion();
       $CantNot = $Notificaciones["cant"];
@@ -621,6 +622,7 @@ $Con->CloseConexion();
          || $CantDelCat > 0 || $CantNot > 0 
          || $CantCrearCat > 0 || $CantCrearMot > 0
          || $CantSolUsr > 0 || $CantSolMod > 0
+         || $CantDelResp > 0
       ) {
       ?>
       <div class = "row">
@@ -680,18 +682,24 @@ $Con->CloseConexion();
               <?php
               echo $CtrGeneral->getSolicitudes_EliminacionCategoria();
             }
+            if ($CantSolUsr > 0) {
+              ?>
+              <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Solcitud de Usuario</h3>
+              <?php
+              echo $CtrGeneral->get_solicitudes_usuario();
+            }
+            if ($CantDelResp > 0) {
+              ?>
+              <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Eliminar Responsable</h3>
+              <?php
+              echo $CtrGeneral->getEliminacion_Responsable();
+            }
             if ($CantNot > 0) {
               ?>
               <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Eliminar Notificaciones</h3>
               <?php
               echo $CtrGeneral->getSolicitudes_Notificaciones();
             }
-            if ($CantSolUsr > 0) {
-              ?>
-              <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Solcitud de Usuario</h3>
-              <?php
-              echo $CtrGeneral->get_solicitudes_usuario();
-            }        
           ?>
         </div>  
         <div class="col-1"></div> 

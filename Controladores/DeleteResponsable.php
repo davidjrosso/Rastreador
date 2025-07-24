@@ -1,6 +1,4 @@
 <?php 
-session_start();
-require_once 'Conexion.php';
 /*
  *
  * This file is part of Rastreador3.
@@ -20,30 +18,43 @@ require_once 'Conexion.php';
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-$ID_Usuario = $_SESSION["Usuario"];
+session_start();
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/SolicitudModificacion.php");
 
-$ID_Responsable = $_REQUEST["ID"];
 
-$Fecha = date("Y-m-d");
-$ID_TipoAccion = 3;
-$Detalles = "El usuario con ID: $ID_Usuario ha dado de baja un Responsable. Datos: Responsable: $ID_Responsable";
+$id_usuario = $_SESSION["Usuario"];
+
+$id_solicitud = $_REQUEST["ID"];
+
+$fecha = date("Y-m-d");
+$id_tipo_accion = 3;
+$detalles = "El usuario con ID: $id_usuario ha dado de baja un Responsable. Datos: Responsable: $id_responsable";
 
 try {
-	$Con = new Conexion();
-	$Con->OpenConexion();
-
-	$Consulta = "update responsable set estado = 0 where id_resp = $ID_Responsable";
-	if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
-		throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 0);		
-	}
-	$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
-	if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
-		throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 1);
-	}	
+	$con = new Conexion();
+	$con->OpenConexion();
+	$solicitud = new SolicitudModificacion(
+											coneccion_base: $con,
+											id_solicitud: $id_solicitud
+										  );
+	$id_responsable = $solicitud->get_id_registro();
+	$responsable = new Responsable(
+								   coneccion_base: $con,
+								   id_responsable: $id_responsable
+								  );
+	$responsable->delete();
+	$accion = new Accion(
+						 xaccountid: $id_usuario,
+						 xFecha: $fecha,
+						 xDetalles:$detalles,
+						 xID_TipoAccion: $id_tipo_accion
+						);
+	$accion->save();
 	$Con->CloseConexion();
 	$Mensaje = "El responsable fue eliminado Correctamente";
 	header('Location: ../view_responsables.php?Mensaje='.$Mensaje);
 } catch (Exception $e) {
-	echo "Error: ".$e->getMessage();
+	echo "Error: " . $e->getMessage();
 }
 ?>
