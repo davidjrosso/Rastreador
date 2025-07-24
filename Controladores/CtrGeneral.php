@@ -1,8 +1,11 @@
 <?php  
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Controladores/Conexion.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Accion.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Barrio.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Categoria.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/CentroSalud.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Motivo.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Responsable.php");
-
 
 class CtrGeneral{
 	//Instanciando la Conexion
@@ -1894,76 +1897,271 @@ class CtrGeneral{
 	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select S.ID_Solicitud_Unificacion, S.Fecha, S.ID_Registro_1, S.ID_Registro_2, T.TipoUnif, U.username, S.ID_TipoUnif from solicitudes_unificacion S, accounts U, tipos_unif T where S.ID_Usuario = U.accountid and S.ID_TipoUnif = T.ID_TipoUnif and S.Estado = 1 order by S.Fecha";
+		$Consulta = "SELECT S.ID_Solicitud_Unificacion, S.Fecha, 
+							S.ID_Registro_1, S.ID_Registro_2, 
+							T.TipoUnif, U.username, S.ID_TipoUnif 
+					 FROM solicitudes_unificacion S, accounts U, tipos_unif T 
+					 WHERE S.ID_Usuario = U.accountid 
+					   AND S.ID_TipoUnif = T.ID_TipoUnif 
+					   AND S.Estado = 1 
+					 ORDER BY S.Fecha";
 		$MessageError = "Problemas al intentar mostrar Solicitudes";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
 		if($Regis > 0){
-			$Table = "<table id='solicitudes-unificacion' class='table-responsive table-bordered'><thead><tr><th style='min-width:50px;'>Id</th><th style='min-width:100px;'>Fecha</th><th style='min-width:100px;'>Registro 1</th><th style='min-width:100px;'>Registro 2</th><th style='min-width:100px;'>Usuario</th><th style='min-width:100px;'>Tipo</th><th style='min-width:100px;'>Acción</th></tr></thead>";
+			$Table = "<table id='solicitudes-unificacion' class='table-responsive table-bordered'>
+						<thead>
+							<tr>
+								<th style='min-width:50px;'>Id</th>
+								<th style='min-width:100px;'>Fecha</th>
+								<th style='min-width:100px;'>Registro 1</th>
+								<th style='min-width:100px;'>Registro 2</th>
+								<th style='min-width:100px;'>Usuario</th>
+								<th style='min-width:100px;'>Tipo</th>
+								<th style='min-width:100px;'>Acción</th>
+							</tr>
+						</thead>";
 			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 				$Fecha = implode("/", array_reverse(explode("-",$Ret["Fecha"])));
 				$ID_Registro_1 = $Ret["ID_Registro_1"];
 				$ID_Registro_2 = $Ret["ID_Registro_2"];
 				switch($Ret['ID_TipoUnif']){
 					case 1: 
-						$ConsultarMotivo_1 = "select Motivo from motivo where ID_Motivo = $ID_Registro_1 and estado = 1 limit 1";
-						$MensajeErrorMotivo_1 = "No se pudo consultar el motivo 1";
-						$ConsultarMotivo_2 = "select Motivo from motivo where ID_Motivo = $ID_Registro_2 and estado = 1 limit 1";
-						$MensajeErrorMotivo_2 = "No se pudo consultar el motivo 2";					
-					break;
+						$registro_1 = new Motivo(
+												 coneccion_base: $Con,
+												 id_motivo: $ID_Registro_1
+												);
+						$registro_2 =  new Motivo(
+												 coneccion_base: $Con,
+												 id_motivo: $ID_Registro_2
+												);
+						break;
 					case 2: 
-						$ConsultarMotivo_1 = "select apellido, nombre from persona where id_persona = $ID_Registro_1 and estado = 1 limit 1";
-						$MensajeErrorMotivo_1 = "No se pudo consultar la persona 1";
-						$ConsultarMotivo_2 = "select apellido, nombre from persona where id_persona = $ID_Registro_2 and estado = 1 limit 1";
-						$MensajeErrorMotivo_2 = "No se pudo consultar la persona 2";					
-					break;
+						$registro_1 = new Persona(ID_Persona: $ID_Registro_1);
+						$registro_2 = new Persona(ID_Persona: $ID_Registro_2);
+						break;
 					case 3: 
-						$ConsultarMotivo_1 = "select centro_salud from centros_salud where id_centro = $ID_Registro_1 and estado = 1 limit 1";
-						$MensajeErrorMotivo_1 = "No se pudo consultar el centro salud 1";
-						$ConsultarMotivo_2 = "select centro_salud from centros_salud where id_centro = $ID_Registro_2 and estado = 1 limit 1";
-						$MensajeErrorMotivo_2 = "No se pudo consultar el centro salud 2";					
+						$registro_1 = new CentroSalud(
+													  coneccion_base: $Con,
+													  id_centro: $ID_Registro_1
+													  );
+						$registro_2 = new CentroSalud(
+													  coneccion_base: $Con,
+													  id_centro: $ID_Registro_2
+													  );
 					break;
 					case 4: 
-						$ConsultarMotivo_1 = "select Escuela from escuelas where ID_Escuela = $ID_Registro_1 and estado = 1 limit 1";
-						$MensajeErrorMotivo_1 = "No se pudo consultar la escuela 1";
-						$ConsultarMotivo_2 = "select Escuela from escuelas where ID_Escuela = $ID_Registro_2 and estado = 1 limit 1";
-						$MensajeErrorMotivo_2 = "No se pudo consultar la escuela 2";					
+						$registro_1 = new Escuela(
+												  coneccion_base: $Con,
+												  xID_Escuela: $ID_Registro_1
+												 );
+						$registro_2 = new Escuela(
+												  coneccion_base: $Con,
+												   xID_Escuela: $ID_Registro_2
+												 );				
 					break;
 					case 5: 
-						$ConsultarMotivo_1 = "select Barrio from barrios where ID_Barrio = $ID_Registro_1 and estado = 1 limit 1";
-						$MensajeErrorMotivo_1 = "No se pudo consultar el barrio 1";
-						$ConsultarMotivo_2 = "select Barrio from barrios where ID_Barrio = $ID_Registro_2 and estado = 1 limit 1";
-						$MensajeErrorMotivo_2 = "No se pudo consultar el barrio 2";					
+						$registro_1 = new Barrio(
+												 coneccion: $Con,
+												 id_barrio: $ID_Registro_1
+												);
+						$registro_2 = new Barrio(
+												 coneccion: $Con,
+												 id_barrio: $ID_Registro_2
+												);				
+					break;
+					case 6: 
+						$registro_1 = new Categoria(xID_Categoria: $ID_Registro_1);
+						$registro_2 = new Categoria(xID_Categoria: $ID_Registro_1);					
+					break;
+					case 7: 
+						$registro_1 = new Responsable(
+													  coneccion_base: $Con,
+													  id_responsable: $ID_Registro_1
+													);
+						$registro_2 =new Responsable(
+													  coneccion_base: $Con,
+													  id_responsable: $ID_Registro_2
+													);					
 					break;
 					default: 
-						$ConsultarMotivo_1 = "select Motivo from motivo where ID_Motivo = $ID_Registro_1 and estado = 1 limit 1";
-						$MensajeErrorMotivo_1 = "No se pudo consultar el motivo 1";
-						$ConsultarMotivo_2 = "select Motivo from motivo where ID_Motivo = $ID_Registro_2 and estado = 1 limit 1";
-						$MensajeErrorMotivo_2 = "No se pudo consultar el motivo 2";	
+						$registro_1 = new Motivo(
+												 coneccion_base: $Con,
+												 id_motivo: $ID_Registro_1
+												);
+						$registro_2 =  new Motivo(
+												 coneccion_base: $Con,
+												 id_motivo: $ID_Registro_2
+												);
 					break;
 				}
-				$EjecutarConsultarMotivo_1 = mysqli_query($Con->Conexion,$ConsultarMotivo_1) or die($MensajeErrorMotivo_1);
-				$EjecutarConsultarMotivo_2 = mysqli_query($Con->Conexion,$ConsultarMotivo_2) or die($MensajeErrorMotivo_2);
-				$RetMotivo_1 = mysqli_fetch_assoc($EjecutarConsultarMotivo_1);
-				$RetMotivo_2 = mysqli_fetch_assoc($EjecutarConsultarMotivo_2);
+
 				$TipoUnif = $Ret["TipoUnif"];
 				$ID_Solicitud = $Ret["ID_Solicitud_Unificacion"];
 				switch($Ret['ID_TipoUnif']){
 					case 1: 
-						$Table .= "<tr><td>".$Ret["ID_Solicitud_Unificacion"]."</td><td>".$Fecha."</td><td>".$RetMotivo_1["Motivo"]."</td><td>".$RetMotivo_2["Motivo"]."</td><td>".$Ret["username"]."</td><td>".$TipoUnif."</td><td><button class='btn btn-success' onClick='VerificarUnificacion(".$ID_Registro_1.",".$ID_Registro_2.",\"".$TipoUnif."\",".$ID_Solicitud.")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarUnificacion(".$Ret["ID_Solicitud_Unificacion"].")'><i class='fa fa-times'></i></button></td></tr>";				
-					break;
+						$Table .= "<tr>
+									 <td>" . $Ret["ID_Solicitud_Unificacion"] . "
+									 </td>
+									 <td>" . $Fecha . "
+									 </td>
+									 <td>" . $registro_1->get_motivo() . "
+									 </td>
+									 <td>" . $registro_2->get_motivo() . "
+									 </td>
+									 <td>" . $Ret["username"] . "
+									 </td>
+									 <td>" . $TipoUnif . "
+									 </td>
+									 <td>
+										 <button class='btn btn-success' onClick='VerificarUnificacion(" . $ID_Registro_1 . "," . $ID_Registro_2 . ",\"" . $TipoUnif . "\"," . $ID_Solicitud . ")'>
+											 <i class='fa fa-check'></i>
+										 </button>
+										 <button class='btn btn-danger' onClick='CancelarUnificacion(" . $Ret["ID_Solicitud_Unificacion"] . ")'>
+											 <i class='fa fa-times'></i>
+										 </button>
+									 </td>
+								   </tr>";				
+						break;
 					case 2: 
-						$Table .= "<tr><td>".$Ret["ID_Solicitud_Unificacion"]."</td><td>".$Fecha."</td><td>".$RetMotivo_1["apellido"].", ".$RetMotivo_1["nombre"]."</td><td>".$RetMotivo_2["apellido"].", ".$RetMotivo_2["nombre"]."</td><td>".$Ret["username"]."</td><td>".$TipoUnif."</td><td><button class='btn btn-success' onClick='VerificarUnificacion(".$ID_Registro_1.",".$ID_Registro_2.",\"".$TipoUnif."\",".$ID_Solicitud.")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarUnificacion(".$Ret["ID_Solicitud_Unificacion"].")'><i class='fa fa-times'></i></button></td></tr>";
-					break;
+						$Table .= "<tr>
+									 <td>" . $Ret["ID_Solicitud_Unificacion"] . "
+									 </td>
+									 <td>" . $Fecha . "
+									 </td>
+									 <td>" . $registro_1->getApellido() . ", " . $registro_1->getNombre() . "
+									 </td>
+									 <td>" . $registro_1->getApellido() . ", " . $registro_1->getNombre() . "
+									 </td>
+									 <td>" . $Ret["username"] . "
+									 </td>
+									 <td>" . $TipoUnif . "
+									 </td>
+									 <td>
+									 	<button class='btn btn-success' onClick='VerificarUnificacion(" . $ID_Registro_1 . "," . $ID_Registro_2 . ",\"" . $TipoUnif . "\"," . $ID_Solicitud . ")'>
+											<i class='fa fa-check'></i>
+										</button>
+										<button class='btn btn-danger' onClick='CancelarUnificacion(" . $Ret["ID_Solicitud_Unificacion"] . ")'>
+											<i class='fa fa-times'></i>
+										</button>
+									 </td>
+								   </tr>";
+						break;
 					case 3: 
-						$Table .= "<tr><td>".$Ret["ID_Solicitud_Unificacion"]."</td><td>".$Fecha."</td><td>".$RetMotivo_1["centro_salud"]."</td><td>".$RetMotivo_2["centro_salud"]."</td><td>".$Ret["username"]."</td><td>".$TipoUnif."</td><td><button class='btn btn-success' onClick='VerificarUnificacion(".$ID_Registro_1.",".$ID_Registro_2.",\"".$TipoUnif."\",".$ID_Solicitud.")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarUnificacion(".$Ret["ID_Solicitud_Unificacion"].")'><i class='fa fa-times'></i></button></td></tr>";					
-					break;
+						$Table .= "<tr>
+									 <td>" . $Ret["ID_Solicitud_Unificacion"] . "
+									 </td>
+									 <td>" . $Fecha . "
+									 </td>
+									 <td>" . $registro_1->get_centro_salud() . "
+									 </td>
+									 <td>" . $registro_2->get_centro_salud() . "
+									 </td>
+									 <td>" . $Ret["username"] . "</td>
+									 <td>" . $TipoUnif . "</td>
+									 <td>
+									 	<button class='btn btn-success' onClick='VerificarUnificacion(" . $ID_Registro_1 . "," . $ID_Registro_2 . ",\"" . $TipoUnif . "\"," . $ID_Solicitud . ")'>
+											<i class='fa fa-check'></i>
+										</button>
+										<button class='btn btn-danger' onClick='CancelarUnificacion(" . $Ret["ID_Solicitud_Unificacion"] . ")'>
+											<i class='fa fa-times'></i>
+										</button>
+									 </td>
+								   </tr>";					
+						break;
 					case 4: 
-						$Table .= "<tr><td>".$Ret["ID_Solicitud_Unificacion"]."</td><td>".$Fecha."</td><td>".$RetMotivo_1["Escuela"]."</td><td>".$RetMotivo_2["Escuela"]."</td><td>".$Ret["username"]."</td><td>".$TipoUnif."</td><td><button class='btn btn-success' onClick='VerificarUnificacion(".$ID_Registro_1.",".$ID_Registro_2.",\"".$TipoUnif."\",".$ID_Solicitud.")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarUnificacion(".$Ret["ID_Solicitud_Unificacion"].")'><i class='fa fa-times'></i></button></td></tr>";					
-					break;
+						$Table .= "<tr>
+									 <td>" . $Ret["ID_Solicitud_Unificacion"] . "
+									 </td>
+									 <td>" . $Fecha . "
+									 </td>
+									 <td>" . $registro_1->getEscuela() . "
+									 </td>
+									 <td>" . $registro_2->getEscuela() . "
+									 </td>
+									 <td>" . $Ret["username"] . "
+									 </td>
+									 <td>" . $TipoUnif . "
+									 </td>
+									 <td>
+									 	<button class='btn btn-success' onClick='VerificarUnificacion(" . $ID_Registro_1 . ", " . $ID_Registro_2 . ", \"" . $TipoUnif . "\", " . $ID_Solicitud . ")'>
+											<i class='fa fa-check'></i>
+										</button>
+										<button class='btn btn-danger' onClick='CancelarUnificacion(" . $Ret["ID_Solicitud_Unificacion"] . ")'>
+											<i class='fa fa-times'></i>
+										</button>
+									 </td>
+									</tr>";					
+						break;
 					case 5: 
-						$Table .= "<tr><td>".$Ret["ID_Solicitud_Unificacion"]."</td><td>".$Fecha."</td><td>".$RetMotivo_1["Barrio"]."</td><td>".$RetMotivo_2["Barrio"]."</td><td>".$Ret["username"]."</td><td>".$TipoUnif."</td><td><button class='btn btn-success' onClick='VerificarUnificacion(".$ID_Registro_1.",".$ID_Registro_2.",\"".$TipoUnif."\",".$ID_Solicitud.")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarUnificacion(".$Ret["ID_Solicitud_Unificacion"].")'><i class='fa fa-times'></i></button></td></tr>";				
-					break;
+						$Table .= "<tr>
+									 <td>" . $Ret["ID_Solicitud_Unificacion"] . "
+									 </td>
+									 <td>" . $Fecha . "
+									 </td>
+									 <td>" . $registro_1->get_barrio() . "
+									 </td>
+									 <td>" . $registro_2->get_barrio() . "
+									 </td>
+									 <td>" . $Ret["username"] . "</td>
+									 <td>" . $TipoUnif . "
+									 </td>
+									 <td>
+									 	<button class='btn btn-success' onClick='VerificarUnificacion(" . $ID_Registro_1 . ", " . $ID_Registro_2 . ", \"" . $TipoUnif . "\", " . $ID_Solicitud . ")'>
+											<i class='fa fa-check'></i>
+										</button>
+										<button class='btn btn-danger' onClick='CancelarUnificacion(" . $Ret["ID_Solicitud_Unificacion"] . ")'>
+											<i class='fa fa-times'></i>
+										</button>
+									 </td>
+								   </tr>";				
+						break;
+					case 6: 
+						$Table .= "<tr>
+									 <td>" . $Ret["ID_Solicitud_Unificacion"] . "
+									 </td>
+									 <td>" . $Fecha . "
+									 </td>
+									 <td>" . $registro_1->getCategoria() . "
+									 </td>
+									 <td>" . $registro_2->getCategoria() . "
+									 </td>
+									 <td>" . $Ret["username"] . "</td>
+									 <td>" . $TipoUnif . "
+									 </td>
+									 <td>
+									 	<button class='btn btn-success' onClick='VerificarUnificacion(" . $ID_Registro_1 . ", " . $ID_Registro_2 . ", \"" . $TipoUnif . "\", " . $ID_Solicitud . ")'>
+											<i class='fa fa-check'></i>
+										</button>
+										<button class='btn btn-danger' onClick='CancelarUnificacion(" . $Ret["ID_Solicitud_Unificacion"] . ")'>
+											<i class='fa fa-times'></i>
+										</button>
+									 </td>
+								   </tr>";				
+						break;
+					case 7: 
+						$Table .= "<tr>
+									 <td>" . $Ret["ID_Solicitud_Unificacion"] . "
+									 </td>
+									 <td>" . $Fecha . "
+									 </td>
+									 <td>" . $registro_1->get_responsable() . "
+									 </td>
+									 <td>" . $registro_2->get_responsable() . "
+									 </td>
+									 <td>" . $Ret["username"] . "</td>
+									 <td>" . $TipoUnif . "
+									 </td>
+									 <td>
+									 	<button class='btn btn-success' onClick='VerificarUnificacion(" . $ID_Registro_1 . ", " . $ID_Registro_2 . ", \"" . $TipoUnif . "\", " . $ID_Solicitud . ")'>
+											<i class='fa fa-check'></i>
+										</button>
+										<button class='btn btn-danger' onClick='CancelarUnificacion(" . $Ret["ID_Solicitud_Unificacion"] . ")'>
+											<i class='fa fa-times'></i>
+										</button>
+									 </td>
+								   </tr>";				
+						break;
 				}
 				// $Table .= "<tr><td>".$Ret["ID_Solicitud_Unificacion"]."</td><td>".$Fecha."</td><td>".$RetMotivo_1["Motivo"]."</td><td>".$RetMotivo_2["Motivo"]."</td><td>".$Ret["username"]."</td><td>".$TipoUnif."</td><td><button class='btn btn-success' onClick='VerificarUnificacion(".$ID_Registro_1.",".$ID_Registro_2.",".$TipoUnif.")'><i class='fa fa-check'></i></button><button class='btn btn-danger' onClick='CancelarUnificacion(".$Ret["ID_Solicitud_Unificacion"].")'><i class='fa fa-times'></i></button></td></tr>";
 			}			

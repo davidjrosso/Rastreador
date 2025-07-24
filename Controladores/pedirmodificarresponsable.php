@@ -62,14 +62,14 @@ if($id_responsable > 0){
     
         $con->CloseConexion();
         $mensaje = "La solicitud de modificacion de responsable se envió a los administradores para ser confirmada.";
-        header('Location: ../view_responsables.php?Mensaje=' . $mensaje);
+        header('Location: ../view_modresponsables.php?Mensaje=' . $mensaje);
+    } else {
+		$con->CloseConexion();
+		$mensaje = "El responsable no esta registrado.";
+		header('Location: ../view_responsables.php?MensajeError=' . $mensaje);
     }
-
-
 
 } else {
 	$mensaje_error = "Debe seleccionar una Responsable";
 	header('Location: ../view_modresponsables.php?ID=' . $ID . '&MensajeError=' . $mensaje_error);
 }
-
-?>

@@ -26,13 +26,16 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Accion.php");
 
 $ID_Usuario = $_SESSION["Usuario"];
-$id_categoria_unif = $_REQUEST["ID_Categoria_unif"];
-$id_categoria_del = $_REQUEST["ID_Categoria_del"];
-
+$id_solicitud = $REQUEST["ID"];
 $fecha = date("Y-m-d");
 $ID_TipoAccion = 2;
 
 try {
+	$solicitud = new Solicitud_unificacion(xID_Solicitud: $id_solicitud);
+
+	$id_categoria_unif = $solicitud->getID_Registro_1();
+	$id_categoria_del = $solicitud->getID_Registro_2();
+
 	if (!empty($id_categoria_unif) && !empty($id_categoria_del)) {
 		$con = new Conexion();
 		$con->OpenConexion();
@@ -44,18 +47,17 @@ try {
 		} else {
 			$categoria_del = new Categoria(xID_Categoria: $id_categoria_del, xConecction: $con);
 			$cod_categoria_unif = $categoria_unif->getCod_Categoria();
-			$cod_categoria_del = $categoria_unif->getCod_Categoria();
+			$cod_categoria_del = $categoria_del->getCod_Categoria();
 			$Consulta = "update motivo 
 						set cod_categoria = '$cod_categoria_unif' 
 						where cod_categoria = '$cod_categoria_del' 
 						and estado = 1";
 
 			if(!$Ret = mysqli_query($con->Conexion,$Consulta)){
-				throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 2);		
+				throw new Exception("Problemas en la consulta. Consulta: " . $Consulta, 2);		
 			}
 
 			$categoria_del->delete();
-			$categoria_del->update();
 
 			$Detalles = "El usuario con ID: $ID_Usuario ha unificado la Categoria: $id_categoria_del con la categoria $id_categoria_unif.";
 			$accion = new Accion(
@@ -88,7 +90,6 @@ try {
 				}
 				$categoria_rol = new CategoriaRol(id_categoria_rol: $id_categoria_rol);
 				$categoria_rol->delete();
-				$categoria_rol->update();
 			}
 
 			$Con->CloseConexion();

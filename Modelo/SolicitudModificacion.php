@@ -156,19 +156,19 @@ class SolicitudModificacion
     {
         $fecha = date(format: "Y-m-d");
         $consulta = "insert into solicitudes_modificacion( 
-                                                            fecha,
-                                                            valor,
-                                                            id_tipo,
-                                                            id_usuario,
-                                                            id_registro,
-                                                            estado
-                                                            ) values(
-                                                                '" . (($this->get_fecha()) ? $this->get_fecha() : $fecha) . "',
-                                                                " . (($this->get_valor()) ? "'" . $this->get_valor() . "'" : 'null') . ",
-                                                                " . $this->get_id_tipo() . ",
-                                                                " . $this->get_id_usuario() . ",
-                                                                " . $this->get_id_registro() . ",
-                                                                " . $this->get_estado() . "
+                                                          fecha,
+                                                          valor,
+                                                          id_tipo,
+                                                          id_usuario,
+                                                          id_registro,
+                                                          estado
+                                                          ) values(
+                                                              '" . (($this->get_fecha()) ? $this->get_fecha() : $fecha) . "',
+                                                               " . (($this->get_valor()) ? "'" . $this->get_valor() . "'" : 'null') . ",
+                                                               " . $this->get_id_tipo() . ",
+                                                               " . $this->get_id_usuario() . ",
+                                                               " . $this->get_id_registro() . ",
+                                                               " . $this->get_estado() . "
                                                             )";
         $mensaje_error = "No se pudo enviar la solicitud";
         mysqli_query($this->coneccion_base->Conexion,$consulta) or die($mensaje_error);

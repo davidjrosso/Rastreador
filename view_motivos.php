@@ -53,9 +53,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/pedireliminarmotivo.php?ID='+xID;
-                  //alert('SI');
-                } else {        
+                  window.location.href = 'Controladores/pedireliminarmotivo.php?ID=' + xID;
                 }
               });
         }

@@ -1,6 +1,4 @@
-<?php 
-session_start();
-require_once 'Conexion.php';
+<?php
 /*
  *
  * This file is part of Rastreador3.
@@ -19,6 +17,9 @@ require_once 'Conexion.php';
  * along with Rastreador3; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
+
+session_start();
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
 
 $ID_Usuario = $_SESSION["Usuario"];
 $ID_Categoria = $_REQUEST["ID_Categoria"];

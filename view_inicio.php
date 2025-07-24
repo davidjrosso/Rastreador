@@ -118,7 +118,9 @@ $Con->CloseConexion();
                     case 'CENTROS SALUD': window.location.href = 'Controladores/unificarcentros.php?ID_Centro_1='+xID_Registro_1+'&ID_Centro_2='+xID_Registro_2+'&ID_Solicitud='+xID_Solicitud; break;
                     case 'ESCUELAS': window.location.href = 'Controladores/unificarescuelas.php?ID_Escuela_1='+xID_Registro_1+'&ID_Escuela_2='+xID_Registro_2+'&ID_Solicitud='+xID_Solicitud; break;
                     case 'BARRIOS': window.location.href = 'Controladores/unificarbarrios.php?ID_Barrio_1='+xID_Registro_1+'&ID_Barrio_2='+xID_Registro_2+'&ID_Solicitud='+xID_Solicitud; break;
-                    default: swal("Algo salio mal consulte con el equipo de desarrollo","","warning");break;                   
+                    case 'CATEGORIA': window.location.href = 'Controladores/unificarcategoria.php?ID=' + xID_Solicitud; break;
+                    case 'RESPONSABLE': window.location.href = 'Controladores/unificarresponsables.php?ID=' + xID_Solicitud; break;
+                    default: swal("Algo salio mal consulte con el equipo de desarrollo","","warning");break;
                   }
                 }
               });
@@ -393,8 +395,6 @@ $Con->CloseConexion();
               .then((willDelete) => {
                 if (willDelete) {
                   window.location.href = 'Controladores/DeletePeticionEliminacionCategoria.php?ID='+xID;
-                  //alert('SI');
-                } else {        
                 }
               });
         }
@@ -414,7 +414,6 @@ $Con->CloseConexion();
                 }
               });
         }
-
   </script>
 
 </head>
@@ -632,10 +631,9 @@ $Con->CloseConexion();
         <div class="col-6">
           <h3 class="bg-secondary text-light" style="text-align: center; padding: 10px;">Solicitudes por autorizar</h3>
           <?php 
-            // $CtrGeneral = new CtrGeneral();
             if ($CantUnif > 0) {
               ?>
-                <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Unificar Motivos</h3>
+                <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Unificaciones</h3>
               <?php
               echo $CtrGeneral->getSolicitudes_Unificacion();
             }

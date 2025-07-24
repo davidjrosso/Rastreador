@@ -156,6 +156,14 @@ class Categoria {
 	}
 	public function delete()
 	{
+		$consulta = "update categoria
+					 set estado = 0
+					 where id_categoria = " . $this->getID_Categoria();
+		$mensaje_error = "No se pudo modificar la categoria";
+		$ret = mysqli_query($this->Conecction->Conexion, $consulta);
+		if (!$ret) {
+			throw new Exception($mensaje_error . $consulta, 2);
+		}
 		$this->Estado = 0;
 
 	}
@@ -176,4 +184,3 @@ class Categoria {
 		}
 	}
 }
-?>
