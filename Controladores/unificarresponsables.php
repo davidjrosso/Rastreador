@@ -35,13 +35,13 @@ $con = new Conexion();
 $con->OpenConexion();
 
 try {
-	if($id_solicitud > 0){
+	if ($id_solicitud > 0) {
 		$solicitud = new Solicitud_Unificacion(
 											   coneccion: $con,
 											   xID_Solicitud : $id_solicitud
 											  );
 		$id_responsable_unif = $solicitud->getID_Registro_1();
-		$id_responsable_del = $solicitud->getID_Registro_1();
+		$id_responsable_del = $solicitud->getID_Registro_2();
 		$solicitud->delete();
 
 		$responsable_unif = new Responsable(
