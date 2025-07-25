@@ -58,7 +58,7 @@ try {
 							 xID_TipoAccion: $id_tipo_accion
 							);
 		$accion->save();
-		$Con->CloseConexion();
+		$con->CloseConexion();
 		$Mensaje = "El responsable fue eliminado Correctamente";
 		header('Location: ../view_inicio.php?Mensaje=' . $Mensaje);
 	} else {
