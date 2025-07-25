@@ -3205,7 +3205,7 @@ class CtrGeneral{
 							<td>" . $responsable_nombre . "</td>
 							<td>" . $Usuario . "</td>
 							<td>
-							  <button class='btn btn-success' onClick='VerificarModificacion(" . $ID . ",\"" . $valor . "\")'>
+							  <button class='btn btn-success' onClick='VerificarEliminacion(" . $ID . ")'>
 							  	<i class='fa fa-check'></i>
 							  </button>
 							  <button class='btn btn-danger' onClick='CancelarModificacion(" . $ID . ")'>
