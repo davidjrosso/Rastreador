@@ -25,9 +25,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Accion.php");
 
 $ID_Usuario = $_SESSION["Usuario"];
-$id_categoria_unif = $_REQUEST["ID_Categoria_Unif"];
-$id_categoria_del = $_REQUEST["ID_Categoria_Del"];
-
+$id_solicitud = $REQUEST["ID"];
 $fecha = date("Y-m-d");
 $ID_TipoAccion = 2;
 
@@ -35,9 +33,13 @@ try {
 	$con = new Conexion();
 	$con->OpenConexion();
 
+	$solicitud = new Solicitud_unificacion(xID_Solicitud: $id_solicitud);
+
+	$id_categoria_unif = $solicitud->getID_Registro_1();
+	$id_categoria_del = $solicitud->getID_Registro_2();
+
 	$categoria_unif = new Categoria(xID_Categoria: $id_categoria_unif, xConecction: $con);
 	$categoria_del = new Categoria(xID_Categoria: $id_categoria_del, xConecction: $con);
-	$TomarDatosViejos = mysqli_fetch_assoc($RetDatosViejos);
     $cod_categoria_unif = $categoria_unif->getCod_Categoria();
     $cod_categoria_del = $categoria_unif->getCod_Categoria();
 	$Consulta = "update motivos 
@@ -129,5 +131,3 @@ try {
 } catch (Exception $e) {
 	echo "Error: ".$e->getMessage();
 }
-
-?>

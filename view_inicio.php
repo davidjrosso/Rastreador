@@ -170,7 +170,7 @@ $Con->CloseConexion();
               });
         }
 
-       function VerificarModificacion(id, valor){
+       function VerificarModificacion(id, valor) {
               swal({
                 title: "¿Está seguro?",
                 text: "¿Seguro de querer modificar este Responsable?",
@@ -181,6 +181,21 @@ $Con->CloseConexion();
               .then((willDelete) => {
                 if (willDelete) {
                   window.location.href = 'Controladores/ModificarResponsable.php?ID=' + id + '&Responsable=' + valor;
+                }
+              });
+        }
+
+       function VerificarEliminacion(id) {
+              swal({
+                title: "¿Está seguro?",
+                text: "¿Seguro de querer eliminar este Responsable?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+              })
+              .then((willDelete) => {
+                if (willDelete) {
+                  window.location.href = 'Controladores/DeleteResponsable.php?ID=' + id;
                 }
               });
         }
@@ -735,11 +750,14 @@ $Con->CloseConexion();
 <?php  
 if (isset($_REQUEST['Mensaje']) ){
   echo "<script type='text/javascript'>
-          swal('".$_REQUEST['Mensaje']."','','success');
+          swal('" . $_REQUEST['Mensaje'] . "', '', 'success');
         </script>";
 }
-?>
-<?php
+if (isset($_REQUEST['MensajeError']) ){
+  echo "<script type='text/javascript'>
+          swal('" . $_REQUEST['Mensaje'] . "' , '', 'warning');
+        </script>";
+}
 ?>
 </body>
 </html>

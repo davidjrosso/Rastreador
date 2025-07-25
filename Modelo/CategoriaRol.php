@@ -114,6 +114,14 @@ class CategoriaRol {
 	}
 	public function delete()
 	{
+		$consulta = "update categorias_roles
+					 set estado = 0
+					 where id_categoria_rol = " . $this->get_id_categoria_rol();
+		$mensaje_error = "No se pudo modificar la categoria rol";
+		$ret = mysqli_query($this->conecction->Conexion, $consulta);
+		if (!$ret) {
+			throw new Exception($mensaje_error . $consulta, 2);
+		}
 		$this->estado = 0;
 
 	}

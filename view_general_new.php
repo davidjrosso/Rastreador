@@ -409,9 +409,6 @@ $TipoUsuario = $account->get_id_tipo_usuario();
       .then((willDelete) => {
         if (willDelete) {
           reiniciarFormulario();
-          // window.location.href = 'Controladores/DeletePersona.php?ID='+xID;
-          //alert('SI');
-        } else {
         }
       });
     }

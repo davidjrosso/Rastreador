@@ -175,8 +175,8 @@ class Responsable implements JsonSerializable
 	public function delete()
 	{
 		$consulta = "update responsable 
-					set estado = 0
-					where id_resp = " . $this->get_id_responsable();
+					 set estado = 0
+					 where id_resp = " . $this->get_id_responsable();
 		$mensaje_error = "No se pudo actualizar la Responsable";
 		$ret = mysqli_query($this->coneccion_base->Conexion, $consulta);
 		if (!$ret) {
