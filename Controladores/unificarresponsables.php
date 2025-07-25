@@ -112,7 +112,7 @@ try {
 
 		$accion->save();
 
-		$mensaje = "El Responsable se modificó Correctamente";
+		$mensaje = "El Responsable se unificó correctamente";
 		header('Location: ../view_inicio.php?&Mensaje=' . $mensaje);
 	}
 } catch (Exception $e) {

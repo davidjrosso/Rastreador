@@ -102,10 +102,41 @@ $Con->CloseConexion();
         //Terminar esta parte cuando termine lo demas.
        }
 
-       function VerificarUnificacion(xID_Registro_1,xID_Registro_2,xID_TipoUnif,xID_Solicitud){
+       function VerificarUnificacion(
+                                     xID_Registro_1,
+                                     xID_Registro_2,
+                                     xID_TipoUnif,
+                                     xID_Solicitud
+        ){
+              let mensaje = null;
+              switch(xID_TipoUnif){
+                case 'MOTIVO':
+                  mensaje = "motivos";
+                  break; 
+                case 'PERSONAS':
+                  mensaje = "personas";
+                  break; 
+                case 'CENTROS SALUD':
+                  mensaje = "centros de salud";
+                  break; 
+                case 'ESCUELAS':
+                  mensaje = "escuelas";
+                  break; 
+                case 'BARRIOS':
+                  mensaje = "barrios";
+                  break; 
+                case 'CATEGORIA':
+                  mensaje = "categorias";
+                  break; 
+                case 'RESPONSABLE':
+                  mensaje = "responsables";
+                  break; 
+                default: swal("Algo salio mal consulte con el equipo de desarrollo","","warning");break;
+              }
+
               swal({
                 title: "¿Está seguro?",
-                text: "¿Seguro de querer unificar estos motivos?",
+                text: "¿Seguro de querer unificar estos " + mensaje + "?",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
