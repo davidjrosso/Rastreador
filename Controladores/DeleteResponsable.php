@@ -51,6 +51,7 @@ try {
 									   id_responsable: $id_responsable
 									  );
 		$responsable->delete();
+		$solicitud->delete();
 		$accion = new Accion(
 							 xaccountid: $id_usuario,
 							 xFecha: $fecha,
