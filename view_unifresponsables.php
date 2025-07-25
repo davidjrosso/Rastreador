@@ -106,7 +106,7 @@ $Con->CloseConexion();
     <br>
      <div class = "row">
       <div class = "col-10">
-          <p class = "TextoAdvertenciaUnificar">¡ADVERTENCIA! El segundo Responsable seleccionado se unirá a la primer Responsable seleccionado. El segundo Responsable se eliminará.</p>
+          <p class = "TextoAdvertenciaUnificar">¡ADVERTENCIA! El segundo Responsable seleccionado se unirá al primer Responsable seleccionado. El segundo Responsable se eliminará.</p>
           <br>
           <form method = "post" action = "Controladores/pedirunificarresponsable.php">
               <div class="form-group row">
