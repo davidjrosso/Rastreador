@@ -92,7 +92,8 @@
                       if (!nombreCalle && !nro) {
                         map.addPersonMap(
                                       objectJsonPersona.lon,
-                                      objectJsonPersona.lat
+                                      objectJsonPersona.lat,
+                                      null
                                       );
                       } else if (nombreCalle && nro) {
                         map.addPersonMapAddress(

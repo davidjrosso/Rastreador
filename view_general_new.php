@@ -26,6 +26,7 @@ header("Content-Type: text/html;charset=utf-8");
 
 if(!isset($_SESSION["Usuario"])){
     header("Location: Error_Session.php");
+    exit();
 }
 
 $ID_Usuario = $_SESSION["Usuario"];
