@@ -2212,7 +2212,7 @@ $ID_Config = $_REQUEST["ID_Config"];
   <div class="class_modal-dialog modal-dialog" role="document"  id="id_modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" style="margin-left: auto;">Selección de orden</h5>
+        <h5 class="modal-title" style="margin-left: auto;">Configuracion de filas</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -2226,16 +2226,16 @@ $ID_Config = $_REQUEST["ID_Config"];
               Fecha
           </li>
           <li>
-            <input type="checkbox" id="boton-10" class="form-check-input"
-                    onclick="orderOptionCheck(10)">
-            <label class="form-check-label" for="boton-1"></label>
-              Domicilio
-          </li>
-          <li>
             <input type="checkbox" id="boton-11" class="form-check-input"
                     onclick="orderOptionCheck(11)">
             <label class="form-check-label" for="boton-2"></label>
               Barrio
+          </li>
+          <li>
+            <input type="checkbox" id="boton-10" class="form-check-input"
+                    onclick="orderOptionCheck(10)">
+            <label class="form-check-label" for="boton-1"></label>
+              Domicilio
           </li>
           <!--
           <li>
