@@ -103,6 +103,35 @@ $Con->CloseConexion();
         //Terminar esta parte cuando termine lo demas.
        }
 
+       function successHandler(jqxhr, textStatus) {
+          let response = jqxhr.requestJSON;
+          if (response.mensaje) {
+            swal({
+              text: response.mensaje,
+              icon: "success",
+              buttons: true,
+              dangerMode: true,
+            });
+          } else if (response.mensajeerror) {
+            swal({
+              text: response.mensajeerror,
+              icon: "warning",
+              buttons: true,
+              dangerMode: true,
+            });
+          }
+       }
+
+       function errorHandler(jqxhr, textStatus, error) {
+          swal({
+            title: "Error en la solicitud",
+            text: "Error al procesar la solicitud, comunicarse con el administrador",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          });
+       }
+
        function VerificarUnificacion(
                                      xID_Registro_1,
                                      xID_Registro_2,
@@ -164,7 +193,7 @@ $Con->CloseConexion();
                         url = '../Controladores/unificarbarrios.php?ID_Barrio_1=' + xID_Registro_1 + '&ID_Barrio_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
                         break;
                     case 'CATEGORIA':
-                        url = '../Controladores/unificarcategoria.php?ID=' + xID_Solicitud;
+                        url = '../Controladores/unificarcategorias.php?ID=' + xID_Solicitud;
                         break;
                     case 'RESPONSABLE':
                         url = '../Controladores/unificarresponsables.php?ID=' + xID_Solicitud;
@@ -173,9 +202,15 @@ $Con->CloseConexion();
                         swal("Algo salio mal consulte con el equipo de desarrollo", "", "warning");
                         break;
                   }
+                  window.location.href = url;
+                  /*
                   let request = $.ajax({
-                    
+                    url: url,
+                    async: true,
+                    success: successHandler,
+                    error: errorHandler
                   })
+                  */
                 }
               });
         }
@@ -188,18 +223,18 @@ $Con->CloseConexion();
                                       xNum_Motivo,
                                       xCategoria
         ){
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer crear este motivo?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'Controladores/InsertMotivo.php?ID=' + xID + '&Fecha=' + xFecha + '&Motivo=' + xMotivo + '&Codigo=' + xCodigo + '&Num_Motivo=' + xNum_Motivo + '&Cod_Categoria=' + xCategoria;
-                }
-              });
+            swal({
+              title: "¿Está seguro?",
+              text: "¿Seguro de querer crear este motivo?",
+              icon: "warning",
+              buttons: true,
+              dangerMode: true,
+            })
+            .then((willDelete) => {
+              if (willDelete) {
+                window.location.href = 'Controladores/InsertMotivo.php?ID=' + xID + '&Fecha=' + xFecha + '&Motivo=' + xMotivo + '&Codigo=' + xCodigo + '&Num_Motivo=' + xNum_Motivo + '&Cod_Categoria=' + xCategoria;
+              }
+            });
         }
 
        function VerificarModificarMotivo(
@@ -593,7 +628,7 @@ $Con->CloseConexion();
       ?>
     <div class="brand">General</div>
     <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
-  
+
         <div class="menu-list">
   
             <?php

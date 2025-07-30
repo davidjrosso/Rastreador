@@ -71,7 +71,8 @@ $tipo_usuario = $account->get_id_tipo_usuario();
             if (!nombreCalle || !nro) {
               map.addPersonMap(
                             objectJsonBarrio.lat,
-                            objectJsonBarrio.lon
+                            objectJsonBarrio.lon,
+                            null
                             );
             } else if (nombreCalle && nro) {
               map.addPersonMapAddress(
@@ -124,7 +125,8 @@ $tipo_usuario = $account->get_id_tipo_usuario();
               if (objectJsonBarrio.lon && objectJsonBarrio.lat) {
                 map.addPersonMap(
                   objectJsonBarrio.lon,
-                  objectJsonBarrio.lat
+                  objectJsonBarrio.lat,
+                  null
                 );
               } else {
                 $("#mapa-sig").prop('disabled', true);

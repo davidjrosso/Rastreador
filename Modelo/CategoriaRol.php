@@ -28,7 +28,7 @@ class CategoriaRol {
 		} else {
 			$consultar = "select *
 						  from categorias_roles 
-						  where id_categoria_rol = " . $this->id_categoria_rol . " 
+						  where id_categoria_rol = " . $id_categoria_rol . " 
 							and estado = 1";
 			$ejecutar_consultar = mysqli_query(
 				$this->conecction->Conexion,
@@ -38,7 +38,7 @@ class CategoriaRol {
 				$row_id_categoria_rol = $ret["id_categoria_rol"];
 				$row_id_categoria = $ret["id_categoria"];
 				$row_fecha = $ret["fecha"];
-				$row_id_tipo_usuario = $ret["id_tipo_usuario"];
+				$row_id_tipo_usuario = $ret["id_tipousuario"];
 				$row_estado = $ret["estado"];
 
 				$this->id_categoria_rol = $row_id_categoria_rol;
@@ -55,7 +55,7 @@ class CategoriaRol {
         $consultar = "select *
                         from categorias_roles 
                         where id_categoria = " . $id_categoria . "
-                          and id_tipo_usuario = " . $id_tipo_usuario . "
+                          and id_tipousuario = " . $id_tipo_usuario . "
                           and estado = 1";
         $ejecutar_consultar = mysqli_query(
             $connection->Conexion,

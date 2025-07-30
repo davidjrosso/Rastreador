@@ -32,30 +32,34 @@ $fecha = date("Y-m-d");
 $ID_TipoAccion = 2;
 
 try {
-	$solicitud = new Solicitud_unificacion(xID_Solicitud: $id_solicitud);
+	$con = new Conexion();
+	$con->OpenConexion();
+	$solicitud = new Solicitud_unificacion(
+										   coneccion: $con,
+										   xID_Solicitud: $id_solicitud
+										  );
 
 	$id_categoria_unif = $solicitud->getID_Registro_1();
 	$id_categoria_del = $solicitud->getID_Registro_2();
 
 	if (!empty($id_categoria_unif) && !empty($id_categoria_del)) {
-		$con = new Conexion();
-		$con->OpenConexion();
 
 		$categoria_unif = new Categoria(xID_Categoria: $id_categoria_unif, xConecction: $con);
 		if (!Categoria::exist_categoria($con, $id_categoria_del)) {
+			$solicitud->delete();
 			$mensaje = "La categoria a unificar ya a sido unificada o no existe.";
-			header('Location: ../view_unifcategorias.php?MensajeError=' . $mensaje);
+			header('Location: ../view_inicio.php?MensajeError=' . $mensaje);
 		} else {
 			$categoria_del = new Categoria(xID_Categoria: $id_categoria_del, xConecction: $con);
 			$cod_categoria_unif = $categoria_unif->getCod_Categoria();
 			$cod_categoria_del = $categoria_del->getCod_Categoria();
-			$Consulta = "update motivo 
+			$consulta = "update motivo 
 						set cod_categoria = '$cod_categoria_unif' 
 						where cod_categoria = '$cod_categoria_del' 
 						and estado = 1";
 
-			if(!$Ret = mysqli_query($con->Conexion,$Consulta)){
-				throw new Exception("Problemas en la consulta. Consulta: " . $Consulta, 2);		
+			if(!$Ret = mysqli_query($con->Conexion,$consulta)){
+				throw new Exception("Problemas en la consulta. Consulta: " . $consulta, 2);		
 			}
 
 			$categoria_del->delete();
@@ -70,7 +74,8 @@ try {
 			$accion->save();
 			$consulta_permisos = "select *
 								from categorias_roles
-								where id_categoria = $id_categoria_del";
+								where id_categoria = $id_categoria_del
+								  and estado = 1";
 			$message_error = "Problemas al consultar categorias roles";
 			if (!$resultados = mysqli_query($con->Conexion,$consulta_permisos)) {
 				throw new Exception($message_error . ". Consulta: " . $consulta_permisos, 2);
@@ -89,17 +94,21 @@ try {
 													);
 					$categoria_rol->save();
 				}
-				$categoria_rol = new CategoriaRol(id_categoria_rol: $id_categoria_rol);
+				$categoria_rol = new CategoriaRol(
+												  conecction: $con,
+												  id_categoria_rol: $id_categoria_rol
+												 );
 				$categoria_rol->delete();
 			}
 
-			$Con->CloseConexion();
+			$solicitud->delete();
+			$con->CloseConexion();
 			$Mensaje = "La categoria se unifico correctamente";
-			header('Location: ../view_unifcategorias.php?Mensaje=' . $Mensaje);
+			header('Location: ../view_inicio.php?Mensaje=' . $Mensaje);
 		}
 	} else {
 		$Mensaje = "Elija las categorias a unificar";
-		header('Location: ../view_unifcategorias.php?MensajeError=' . $Mensaje);
+		header('Location: ../view_inicio.php?MensajeError=' . $Mensaje);
 	}
 } catch (Exception $e) {
 	echo "Error: " . $e->getMessage();

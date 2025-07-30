@@ -101,7 +101,8 @@ $TipoUsuario = $account->get_id_tipo_usuario();
           if (objectJsonPersona.lat && objectJsonPersona.lon) {
             map.addPersonMap(
                              objectJsonPersona.lat,
-                             objectJsonPersona.lon
+                             objectJsonPersona.lon,
+                             null
                             );
           }
         };
