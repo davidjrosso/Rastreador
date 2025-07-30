@@ -24,7 +24,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Categoria.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/CategoriaRol.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Accion.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_unificacion.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_Unificacion.php");
 
 $ID_Usuario = $_SESSION["Usuario"];
 $id_solicitud = $_REQUEST["ID"];
