@@ -22,7 +22,7 @@ session_start();
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Categoria.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_unificacion.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_Unificacion.php");
 
 
 $id_usuario = $_SESSION["Usuario"];
