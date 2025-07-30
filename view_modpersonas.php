@@ -1,8 +1,29 @@
 <?php
+/*
+ *
+ * This file is part of Rastreador3.
+ *
+ * Rastreador3 is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Rastreador3 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Rastreador3; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
+
 session_start();
-require_once "Controladores/Elements.php";
-require_once "Controladores/CtrGeneral.php";
-require_once "Modelo/Persona.php";
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
+
 header("Content-Type: text/html;charset=utf-8");
 
 /*     CONTROL DE USUARIOS                    */
@@ -16,15 +37,9 @@ if (!preg_match("~view_personas~", $_SERVER["HTTP_REFERER"])) {
   $_SESSION["from_reporte_grafico"] = false;
 }
 
-$Con = new Conexion();
-$Con->OpenConexion();
 $ID_Usuario = $_SESSION["Usuario"];
-$ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
-$MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
-$EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion, $ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
-$Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
-$TipoUsuario = $Ret["ID_TipoUsuario"];
-$Con->CloseConexion();
+$account = new Account(account_id: $ID_Usuario);
+$TipoUsuario = $account->get_id_tipo_usuario();
 ?>
 <!DOCTYPE html>
 <html>
@@ -102,9 +117,12 @@ $Con->CloseConexion();
 
       $("#ID_Calle").on("input", function(e) {
         let nro = $("#NumeroDeCalle").val();
+        let calleId = null;
+        let calleNombre = null;
         if (nro) {
           $("#mapa-sig").prop('disabled', false);
-          calle = $("#ID_Calle").find(":selected").text();
+          calleNombre = $("#ID_Calle").find(":selected").text();
+          calleId = $("#ID_Calle").val();
           nro = $("#NumeroDeCalle").val();
           if (!map) {
             map = init(
@@ -115,18 +133,18 @@ $Con->CloseConexion();
             map.setGeoreferenciacion();
           }
           map.addPersonMapAddress(
-                                  calle,
-                                  nro
+                                  calleNombre,
+                                  nro,
+                                  calleId
                                  );
         }
       });
       $("#NumeroDeCalle").on("input", function(e) {
-        let calle = $("#ID_Calle").val();
+        let calleNombre = $("#ID_Calle").find(":selected").text();
+        let calleId = $("#ID_Calle").val();
         let nro = $(this).val();
-        if (calle && nro) {
+        if (calleNombre && nro) {
           $("#mapa-sig").prop('disabled', false);
-          calle = $("#ID_Calle").find(":selected").text();
-          nro = $("#NumeroDeCalle").val();
           if (!map) {
             map = init(
                        objectJsonPersona.lat, 
@@ -136,8 +154,9 @@ $Con->CloseConexion();
             map.setGeoreferenciacion();
           }
           map.addPersonMapAddress(
-            calle,
-                                  nro
+                                  calleNombre,
+                                  nro,
+                                  calleId
                                  );
         } else {
           $("#mapa-sig").prop('disabled', true);

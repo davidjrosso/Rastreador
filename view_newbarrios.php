@@ -7,6 +7,7 @@
 
   if(!isset($_SESSION["Usuario"])){
       header("Location: Error_Session.php");
+      exit();
   }
 
   $id_usuario = $_SESSION["Usuario"];
@@ -50,10 +51,12 @@
           $("#mapa-sig").on("click", function (e) {
             let calle = $("#Calle").val();
             let nro = $("#NumeroDeCalle").val();
+            nombreCalle = $("#BotonModalDireccion_1").text();
             if (nombreCalle && nro) {
               map.addPersonMapAddress(
                                       nombreCalle,
-                                      nro
+                                      nro,
+                                      calle
                                     );
             }
           });

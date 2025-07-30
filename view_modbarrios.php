@@ -65,8 +65,9 @@ $tipo_usuario = $account->get_id_tipo_usuario();
           });
 
           $("#mapa-sig").on("click", function (e) {
-            let calle = $("#Calle").val();
+            let calleId = $("#Calle").val();
             let nro = $("#NumeroDeCalle").val();
+            nombreCalle = $("#BotonModalDireccion_1").text();
             if (!nombreCalle || !nro) {
               map.addPersonMap(
                             objectJsonBarrio.lat,
@@ -75,7 +76,8 @@ $tipo_usuario = $account->get_id_tipo_usuario();
             } else if (nombreCalle && nro) {
               map.addPersonMapAddress(
                                       nombreCalle,
-                                      nro
+                                      nro,
+                                      calleId
                                     );
             }
           });
@@ -157,7 +159,8 @@ $tipo_usuario = $account->get_id_tipo_usuario();
           $("#mapa-sig").prop('disabled', false);
           map.addPersonMapAddress(
                                   xNombre,
-                                  nro
+                                  nro,
+                                  xID
                                 );
         }
       }

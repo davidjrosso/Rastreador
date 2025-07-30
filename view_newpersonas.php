@@ -97,7 +97,8 @@
                       } else if (nombreCalle && nro) {
                         map.addPersonMapAddress(
                                                 nombreCalle,
-                                                nro
+                                                nro,
+                                                calle
                                               );
                         
                       }
@@ -238,7 +239,7 @@
       xmlhttp.send();
     }
 
-    function seleccionCalle(xNombre,xID){
+    function seleccionCalle(xNombre, xID) {
           var BotonModalPersona = document.getElementById("BotonModalDireccion_1");
           var calle = document.getElementById("Calle");
           nombreCalle = xNombre;
@@ -250,7 +251,8 @@
             $("#mapa-sig").prop('disabled', false);
             map.addPersonMapAddress(
                                     xNombre,
-                                    nro
+                                    nro,
+                                    xID
                                    );
           }
         }

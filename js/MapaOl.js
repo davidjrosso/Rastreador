@@ -90,15 +90,16 @@ export class MapaOl {
         this.addIcon(lon, lat, imagen);
     }
 
-    addPersonMapAddress(calle, nro) {
-      let addres = "https://nominatim.openstreetmap.org/search?street=" + calle + "+" + nro + "&city=rio+tercero&format=jsonv2&limit=1&addressdetails=1&email=martinmonnittola@gmail.com";
+    addPersonMapAddress(calleNombre, nro, calleId) {
+      let addres = "../Controladores/georeferenciadomiciliopersona.php?calle=" + calleId + "&nro=" + nro;
       let barrio = null;
+      let barrioResp = null;
       let request = $.ajax({
         url : addres,
         success : function (data, status, requestHttp) {
             if (requestHttp.responseJSON) {
-              let lon = requestHttp.responseJSON[0].lon;
-              let lat = requestHttp.responseJSON[0].lat;
+              let lon = requestHttp.responseJSON.lon;
+              let lat = requestHttp.responseJSON.lat;
               let imagen = './images/icons/location.png';
               this.addIcon(
                           lat,
@@ -106,8 +107,9 @@ export class MapaOl {
                           imagen
                           );
               this.#mapa.getView().setCenter([lon, lat]);
-              barrio = requestHttp.responseJSON[0].address.neighbourhood;
-              $("#calle-georeferencia").text(calle);
+              barrioResp = requestHttp.responseJSON.barrio;
+              barrio = (barrioResp) ? barrioResp : "no disponible";
+              $("#calle-georeferencia").text(calleNombre);
               $("#nro-georeferencia").text(nro);
               $("#barrio-georeferencia").text(barrio);
               $("#desplegable").show();
