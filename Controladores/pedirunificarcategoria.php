@@ -22,11 +22,12 @@ session_start();
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Categoria.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_unificacion.php");
 
 
-$ID_Usuario = $_SESSION["Usuario"];
-$id_categoria_unif = $_REQUEST["ID_Categoria_Unif"];
-$id_categoria_del = $_REQUEST["ID_Categoria_Del"];
+$id_usuario = $_SESSION["Usuario"];
+$id_categoria_unif = $_REQUEST["ID_Categoria_unif"];
+$id_categoria_del = $_REQUEST["ID_Categoria_del"];
 
 $fecha = date("Y-m-d");
 $ID_TipoAccion = 2;
