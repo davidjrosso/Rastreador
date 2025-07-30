@@ -35,6 +35,7 @@ header("Content-Type: text/html;charset=utf-8");
 /*     CONTROL DE USUARIOS                    */
 if (!isset($_SESSION["Usuario"])) {
   header("Location: Error_Session.php");
+  exit();
 }
 
 $ID_Usuario = $_SESSION["Usuario"];
@@ -829,7 +830,11 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
 
           obj.on("click", function () {
           if (elemento.lat && elemento.lon) {
-            map.addPersonMap(elemento.lat, elemento.lon);
+            map.addPersonMap(
+                              elemento.lat, 
+                              elemento.lon,
+                              elemento.id_persona
+                            );
           }
           });
         });

@@ -85,9 +85,9 @@ export class MapaOl {
 
     }
 
-    addPersonMap(lon, lat) {
+    addPersonMap(lon, lat, id_persona) {
         let imagen = './images/icons/location.png';
-        this.addIcon(lon, lat, imagen);
+        this.addIcon(lon, lat, id_persona, imagen);
     }
 
     addPersonMapAddress(calleNombre, nro, calleId) {
@@ -104,6 +104,7 @@ export class MapaOl {
               this.addIcon(
                           lat,
                           lon,
+                          null,
                           imagen
                           );
               this.#mapa.getView().setCenter([lon, lat]);
@@ -168,7 +169,7 @@ export class MapaOl {
           if (vectorLayer.item(2)) {
             vectorLayer.item(2).getSource().getFeatures()[0].setGeometry(new Point(lonLat));
           } else {
-            addPerson(lonLat[1], lonLat[0]);
+            addPerson(lonLat[1], lonLat[0], null);
           }
           $("#lat").attr("value", lonLat[1]);
           $("#lon").attr("value", lonLat[0]);
@@ -215,7 +216,7 @@ export class MapaOl {
         }
     }
 
-    addIcon(lon, lat, imagen) {
+    addIcon(lon, lat, id_persona, imagen) {
         let iconFeatures=[];
         let pos = [parseFloat(lat), parseFloat(lon)];
         let point = new Point(pos);
@@ -232,12 +233,13 @@ export class MapaOl {
           icon = list.at(-1);
         }
 
-        if (icon && icon.values_.descripcion == "icono") {
+        if (icon && icon.values_.tipo == "icono") {
            icon.setGeometry(point);
         } else {
           let iconFeature = new Feature({
             geometry: point,
-            descripcion: "icono"
+            description: id_persona,
+            tipo: "icono"
           });
 
           if (vectorLayer.item(4)) {
@@ -286,7 +288,8 @@ export class MapaOl {
 
       let textLabel = new Feature({
         geometry: point,
-        description: elemento.id_persona
+        description: elemento.id_persona,
+        tipo: "motivo"
       });
 
       function styleFunction() {

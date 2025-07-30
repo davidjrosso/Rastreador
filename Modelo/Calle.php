@@ -99,6 +99,25 @@ class Calle {
 		return $calle;
 	}
 
+	public static function existe_id_calle($id_calle=null, $connection=null)
+	{
+		if ($id_calle) {
+			$consulta = "select *
+						 from calle
+						 where id_calle = $id_calle
+						   and estado = 1
+						 order by calle_nombre asc;";
+			$query_object = mysqli_query(
+								  $connection->Conexion, 
+								  $consulta
+								  	   ) or die("Error al consultar datos");
+			if (mysqli_num_rows($query_object) > 0) {
+				$existe_calle = true;
+			};
+		}
+		return $existe_calle;
+	}
+
 	public static function existe_calle_con_barrio_nro(
 														$calle=null,
 														$id_bario=null,
