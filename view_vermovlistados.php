@@ -2220,6 +2220,25 @@ $ID_Config = $_REQUEST["ID_Config"];
       <div class="modal-body">
         <ul type=none>
           <li>
+            <input type="checkbox" id="boton-0" class="form-check-input"
+                    onclick="orderOptionCheck(0)">
+            <label class="form-check-label" for="boton-0"></label>
+              Fecha
+          </li>
+          <li>
+            <input type="checkbox" id="boton-10" class="form-check-input"
+                    onclick="orderOptionCheck(10)">
+            <label class="form-check-label" for="boton-1"></label>
+              Domicilio
+          </li>
+          <li>
+            <input type="checkbox" id="boton-11" class="form-check-input"
+                    onclick="orderOptionCheck(11)">
+            <label class="form-check-label" for="boton-2"></label>
+              Barrio
+          </li>
+          <!--
+          <li>
             <button type="button" id="boton-disable-0" class="btn buttom-order-list btn-outline-light"
                     onclick="orderOption(0, -1)">
               ASC
@@ -2445,6 +2464,7 @@ $ID_Config = $_REQUEST["ID_Config"];
             </button>
             Otras instituciones
           </li>
+          -->
         </ul>
       </div>
       <div class="modal-footer modal-footer-flex-center">
@@ -2489,6 +2509,19 @@ $ID_Config = $_REQUEST["ID_Config"];
     }
   }
 
+  function orderOptionCheck(idOption) {
+    if (listaOrden.has(idOption)) {
+      listaOrden.delete(idOption);
+    } else {
+       listaOrden.set(idOption, 1);
+    }
+
+    if (idOption >= 1 && listaOrden.has(0)) {
+      listaOrden.delete(0);
+      listaOrden.set(0, 1);
+    }
+  }
+
   function lessThan(a, b, indice) {
     let ret_valor = false;
     let elementA = null;
@@ -2517,7 +2550,18 @@ $ID_Config = $_REQUEST["ID_Config"];
       elementB = elementB.join("-");
       ret_valor = (Date.parse(elementA) < Date.parse(elementB));
     } else {
-      ret_valor = (a < b);
+      elementA = a.trim().toLowerCase();
+      elementB = b.trim().toLowerCase();
+
+      if (isNaN(elementA) && !isNaN(elementB)) {
+        ret_valor = true;  
+      } else if (!isNaN(elementA) && isNaN(elementB)) {
+        ret_valor = false;
+      } else if (isNaN(elementA) && isNaN(elementB)) {
+        ret_valor = (a < b);
+      } else {
+        ret_valor = (elementA.toLowerCase() < elementB.toLowerCase());
+      }
     }
     return ret_valor;
   }
@@ -2551,7 +2595,17 @@ $ID_Config = $_REQUEST["ID_Config"];
 
       ret_valor = (Date.parse(elementA) > Date.parse(elementB));
     } else {
-      ret_valor = (a > b);
+      elementA = a.trim();
+      elementB = b.trim();
+      if (isNaN(elementA) && !isNaN(elementB)) {
+        ret_valor = false;  
+      } else if (!isNaN(elementA) && isNaN(elementB)) {
+        ret_valor = true;
+      } else if (isNaN(elementA) && isNaN(elementB)) {
+        ret_valor = (a > b);
+      } else {
+        ret_valor = (elementA.toLowerCase() > elementB.toLowerCase());
+      }
     }
     return ret_valor;
   }
