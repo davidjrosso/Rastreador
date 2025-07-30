@@ -182,7 +182,7 @@ $ID_Config = $_REQUEST["ID_Config"];
           <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_listados.php'">Atras</button>
           <button type="button" class="btn btn-secondary" onclick="enviarImprimirPdf();"> Imprimir</button>
         </div>
-        <div class="col-md-7">
+        <div class="col-md-6">
         <?php
         $Con = new Conexion();
         $Con->OpenConexion();
@@ -799,6 +799,24 @@ $ID_Config = $_REQUEST["ID_Config"];
 
       	?>
         <center><p class = "LblForm">ENTRE: <?php echo $Etiqueta_Fecha_Inicio." Y " . $Etiqueta_Fecha_Fin; ?></p></center>
+        </div>
+        <div class="col-md-4" style="padding-left: 2px; padding-right: 2px;">
+            <button type = "button" class = "btn btn-secondary" data-toggle="modal" 
+                    data-target="#orden-modal">
+                config. filas
+            </button>
+            <button type = "button" class = "btn btn-secondary" data-toggle="modal" 
+                    data-target="#configModal">
+                config. columnas
+            </button>
+            <button type="button" class="btn btn-secondary" onClick="htmlExcel('tabla-movimiento-general', 'excel');">
+                Excel
+            </button>
+        </div>
+     </div>
+     <div class = "row">
+      <div class="col-md-2"></div>
+      <div class="col-md-7">
         <span> Filtros seleccionados </span>
         <!-- <i class="fa fa-filter"></i> -->
         <?php
@@ -808,12 +826,8 @@ $ID_Config = $_REQUEST["ID_Config"];
         }
         ?>
         </div>
-        <div class="col-md-3">
-            <button type = "button" class = "btn btn-secondary" data-toggle="modal" data-target="#orden-modal">Orden</button>
-            <button type = "button" class = "btn btn-secondary" data-toggle="modal" data-target="#configModal">Config</button>
-            <button type="button" class="btn btn-secondary" onClick="htmlExcel('tabla-movimiento-general', 'excel');">Excel</button>
-        </div>
-     </div>
+      <div class="col-md-3"></div>
+    </div>
      <div class = "row">
       <div class = "col-10">
           <!-- Search -->
