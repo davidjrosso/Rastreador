@@ -1,4 +1,23 @@
 <?php 
+/*
+ *
+ * This file is part of Rastreador3.
+ *
+ * Rastreador3 is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Rastreador3 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Rastreador3; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
+
 session_start(); 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
@@ -22,9 +41,10 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   <meta charset="utf-8">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
   <link rel="import" href="https://sites.google.com/view/generales2019riotercero/página-principal">
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" 	crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
@@ -32,7 +52,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" 	crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" 		crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
@@ -151,12 +170,14 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                     echo $Element->CBModFormas_Categoria($ID_Forma);?>
                   </div>
                 </div>
+                <!--
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Código: </label>
                   <div class="col-md-10">
                     <input type="text" class="form-control" name = "Codigo" id="inputPassword" autocomplete="off" readonly value = "<?php echo $Cod_Categoria; ?>">
                   </div>
                 </div>
+                -->
                 <div class="form-group row">
                   <label id="grupousuarios" for="grupousuarios" class="col-md-2 col-form-label LblForm">Permisos : </label>                  
                   <div class="col-md-10">
@@ -295,26 +316,6 @@ if(isset($_REQUEST['MensajeError'])){
     swal('".$_REQUEST['MensajeError']."','','warning');
 </script>";
 }
-?>
-<?php
-/*
- *
- * This file is part of Rastreador3.
- *
- * Rastreador3 is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Rastreador3 is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Rastreador3; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- */
 ?>
 </body>
 </html>
