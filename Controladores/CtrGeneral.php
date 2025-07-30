@@ -2016,8 +2016,14 @@ class CtrGeneral{
 												);				
 					break;
 					case 6: 
-						$registro_1 = new Categoria(xID_Categoria: $ID_Registro_1);
-						$registro_2 = new Categoria(xID_Categoria: $ID_Registro_1);					
+						$registro_1 = new Categoria(
+													xConecction: $Con,
+													xID_Categoria: $ID_Registro_1
+												   );
+						$registro_2 = new Categoria(
+													xConecction: $Con,
+													xID_Categoria: $ID_Registro_2
+												   );
 					break;
 					case 7: 
 						$registro_1 = new Responsable(
