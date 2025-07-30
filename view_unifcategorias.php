@@ -126,7 +126,7 @@ $Con->CloseConexion();
       <div class = "col-10">
           <p class = "TextoAdvertenciaUnificar">¡ADVERTENCIA! La segunda Categoria seleccionada se unirá a la primer Categoria seleccionada. La segunda Categoria se eliminará.</p>
           <br>
-          <form method = "post" action = "Controladores/unificarcategorias.php">
+          <form method = "post" action = "Controladores/pedirunificarcategoria.php">
               <div class="form-group row">
                   <label for="categoria_1" class="col-md-3 col-form-label LblForm">Primer Categoria: </label>
                   <div class="col-md-9">
