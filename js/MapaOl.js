@@ -114,6 +114,8 @@ export class MapaOl {
               $("#nro-georeferencia").text(nro);
               $("#barrio-georeferencia").text(barrio);
               $("#desplegable").show();
+              $("#lat").val(lat);
+              $("#lon").val(lon);
             }
         }.bind(this),
         error: function (data, status, requestHttp) {
