@@ -29,6 +29,7 @@ header("Content-Type: text/html;charset=utf-8");
 /*     CONTROL DE USUARIOS                    */
 if (!isset($_SESSION["Usuario"])) {
     header("Location: Error_Session.php");
+    exit();
 }
 
 $Con = new Conexion();
@@ -78,7 +79,7 @@ $Con->CloseConexion();
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script>
-       $(document).ready(function(){
+       $(document).ready(function() {
               var date_input=$('input[name="date"]'); //our date input has the name "date"
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
               date_input.datepicker({
@@ -89,7 +90,7 @@ $Con->CloseConexion();
               });
           });
 
-       function CalcularPrecio(){
+       function CalcularPrecio() {
         //var Combus = document.getElementById("Combustible").value;
         var Litros = document.getElementById("Litros").value;
         var Combustible = document.getElementById("Combustible");
@@ -109,50 +110,72 @@ $Con->CloseConexion();
                                      xID_Solicitud
         ){
               let mensaje = null;
-              switch(xID_TipoUnif){
+              let url = null;
+              switch (xID_TipoUnif) {
                 case 'MOTIVO':
-                  mensaje = "motivos";
+                  mensaje = "estos motivos";
                   break; 
                 case 'PERSONAS':
-                  mensaje = "personas";
+                  mensaje = "estas personas";
                   break; 
                 case 'CENTROS SALUD':
-                  mensaje = "centros de salud";
+                  mensaje = "estos centros de salud";
                   break; 
                 case 'ESCUELAS':
-                  mensaje = "escuelas";
+                  mensaje = "estas escuelas";
                   break; 
                 case 'BARRIOS':
-                  mensaje = "barrios";
+                  mensaje = "estos barrios";
                   break; 
                 case 'CATEGORIA':
-                  mensaje = "categorias";
+                  mensaje = "estas categorias";
                   break; 
                 case 'RESPONSABLE':
-                  mensaje = "responsables";
+                  mensaje = "estos responsables";
                   break; 
-                default: swal("Algo salio mal consulte con el equipo de desarrollo","","warning");break;
+                default: 
+                  swal("Algo salio mal consulte con el equipo de desarrollo", "", "warning");
+                  break;
               }
 
               swal({
                 title: "¿Está seguro?",
-                text: "¿Seguro de querer unificar estos " + mensaje + "?",
+                text: "¿Seguro de querer unificar " + mensaje + "?",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  switch(xID_TipoUnif){
-                    case 'MOTIVO': window.location.href = 'Controladores/unificarmotivos.php?ID_Motivo_1='+xID_Registro_1+'&ID_Motivo_2='+xID_Registro_2+'&ID_Solicitud='+xID_Solicitud; break; 
-                    case 'PERSONAS': window.location.href = 'Controladores/unificarpersonas.php?ID_Persona_1='+xID_Registro_1+'&ID_Persona_2='+xID_Registro_2+'&ID_Solicitud='+xID_Solicitud; break;
-                    case 'CENTROS SALUD': window.location.href = 'Controladores/unificarcentros.php?ID_Centro_1='+xID_Registro_1+'&ID_Centro_2='+xID_Registro_2+'&ID_Solicitud='+xID_Solicitud; break;
-                    case 'ESCUELAS': window.location.href = 'Controladores/unificarescuelas.php?ID_Escuela_1='+xID_Registro_1+'&ID_Escuela_2='+xID_Registro_2+'&ID_Solicitud='+xID_Solicitud; break;
-                    case 'BARRIOS': window.location.href = 'Controladores/unificarbarrios.php?ID_Barrio_1='+xID_Registro_1+'&ID_Barrio_2='+xID_Registro_2+'&ID_Solicitud='+xID_Solicitud; break;
-                    case 'CATEGORIA': window.location.href = 'Controladores/unificarcategoria.php?ID=' + xID_Solicitud; break;
-                    case 'RESPONSABLE': window.location.href = 'Controladores/unificarresponsables.php?ID=' + xID_Solicitud; break;
-                    default: swal("Algo salio mal consulte con el equipo de desarrollo","","warning");break;
+                  switch (xID_TipoUnif) {
+                    case 'MOTIVO':
+                        url = '../Controladores/unificarmotivos.php?ID_Motivo_1=' + xID_Registro_1 + '&ID_Motivo_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
+                        break;
+                    case 'PERSONAS':
+                        url = '../Controladores/unificarpersonas.php?ID_Persona_1=' + xID_Registro_1 + '&ID_Persona_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
+                        break;
+                    case 'CENTROS SALUD':
+                        url = '../Controladores/unificarcentros.php?ID_Centro_1=' + xID_Registro_1 + '&ID_Centro_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
+                        break;
+                    case 'ESCUELAS':
+                        url = '../Controladores/unificarescuelas.php?ID_Escuela_1=' + xID_Registro_1 + '&ID_Escuela_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
+                        break;
+                    case 'BARRIOS':
+                        url = '../Controladores/unificarbarrios.php?ID_Barrio_1=' + xID_Registro_1 + '&ID_Barrio_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
+                        break;
+                    case 'CATEGORIA':
+                        url = '../Controladores/unificarcategoria.php?ID=' + xID_Solicitud;
+                        break;
+                    case 'RESPONSABLE':
+                        url = '../Controladores/unificarresponsables.php?ID=' + xID_Solicitud;
+                        break;
+                    default:
+                        swal("Algo salio mal consulte con el equipo de desarrollo", "", "warning");
+                        break;
                   }
+                  let request = $.ajax({
+                    
+                  })
                 }
               });
         }
@@ -174,7 +197,7 @@ $Con->CloseConexion();
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/InsertMotivo.php?ID='+xID+'&Fecha='+xFecha+'&Motivo='+xMotivo+'&Codigo='+xCodigo+'&Num_Motivo='+xNum_Motivo+'&Cod_Categoria='+xCategoria;
+                  window.location.href = 'Controladores/InsertMotivo.php?ID=' + xID + '&Fecha=' + xFecha + '&Motivo=' + xMotivo + '&Codigo=' + xCodigo + '&Num_Motivo=' + xNum_Motivo + '&Cod_Categoria=' + xCategoria;
                 }
               });
         }
@@ -196,7 +219,7 @@ $Con->CloseConexion();
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/ModificarMotivo.php?ID='+xID+'&Fecha='+xFecha+'&Motivo='+xMotivo+'&Codigo='+xCodigo+'&Num_Motivo='+xNum_Motivo+'&ID_Motivo='+xID_Motivo;                
+                  window.location.href = 'Controladores/ModificarMotivo.php?ID=' + xID + '&Fecha=' + xFecha + '&Motivo=' + xMotivo + '&Codigo=' + xCodigo + '&Num_Motivo=' + xNum_Motivo + '&ID_Motivo=' + xID_Motivo;                
                 }
               });
         }
@@ -231,7 +254,7 @@ $Con->CloseConexion();
               });
         }
 
-        function VerificarCrearCategoria(xID,xFecha,xCodigo,xCategoria,xID_Forma,xColor){
+        function VerificarCrearCategoria(xID,xFecha,xCodigo,xCategoria,xID_Forma,xColor) {
               var ColorBase = btoa(xColor);
               swal({
                 title: "¿Está seguro?",
@@ -242,12 +265,12 @@ $Con->CloseConexion();
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/InsertCategoria.php?ID='+xID+'&Fecha='+xFecha+'&Codigo='+xCodigo+'&Categoria='+xCategoria+'&ID_Forma='+xID_Forma+'&ID_Categoria='+xID+'&Color='+ColorBase;
+                  window.location.href = 'Controladores/InsertCategoria.php?ID=' + xID + '&Fecha=' + xFecha + '&Codigo=' + xCodigo + '&Categoria=' + xCategoria + '&ID_Forma=' + xID_Forma + '&ID_Categoria=' + xID + '&Color='+ColorBase;
                 }
               });
         }
 
-        function VerificarModificarCategoria(xID,xFecha,xCodigo,xCategoria,xID_Forma,xNuevoColor,xID_Categoria){
+        function VerificarModificarCategoria(xID,xFecha,xCodigo,xCategoria,xID_Forma,xNuevoColor,xID_Categoria) {
               var NuevoColorBase = btoa(xNuevoColor);
 
               swal({
@@ -259,12 +282,12 @@ $Con->CloseConexion();
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/ModificarCategoria.php?ID='+xID+'&Fecha='+xFecha+'&Codigo='+xCodigo+'&Categoria='+xCategoria+'&ID_Forma='+xID_Forma+'&ID_Categoria='+xID_Categoria+'&CodigoColor='+NuevoColorBase;
+                  window.location.href = 'Controladores/ModificarCategoria.php?ID=' + xID + '&Fecha=' + xFecha + '&Codigo=' + xCodigo + '&Categoria=' + xCategoria + '&ID_Forma=' + xID_Forma + '&ID_Categoria=' + xID_Categoria + '&CodigoColor='+NuevoColorBase;
                 }
               });
         }
 
-       function VerificarEliminarMotivo(xID_Motivo){
+       function VerificarEliminarMotivo(xID_Motivo) {
               swal({
                 title: "¿Está seguro?",
                 text: "¿Seguro de querer eliminar este motivo?",
@@ -274,12 +297,12 @@ $Con->CloseConexion();
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/DeleteMotivo.php?ID='+xID_Motivo;
+                  window.location.href = 'Controladores/DeleteMotivo.php?ID=' + xID_Motivo;
                 }
               });
         }
 
-        function VerificarEliminarCategoria(xID_Categoria){
+        function VerificarEliminarCategoria(xID_Categoria) {
               swal({
                 title: "¿Está seguro?",
                 text: "¿Seguro de querer eliminar este categoria?",
@@ -289,7 +312,7 @@ $Con->CloseConexion();
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/DeleteCategoria.php?ID='+xID_Categoria;
+                  window.location.href = 'Controladores/DeleteCategoria.php?ID=' + xID_Categoria;
                 }
               });
         }
@@ -304,13 +327,13 @@ $Con->CloseConexion();
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/DeleteNotificacion.php?ID='+xID_Notificacion;
+                  window.location.href = 'Controladores/DeleteNotificacion.php?ID=' + xID_Notificacion;
                 } else {
                 }
               });
         }
 
-        function VerificarModificarUsuario(xID_Solcitud){
+        function VerificarModificarUsuario(xID_Solcitud) {
               swal({
                 title: "¿Está seguro?",
                 text: "¿Seguro de querer procesar esta solicitud?",
@@ -325,7 +348,7 @@ $Con->CloseConexion();
               });
         }
 
-        function CancelarUnificacion(xID_Peticion){
+        function CancelarUnificacion(xID_Peticion) {
               swal({
                 title: "¿Está seguro?",
                 text: "¿Seguro de querer borrar esta petición de unificación?",
@@ -335,7 +358,7 @@ $Con->CloseConexion();
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/DeletePeticion.php?ID='+xID_Peticion;
+                  window.location.href = 'Controladores/DeletePeticion.php?ID=' + xID_Peticion;
                 }
               });
         }
@@ -350,7 +373,7 @@ $Con->CloseConexion();
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/DeletePeticionModificacionMotivo.php?ID='+xID;
+                  window.location.href = 'Controladores/DeletePeticionModificacionMotivo.php?ID=' + xID;
                 }
               });
         }
@@ -370,7 +393,7 @@ $Con->CloseConexion();
               });
         }
 
-        function CancelarCrearMotivo(xID){
+        function CancelarCrearMotivo(xID) {
               swal({
                 title: "¿Está seguro?",
                 text: "¿Seguro de querer borrar esta petición de creación?",
@@ -380,12 +403,12 @@ $Con->CloseConexion();
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/DeletePeticionCrearMotivo.php?ID='+xID;
+                  window.location.href = 'Controladores/DeletePeticionCrearMotivo.php?ID=' + xID;
                 }
               });
         }
 
-        function CancelarCrearCategoria(xID){
+        function CancelarCrearCategoria(xID) {
               swal({
                 title: "¿Está seguro?",
                 text: "¿Seguro de querer borrar esta petición de creación?",
@@ -395,12 +418,12 @@ $Con->CloseConexion();
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/DeletePeticionCrearCategoria.php?ID='+xID;
+                  window.location.href = 'Controladores/DeletePeticionCrearCategoria.php?ID=' + xID;
                 }
               });
         }
 
-        function CancelarModificacionCategoria(xID){
+        function CancelarModificacionCategoria(xID) {
               swal({
                 title: "¿Está seguro?",
                 text: "¿Seguro de querer borrar esta petición de modificación?",
@@ -415,7 +438,7 @@ $Con->CloseConexion();
               });
         }
 
-        function CancelarEliminacionMotivo(xID){
+        function CancelarEliminacionMotivo(xID) {
               swal({
                 title: "¿Está seguro?",
                 text: "¿Seguro de querer borrar esta petición de eliminación?",
@@ -425,7 +448,7 @@ $Con->CloseConexion();
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/DeletePeticionEliminacion.php?ID='+xID;
+                  window.location.href = 'Controladores/DeletePeticionEliminacion.php?ID=' + xID;
                 }
               });
         }
@@ -440,7 +463,7 @@ $Con->CloseConexion();
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/DeletePeticionEliminacionCategoria.php?ID='+xID;
+                  window.location.href = 'Controladores/DeletePeticionEliminacionCategoria.php?ID=' + xID;
                 }
               });
         }
@@ -686,7 +709,7 @@ $Con->CloseConexion();
               echo $CtrGeneral->getSolicitudes_Unificacion();
             }
             
-            if ($CantCrearMot > 0 ){
+            if ($CantCrearMot > 0 ) {
               ?>
                 <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Crear Motivos</h3>
               <?php
@@ -779,12 +802,12 @@ $Con->CloseConexion();
   </div>
 </div>
 <?php  
-if (isset($_REQUEST['Mensaje']) ){
+if (isset($_REQUEST['Mensaje']) ) {
   echo "<script type='text/javascript'>
           swal('" . $_REQUEST['Mensaje'] . "', '', 'success');
         </script>";
 }
-if (isset($_REQUEST['MensajeError']) ){
+if (isset($_REQUEST['MensajeError']) ) {
   echo "<script type='text/javascript'>
           swal('" . $_REQUEST['MensajeError'] . "' , '', 'warning');
         </script>";
