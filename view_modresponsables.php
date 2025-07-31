@@ -101,7 +101,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
           <!-- Search -->
         <div class = "row">
           <?php  
-            if(isset($_REQUEST["ID"]) && $_REQUEST["ID"]!=null){
+            if (isset($_REQUEST["ID"]) && $_REQUEST["ID"] != null) {
               $id_responsable = $_REQUEST["ID"];
 
               $con = new Conexion();
@@ -145,8 +145,8 @@ $TipoUsuario = $account->get_id_tipo_usuario();
             </div>
             </div>
               <?php  
-            }else{
-              $Mensaje = "No se pudo consultar los Datos porque no se pudo obtener el ID del Motivo";
+            } else {
+              $Mensaje = "No se pudo consultar los Datos porque no se pudo obtener el ID del Responsable";
               echo $Mensaje;
             }
           ?>
