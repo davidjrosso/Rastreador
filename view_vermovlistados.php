@@ -2550,18 +2550,9 @@ $ID_Config = $_REQUEST["ID_Config"];
       elementB = elementB.join("-");
       ret_valor = (Date.parse(elementA) < Date.parse(elementB));
     } else {
-      elementA = a.trim().toLowerCase();
-      elementB = b.trim().toLowerCase();
-
-      if (isNaN(elementA) && !isNaN(elementB)) {
-        ret_valor = true;  
-      } else if (!isNaN(elementA) && isNaN(elementB)) {
-        ret_valor = false;
-      } else if (isNaN(elementA) && isNaN(elementB)) {
-        ret_valor = (a < b);
-      } else {
-        ret_valor = (elementA.toLowerCase() < elementB.toLowerCase());
-      }
+      elementA = a.trim();
+      elementB = b.trim();
+      ret_valor = (elementA.toLowerCase() < elementB.toLowerCase());
     }
     return ret_valor;
   }
@@ -2597,15 +2588,7 @@ $ID_Config = $_REQUEST["ID_Config"];
     } else {
       elementA = a.trim();
       elementB = b.trim();
-      if (isNaN(elementA) && !isNaN(elementB)) {
-        ret_valor = false;  
-      } else if (!isNaN(elementA) && isNaN(elementB)) {
-        ret_valor = true;
-      } else if (isNaN(elementA) && isNaN(elementB)) {
-        ret_valor = (a > b);
-      } else {
-        ret_valor = (elementA.toLowerCase() > elementB.toLowerCase());
-      }
+      ret_valor = (elementA.toLowerCase() > elementB.toLowerCase());
     }
     return ret_valor;
   }
@@ -2615,16 +2598,16 @@ $ID_Config = $_REQUEST["ID_Config"];
       let listaValores = [].concat(listVal);
       let result = 0;
       let elem = null;
-      let listaIndices = (listInd) ? listInd.slice(1) : [];
-      let lista = (listVal) ? listVal.slice(1) : [];
-      let indice = (listaFilas) ? listaFilas.shift() : null;
-      let orden = (listaValores) ? listaValores.shift() : null;
-      let nodeInnerA = elementoA.children[indice];
-      let nodeInnerB = elementoB.children[indice];
-      nodeInnerA = (nodeInnerA) ? nodeInnerA.outerText : null;
-      nodeInnerB = (nodeInnerB) ? nodeInnerB.outerText : null;
-
       if (listInd.length > 0) {
+        let listaIndices = (listInd) ? listInd.slice(1) : [];
+        let lista = (listVal) ? listVal.slice(1) : [];
+        let indice = (listaFilas) ? listaFilas.shift() : null;
+        let orden = (listaValores) ? listaValores.shift() : null;
+        let nodeInnerA = elementoA.children[indice];
+        let nodeInnerB = elementoB.children[indice];
+        nodeInnerA = (nodeInnerA) ? nodeInnerA.outerText : null;
+        nodeInnerB = (nodeInnerB) ? nodeInnerB.outerText : null;
+
         if (moreThan(nodeInnerA, nodeInnerA, indice)) {
           result = (-1) * orden;
         } else if (lessThan(nodeInnerA, nodeInnerB, indice)) {
@@ -2660,7 +2643,7 @@ $ID_Config = $_REQUEST["ID_Config"];
           if (moreThan(nodeInnerA, nodeInnerB, indice)) {
             result = (-1) * orden;
           } else if (lessThan(nodeInnerA, nodeInnerB, indice)) {
-            result = 1  * orden;
+            result = 1 * orden;
           } else {
             result = orderListOption(elementoA, elementoB, listaIndices, listaVal);
           }
