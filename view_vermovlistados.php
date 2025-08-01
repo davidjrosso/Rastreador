@@ -2513,7 +2513,7 @@ $ID_Config = $_REQUEST["ID_Config"];
     if (listaOrden.has(idOption)) {
       listaOrden.delete(idOption);
     } else {
-       listaOrden.set(idOption, 1);
+       listaOrden.set(idOption, -1);
     }
 
     if (idOption >= 1 && listaOrden.has(0)) {
