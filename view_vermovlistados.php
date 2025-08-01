@@ -2490,6 +2490,35 @@ $ID_Config = $_REQUEST["ID_Config"];
   fechaHasta = "<?php echo $Fecha_Fin;?>";
   filtroSeleccionados = <?php echo json_encode($filtros); ?>;
 
+
+  function characterAscii(elem) {
+        let caracter = null;
+        switch (elem) {
+          case "á":
+            caracter = "a";
+            break;
+          case "é":
+            caracter = "e";
+            break;
+          case "í":
+            caracter = "i";
+            break;
+          case "ó":
+            caracter = "o";
+            break;
+          case "ú":
+            caracter = "u";
+            break;
+          case "ñ":
+            caracter = "n";
+            break;
+          default:
+            caracter = '';
+            break;
+        }
+        return caracter;
+      }
+  
   function orderOption(idOption, orden) {
     if (listaOrden.has(idOption)) listaOrden.delete(idOption);
     if (orden != 0) listaOrden.set(idOption, orden);
@@ -2550,9 +2579,11 @@ $ID_Config = $_REQUEST["ID_Config"];
       elementB = elementB.join("-");
       ret_valor = (Date.parse(elementA) < Date.parse(elementB));
     } else {
-      elementA = a.trim();
-      elementB = b.trim();
-      ret_valor = (elementA.toLowerCase() < elementB.toLowerCase());
+      elementA = a.trim().toLowerCase();
+      elementB = b.trim().toLowerCase();
+      elementA = elementA.replace(/[áéíóúñ]/, characterAscii);
+      elementB = elementB.replace(/[áéíóúñ]/, characterAscii);
+      ret_valor = (elementA < elementB);
     }
     return ret_valor;
   }
@@ -2586,9 +2617,11 @@ $ID_Config = $_REQUEST["ID_Config"];
 
       ret_valor = (Date.parse(elementA) > Date.parse(elementB));
     } else {
-      elementA = a.trim();
-      elementB = b.trim();
-      ret_valor = (elementA.toLowerCase() > elementB.toLowerCase());
+      elementA = a.trim().toLowerCase();
+      elementB = b.trim().toLowerCase();
+      elementA = elementA.replace(/[áéíóúñ]/, characterAscii);
+      elementB = elementB.replace(/[áéíóúñ]/, characterAscii);
+      ret_valor = (elementA > elementB);
     }
     return ret_valor;
   }
