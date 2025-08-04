@@ -467,6 +467,9 @@ public function getMenuGeneralUsuario($ID)
                 <li class="collapsed active" onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                 </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifresponsables.php\'">
+                  <a href="view_unifresponsables.php"><i class="fa fa-file-text fa-lg"></i> Responsables</a>
+                </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
                   <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
                 </li>
@@ -495,6 +498,9 @@ public function getMenuGeneralUsuario($ID)
             <ul id="menu-content" class="menu-content collapse out">
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifresponsables.php\'">
+                  <a href="view_unifresponsables.php"><i class="fa fa-file-text fa-lg"></i> Responsables</a>
                 </li>
                 <li class="collapsed active" onClick = "location.href = \'view_unifmotivos.php\'">
                   <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
@@ -525,6 +531,9 @@ public function getMenuGeneralUsuario($ID)
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                 </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifresponsables.php\'">
+                  <a href="view_unifresponsables.php"><i class="fa fa-file-text fa-lg"></i> Responsables</a>
+                </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
                   <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
                 </li>
@@ -553,6 +562,9 @@ public function getMenuGeneralUsuario($ID)
             <ul id="menu-content" class="menu-content collapse out">
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifresponsables.php\'">
+                  <a href="view_unifresponsables.php"><i class="fa fa-file-text fa-lg"></i> Responsables</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
                   <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
@@ -583,6 +595,9 @@ public function getMenuGeneralUsuario($ID)
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                 </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifresponsables.php\'">
+                  <a href="view_unifresponsables.php"><i class="fa fa-file-text fa-lg"></i> Responsables</a>
+                </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
                   <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
                 </li>
@@ -612,6 +627,9 @@ public function getMenuGeneralUsuario($ID)
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                 </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifresponsables.php\'">
+                  <a href="view_unifresponsables.php"><i class="fa fa-file-text fa-lg"></i> Responsables</a>
+                </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
                   <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
                 </li>
@@ -640,6 +658,9 @@ public function getMenuGeneralUsuario($ID)
             <ul id="menu-content" class="menu-content collapse out">
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifresponsables.php\'">
+                  <a href="view_unifresponsables.php"><i class="fa fa-file-text fa-lg"></i> Responsables</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
                   <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
@@ -671,6 +692,9 @@ public function getMenuGeneralUsuario($ID)
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                 </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifresponsables.php\'">
+                  <a href="view_unifresponsables.php"><i class="fa fa-file-text fa-lg"></i> Responsables</a>
+                </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
                   <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
                 </li>
@@ -695,10 +719,47 @@ public function getMenuGeneralUsuario($ID)
             </ul>
         </div>';
         break;
-      default:echo '<div class="menu-list">
+        case self::PAGINA_UNIFICACION_RESPONSABLE:
+          echo '<div class="menu-list">
             <ul id="menu-content" class="menu-content collapse out">
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
+                </li>
+                <li class="collapsed active" onClick = "location.href = \'view_unifresponsables.php\'">
+                  <a href="view_unifresponsables.php"><i class="fa fa-file-text fa-lg"></i> Responsables</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
+                  <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifcategorias.php\'">
+                  <a href="view_unifcategorias.php"><i class="fa fa-file-text fa-lg"></i> Categorias</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifcentros.php\'">
+                  <a href="view_unifcentros.php"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
+                  <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
+                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
+                  <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
+                </li>
+               <li class="collapsed" onClick = "location.href = \'view_unifdirecciones.php\'">
+                  <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
+                </li>
+            </ul>
+        </div>';
+        break;
+      default:
+        echo '<div class="menu-list">
+            <ul id="menu-content" class="menu-content collapse out">
+                <li onClick = "location.href = \'view_unifpersonas.php\'">
+                  <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
+                </li>
+                <li class="collapsed" onClick = "location.href = \'view_unifresponsables.php\'">
+                  <a href="view_unifresponsables.php"><i class="fa fa-file-text fa-lg"></i> Responsables</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifmotivos.php\'">
                   <a href="view_unifmotivos.php"><i class="fa fa-file-text fa-lg"></i> Motivos</a>
@@ -722,7 +783,8 @@ public function getMenuGeneralUsuario($ID)
                   <a href="view_unifdirecciones.php"><i class="fa fa-file-text fa-lg"></i> Calles</a>
                 </li>
             </ul>
-        </div>';break;
+        </div>';
+        break;
     }
     
   }
