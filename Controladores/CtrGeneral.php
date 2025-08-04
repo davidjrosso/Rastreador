@@ -429,11 +429,40 @@ class CtrGeneral{
 					  group by M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable
 					  order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
+		$Table = "<table class='table'>
+					<thead>
+						<tr>
+							<th style='width:15%'>Fecha Carga</th>
+							<th>Apellido</th>
+							<th>Nombre</th>
+							<th>Resp.</th>
+							<th colspan='3'></th>
+						</tr>
+					</thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
-			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr>
+						  <td>" . $Fecha . "</td>
+						  <td>" . $Ret["apellido"] . "</td>
+						  <td>" . $Ret["nombre"] . "</td>
+						  <td>" . $Ret["responsable"] . "</td>
+						  <td>
+						  	<a href = 'view_vermovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'>
+							</a>
+						  </td>
+						  <td>
+						  	<a href = 'view_modmovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+							</a>
+						  </td>
+						  <td>
+						  	<a onClick = 'Verificar(" . $Ret["id_movimiento"] . ")'>
+								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
+							</a>
+						  </td>
+					   </tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -484,18 +513,18 @@ class CtrGeneral{
 						  motivo MT
 					 where M.id_persona = P.id_persona 
 					   and M.id_resp = R.id_resp 
-					   and P.documento like '%$Documento%' 
+					   and P.documento like '%$Documento%'
 					   and CS.id_categoria = C.id_categoria
 					   and C.cod_categoria = MT.cod_categoria
-								and ((M.motivo_1 IN (SELECT * FROM INN) 
+								and ((M.motivo_1 IN (SELECT * FROM INN)
 								   OR M.motivo_1 IN (SELECT * FROM GIN))
-								  OR (M.motivo_2 IN (SELECT * FROM INN) 
+								  OR (M.motivo_2 IN (SELECT * FROM INN)
 								   OR M.motivo_2 IN (SELECT * FROM GIN))
-								  OR (M.motivo_3 IN (SELECT * FROM INN) 
+								  OR (M.motivo_3 IN (SELECT * FROM INN)
 								   OR M.motivo_3 IN (SELECT * FROM GIN))
-								  OR (M.motivo_4 IN (SELECT * FROM INN) 
+								  OR (M.motivo_4 IN (SELECT * FROM INN)
 								   OR M.motivo_4 IN (SELECT * FROM GIN))
-								  OR (M.motivo_5 IN (SELECT * FROM INN) 
+								  OR (M.motivo_5 IN (SELECT * FROM INN)
 								   OR M.motivo_5 IN (SELECT * FROM GIN)))
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 

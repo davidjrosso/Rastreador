@@ -275,7 +275,7 @@
 			default :
 				$valor_fecha = (!empty($col_header)) ? $col_header : null;
 				//$pattern = "/([0-9][0-9]|[1-9]).([0-9][0-9]|[1-9]).[2-9][0-9][0-9][0-9]/";
-				$pattern = "/(([0-9][0-9]).([0-9][0-9]).[2-9][0-9][0-9][0-9]|([0-9][0-9]).([0-9][0-9]).[0-9][0-9])/";
+				$pattern = "/(([0-9][0-9]).([0-9][0-9]).[2-9][0-9][0-9][0-9]|([0-9][0-9]).([0-9][0-9]).[0-9][0-9])|([0-9][0-9]).[0-9].[2-9][0-9][0-9][0-9]/";
 				$is_fecha = preg_match(
 								$pattern,
 								$valor_fecha,
@@ -340,7 +340,7 @@
 				$value = (!empty($rows_excel[$row][$col])) ? $rows_excel[$row][$col] : null;
 				$col_excel = colExcel($col);
 				$col_header = (!empty($rows_excel[$indixe_col_h][$col])) ? $rows_excel[$indixe_col_h][$col] : null;
-				$col_config = (isset($config_datos[$col_excel])) ? $config_datos[$col_excel] : null;
+				$col_config = (isset($config_datos[$col_excel])) ? $config_datos[$col_excel] : "default";
 				$valor = objetoExcel(
 									obj: $col_config,
 									valor: $value,
@@ -350,7 +350,7 @@
 				if ($col_config == "observacion") {
 						$lista_valores["observacion"] .= " - " . $valor;
 				} else if ($col_config == "motivo" && isset($valor["motivo"])
-						   && (count($valor["motivo"]) > 1)) {
+						   && (count($valor["motivo"]) >= 1)) {
 						foreach ($valor["motivo"] as $val_motivo) {
 							$row_motivo["fecha"] = $valor["fecha"];
 							$row_motivo["motivo"] = $val_motivo;
@@ -1203,7 +1203,7 @@
 
 							if ($arr_obj_json &&  $valor["server"] == 0) {
 
-								if (!empty($arr_obj_json[0]) 
+								if (!empty($arr_obj_json[0])
 									&& (!is_null($arr_obj_json[0]->lat)
 										|| !is_null($arr_obj_json[0]->lon))) {
 									$lat = $arr_obj_json[0]->lat;
