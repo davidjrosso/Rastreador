@@ -237,6 +237,7 @@ export class MapaOl {
 
         if (icon && icon.values_.tipo == "icono") {
            icon.setGeometry(point);
+           icon.set('description', id_persona);
         } else {
           let iconFeature = new Feature({
             geometry: point,
@@ -321,12 +322,14 @@ export class MapaOl {
       return textLabel;
     }
 
-    addVectorLayer(){
+    addVectorLayer(element){
       let vectorSourceText = new olSource.Vector({
-        features: this.#listaFeatures
+        features: this.#listaFeatures,
+        tipoLayer: element
       });
       let vectorLayerText = new VectorLayer({
-        source: vectorSourceText
+        source: vectorSourceText,
+        tipoLayer: element
       });
       this.#mapa.addLayer(vectorLayerText);
     }

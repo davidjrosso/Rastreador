@@ -73,7 +73,7 @@ export function carga(map, listReferencias) {
   let row = [];
   let feature = null;
   let listaOrdenada = listReferencias.sort(ordenGeoreferencia); 
-  map.addVectorLayer();
+  map.addVectorLayer("personas_inicial");
   map.deleteHandlerSource();
   map.clearListaAnimacion();
   listaOrdenada.forEach(function (elemento, indice, array) {
@@ -210,4 +210,82 @@ export function animacionStop(mapa) {
     $("#barra-temporal-motivos").prop("data-prev-value", 0);
     $("#barra-temporal-motivos").prop("value", 0);
   }
+}
+
+function agregadoDePacientes(map, jqxhr, textStatus, error) {
+  let listReferencias = jqxhr.personas;
+  let nroLote = 1;
+  let pos = null;
+  let posicionAnterior = null;
+  let positionFormas = null;
+  let offsetX = null;
+  let offsetY = null;
+  let feature = null;
+  let listaOrdenada = listReferencias.sort(ordenGeoreferencia); 
+  map.addVectorLayer("personas_paciente");
+  map.deleteHandlerSource();
+  listaOrdenada.forEach(function (elemento, indice, array) {
+    pos = [parseFloat(elemento.lon), parseFloat(elemento.lat)];
+    let caracter = elemento.caracter;
+    if (caracter) {
+      if (indice >= 1) {
+        if (posicionAnterior && (posicionAnterior[0] === pos[0] && posicionAnterior[1] === pos[1])) {
+          pos = [pos[0] + ((-0.000067060) * nroLote), pos[1] + ((0.000067060) * nroLote)];
+          nroLote++;
+        } else {
+          posicionAnterior = pos;
+          nroLote = 1;
+        }
+      } else {
+        posicionAnterior = pos;
+      }
+      positionFormas = pos;
+
+      offsetX = 0.000067060;
+      offsetY = -0.00006002;
+      feature = map.addIconLayerR(
+                  positionFormas[0],
+                  positionFormas[1],
+                  offsetY,
+                  offsetX,
+                  elemento,
+                  elemento.caracter,
+                  elemento.simbolo
+      );
+    }
+  });
+  map.layerAddToMapp();
+}
+
+function errorHandler(jqxhr, textStatus, error) {
+  swal({
+    title: "Error en la solicitud",
+    text: "Error al procesar la solicitud, comunicarse con el administrador",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  });
+}
+
+export function agregarPacientesAMapa(
+                                mapa,
+                                escuela,
+                                motivo,
+                                barrio,
+                                otrainstitucion
+                              ) {
+  let request = null;
+  let url = "../Controladores/listarPersonasMapa.php?";
+
+  url += (escuela) ? "&id_escuela=" + escuela : "";
+  url += (motivo) ? "&id_motivo=" + motivo : "";
+  url += (barrio) ? "&id_barrio=" + barrio : "";
+  url += (otrainstitucion) ? "&id_otra_institucion=" + otrainstitucion : "";
+
+  request = $.ajax({
+                url: url,
+                async: true,
+                success: agregadoDePacientes.bind(null, mapa),
+                error: errorHandler
+                });
 }

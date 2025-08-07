@@ -306,6 +306,11 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
         listarPersonasGeoreferencia(map, objectJsonTabla);
       });
 
+      $("#boton-agregar-personas").on("click", function (e) {
+        $("#filtro-agregar-persona").toggle();
+        agregarOpcionesDeListas();
+      });
+
       $("#boton-multi-decrement").on("click", function (e) {
         map.decAnimacion(3);
       });
@@ -326,6 +331,20 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
           document.exitFullscreen();
           fullscreen = false;
         }
+      });
+
+      $("#boton-agregar-pacientes").on("click", function (e) {
+        let escuela = $("#escuela-filtro").val();
+        let motivo = $("#motivo-filtro").val();
+        let barrio = $("#barrio-filtro").val();
+        let otrainstitucion = $("#otra-institucion-filtro").val();
+        agregarPacientesAMapa(
+                              map,
+                              escuela,
+                              motivo,
+                              barrio,
+                              otrainstitucion
+                            );
       });
 
       $("#barra-temporal-motivos").on("input", function (e) {
@@ -798,8 +817,8 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
     function listarPersonasGeoreferencia(map, listaPersonas) {
       let count = 1;
       let ids = new Set();
-      let cantLista = $(".dropdown-menu > li").size();
-      let lista = $(".dropdown-menu");
+      let cantLista = $("#listado-personas > li").size();
+      let lista = $("#listado-personas");
       let list = listaPersonas.filter(function (obj) {
           let flag = false;
           if (!ids.has(obj.id_persona)) {
@@ -828,18 +847,18 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
               obj.css("background-color","rgb(229 233 232)");
           }
 
-          obj.on("click", function () {
-          if (elemento.lat && elemento.lon) {
-            map.addPersonMap(
-                              elemento.lat, 
-                              elemento.lon,
-                              elemento.id_persona
-                            );
-          }
+          obj.on("click", function(e) {
+              if (elemento.lat && elemento.lon) {
+                map.addPersonMap(
+                                  elemento.lat, 
+                                  elemento.lon,
+                                  elemento.id_persona
+                                );
+              }
           });
         });
       }
-    };
+    }
 
     function navegacionConBarVNav(e) {
       var value = parseInt(e.target.value);
@@ -859,6 +878,54 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
       }
       $("#BarraDeNavVTabla").attr("value", filaIndice);
     }
+
+    function agregadoDeListas(jqxhr, textStatus, error) {
+      let response = jqxhr;
+      let selectEscuela = $("#escuela-filtro");
+      let selectMotivo = $("#motivo-filtro");
+      let selectBarrio = $("#barrio-filtro");
+      let selectOtraIntitucion = $("#otra-institucion-filtro");
+      let option = null;
+      response.motivos.forEach(function (motivo) {
+        option = $("<option value=" + motivo.id_motivo + " > " + motivo.motivo + "</option>");
+        selectMotivo.append(option);
+      });
+      response.escuelas.forEach(function (escuela) {
+        option = $("<option value=" + escuela.id_escuela + " > " + escuela.escuela + "</option>");
+        selectEscuela.append(option);
+      });
+      response.barrios.forEach(function (barrio) {
+        option = $("<option value=" + barrio.id_barrio + " > " + barrio.barrio + "</option>");
+        selectBarrio.append(option);
+      });
+      response.otras_instituciones.forEach(function (otraIntitucion)  {
+        option = $("<option value=" + otraIntitucion.id_otra_institucion + " > " + otraIntitucion.otra_institucion + "</option>");
+        selectOtraIntitucion.append(option);
+      });
+    }
+
+    function errorHandler(jqxhr, textStatus, error) {
+      swal({
+        title: "Error en la solicitud",
+        text: "Error al procesar la solicitud, comunicarse con el administrador",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      });
+    }
+
+    function agregarOpcionesDeListas() {
+        let request = null;
+        let url = "../Controladores/buscarOpciones.php";
+        request = $.ajax({
+                      url: url,
+                      async: true,
+                      success: agregadoDeListas,
+                      error: errorHandler
+                      });
+    }
+
+    
   </script>
   <style>
     body {
@@ -2876,6 +2943,13 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
               <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
             </svg>
           </button>
+          <button type="button" id="boton-agregar-personas" class="button-plus" aria-label="plus">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 16 16">
+              <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+              <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+              <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
+            </svg>
+          </button>
           <button type="button" id="boton-calendario" class="button-calendar" aria-label="calendar" style="display: none;">
             <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" class="bi bi-calendar-check" viewBox="0 0 16 16" style="margin-bottom: 5px;">
               <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
@@ -2922,9 +2996,50 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             }
             ?>
           </div>
-          <div id="lista-personas-georeferencia" class="dropdown" style="position: absolute; top: 1px; display: none;"  aria-labelledby="dropdownMenuButton1">
-            <div class="dropdown-menu" style="display: block; top: 1px; max-height: 325px; overflow-y: auto; overflow-x: hidden; width: 255px; font-size: 0.90rem;">
-              <h6 class="dropdown-header" style="text-align: center">Personas</h6>
+          <div style="display: flex; position: absolute; top: 1px; padding-bottom: 5px; padding-left: 5px;">
+            <div id="lista-personas-georeferencia" class="dropdown" style="display: none;"  aria-labelledby="dropdownMenuButton1">
+              <div  id="listado-personas" class="dropdown-menu" style="display: block; top: 1px; max-height: 325px; overflow-y: auto; overflow-x: hidden; width: 255px; font-size: 0.90rem; position: static">
+                <h6 class="dropdown-header" style="text-align: center">Personas</h6>
+              </div>
+            </div>
+
+            <div id="filtro-agregar-persona" style="display: none; margin-left: 4px;"  aria-labelledby="dropdownMenuButton1">
+              <div class="dropdown-menu" style="display: block; top: 1px; overflow-x: hidden; width: 255px; font-size: 0.90rem; position: static">
+                <h6 class="dropdown-header" style="text-align: center">Pacientes</h6>
+                <div class="input-group input-group-sm mb-3">
+                  <label for="desde-edad-filtro" class="input-group-text" style="width: 25%;">Edad</label>
+                  <input id="desde-edad-filtro" type="number" style="max-width: 37%;" class="form-control form-control-sm" min="0" placeholder="Desde">
+                  <input id="hasta-edad-filtro" type="number" style="max-width: 37%;" class="form-control form-control-sm" min="0" placeholder="Hasta">
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                  <label for="motivo-filtro" class="input-group-text" style="width: 25%;">Motivo</label>
+                  <select id="motivo-filtro" style="display: inline-block; width: 73%; color: #6c757d;" class="form-select form-select-sm" aria-label="Default select example">
+                    <option selected disabled> seleccion </option>
+                  </select>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                  <label for="barrio-filtro" class="input-group-text" style="width: 25%;">Barrio</label>
+                  <select id="barrio-filtro" style="display: inline-block; width: 73%; color: #6c757d;" class="form-select form-select-sm" aria-label="Default select example">
+                    <option selected disabled> seleccion </option>
+                  </select>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                  <label for="escuela-filtro" class="input-group-text" style="width: 25%;">Escuela</label>
+                  <select id="escuela-filtro" style="display: inline-block; width: 73%; color: #6c757d;" class="form-select form-select-sm" aria-label="Default select example">
+                    <option selected disabled> seleccion </option>
+                  </select>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                  <label for="otra-institucion-filtro" class="input-group-text" style="width: 43%;">Otra institucion</label>
+                  <select id="otra-institucion-filtro" style="display: inline-block; width: 57%; color: #6c757d;" class="form-select form-select-sm" aria-label="Default select example">
+                    <option selected disabled> seleccion </option>
+                  </select>
+                </div>
+                <div class="input-group input-group-sm mb-3" style="justify-content: center;">
+                    <button id="boton-agregar-pacientes" class="btn btn-outline-success" type="button">Agregar</button>
+                    <button id="boton-cancelar" class="btn btn-outline-dark" type="button">Cancelar</button>
+                </div>
+              </div>
             </div>
           </div>
           <input id="barra-temporal-motivos" type="range" value="0" min="0" max="100" data-prev-value="0"
