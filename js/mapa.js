@@ -223,7 +223,7 @@ function agregadoDePacientes(map, jqxhr, textStatus, error) {
   let feature = null;
   let listaOrdenada = listReferencias.sort(ordenGeoreferencia); 
   map.addVectorLayer("personas_paciente");
-  map.deleteHandlerSource();
+  map.addHandlerSource();
   listaOrdenada.forEach(function (elemento, indice, array) {
     pos = [parseFloat(elemento.lon), parseFloat(elemento.lat)];
     let caracter = elemento.caracter;
@@ -254,6 +254,7 @@ function agregadoDePacientes(map, jqxhr, textStatus, error) {
       );
     }
   });
+  map.deleteHandlerSource();
   map.layerAddToMapp();
 }
 
