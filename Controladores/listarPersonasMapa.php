@@ -41,8 +41,8 @@ try {
     $rows = [];
     $consulta = "SELECT DISTINCT
                                  p.id_persona,
-                                 P.apellido,
-                                 P.nombre,
+                                 p.apellido,
+                                 p.nombre,
                                  ST_X(p.georeferencia) AS lat,
                                  ST_Y(p.georeferencia) AS lon
                  FROM persona p
