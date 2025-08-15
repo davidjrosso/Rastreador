@@ -39,11 +39,14 @@ if (!isset($_SESSION["Usuario"])) {
 }
 
 $ID_Usuario = $_SESSION["Usuario"];
+$_SESSION["reporte_grafico"] = true;
+session_write_close();
+
 
 $usuario = new Account(account_id: $ID_Usuario);
 $TipoUsuario = $usuario->get_id_tipo_usuario();
-$_SESSION["reporte_grafico"] = true;
 $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"] : null;
+
 
 if (isset($_REQUEST["Fecha_Desde"])) {
   $lista_animacion = explode("/", $_REQUEST["Fecha_Desde"]);
@@ -2262,7 +2265,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
                 // }
           
                 // $Table .= "<tr class='SinMovimientos Datos'>";
-                // $Table .= "<td id='Contenido-1'>".$RetTodos["Barrio"]."</td><td id='Contenido-2'>".$RetTodos["domicilio"]."</td><td id='Contenido-3' name='datosflia' style='max-width: 50px;'>".$RetTodos["manzana"]."</td><td id='Contenido-4' name='datosflia' style='max-width: 50px;'>".$RetTodos["lote"]."</td><td id='Contenido-5' name='datosflia' style='max-width: 50px;'>".$RetTodos["familia"]."</td><td id='Contenido-6'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$RetTodos["apellido"].", ".$RetTodos["nombre"]."</a></td><td id='Contenido-7' style='max-width: 100px;'>".$Fecha_Nacimiento."</td>";
+                // $Table .= "<td id='Contenido-1'>".$RetTodos["Barrio"]."</td><td id='Contenido-2'>".$RetTodos["domicilio"]."</td><td id='Contenido-3' name='datosflia' style='max-width: 50px;'>".$RetTodos["manzana"]."</td><td id='Contenido-4' name='datosflia' style='max-width: 50px;'>".$RetTodos["lote"]."</td><td id='Contenido-5' name='datosflia' style='max-width: 50px;'>".$RetTodos["familia"]."</td><td id='Contenido-6'><a href = 'javascript:window.open(\"persona/editar?ID=".$RetTodos["id_persona"]."\",\"Ventana".$RetTodos["id_persona"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$RetTodos["apellido"].", ".$RetTodos["nombre"]."</a></td><td id='Contenido-7' style='max-width: 100px;'>".$Fecha_Nacimiento."</td>";
           
                 // $ColSpans = $MesesDiferencia * 270;
                 // $Table .= "<td style='width:".$ColSpans."px'></td>";
@@ -2299,7 +2302,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
           
               // }else{                               
               //   $Table .= "<tr class='Datos'>";
-              //   $Table .= "<td id='Contenido-1'>".$Ret["Barrio"]."</td><td id='Contenido-2'>".$Ret["domicilio"]."</td><td id='Contenido-3' name='datosflia' style='max-width: 50px;'>".$Ret["manzana"]."</td><td id='Contenido-4' name='datosflia' style='max-width: 50px;'>".$Ret["lote"]."</td><td id='Contenido-5' name='datosflia' style='max-width: 50px;'>".$Ret["familia"]."</td><td id='Contenido-6'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=".$Ret["id_persona"]."\",\"Ventana".$Ret["id_persona"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$Ret["apellido"].", ".$Ret["nombre"]."</a></td><td id='Contenido-7' style='max-width: 100px;'>".$Fecha_Nacimiento."</td>";
+              //   $Table .= "<td id='Contenido-1'>".$Ret["Barrio"]."</td><td id='Contenido-2'>".$Ret["domicilio"]."</td><td id='Contenido-3' name='datosflia' style='max-width: 50px;'>".$Ret["manzana"]."</td><td id='Contenido-4' name='datosflia' style='max-width: 50px;'>".$Ret["lote"]."</td><td id='Contenido-5' name='datosflia' style='max-width: 50px;'>".$Ret["familia"]."</td><td id='Contenido-6'><a href = 'javascript:window.open(\"persona/editar?ID=".$Ret["id_persona"]."\",\"Ventana".$Ret["id_persona"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$Ret["apellido"].", ".$Ret["nombre"]."</a></td><td id='Contenido-7' style='max-width: 100px;'>".$Fecha_Nacimiento."</td>";
               // }
           
               $ID_Persona_Bandera = $Ret["id_persona"];
@@ -2587,7 +2590,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
                   $jsonTable[$clave]["familia"] = $RetTodos["familia"];
                   $Table .= " <td id='Contenido-3' style='overflow: hidden;'>
                                   <div style='position: relative;z-index: 1000;'>
-                                    <a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $RetTodos["id_persona"] . "\",\"Ventana" . $RetTodos["id_persona"] . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" .
+                                    <a href = 'javascript:window.open(\"persona/editar?ID=" . $RetTodos["id_persona"] . "\",\"Ventana" . $RetTodos["id_persona"] . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" .
                     $RetTodos["apellido"] . ", " . $RetTodos["nombre"] . "
                                     </a>
                                   </div>
@@ -2690,7 +2693,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
                   $tagsTD .= "
                     <td id='Contenido-3' style='overflow: hidden;'>
                       <div style='position: relative;z-index: 1000;'>
-                        <a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $RetTodos["id_persona"] . "\",\"Ventana" . $RetTodos["id_persona"] . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" .
+                        <a href = 'javascript:window.open(\"persona/editar?ID=" . $RetTodos["id_persona"] . "\",\"Ventana" . $RetTodos["id_persona"] . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" .
                     $RetTodos["apellido"] . ", " . $RetTodos["nombre"] . "
                         </a>
                       </div>
@@ -3062,7 +3065,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
     valInputRangePrev = columnaIndice;
     nroColumnaInicial = columnaIndice;
 
-    <?php $_SESSION["meses"] = $mesesHeader; ?>
+    <?php //$_SESSION["meses"] = $mesesHeader; ?>
     var objectJsonTabla = <?php echo json_encode(value: array_values($jsonTable), flags: true); ?>;
     var objectJsonAnimacion = <?php echo json_encode(value: array_values($lista_animacion), flags: true); ?>;
 
