@@ -18,7 +18,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-session_start();
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
@@ -31,15 +30,21 @@ if (!isset($_SESSION["Usuario"])) {
   header("Location: Error_Session.php");
 }
 
-if (!preg_match("~view_personas~", $_SERVER["HTTP_REFERER"])) {
+$http_referer = (!empty($_SERVER["HTTP_REFERER"])) ? $_SERVER["HTTP_REFERER"] : null;
+
+if (!preg_match("~view_personas~", $http_referer)) {
   $_SESSION["from_reporte_grafico"] = true;
 } else {
   $_SESSION["from_reporte_grafico"] = false;
 }
 
-$ID_Usuario = $_SESSION["Usuario"];
+$ID_Usuario = 1 ;//$_SESSION["Usuario"];
 $account = new Account(account_id: $ID_Usuario);
 $TipoUsuario = $account->get_id_tipo_usuario();
+
+$mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+$mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -47,6 +52,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
 <head>
   <title>Rastreador III</title>
   <meta charset="utf-8">
+  <base href="/">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
@@ -61,7 +67,6 @@ $TipoUsuario = $account->get_id_tipo_usuario();
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
     integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
     crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script src="./dist/mapa.js"></script>
   <script src="./dist/control.js"></script>
 
@@ -72,8 +77,12 @@ $TipoUsuario = $account->get_id_tipo_usuario();
     let fullscreen = false;
 
     $(document).ready(function () {
-      var date_input = $('input[name="Fecha_Nacimiento"]'); //our date input has the name "date"
-      var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
+      let date_input = $('input[name="Fecha_Nacimiento"]'); //our date input has the name "date"
+      let container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
+      let mensajeError = '<?php echo $mensaje_error;?>';
+      let mensajeSuccess = '<?php echo $mensaje_success;?>';
+
+      controlMensaje(mensajeSuccess, mensajeError);
       date_input.datepicker({
         format: 'dd/mm/yyyy',
         container: container,
@@ -185,7 +194,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
         }
       });
 
-      if($("#NumeroDeCalle").val() && $("#ID_Calle").find(":selected").val()) {
+      if($("#ID_Calle").find(":selected").val()) {
         $("#mapa-sig").prop('disabled', false);
       }
     });
@@ -290,7 +299,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
 
               ?>
               <div class="col-10">
-                <form id="form-mod-persona" method="post" onKeydown="return event.key != 'Enter';" action="Controladores/ModificarPersona.php">
+                <form id="form-mod-persona" method="post" onKeydown="return event.key != 'Enter';" action="modificar_persona">
                   <input type="hidden" name="ID" value="<?php echo $Persona->getID_Persona(); ?>">
                   <div class="form-group row">
                     <label for="apellido" class="col-md-2 col-form-label LblForm">Apellido: </label>
@@ -481,7 +490,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
                     <div class="offset-md-2 col-md-10">
                       <button type="submit" class="btn btn-outline-success">Guardar</button>
                       <button type="button" class="btn btn-danger"
-                        onClick="location.href = 'view_personas.php'">Atras</button>
+                        onClick="location.href = 'personas'">Atras</button>
                     </div>
                   </div>
                 </form>
@@ -496,7 +505,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
           <div class="row">
             <div class="col-10"></div>
             <div class="col-2">
-              <!-- <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = 'view_personas.php'">Volver</button> -->
+              <!-- <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = 'personas'">Volver</button> -->
             </div>
           </div>
         </div>
@@ -610,16 +619,6 @@ $TipoUsuario = $account->get_id_tipo_usuario();
       </div>
     </div>
   </div>
-  <?php
-  if (isset($_REQUEST["Mensaje"])) {
-    echo "<script type='text/javascript'>
-            swal('" . $_REQUEST['Mensaje'] . "','','success');
-            if (" . $_REQUEST['reporte'] . ") {
-              window.opener.document.location.reload();
-            }
-          </script>";
-  }
-  ?>
   <script>
     objectJsonPersona.lat = <?php echo (!empty($Persona->getLatitud())) ? $Persona->getLatitud() : "null" ; ?>;
     objectJsonPersona.lon = <?php echo (!empty($Persona->getLonguitud())) ? $Persona->getLonguitud() : "null"; ?>;
