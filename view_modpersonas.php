@@ -18,17 +18,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+session_start();
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
 
 header("Content-Type: text/html;charset=utf-8");
-
-/*     CONTROL DE USUARIOS                    */
-if (!isset($_SESSION["Usuario"])) {
-  header("Location: Error_Session.php");
-}
 
 $http_referer = (!empty($_SERVER["HTTP_REFERER"])) ? $_SERVER["HTTP_REFERER"] : null;
 
@@ -38,7 +34,7 @@ if (!preg_match("~view_personas~", $http_referer)) {
   $_SESSION["from_reporte_grafico"] = false;
 }
 
-$ID_Usuario = 1 ;//$_SESSION["Usuario"];
+$ID_Usuario = (isset($_SESSION["Usuario"])) ? $_SESSION["Usuario"] : null;
 $account = new Account(account_id: $ID_Usuario);
 $TipoUsuario = $account->get_id_tipo_usuario();
 
