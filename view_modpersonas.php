@@ -149,7 +149,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
         let calleNombre = $("#ID_Calle").find(":selected").text();
         let calleId = $("#ID_Calle").val();
         let nro = $(this).val();
-        if (calleNombre && nro) {
+        if (calleNombre) {
           $("#mapa-sig").prop('disabled', false);
           if (!map) {
             map = init(
@@ -159,13 +159,13 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                       );
             map.setGeoreferenciacion();
           }
-          map.addPersonMapAddress(
-                                  calleNombre,
-                                  nro,
-                                  calleId
-                                 );
-        } else {
-          $("#mapa-sig").prop('disabled', true);
+          if (nro) {
+            map.addPersonMapAddress(
+                                    calleNombre,
+                                    nro,
+                                    calleId
+                                   );
+          } 
         }
       });
 
