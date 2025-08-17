@@ -133,4 +133,14 @@ export function showControlFormulario() {
     $("#nro-buttom").show();
     $("#barrio-buttom").show();
     $("#formulario-succes").hide();
-  }
+}
+
+export function controlMensaje(mensajeSuccess, mensajeError) {
+    if (mensajeSuccess) {
+        swal.fire(mensajeSuccess, '', 'success');
+    }
+
+    if (mensajeError) {
+        swal.fire(mensajeError, '', 'warning');
+    }
+}
