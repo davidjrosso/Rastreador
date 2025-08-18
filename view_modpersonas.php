@@ -18,7 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-session_start();
+if(session_status() !== PHP_SESSION_ACTIVE) session_start();
+
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
@@ -26,12 +27,9 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
 
 header("Content-Type: text/html;charset=utf-8");
 
-/*     CONTROL DE USUARIOS                    */
-if (!isset($_SESSION["Usuario"])) {
-  header("Location: Error_Session.php");
-}
+$http_referer = (!empty($_SERVER["HTTP_REFERER"])) ? $_SERVER["HTTP_REFERER"] : "";
 
-if (!preg_match("~view_personas~", $_SERVER["HTTP_REFERER"])) {
+if (!preg_match("~view_personas~", $http_referer)) {
   $_SESSION["from_reporte_grafico"] = true;
 } else {
   $_SESSION["from_reporte_grafico"] = false;
@@ -40,6 +38,9 @@ if (!preg_match("~view_personas~", $_SERVER["HTTP_REFERER"])) {
 $ID_Usuario = $_SESSION["Usuario"];
 $account = new Account(account_id: $ID_Usuario);
 $TipoUsuario = $account->get_id_tipo_usuario();
+
+$mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -47,6 +48,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
 <head>
   <title>Rastreador III</title>
   <meta charset="utf-8">
+  <base href="/">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
