@@ -30,15 +30,21 @@ try {
                                          connection: $con,
                                          id_geo: $existe_geo
                                         );
-        $georeferencia->set_pendiente_by_min_max_punto();
+        if ($georeferencia->get_min_num() != 0
+            || $georeferencia->get_max_num() != 0) {
+            $georeferencia->set_pendiente_by_min_max_punto();
+            $resp_json["lat"] = $georeferencia->geo_lat_by_number($numero);
+            $resp_json["lon"] = $georeferencia->geo_lon_by_number($numero);
+        } else {
+            $resp_json["lat"] = $georeferencia->get_punto_lat();
+            $resp_json["lon"] = $georeferencia->get_punto_lon();
+        }
         $id_barrio = $georeferencia->get_id_barrio();
         $barrio = new Barrio(
-                             coneccion: $con,
-                             id_barrio: $id_barrio
+                                coneccion: $con,
+                                id_barrio: $id_barrio
                             );
-        $resp_json["lat"] = $georeferencia->geo_lat_by_number($numero);
-        $resp_json["lon"] = $georeferencia->geo_lon_by_number($numero);
-        $resp_json["barrio"] = $barrio->get_barrio();
+        $resp_json["barrio"] = (!empty($barrio->get_barrio())) ? $barrio->get_barrio() : null;
 
     } else if (!$existe_geo && $existe_calle) {
         $calle = new Calle(id_calle: $calle_id);
