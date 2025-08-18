@@ -93,23 +93,24 @@ class CalleBarrio
 	{
 		$id_geo = null;
 		if ($id_calle && $num_calle) {
-			$consulta = "select *
-						 from calles_barrios
-						 where id_calle = $id_calle
-                           and $num_calle between min_num and max_num
-						   and estado = 1;";
+			$consulta = "SELECT *
+						 FROM calles_barrios
+						 WHERE id_calle = $id_calle
+                           AND ($num_calle BETWEEN min_num AND max_num
+						   		OR (min_num = 0 AND max_num = 0))
+						   AND estado = 1;";
 			$query_object = mysqli_query($connection->Conexion, $consulta) or die("Error al consultar datos");
 			if (mysqli_num_rows($query_object) > 0) {
 				$ret = mysqli_fetch_assoc($query_object);
 				$id_geo = $ret["id_geo"];
 			};
 		} else if ($id_calle && !$num_calle) {
-			$consulta = "select *
-						 from calles_barrios
-						 where id_calle = $id_calle
-                           and min_num = 0
-						   and max_num = 0
-						   and estado = 1;";
+			$consulta = "SELECT *
+						 FROM calles_barrios
+						 WHERE id_calle = $id_calle
+                           AND min_num = 0
+						   AND max_num = 0
+						   AND estado = 1;";
 			$query_object = mysqli_query($connection->Conexion, $consulta) or die("Error al consultar datos");
 			if (mysqli_num_rows($query_object) > 0) {
 				$ret = mysqli_fetch_assoc($query_object);
