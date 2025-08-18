@@ -296,7 +296,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 
               ?>
               <div class="col-10">
-                <form id="form-mod-persona" method="post" onKeydown="return event.key != 'Enter';" action="modificar_persona">
+                <form id="form-mod-persona" method="post" onKeydown="return event.key != 'Enter';" action="Controladores/ModificarPersona.php">
                   <input type="hidden" name="ID" value="<?php echo $Persona->getID_Persona(); ?>">
                   <div class="form-group row">
                     <label for="apellido" class="col-md-2 col-form-label LblForm">Apellido: </label>
