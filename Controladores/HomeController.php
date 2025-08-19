@@ -116,14 +116,12 @@ class HomeController
         }
     }
 
-    public function logout()
+    public function logout_control()
     {
         if (isset($_SESSION["Usuario"])) {
             session_destroy();
-            header("Location: /login"); 
-        } else {
-            header("Location: /login"); 
         }
+        header("Location: /login");
     }
 
 }

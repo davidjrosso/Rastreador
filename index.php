@@ -54,11 +54,12 @@ try {
 	$url = "https://" . $host_url;
 
 	$routes[] = Route::get('home', '/', handler: [HomeController::class, 'index']);
-	$routes[] = Route::get('home_succes', 'home\?Mensaje={mensaje}', [HomeController::class, 'index']);
-	$routes[] = Route::get('home_error', 'home\?MensajeError={mensaje}', [HomeController::class, 'index']);
+	$routes[] = Route::get('home_url', '/home', [HomeController::class, 'index']);
+	$routes[] = Route::get('home_succes', '/home\?Mensaje={mensaje}', [HomeController::class, 'index']);
+	$routes[] = Route::get('home_error', '/home\?MensajeError={mensaje}', [HomeController::class, 'index']);
 	$routes[] = Route::get('login', '/login', [HomeController::class, 'login']);
 	$routes[] = Route::post('login_control', '/login_control', [HomeController::class, 'login_control']);
-	$routes[] = Route::post('logout', '/Controladores/CtrLogout.php', [HomeController::class, 'login_control']);
+	$routes[] = Route::post('logout', '/logout', [HomeController::class, 'logout_control']);
 	$routes[] = Route::get('personas_listado', '/personas', [PersonaController::class, 'listado_personas']);
 	$routes[] = Route::get('persona_ver', '/persona\?ID={ID}', [PersonaController::class, 'datos_persona']);
 	$routes[] = Route::get('mod_persona', '/persona/editar\?ID={id}', [PersonaController::class, 'mod_persona']);
