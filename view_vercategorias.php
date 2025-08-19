@@ -1,14 +1,10 @@
 <?php 
-session_start(); 
+
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-header("Content-Type: text/html;charset=utf-8");
 
-/*     CONTROL DE USUARIOS                    */
-if(!isset($_SESSION["Usuario"])){
-    header("Location: Error_Session.php");
-}
+header("Content-Type: text/html;charset=utf-8");
 
 $ID_Usuario = $_SESSION["Usuario"];
 $usuario = new Account(account_id: $ID_Usuario);
@@ -108,7 +104,7 @@ $CtrGeneral = new CtrGeneral();
         <div class="row">
             <div class="col-10"></div>
             <div class="col-2">
-              <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_categorias.php'">Atras</button>
+              <button type = "button" class = "btn btn-danger" onClick = "location.href = '/categorias'">Atras</button>
               
             </div>
         </div>

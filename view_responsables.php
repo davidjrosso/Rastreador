@@ -1,15 +1,28 @@
-<?php 
-session_start(); 
+<?php
+/*
+ *
+ * This file is part of Rastreador3.
+ *
+ * Rastreador3 is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Rastreador3 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Rastreador3; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
+
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-header("Content-Type: text/html;charset=utf-8");
 
-/*     CONTROL DE USUARIOS                    */
-if(!isset($_SESSION["Usuario"])){
-    header("Location: Error_Session.php");
-    exit();
-}
+header("Content-Type: text/html;charset=utf-8");
 
 $ID_Usuario = $_SESSION["Usuario"];
 $usuario = new Account(account_id: $ID_Usuario);
@@ -51,7 +64,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                 dangerMode: true,
               }).then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/pedireliminarresponsable.php?ID=' + xID;
+                  window.location.href = 'pedir_eliminar_responsable?ID=' + xID;
                 }
               });
         }
@@ -79,7 +92,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
           <center><button class = "btn btn-secondary" onClick = "location.href='view_newresponsables.php'">Agregar Nuevo Responsable</button></center>
       </div>
       <div class="col-2">
-                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="location.href = '/'">Volver</button>
       </div>
       <div class = "col"></div>
     </div>
@@ -135,26 +148,6 @@ if(isset($_REQUEST['Mensaje'])){
     swal('".$_REQUEST['Mensaje']."','','success');
 </script>";
 }
-?>
-<?php
-/*
- *
- * This file is part of Rastreador3.
- *
- * Rastreador3 is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Rastreador3 is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Rastreador3; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- */
 ?>
 </body>
 </html>

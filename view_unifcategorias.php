@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-session_start();
+
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
@@ -28,11 +28,6 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Categoria.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/CategoriaRol.php");
 
 header("Content-Type: text/html;charset=utf-8");
-
-/*     CONTROL DE USUARIOS                    */
-if(!isset($_SESSION["Usuario"])){
-    header("Location: Error_Session.php");
-}
 
 $Con = new Conexion();
 $Con->OpenConexion();
@@ -47,6 +42,7 @@ $Con->CloseConexion();
 <head>
   <title>Rastreador III</title>
   <meta charset="utf-8">
+  <base href="/">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
@@ -144,7 +140,7 @@ $Con->CloseConexion();
                 <input type="hidden" name="ID_Categoria_unif" id="ID_Categoria_unif" value="0">
                 <input type="hidden" name="ID_Categoria_del" id="ID_Categoria_del" value="0">
                 <button type="submit" class="btn btn-outline-success">Aceptar</button>
-                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="location.href = '/'">Volver</button>
               </div>
             </div>
           </form>

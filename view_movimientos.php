@@ -1,23 +1,32 @@
 <?php
-session_start();
-require_once "Controladores/Elements.php";
-require_once "Controladores/CtrGeneral.php";
+/*
+*
+* This file is part of Rastreador3.
+*
+* Rastreador3 is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* Rastreador3 is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Rastreador3; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+*/
+
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
 header("Content-Type: text/html;charset=utf-8");
 
-/*     CONTROL DE USUARIOS                    */
-if (!isset($_SESSION["Usuario"])) {
-  header("Location: Error_Session.php");
-}
 
-$Con = new Conexion();
-$Con->OpenConexion();
 $ID_Usuario = $_SESSION["Usuario"];
-$ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
-$MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
-$EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion, $ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
-$Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
-$TipoUsuario = $Ret["ID_TipoUsuario"];
-$Con->CloseConexion();
+$usuario = new Account(account_id: $ID_Usuario);
+$TipoUsuario = $usuario->get_id_tipo_usuario();
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -78,7 +87,7 @@ $Con->CloseConexion();
         </div>
         <div class="col-2">
           <button type="button" class="btn btn-outline-secondary"
-            onclick="location.href = 'view_inicio.php'">Volver</button>
+            onclick="location.href = '/'">Volver</button>
         </div>
         <div class="col"></div>
       </div>
@@ -189,26 +198,6 @@ $Con->CloseConexion();
           mensajeDeProcesamiento('" . $_REQUEST['Mensaje'] . "');
         </script>";
     }
-    ?>
-    <?php
-    /*
-     *
-     * This file is part of Rastreador3.
-     *
-     * Rastreador3 is free software; you can redistribute it and/or modify
-     * it under the terms of the GNU General Public License as published by
-     * the Free Software Foundation; either version 2 of the License, or
-     * (at your option) any later version.
-     *
-     * Rastreador3 is distributed in the hope that it will be useful,
-     * but WITHOUT ANY WARRANTY; without even the implied warranty of
-     * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-     * GNU General Public License for more details.
-     *
-     * You should have received a copy of the GNU General Public License
-     * along with Rastreador3; if not, write to the Free Software
-     * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-     */
     ?>
 </body>
 

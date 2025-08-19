@@ -34,7 +34,7 @@ export function Verificar(xID) {
     })
     .then((selectOption) => {
         if (selectOption.isConfirmed) {
-        window.location.href = 'Controladores/DeleteMovimiento.php?ID=' + xID;
+        window.location.href = 'delete_movimiento?ID=' + xID;
       }
     });
 }

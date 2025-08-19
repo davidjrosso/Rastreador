@@ -17,16 +17,13 @@
  * along with Rastreador3; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
-session_start(); 
+
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . '/Modelo/Barrio.php');
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-header("Content-Type: text/html;charset=utf-8");
 
-if(!isset($_SESSION["Usuario"])){
-    header("Location: Error_Session.php");
-}
+header("Content-Type: text/html;charset=utf-8");
 
 $id_usuario = $_SESSION["Usuario"];
 $account = new Account(account_id: $id_usuario);
@@ -38,6 +35,7 @@ $tipo_usuario = $account->get_id_tipo_usuario();
 <head>
   <title>Rastreador III</title>
   <meta charset="utf-8">
+  <base href="/">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -202,7 +200,7 @@ $tipo_usuario = $account->get_id_tipo_usuario();
 
               ?>
             <div class = "col-10">
-            <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/ModificarBarrio.php">
+            <form method = "post" onKeydown="return event.key != 'Enter';" action = "modificar_barrio">
                 <!-- <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Id: </label>
                   <div class="col-md-10">
@@ -234,7 +232,7 @@ $tipo_usuario = $account->get_id_tipo_usuario();
                 <div class="form-group row" style="margin-top: 36px;">
                   <div class="offset-md-4 col-md-8">
                     <button type="submit" class="btn btn-outline-success">Guardar</button>
-                    <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_barrios.php'">Atras</button>
+                    <button type = "button" class = "btn btn-danger" onClick = "location.href = '/barrios'">Atras</button>
                   </div>
                 </div>
                 <input type="hidden" id="lat" name="lat" value="<?php echo $geo_lat_barrio?>">

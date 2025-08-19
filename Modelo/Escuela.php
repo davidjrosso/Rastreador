@@ -32,6 +32,7 @@ class Escuela
 								$observaciones=null,
 								$xEstado=null
 	){
+		$this->coneccion_base = $coneccion_base;
 		if (!$xID_Escuela) {
 			$this->ID_Escuela = $xID_Escuela;
 			$this->Codigo = $xCodigo;

@@ -18,7 +18,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-session_start(); 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Conexion.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Elements.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/CtrGeneral.php';
@@ -27,12 +26,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Responsable.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Account.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/MovimientoMotivo.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/DtoMovimiento.php';
-header("Content-Type: text/html;charset=utf-8");
 
-/*     CONTROL DE USUARIOS                    */
-if(!isset($_SESSION["Usuario"])){
-    header("Location: Error_Session.php");
-}
+header("Content-Type: text/html;charset=utf-8");
 
 $ID_Usuario = $_SESSION["Usuario"];
 $usuario = new Account(account_id: $ID_Usuario);
@@ -43,6 +38,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
 <head>
   <title>Rastreador III</title>
   <meta charset="utf-8">
+  <base href="/">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -322,7 +318,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               $Con->CloseConexion();
               ?>
             <div class = "col-10">
-            <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/ModificarMovimiento.php" onSubmit = "return ValidarMovimiento();">
+            <form method = "post" onKeydown="return event.key != 'Enter';" action = "modificar_movimiento" onSubmit = "return ValidarMovimiento();">
                 <!-- <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Id: </label>
                   <div class="col-md-10">
@@ -501,7 +497,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                       }
                     ?>
                     <button type="submit" class="btn btn-outline-success">Guardar</button>
-                    <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_movimientos.php'">Atras</button>
+                    <button type = "button" class = "btn btn-danger" onClick = "location.href = '/movimientos'">Atras</button>
                   </div>
                 </div>
             </form>
@@ -517,7 +513,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
             <div class="col-10"></div>
             <div class="col-2">
               
-              <!-- <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_movimientos.php'">Atras</button> -->
+              <!-- <button type = "button" class = "btn btn-danger" onClick = "location.href = '/movimientos'">Atras</button> -->
             </div>
         </div>
          <!-- SECCION DE MODALES -->

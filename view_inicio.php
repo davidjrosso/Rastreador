@@ -18,47 +18,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-session_start(); 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Parametria.php");
 header("Content-Type: text/html;charset=utf-8");
-
-/*     CONTROL DE USUARIOS                    */
-if (!isset($_SESSION["Usuario"])) {
-    header("Location: Error_Session.php");
-    exit();
-}
 
 $Con = new Conexion();
 $Con->OpenConexion();
 $id_usuario = $_SESSION["Usuario"];
 $account = new Account(account_id: $id_usuario);
 $tipo_usuario = $account->get_id_tipo_usuario();
-
-$fecha_actual = new DateTime(date("Y-m-d"));
-$value = new Parametria(coneccion_base: $Con, codigo: "UPDATE_FECHA_PERSONA");
-$fecha_update = new DateTime($value->get_valor());
-if ($fecha_actual > $fecha_update) {
-  $consultar_datos_personas = "UPDATE persona p
-                               SET edad = IF(fecha_nac >= CURDATE() , 0, TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE())),
-                                   meses = IF(fecha_nac >= CURDATE(), 0, MOD(TIMESTAMPDIFF(MONTH, fecha_nac, CURDATE()), 12))
-                               WHERE  id_persona in (select id_persona
-                                                     from persona 
-                                                     where fecha_nac is not null
-                                                       and fecha_nac <> 'null'
-                                                       and fecha_nac <> ''
-                                                       and estado = 1)";
-  $mensaje_error_datos_personas = "No se pudieron consultar los datos de las personas registradas en el sistema";
-  $ejecutar_consultar_datos_personas = mysqli_query(
-                      $Con->Conexion,
-                      $consultar_datos_personas
-                    ) or die($mensaje_error_datos_personas);
-  $value->set_valor(date("Y-m-d"));
-  $value->update($Con);
-}
 $Con->CloseConexion();
 
 ?>
@@ -91,7 +61,6 @@ $Con->CloseConexion();
           });
 
        function CalcularPrecio() {
-        //var Combus = document.getElementById("Combustible").value;
         var Litros = document.getElementById("Litros").value;
         var Combustible = document.getElementById("Combustible");
         var PrecioxL = Combustible.options[Combustible.selectedIndex].getAttribute("name");
@@ -100,7 +69,6 @@ $Con->CloseConexion();
 
         var Precio = document.getElementById("Precio");
         Precio.setAttribute("value",parseFloat(Total).toFixed(2));
-        //Terminar esta parte cuando termine lo demas.
        }
 
        function successHandler(jqxhr, textStatus) {
@@ -378,7 +346,7 @@ $Con->CloseConexion();
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/ModificarUsuario.php?id_solcitud=' + xID_Solcitud;
+                  window.location.href = 'Controladores//modificar_account?id_solcitud=' + xID_Solcitud;
                 }
               });
         }

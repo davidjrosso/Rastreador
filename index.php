@@ -1,93 +1,4 @@
 <?php
-//require_once $_SERVER['DOCUMENT_ROOT'] . 'vendor/autoload.php';
-header("Content-Type: text/html;charset=utf-8");
-?>
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-  <meta charset="UTF-8">
-  <title>Rastreador III</title>
-  <meta charset="utf-8">
-
-  <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-
-  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
-  <link rel="stylesheet" type="text/css" href="css/Estilos.css">
-  <link rel="stylesheet" href="css/style.css">
-  <script src="js/ValidarGeneral.js"></script>
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.7.1.slim.js"
-		  integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc="
-		  crossorigin="anonymous"></script>
-
-  <script>
-	$(document).ready(function(){
-	  $("#spanMostrar").on("click", function(){
-		var elementInput= $("#login-pass");
-		var elementIcon= $("#iconMostrar");
-		if(elementIcon.hasClass("active")){
-			elementIcon.removeClass("active");
-			elementIcon.html("visibility_off");
-			elementInput.prop("type","password");
-		} else{
-			elementIcon.addClass("active");
-			elementIcon.html("visibility");
-			elementInput.prop("type","text");
-		}
-	  });
-	});
-  </script>
-</head>
-<body>
-  <body>
-	<div class="login">
-		<div class="login-screen">
-			<div class="app-title">
-				<h1>Acceder</h1>
-			</div>
-
-			<div class="login-form">
-				<form method = "post" action = "Controladores/CtrLogin.php" autocomplete="off">
-				<div class="control-group">
-					<input type="text" class="login-field" value="" placeholder="Nombre de Usuario" id="login-name" name = "UserName" autocomplete = "off">
-					<label class="login-field-icon fui-user" for="login-name"></label>
-				</div>
-
-				<div class="control-group" style="position:relative">
-					<input type="password" autocomplete="off" class="login-field" value="" placeholder="Contraseña" id="login-pass" name = "UserPass" >
-					<label class="login-field-icon fui-lock" for="login-pass"></label>
-					<span id="spanMostrar" class="form-clear d-none">
-						<i id="iconMostrar" class="material-icons mdc-text-field__icon">
-							visibility
-						</i>
-					</span>
-				</div>
-				<button class="btn btn-primary btn-large btn-block Hander" style="margin-bottom: 12px;" type = "submit">Entrar</button>				
-				</form>
-				<a href="view_recuperar_password.php" class="recovery-email">¿Olvidaste tu contraseña?</a>
-			</div>
-		</div>
-	</div>
-
-</body>    
-</body>
-<?php
-if(isset($_REQUEST["MensajeError"])){
-	$mensaje_error = $_REQUEST["MensajeError"]; 
-	echo "<script type='text/javascript'>
-		  swal('" . $mensaje_error . "','','warning');
-		</script>";
-}
-if(isset($_REQUEST["Mensaje"])){
-	$mensaje = $_REQUEST["Mensaje"]; 
-	echo "<script type='text/javascript'>
-		  swal('" . $mensaje . "','','success');
-		</script>";
-}
-?>
-<?php
 /*
  *
  * This file is part of Rastreador3.
@@ -106,5 +17,156 @@ if(isset($_REQUEST["Mensaje"])){
  * along with Rastreador3; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
-?>
-</html>
+
+session_start();
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/PersonaController.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/HomeController.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/MovimientoController.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CategoriaController.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/EscuelaController.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CalleController.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/BarrioController.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/OtraInstitucionController.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/ResponsableController.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/AccountController.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/MotivoController.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Parametria.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php");
+
+use PhpDevCommunity\Route;
+use PhpDevCommunity\Router;
+use \PhpDevCommunity\Exception\MethodNotAllowed;
+use \PhpDevCommunity\Exception\RouteNotFound;
+
+
+try {
+	$con = new Conexion();
+	$con->OpenConexion();
+	$routes = [];	
+	$metodo = $_SERVER["REQUEST_METHOD"];
+	$url_request = $_SERVER["REQUEST_URI"];
+	$parametria = new Parametria(
+							     coneccion_base: $con,
+							     id_parametria: "ENV_HOST"
+							   );
+	$host_url = $parametria->get_valor();
+	$url = "https://" . $host_url;
+
+	$routes[] = Route::get('home', '/', handler: [HomeController::class, 'index']);
+	$routes[] = Route::get('home_succes', 'home\?Mensaje={mensaje}', [HomeController::class, 'index']);
+	$routes[] = Route::get('home_error', 'home\?MensajeError={mensaje}', [HomeController::class, 'index']);
+	$routes[] = Route::get('login', '/login', [HomeController::class, 'login']);
+	$routes[] = Route::post('login_control', '/login_control', [HomeController::class, 'login_control']);
+	$routes[] = Route::post('logout', '/Controladores/CtrLogout.php', [HomeController::class, 'login_control']);
+	$routes[] = Route::get('personas_listado', '/personas', [PersonaController::class, 'listado_personas']);
+	$routes[] = Route::get('persona_ver', '/persona\?ID={ID}', [PersonaController::class, 'datos_persona']);
+	$routes[] = Route::get('mod_persona', '/persona/editar\?ID={id}', [PersonaController::class, 'mod_persona']);
+	$routes[] = Route::get('personas_eliminar', 'Controladores/DeletePersona.php\?ID={id}', [PersonaController::class, 'del_p_control']);
+	$routes[] = Route::post('persona_mod_control', '/modificar_persona', [PersonaController::class, 'mod_persona_control']);
+	$routes[] = Route::get('personas_unificar', '/personas/unificar', [PersonaController::class, 'unif_persona']);
+	$routes[] = Route::post('personas_unif_control', 'unificarpersonas', [PersonaController::class, 'unif_persona_control']);
+	$routes[] = Route::get('movimientos_listado', '/movimientos', [MovimientoController::class, 'listado_movimiento']);
+	$routes[] = Route::get('movimientos_listado_succes', '/movimientos\?Mensaje={mensaje}', [MovimientoController::class, 'listado_movimiento']);
+	$routes[] = Route::get('movimiento', '/movimiento\?ID={id}', [MovimientoController::class, 'datos_movimiento']);
+	$routes[] = Route::get('mod_movimiento', '/movimiento/editar\?ID={id}', [MovimientoController::class, 'mod_movimiento']);
+	$routes[] = Route::post('mod_movimiento_control', '/modificar_movimiento', [MovimientoController::class, 'mod_movimiento_control']);
+	$routes[] = Route::get('del_movimiento', '/delete_movimiento\?ID={id}', [MovimientoController::class, 'del_movimiento_control']);
+	$routes[] = Route::get('listado_categorias', '/categorias', [CategoriaController::class, 'listado_categorias']);
+	$routes[] = Route::get('listado_categorias_success', '/categorias\?Mensaje={mensaje}', [CategoriaController::class, 'listado_categorias']);
+	$routes[] = Route::get('datos_categoria', '/categoria\?ID={id}', [CategoriaController::class, 'datos_categoria']);
+	$routes[] = Route::get('mod_categoria', '/categoria/editar\?ID={id}', [CategoriaController::class, 'mod_categoria']);
+	$routes[] = Route::get('sol_del_control', 'pedireliminarcategoria\?ID={id}', [CategoriaController::class, 'sol_del_control']);
+	$routes[] = Route::get('del_categoria', '/delete_categoria\?ID={id}', [CategoriaController::class, 'del_categoria_control']);
+	$routes[] = Route::get('categoria', '/categoria/unificar', [CategoriaController::class, 'unif_categoria']);
+	$routes[] = Route::post('sol_unif_control', 'pedirunificarcategoria', [CategoriaController::class, 'sol_unif_control']);
+	$routes[] = Route::get('motivos_listado', '/motivos', [MotivoController::class, 'listado_motivos']);
+	$routes[] = Route::get('mod_motivo', '/motivo/editar\?ID={id}', [MotivoController::class, 'mod_motivo']);
+	$routes[] = Route::get('mod_motivo_succes', '/motivos\?Mensaje={mensaje}', [MotivoController::class, 'listado_motivos']);
+	$routes[] = Route::get('mod_motivo_error', '/motivo/editar\?ID={id}&MensajeError={mensaje}', [MotivoController::class, 'mod_motivo']);
+	$routes[] = Route::post('sol_mod_motivo', 'pedirmodificarmotivo', [MotivoController::class, 'sol_mod_control']);
+	$routes[] = Route::post('mod_motivo_control', 'modificarmotivo', [MotivoController::class, 'mod_motivo_control']);
+	$routes[] = Route::get('del_motivo_control', 'pedireliminarmotivo\?ID={id}', [MotivoController::class, 'del_motivo_control']);
+	$routes[] = Route::get('unif_motivo', '/motivo/unificar', [MotivoController::class, 'unif_motivo']);
+	$routes[] = Route::get('unif_motivo_success', '/motivo/unificar\?Mensaje={mensaje}', [MotivoController::class, 'unif_motivo']);
+	$routes[] = Route::post('sol_unif_motivo_control', 'pedirunificarmotivos', [MotivoController::class, 'sol_unif_control']);
+	$routes[] = Route::post('unif_motivo_control', 'unificarmotivos', [MotivoController::class, 'unif_motivo_control']);
+	$routes[] = Route::get('listado_responsables', '/responsables', [ResponsableController::class, 'listado_responsables']);
+	$routes[] = Route::get('mod_responsable', '/responsable/editar\?ID={id}', [ResponsableController::class, 'mod_responsable']);
+	$routes[] = Route::get('sol_del_responsable', '/pedireliminarresponsable\?ID={id}', [ResponsableController::class, 'sol_del_responsable']);
+	$routes[] = Route::get('unif_responsable', '/responsable/unificar', [ResponsableController::class, 'unif_responsable']);
+	$routes[] = Route::get('responsables', '/pedirunificarresponsable', [ResponsableController::class, 'index']);
+	$routes[] = Route::get('accounts', '/usuarios', [AccountController::class, 'listado_accounts']);
+	$routes[] = Route::get('mod_account', '/usuario/editar\?account_id={id}', [AccountController::class, 'mod_account']);
+	$routes[] = Route::get('mod_account_success', '/usuario/editar\?account_id={id}&Mensaje={mensaje}', [AccountController::class, 'mod_account']);
+	$routes[] = Route::get('mod_account_error', '/usuario/editar\?account_id={id}&MensajeError={mensaje}', [AccountController::class, 'mod_account']);
+	$routes[] = Route::post('new_account', '/usuario/nuevo', [AccountController::class, 'new_account']);
+	$routes[] = Route::post('mod_account_control', '/modificar_usuario', [AccountController::class, 'mod_account_control']);
+	$routes[] = Route::get('del_account_control', '/delete_usuario\?ID={id}', [AccountController::class, 'del_account_control']);
+	$routes[] = Route::get('listado_barrios', '/barrios', [BarrioController::class, 'listado_barrios']);
+	$routes[] = Route::get('mod_barrio', '/barrio/editar\?ID={id}', [BarrioController::class, 'mod_barrio']);
+	$routes[] = Route::post('mod_barrio_control', '/modificar_barrio', [BarrioController::class, 'mod_barrio_control']);
+	$routes[] = Route::get('del_barrio_control', '/delete_barrio\?ID={id}', [BarrioController::class, 'del_barrio_control']);
+	$routes[] = Route::get('new_barrio', '/barrio/nuevo', [BarrioController::class, 'new_barrio']);
+	$routes[] = Route::get('unif_barrio', '/barrio/unificar', [BarrioController::class, 'unif_barrios']);
+	$routes[] = Route::get('unif_barrio_success', '/barrio/unificar\?Mensaje={mensaje}', [BarrioController::class, 'unif_barrios']);
+	$routes[] = Route::post('sol_unif_barrio', '/pedir_unificar_barrios', [BarrioController::class, 'sol_unif_barrio']);
+	$routes[] = Route::post('unif_barrio_control', '/unificar_barrios', [BarrioController::class, 'unif_barrio_control']);
+	$routes[] = Route::post('new_barrio_control', 	'/insertar_barrio', [BarrioController::class, 'new_barrio_control']);
+	$routes[] = Route::get('listado_calles', '/calles', [CalleController::class, 'listado_calles']);
+	$routes[] = Route::get('listado_calles_succes', '/calles\?Mensaje={mensaje}', [CalleController::class, 'listado_calles']);
+	$routes[] = Route::get('mod_calle', '/calle/editar\?ID={id}', [CalleController::class, 'mod_calle']);
+	$routes[] = Route::post('mod_calle_control', '/modificar_calle', [CalleController::class, 'mod_calle_control']);
+	$routes[] = Route::get('del_calle_control', '/delete_calle\?ID={id}', [CalleController::class, 'del_calle_control']);
+	$routes[] = Route::get('new_calle', '/calle/nueva', [CalleController::class, 'new_calle']);
+	$routes[] = Route::post('new_calle_control', '/insertar_calle.php', [CalleController::class, 'new_calle_control']);
+	$routes[] = Route::get('unif_calle', '/calle/unificar', [CalleController::class, 'unif_calle']);
+	$routes[] = Route::post('unif_calle_control', '/unificar_direcciones', [CalleController::class, 'unif_calle_control']);
+	$routes[] = Route::get('listado_escuelas', '/escuelas', [EscuelaController::class, 'listado_escuelas']);
+	$routes[] = Route::get('listado_escuelas_success', '/escuelas\?Mensaje={mensaje}', [EscuelaController::class, 'listado_escuelas']);
+	$routes[] = Route::get('escuelas', '/escuela/editar\?ID={id}', [EscuelaController::class, 'mod_escuela']);
+	$routes[] = Route::get('unif_escuelas', '/escuela/unificar', [EscuelaController::class, 'unif_escuelas']);
+	$routes[] = Route::post('sol_unif_escuela_control', '/pedir_unificar_escuelas', [EscuelaController::class, 'sol_unif_escuela_control']);
+	$routes[] = Route::post('unif_escuela_control', '/unificar_escuelas', [EscuelaController::class, 'unif_escuela_control']);
+	$routes[] = Route::get('delete_escuela_control', '/delete_escuela\?ID={id}', [EscuelaController::class, 'del_escuela_control']);
+	$routes[] = Route::get('new_escuela', '/escuela/nueva', [EscuelaController::class, 'new_escuela']);
+	$routes[] = Route::get('new_escuela_control', '/insertar_escuela', [EscuelaController::class, 'new_escuela_control']);
+	$routes[] = Route::post('mod_escuela_control', '/modificar_escuela', [EscuelaController::class, 'mod_escuela_control']);
+	$routes[] = Route::get('listado_otras_instituciones', '/otrasinstituciones', [OtraInstitucionController::class, 'listado_otras_instituciones']);
+	$routes[] = Route::get('mod_otra_institucion', '/otrainstitucion/editar\?ID={id}', [OtraInstitucionController::class, 'mod_otra_institucion']);
+	$routes[] = Route::get('mod_otra_institucion_control', 'modificar_otra_institucion', [OtraInstitucionController::class, 'mod_otra_institucion_control']);
+	$routes[] = Route::get('del_otra_institucion_control', '/delete_otra_institucion\?ID={id}', [OtraInstitucionController::class, 'del_otra_institucion_control']);
+	$routes[] = Route::get('new_otra_institucion', '/view_newotrasinstituciones.php', [OtraInstitucionController::class, 'new_otra_institucion']);
+	$routes[] = Route::get('new_otra_institucion_control', '/insertar_otra_institucion\?ID={id}', [OtraInstitucionController::class, 'new_otra_institucion_control']);
+	$routes[] = Route::post('error_session', '/error_session.php', [HomeController::class, 'error_session']);
+
+	$router = new Router($routes, $url);
+
+	$route = $router->matchFromPath(path: $url_request, method: $metodo);
+
+    $handler = $route->getHandler();
+    $attributes = $route->getAttributes();
+    $controllerName = $handler[0];
+    $methodName = $handler[1] ?? null;
+    $controller = new $controllerName();
+
+    if (!is_callable($controller)) {
+        $controller =  [$controller, $methodName];
+    }
+
+    echo $controller(...array_values($attributes));
+	exit();
+
+} catch (MethodNotAllowed $exception) {
+	header("Content-Type: text/html;charset=utf-8");
+	header("HTTP/1.0 405 Method Not Allowed");
+	include("view_not_found_404.php");
+
+} catch (RouteNotFound $exception) {
+	header("Content-Type: text/html;charset=utf-8");
+    header("HTTP/1.0 404 Not Found");
+	include("view_not_found_404.php");
+
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage();
+}

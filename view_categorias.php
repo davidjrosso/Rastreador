@@ -18,17 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-session_start(); 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-header("Content-Type: text/html;charset=utf-8");
 
-/*     CONTROL DE USUARIOS                    */
-if(!isset($_SESSION["Usuario"])){
-    header("Location: Error_Session.php");
-    exit();
-}
+header("Content-Type: text/html;charset=utf-8");
 
 $ID_Usuario = $_SESSION["Usuario"];
 $usuario = new Account(account_id: $ID_Usuario);
@@ -61,7 +55,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
           })
           .then((willDelete) => {
             if (willDelete) {
-              window.location.href = 'Controladores/pedireliminarcategoria.php?ID=' + xID;
+              window.location.href = 'pedireliminarcategoria?ID=' + xID;
             }
           });
     }
@@ -88,7 +82,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
           <center><button class = "btn btn-secondary" onClick = "location.href='view_newcategorias.php'">Agregar Nueva Categoria</button></center>
       </div>
       <div class="col-2">
-                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="location.href = '/'">Volver</button>
       </div>
 
       <div class = "col"></div>

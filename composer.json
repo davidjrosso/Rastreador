@@ -8,6 +8,7 @@
     "require": {
         "google/apiclient": "^2.18",
         "league/oauth2-server": "^4.1",
-        "phpoffice/phpspreadsheet": "^4.4"
+        "phpoffice/phpspreadsheet": "^4.4",
+        "phpdevcommunity/php-router": "^3.1"
     }
 }
