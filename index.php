@@ -53,7 +53,7 @@ try {
 	$host_url = $parametria->get_valor();
 	$url = "https://" . $host_url;
 
-	$routes[] = Route::get('home', '/', handler: [HomeController::class, 'index']);
+	$routes[] = Route::get('home', '/', [HomeController::class, 'index']);
 	$routes[] = Route::get('home_url', '/home', [HomeController::class, 'index']);
 	$routes[] = Route::get('home_succes', '/home\?Mensaje={mensaje}', [HomeController::class, 'index']);
 	$routes[] = Route::get('home_error', '/home\?MensajeError={mensaje}', [HomeController::class, 'index']);
