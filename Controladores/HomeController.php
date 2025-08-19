@@ -91,7 +91,7 @@ class HomeController
         $user_name = $_REQUEST["UserName"];
         $user_pass = md5($_REQUEST["UserPass"]);
         if (isset($_SESSION["Usuario"])) {
-            header("Location: ../view_inicio.php");
+            header("Location: /");
         } else {
             $control = Account::control_user_password(
                                                     con: $con,
