@@ -70,12 +70,11 @@ class HomeController
     public function login() 
     {
         if (isset($_SESSION["Usuario"])) {
-            include("view_inicio.php");
-            exit();
+            header("Location: /");
+        } else {
+            include("view_login.php");
         }
-
-        include("view_login.php");
-
+        exit();
     }
 
     public function login_control() 
@@ -122,6 +121,7 @@ class HomeController
             session_destroy();
         }
         header("Location: /login");
+        exit();
     }
 
 }
