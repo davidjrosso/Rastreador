@@ -120,8 +120,8 @@ public function getMenuGeneralUsuario($ID)
                         <li class="collapsed" onClick = "location.href = \'/responsables\'">
                           <a href="/responsables"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
                         </li>
-                        <li class="collapsed" onClick = "location.href = \'/centrossalud\'">
-                          <a href="/centrossalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                        <li class="collapsed" onClick = "location.href = \'/centrosdesalud\'">
+                          <a href="/centrosdesalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
                         </li>
                         <li class="collapsed" onClick = "location.href = \'/escuelas\'">
                           <a href="/escuelas"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
@@ -153,8 +153,8 @@ public function getMenuGeneralUsuario($ID)
                   <li class="collapsed" onClick = "location.href = \'/responsables\'">
                     <a href="/responsables"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
                   </li>
-                  <li class="collapsed" onClick = "location.href = \'/centrossalud\'">
-                    <a href="/centrossalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                  <li class="collapsed" onClick = "location.href = \'/centrosdesalud\'">
+                    <a href="/centrosdesalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
                   </li>
                   <li class="collapsed" onClick = "location.href = \'/escuelas\'">
                     <a href="/escuelas"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
@@ -187,8 +187,8 @@ public function getMenuGeneralUsuario($ID)
                   <li class="collapsed" onClick = "location.href = \'/responsables\'">
                     <a href="/responsables"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
                   </li>
-                  <li class="collapsed" onClick = "location.href = \'/centrossalud\'">
-                    <a href="/centrossalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                  <li class="collapsed" onClick = "location.href = \'/centrosdesalud\'">
+                    <a href="/centrosdesalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
                   </li>
                   <li class="collapsed" onClick = "location.href = \'/escuelas\'">
                     <a href="/escuelas"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
@@ -221,8 +221,8 @@ public function getMenuGeneralUsuario($ID)
                 <li class="collapsed active" onClick = "location.href = \'/responsables\'">
                   <a href="/responsables"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'/centrossalud\'">
-                  <a href="/centrossalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                <li class="collapsed" onClick = "location.href = \'/centrosdesalud\'">
+                  <a href="/centrosdesalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'/escuelas\'">
                   <a href="/escuelas"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
@@ -255,8 +255,8 @@ public function getMenuGeneralUsuario($ID)
                 <li class="collapsed" onClick = "location.href = \'/responsables\'">
                   <a href="/responsables"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
                 </li>
-                <li class="collapsed active" onClick = "location.href = \'/centrossalud\'">
-                  <a href="/centrossalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                <li class="collapsed active" onClick = "location.href = \'/centrosdesalud\'">
+                  <a href="/centrosdesalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'/escuelas\'">
                   <a href="/escuelas"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
@@ -289,8 +289,8 @@ public function getMenuGeneralUsuario($ID)
                 <li class="collapsed" onClick = "location.href = \'/responsables\'">
                   <a href="/responsables"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'/centrossalud\'">
-                  <a href="/centrossalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                <li class="collapsed" onClick = "location.href = \'/centrosdesalud\'">
+                  <a href="/centrosdesalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
                 </li>
                 <li class="collapsed active" onClick = "location.href = \'/escuelas\'">
                   <a href="/escuelas"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
@@ -322,8 +322,8 @@ public function getMenuGeneralUsuario($ID)
                 <li class="collapsed" onClick = "location.href = \'/responsables\'">
                   <a href="/responsables"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'/centrossalud\'">
-                  <a href="/centrossalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                <li class="collapsed" onClick = "location.href = \'/centrosdesalud\'">
+                  <a href="/centrosdesalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'/escuelas\'">
                   <a href="/escuelas"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
@@ -354,8 +354,8 @@ public function getMenuGeneralUsuario($ID)
                 <li class="collapsed" onClick = "location.href = \'/responsables\'">
                   <a href="/responsables"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'/centrossalud\'">
-                  <a href="/centrossalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                <li class="collapsed" onClick = "location.href = \'/centrosdesalud\'">
+                  <a href="/centrosdesalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'/escuelas\'">
                   <a href="/escuelas"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
@@ -386,8 +386,8 @@ public function getMenuGeneralUsuario($ID)
                 <li class="collapsed" onClick = "location.href = \'/responsables\'">
                   <a href="/responsables"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'/centrossalud\'">
-                  <a href="/centrossalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                <li class="collapsed" onClick = "location.href = \'/centrosdesalud\'">
+                  <a href="/centrosdesalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'/escuelas\'">
                   <a href="/escuelas"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
@@ -418,8 +418,8 @@ public function getMenuGeneralUsuario($ID)
                 <li class="collapsed" onClick = "location.href = \'/responsables\'">
                   <a href="/responsables"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'/centrossalud\'">
-                  <a href="/centrossalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                <li class="collapsed" onClick = "location.href = \'/centrosdesalud\'">
+                  <a href="/centrosdesalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'/escuelas\'">
                   <a href="/escuelas"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
@@ -1532,8 +1532,8 @@ public function getMenuSeguridadUsuario($ID){
                         <li class="collapsed" onClick = "location.href = \'/responsables\'">
                           <a href="/responsables"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
                         </li>
-                        <li class="collapsed" onClick = "location.href = \'/centrossalud\'">
-                          <a href="/centrossalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                        <li class="collapsed" onClick = "location.href = \'/centrosdesalud\'">
+                          <a href="/centrosdesalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
                         </li>
                         <li class="collapsed" onClick = "location.href = \'/escuelas\'">
                           <a href="/escuelas"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
@@ -1566,8 +1566,8 @@ public function getMenuSeguridadUsuario($ID){
                 <li class="collapsed" onClick = "location.href = \'/responsables\'">
                   <a href="/responsables"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'/centrossalud\'">
-                  <a href="/centrossalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                <li class="collapsed" onClick = "location.href = \'/centrosdesalud\'">
+                  <a href="/centrosdesalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'/escuelas\'">
                   <a href="/escuelas"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
@@ -1599,8 +1599,8 @@ public function getMenuSeguridadUsuario($ID){
                 <li class="collapsed" onClick = "location.href = \'/responsables\'">
                   <a href="/responsables"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'/centrossalud\'">
-                  <a href="/centrossalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                <li class="collapsed" onClick = "location.href = \'/centrosdesalud\'">
+                  <a href="/centrosdesalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'/escuelas\'">
                   <a href="/escuelas"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
@@ -1632,8 +1632,8 @@ public function getMenuSeguridadUsuario($ID){
                 <li class="collapsed active" onClick = "location.href = \'/responsables\'">
                   <a href="/responsables"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'/centrossalud\'">
-                  <a href="/centrossalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                <li class="collapsed" onClick = "location.href = \'/centrosdesalud\'">
+                  <a href="/centrosdesalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'/escuelas\'">
                   <a href="/escuelas"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
@@ -1665,8 +1665,8 @@ public function getMenuSeguridadUsuario($ID){
                 <li class="collapsed" onClick = "location.href = \'/responsables\'">
                   <a href="/responsables"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
                 </li>
-                <li class="collapsed active" onClick = "location.href = \'/centrossalud\'">
-                  <a href="/centrossalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                <li class="collapsed active" onClick = "location.href = \'/centrosdesalud\'">
+                  <a href="/centrosdesalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'/escuelas\'">
                   <a href="/escuelas"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
@@ -1698,8 +1698,8 @@ public function getMenuSeguridadUsuario($ID){
                 <li class="collapsed" onClick = "location.href = \'/responsables\'">
                   <a href="/responsables"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'/centrossalud\'">
-                  <a href="/centrossalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                <li class="collapsed" onClick = "location.href = \'/centrosdesalud\'">
+                  <a href="/centrosdesalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
                 </li>
                 <li class="collapsed active" onClick = "location.href = \'/escuelas\'">
                   <a href="/escuelas"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
@@ -1731,8 +1731,8 @@ public function getMenuSeguridadUsuario($ID){
                 <li class="collapsed" onClick = "location.href = \'/responsables\'">
                   <a href="/responsables"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'/centrossalud\'">
-                  <a href="/centrossalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                <li class="collapsed" onClick = "location.href = \'/centrosdesalud\'">
+                  <a href="/centrosdesalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'/escuelas\'">
                   <a href="/escuelas"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
@@ -1764,8 +1764,8 @@ public function getMenuSeguridadUsuario($ID){
                 <li class="collapsed" onClick = "location.href = \'/responsables\'">
                   <a href="/responsables"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'/centrossalud\'">
-                  <a href="/centrossalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                <li class="collapsed" onClick = "location.href = \'/centrosdesalud\'">
+                  <a href="/centrosdesalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'/escuelas\'">
                   <a href="/escuelas"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
@@ -1797,8 +1797,8 @@ public function getMenuSeguridadUsuario($ID){
               <li class="collapsed" onClick = "location.href = \'/responsables\'">
                 <a href="/responsables"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
               </li>
-              <li class="collapsed" onClick = "location.href = \'/centrossalud\'">
-                <a href="/centrossalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+              <li class="collapsed" onClick = "location.href = \'/centrosdesalud\'">
+                <a href="/centrosdesalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
               </li>
               <li class="collapsed" onClick = "location.href = \'/escuelas\'">
                 <a href="/escuelas"><i class="fa fa-file-text fa-lg"></i> Escuela</a>
@@ -1830,8 +1830,8 @@ public function getMenuSeguridadUsuario($ID){
                 <li class="collapsed" onClick = "location.href = \'/responsables\'">
                   <a href="/responsables"><i class="fa fa-file-text fa-lg"></i> Responsable</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'/centrossalud\'">
-                  <a href="/centrossalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
+                <li class="collapsed" onClick = "location.href = \'/centrosdesalud\'">
+                  <a href="/centrosdesalud"><i class="fa fa-file-text fa-lg"></i> Centros Salud</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'/escuelas\'">
                   <a href="/escuelas"><i class="fa fa-file-text fa-lg"></i> Escuela</a>

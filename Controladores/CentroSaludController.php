@@ -29,13 +29,21 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_Unificacion.php");
 class CentroSaludController 
 {
 
-    public function listado_centro_salud($mensaje = null)
+    public function listado_centros_salud($mensaje = null, $id_filtro = null)
     {
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
             include("view_centros.php");
         }
+        exit();
+    }
+
+    public function buscar_centos_salud($filtro_nombre = null, $filtro_id = null)
+    {
+        $filtro = $_REQUEST["Search"];
+        $id_filtro = $_REQUEST["ID_Filtro"];
+        header("Location: /centrosdesalud?Filtro=" . $filtro . "&ID_Filtro=" . $id_filtro);
         exit();
     }
 

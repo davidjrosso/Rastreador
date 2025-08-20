@@ -1,15 +1,12 @@
 <?php 
-session_start(); 
+
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Elements.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/CtrGeneral.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/CentroSalud.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Account.php';
+
+
 header("Content-Type: text/html;charset=utf-8");
-
-
-if(!isset($_SESSION["Usuario"])){
-    header("Location: Error_Session.php");
-}
 
 $ID_Usuario = $_SESSION["Usuario"];
 $usuario = new Account(account_id: $ID_Usuario); 
@@ -20,6 +17,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
 <head>
   <title>Rastreador III</title>
   <meta charset="utf-8">
+  <base href="/">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -124,7 +122,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
 
             ?>
             <div class = "col-10">
-            <form method="post" onKeydown="return event.key != 'Enter';" action = "Controladores/ModificarCentroSalud.php">
+            <form method="post" onKeydown="return event.key != 'Enter';" action = "mod_centro_salud">
                 <!-- <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Id: </label>
                   <div class="col-md-10">
@@ -193,7 +191,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                 <div class="form-group row">
                   <div class="offset-md-2 col-md-10">
                     <button type="submit" class="btn btn-outline-success">Guardar</button>
-                    <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_centros.php'">Atras</button>
+                    <button type = "button" class = "btn btn-danger" onClick = "location.href = '/home'">Atras</button>
                   </div>
                 </div>
             </form>

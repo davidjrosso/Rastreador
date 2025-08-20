@@ -100,8 +100,11 @@ try {
 	$routes[] = Route::get('sol_del_responsable', '/pedireliminarresponsable\?ID={id}', [ResponsableController::class, 'sol_del_responsable']);
 	$routes[] = Route::get('unif_responsable', '/responsable/unificar', [ResponsableController::class, 'unif_responsable']);
 	$routes[] = Route::get('responsables', '/pedirunificarresponsable', [ResponsableController::class, 'index']);
-	$routes[] = Route::get('listado_centros_salud', '/centrossalud', [CentroSaludController::class, 'listado_centros_salud']);
+	$routes[] = Route::get('listado_centros_salud', '/centrosdesalud', [CentroSaludController::class, 'listado_centros_salud']);
+	$routes[] = Route::get('listado_centros_salud_filtro', '/centrosdesalud\?Filtro={filt}&ID_Filtro={idfilt}', [CentroSaludController::class, 'listado_centros_salud']);
+	$routes[] = Route::get('buscar_centos_salud', '/buscar_centos_salud', [CentroSaludController::class, 'buscar_centos_salud']);
 	$routes[] = Route::get('mod_centro_salud', '/centrosalud/editar\?ID={id}', [CentroSaludController::class, 'mod_centro_salud']);
+	$routes[] = Route::get('mod_centro_salud_control', '/mod_centro_salud', [CentroSaludController::class, 'mod_centro_salud_control']);
 	$routes[] = Route::get('sol_del_centro_salud', '/pedireliminarcentrosalud\?ID={id}', [CentroSaludController::class, 'sol_del_responsable']);
 	$routes[] = Route::get('unif_centro_salud', '/centroalud/unificar', [CentroSaludController::class, 'unif_centro_salud']);
 	$routes[] = Route::get('sol_unif_centro_salud_control', '/pedirunificarcentrosalud', [CentroSaludController::class, 'sol_unif_centro_salud_control']);
