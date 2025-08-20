@@ -1,47 +1,37 @@
 <?php 
-session_start(); 
-require_once "Controladores/Elements.php";
-require_once "Controladores/CtrGeneral.php";
+
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
+
+
 header("Content-Type: text/html;charset=utf-8");
 
-/*     CONTROL DE USUARIOS                    */
-if(!isset($_SESSION["Usuario"])){
-    header("Location: Error_Session.php");
-}
-
-$Con = new Conexion();
-$Con->OpenConexion();
 $ID_Usuario = $_SESSION["Usuario"];
-$ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
-$MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
-$EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
-$Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
-$TipoUsuario = $Ret["ID_TipoUsuario"];
-$Con->CloseConexion();
+$usuario = new Account(account_id: $ID_Usuario);
+$TipoUsuario = $usuario->get_id_tipo_usuario();
+
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <title>Rastreador III</title>
   <meta charset="utf-8">
+  <base href="/">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-  <!--<link href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-  <!--<script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script> -->
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-  <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="js/ValidarUnifPersonas.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script>
-       function buscarCentros_1(){
+       function buscarCentros_1() {
           var xCentro = document.getElementById('SearchCentros_1').value;
           var textoBusqueda = xCentro;
           xmlhttp=new XMLHttpRequest();
@@ -55,7 +45,7 @@ $Con->CloseConexion();
           xmlhttp.send();
         }
 
-        function buscarCentros_2(){
+        function buscarCentros_2() {
           var xCentro = document.getElementById('SearchCentros_2').value;
           var textoBusqueda = xCentro;
           xmlhttp=new XMLHttpRequest();
@@ -69,7 +59,7 @@ $Con->CloseConexion();
           xmlhttp.send();
         }
 
-        function seleccionCentro_1(xCentro,xID){
+        function seleccionCentro_1(xCentro,xID) {
           var Centro = document.getElementById("Centro_1");
           var ID_Centro = document.getElementById("ID_Centro_1");
           Centro.innerHTML = "";
@@ -77,7 +67,7 @@ $Con->CloseConexion();
           ID_Centro.setAttribute('value',xID);
         }
 
-        function seleccionCentro_2(xCentro,xID){
+        function seleccionCentro_2(xCentro,xID) {
           var Centro = document.getElementById("Centro_2");
           var ID_Centro = document.getElementById("ID_Centro_2");
           Centro.innerHTML = "";
@@ -107,7 +97,7 @@ $Con->CloseConexion();
           <p class = "TextoAdvertenciaUnificar">¡ADVERTENCIA! El segundo centro seleccionado se unirá al primer centro seleccionado. El segundo centro se eliminará.</p>
           <br>
            <!-- Carga -->
-          <form method = "post" action = "Controladores/pedirunificarcentros_salud.php" onSubmit = "return ValidarUnifCentros();">
+          <form method = "post" action = "pedirunificarcentros_salud" onSubmit = "return ValidarUnifCentros();">
               <div class="form-group row">
                   <label for="inputPassword" class="col-md-3 col-form-label LblForm">Primer Centro: </label>
                   <div class="col-md-9" id = "Centro_1">
@@ -125,7 +115,7 @@ $Con->CloseConexion();
                 <input type="hidden" name="ID_Centro_1" id = "ID_Centro_1" value = "0">
                 <input type="hidden" name="ID_Centro_2" id = "ID_Centro_2" value = "0">
                 <button type="submit" class="btn btn-outline-success">Aceptar</button>
-                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="location.href = '/home'">Volver</button>
               </div>
             </div>
           </form>

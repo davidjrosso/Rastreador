@@ -107,7 +107,7 @@ try {
 	$routes[] = Route::get('mod_centro_salud_control', '/mod_centro_salud', [CentroSaludController::class, 'mod_centro_salud_control']);
 	$routes[] = Route::get('sol_del_centro_salud', '/pedireliminarcentrosalud\?ID={id}', [CentroSaludController::class, 'sol_del_responsable']);
 	$routes[] = Route::get('unif_centro_salud', '/centrosalud/unificar', [CentroSaludController::class, 'unif_centro_salud']);
-	$routes[] = Route::get('sol_unif_centro_salud_control', '/pedirunificarcentrosalud', [CentroSaludController::class, 'sol_unif_centro_salud_control']);
+	$routes[] = Route::get('sol_unif_centro_salud_control', '/pedirunificarcentros_salud', [CentroSaludController::class, 'sol_unif_centro_salud_control']);
 	$routes[] = Route::get('accounts', '/usuarios', [AccountController::class, 'listado_accounts']);
 	$routes[] = Route::get('mod_account', '/usuario/editar\?account_id={id}', [AccountController::class, 'mod_account']);
 	$routes[] = Route::get('mod_account_success', '/usuario/editar\?account_id={id}&Mensaje={mensaje}', [AccountController::class, 'mod_account']);
