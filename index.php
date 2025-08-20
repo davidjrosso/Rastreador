@@ -68,11 +68,13 @@ try {
 	$routes[] = Route::get('personas_unificar', '/personas/unificar', [PersonaController::class, 'unif_persona']);
 	$routes[] = Route::post('personas_unif_control', 'unificarpersonas', [PersonaController::class, 'unif_persona_control']);
 	$routes[] = Route::get('movimientos_listado', '/movimientos', [MovimientoController::class, 'listado_movimiento']);
+	$routes[] = Route::get('movimientos_listado_filtro', '/movimientos\?Filtro={filtro}&ID_Filtro={id}', [MovimientoController::class, 'listado_movimiento']);
 	$routes[] = Route::get('movimientos_listado_succes', '/movimientos\?Mensaje={mensaje}', [MovimientoController::class, 'listado_movimiento']);
 	$routes[] = Route::get('movimiento', '/movimiento\?ID={id}', [MovimientoController::class, 'datos_movimiento']);
 	$routes[] = Route::get('mod_movimiento', '/movimiento/editar\?ID={id}', [MovimientoController::class, 'mod_movimiento']);
 	$routes[] = Route::post('mod_movimiento_control', '/modificar_movimiento', [MovimientoController::class, 'mod_movimiento_control']);
 	$routes[] = Route::get('del_movimiento', '/delete_movimiento\?ID={id}', [MovimientoController::class, 'del_movimiento_control']);
+	$routes[] = Route::post('buscar_movimientos', '/buscar_movimientos', [MovimientoController::class, 'buscar_movimientos']);
 	$routes[] = Route::get('listado_categorias', '/categorias', [CategoriaController::class, 'listado_categorias']);
 	$routes[] = Route::get('listado_categorias_success', '/categorias\?Mensaje={mensaje}', [CategoriaController::class, 'listado_categorias']);
 	$routes[] = Route::get('datos_categoria', '/categoria\?ID={id}', [CategoriaController::class, 'datos_categoria']);
@@ -136,6 +138,8 @@ try {
 	$routes[] = Route::get('listado_otras_instituciones', '/otrasinstituciones', [OtraInstitucionController::class, 'listado_otras_instituciones']);
 	$routes[] = Route::get('mod_otra_institucion', '/otrainstitucion/editar\?ID={id}', [OtraInstitucionController::class, 'mod_otra_institucion']);
 	$routes[] = Route::get('mod_otra_institucion_control', 'modificar_otra_institucion', [OtraInstitucionController::class, 'mod_otra_institucion_control']);
+	$routes[] = Route::get('unif_otra_institucion', '/otrainstitucion/unificar', [OtraInstitucionController::class, 'unif_otra_institucion']);
+	$routes[] = Route::get('unif_otra_institucion_control', '/unificar_otra_institucion', [OtraInstitucionController::class, 'unif_otra_institucion_control']);
 	$routes[] = Route::get('del_otra_institucion_control', '/delete_otra_institucion\?ID={id}', [OtraInstitucionController::class, 'del_otra_institucion_control']);
 	$routes[] = Route::get('new_otra_institucion', '/view_newotrasinstituciones.php', [OtraInstitucionController::class, 'new_otra_institucion']);
 	$routes[] = Route::get('new_otra_institucion_control', '/insertar_otra_institucion\?ID={id}', [OtraInstitucionController::class, 'new_otra_institucion_control']);

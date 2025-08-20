@@ -290,163 +290,48 @@ class OtraInstitucionController
         exit();
     }
 
-    public function sol_unif_control()
-    {
-        $id_usuario = $_SESSION["Usuario"];
-        $id_otra_institucion_unif = $_REQUEST["ID_otra_institucion_unif"];
-        $id_otra_institucion_del = $_REQUEST["ID_otra_institucion_del"];
-
-        $fecha = date("Y-m-d");
-        $ID_TipoAccion = 2;
-
-        try {
-            $con = new Conexion();
-            $con->OpenConexion();
-
-            if (!empty($id_otra_institucion_unif) && !empty($id_otra_institucion_del)) {
-                $con = new Conexion();
-                $con->OpenConexion();
-
-                $existe_otra_institucion_unif = otra_institucion::exist_otra_institucion(
-                                                            connection: $con,
-                                                            id_otra_institucion: $id_otra_institucion_unif
-                                                        );
-                $existe_otra_institucion_del = otra_institucion::exist_otra_institucion(
-                                                            connection: $con,
-                                                            id_otra_institucion: $id_otra_institucion_del
-                                                        );
-
-                if(!$existe_otra_institucion_unif || !$existe_otra_institucion_del){
-                    $con->CloseConexion();
-                    $mensaje = "No existen la otra_institucion a unificar";
-                    header('Location: /otra_institucion/unificar?MensajeError=' . $mensaje);
-                } else {
-                    $solicitud_unificacion = new Solicitud_Unificacion(
-                        coneccion: $con,
-                        xID_Usuario : $id_usuario,
-                        xID_Registro_1 : $id_otra_institucion_unif,
-                        xTipoUnif: 6,
-                        xID_Registro_2 : $id_otra_institucion_del,
-                        xFecha: $fecha
-                    );
-                    $solicitud_unificacion->save();
-                
-                    $con->CloseConexion();
-                    $mensaje = "La solicitud de unificacion de otra_institucion se envió a los administradores para ser confirmada.";
-                    header('Location: /otra_institucion/unificar?Mensaje=' . $mensaje);
-                }
-
-            } else {
-                $mensaje_error = "Debe seleccionar una otra_institucion";
-                header('Location: /otra_institucion/unificar?MensajeError=' . $mensaje_error);
-            }
-
-        } catch (Exception $e) {
-            echo "Error: ".$e->getMessage();
-        }
-        exit();
-    }
-
     public function unif_otra_institucion($mensaje = null)
     {
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("viwe_unifotrasinstituciones.php");
+            include("view_unifotrasinstituciones.php");
         }
         exit();
     }
 
     public function unif_otra_institucion_control()
     {
-        $ID_Usuario = $_SESSION["Usuario"];
-        $id_solicitud = $_REQUEST["ID"];
-        $fecha = date("Y-m-d");
-        $ID_TipoAccion = 2;
+        $ID_Institucion_1 = $_REQUEST["ID_Institucion_1"];
+        $ID_Institucion_2 = $_REQUEST["ID_Institucion_2"];
 
-        try {
-            $con = new Conexion();
-            $con->OpenConexion();
-            $solicitud = new Solicitud_unificacion(
-                                                coneccion: $con,
-                                                xID_Solicitud: $id_solicitud
-                                                );
+        if($ID_Institucion_1 > 0 && $ID_Institucion_2 > 0){
+            $Con = new Conexion();
+            $Con->OpenConexion();
 
-            $id_otra_institucion_unif = $solicitud->getID_Registro_1();
-            $id_otra_institucion_del = $solicitud->getID_Registro_2();
+            $ConsultarInstituciones = "select * from movimiento where id_otrainstitucion = $ID_Institucion_2 and estado = 1";
+            $MensajeErrorConsultarInstituciones = "No se pudieron consultar los casos de igualdad en la Institución 1";
 
-            if (!empty($id_otra_institucion_unif) && !empty($id_otra_institucion_del)) {
-
-                $otra_institucion_unif = new otra_institucion(xID_otra_institucion: $id_otra_institucion_unif, xConecction: $con);
-                if (!otra_institucion::exist_otra_institucion($con, $id_otra_institucion_del)) {
-                    $solicitud->delete();
-                    $mensaje = "La otra_institucion a unificar ya a sido unificada o no existe.";
-                    header('Location: /home?MensajeError=' . $mensaje);
-                } else {
-                    $otra_institucion_del = new otra_institucion(xID_otra_institucion: $id_otra_institucion_del, xConecction: $con);
-                    $cod_otra_institucion_unif = $otra_institucion_unif->getCod_otra_institucion();
-                    $cod_otra_institucion_del = $otra_institucion_del->getCod_otra_institucion();
-                    $consulta = "update motivo 
-                                set cod_otra_institucion = '$cod_otra_institucion_unif' 
-                                where cod_otra_institucion = '$cod_otra_institucion_del' 
-                                and estado = 1";
-
-                    if(!$Ret = mysqli_query($con->Conexion,$consulta)){
-                        throw new Exception("Problemas en la consulta. Consulta: " . $consulta, 2);		
-                    }
-
-                    $otra_institucion_del->delete();
-
-                    $Detalles = "El usuario con ID: $ID_Usuario ha unificado la otra_institucion: $id_otra_institucion_del con la otra_institucion $id_otra_institucion_unif.";
-                    $accion = new Accion(
-                                        xaccountid: $ID_Usuario,
-                                        xDetalles: $Detalles,
-                                        xFecha: $fecha,
-                                        xID_TipoAccion: $ID_TipoAccion
-                                        );
-                    $accion->save();
-                    $consulta_permisos = "select *
-                                        from otra_institucions_roles
-                                        where id_otra_institucion = $id_otra_institucion_del
-                                        and estado = 1";
-                    $message_error = "Problemas al consultar otra_institucions roles";
-                    if (!$resultados = mysqli_query($con->Conexion,$consulta_permisos)) {
-                        throw new Exception($message_error . ". Consulta: " . $consulta_permisos, 2);
-                    }
-
-                    while ($RetPermisos = mysqli_fetch_array($resultados)) {
-                        $grupo_usuarios = $RetPermisos["id_tipousuario"];
-                        $id_otra_institucion_rol = $RetPermisos["id_otra_institucion_rol"];
-                        if (!otra_institucionRol::exist_rol(connection: $con, 
-                                                    id_otra_institucion: $id_otra_institucion_unif,
-                                                    id_tipo_usuario: $grupo_usuarios)) {
-                            $otra_institucion_rol = new otra_institucionRol(id_otra_institucion: $id_otra_institucion_unif,
-                                                            id_tipo_usuario: $grupo_usuarios, 
-                                                            fecha: $fecha,
-                                                            conecction: $con,
-                                                            estado: 1
-                                                            );
-                            $otra_institucion_rol->save();
-                        }
-                        $otra_institucion_rol = new otra_institucionRol(
-                                                        conecction: $con,
-                                                        id_otra_institucion_rol: $id_otra_institucion_rol
-                                                        );
-                        $otra_institucion_rol->delete();
-                    }
-
-                    $solicitud->delete();
-                    $con->CloseConexion();
-                    $Mensaje = "La otra_institucion se unifico correctamente";
-                    header('Location: /home?Mensaje=' . $Mensaje);
-                }
-            } else {
-                $Mensaje = "Elija las otra_institucions a unificar";
-                header('Location: /home?MensajeError=' . $Mensaje);
+            $EjecutarConsultarInstituciones = mysqli_query($Con->Conexion, $ConsultarInstituciones) or die($MensajeErrorConsultarInstituciones);
+            while($RetInstituciones = mysqli_fetch_assoc($EjecutarConsultarInstituciones)){
+                $ID_Movimiento = $RetInstituciones["id_movimiento"];
+                $CambiarInstituciones = "update movimiento set id_otrainstitucion = $ID_Institucion_1 where id_movimiento = $ID_Movimiento";
+                $MensajeErrorCambiarInstituciones = "No se pudieron cambiar las instituciones 1";
+                mysqli_query($Con->Conexion, $CambiarInstituciones) or die($MensajeErrorCambiarInstituciones);
             }
-        } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+
+            $ConsultaBajaInstitucion = "update otras_instituciones set Estado = 0 where ID_OtraInstitucion = $ID_Institucion_2";
+            $MensajeErrorBajaInstitucion = "No se pudo dar de baja la Institución";
+
+            mysqli_query($Con->Conexion,$ConsultaBajaInstitucion) or die($MensajeErrorBajaInstitucion);
+
+            $Con->CloseConexion();
+            $Mensaje = "Los datos se unificaron Correctamente";
+            header('Location: /otrainstitucion/unificar?Mensaje=' . $Mensaje);
+        } else {
+            $MensajeError = "Debe seleccionar Primer Barrio y Segundo Barrio";
+            header('Location: /otrainstitucion/unificar?MensajeError=' . $MensajeError);
         }
-        
+        exit();
     }
 }
