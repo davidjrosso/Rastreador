@@ -105,7 +105,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
      <div class = "row">
       <div class = "col-10">
            <!-- Carga -->
-          <form method = "post" action = "buscar_centos_salud">
+          <form method = "post" action = "buscar_centros_salud">
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Buscar: </label>
               <div class="col-md-4">
