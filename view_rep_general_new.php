@@ -1296,7 +1296,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             <?php
             $Element->getMenuHistorial(0); ?>
           </div>
-          <div class="brand btn-Salir" onClick="location.href = 'Controladores/CtrLogout.php'">Salir**</div>
+          <div class="brand btn-Salir" onClick="location.href = '/logout'">Salir**</div>
         </div>
       </div>
       <?php
@@ -1353,7 +1353,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             <?php
             $Element->getMenuHistorial(0); ?>
           </div>
-          <div class="brand btn-Salir" onClick="location.href = 'Controladores/CtrLogout.php'">Salir</div>
+          <div class="brand btn-Salir" onClick="location.href = '/logout'">Salir</div>
         </div>
       </div>
       <?php
@@ -1411,7 +1411,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             <?php
             $Element->getMenuHistorial(0); ?>
           </div>
-          <div class="brand btn-Salir" onClick="location.href = 'Controladores/CtrLogout.php'">Salir</div>
+          <div class="brand btn-Salir" onClick="location.href = '/logout'">Salir</div>
         </div>
       </div>
     <?php } ?>
@@ -2348,7 +2348,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
           
               //       $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
           
-              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
+              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"/movimiento?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
               //     }
               //   }elseif($ID_Motivo2 > 0){
               //     if($ID_Motivo2 == $Ret_Datos_Movimiento["motivo_1"]){
@@ -2359,7 +2359,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
           
               //       $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
           
-              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
+              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"/movimiento?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
               //     }
               //   }elseif($ID_Motivo3 > 0){
               //     if($ID_Motivo3 == $Ret_Datos_Movimiento["motivo_1"]){
@@ -2370,7 +2370,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
           
               //       $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
           
-              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
+              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"/movimiento?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
               //     }
               //   }else{                                                        
               //     $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color from motivo M, categoria C, formas_categorias F where M.id_motivo = ".$Ret_Datos_Movimiento["motivo_1"]." and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
@@ -2380,7 +2380,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
           
               //     $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
           
-              //     $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; padding: 0px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";
+              //     $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"/movimiento?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; padding: 0px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";
               //   }
               // }
           
@@ -2394,7 +2394,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
           
               //       $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
           
-              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
+              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"/movimiento?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
               //     }
               //   }elseif($ID_Motivo2 > 0){
               //     if($ID_Motivo2 == $Ret_Datos_Movimiento["motivo_2"]){
@@ -2405,7 +2405,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
           
               //       $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
           
-              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
+              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"/movimiento?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
               //     }
               //   }elseif($ID_Motivo3 > 0){
               //     if($ID_Motivo3 == $Ret_Datos_Movimiento["motivo_2"]){
@@ -2416,7 +2416,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
           
               //       $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
           
-              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
+              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"/movimiento?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
               //     }
               //   }else{ 
               //     $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color from motivo M, categoria C, formas_categorias F where M.id_motivo = ".$Ret_Datos_Movimiento["motivo_2"]." and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
@@ -2429,7 +2429,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
           
 
 
-              //     $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"]."; text-align= center;'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";
+              //     $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"/movimiento?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"]."; text-align= center;'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";
               //   }
               // }
           
@@ -2444,7 +2444,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
           
               //       $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
           
-              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
+              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"/movimiento?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
               //     }
               //   }elseif($ID_Motivo2 > 0){
               //     if($ID_Motivo2 == $Ret_Datos_Movimiento["motivo_3"]){
@@ -2455,7 +2455,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
           
               //       $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
           
-              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
+              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"/movimiento?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
               //     }
               //   }elseif($ID_Motivo3 > 0){
               //     if($ID_Motivo3 == $Ret_Datos_Movimiento["motivo_3"]){
@@ -2466,7 +2466,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
           
               //       $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
           
-              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
+              //       $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"/movimiento?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";                                  
               //     }
               //   }else{ 
               //     $ConsultarCodyColor = "select M.cod_categoria, F.Forma_Categoria, C.color from motivo M, categoria C, formas_categorias F where M.id_motivo = ".$Ret_Datos_Movimiento["motivo_3"]." and M.cod_categoria = C.cod_categoria and C.ID_Forma = F.ID_Forma and M.estado = 1 and C.estado = 1";
@@ -2478,7 +2478,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
               //     $RetMotivo = mysqli_fetch_assoc($TomarCodyColor);
           
 
-              //     $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";
+              //     $Table .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center;'><a style='text-decoration: none;' href = 'javascript:window.open(\"/movimiento?ID=".$Ret_Datos_Movimiento["id_movimiento"]."\",\"Ventana".$Ret_Datos_Movimiento["id_movimiento"]."\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'><span style='font-size: 30px; color: ".$RetMotivo["color"].";'>".$RetMotivo["Forma_Categoria"]."<center><span class='nombreCategoria' color: '".$RetMotivo["color"]."'>".$RetMotivo["cod_categoria"]."</span></center></span></a></div>";
               //   }
               // }     
               ////////////////////////////////////////////////////////////////                                             
@@ -2736,7 +2736,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
                                           $nroMotivosEnFecha += 1;
                                           $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                                           $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center; " . $value["div_hidden"] . "'>
-                                                        <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $RetTodos["id_movimiento"] . "\",\"Ventana" . $RetTodos["id_movimiento"] . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
+                                                        <a style='text-decoration: none;' href = 'javascript:window.open(\"/movimiento?ID=" . $RetTodos["id_movimiento"] . "\",\"Ventana" . $RetTodos["id_movimiento"] . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
                                                           <span style='font-size: 30px; color: " . $RetTodos["color"] . ";'>" .
                                                             $RetTodos["Forma_Categoria"] . "
                                                             <center>

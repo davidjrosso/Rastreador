@@ -11,7 +11,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/MovimientoMotivo.php");
 class MovimientoController 
 {
 
-    public function listado_movimiento($mensaje = null)
+    public function listado_movimiento($mensaje = null, $id = null)
     {
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
@@ -19,6 +19,13 @@ class MovimientoController
             include("view_movimientos.php");
         }
         exit();
+    }
+
+    public function buscar_movimientos()
+    {
+        $Filtro = $_REQUEST["Search"];
+        $ID_Filtro = $_REQUEST["ID_Filtro"];
+        header("Location: /movimientos?Filtro=" . $Filtro . "&ID_Filtro=" . $ID_Filtro);
     }
 
     public function datos_movimiento($id_movimiento)

@@ -20,6 +20,8 @@
 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
+
 header("Content-Type: text/html;charset=utf-8");
 
 
@@ -94,7 +96,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
       <br>
       <div class="row">
         <div class="col-10">
-          <form method="post" action="Controladores/CtrBuscarMovimientos.php">
+          <form method="post" action="buscar_movimientos">
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Buscar: </label>
               <div class="col-md-4">

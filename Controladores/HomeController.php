@@ -80,7 +80,7 @@ class HomeController
     public function login_control() 
     {
         if (isset($_SESSION["Usuario"])) {
-            include("view_inicio.php");
+            header("Location: /");
             exit();
         }
 
@@ -111,7 +111,7 @@ class HomeController
                 $mensaje_error = "Nombre de Usuario o Password incorrectos";
                 header("Location: /login?MensajeError=" . $mensaje_error);
             }
-            
+
         }
     }
 
