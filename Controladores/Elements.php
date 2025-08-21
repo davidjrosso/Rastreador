@@ -444,33 +444,33 @@ public function getMenuGeneralUsuario($ID)
       case 1:echo '<div class="menu-list">
   
             <ul id="menu-content" class="menu-content collapse out">
-                <li class="collapsed active" onClick = "location.href = \'view_general_new.php\'">
-                  <a href="view_general_new.php"><i class="fa fa-file-text fa-lg"></i> Gráfico</a>
+                <li class="collapsed active" onClick = "location.href = \'/filtrografico\'">
+                  <a href="/filtrografico"><i class="fa fa-file-text fa-lg"></i> Gráfico</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_listados.php\'">
-                  <a href="view_listados.php"><i class="fa fa-file-text fa-lg"></i> Listados</a>
+                <li class="collapsed" onClick = "location.href = \'/filtrolistado\'">
+                  <a href="/filtrolistado"><i class="fa fa-file-text fa-lg"></i> Listados</a>
                 </li>
             </ul>
         </div>';break;
       case 2:echo '<div class="menu-list">
   
             <ul id="menu-content" class="menu-content collapse out">
-                <li class="collapsed" onClick = "location.href = \'view_general_new.php\'">
-                  <a href="view_general_new.php"><i class="fa fa-file-text fa-lg"></i> Gráfico</a>
+                <li class="collapsed" onClick = "location.href = \'/filtrografico\'">
+                  <a href="/filtrografico"><i class="fa fa-file-text fa-lg"></i> Gráfico</a>
                 </li>
-                <li class="collapsed active" onClick = "location.href = \'view_listados.php\'">
-                  <a href="view_listados.php"><i class="fa fa-file-text fa-lg"></i> Listados</a>
+                <li class="collapsed active" onClick = "location.href = \'/filtrolistado\'">
+                  <a href="/filtrolistado"><i class="fa fa-file-text fa-lg"></i> Listados</a>
                 </li>
             </ul>
         </div>';break;
       default:echo '<div class="menu-list">
   
             <ul id="menu-content" class="menu-content collapse out">
-                <li class="collapsed" onClick = "location.href = \'view_general_new.php\'">
-                  <a href="view_general_new.php"><i class="fa fa-file-text fa-lg"></i> Gráfico</a>
+                <li class="collapsed" onClick = "location.href = \'/filtrografico\'">
+                  <a href="/filtrografico"><i class="fa fa-file-text fa-lg"></i> Gráfico</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_listados.php\'">
-                  <a href="view_listados.php"><i class="fa fa-file-text fa-lg"></i> Listados</a>
+                <li class="collapsed" onClick = "location.href = \'/filtrolistado\'">
+                  <a href="/filtrolistado"><i class="fa fa-file-text fa-lg"></i> Listados</a>
                 </li>
             </ul>
         </div>';break;
@@ -903,11 +903,11 @@ public function getMenuSeguridad($ID){
       case 11:
           $menu = '<div class="menu-list">
                     <ul id="menu-content" class="menu-content collapse out">
-                        <li class="collapsed active" onClick = "location.href = \'view_general_new.php\'">
-                          <a href="view_general_new.php"><i class="fa fa-file-text fa-lg"></i> Gráfico</a>
+                        <li class="collapsed active" onClick = "location.href = \'/filtrografico\'">
+                          <a href="/filtrografico"><i class="fa fa-file-text fa-lg"></i> Gráfico</a>
                         </li>
-                        <li class="collapsed" onClick = "location.href = \'view_listados.php\'">
-                          <a href="view_listados.php"><i class="fa fa-file-text fa-lg"></i> Listados</a>
+                        <li class="collapsed" onClick = "location.href = \'/filtrolistado\'">
+                          <a href="/filtrolistado"><i class="fa fa-file-text fa-lg"></i> Listados</a>
                         </li>
                     </ul>
                   </div>';
@@ -915,11 +915,11 @@ public function getMenuSeguridad($ID){
       case 12:
           $menu = '<div class="menu-list">
                     <ul id="menu-content" class="menu-content collapse out">
-                        <li class="collapsed" onClick = "location.href = \'view_general_new.php\'">
-                          <a href="view_general_new.php"><i class="fa fa-file-text fa-lg"></i> Gráfico</a>
+                        <li class="collapsed" onClick = "location.href = \'/filtrografico\'">
+                          <a href="/filtrografico"><i class="fa fa-file-text fa-lg"></i> Gráfico</a>
                         </li>
-                        <li class="collapsed active" onClick = "location.href = \'view_listados.php\'">
-                          <a href="view_listados.php"><i class="fa fa-file-text fa-lg"></i> Listados</a>
+                        <li class="collapsed active" onClick = "location.href = \'/filtrolistado\'">
+                          <a href="/filtrolistado"><i class="fa fa-file-text fa-lg"></i> Listados</a>
                         </li>
                     </ul>
                    </div>';
@@ -927,11 +927,11 @@ public function getMenuSeguridad($ID){
       default:
           $menu = '<div class="menu-list">
                     <ul id="menu-content" class="menu-content collapse out">
-                        <li class="collapsed" onClick = "location.href = \'view_general_new.php\'">
-                          <a href="view_general_new.php"><i class="fa fa-file-text fa-lg"></i> Gráfico</a>
+                        <li class="collapsed" onClick = "location.href = \'/filtrografico\'">
+                          <a href="/filtrografico"><i class="fa fa-file-text fa-lg"></i> Gráfico</a>
                         </li>
-                        <li class="collapsed" onClick = "location.href = \'view_listados.php\'">
-                          <a href="view_listados.php"><i class="fa fa-file-text fa-lg"></i> Listados</a>
+                        <li class="collapsed" onClick = "location.href = \'/filtrolistado\'">
+                          <a href="/filtrolistado"><i class="fa fa-file-text fa-lg"></i> Listados</a>
                         </li>
                     </ul>
                     </div>';

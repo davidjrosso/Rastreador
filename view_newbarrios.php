@@ -187,7 +187,7 @@
               <div class="form-group row" style="margin-top: 36px;">
                 <div class="offset-md-4 col-md-8">
                   <button type="submit" class="btn btn-outline-success">Guardar</button>
-                  <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_barrios.php'">Atras</button>
+                  <button type = "button" class = "btn btn-danger" onClick = "location.href = '/barrios'">Atras</button>
                 </div>
               </div>
               <input type="hidden" id="lat" name="lat" value="">

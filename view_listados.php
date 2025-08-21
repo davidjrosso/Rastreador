@@ -1,14 +1,11 @@
 <?php 
-session_start(); 
+
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-header("Content-Type: text/html;charset=utf-8");
 
-/*     CONTROL DE USUARIOS                    */
-if(!isset($_SESSION["Usuario"])){
-    header("Location: Error_Session.php");
-}
+
+header("Content-Type: text/html;charset=utf-8");
 
 $ID_Usuario = $_SESSION["Usuario"];
 $account = new Account(account_id: $ID_Usuario);
@@ -520,7 +517,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
       <div class = "col-10">
           <!-- Carga -->
           <p class = "Titulos">Parámetros</p>
-          <form method = "post" onKeydown="return event.key != 'Enter';" action = "view_vermovlistados.php" onSubmit = "return ValidarGeneral();">
+          <form method = "post" onKeydown="return event.key != 'Enter';" action = "/reportelistado" onSubmit = "return ValidarGeneral();">
             <div class="form-group row">
                 <label for="Fecha_Desde" class="col-md-2 col-form-label LblForm">Fecha desde *: </label>
                 <div class="col-md-10">
@@ -747,7 +744,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
                 <input type="hidden" name="ID_Categoria" id = "ID_Categoria" value = "0">
                 <input type="hidden" name="ID_Config" id="ID_Config" value="table">
                 <button type="submit" class="btn btn-outline-success">Aceptar</button>
-                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="location.href = '/'">Volver</button>
               </div>
             </div>
           </form>

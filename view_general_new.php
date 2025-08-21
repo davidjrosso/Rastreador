@@ -18,16 +18,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-session_start(); 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-header("Content-Type: text/html;charset=utf-8");
 
-if(!isset($_SESSION["Usuario"])){
-    header("Location: Error_Session.php");
-    exit();
-}
+
+header("Content-Type: text/html;charset=utf-8");
 
 $ID_Usuario = $_SESSION["Usuario"];
 $account = new Account(account_id: $ID_Usuario);
@@ -677,7 +673,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
       <div class = "col-10">
           <!-- Carga -->
           <p class = "Titulos">Parámetros</p>
-          <form method = "post" onKeydown="return event.key != 'Enter';" action = "view_rep_general_new.php" onSubmit = "return ValidarGeneral();">
+          <form method = "post" onKeydown="return event.key != 'Enter';" action = "/reportegrafico" onSubmit = "return ValidarGeneral();">
             <div class="form-group row">
                 <label for="Fecha_Desde" class="col-md-2 col-form-label LblForm">Fecha desde *: </label>
                 <div class="col-md-10">
@@ -902,7 +898,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
                     <input type="hidden" name="width-display" id = "width-display" value = "0">
                     <button type="submit" class="btn btn-outline-success">Aceptar</button>
                     <button type="button" class="btn btn-outline-secondary" onClick="resetearForm()">Cancel</button>
-                    <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = 'view_inicio.php'">Volver</button>
+                    <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = '/'">Volver</button>
                   </div>
               </div>
             </div>
@@ -910,7 +906,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
           <div class="row">
               <div class="col-10"></div>
               <!-- <div class="col-2">
-                <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = 'view_inicio.php'">Volver</button>
+                <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = '/'">Volver</button>
               </div> -->
           </div>
           <br><br><br>

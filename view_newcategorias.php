@@ -166,7 +166,7 @@ $Con->CloseConexion();
             <div class="form-group row">
               <div class="offset-md-2 col-md-10">
                 <button type="button" class="btn btn-outline-success" onClick ="Verificar();">Guardar</button>
-                <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_categorias.php'">Atrás</button>
+                <button type = "button" class = "btn btn-danger" onClick = "location.href = '/categorias'">Atrás</button>
               </div>
             </div>
           </form>

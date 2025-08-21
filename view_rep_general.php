@@ -271,7 +271,7 @@ $Con->CloseConexion();
                         $RetMotivo_1 = mysqli_fetch_assoc($TomarCodyColor);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetEnero["id_movimiento"]."\",\"Ventana".$RetEnero["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetEnero["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_1["color"].";'>".$RetMotivo_1["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetEnero["id_movimiento"]."\",\"Ventana".$RetEnero["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetEnero["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_1["color"].";'>".$RetMotivo_1["cod_categoria"]."</span><br>";
                     }
                     if($RetEnero["motivo_2"] == $ID_Motivo){
                         $ConsultarCodyColor2 = "select M.cod_categoria, C.color from motivo M, categoria C where M.id_motivo = ".$RetEnero["motivo_2"]." and M.cod_categoria = C.cod_categoria";
@@ -282,7 +282,7 @@ $Con->CloseConexion();
                         $RetMotivo_2 = mysqli_fetch_assoc($TomarCodyColor2);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetEnero["id_movimiento"]."\",\"Ventana".$RetEnero["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetEnero["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_2["color"].";'>".$RetMotivo_2["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetEnero["id_movimiento"]."\",\"Ventana".$RetEnero["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetEnero["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_2["color"].";'>".$RetMotivo_2["cod_categoria"]."</span><br>";
                     }
                     if($RetEnero["motivo_3"] == $ID_Motivo){
                         $ConsultarCodyColor3 = "select M.cod_categoria, C.color from motivo M, categoria C where M.id_motivo = ".$RetEnero["motivo_3"]." and M.cod_categoria = C.cod_categoria";
@@ -293,7 +293,7 @@ $Con->CloseConexion();
                         $RetMotivo_3 = mysqli_fetch_assoc($TomarCodyColor3);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetEnero["id_movimiento"]."\",\"Ventana".$RetEnero["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetEnero["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_3["color"].";'>".$RetMotivo_3["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetEnero["id_movimiento"]."\",\"Ventana".$RetEnero["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetEnero["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_3["color"].";'>".$RetMotivo_3["cod_categoria"]."</span><br>";
                     }
                   }else{
                   /////////////////////////////////////////////////////////////////////////////////////////
@@ -316,7 +316,7 @@ $Con->CloseConexion();
 
                     $Table .= "<div class = 'row'>";                                      
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetEnero["id_movimiento"]."\",\"Ventana".$RetEnero["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetEnero["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetEnero["id_movimiento"]."\",\"Ventana".$RetEnero["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetEnero["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -345,7 +345,7 @@ $Con->CloseConexion();
 
                     $Table .= "<div class = 'row'>";                      
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetEnero["id_movimiento"]."\",\"Ventana".$RetEnero["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetEnero["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetEnero["id_movimiento"]."\",\"Ventana".$RetEnero["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetEnero["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -373,7 +373,7 @@ $Con->CloseConexion();
 
                     $Table .= "<div class = 'row'>";                    
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetEnero["id_movimiento"]."\",\"Ventana".$RetEnero["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetEnero["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetEnero["id_movimiento"]."\",\"Ventana".$RetEnero["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetEnero["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -408,7 +408,7 @@ $Con->CloseConexion();
                         $RetMotivo_1 = mysqli_fetch_assoc($TomarCodyColor);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetFebrero["id_movimiento"]."\",\"Ventana".$RetFebrero["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetFebrero["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_1["color"].";'>".$RetMotivo_1["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetFebrero["id_movimiento"]."\",\"Ventana".$RetFebrero["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetFebrero["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_1["color"].";'>".$RetMotivo_1["cod_categoria"]."</span><br>";
                     }
                     if($RetFebrero["motivo_2"] == $ID_Motivo){
                         $ConsultarCodyColor2 = "select M.cod_categoria, C.color from motivo M, categoria C where M.id_motivo = ".$RetFebrero["motivo_2"]." and M.cod_categoria = C.cod_categoria";
@@ -419,7 +419,7 @@ $Con->CloseConexion();
                         $RetMotivo_2 = mysqli_fetch_assoc($TomarCodyColor2);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetFebrero["id_movimiento"]."\",\"Ventana".$RetFebrero["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetFebrero["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_2["color"].";'>".$RetMotivo_2["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetFebrero["id_movimiento"]."\",\"Ventana".$RetFebrero["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetFebrero["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_2["color"].";'>".$RetMotivo_2["cod_categoria"]."</span><br>";
                     }
                     if($RetFebrero["motivo_3"] == $ID_Motivo){
                         $ConsultarCodyColor3 = "select M.cod_categoria, C.color from motivo M, categoria C where M.id_motivo = ".$RetFebrero["motivo_3"]." and M.cod_categoria = C.cod_categoria";
@@ -430,7 +430,7 @@ $Con->CloseConexion();
                         $RetMotivo_3 = mysqli_fetch_assoc($TomarCodyColor3);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetFebrero["id_movimiento"]."\",\"Ventana".$RetFebrero["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetFebrero["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_3["color"].";'>".$RetMotivo_3["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetFebrero["id_movimiento"]."\",\"Ventana".$RetFebrero["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetFebrero["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_3["color"].";'>".$RetMotivo_3["cod_categoria"]."</span><br>";
                     }
                   }else{                                      
                     /////////////////////////////DIBUJANDO EL CUADRADO DEL MOTIVO 1 ///////////////////////////////////////////
@@ -451,7 +451,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetFebrero["id_movimiento"]."\",\"Ventana".$RetFebrero["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetFebrero["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetFebrero["id_movimiento"]."\",\"Ventana".$RetFebrero["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetFebrero["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -480,7 +480,7 @@ $Con->CloseConexion();
 
                     $Table .= "<div class = 'row'>";                   
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetFebrero["id_movimiento"]."\",\"Ventana".$RetFebrero["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetFebrero["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetFebrero["id_movimiento"]."\",\"Ventana".$RetFebrero["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetFebrero["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -510,7 +510,7 @@ $Con->CloseConexion();
 
                     $Table .= "<div class = 'row'>";                      
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetFebrero["id_movimiento"]."\",\"Ventana".$RetFebrero["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetFebrero["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetFebrero["id_movimiento"]."\",\"Ventana".$RetFebrero["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetFebrero["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -543,7 +543,7 @@ $Con->CloseConexion();
                         $RetMotivo_1 = mysqli_fetch_assoc($TomarCodyColor);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetMarzo["id_movimiento"]."\",\"Ventana".$RetMarzo["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetMarzo["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_1["color"].";'>".$RetMotivo_1["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetMarzo["id_movimiento"]."\",\"Ventana".$RetMarzo["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetMarzo["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_1["color"].";'>".$RetMotivo_1["cod_categoria"]."</span><br>";
                     }
                     if($RetMarzo["motivo_2"] == $ID_Motivo){
                         $ConsultarCodyColor2 = "select M.cod_categoria, C.color from motivo M, categoria C where M.id_motivo = ".$RetMarzo["motivo_2"]." and M.cod_categoria = C.cod_categoria";
@@ -554,7 +554,7 @@ $Con->CloseConexion();
                         $RetMotivo_2 = mysqli_fetch_assoc($TomarCodyColor2);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetMarzo["id_movimiento"]."\",\"Ventana".$RetMarzo["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetMarzo["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_2["color"].";'>".$RetMotivo_2["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetMarzo["id_movimiento"]."\",\"Ventana".$RetMarzo["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetMarzo["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_2["color"].";'>".$RetMotivo_2["cod_categoria"]."</span><br>";
                     }
                     if($RetMarzo["motivo_3"] == $ID_Motivo){
                         $ConsultarCodyColor3 = "select M.cod_categoria, C.color from motivo M, categoria C where M.id_motivo = ".$RetMarzo["motivo_3"]." and M.cod_categoria = C.cod_categoria";
@@ -565,7 +565,7 @@ $Con->CloseConexion();
                         $RetMotivo_3 = mysqli_fetch_assoc($TomarCodyColor3);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetMarzo["id_movimiento"]."\",\"Ventana".$RetMarzo["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetMarzo["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_3["color"].";'>".$RetMotivo_3["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetMarzo["id_movimiento"]."\",\"Ventana".$RetMarzo["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetMarzo["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_3["color"].";'>".$RetMotivo_3["cod_categoria"]."</span><br>";
                     }
                   }else{                
                     /////////////////////////////DIBUJANDO EL CUADRADO DEL MOTIVO 1 ///////////////////////////////////////////
@@ -586,7 +586,7 @@ $Con->CloseConexion();
 
                     $Table .= "<div class = 'row'>";
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetMarzo["id_movimiento"]."\",\"Ventana".$RetMarzo["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetMarzo["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetMarzo["id_movimiento"]."\",\"Ventana".$RetMarzo["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetMarzo["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -615,7 +615,7 @@ $Con->CloseConexion();
 
                     $Table .= "<div class = 'row'>";
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetMarzo["id_movimiento"]."\",\"Ventana".$RetMarzo["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetMarzo["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetMarzo["id_movimiento"]."\",\"Ventana".$RetMarzo["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetMarzo["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -645,7 +645,7 @@ $Con->CloseConexion();
 
                     $Table .= "<div class = 'row'>";
 
-                    $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetMarzo["id_movimiento"]."\",\"Ventana".$RetMarzo["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetMarzo["id_movimiento"]."</a>";
+                    $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetMarzo["id_movimiento"]."\",\"Ventana".$RetMarzo["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetMarzo["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -678,7 +678,7 @@ $Con->CloseConexion();
                         $RetMotivo_1 = mysqli_fetch_assoc($TomarCodyColor);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetAbril["id_movimiento"]."\",\"Ventana".$RetAbril["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetAbril["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_1["color"].";'>".$RetMotivo_1["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetAbril["id_movimiento"]."\",\"Ventana".$RetAbril["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetAbril["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_1["color"].";'>".$RetMotivo_1["cod_categoria"]."</span><br>";
                     }
                     if($RetAbril["motivo_2"] == $ID_Motivo){
                         $ConsultarCodyColor2 = "select M.cod_categoria, C.color from motivo M, categoria C where M.id_motivo = ".$RetAbril["motivo_2"]." and M.cod_categoria = C.cod_categoria";
@@ -689,7 +689,7 @@ $Con->CloseConexion();
                         $RetMotivo_2 = mysqli_fetch_assoc($TomarCodyColor2);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetAbril["id_movimiento"]."\",\"Ventana".$RetAbril["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetAbril["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_2["color"].";'>".$RetMotivo_2["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetAbril["id_movimiento"]."\",\"Ventana".$RetAbril["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetAbril["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_2["color"].";'>".$RetMotivo_2["cod_categoria"]."</span><br>";
                     }
                     if($RetAbril["motivo_3"] == $ID_Motivo){
                         $ConsultarCodyColor3 = "select M.cod_categoria, C.color from motivo M, categoria C where M.id_motivo = ".$RetAbril["motivo_3"]." and M.cod_categoria = C.cod_categoria";
@@ -700,7 +700,7 @@ $Con->CloseConexion();
                         $RetMotivo_3 = mysqli_fetch_assoc($TomarCodyColor3);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetAbril["id_movimiento"]."\",\"Ventana".$RetAbril["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetAbril["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_3["color"].";'>".$RetMotivo_3["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetAbril["id_movimiento"]."\",\"Ventana".$RetAbril["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetAbril["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_3["color"].";'>".$RetMotivo_3["cod_categoria"]."</span><br>";
                     }
                   }else{                
                     /////////////////////////////DIBUJANDO EL CUADRADO DEL MOTIVO 1 ///////////////////////////////////////////
@@ -722,7 +722,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetAbril["id_movimiento"]."\",\"Ventana".$RetAbril["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetAbril["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetAbril["id_movimiento"]."\",\"Ventana".$RetAbril["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetAbril["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -754,7 +754,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetAbril["id_movimiento"]."\",\"Ventana".$RetAbril["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetAbril["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetAbril["id_movimiento"]."\",\"Ventana".$RetAbril["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetAbril["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -785,7 +785,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetAbril["id_movimiento"]."\",\"Ventana".$RetAbril["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetAbril["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetAbril["id_movimiento"]."\",\"Ventana".$RetAbril["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetAbril["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -817,7 +817,7 @@ $Con->CloseConexion();
                         $RetMotivo_1 = mysqli_fetch_assoc($TomarCodyColor);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetMayo["id_movimiento"]."\",\"Ventana".$RetMayo["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetMayo["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_1["color"].";'>".$RetMotivo_1["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetMayo["id_movimiento"]."\",\"Ventana".$RetMayo["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetMayo["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_1["color"].";'>".$RetMotivo_1["cod_categoria"]."</span><br>";
                     }
                     if($RetMayo["motivo_2"] == $ID_Motivo){
                         $ConsultarCodyColor2 = "select M.cod_categoria, C.color from motivo M, categoria C where M.id_motivo = ".$RetMayo["motivo_2"]." and M.cod_categoria = C.cod_categoria";
@@ -828,7 +828,7 @@ $Con->CloseConexion();
                         $RetMotivo_2 = mysqli_fetch_assoc($TomarCodyColor2);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetMayo["id_movimiento"]."\",\"Ventana".$RetMayo["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetMayo["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_2["color"].";'>".$RetMotivo_2["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetMayo["id_movimiento"]."\",\"Ventana".$RetMayo["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetMayo["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_2["color"].";'>".$RetMotivo_2["cod_categoria"]."</span><br>";
                     }
                     if($RetMayo["motivo_3"] == $ID_Motivo){
                         $ConsultarCodyColor3 = "select M.cod_categoria, C.color from motivo M, categoria C where M.id_motivo = ".$RetMayo["motivo_3"]." and M.cod_categoria = C.cod_categoria";
@@ -839,7 +839,7 @@ $Con->CloseConexion();
                         $RetMotivo_3 = mysqli_fetch_assoc($TomarCodyColor3);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetMayo["id_movimiento"]."\",\"Ventana".$RetMayo["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetMayo["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_3["color"].";'>".$RetMotivo_3["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetMayo["id_movimiento"]."\",\"Ventana".$RetMayo["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetMayo["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_3["color"].";'>".$RetMotivo_3["cod_categoria"]."</span><br>";
                     }
                   }else{                
                     /////////////////////////////DIBUJANDO EL CUADRADO DEL MOTIVO 1 ///////////////////////////////////////////
@@ -861,7 +861,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetMayo["id_movimiento"]."\",\"Ventana".$RetMayo["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetMayo["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetMayo["id_movimiento"]."\",\"Ventana".$RetMayo["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetMayo["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -892,7 +892,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetMayo["id_movimiento"]."\",\"Ventana".$RetMayo["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetMayo["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetMayo["id_movimiento"]."\",\"Ventana".$RetMayo["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetMayo["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -923,7 +923,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetMayo["id_movimiento"]."\",\"Ventana".$RetMayo["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetMayo["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetMayo["id_movimiento"]."\",\"Ventana".$RetMayo["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetMayo["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -956,7 +956,7 @@ $Con->CloseConexion();
                         $RetMotivo_1 = mysqli_fetch_assoc($TomarCodyColor);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetJunio["id_movimiento"]."\",\"Ventana".$RetJunio["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetJunio["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_1["color"].";'>".$RetMotivo_1["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetJunio["id_movimiento"]."\",\"Ventana".$RetJunio["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetJunio["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_1["color"].";'>".$RetMotivo_1["cod_categoria"]."</span><br>";
                     }
                     if($RetJunio["motivo_2"] == $ID_Motivo){
                         $ConsultarCodyColor2 = "select M.cod_categoria, C.color from motivo M, categoria C where M.id_motivo = ".$RetJunio["motivo_2"]." and M.cod_categoria = C.cod_categoria";
@@ -967,7 +967,7 @@ $Con->CloseConexion();
                         $RetMotivo_2 = mysqli_fetch_assoc($TomarCodyColor2);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetJunio["id_movimiento"]."\",\"Ventana".$RetJunio["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetJunio["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_2["color"].";'>".$RetMotivo_2["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetJunio["id_movimiento"]."\",\"Ventana".$RetJunio["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetJunio["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_2["color"].";'>".$RetMotivo_2["cod_categoria"]."</span><br>";
                     }
                     if($RetJunio["motivo_3"] == $ID_Motivo){
                         $ConsultarCodyColor3 = "select M.cod_categoria, C.color from motivo M, categoria C where M.id_motivo = ".$RetJunio["motivo_3"]." and M.cod_categoria = C.cod_categoria";
@@ -978,7 +978,7 @@ $Con->CloseConexion();
                         $RetMotivo_3 = mysqli_fetch_assoc($TomarCodyColor3);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetJunio["id_movimiento"]."\",\"Ventana".$RetJunio["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetJunio["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_3["color"].";'>".$RetMotivo_3["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetJunio["id_movimiento"]."\",\"Ventana".$RetJunio["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetJunio["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_3["color"].";'>".$RetMotivo_3["cod_categoria"]."</span><br>";
                     }
                   }else{                
                     /////////////////////////////DIBUJANDO EL CUADRADO DEL MOTIVO 1 ///////////////////////////////////////////
@@ -1000,7 +1000,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetJunio["id_movimiento"]."\",\"Ventana".$RetJunio["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetJunio["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetJunio["id_movimiento"]."\",\"Ventana".$RetJunio["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetJunio["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -1031,7 +1031,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetJunio["id_movimiento"]."\",\"Ventana".$RetJunio["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetJunio["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetJunio["id_movimiento"]."\",\"Ventana".$RetJunio["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetJunio["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -1062,7 +1062,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetJunio["id_movimiento"]."\",\"Ventana".$RetJunio["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetJunio["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetJunio["id_movimiento"]."\",\"Ventana".$RetJunio["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetJunio["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -1095,7 +1095,7 @@ $Con->CloseConexion();
                         $RetMotivo_1 = mysqli_fetch_assoc($TomarCodyColor);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetJulio["id_movimiento"]."\",\"Ventana".$RetJulio["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetJulio["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_1["color"].";'>".$RetMotivo_1["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetJulio["id_movimiento"]."\",\"Ventana".$RetJulio["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetJulio["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_1["color"].";'>".$RetMotivo_1["cod_categoria"]."</span><br>";
                     }
                     if($RetJulio["motivo_2"] == $ID_Motivo){
                         $ConsultarCodyColor2 = "select M.cod_categoria, C.color from motivo M, categoria C where M.id_motivo = ".$RetJulio["motivo_2"]." and M.cod_categoria = C.cod_categoria";
@@ -1106,7 +1106,7 @@ $Con->CloseConexion();
                         $RetMotivo_2 = mysqli_fetch_assoc($TomarCodyColor2);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetJulio["id_movimiento"]."\",\"Ventana".$RetJulio["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetJulio["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_2["color"].";'>".$RetMotivo_2["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetJulio["id_movimiento"]."\",\"Ventana".$RetJulio["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetJulio["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_2["color"].";'>".$RetMotivo_2["cod_categoria"]."</span><br>";
                     }
                     if($RetJulio["motivo_3"] == $ID_Motivo){
                         $ConsultarCodyColor3 = "select M.cod_categoria, C.color from motivo M, categoria C where M.id_motivo = ".$RetJulio["motivo_3"]." and M.cod_categoria = C.cod_categoria";
@@ -1117,7 +1117,7 @@ $Con->CloseConexion();
                         $RetMotivo_3 = mysqli_fetch_assoc($TomarCodyColor3);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetJulio["id_movimiento"]."\",\"Ventana".$RetJulio["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetJulio["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_3["color"].";'>".$RetMotivo_3["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetJulio["id_movimiento"]."\",\"Ventana".$RetJulio["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetJulio["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_3["color"].";'>".$RetMotivo_3["cod_categoria"]."</span><br>";
                     }
                   }else{                
                     /////////////////////////////DIBUJANDO EL CUADRADO DEL MOTIVO 1 ///////////////////////////////////////////
@@ -1139,7 +1139,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetJulio["id_movimiento"]."\",\"Ventana".$RetJulio["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetJulio["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetJulio["id_movimiento"]."\",\"Ventana".$RetJulio["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetJulio["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -1170,7 +1170,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetJulio["id_movimiento"]."\",\"Ventana".$RetJulio["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetJulio["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetJulio["id_movimiento"]."\",\"Ventana".$RetJulio["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetJulio["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -1201,7 +1201,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetJulio["id_movimiento"]."\",\"Ventana".$RetJulio["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetJulio["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetJulio["id_movimiento"]."\",\"Ventana".$RetJulio["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetJulio["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -1235,7 +1235,7 @@ $Con->CloseConexion();
                         $RetMotivo_1 = mysqli_fetch_assoc($TomarCodyColor);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetAgosto["id_movimiento"]."\",\"Ventana".$RetAgosto["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetAgosto["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_1["color"].";'>".$RetMotivo_1["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetAgosto["id_movimiento"]."\",\"Ventana".$RetAgosto["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetAgosto["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_1["color"].";'>".$RetMotivo_1["cod_categoria"]."</span><br>";
                     }
                     if($RetAgosto["motivo_2"] == $ID_Motivo){
                         $ConsultarCodyColor2 = "select M.cod_categoria, C.color from motivo M, categoria C where M.id_motivo = ".$RetAgosto["motivo_2"]." and M.cod_categoria = C.cod_categoria";
@@ -1246,7 +1246,7 @@ $Con->CloseConexion();
                         $RetMotivo_2 = mysqli_fetch_assoc($TomarCodyColor2);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetAgosto["id_movimiento"]."\",\"Ventana".$RetAgosto["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetAgosto["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_2["color"].";'>".$RetMotivo_2["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetAgosto["id_movimiento"]."\",\"Ventana".$RetAgosto["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetAgosto["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_2["color"].";'>".$RetMotivo_2["cod_categoria"]."</span><br>";
                     }
                     if($RetAgosto["motivo_3"] == $ID_Motivo){
                         $ConsultarCodyColor3 = "select M.cod_categoria, C.color from motivo M, categoria C where M.id_motivo = ".$RetAgosto["motivo_3"]." and M.cod_categoria = C.cod_categoria";
@@ -1257,7 +1257,7 @@ $Con->CloseConexion();
                         $RetMotivo_3 = mysqli_fetch_assoc($TomarCodyColor3);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetAgosto["id_movimiento"]."\",\"Ventana".$RetAgosto["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetAgosto["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_3["color"].";'>".$RetMotivo_3["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetAgosto["id_movimiento"]."\",\"Ventana".$RetAgosto["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetAgosto["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_3["color"].";'>".$RetMotivo_3["cod_categoria"]."</span><br>";
                     }
                   }else{                
                     /////////////////////////////DIBUJANDO EL CUADRADO DEL MOTIVO 1 ///////////////////////////////////////////
@@ -1279,7 +1279,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetAgosto["id_movimiento"]."\",\"Ventana".$RetAgosto["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetAgosto["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetAgosto["id_movimiento"]."\",\"Ventana".$RetAgosto["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetAgosto["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -1310,7 +1310,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetAgosto["id_movimiento"]."\",\"Ventana".$RetAgosto["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetAgosto["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetAgosto["id_movimiento"]."\",\"Ventana".$RetAgosto["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetAgosto["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -1341,7 +1341,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetAgosto["id_movimiento"]."\",\"Ventana".$RetAgosto["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetAgosto["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetAgosto["id_movimiento"]."\",\"Ventana".$RetAgosto["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetAgosto["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -1375,7 +1375,7 @@ $Con->CloseConexion();
                         $RetMotivo_1 = mysqli_fetch_assoc($TomarCodyColor);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetSeptiembre["id_movimiento"]."\",\"Ventana".$RetSeptiembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetSeptiembre["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_1["color"].";'>".$RetMotivo_1["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetSeptiembre["id_movimiento"]."\",\"Ventana".$RetSeptiembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetSeptiembre["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_1["color"].";'>".$RetMotivo_1["cod_categoria"]."</span><br>";
                     }
                     if($RetSeptiembre["motivo_2"] == $ID_Motivo){
                         $ConsultarCodyColor2 = "select M.cod_categoria, C.color from motivo M, categoria C where M.id_motivo = ".$RetSeptiembre["motivo_2"]." and M.cod_categoria = C.cod_categoria";
@@ -1386,7 +1386,7 @@ $Con->CloseConexion();
                         $RetMotivo_2 = mysqli_fetch_assoc($TomarCodyColor2);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetSeptiembre["id_movimiento"]."\",\"Ventana".$RetSeptiembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetSeptiembre["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_2["color"].";'>".$RetMotivo_2["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetSeptiembre["id_movimiento"]."\",\"Ventana".$RetSeptiembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetSeptiembre["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_2["color"].";'>".$RetMotivo_2["cod_categoria"]."</span><br>";
                     }
                     if($RetSeptiembre["motivo_3"] == $ID_Motivo){
                         $ConsultarCodyColor3 = "select M.cod_categoria, C.color from motivo M, categoria C where M.id_motivo = ".$RetSeptiembre["motivo_3"]." and M.cod_categoria = C.cod_categoria";
@@ -1397,7 +1397,7 @@ $Con->CloseConexion();
                         $RetMotivo_3 = mysqli_fetch_assoc($TomarCodyColor3);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetSeptiembre["id_movimiento"]."\",\"Ventana".$RetSeptiembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetSeptiembre["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_3["color"].";'>".$RetMotivo_3["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetSeptiembre["id_movimiento"]."\",\"Ventana".$RetSeptiembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetSeptiembre["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_3["color"].";'>".$RetMotivo_3["cod_categoria"]."</span><br>";
                     }
                   }else{                
                     /////////////////////////////DIBUJANDO EL CUADRADO DEL MOTIVO 1 ///////////////////////////////////////////
@@ -1419,7 +1419,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetSeptiembre["id_movimiento"]."\",\"Ventana".$RetSeptiembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetSeptiembre["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetSeptiembre["id_movimiento"]."\",\"Ventana".$RetSeptiembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetSeptiembre["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -1451,7 +1451,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetSeptiembre["id_movimiento"]."\",\"Ventana".$RetSeptiembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetSeptiembre["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetSeptiembre["id_movimiento"]."\",\"Ventana".$RetSeptiembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetSeptiembre["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -1482,7 +1482,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetSeptiembre["id_movimiento"]."\",\"Ventana".$RetSeptiembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetSeptiembre["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetSeptiembre["id_movimiento"]."\",\"Ventana".$RetSeptiembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetSeptiembre["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -1515,7 +1515,7 @@ $Con->CloseConexion();
                         $RetMotivo_1 = mysqli_fetch_assoc($TomarCodyColor);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetOctubre["id_movimiento"]."\",\"Ventana".$RetOctubre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetOctubre["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_1["color"].";'>".$RetMotivo_1["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetOctubre["id_movimiento"]."\",\"Ventana".$RetOctubre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetOctubre["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_1["color"].";'>".$RetMotivo_1["cod_categoria"]."</span><br>";
                     }
                     if($RetOctubre["motivo_2"] == $ID_Motivo){
                         $ConsultarCodyColor2 = "select M.cod_categoria, C.color from motivo M, categoria C where M.id_motivo = ".$RetOctubre["motivo_2"]." and M.cod_categoria = C.cod_categoria";
@@ -1526,7 +1526,7 @@ $Con->CloseConexion();
                         $RetMotivo_2 = mysqli_fetch_assoc($TomarCodyColor2);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetOctubre["id_movimiento"]."\",\"Ventana".$RetOctubre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetOctubre["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_2["color"].";'>".$RetMotivo_2["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetOctubre["id_movimiento"]."\",\"Ventana".$RetOctubre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetOctubre["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_2["color"].";'>".$RetMotivo_2["cod_categoria"]."</span><br>";
                     }
                     if($RetOctubre["motivo_3"] == $ID_Motivo){
                         $ConsultarCodyColor3 = "select M.cod_categoria, C.color from motivo M, categoria C where M.id_motivo = ".$RetOctubre["motivo_3"]." and M.cod_categoria = C.cod_categoria";
@@ -1537,7 +1537,7 @@ $Con->CloseConexion();
                         $RetMotivo_3 = mysqli_fetch_assoc($TomarCodyColor3);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetOctubre["id_movimiento"]."\",\"Ventana".$RetOctubre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetOctubre["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_3["color"].";'>".$RetMotivo_3["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetOctubre["id_movimiento"]."\",\"Ventana".$RetOctubre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetOctubre["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_3["color"].";'>".$RetMotivo_3["cod_categoria"]."</span><br>";
                     }
                   }else{                
                     /////////////////////////////DIBUJANDO EL CUADRADO DEL MOTIVO 1 ///////////////////////////////////////////
@@ -1559,7 +1559,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetOctubre["id_movimiento"]."\",\"Ventana".$RetOctubre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetOctubre["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetOctubre["id_movimiento"]."\",\"Ventana".$RetOctubre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetOctubre["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -1590,7 +1590,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetOctubre["id_movimiento"]."\",\"Ventana".$RetOctubre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetOctubre["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetOctubre["id_movimiento"]."\",\"Ventana".$RetOctubre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetOctubre["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -1621,7 +1621,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetOctubre["id_movimiento"]."\",\"Ventana".$RetOctubre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetOctubre["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetOctubre["id_movimiento"]."\",\"Ventana".$RetOctubre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetOctubre["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -1654,7 +1654,7 @@ $Con->CloseConexion();
                         $RetMotivo_1 = mysqli_fetch_assoc($TomarCodyColor);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetNoviembre["id_movimiento"]."\",\"Ventana".$RetNoviembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetNoviembre["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_1["color"].";'>".$RetMotivo_1["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetNoviembre["id_movimiento"]."\",\"Ventana".$RetNoviembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetNoviembre["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_1["color"].";'>".$RetMotivo_1["cod_categoria"]."</span><br>";
                     }
                     if($RetNoviembre["motivo_2"] == $ID_Motivo){
                         $ConsultarCodyColor2 = "select M.cod_categoria, C.color from motivo M, categoria C where M.id_motivo = ".$RetNoviembre["motivo_2"]." and M.cod_categoria = C.cod_categoria";
@@ -1665,7 +1665,7 @@ $Con->CloseConexion();
                         $RetMotivo_2 = mysqli_fetch_assoc($TomarCodyColor2);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetNoviembre["id_movimiento"]."\",\"Ventana".$RetNoviembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetNoviembre["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_2["color"].";'>".$RetMotivo_2["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetNoviembre["id_movimiento"]."\",\"Ventana".$RetNoviembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetNoviembre["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_2["color"].";'>".$RetMotivo_2["cod_categoria"]."</span><br>";
                     }
                     if($RetNoviembre["motivo_3"] == $ID_Motivo){
                         $ConsultarCodyColor3 = "select M.cod_categoria, C.color from motivo M, categoria C where M.id_motivo = ".$RetNoviembre["motivo_3"]." and M.cod_categoria = C.cod_categoria";
@@ -1676,7 +1676,7 @@ $Con->CloseConexion();
                         $RetMotivo_3 = mysqli_fetch_assoc($TomarCodyColor3);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetNoviembre["id_movimiento"]."\",\"Ventana".$RetNoviembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetNoviembre["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_3["color"].";'>".$RetMotivo_3["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetNoviembre["id_movimiento"]."\",\"Ventana".$RetNoviembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetNoviembre["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_3["color"].";'>".$RetMotivo_3["cod_categoria"]."</span><br>";
                     }
                   }else{                                    
                     /////////////////////////////DIBUJANDO EL CUADRADO DEL MOTIVO 1 ///////////////////////////////////////////
@@ -1698,7 +1698,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetNoviembre["id_movimiento"]."\",\"Ventana".$RetNoviembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetNoviembre["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetNoviembre["id_movimiento"]."\",\"Ventana".$RetNoviembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetNoviembre["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -1729,7 +1729,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetNoviembre["id_movimiento"]."\",\"Ventana".$RetNoviembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetNoviembre["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetNoviembre["id_movimiento"]."\",\"Ventana".$RetNoviembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetNoviembre["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -1760,7 +1760,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetNoviembre["id_movimiento"]."\",\"Ventana".$RetNoviembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetNoviembre["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetNoviembre["id_movimiento"]."\",\"Ventana".$RetNoviembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetNoviembre["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -1793,7 +1793,7 @@ $Con->CloseConexion();
                         $RetMotivo_1 = mysqli_fetch_assoc($TomarCodyColor);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetDiciembre["id_movimiento"]."\",\"Ventana".$RetDiciembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetDiciembre["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_1["color"].";'>".$RetMotivo_1["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetDiciembre["id_movimiento"]."\",\"Ventana".$RetDiciembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetDiciembre["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_1["color"].";'>".$RetMotivo_1["cod_categoria"]."</span><br>";
                     }
                     if($RetDiciembre["motivo_2"] == $ID_Motivo){
                         $ConsultarCodyColor2 = "select M.cod_categoria, C.color from motivo M, categoria C where M.id_motivo = ".$RetDiciembre["motivo_2"]." and M.cod_categoria = C.cod_categoria";
@@ -1804,7 +1804,7 @@ $Con->CloseConexion();
                         $RetMotivo_2 = mysqli_fetch_assoc($TomarCodyColor2);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetDiciembre["id_movimiento"]."\",\"Ventana".$RetDiciembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetDiciembre["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_2["color"].";'>".$RetMotivo_2["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetDiciembre["id_movimiento"]."\",\"Ventana".$RetDiciembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetDiciembre["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_2["color"].";'>".$RetMotivo_2["cod_categoria"]."</span><br>";
                     }
                     if($RetDiciembre["motivo_3"] == $ID_Motivo){
                         $ConsultarCodyColor3 = "select M.cod_categoria, C.color from motivo M, categoria C where M.id_motivo = ".$RetDiciembre["motivo_3"]." and M.cod_categoria = C.cod_categoria";
@@ -1815,7 +1815,7 @@ $Con->CloseConexion();
                         $RetMotivo_3 = mysqli_fetch_assoc($TomarCodyColor3);
                         
 
-                        $Table .= "N° <a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetDiciembre["id_movimiento"]."\",\"Ventana".$RetDiciembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetDiciembre["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_3["color"].";'>".$RetMotivo_3["cod_categoria"]."</span><br>";
+                        $Table .= "N° <a href = 'javascript:window.open(\"/movimiento?ID=".$RetDiciembre["id_movimiento"]."\",\"Ventana".$RetDiciembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetDiciembre["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetMotivo_3["color"].";'>".$RetMotivo_3["cod_categoria"]."</span><br>";
                     }
                   }else{                
                     /////////////////////////////DIBUJANDO EL CUADRADO DEL MOTIVO 1 ///////////////////////////////////////////
@@ -1837,7 +1837,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetDiciembre["id_movimiento"]."\",\"Ventana".$RetDiciembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetDiciembre["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetDiciembre["id_movimiento"]."\",\"Ventana".$RetDiciembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetDiciembre["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -1868,7 +1868,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetDiciembre["id_movimiento"]."\",\"Ventana".$RetDiciembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetDiciembre["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetDiciembre["id_movimiento"]."\",\"Ventana".$RetDiciembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetDiciembre["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 
@@ -1899,7 +1899,7 @@ $Con->CloseConexion();
                     $Table .= "<div class = 'row'>";
                     
 
-                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"view_vermovimientos.php?ID=".$RetDiciembre["id_movimiento"]."\",\"Ventana".$RetDiciembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetDiciembre["id_movimiento"]."</a>";
+                    $Table .= "<span>N° </span><a href = 'javascript:window.open(\"/movimiento?ID=".$RetDiciembre["id_movimiento"]."\",\"Ventana".$RetDiciembre["id_movimiento"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>".$RetDiciembre["id_movimiento"]."</a>";
 
                     $Table .= "</div>";
 

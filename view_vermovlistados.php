@@ -770,7 +770,7 @@ $ID_Config = $_REQUEST["ID_Config"];
 	                // }
 
 	                // $Table .= "<tr class='SinMovimientos Datos'>";
-                  // $Table .= "<td id='Contenido-1'>" . $RetTodos["Barrio"]."</td><td id='Contenido-2'>" . $RetTodos["domicilio"]."</td><td id='Contenido-3' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"]."</td><td id='Contenido-4' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"]."</td><td id='Contenido-5' name='datosflia' style='max-width: 50px;'>" . $RetTodos["familia"]."</td><td id='Contenido-6'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $RetTodos["id_persona"]."\",\"Ventana" . $RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" . $RetTodos["apellido"].", " . $RetTodos["nombre"]."</a></td><td id='Contenido-7' style='max-width: 100px;'>" . $Fecha_Nacimiento."</td>";
+                  // $Table .= "<td id='Contenido-1'>" . $RetTodos["Barrio"]."</td><td id='Contenido-2'>" . $RetTodos["domicilio"]."</td><td id='Contenido-3' name='datosflia' style='max-width: 50px;'>" . $RetTodos["manzana"]."</td><td id='Contenido-4' name='datosflia' style='max-width: 50px;'>" . $RetTodos["lote"]."</td><td id='Contenido-5' name='datosflia' style='max-width: 50px;'>" . $RetTodos["familia"]."</td><td id='Contenido-6'><a href = 'javascript:window.open(\"persona/editar?ID=" . $RetTodos["id_persona"]."\",\"Ventana" . $RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" . $RetTodos["apellido"].", " . $RetTodos["nombre"]."</a></td><td id='Contenido-7' style='max-width: 100px;'>" . $Fecha_Nacimiento."</td>";
 
                   // $ColSpans = $MesesDiferencia * 270;
                   // $Table .= "<td style='width:" . $ColSpans."px'></td>";
@@ -1719,7 +1719,7 @@ $ID_Config = $_REQUEST["ID_Config"];
                                       Persona
                                     </td>
                                     <td style = 'width: 70%;'>
-                                      <a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $id_persona ."\",\"Ventana" . $id_persona ."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".
+                                      <a href = 'javascript:window.open(\"persona/editar?ID=" . $id_persona ."\",\"Ventana" . $id_persona ."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".
                                         $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "
                                       </a>
                                     </td>
@@ -1786,7 +1786,7 @@ $ID_Config = $_REQUEST["ID_Config"];
                     $TableMov .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td>";
                     $TableMovPrint .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td>";
                     $json_row["Fecha"] = $DtoMovimiento->getFecha();
-                    $TableMov .= "<td class='trPersona' style = 'width: auto;'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $id_persona . "\",\"Ventana" . $id_persona . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" . $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "</a></td>";
+                    $TableMov .= "<td class='trPersona' style = 'width: auto;'><a href = 'javascript:window.open(\"persona/editar?ID=" . $id_persona . "\",\"Ventana" . $id_persona . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" . $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "</a></td>";
                     $TableMovPrint .= "<td class='trPersona' style = 'width: auto;'>".
                                           $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "
                                       </td>";
@@ -2040,7 +2040,7 @@ $ID_Config = $_REQUEST["ID_Config"];
                   $TableMov .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td></tr>";
                   $TableMovPrint .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td></tr>";
                   $json_row["Fecha"] = $DtoMovimiento->getFecha();
-                  $TableMov .= "<td class='trPersona' style = 'width: auto;'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $RetTodos["id_persona"]."\",\"Ventana" . $RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" . $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "</a></td></tr>";
+                  $TableMov .= "<td class='trPersona' style = 'width: auto;'><a href = 'javascript:window.open(\"persona/editar?ID=" . $RetTodos["id_persona"]."\",\"Ventana" . $RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" . $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "</a></td></tr>";
                   $TableMovPrint .= "<td class='trPersona' style = 'width: auto;'>".
                                       $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "
                                     </td>
