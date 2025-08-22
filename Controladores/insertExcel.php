@@ -211,6 +211,12 @@
 				$datos["apellido"] = preg_replace("~,~", "", $lista[0]);
 				$datos["nombre"] = implode( " ",array_slice($lista, 1));
 				break;
+			case "apellido":
+				$datos["apellido"] = trim($valor);
+				break;
+			case "nombre":
+				$datos["nombre"] = trim($valor);
+				break;
 			case "hc":
 				$datos = $valor;
 				break;
@@ -318,9 +324,10 @@
 		$indixe_col_h = (isset($config_datos["col"])) ? $config_datos["col"] : null;
 		$dni_col = (isset($config_datos["dni_col"])) ? $config_datos["dni_col"] : null;
 		$nombre_col = (isset($config_datos["nombre_col"])) ? $config_datos["nombre_col"] : null;
-		$com = (isset($config_datos["row"])) ? $config_datos["row"] : null;
+		$com_row = (isset($config_datos["row"])) ? $config_datos["row"] : 0;
+		$com_col = (isset($config_datos["col_init"])) ? $config_datos["col"] : 0;
 
-		for ($row = $com; $row <= $highestRow; $row++) {
+		for ($row = $com_row; $row <= $highestRow; $row++) {
 			if (count($rows_excel[$row]) == 0 
 				|| (!is_null($nombre_col) && empty($rows_excel[$row][$nombre_col]))
 				|| (!is_null($dni_col) && empty($rows_excel[$row][$dni_col]))
@@ -336,7 +343,7 @@
 			$lista_valores["observacion"] = "";
 			$highestColumnIndex = count($rows_excel[$row]) - 1;
 
-			for ($col = 0; $col <= $highestColumnIndex; $col++) {
+			for ($col = $com_col; $col <= $highestColumnIndex; $col++) {
 				$value = (!empty($rows_excel[$row][$col])) ? $rows_excel[$row][$col] : null;
 				$col_excel = colExcel($col);
 				$col_header = (!empty($rows_excel[$indixe_col_h][$col])) ? $rows_excel[$indixe_col_h][$col] : null;
@@ -436,6 +443,7 @@
 
 			$reader_file = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($file_type);
 			$spreadsheet = $reader_file->load($tmp_file_name_xlsx);
+			$spreadsheet->setActiveSheetIndexByName($seccion);
 			$result = $spreadsheet->getActiveSheet()->toArray();
 			$flag = fclose($file_temp);
 
@@ -485,9 +493,14 @@
 				$geo_lon = null;
 				$lista_motivos = (!empty($dato["motivos"])) ? $dato["motivos"] : [];
 				$dni = $dato["dni"];
-				$nombre_apellido = $dato["nombre_apellido"];
-				$nombre = $nombre_apellido["nombre"];
-				$apellido = $nombre_apellido["apellido"];
+				if (!empty($dato["nombre_apellido"])) {
+					$nombre_apellido = $dato["nombre_apellido"];
+					$nombre = $nombre_apellido["nombre"];
+					$apellido = $nombre_apellido["apellido"];
+				} else {
+					$nombre = (isset($dato["nombre"])) ? $dato["nombre"]["nombre"] : null;
+					$apellido = (isset($dato["apellido"])) ? $dato["apellido"]["apellido"] : null;
+				}
 				$Fecha_Nacimiento = $dato["fecha_nacimiento"];
 				$direccion = (isset($dato["direccion"]["direccion"])) ? $dato["direccion"]["direccion"] : null;
 				$nro_calle = nro_from_domicilio($direccion);

@@ -32,6 +32,7 @@ class ReporteListadoController
 
     public function filtro_movimientos()
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
@@ -42,6 +43,7 @@ class ReporteListadoController
 
     public function reporte()
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {

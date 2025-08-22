@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-session_start(); 
+
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Controladores/Elements.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Controladores/CtrGeneral.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Persona.php");
@@ -26,12 +26,9 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/DtoMovimiento.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Motivo.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Categoria.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-header("Content-Type: text/html;charset=utf-8");
 
-/*     CONTROL DE USUARIOS                    */
-if(!isset($_SESSION["Usuario"])){
-    header("Location: Error_Session.php");
-}
+
+header("Content-Type: text/html;charset=utf-8");
 
 $ID_Usuario = $_SESSION["Usuario"];
 $usuario = new Account(account_id: $ID_Usuario);
@@ -57,6 +54,7 @@ $ID_Config = $_REQUEST["ID_Config"];
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="dist/reporte.js"></script>
+  <script src="./dist/grafico.js"></script>
   <script>
       let fechaDesde = null;
       let fechaHasta = null;
@@ -82,9 +80,10 @@ $ID_Config = $_REQUEST["ID_Config"];
               $("tbody ul li buttom").on("click", function () {
                 $()
               });
+              grafico();
       });
 
-      function CalcularPrecio(){
+      function CalcularPrecio() {
         //var Combus = document.getElementById("Combustible").value;
         var Litros = document.getElementById("Litros").value;
         var Combustible = document.getElementById("Combustible");
@@ -179,7 +178,7 @@ $ID_Config = $_REQUEST["ID_Config"];
     <br>
     <div class="row">
         <div class="col-md-2" style="padding-right: 0px;padding-left: 0pc;">
-          <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_listados.php'">Atras</button>
+          <button type = "button" class = "btn btn-danger" onClick = "location.href = '/filtrolistado'">Atras</button>
           <button type="button" class="btn btn-secondary" onclick="enviarImprimirPdf();"> Imprimir</button>
         </div>
         <div class="col-md-6">
@@ -811,6 +810,10 @@ $ID_Config = $_REQUEST["ID_Config"];
             </button>
             <button type="button" class="btn btn-secondary" onClick="htmlExcel('tabla-movimiento-general', 'excel');">
                 Excel
+            </button>
+            <button type = "button" class = "btn btn-secondary" data-toggle="modal" 
+                    data-target="#datos-analisis-modal">
+                Analisis de Datos
             </button>
         </div>
      </div>
@@ -2470,6 +2473,35 @@ $ID_Config = $_REQUEST["ID_Config"];
       <div class="modal-footer modal-footer-flex-center">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
         <button type="button" class="btn btn-primary" onClick="ordenResultados()" data-dismiss="modal">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="datos-analisis-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="class_modal-dialog modal-dialog" role="document"  id="id_modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel" style="margin-left: auto;">Analisis de datos</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <canvas id="myChart"></canvas>
+        </div>
+        <div>
+          <canvas id="graphics"></canvas>
+        </div>
+      </div>
+        <div>
+          <canvas id="graphics-2"></canvas>
+        </div>
+      </div>
+      <div class="modal-footer modal-footer-flex-center">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" onClick="configResultados()" data-dismiss="modal">Aceptar</button>
       </div>
     </div>
   </div>

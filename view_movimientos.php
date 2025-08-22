@@ -29,6 +29,9 @@ $ID_Usuario = $_SESSION["Usuario"];
 $usuario = new Account(account_id: $ID_Usuario);
 $TipoUsuario = $usuario->get_id_tipo_usuario();
 
+$mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+$mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -52,6 +55,8 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   <script src="./dist/alerta.js"></script>
   <script src="./dist/control.js"></script>
   <script>
+    let mensajeError = '<?php echo $mensaje_error;?>';
+    let mensajeSuccess = '<?php echo $mensaje_success;?>';
     $(document).ready(function () {
       var date_input = $('input[name="date"]');
       var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
@@ -61,6 +66,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
         todayHighlight: true,
         autoclose: true,
       });
+			controlMensaje(mensajeSuccess, mensajeError);
     });
   </script>
 </head>
@@ -84,7 +90,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
         <button id="btn-enlace-driver" class="btn btn-md btn-secondary" data-toggle="modal" data-target="#modal-enlace-drive">Enlace</button>
         </div>
         <div class="col-4">
-          <center><button class="btn btn-secondary" onClick="location.href='view_newmovimientos.php'">Agregar Nuevo
+          <center><button class="btn btn-secondary" onClick="location.href='/movimiento/nuevo'">Agregar Nuevo
               Movimiento</button></center>
         </div>
         <div class="col-2">
@@ -194,13 +200,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
       </div>
     </div>
   <!-- FIN MODAL SELECCION ENLACE DRIVER -->
-    <?php
-    if (isset($_REQUEST['Mensaje'])) {
-      echo "<script type='text/javascript'>
-          mensajeDeProcesamiento('" . $_REQUEST['Mensaje'] . "');
-        </script>";
-    }
-    ?>
 </body>
 
 </html>

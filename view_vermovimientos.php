@@ -1,4 +1,6 @@
 <?php 
+
+use function PHPUnit\Framework\isNull;
 /*
  *
  * This file is part of Rastreador3.
@@ -79,8 +81,48 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
-  echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_MOVIMIENTO);
+
+    if (isset($_REQUEST["ID"]) && $_REQUEST["ID"] != null) {
+      $ID_Movimiento = $_REQUEST["ID"];
+
+      $Con = new Conexion();
+      $Con->OpenConexion();
+
+      $consultaGeneral = "CREATE TEMPORARY TABLE MTPERM SELECT DISTINCT(MT.id_motivo), MT.motivo 
+                            from motivo MT inner join categoria C on (MT.cod_categoria = C.cod_categoria) 
+                              inner join categorias_roles CR on (CR.id_categoria = CR.id_categoria)" ;
+      $MessageError = "Problemas al crear la tabla temporaria de usuarios";
+      $Con->ResultSet = mysqli_query($Con->Conexion,$consultaGeneral
+                                    ) or die($MessageError);
+
+      $ConsultarDatos = "select M.id_movimiento, M.fecha, P.apellido,
+                                P.nombre, M.observaciones,
+                                R.responsable, M.id_resp_2,
+                                M.id_resp_3, M.id_resp_4,
+                                C.centro_salud, I.Nombre,
+                                MT.motivo as Mot
+                          from movimiento M 
+                              INNER JOIN movimiento_motivo MEMT ON (M.id_movimiento = MEMT.id_movimiento)
+                              INNER JOIN motivo MT ON (MEMT.id_motivo = MT.id_motivo)
+                              INNER JOIN MTPERM ME ON (MT.id_motivo = ME.id_motivo)
+                              INNER JOIN persona P ON (M.id_persona = P.id_persona)
+                              INNER JOIN responsable R ON (M.id_resp = R.id_resp) 
+                              LEFT JOIN centros_salud C ON (M.id_centro = C.id_centro)
+                              LEFT JOIN otras_instituciones I ON (M.id_otrainstitucion = I.ID_OtraInstitucion )
+                          where M.id_movimiento = $ID_Movimiento";
+      $MensajeErrorDatos = "No se pudo consultar los Datos del Movimiento";
+
+      $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
+
+      $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
+  }
+  if (!isset($Ret)) {
+        $empty_query_message = "El movimiento no posee datos.";
+        header("Location: /movimientos?MensajeError=" . $empty_query_message);
+        exit();
+  } else {
+    $Element = new Elements();
+    echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_MOVIMIENTO);
   ?>
   <div class = "col-md-9">
     <div class="row">
@@ -96,40 +138,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
           <!-- Search -->
         <div class = "row">
           <?php  
-            if (isset($_REQUEST["ID"]) && $_REQUEST["ID"] != null) {
-              $ID_Movimiento = $_REQUEST["ID"];
-
-              $Con = new Conexion();
-              $Con->OpenConexion();
-
-              $consultaGeneral = "CREATE TEMPORARY TABLE MTPERM SELECT DISTINCT(MT.id_motivo), MT.motivo 
-                                   from motivo MT inner join categoria C on (MT.cod_categoria = C.cod_categoria) 
-                                     inner join categorias_roles CR on (CR.id_categoria = CR.id_categoria)" ;
-              $MessageError = "Problemas al crear la tabla temporaria de usuarios";
-              $Con->ResultSet = mysqli_query($Con->Conexion,$consultaGeneral
-                                            ) or die($MessageError);
-
-              $ConsultarDatos = "select M.id_movimiento, M.fecha, P.apellido,
-                                        P.nombre, M.observaciones,
-                                        R.responsable, M.id_resp_2,
-                                        M.id_resp_3, M.id_resp_4,
-                                        C.centro_salud, I.Nombre,
-                                        MT.motivo as Mot
-                                 from movimiento M 
-                                      INNER JOIN movimiento_motivo MEMT ON (M.id_movimiento = MEMT.id_movimiento)
-                                      INNER JOIN motivo MT ON (MEMT.id_motivo = MT.id_motivo)
-                                      INNER JOIN MTPERM ME ON (MT.id_motivo = ME.id_motivo)
-                                      INNER JOIN persona P ON (M.id_persona = P.id_persona)
-                                      INNER JOIN responsable R ON (M.id_resp = R.id_resp) 
-                                      LEFT JOIN centros_salud C ON (M.id_centro = C.id_centro)
-                                      LEFT JOIN otras_instituciones I ON (M.id_otrainstitucion = I.ID_OtraInstitucion )
-                                 where M.id_movimiento = $ID_Movimiento";
-              $MensajeErrorDatos = "No se pudo consultar los Datos del Movimiento";
-
-              $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
-
-              $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
-
               $Fecha = $Fecha_Nacimiento = implode("-", array_reverse(explode("-",$Ret["fecha"])));
               $Apellido = $Ret["apellido"];
               $Nombre = $Ret["nombre"];
@@ -268,9 +276,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               $Con->CloseConexion();
               
 
-            } else {
-              $Mensaje = "No se pudo consultar los Datos porque no se pudo obtener el ID del Movimiento";
-              echo $Mensaje;
             }
           ?>
         </div>
@@ -279,7 +284,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               
             </div>
             <div class="col-2">       
-              <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_movimientos.php'">Atras</button>
+              <button type = "button" class = "btn btn-danger" onClick = "location.href = '/movimientos'">Atras</button>
             </div>
         </div>
   </div>
