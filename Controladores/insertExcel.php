@@ -507,7 +507,7 @@
 				$manzana = (!empty($dato["manzana"])) ? $dato["manzana"] : null;
 				$departam = (isset($dato["departamento"])) ? $dato["departamento"] : null;
 				$departam = (!empty($dato["direccion"]["departamento"])) ? $dato["direccion"]["departamento"] : $departam;
-				$hc = $dato["hc"];
+				$hc = (!empty($dato["hc"])) ? $dato["hc"] : null;
 				$obra_social = (!empty($dato["obra_social"])) ? $dato["obra_social"] : null;
 				$telefono = (!empty($dato["telefono"])) ? $dato["telefono"] : null;
 				$id_barrio = (!empty($dato["barrio"])) ? $dato["barrio"] : $id_barrio_centro;
