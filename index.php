@@ -120,6 +120,9 @@ try {
 	$routes[] = Route::get('mod_account_success', '/usuario/editar\?account_id={id}&Mensaje={mensaje}', [AccountController::class, 'mod_account']);
 	$routes[] = Route::get('mod_account_error', '/usuario/editar\?account_id={id}&MensajeError={mensaje}', [AccountController::class, 'mod_account']);
 	$routes[] = Route::post('new_account', '/usuario/nuevo', [AccountController::class, 'new_account']);
+	$routes[] = Route::get('accounts_user', '/cuenta\?account_id={id}', [AccountController::class, 'dato_account_user']);
+	$routes[] = Route::get('accounts_mensaje', '/cuenta\?account_id={id}&Mensaje={mensaje}', [AccountController::class, 'dato_account_user']);
+	$routes[] = Route::get('accounts_mensaje_error', '/cuenta\?account_id={id}&MensajeError={mensaje}', [AccountController::class, 'dato_account_user']);
 	$routes[] = Route::post('mod_account_control', '/modificar_usuario', [AccountController::class, 'mod_account_control']);
 	$routes[] = Route::get('del_account_control', '/delete_usuario\?ID={id}', [AccountController::class, 'del_account_control']);
 	$routes[] = Route::get('listado_barrios', '/barrios', [BarrioController::class, 'listado_barrios']);

@@ -24,6 +24,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Accion.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . '/Modelo/Solicitud_Usuario.php');
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
 
 
 class AccountController 
@@ -47,6 +49,25 @@ class AccountController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
+            header("Content-Type: text/html;charset=utf-8");
+
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+
+            $AccountID = $_REQUEST["account_id"];
+            $usuario = new Account(account_id: $AccountID);
+            $lastname = ucfirst($usuario->get_last_name());
+            $firstname = ucwords($usuario->get_first_name());
+            $initials = strtoupper($usuario->get_initials());
+            $username = $usuario->get_user_name();
+            $userpass = $usuario->get_password();
+            $email = $usuario->get_email();
+            $ID_Tipo = $usuario->get_id_tipo_usuario();
+
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
             include("view_modusuario.php");
         }
         exit();
@@ -59,6 +80,37 @@ class AccountController
         } else {
             include("view_verusuarios.php");
         }
+        exit();
+    }
+
+    public function dato_account_user($id_account = null, $mensaje = null)
+    {
+        if (!isset($_SESSION["Usuario"])) {
+            include("Error_Session.php");
+
+        } else {
+            header("Content-Type: text/html;charset=utf-8");
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+
+            $AccountID = $_REQUEST["account_id"];
+            $account = new Account(account_id: $AccountID);
+            $exist_user = Account::exist_account(account_id: $AccountID);
+            $lastname = ucfirst($account->get_last_name());
+            $firstname = ucwords($account->get_first_name());
+            $initials = strtoupper($account->get_initials());
+            $username = $account->get_user_name();
+            $userpass = $account->get_password();
+            $email = $account->get_email();
+            $ID_Tipo = $account->get_id_tipo_usuario();
+
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
+            include("view_perfilusuario.php");
+        }
+
         exit();
     }
 
@@ -84,6 +136,7 @@ class AccountController
                 if (!($has8characters && $hasAlpha && $hasNum && !$hasNonAlphaNum)) {
                     $mensaje = "La contraseña debe contener 8 caracteres, alfabeticos y numericos";
                     header("Location: /usuario/editar?account_id={$account_id}&MensajeError="  . $mensaje);
+                    exit();
                 }
 
                 $existe = Account::exist_account($account_id);
