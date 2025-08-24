@@ -124,4 +124,16 @@ class HomeController
         exit();
     }
 
+    public function not_found() {
+        header("Content-Type: text/html;charset=utf-8");
+        header("HTTP/1.0 404 Not Found");
+        require("view_not_found.php");
+    }
+
+    public function metodo_no_aceptado() {
+        header("Content-Type: text/html;charset=utf-8");
+        header("HTTP/1.0 405 Method Not Allowed");
+        require("view_not_found.php");
+    }
+
 }

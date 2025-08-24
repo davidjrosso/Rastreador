@@ -163,6 +163,9 @@ try {
 	$routes[] = Route::get('new_otra_institucion', '/view_newotrasinstituciones.php', [OtraInstitucionController::class, 'new_otra_institucion']);
 	$routes[] = Route::get('new_otra_institucion_control', '/insertar_otra_institucion\?ID={id}', [OtraInstitucionController::class, 'new_otra_institucion_control']);
 	$routes[] = Route::post('error_session', '/error_session.php', [HomeController::class, 'error_session']);
+	$routes[] = Route::get('not_found', '/not_found', [HomeController::class, 'not_found']);
+	$routes[] = Route::get('not_allowed', '/not_allowed', [HomeController::class, 'metodo_no_aceptado']);
+
 
 	$router = new Router($routes, $url);
 
@@ -182,14 +185,10 @@ try {
 	exit();
 
 } catch (MethodNotAllowed $exception) {
-	header("Content-Type: text/html;charset=utf-8");
-	header("HTTP/1.0 405 Method Not Allowed");
-	include("view_not_found_404.php");
+	header("Location: /not_allowed");
 
 } catch (RouteNotFound $exception) {
-	header("Content-Type: text/html;charset=utf-8");
-    header("HTTP/1.0 404 Not Found");
-	include("view_not_found_404.php");
+	header("Location: /not_found");
 
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage();
