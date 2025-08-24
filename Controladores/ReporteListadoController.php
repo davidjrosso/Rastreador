@@ -47,6 +47,17 @@ class ReporteListadoController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
+            header("Content-Type: text/html;charset=utf-8");
+
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+
+            $_SESSION["reporte_listado"] = true;
+            $_SESSION["reporte_grafico"] = false;
+            $ID_Config = $_REQUEST["ID_Config"];
+            $Element = new Elements();
+
             include("view_vermovlistados.php");
         }
         exit();

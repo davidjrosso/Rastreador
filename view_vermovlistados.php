@@ -19,25 +19,6 @@
  */
 
 
-require_once($_SERVER['DOCUMENT_ROOT'] . "/Controladores/Elements.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Persona.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/DtoMovimiento.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Motivo.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Categoria.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-
-
-header("Content-Type: text/html;charset=utf-8");
-
-$ID_Usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $usuario->get_id_tipo_usuario();
-
-$_SESSION["reporte_listado"] = true;
-$_SESSION["reporte_grafico"] = false;
-$ID_Config = $_REQUEST["ID_Config"];
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -164,7 +145,6 @@ $ID_Config = $_REQUEST["ID_Config"];
 <body>
 <div class = "row menu-col-2">
   <?php
-    $Element = new Elements();
     echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_REPORTE_LISTADO);
   ?>
   <div class = "col-md-10">
