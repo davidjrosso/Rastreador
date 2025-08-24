@@ -18,20 +18,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Conexion.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Elements.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/CtrGeneral.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Movimiento.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Responsable.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Account.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/MovimientoMotivo.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/DtoMovimiento.php';
-
-header("Content-Type: text/html;charset=utf-8");
-
-$ID_Usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $usuario->get_id_tipo_usuario();
 ?>
 <!DOCTYPE html>
 <html>
@@ -56,7 +42,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
         var cantMotivos = 3;
        $(document).ready(function(){
               var date_input=$('input[name="Fecha"]'); //our date input has the name "date"
-              var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+              var container=$('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
               date_input.datepicker({
                   format: 'dd/mm/yyyy',
                   container: container,
@@ -235,7 +221,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_MOVIMIENTO);
   ?>
   <div class = "col-md-9">
@@ -337,7 +322,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Persona: </label>
                   <div class="col-md-10" id = "Persona">
                     <?php  
-                    $Element = new Elements();
                     echo $Element->BTNModPersonas($ID_Persona);
                     ?>
                   </div>
@@ -346,7 +330,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 1: </label>
                   <div class="col-md-9" id = "Motivo_1">
                     <?php  
-                      $Element = new Elements();
                       echo $Element->BTNModMotivo_1($DtoMovimiento->getMotivo_1());
                     ?>
                   </div>
@@ -358,7 +341,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 2: </label>
                   <div class="col-md-10" id = "Motivo_2">
                     <?php  
-                    $Element = new Elements();
                     echo $Element->BTNModMotivo_2($DtoMovimiento->getMotivo_2());
                     ?>
                   </div>
@@ -367,7 +349,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 3: </label>
                   <div class="col-md-10" id = "Motivo_3">
                     <?php  
-                    $Element = new Elements();
                     echo $Element->BTNModMotivo_3($DtoMovimiento->getMotivo_3());
                     ?>
                   </div>
@@ -379,7 +360,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 4: </label>
                   <div class="col-md-10" id = "Motivo_4">
                 <?php
-                  $Element = new Elements();
                   echo $Element->BTNModMotivo_4($DtoMovimiento->getMotivo_4());
                 ?>
                   </div>
@@ -394,7 +374,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 5: </label>
                   <div class="col-md-10" id = "Motivo_5">
                 <?php
-                  $Element = new Elements();
                   echo $Element->BTNModMotivo_5($DtoMovimiento->getMotivo_5());
                 ?>
                   </div>
@@ -414,7 +393,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable: </label>
                   <div class = "col-md-10">
                     <?php  
-                    $Element = new Elements();
                     echo $Element->CBModResponsables($ID_Responsable);
                     ?>
                   </div>
@@ -424,7 +402,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                     <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable 2: </label>
                     <div class = "col-md-10">
                       <?php  
-                      $Element = new Elements();
                       echo $Element->CBModResponsables($ID_Responsable_2);
                       ?>
                     </div>
@@ -437,7 +414,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                     <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable 3: </label>
                     <div class = "col-md-10">
                       <?php  
-                      $Element = new Elements();
                       echo $Element->CBModResponsables($ID_Responsable_3);
                       ?>
                     </div>
@@ -450,7 +426,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                     <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable 4: </label>
                     <div class = "col-md-10">
                       <?php  
-                      $Element = new Elements();
                       echo $Element->CBModResponsables($ID_Responsable_4);
                       ?>
                     </div>
@@ -462,7 +437,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Centro de Salud: </label>
                   <div class = "col-md-10">
                     <?php  
-                    $Element = new Elements();
                     echo $Element->CBModCentros($ID_Centro);
                     ?>
                   </div>
@@ -471,7 +445,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Institución: </label>
                   <div class = "col-md-10">
                     <?php  
-                    $Element = new Elements();
                     echo $Element->CBModOtrasInstituciones($ID_OtraInstitucion);
                     ?>
                   </div>
@@ -503,7 +476,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
             </form>
             </div>
               <?php  
-            }else{
+            } else {
               $Mensaje = "No se pudo consultar los Datos porque no se pudo obtener el ID del Movimiento";
               echo $Mensaje;
             }

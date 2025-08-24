@@ -1,12 +1,17 @@
 <?php
 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Parametria.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Categoria.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_Unificacion.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Movimiento.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/MovimientoMotivo.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/DtoMovimiento.php';
+
 
 class MovimientoController 
 {
@@ -16,6 +21,17 @@ class MovimientoController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
+            header("Content-Type: text/html;charset=utf-8");
+
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+
             include("view_movimientos.php");
         }
         exit();
@@ -33,6 +49,12 @@ class MovimientoController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
+            header("Content-Type: text/html;charset=utf-8");
+
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Element = new Elements();
             include("view_vermovimientos.php");
         }
         exit();
@@ -43,6 +65,13 @@ class MovimientoController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
+            header("Content-Type: text/html;charset=utf-8");
+
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+
+            $Element = new Elements();
             include("view_modmovimientos.php");
         }
         exit();

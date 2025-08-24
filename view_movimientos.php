@@ -18,20 +18,6 @@
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-
-header("Content-Type: text/html;charset=utf-8");
-
-
-$ID_Usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $usuario->get_id_tipo_usuario();
-
-$mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
-$mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -74,7 +60,6 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 <body>
   <div class="row">
     <?php
-    $Element = new Elements();
     echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_MOVIMIENTO);
     ?>
     <div class="col-md-9">
@@ -134,7 +119,6 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
             if (isset($_REQUEST["Filtro"]) && $_REQUEST["Filtro"] != null) {
               $Filtro = $_REQUEST["Filtro"];
               $ID_Filtro = $_REQUEST["ID_Filtro"];
-              $DTGeneral = new CtrGeneral();
 
               switch ($ID_Filtro) {
                 // case 'ID': echo $DTGeneral->getMovimientosxID($Filtro);break;
@@ -164,7 +148,6 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                   break;
               }
             } else {
-              $DTGeneral = new CtrGeneral();
               echo $DTGeneral->getMovimientos($TipoUsuario);
             }
             ?>
