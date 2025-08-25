@@ -1,17 +1,22 @@
 <?php 
-
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-
-
-header("Content-Type: text/html;charset=utf-8");
-
-$ID_Usuario = $_SESSION["Usuario"];
-$account = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $account->get_id_tipo_usuario();
-
-$datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
+/*
+ *
+ * This file is part of Rastreador3.
+ *
+ * Rastreador3 is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Rastreador3 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Rastreador3; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 ?>
 <!DOCTYPE html>
@@ -358,7 +363,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
       labelBarrio.innerText = 'Barrio '+cantBarrios+':';
       var divSelectBarrio = document.createElement("div");
       divSelectBarrio.setAttribute('class','col-md-10');
-      var select = `<?php $Element = new Elements(); echo $Element->CBRepBarrios(); ?>`;
+      var select = `<?php echo $Element->CBRepBarrios(); ?>`;
       divSelectBarrio.innerHTML = select;      
       divBarrio.appendChild(labelBarrio);
       divBarrio.appendChild(divSelectBarrio);
@@ -493,7 +498,6 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_REPORTE_LISTADO);
   ?>
   <div class = "col-md-9">
@@ -590,9 +594,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
             <div class="form-group row">
               <label for="ID_Barrio" class="col-md-2 col-form-label LblForm">Barrio: </label>
               <div class="col-md-9">
-                <?php  
-                $Element = new Elements();
-
+                <?php
                 if(isset($datosNav["ID_Barrio"])){
                   echo $Element->CBModBarrios($datosNav["ID_Barrio"]);
                 }else{
@@ -664,11 +666,9 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
               <label for="ID_Centro" class="col-md-2 col-form-label LblForm">Centro Salud: </label>
               <div class="col-md-10">
                 <?php  
-                $Element = new Elements();
-
-                if(isset($datosNav["ID_CentroSalud"])){
+                if (isset($datosNav["ID_CentroSalud"])) {
                   echo $Element->CBRepModCentros($datosNav["ID_CentroSalud"]);
-                }else{
+                } else {
                   echo $Element->CBRepCentros();
                 }
                 ?>
@@ -690,12 +690,10 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
             <div class="form-group row">
               <label for="ID_OtraInstitucion" class="col-md-2 col-form-label LblForm">Otras Instituciones: </label>
               <div class="col-md-10">
-                <?php  
-                $Element = new Elements();
-                
-                if(isset($datosNav["ID_OtraInstitucion"])){
+                <?php                  
+                if (isset($datosNav["ID_OtraInstitucion"])) {
                   echo $Element->CBRepModOtrasInstituciones($datosNav["ID_OtraInstitucion"]);
-                }else{
+                } else {
                   echo $Element->CBRepOtrasInstituciones();
                 }
                 ?>
@@ -705,11 +703,9 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
               <label for="ID_Escuela" class="col-md-2 col-form-label LblForm">Escuela: </label>
               <div class="col-md-10">
                 <?php  
-                $Element = new Elements();
-
-                if(isset($datosNav["ID_Escuela"])){
+                if (isset($datosNav["ID_Escuela"])) {
                   echo $Element->CBModEscuelas($datosNav["ID_Escuela"]);
-                }else{
+                } else {
                   echo $Element->CBRepEscuelas();
                 }
                 ?>
@@ -719,11 +715,9 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
               <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable: </label>
               <div class="col-md-10">
                 <?php  
-                $Element = new Elements();
-
-                if(isset($datosNav["ID_Responsable"])){
+                if (isset($datosNav["ID_Responsable"])) {
                   echo $Element->CBRepModResponsables($datosNav["ID_Responsable"]);
-                }else{
+                } else {
                   echo $Element->CBRepResponsable();
                 }
                 ?>
@@ -748,6 +742,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
               </div>
             </div>
           </form>
+
           <br><br><br>
           <!-- Fin Carga -->
           <!-- SECCION DE MODALES -->
@@ -1074,12 +1069,12 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
             <div class="modal-body">
               <div class="row">
                 <div class="col-4">
-                  <?php 
+                  <?php
                     echo $Element->CBCSDrives();
                   ?>
                 </div>
                 <div class="col-8">
-                  <?php 
+                  <?php
                     echo $Element->CBDrive();
                   ?>
                 </div>
@@ -1096,25 +1091,5 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
   </div>
 </div>
 </div>
-<?php
-/*
- *
- * This file is part of Rastreador3.
- *
- * Rastreador3 is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Rastreador3 is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Rastreador3; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- */
-?>
 </body>
 </html>

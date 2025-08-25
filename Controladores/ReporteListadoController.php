@@ -36,6 +36,15 @@ class ReporteListadoController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
+            header("Content-Type: text/html;charset=utf-8");
+
+            $ID_Usuario = $_SESSION["Usuario"];
+            $account = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $account->get_id_tipo_usuario();
+
+            $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
+            $Element = new Elements();
+
             include("view_listados.php");
         }
         exit();

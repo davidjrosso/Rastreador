@@ -19,12 +19,17 @@
  */
 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Parametria.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Motivo.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Categoria.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/CategoriaRol.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Accion.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/sys_config.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/dompdf/autoload.inc.php");
 
 
 class ReporteGraficoController 
@@ -47,6 +52,35 @@ class ReporteGraficoController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
+
+            $ID_Usuario = $_SESSION["Usuario"];
+            $_SESSION["reporte_grafico"] = true;
+            session_write_close();
+
+
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"] : null;
+
+
+            if (isset($_REQUEST["Fecha_Desde"])) {
+            $lista_animacion = explode("/", $_REQUEST["Fecha_Desde"]);
+            $Fecha_Inicio = implode("-", array_reverse($lista_animacion));
+            $fecha_init_animacion = $Fecha_Inicio;
+            $anio_animacion = $lista_animacion[2];
+            $mes_animacion = $lista_animacion[1];
+            $dia_animacion = $lista_animacion[0];
+            } else {
+            $Fecha_Inicio = null;
+            }
+            if (isset($_REQUEST["Fecha_Hasta"])) {
+            $Fecha_Fin = implode("-", array_reverse(explode("/", $_REQUEST["Fecha_Hasta"])));
+            $fecha_end_animacion = $Fecha_Fin;
+            } else {
+            $Fecha_Fin = null;
+            }
+
+            $Element = new Elements();
             include("view_rep_general_new.php");
         }
         exit();
