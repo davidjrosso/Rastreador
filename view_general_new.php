@@ -18,16 +18,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-
-
-header("Content-Type: text/html;charset=utf-8");
-
-$ID_Usuario = $_SESSION["Usuario"];
-$account = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $account->get_id_tipo_usuario();
 ?>
 <!DOCTYPE html>
 <html>
@@ -387,7 +377,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
       labelBarrio.innerText = 'Barrio ' + cantBarrios + ':';
       var divSelectBarrio = document.createElement("div");
       divSelectBarrio.setAttribute('class','col-md-10');
-      var select = `<?php $Element = new Elements(); echo $Element->CBRepBarrios(); ?>`;
+      var select = `<?php  echo $Element->CBRepBarrios(); ?>`;
       divSelectBarrio.innerHTML = select;
       divBarrio.appendChild(labelBarrio);
       divBarrio.appendChild(divSelectBarrio);
@@ -646,7 +636,6 @@ $TipoUsuario = $account->get_id_tipo_usuario();
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_REPORTE_GRAFICO);
   ?>
   <div class = "col-md-9">
@@ -752,7 +741,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
               <label for="ID_Barrio" class="col-md-2 col-form-label LblForm">Barrio: </label>
               <div class="col-md-9">
                 <?php  
-                $Element = new Elements();
+                
                 echo $Element->CBRepBarrios();
                 ?>
               </div>
@@ -836,7 +825,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
               <label for="ID_Centro" class="col-md-2 col-form-label LblForm">Centro Salud: </label>
               <div class="col-md-10">
                 <?php  
-                $Element = new Elements();
+                
                 echo $Element->CBRepCentros();
                 ?>
               </div>
@@ -857,7 +846,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
               <label for="ID_OtraInstitucion" class="col-md-2 col-form-label LblForm">Otras Instituciones: </label>
               <div class="col-md-10">
                 <?php  
-                $Element = new Elements();
+                
                 echo $Element->CBRepOtrasInstituciones();
                 ?>
               </div>
@@ -866,7 +855,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
               <label for="ID_Escuela" class="col-md-2 col-form-label LblForm">Escuela: </label>
               <div class="col-md-10">
                 <?php  
-                $Element = new Elements();
+                
                 echo $Element->CBRepEscuelas();
                 ?>
               </div>
@@ -876,7 +865,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
               <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable: </label>
               <div class="col-md-10">
                 <?php  
-                $Element = new Elements();
+                
                 echo $Element->CBRepResponsable();
                 ?>
               </div>

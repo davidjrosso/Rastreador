@@ -41,6 +41,13 @@ class ReporteGraficoController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
+
+            $ID_Usuario = $_SESSION["Usuario"];
+            $account = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $account->get_id_tipo_usuario();
+
+            $Element = new Elements();
+
             include("view_general_new.php");
         }
         exit();
@@ -81,6 +88,7 @@ class ReporteGraficoController
             }
 
             $Element = new Elements();
+
             include("view_rep_general_new.php");
         }
         exit();
