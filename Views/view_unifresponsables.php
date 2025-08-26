@@ -68,7 +68,7 @@ $Con->CloseConexion();
               document.getElementById("ResultadosResponsable_" + nro).innerHTML=contenidosRecibidos;
               }
           }
-          xmlhttp.open('POST', 'buscarResponsable.php?valorBusqueda=' + textoBusqueda + '&idResponsable=' + nro, true);
+          xmlhttp.open('POST', '/buscar_responsable?valorBusqueda=' + textoBusqueda + '&idResponsable=' + nro, true);
           xmlhttp.send();
         }
 

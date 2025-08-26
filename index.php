@@ -145,6 +145,7 @@ try {
 	$routes[] = Route::post('new_calle_control', '/insertar_calle.php', [CalleController::class, 'new_calle_control']);
 	$routes[] = Route::get('unif_calle', '/calle/unificar', [CalleController::class, 'unif_calle']);
 	$routes[] = Route::post('unif_calle_control', '/unificar_direcciones', [CalleController::class, 'unif_calle_control']);
+	$routes[] = Route::post('buscar_unif_direcciones', '/buscar_unif_direcciones\?valorBusqueda={valor}', [CalleController::class, 'buscar_unif_direcciones']);
 	$routes[] = Route::get('listado_escuelas', '/escuelas', [EscuelaController::class, 'listado_escuelas']);
 	$routes[] = Route::get('listado_escuelas_success', '/escuelas\?Mensaje={mensaje}', [EscuelaController::class, 'listado_escuelas']);
 	$routes[] = Route::get('escuelas', '/escuela/editar\?ID={id}', [EscuelaController::class, 'mod_escuela']);
@@ -167,6 +168,7 @@ try {
 	$routes[] = Route::get('not_found', '/not_found', [HomeController::class, 'not_found']);
 	$routes[] = Route::get('not_allowed', '/not_allowed', [HomeController::class, 'metodo_no_aceptado']);
 	$routes[] = Route::post('insertar_excel', '/load_excel', [DriveController::class, 'load_excel']);
+	$routes[] = Route::get('excel', '/excel\?ID={id}', [DriveController::class, 'data_excel']);
 
 	$router = new Router($routes, $url);
 

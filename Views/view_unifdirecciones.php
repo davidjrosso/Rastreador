@@ -51,18 +51,20 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
         var Personas = [];
 
         function buscarDireccionModal(){
-          var xDireccion = document.getElementById('SearchDireccion').value;
-          var textoBusqueda = xDireccion;
-          xmlhttp=new XMLHttpRequest();
-          xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-              contenidosRecibidos = xmlhttp.responseText;
-              document.getElementById("ResultadosPersonas_1").innerHTML=contenidosRecibidos;
-              document.getElementById("ResultadosDirecciones").innerHTML=contenidosRecibidos;
-              }
+          let xDireccion = document.getElementById('SearchDireccion').value;
+          let textoBusqueda = xDireccion;
+          if (textoBusqueda) {
+            xmlhttp=new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+              if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                contenidosRecibidos = xmlhttp.responseText;
+                document.getElementById("ResultadosPersonas_1").innerHTML=contenidosRecibidos;
+                document.getElementById("ResultadosDirecciones").innerHTML=contenidosRecibidos;
+                }
+            }
+            xmlhttp.open('POST', '/buscar_unif_direcciones?valorBusqueda=' + textoBusqueda, true); // Método post y url invocada
+            xmlhttp.send();
           }
-          xmlhttp.open('POST', 'buscarUnifDirecciones.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
-          xmlhttp.send();
         }
 
         function actualizarContenido(){

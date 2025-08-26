@@ -29,7 +29,7 @@ class HomeController
     public function index()
     {
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             $con = new Conexion();
             $con->OpenConexion();
@@ -127,7 +127,7 @@ class HomeController
     public function not_found() {
         header("Content-Type: text/html;charset=utf-8");
         header("HTTP/1.0 404 Not Found");
-        require("../Views/view_not_found_404.php");
+        require("./Views/view_not_found_404.php");
     }
 
     public function metodo_no_aceptado() {

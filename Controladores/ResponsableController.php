@@ -15,7 +15,7 @@ class ResponsableController
     {
         header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_responsables.php");
         }
@@ -26,7 +26,7 @@ class ResponsableController
     {
         header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_modresponsables.php");
         }
@@ -37,7 +37,7 @@ class ResponsableController
     {
         header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_verresponsables.php");
         }
@@ -356,7 +356,7 @@ class ResponsableController
     {
         header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_unifresponsables.php");
         }
@@ -460,5 +460,72 @@ class ResponsableController
             echo "Error: " . $e->getMessage();
         }
         exit();
+    }
+
+    public function buscar_responsable($valor, $id)
+    {
+        header('Content-Type: text/html; charset=utf-8');
+
+        $consultaBusqueda = $valor;
+        $responsable_nro = $id;
+
+        //Filtro anti-XSS
+        $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
+        $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
+        $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consultaBusqueda);
+
+        $mensaje = "";
+
+        if (isset($consultaBusqueda)) {
+
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            $query = "SELECT * 
+                    FROM responsable 
+                    WHERE responsable LIKE '%$consultaBusqueda%' 
+                        AND estado = 1
+                    ORDER BY responsable ASC";
+
+            $consulta = mysqli_query($Con->Conexion, $query);
+
+            $filas = mysqli_num_rows($consulta);
+
+            if ($filas === 0) {
+                $mensaje = "<p>No hay ningún registro con ese dato</p>";
+            } else {
+                $mensaje .= '<table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        <th scope="col">id</th>
+                        <th scope="col">Responsable</th>	
+                        <th scope="col">Acción</th>	
+                        </tr>
+                    </thead>
+                    <tbody>';
+
+                while($resultados = mysqli_fetch_array($consulta)) {
+                    $id_responsable = $resultados["id_resp"];			
+                    $responsable = $resultados['responsable'];
+                    $mensaje .= '<tr>
+                                    <th scope="row">' . $id_responsable . '</th>
+                                    <td>' . $responsable . '</td>';
+                    $mensaje .= '<td>
+                                    <button type = "button" class = "btn btn-outline-success" onClick="seleccionResponsable(\'' . $responsable . '\', ' . $id_responsable . ', ' . $responsable_nro . ')" data-dismiss="modal">
+                                        seleccionar
+                                    </button>
+                                </td>
+                            </tr>';
+                };
+
+                $mensaje .= '</tbody>
+                    </table>';
+
+            };
+            $Con->CloseConexion();
+
+        };
+
+        echo $mensaje;
     }
 }
