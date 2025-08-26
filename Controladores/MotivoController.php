@@ -16,7 +16,7 @@ class MotivoController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_motivos.php");
+            include("./Views/view_motivos.php");
         }
         exit();
     }
@@ -26,7 +26,7 @@ class MotivoController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_modmotivos.php");
+            include("./Views/view_modmotivos.php");
         }
         exit();
     }
@@ -61,7 +61,7 @@ class MotivoController
             }
             $Con->CloseConexion();
             $Mensaje = "El motivo se elimino Correctamente";
-            header('Location: ../view_inicio.php?Mensaje='.$Mensaje);
+            header('Location: /home?Mensaje=' . $Mensaje);
         } catch (Exception $e) {
             echo "Error: ".$e->getMessage();
         }
@@ -221,7 +221,7 @@ class MotivoController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_unifmotivos.php");
+            include("./Views/view_unifmotivos.php");
         }
         exit();
     }

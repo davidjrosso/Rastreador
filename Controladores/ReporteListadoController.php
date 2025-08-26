@@ -45,7 +45,7 @@ class ReporteListadoController
             $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
             $Element = new Elements();
 
-            include("view_listados.php");
+            include("./Views/view_listados.php");
         }
         exit();
     }
@@ -67,7 +67,7 @@ class ReporteListadoController
             $ID_Config = $_REQUEST["ID_Config"];
             $Element = new Elements();
 
-            include("view_vermovlistados.php");
+            include("./Views/view_vermovlistados.php");
         }
         exit();
     }

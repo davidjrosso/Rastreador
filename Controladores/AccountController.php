@@ -36,7 +36,7 @@ class AccountController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_usuarios.php");
+            include("./Views/view_usuarios.php");
         }
         exit();
     }
@@ -68,7 +68,7 @@ class AccountController
             $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
             $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 
-            include("view_modusuario.php");
+            include("./Views/view_modusuario.php");
         }
         exit();
     }
@@ -78,7 +78,7 @@ class AccountController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_verusuarios.php");
+            include("./Views/view_verusuarios.php");
         }
         exit();
     }
@@ -108,7 +108,9 @@ class AccountController
             $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
             $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 
-            include("view_perfilusuario.php");
+            $Element = new Elements();
+
+            include("./Views/view_perfilusuario.php");
         }
 
         exit();

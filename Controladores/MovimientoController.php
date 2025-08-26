@@ -27,6 +27,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Categoria.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_Unificacion.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Movimiento.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Motivo.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/MovimientoMotivo.php");
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/DtoMovimiento.php';
 
@@ -36,10 +37,10 @@ class MovimientoController
 
     public function listado_movimiento($mensaje = null, $id = null)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            header("Content-Type: text/html;charset=utf-8");
 
             $ID_Usuario = $_SESSION["Usuario"];
             $usuario = new Account(account_id: $ID_Usuario);
@@ -50,7 +51,7 @@ class MovimientoController
             $Element = new Elements();
             $DTGeneral = new CtrGeneral();
 
-            include("view_movimientos.php");
+            include("./Views/view_movimientos.php");
         }
         exit();
     }
@@ -64,33 +65,33 @@ class MovimientoController
 
     public function datos_movimiento($id_movimiento)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            header("Content-Type: text/html;charset=utf-8");
 
             $ID_Usuario = $_SESSION["Usuario"];
             $usuario = new Account(account_id: $ID_Usuario);
             $TipoUsuario = $usuario->get_id_tipo_usuario();
             $Element = new Elements();
-            include("view_vermovimientos.php");
+            include("./Views/view_vermovimientos.php");
         }
         exit();
     }
 
     public function mod_movimiento($id_movimiento)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            header("Content-Type: text/html;charset=utf-8");
 
             $ID_Usuario = $_SESSION["Usuario"];
             $usuario = new Account(account_id: $ID_Usuario);
             $TipoUsuario = $usuario->get_id_tipo_usuario();
 
             $Element = new Elements();
-            include("view_modmovimientos.php");
+            include("./Views/view_modmovimientos.php");
         }
         exit();
     }

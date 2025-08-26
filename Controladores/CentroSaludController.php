@@ -34,7 +34,7 @@ class CentroSaludController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_centros.php");
+            include("./Views/view_centros.php");
         }
         exit();
     }
@@ -52,7 +52,7 @@ class CentroSaludController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_modcentros.php");
+            include("./Views/view_modcentros.php");
         }
         exit();
     }
@@ -81,7 +81,7 @@ class CentroSaludController
             }	
             $Con->CloseConexion();
             $Mensaje = "El centro de salud fue eliminado Correctamente";
-            header('Location: ../view_centros.php?Mensaje='.$Mensaje);
+            header('Location: /centrosdesalud?Mensaje=' . $Mensaje);
         } catch (Exception $e) {
             echo "Error: ".$e->getMessage();
         }
@@ -175,7 +175,7 @@ class CentroSaludController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_unifcentros.php");
+            include("./Views/view_unifcentros.php");
         }
         exit();
     }

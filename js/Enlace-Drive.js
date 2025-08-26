@@ -154,7 +154,7 @@
     $.ajax({
       type: "POST",
       cache: false,
-      url: "./Controladores/insertExcel.php",
+      url: "/load_excel",
       async: true,
       data: dataRequest,
       processData: false,

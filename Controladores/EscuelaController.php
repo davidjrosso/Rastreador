@@ -36,7 +36,7 @@ class EscuelaController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_escuelas.php");
+            include("./Views/view_escuelas.php");
         }
         exit();
     }
@@ -46,7 +46,7 @@ class EscuelaController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_modescuelas.php");
+            include("./Views/view_modescuelas.php");
         }
         exit();
     }
@@ -56,7 +56,7 @@ class EscuelaController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_verescuelas.php");
+            include("./Views/view_verescuelas.php");
         }
         exit();
     }
@@ -171,7 +171,7 @@ class EscuelaController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_unifescuelas.php");
+            include("./Views/view_unifescuelas.php");
         }
         exit();
     }

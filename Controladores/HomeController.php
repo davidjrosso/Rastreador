@@ -55,7 +55,7 @@ class HomeController
                 $value->update($con);
             }
 
-            include("view_inicio.php");
+            include("./Views/view_inicio.php");
         }
         exit();
     }
@@ -63,7 +63,7 @@ class HomeController
     public function error_session() 
     {
         if (isset($_SESSION["Usuario"])) {
-            include("view_inicio.php");
+            include("./Views/view_inicio.php");
         }
     }
 
@@ -72,7 +72,7 @@ class HomeController
         if (isset($_SESSION["Usuario"])) {
             header("Location: /");
         } else {
-            include("view_login.php");
+            include("./Views/view_login.php");
         }
         exit();
     }
@@ -127,13 +127,13 @@ class HomeController
     public function not_found() {
         header("Content-Type: text/html;charset=utf-8");
         header("HTTP/1.0 404 Not Found");
-        require("view_not_found.php");
+        require("../Views/view_not_found_404.php");
     }
 
     public function metodo_no_aceptado() {
         header("Content-Type: text/html;charset=utf-8");
         header("HTTP/1.0 405 Method Not Allowed");
-        require("view_not_found.php");
+        require("./Views/view_not_found_404.php");
     }
 
 }

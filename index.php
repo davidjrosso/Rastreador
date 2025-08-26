@@ -34,6 +34,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/OtraInstitucionControll
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/ResponsableController.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/AccountController.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/MotivoController.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/DriveController.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Parametria.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php");
 
@@ -165,7 +166,7 @@ try {
 	$routes[] = Route::post('error_session', '/error_session.php', [HomeController::class, 'error_session']);
 	$routes[] = Route::get('not_found', '/not_found', [HomeController::class, 'not_found']);
 	$routes[] = Route::get('not_allowed', '/not_allowed', [HomeController::class, 'metodo_no_aceptado']);
-
+	$routes[] = Route::post('insertar_excel', '/load_excel', [DriveController::class, 'load_excel']);
 
 	$router = new Router($routes, $url);
 

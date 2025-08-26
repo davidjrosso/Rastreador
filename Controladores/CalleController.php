@@ -37,7 +37,7 @@ class CalleController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_calles.php");
+            include("./Views/view_calles.php");
         }
         exit();
     }
@@ -47,7 +47,7 @@ class CalleController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_modcalles.php");
+            include("./Views/view_modcalles.php");
         }
         exit();
     }
@@ -140,7 +140,7 @@ class CalleController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_unifdirecciones.php");
+            include("./Views/view_unifdirecciones.php");
         }
         exit();
     }

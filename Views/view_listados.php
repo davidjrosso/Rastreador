@@ -595,12 +595,11 @@
               <label for="ID_Barrio" class="col-md-2 col-form-label LblForm">Barrio: </label>
               <div class="col-md-9">
                 <?php
-                if(isset($datosNav["ID_Barrio"])){
+                if (isset($datosNav["ID_Barrio"])) {
                   echo $Element->CBModBarrios($datosNav["ID_Barrio"]);
-                }else{
+                } else {
                   echo $Element->CBRepBarrios();
                 }            
-
                 ?>
               </div>
               <div class="col-md-1">

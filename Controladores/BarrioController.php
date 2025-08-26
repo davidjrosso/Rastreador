@@ -35,7 +35,7 @@ class BarrioController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_barrios.php");
+            include("./Views/view_barrios.php");
         }
         exit();
     }
@@ -45,7 +45,7 @@ class BarrioController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_modbarrios.php");
+            include("./Views/view_modbarrios.php");
         }
         exit();
     }
@@ -55,7 +55,7 @@ class BarrioController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_verbarrios.php");
+            include("./Views/view_verbarrios.php");
         }
         exit();
     }
@@ -189,7 +189,7 @@ class BarrioController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_unifbarrios.php");
+            include("./Views/view_unifbarrios.php");
         }
         exit();
     }

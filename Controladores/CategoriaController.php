@@ -37,7 +37,7 @@ class CategoriaController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_categorias.php");
+            include("./Views/view_categorias.php");
         }
         exit();
     }
@@ -47,7 +47,7 @@ class CategoriaController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_modcategorias.php");
+            include("./Views/view_modcategorias.php");
         }
         exit();
     }
@@ -57,7 +57,7 @@ class CategoriaController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_vercategorias.php");
+            include("./Views/view_vercategorias.php");
         }
         exit();
     }
@@ -365,7 +365,7 @@ class CategoriaController
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_unifcategorias.php");
+            include("./Views/view_unifcategorias.php");
         }
         exit();
     }

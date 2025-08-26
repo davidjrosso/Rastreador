@@ -65,7 +65,6 @@
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_USUARIO);
   ?>
   <div class = "col-md-9">

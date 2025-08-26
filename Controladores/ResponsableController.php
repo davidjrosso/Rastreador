@@ -13,30 +13,33 @@ class ResponsableController
 
     public function listado_responsables($mensaje = null)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_responsables.php");
+            include("./Views/view_responsables.php");
         }
         exit();
     }
 
     public function mod_responsable($id_responsable)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_modresponsables.php");
+            include("./Views/view_modresponsables.php");
         }
         exit();
     }
 
     public function datos_responsable($id_responsable)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_verresponsables.php");
+            include("./Views/view_verresponsables.php");
         }
         exit();
     }
@@ -351,10 +354,11 @@ class ResponsableController
 
     public function unif_responsable($mensaje = null)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_unifresponsables.php");
+            include("./Views/view_unifresponsables.php");
         }
         exit();
     }
@@ -450,10 +454,10 @@ class ResponsableController
                 $accion->save();
 
                 $mensaje = "El Responsable se unificó correctamente";
-                header('Location: ../view_inicio.php?&Mensaje=' . $mensaje);
+                header('Location: /home?&Mensaje=' . $mensaje);
             }
         } catch (Exception $e) {
-            echo "Error: ".$e->getMessage();
+            echo "Error: " . $e->getMessage();
         }
         exit();
     }

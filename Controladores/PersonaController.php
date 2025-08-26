@@ -10,30 +10,33 @@ class PersonaController
 
     public function listado_personas()
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_personas.php");
+            include("./Views/view_personas.php");
         }
         exit();
     }
 
     public function datos_persona($id_persona)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_verpersonas.php");
+            include("./Views/view_verpersonas.php");
         }
         exit();
     }
 
     public function mod_persona($id_persona)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_modpersonas.php");
+            include("./Views/view_modpersonas.php");
         }
         exit();
     }
@@ -287,10 +290,11 @@ class PersonaController
 
     public function unif_persona()
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_unifpersonas.php");
+            include("./Views/view_unifpersonas.php");
         }
         exit();
     }

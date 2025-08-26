@@ -31,20 +31,22 @@ class OtraInstitucionController
 
     public function listado_otras_instituciones($mensaje = null)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_otrasinstituciones.php");
+            include("./Views/view_otrasinstituciones.php");
         }
         exit();
     }
 
     public function mod_otra_institucion($id_otra_institucion)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_modotrasinstituciones.php");
+            include("./Views/view_modotrasinstituciones.php");
         }
         exit();
     }
@@ -292,10 +294,11 @@ class OtraInstitucionController
 
     public function unif_otra_institucion($mensaje = null)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("Error_Session.php");
         } else {
-            include("view_unifotrasinstituciones.php");
+            include("./Views/view_unifotrasinstituciones.php");
         }
         exit();
     }
