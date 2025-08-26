@@ -56,6 +56,7 @@ try {
 							   );
 	$host_url = $parametria->get_valor();
 	$url = "https://" . $host_url;
+	$url_request = str_replace("&", "/", $url_request);
 
 	$routes[] = Route::get('home', '/', [HomeController::class, 'index']);
 	$routes[] = Route::get('home_url', '/home', [HomeController::class, 'index']);
@@ -72,7 +73,7 @@ try {
 	$routes[] = Route::get('personas_unificar', '/personas/unificar', [PersonaController::class, 'unif_persona']);
 	$routes[] = Route::post('personas_unif_control', 'unificarpersonas', [PersonaController::class, 'unif_persona_control']);
 	$routes[] = Route::get('movimientos_listado', '/movimientos', [MovimientoController::class, 'listado_movimiento']);
-	$routes[] = Route::get('movimientos_listado_filtro', '/movimientos\?Filtro={filtro}&ID_Filtro={id}', [MovimientoController::class, 'listado_movimiento']);
+	$routes[] = Route::get('movimientos_listado_filtro', '/movimientos\?Filtro={filtro}/ID_Filtro={id}', [MovimientoController::class, 'listado_movimiento']);
 	$routes[] = Route::get('movimientos_listado_succes', '/movimientos\?Mensaje={mensaje}', [MovimientoController::class, 'listado_movimiento']);
 	$routes[] = Route::get('movimientos_listado_error', '/movimientos\?MensajeError={mensaje}', [MovimientoController::class, 'listado_movimiento']);
 	$routes[] = Route::get('movimiento', '/movimiento\?ID={id}', [MovimientoController::class, 'datos_movimiento']);
@@ -95,7 +96,7 @@ try {
 	$routes[] = Route::get('motivos_listado', '/motivos', [MotivoController::class, 'listado_motivos']);
 	$routes[] = Route::get('mod_motivo', '/motivo/editar\?ID={id}', [MotivoController::class, 'mod_motivo']);
 	$routes[] = Route::get('mod_motivo_succes', '/motivos\?Mensaje={mensaje}', [MotivoController::class, 'listado_motivos']);
-	$routes[] = Route::get('mod_motivo_error', '/motivo/editar\?ID={id}&MensajeError={mensaje}', [MotivoController::class, 'mod_motivo']);
+	$routes[] = Route::get('mod_motivo_error', '/motivo/editar\?ID={id}/MensajeError={mensaje}', [MotivoController::class, 'mod_motivo']);
 	$routes[] = Route::post('sol_mod_motivo', 'pedirmodificarmotivo', [MotivoController::class, 'sol_mod_control']);
 	$routes[] = Route::post('mod_motivo_control', 'modificarmotivo', [MotivoController::class, 'mod_motivo_control']);
 	$routes[] = Route::get('del_motivo_control', 'pedireliminarmotivo\?ID={id}', [MotivoController::class, 'del_motivo_control']);
@@ -108,8 +109,9 @@ try {
 	$routes[] = Route::get('sol_del_responsable', '/pedireliminarresponsable\?ID={id}', [ResponsableController::class, 'sol_del_responsable']);
 	$routes[] = Route::get('unif_responsable', '/responsable/unificar', [ResponsableController::class, 'unif_responsable']);
 	$routes[] = Route::get('responsables', '/pedirunificarresponsable', [ResponsableController::class, 'index']);
+	$routes[] = Route::post('buscar_responsable', '/buscar_responsable\?valorBusqueda={valor}/idResponsable={id}', [ResponsableController::class, 'buscar_responsable']);
 	$routes[] = Route::get('listado_centros_salud', '/centrosdesalud', [CentroSaludController::class, 'listado_centros_salud']);
-	$routes[] = Route::get('listado_centros_salud_filtro', '/centrosdesalud\?Filtro={filt}&ID_Filtro={idfilt}', [CentroSaludController::class, 'listado_centros_salud']);
+	$routes[] = Route::get('listado_centros_salud_filtro', '/centrosdesalud\?Filtro={filt}/ID_Filtro={idfilt}', [CentroSaludController::class, 'listado_centros_salud']);
 	$routes[] = Route::post('buscar_centos_salud', '/buscar_centros_salud', [CentroSaludController::class, 'buscar_centos_salud']);
 	$routes[] = Route::get('mod_centro_salud', '/centrosalud/editar\?ID={id}', [CentroSaludController::class, 'mod_centro_salud']);
 	$routes[] = Route::get('mod_centro_salud_control', '/mod_centro_salud', [CentroSaludController::class, 'mod_centro_salud_control']);
@@ -118,12 +120,12 @@ try {
 	$routes[] = Route::get('sol_unif_centro_salud_control', '/pedirunificarcentros_salud', [CentroSaludController::class, 'sol_unif_centro_salud_control']);
 	$routes[] = Route::get('accounts', '/usuarios', [AccountController::class, 'listado_accounts']);
 	$routes[] = Route::get('mod_account', '/usuario/editar\?account_id={id}', [AccountController::class, 'mod_account']);
-	$routes[] = Route::get('mod_account_success', '/usuario/editar\?account_id={id}&Mensaje={mensaje}', [AccountController::class, 'mod_account']);
-	$routes[] = Route::get('mod_account_error', '/usuario/editar\?account_id={id}&MensajeError={mensaje}', [AccountController::class, 'mod_account']);
+	$routes[] = Route::get('mod_account_success', '/usuario/editar\?account_id={id}/Mensaje={mensaje}', [AccountController::class, 'mod_account']);
+	$routes[] = Route::get('mod_account_error', '/usuario/editar\?account_id={id}/MensajeError={mensaje}', [AccountController::class, 'mod_account']);
 	$routes[] = Route::post('new_account', '/usuario/nuevo', [AccountController::class, 'new_account']);
 	$routes[] = Route::get('accounts_user', '/cuenta\?account_id={id}', [AccountController::class, 'dato_account_user']);
-	$routes[] = Route::get('accounts_mensaje', '/cuenta\?account_id={id}&Mensaje={mensaje}', [AccountController::class, 'dato_account_user']);
-	$routes[] = Route::get('accounts_mensaje_error', '/cuenta\?account_id={id}&MensajeError={mensaje}', [AccountController::class, 'dato_account_user']);
+	$routes[] = Route::get('accounts_mensaje', '/cuenta\?account_id={id}/Mensaje={mensaje}', [AccountController::class, 'dato_account_user']);
+	$routes[] = Route::get('accounts_mensaje_error', '/cuenta\?account_id={id}/MensajeError={mensaje}', [AccountController::class, 'dato_account_user']);
 	$routes[] = Route::post('mod_account_control', '/modificar_usuario', [AccountController::class, 'mod_account_control']);
 	$routes[] = Route::get('del_account_control', '/delete_usuario\?ID={id}', [AccountController::class, 'del_account_control']);
 	$routes[] = Route::get('listado_barrios', '/barrios', [BarrioController::class, 'listado_barrios']);
