@@ -450,7 +450,7 @@ class DriveController {
 		return $lista_personas;
 	}
 
-    public function load_excel($id_archivo, $id_centro) 
+    public function load_excel($archivo = null, $centro_salud = null) 
     {
 	    header('Content-Type: text/event-stream');
 
@@ -460,6 +460,9 @@ class DriveController {
             $con = new Conexion();
             $con->OpenConexion();
             $private_key = Parametria::get_value_by_code($con, 'SECRET_KEY');
+
+            $id_archivo = $_POST["id_archivo"];
+            $id_centro = $_POST["centro_salud"];
 
             $archivo = new Archivo(
                 coneccion_base: $con,
