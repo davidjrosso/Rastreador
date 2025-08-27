@@ -18,16 +18,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-
-header("Content-Type: text/html;charset=utf-8");
-
-$ID_Usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $usuario->get_id_tipo_usuario();
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -58,8 +48,9 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               document.getElementById("ResultadosBarrios_1").innerHTML=contenidosRecibidos;
               }
           }
-          xmlhttp.open('POST', 'buscarBarrios_1.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
-          xmlhttp.send();
+          xmlhttp.open('POST', 'buscar_barrio', true); // Método post y url invocada
+          xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+          xmlhttp.send('valorBusqueda=' + textoBusqueda + '&id=1');
         }
 
         function buscarBarrios_2(){
@@ -72,8 +63,9 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               document.getElementById("ResultadosBarrios_2").innerHTML=contenidosRecibidos;
               }
           }
-          xmlhttp.open('POST', 'buscarBarrios_2.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
-          xmlhttp.send();
+          xmlhttp.open('POST', 'buscar_barrio', true); // Método post y url invocada
+          xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+          xmlhttp.send('valorBusqueda=' + textoBusqueda + '&id=2');
         }
 
         function seleccionBarrio_1(xBarrio,xID){
@@ -97,7 +89,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_UNIFICACION_BARRIO);
   ?>
   <div class = "col-md-9">

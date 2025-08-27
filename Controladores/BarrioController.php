@@ -19,6 +19,8 @@
  */
 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Parametria.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . '/Modelo/Barrio.php');
@@ -32,8 +34,9 @@ class BarrioController
 
     public function listado_barrios($mensaje = null)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_barrios.php");
         }
@@ -42,8 +45,9 @@ class BarrioController
 
     public function mod_barrio($id_barrio)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_modbarrios.php");
         }
@@ -52,8 +56,9 @@ class BarrioController
 
     public function datos_barrio($id_barrio)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_verbarrios.php");
         }
@@ -186,9 +191,15 @@ class BarrioController
 
     public function unif_barrios($mensaje = null)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Element = new Elements();
+
             include("./Views/view_unifbarrios.php");
         }
         exit();
@@ -233,5 +244,83 @@ class BarrioController
             header('Location: /home?MensajeError=' . $MensajeError);
         }
         exit();
+    }
+
+    public function buscar_barrio()
+    {
+
+        $consultaBusqueda = $_REQUEST['valorBusqueda'];
+        $id = $_REQUEST['id'];
+
+
+        //Filtro anti-XSS
+        $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
+        $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
+        $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consultaBusqueda);
+
+        //Variable vacía (para evitar los E_NOTICE)
+        $mensaje = "";
+
+
+        //Comprueba si $consultaBusqueda está seteado
+        if (isset($consultaBusqueda)) {
+
+            $Con = new Conexion();
+            $Con->OpenConexion();
+            //Selecciona todo de la tabla mmv001 
+            //donde el nombre sea igual a $consultaBusqueda, 
+            //o el apellido sea igual a $consultaBusqueda, 
+            //o $consultaBusqueda sea igual a nombre + (espacio) + apellido
+
+            $consulta = mysqli_query($Con->Conexion, "SELECT ID_Barrio, Barrio FROM barrios WHERE Barrio LIKE '%$consultaBusqueda%' and estado = 1");
+
+
+            //Obtiene la cantidad de filas que hay en la consulta
+            $filas = mysqli_num_rows($consulta);
+
+            //Si no existe ninguna fila que sea igual a $consultaBusqueda, entonces mostramos el siguiente mensaje
+            if ($filas === 0) {
+                $mensaje = "<p>No hay ningún registro con ese dato</p>";
+            } else {
+                //Si existe alguna fila que sea igual a $consultaBusqueda, entonces mostramos el siguiente mensaje
+                //echo 'Resultados para <strong>'.$consultaBusqueda.'</strong>';
+
+                $mensaje .= '<table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        <th scope="col">ID</th>			      
+                        <th scope="col">Barrio</th>			      			     
+                        <th scope="col">Accion</th>	
+                        </tr>
+                    </thead>
+                    <tbody>';
+
+                //La variable $resultado contiene el array que se genera en la consulta, así que obtenemos los datos y los mostramos en un bucle
+                while($resultados = mysqli_fetch_array($consulta)) {
+                    $ID_Barrio = $resultados["ID_Barrio"];			
+                    $Barrio = $resultados['Barrio'];										
+
+                    //Output
+                    $mensaje .= '
+                        <tr>
+                        <th scope="row">' . $ID_Barrio . '</th>
+                        <th scope="row">' . $Barrio . '</th>			      			      
+                        <td><button type = "button" class = "btn btn-outline-success" onClick="seleccionBarrio_' . $id  . '(\''.$Barrio.'\','.$ID_Barrio.')" data-dismiss="modal">seleccionar</button></td>
+                        </tr>';
+
+
+
+
+                };//Fin while $resultados
+
+                $mensaje .= '</tbody>
+                    </table>';
+
+            }; //Fin else $filas
+            $Con->CloseConexion();
+
+        };//Fin isset $consultaBusqueda
+
+        echo $mensaje;
     }
 }

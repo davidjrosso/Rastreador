@@ -138,6 +138,7 @@ try {
 	$routes[] = Route::post('sol_unif_barrio', '/pedir_unificar_barrios', [BarrioController::class, 'sol_unif_barrio']);
 	$routes[] = Route::post('unif_barrio_control', '/unificar_barrios', [BarrioController::class, 'unif_barrio_control']);
 	$routes[] = Route::post('new_barrio_control', 	'/insertar_barrio', [BarrioController::class, 'new_barrio_control']);
+	$routes[] = Route::post('buscar_barrio', 	'/buscar_barrio', [BarrioController::class, 'buscar_barrio']);
 	$routes[] = Route::get('listado_calles', '/calles', [CalleController::class, 'listado_calles']);
 	$routes[] = Route::get('listado_calles_succes', '/calles\?Mensaje={mensaje}', [CalleController::class, 'listado_calles']);
 	$routes[] = Route::get('mod_calle', '/calle/editar\?ID={id}', [CalleController::class, 'mod_calle']);
