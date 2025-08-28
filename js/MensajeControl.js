@@ -39,6 +39,40 @@ export function Verificar(xID) {
     });
 }
 
+export function VerificarCategoria(xID) {
+        swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer eliminar esta categoría?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                window.location.href = 'pedireliminarcategoria?ID=' + xID;
+            }
+        });
+}
+
+export function VerificarCrearCategoria() {
+        let form_1= document.getElementById("form_1");
+        swal.fire({
+          title: "¿Está seguro?",
+          text: "¿Seguro de querer crear esta categoría?",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        })
+        .then((result) => {
+            if (result) {
+                form_1.submit();
+                return true;
+            } else {
+                return false;
+            }
+        });
+      }
+
 export function mensajeDeProcesamiento(mensaje) {
     swal.fire(mensaje, '', 'success');
 }
@@ -134,3 +168,13 @@ export function showControlFormulario() {
     $("#barrio-buttom").show();
     $("#formulario-succes").hide();
   }
+
+export function controlMensaje(mensajeSuccess, mensajeError) {
+    if (mensajeSuccess) {
+        swal.fire(mensajeSuccess, '', 'success');
+    }
+
+    if (mensajeError) {
+        swal.fire(mensajeError, '', 'warning');
+    }
+}

@@ -1,45 +1,46 @@
 <?php 
-session_start(); 
-require_once "Controladores/Elements.php";
-require_once "Controladores/CtrGeneral.php";
-header("Content-Type: text/html;charset=utf-8");
+/*
+ *
+ * This file is part of Rastreador3.
+ *
+ * Rastreador3 is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Rastreador3 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Rastreador3; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-/*     CONTROL DE USUARIOS                    */
-if(!isset($_SESSION["Usuario"])){
-    header("Location: Error_Session.php");
-}
-
-$Con = new Conexion();
-$Con->OpenConexion();
-$ID_Usuario = $_SESSION["Usuario"];
-$ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
-$MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
-$EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
-$Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
-$TipoUsuario = $Ret["ID_TipoUsuario"];
-$Con->CloseConexion();
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <title>Rastreador III</title>
   <meta charset="utf-8">
+  <base href="/"> 
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-  <!--<link href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-  <!--<script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script> -->
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-  <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+	<script src="dist/control.js"></script>
+
   <script>
+			let mensajeError = '<?php echo $mensaje_error;?>';
+			let mensajeSuccess = '<?php echo $mensaje_success;?>';
+
        $(document).ready(function(){
               var date_input=$('input[name="date"]'); //our date input has the name "date"
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
@@ -49,6 +50,9 @@ $Con->CloseConexion();
                   todayHighlight: true,
                   autoclose: true,
               });
+
+			        controlMensaje(mensajeSuccess, mensajeError);
+
           });
 
        function CalcularPrecio(){
@@ -95,7 +99,6 @@ $Con->CloseConexion();
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_CATEGORIA);
   ?>
   <div class = "col-md-9">
@@ -112,7 +115,7 @@ $Con->CloseConexion();
           <!-- Search -->
         <div class = "row">
           <?php  
-            if(isset($_REQUEST["ID"]) && $_REQUEST["ID"]!=null){
+            if(isset($_REQUEST["ID"])){
               $ID_Categoria = $_REQUEST["ID"];
               $ID_Forma = $_REQUEST["ID_Forma"];
 
@@ -178,7 +181,7 @@ $Con->CloseConexion();
                   <div class = 'TablaColores' style='background-color:#FFFFFF;' onClick = 'MostrarColor(this)' id = '#FFFFFF'></div><div class = 'TablaColores' style='background-color:#DDDDDD;' onClick = 'MostrarColor(this)' id = '#DDDDDD'></div><div class = 'TablaColores' style='background-color:#C0C0C0;' onClick = 'MostrarColor(this)' id = '#C0C0C0'></div><div class = 'TablaColores' style='background-color:#969696;' onClick = 'MostrarColor(this)' id = '#969696'></div><div class = 'TablaColores' style='background-color:#808080;' onClick = 'MostrarColor(this)' id = '#808080'></div><div class = 'TablaColores' style='background-color:#646464;' onClick = 'MostrarColor(this)' id = '#646464'></div><div class = 'TablaColores' style='background-color:#4B4B4B;' onClick = 'MostrarColor(this)' id = '#4B4B4B'></div><div class = 'TablaColores' style='background-color:#242424;' onClick = 'MostrarColor(this)' id = '#242424'></div><div class = 'TablaColores' style='background-color:#000000;' onClick = 'MostrarColor(this)' id = '#000000'></div>
               </div>
               <br>
-              <form method = 'post' action = 'Controladores/CrearCategoria.php'>
+              <form method = 'post' action = '/crear_categoria'>
               <div class = 'row'>
                   <div class = 'col-md-6'>
                         <label>Codigo del Color</label>
@@ -228,7 +231,7 @@ $Con->CloseConexion();
               }
               /////////////////////////////////////////////////
               $Con->CloseConexion();                          
-            }else{
+            } else {
               $Mensaje = "No se pudo consultar los Datos porque no se pudo obtener el ID de la Categoria";
               echo $Mensaje;
             }
@@ -237,32 +240,5 @@ $Con->CloseConexion();
   </div>
 </div>
 </div>
-<?php  
-if(isset($MensajeError)){
-  echo "<script type='text/javascript'>
-  swal('".$MensajeError."','','warning');
-</script>";
-}
-?>
-<?php
-/*
- *
- * This file is part of Rastreador3.
- *
- * Rastreador3 is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Rastreador3 is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Rastreador3; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- */
-?>
 </body>
 </html>

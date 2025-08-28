@@ -47,7 +47,7 @@ use \PhpDevCommunity\Exception\RouteNotFound;
 try {
 	$con = new Conexion();
 	$con->OpenConexion();
-	$routes = [];	
+	$routes = [];
 	$metodo = $_SERVER["REQUEST_METHOD"];
 	$url_request = $_SERVER["REQUEST_URI"];
 	$parametria = new Parametria(
@@ -86,13 +86,21 @@ try {
 	$routes[] = Route::post('reporte_movimientos_listado', '/reportelistado', [ReporteListadoController::class, 'reporte']);
 	$routes[] = Route::post('buscar_movimientos', '/buscar_movimientos', [MovimientoController::class, 'buscar_movimientos']);
 	$routes[] = Route::get('listado_categorias', '/categorias', [CategoriaController::class, 'listado_categorias']);
+	$routes[] = Route::get('listado_categorias_filtro', '/categorias\?Filtro={filtro}/ID_Filtro={id}', [CategoriaController::class, 'listado_categorias']);
 	$routes[] = Route::get('listado_categorias_success', '/categorias\?Mensaje={mensaje}', [CategoriaController::class, 'listado_categorias']);
 	$routes[] = Route::get('datos_categoria', '/categoria\?ID={id}', [CategoriaController::class, 'datos_categoria']);
 	$routes[] = Route::get('mod_categoria', '/categoria/editar\?ID={id}', [CategoriaController::class, 'mod_categoria']);
 	$routes[] = Route::get('sol_del_control', 'pedireliminarcategoria\?ID={id}', [CategoriaController::class, 'sol_del_control']);
 	$routes[] = Route::get('del_categoria', '/delete_categoria\?ID={id}', [CategoriaController::class, 'del_categoria_control']);
 	$routes[] = Route::get('categoria', '/categoria/unificar', [CategoriaController::class, 'unif_categoria']);
+	$routes[] = Route::get('crear_categoria', '/categoria/nueva', [CategoriaController::class, 'crear_categoria']);
+	$routes[] = Route::get('crear_categoria_error', '/categoria/nueva\?MensajeError={mensaje}', [CategoriaController::class, 'crear_categoria']);
+	$routes[] = Route::get('crear_categoria_success', '/categoria/nueva\?Mensaje={mensaje}', [CategoriaController::class, 'crear_categoria']);
+	$routes[] = Route::get('color_categoria', '/categoria/colorcategoria\?ID={id}/ID_Forma={forma}', [CategoriaController::class, 'color_categoria']);
+	$routes[] = Route::post('crear_categoria_control', '/crear_categoria', [CategoriaController::class, 'crear_categoria_control']);
 	$routes[] = Route::post('sol_unif_control', 'pedirunificarcategoria', [CategoriaController::class, 'sol_unif_control']);
+	$routes[] = Route::post('buscar_categorias_desc', 'buscar_categorias_desc', [CategoriaController::class, 'buscar_categorias_desc']);
+	$routes[] = Route::post('buscar_categorias_filtrado', 'buscar_categorias_filtrado', [CategoriaController::class, 'buscar_categorias_filtrado']);
 	$routes[] = Route::get('motivos_listado', '/motivos', [MotivoController::class, 'listado_motivos']);
 	$routes[] = Route::get('mod_motivo', '/motivo/editar\?ID={id}', [MotivoController::class, 'mod_motivo']);
 	$routes[] = Route::get('mod_motivo_succes', '/motivos\?Mensaje={mensaje}', [MotivoController::class, 'listado_motivos']);
@@ -132,12 +140,15 @@ try {
 	$routes[] = Route::get('mod_barrio', '/barrio/editar\?ID={id}', [BarrioController::class, 'mod_barrio']);
 	$routes[] = Route::post('mod_barrio_control', '/modificar_barrio', [BarrioController::class, 'mod_barrio_control']);
 	$routes[] = Route::get('del_barrio_control', '/delete_barrio\?ID={id}', [BarrioController::class, 'del_barrio_control']);
-	$routes[] = Route::get('new_barrio', '/barrio/nuevo', [BarrioController::class, 'new_barrio']);
+	$routes[] = Route::get('crear_barrio', '/barrio/nuevo', [BarrioController::class, 'crear_barrio']);
+	$routes[] = Route::post('new_barrio_control', 	'/buscar_barrio', [BarrioController::class, 'new_barrio_control']);
 	$routes[] = Route::get('unif_barrio', '/barrio/unificar', [BarrioController::class, 'unif_barrios']);
 	$routes[] = Route::get('unif_barrio_success', '/barrio/unificar\?Mensaje={mensaje}', [BarrioController::class, 'unif_barrios']);
 	$routes[] = Route::post('sol_unif_barrio', '/pedir_unificar_barrios', [BarrioController::class, 'sol_unif_barrio']);
 	$routes[] = Route::post('unif_barrio_control', '/unificar_barrios', [BarrioController::class, 'unif_barrio_control']);
-	$routes[] = Route::post('new_barrio_control', 	'/insertar_barrio', [BarrioController::class, 'new_barrio_control']);
+	$routes[] = Route::get('crear_barrio_error', '/barrio/nuevo\?MensajeError={mensaje}', [BarrioController::class, 'crear_barrio']);
+	$routes[] = Route::get('crear_barrio_success', '/barrio/nuevo\?Mensaje={mensaje}', [BarrioController::class, 'crear_barrio']);
+	$routes[] = Route::post('new_barrio_control', 	'/insertar_barrio', [BarrioController::class, 'crear_barrio_control']);
 	$routes[] = Route::post('buscar_barrio', 	'/buscar_barrio', [BarrioController::class, 'buscar_barrio']);
 	$routes[] = Route::get('listado_calles', '/calles', [CalleController::class, 'listado_calles']);
 	$routes[] = Route::get('listado_calles_succes', '/calles\?Mensaje={mensaje}', [CalleController::class, 'listado_calles']);

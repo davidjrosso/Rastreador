@@ -34,9 +34,26 @@ class CategoriaController
 
     public function listado_categorias($mensaje = null)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
+            $Filtro = null;
+            $ID_Filtro = null;
+            if (isset($_REQUEST["Filtro"])){
+              $Filtro = $_REQUEST["Filtro"];
+              $ID_Filtro = $_REQUEST["ID_Filtro"];
+            }
+
             include("./Views/view_categorias.php");
         }
         exit();
@@ -44,8 +61,9 @@ class CategoriaController
 
     public function mod_categoria($id_categoria)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_modcategorias.php");
         }
@@ -54,12 +72,123 @@ class CategoriaController
 
     public function datos_categoria($id_categoria)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_vercategorias.php");
         }
         exit();
+    }
+
+    public function crear_categoria($mensaje = null)
+    {
+        header(header: "Content-Type: text/html;charset=utf-8");
+        if (!isset($_SESSION["Usuario"])) {
+            include("./Views/Error_Session.php");
+        } else {
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Element = new Elements();
+
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
+            include("./Views/view_newcategorias.php");
+        }
+        exit();
+    }
+
+    public function crear_categoria_control()
+    {
+        $ID_Usuario = $_SESSION["Usuario"];
+
+        $Codigo = (isset($_REQUEST["Codigo"]))?strtoupper($_REQUEST["Codigo"]):null;
+        $Categoria = (isset($_REQUEST["Categoria"]))?$_REQUEST["Categoria"]:null;
+        $ID_Forma = $_REQUEST["ID_Forma"];
+        $ID = (isset($_REQUEST["ID"]))?$_REQUEST["ID"]:null;
+        $Color = (isset($_REQUEST["CodigoColor"]))?$_REQUEST["CodigoColor"]:null;
+        $GrupoUsuarios = (isset($_REQUEST["Tipo_Usuario"]))?$_REQUEST["Tipo_Usuario"]:null;
+
+        $Fecha = date("Y-m-d");
+
+        try {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+            if ($Color != null && $Color != "") {
+                $ConsultarRegistros = "select * from solicitudes_crearcategorias where ID = '$ID' and estado = 1";
+                $MensajeErrorConsulta = "Ocurrio un error en la consulta de solicitudes de creacion de categorias";
+                $RetIguales = mysqli_query($Con->Conexion,$ConsultarRegistros) or die($MensajeErrorConsulta);
+                $TomarCategoria = mysqli_fetch_assoc($RetIguales);
+                $RetID_Categoria = $TomarCategoria["Categoria"];
+                $RetCodigo_Categoria = $TomarCategoria["Codigo"];
+                $ActualizarColor = "update solicitudes_crearcategorias set color = '$Color' where id = $ID and estado = 1";
+                $MensajeErrorActualizarColor = "No se pudo actualizar el color";
+                mysqli_query($Con->Conexion,$ActualizarColor) or die($MensajeErrorActualizarColor);
+
+                $DetalleNot = "Se ha creado una nueva categoría: ".$RetID_Categoria." , codigo: ".$RetCodigo_Categoria."";
+                $Expira = date("Y-m-d", strtotime($Fecha." + 30 days"));
+
+                $ConsultaNot = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('".$DetalleNot."','".$Fecha."', '".$Expira."',1)";
+                if (!$RetNot = mysqli_query($Con->Conexion,$ConsultaNot)) {
+                    throw new Exception("Error al intentar registrar Notificacion. Consulta: ".$ConsultaNot, 3);
+                }
+
+                $Mensaje = "La solicitud de creacion de categoría se envió a los administradores para ser confirmada.";
+                header('Location: /categoria/nueva?Mensaje=' . $Mensaje);
+            } else {
+                $Insert_Solicitud = "insert into solicitudes_crearcategorias(Fecha,Codigo,Categoria,ID_Forma,Color,Estado,ID_Usuario) values('{$Fecha}','{$Codigo}','{$Categoria}',{$ID_Forma},'{$Color}',1,{$ID_Usuario})";
+                $MensajeError = "No se pudo enviar la solicitud";
+
+                if (!$RetID = mysqli_query($Con->Conexion, $Insert_Solicitud)){
+                    throw new Exception($MensajeError . " " . $Insert_Solicitud, 2);
+                }
+
+                $ConsultarID = "select id 
+                                from solicitudes_crearcategorias 
+                                where codigo = '$Codigo' 
+                                and categoria = '$Categoria' 
+                                and estado = 1 
+                                limit 1";
+                if (!$RetID = mysqli_query($Con->Conexion,$ConsultarID)) {
+                    throw new Exception("No se pudo consultar el ID de la categoría cargada. Consulta: ".$ConsultarID, 2);
+                }
+                $Ret = mysqli_fetch_array($RetID);
+
+                foreach ($GrupoUsuarios as $key => $value) {
+                    $Insert_Solicitud = "insert into solicitudes_permisos(ID, ID_TipoUsuario, Fecha, estado) values('{$Ret["id"]}','{$value}','{$Fecha}', 1)";
+                    $MensajeError = "No se pudo insertar la solicitud de creacion de permisos";
+                    if(!$RetID = mysqli_query($Con->Conexion,$Insert_Solicitud)){
+                        throw new Exception($MensajeError . " . Consulta :" . $Insert_Solicitud, 2);
+                    }
+                }
+                $Mensaje = "La solicitud de creacion de categoría se envió a los administradores para ser confirmada.";
+                header('Location: /categoria/colorcategoria?ID=' . $Ret["id"] . '&ID_Forma=' . $ID_Forma);
+                $Con->CloseConexion();
+            }
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+
+    public function color_categoria()
+    {
+        header("Content-Type: text/html;charset=utf-8");
+        if (!isset($_SESSION["Usuario"])) {
+            include("./Views/Error_Session.php");
+        } else {
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Element = new Elements();
+
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
+            include("./Views/view_colorcategoria.php");
+        }
+        exit();  
     }
 
     public function sol_del_control($id_categoria)
@@ -362,8 +491,9 @@ class CategoriaController
 
     public function unif_categoria($mensaje = null)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_unifcategorias.php");
         }
@@ -461,5 +591,94 @@ class CategoriaController
             echo "Error: " . $e->getMessage();
         }
         
+    }
+
+    public function buscar_categorias_desc()
+    {
+        header('Content-Type: text/html; charset=utf-8');
+
+        $consultaBusqueda = $_POST['valorBusqueda'];
+
+        $json_string = file_get_contents('php://input');
+        $lista_categoria = json_decode($json_string, true);
+
+        //Filtro anti-XSS
+        $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
+        $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
+        $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consultaBusqueda);
+
+        $mensaje = "";
+
+        if (isset($consultaBusqueda)) {
+
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            $query = "SELECT * 
+                    FROM categoria 
+                    WHERE categoria LIKE '%$consultaBusqueda%'
+                        and estado = 1
+                    ORDER BY tipo_categoria ASC, orden DESC";
+            $consulta = mysqli_query($Con->Conexion, $query);
+
+            $filas = mysqli_num_rows($consulta);
+
+            if ($filas === 0) {
+                $mensaje = "<p>No hay ningún registro con ese dato</p>";
+            } else {
+                $mensaje .= '<table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        <th scope="col">Categoría</th>
+                        <th scope="col">Cod_Categoria</th>	
+                        <th scope="col">Acción</th>	
+                        </tr>
+                    </thead>
+                    <tbody>';
+
+                $valores_categorias = ($lista_categoria) ? array_values(array: $lista_categoria) : [];
+
+                while($resultados = mysqli_fetch_array($consulta)) {
+                    $ID_Categoria = $resultados["id_categoria"];			
+                    $Categoria = $resultados['categoria'];
+                    $Cod_Categoria = $resultados['cod_categoria'];
+                    $mensaje .= '<tr>
+                                    <th scope="row">' . $Categoria . '</th>
+                                    <td>' . $Cod_Categoria . '</td>';
+
+                    if (in_array($ID_Categoria, $valores_categorias)) {
+                        $mensaje .= '<td>
+                                        <button type = "button" style=\'width:12ch\' class = "btn btn-outline-success" onClick="addMultipleCategoria(\'' . $Categoria . '\',' . $ID_Categoria . ', this)">
+                                            &#10003
+                                        </button>
+                                    </td>
+                                </tr>';
+                    } else {
+                        $mensaje .= '<td>
+                                        <button type = "button" class = "btn btn-outline-success" onClick="addMultipleCategoria(\'' . $Categoria . '\',' . $ID_Categoria . ', this)">
+                                            seleccionar
+                                        </button>
+                                    </td>
+                                </tr>';
+                    }
+                };
+
+                $mensaje .= '</tbody>
+                    </table>';
+
+            };
+            $Con->CloseConexion();
+
+        };
+
+        echo $mensaje;
+    }
+
+    public function buscar_categorias_filtrado()
+    {
+        $Filtro = $_REQUEST["Search"];
+        $ID_Filtro = $_REQUEST["ID_Filtro"];
+
+        header("Location: /categorias?Filtro=" . $Filtro  ."&ID_Filtro=" . $ID_Filtro);
     }
 }

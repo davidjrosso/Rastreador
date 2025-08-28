@@ -38,6 +38,12 @@ class BarrioController
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+
             include("./Views/view_barrios.php");
         }
         exit();
@@ -60,9 +66,88 @@ class BarrioController
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
+            $id_usuario = $_SESSION["Usuario"];
+            $account = new Account(account_id: $id_usuario);
+            $tipo_usuario = $account->get_id_tipo_usuario();
+            $Element = new Elements();
+
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
             include("./Views/view_verbarrios.php");
         }
         exit();
+    }
+
+    public function crear_barrio($mensaje = null)
+    {
+        header("Content-Type: text/html;charset=utf-8");
+        if (!isset($_SESSION["Usuario"])) {
+            include("./Views/Error_Session.php");
+        } else {
+            $id_usuario = $_SESSION["Usuario"];
+            $account = new Account(account_id: $id_usuario);
+            $tipo_usuario = $account->get_id_tipo_usuario();
+            $Element = new Elements();
+
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
+            include("./Views/view_newbarrios.php");
+        }
+        exit();
+    }
+
+    public function crear_barrio_control()
+    {
+        $ID_Usuario = $_SESSION["Usuario"];
+
+        $Barrio = ucwords($_REQUEST["Barrio"]);
+        $Estado = 1;
+
+        $georeferencia_point = null;
+        if (!empty($_REQUEST["lat"])) {
+            $lat_point = $_REQUEST["lat"];
+            $georeferencia_point = "POINT(" . $lat_point;
+
+            if (!empty($_REQUEST["lon"])){
+                $lon_point = $_REQUEST["lon"];
+                $georeferencia_point .= "," . $lon_point . ")";
+            } else {
+                $georeferencia_point = null;
+            }
+        }
+
+        $Fecha = date("Y-m-d");
+        $ID_TipoAccion = 1;
+        $Detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Barrio. Datos: $Barrio";
+
+        try {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+            $existe = Barrio::existe_barrio(coneccion: $Con, name: $Barrio);
+            if ($existe > 0) {
+                $Con->CloseConexion();
+                $Mensaje = "Ya existe un Barrio con ese Nombre";
+                header('Location: /barrio/nuevo?MensajeError=' . $Mensaje);
+            } else {
+                $barrio = new Barrio(coneccion: $Con, barrio: $Barrio, georeferencia: $georeferencia_point);
+                $barrio->save(coneccion: $Con);
+
+                $accion = new Accion(
+                    xaccountid: $ID_Usuario,
+                    xFecha : $Fecha,
+                    xDetalles: $Detalles,
+                    xID_TipoAccion: $ID_TipoAccion	 
+                );
+                $accion->save();
+                $Con->CloseConexion();
+                $Mensaje = "El Barrio se registro Correctamente";
+                header('Location: /barrio/nuevo?Mensaje=' . $Mensaje);
+            }
+        } catch (Exception $e) {
+            echo "Error: ".$e->getMessage();
+        }
     }
 
     public function del_barrio_control($id_barrio)
