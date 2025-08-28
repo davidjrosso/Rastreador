@@ -46,22 +46,6 @@
                   autoclose: true,
               });
           });
-
-       function Verificar(xID){
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer eliminar este barrio?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'delete_barrio?ID='+xID;
-                }
-              });
-        }
-
   </script>
 
 </head>

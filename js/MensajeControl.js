@@ -73,6 +73,21 @@ export function VerificarCrearCategoria() {
         });
       }
 
+export function VerificarDeleteBarrio(xID){
+        swal.fire({
+            title: "¿Está seguro?",
+            text: "¿Seguro de querer eliminar este barrio?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                window.location.href = 'delete_barrio?ID='+xID;
+            }
+        });
+}
+
 export function mensajeDeProcesamiento(mensaje) {
     swal.fire(mensaje, '', 'success');
 }
