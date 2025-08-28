@@ -35,7 +35,7 @@
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="dist/reporte.js"></script>
-  <script src="./dist/grafico.js"></script>
+  <!--<script src="./dist/grafico.js"></script>-->
   <script>
       let fechaDesde = null;
       let fechaHasta = null;
@@ -60,7 +60,7 @@
               nroPaginaPdf = 0;
               thTable = $("thead > tr > th");
 
-              grafico();
+              //grafico();
 
               $("#boton-fullscreen").on("click", function (e) {
                 if (!fullscreen) {
