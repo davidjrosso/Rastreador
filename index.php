@@ -138,6 +138,7 @@ try {
 	$routes[] = Route::get('del_account_control', '/delete_usuario\?ID={id}', [AccountController::class, 'del_account_control']);
 	$routes[] = Route::get('listado_barrios', '/barrios', [BarrioController::class, 'listado_barrios']);
 	$routes[] = Route::get('listado_barrios_succes', '/barrios\?Mensaje={mensaje}', [BarrioController::class, 'listado_barrios']);
+	$routes[] = Route::get('listado_barrios_error', '/barrios\?MensajeError={mensaje}', [BarrioController::class, 'listado_barrios']);
 	$routes[] = Route::get('mod_barrio', '/barrio/editar\?ID={id}', [BarrioController::class, 'mod_barrio']);
 	$routes[] = Route::post('mod_barrio_control', '/modificar_barrio', [BarrioController::class, 'mod_barrio_control']);
 	$routes[] = Route::get('del_barrio_control', '/delete_barrio\?ID={id}', [BarrioController::class, 'del_barrio_control']);
