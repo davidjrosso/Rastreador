@@ -174,7 +174,7 @@ class BarrioController
             }	
             $Con->CloseConexion();
             $Mensaje = "El barrio fue eliminado Correctamente";
-            header('Location: ../view_barrios.php?Mensaje='.$Mensaje);
+            header('Location: /barrios?Mensaje=' . $Mensaje);
         } catch (Exception $e) {
             echo "Error: ".$e->getMessage();
         }
