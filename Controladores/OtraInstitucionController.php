@@ -33,7 +33,7 @@ class OtraInstitucionController
     {
         header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_otrasinstituciones.php");
         }
@@ -44,7 +44,7 @@ class OtraInstitucionController
     {
         header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_modotrasinstituciones.php");
         }
@@ -296,7 +296,7 @@ class OtraInstitucionController
     {
         header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_unifotrasinstituciones.php");
         }

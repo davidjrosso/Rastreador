@@ -14,7 +14,7 @@ class MotivoController
     public function listado_motivos($mensaje = null)
     {
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_motivos.php");
         }
@@ -24,7 +24,7 @@ class MotivoController
     public function mod_motivo($id_motivo)
     {
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_modmotivos.php");
         }
@@ -219,7 +219,7 @@ class MotivoController
     public function unif_motivo($mensaje = null)
     {
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_unifmotivos.php");
         }

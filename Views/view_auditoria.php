@@ -119,7 +119,7 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
         <div class="col"></div>
         <div class="col-2">
           <button type="button" class="btn btn-outline-secondary"
-            onclick="location.href = 'view_inicio.php'">Volver</button>
+            onclick="location.href = '/'">Volver</button>
         </div>
         <div class="col"></div>
       </div>

@@ -12,7 +12,7 @@ class PersonaController
     {
         header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_personas.php");
         }
@@ -23,7 +23,7 @@ class PersonaController
     {
         header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_verpersonas.php");
         }
@@ -34,7 +34,7 @@ class PersonaController
     {
         header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_modpersonas.php");
         }
@@ -292,7 +292,7 @@ class PersonaController
     {
         header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_unifpersonas.php");
         }

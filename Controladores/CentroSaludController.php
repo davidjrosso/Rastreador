@@ -32,7 +32,7 @@ class CentroSaludController
     public function listado_centros_salud($mensaje = null, $id_filtro = null)
     {
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_centros.php");
         }
@@ -50,7 +50,7 @@ class CentroSaludController
     public function mod_centro_salud($id_centro)
     {
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_modcentros.php");
         }
@@ -173,7 +173,7 @@ class CentroSaludController
     public function unif_centro_salud($mensaje = null)
     {
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_unifcentros.php");
         }

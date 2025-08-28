@@ -241,8 +241,9 @@
           document.getElementById("ResultadosCategorias").innerHTML=contenidosRecibidos;
           }
       }
-      xmlhttp.open('POST', 'buscarCategorias.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
-      xmlhttp.send();
+      xmlhttp.open('POST', 'buscar_categorias_desc', true); // Método post y url invocada
+      xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      xmlhttp.send('valorBusqueda=' + textoBusqueda);
     }
     
     function seleccionPersona(xNombre,xID) {

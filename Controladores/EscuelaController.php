@@ -34,7 +34,7 @@ class EscuelaController
     public function listado_escuelas($mensaje = null)
     {
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_escuelas.php");
         }
@@ -44,7 +44,7 @@ class EscuelaController
     public function mod_escuela($id_escuela)
     {
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_modescuelas.php");
         }
@@ -54,7 +54,7 @@ class EscuelaController
     public function datos_categoria($id_escuela)
     {
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_verescuelas.php");
         }
@@ -169,7 +169,7 @@ class EscuelaController
     public function unif_escuelas($mensaje = null)
     {
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_unifescuelas.php");
         }

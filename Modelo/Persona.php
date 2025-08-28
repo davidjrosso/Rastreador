@@ -818,11 +818,11 @@ public function getCalle(){
 public function getNroCalle()
 {
 	$LongString = strlen($this->Domicilio);
-	if ($LongString > 1) {
+	if ($LongString > 3) {
 	  $StringDelimitado = chunk_split($this->Domicilio,$LongString - 4,"-");
 	  $PartesDireccion = explode("-", $StringDelimitado);
 	  $NroDomActual = (int) filter_var($PartesDireccion[1], FILTER_SANITIZE_NUMBER_INT);
-	  if($NroDomActual == 0){
+	  if ($NroDomActual == 0) {
 		$NroDomActual = null;
 	  }
 	} else {

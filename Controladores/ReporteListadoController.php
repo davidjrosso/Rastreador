@@ -34,7 +34,7 @@ class ReporteListadoController
     {
         header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             header("Content-Type: text/html;charset=utf-8");
 
@@ -54,7 +54,7 @@ class ReporteListadoController
     {
         header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             header("Content-Type: text/html;charset=utf-8");
 

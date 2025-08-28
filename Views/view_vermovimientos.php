@@ -29,11 +29,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Responsable.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Account.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/MovimientoMotivo.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/DtoMovimiento.php';
-header("Content-Type: text/html;charset=utf-8");
 
-$ID_Usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $usuario->get_id_tipo_usuario();
 ?>
 <!DOCTYPE html>
 <html>
@@ -121,7 +117,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
         header("Location: /movimientos?MensajeError=" . $empty_query_message);
         exit();
   } else {
-    $Element = new Elements();
     echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_MOVIMIENTO);
   ?>
   <div class = "col-md-9">
@@ -274,7 +269,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               echo $Table;
 
               $Con->CloseConexion();
-              
 
             }
           ?>
@@ -283,7 +277,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
             <div class="col-10">
               
             </div>
-            <div class="col-2">       
+            <div class="col-2">
               <button type = "button" class = "btn btn-danger" onClick = "location.href = '/movimientos'">Atras</button>
             </div>
         </div>

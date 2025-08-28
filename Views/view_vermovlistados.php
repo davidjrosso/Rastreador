@@ -41,6 +41,8 @@
       let fechaHasta = null;
       let filtroSeleccionados = null;
       let listaOrden = new Map();
+      let fullscreen = false;
+
       $(document).ready(function(){
               var date_input=$('input[name="date"]');
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
@@ -58,10 +60,17 @@
               nroPaginaPdf = 0;
               thTable = $("thead > tr > th");
 
-              $("tbody ul li buttom").on("click", function () {
-                $()
-              });
               grafico();
+
+              $("#boton-fullscreen").on("click", function (e) {
+                if (!fullscreen) {
+                  $("#excel-modal div[class='modal-content']")[0].requestFullscreen();
+                  fullscreen = true;
+                } else {
+                  document.exitFullscreen();
+                  fullscreen = false;
+                }
+              });
       });
 
       function CalcularPrecio() {
@@ -791,9 +800,15 @@
             <button type="button" class="btn btn-secondary" onClick="htmlExcel('tabla-movimiento-general', 'excel');">
                 Excel
             </button>
+            <!--
             <button type = "button" class = "btn btn-secondary" data-toggle="modal" 
                     data-target="#datos-analisis-modal">
                 Analisis de Datos
+            </button>
+            -->
+            <button type = "button" class = "btn btn-secondary" data-toggle="modal" 
+                    data-target="#excel-modal">
+                Excel Planilla
             </button>
         </div>
      </div>
@@ -2469,19 +2484,33 @@
       </div>
       <div class="modal-body">
         <div>
-          <canvas id="myChart"></canvas>
-        </div>
-        <div>
           <canvas id="graphics"></canvas>
         </div>
       </div>
-        <div>
-          <canvas id="graphics-2"></canvas>
-        </div>
       </div>
       <div class="modal-footer modal-footer-flex-center">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
         <button type="button" class="btn btn-primary" onClick="configResultados()" data-dismiss="modal">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="excel-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="class_modal-dialog modal-dialog" role="document"  id="id_modal-dialog">
+    <div class="modal-content" style="height: 600px; width: 800px;">
+      <div class="modal-header" style="padding: 0rem;">
+          <button type="button" id="boton-fullscreen" class="button-fullscreen" aria-label="fullscreen">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
+              </svg>
+          </button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="padding: 0rem;">
+        <iframe src="/excel?ID=19" width="100%" height="100%"> </iframe>
       </div>
     </div>
   </div>

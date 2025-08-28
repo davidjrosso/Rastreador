@@ -103,7 +103,7 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
               <div class="col-md-3">
               </div>
               <div class="col-md-3">
-                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="location.href = '/'">Volver</button>
               </div>
             </div>
           </form>

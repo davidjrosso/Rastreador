@@ -47,21 +47,21 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 				let mensajeError = '<?php echo $mensaje_error;?>';
 				let mensajeSuccess = '<?php echo $mensaje_success;?>';
 
-			$("#spanMostrar").on("click", function(){
-				var elementInput= $("#login-pass");
-				var elementIcon= $("#iconMostrar");
-				if(elementIcon.hasClass("active")){
-					elementIcon.removeClass("active");
-					elementIcon.html("visibility_off");
-					elementInput.prop("type","password");
-				} else {
-					elementIcon.addClass("active");
-					elementIcon.html("visibility");
-					elementInput.prop("type","text");
-				}
-			});
+				$("#spanMostrar").on("click", function(){
+					var elementInput= $("#login-pass");
+					var elementIcon= $("#iconMostrar");
+					if(elementIcon.hasClass("active")){
+						elementIcon.removeClass("active");
+						elementIcon.html("visibility_off");
+						elementInput.prop("type","password");
+					} else {
+						elementIcon.addClass("active");
+						elementIcon.html("visibility");
+						elementInput.prop("type","text");
+					}
+				});
 
-			controlMensaje(mensajeSuccess, mensajeError);
+				controlMensaje(mensajeSuccess, mensajeError);
 			});
 		</script>
 	</head>

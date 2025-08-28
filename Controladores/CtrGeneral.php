@@ -1352,7 +1352,7 @@ class CtrGeneral{
 		$Table = "<table class='table'><thead><tr><th>Categoría</th><th>Forma</th><th>Color</th><th colspan='3'></th></tr></thead>";//<th>Codigo</th> <td>".$Ret["cod_categoria"]."</td>
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["categoria"]."</td><td style='font-size: 40px; text-align: center; padding: 0; color: ".$Ret["color"]."'>".$Ret["Forma_Categoria"]."</td><td style= 'background-color: ".$Ret["color"]."; color: #fff;'></td><td><a href = '/categoria?ID=".$Ret["id_categoria"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = '/categoria/editar?ID=".$Ret["id_categoria"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_categoria"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["categoria"]."</td><td style='font-size: 40px; text-align: center; padding: 0; color: ".$Ret["color"]."'>".$Ret["Forma_Categoria"]."</td><td style= 'background-color: ".$Ret["color"]."; color: #fff;'></td><td><a href = '/categoria?ID=".$Ret["id_categoria"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = '/categoria/editar?ID=".$Ret["id_categoria"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'VerificarCategoria(".$Ret["id_categoria"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -1374,7 +1374,7 @@ class CtrGeneral{
 		$Table = "<table class='table'><thead><tr><th>Categoría</th><th>Forma</th><th>Color</th><th colspan='3'></th></tr></thead>";//<th>Codigo</th>  <td>".$Ret["cod_categoria"]."</td>
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["categoria"]."</td><td style='font-size: 40px; text-align: center; padding: 0; color: ".$Ret["color"]."'>".$Ret["Forma_Categoria"]."</td><td style= 'background-color: ".$Ret["color"]."; color: #fff;'></td><td><a href = '/categoria?ID=".$Ret["id_categoria"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = '/categoria/editar?ID=".$Ret["id_categoria"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_categoria"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["categoria"]."</td><td style='font-size: 40px; text-align: center; padding: 0; color: ".$Ret["color"]."'>".$Ret["Forma_Categoria"]."</td><td style= 'background-color: ".$Ret["color"]."; color: #fff;'></td><td><a href = '/categoria?ID=".$Ret["id_categoria"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = '/categoria/editar?ID=".$Ret["id_categoria"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'VerificarCategoria(".$Ret["id_categoria"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -1418,7 +1418,7 @@ class CtrGeneral{
 		$Table = "<table class='table'><thead><tr><th>Categoría</th><th>Forma</th><th>Color</th><th colspan='3'></th></tr></thead>";//<th>Codigo</th>  <td>".$Ret["cod_categoria"]."</td>
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["categoria"]."</td><td style='font-size: 40px; text-align: center; padding: 0; color: ".$Ret["color"]."'>".$Ret["Forma_Categoria"]."</td><td style= 'background-color: ".$Ret["color"]."; color: #fff;'></td><td><a href = '/categoria?ID=".$Ret["id_categoria"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = '/categoria/editar?ID=".$Ret["id_categoria"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_categoria"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["categoria"]."</td><td style='font-size: 40px; text-align: center; padding: 0; color: ".$Ret["color"]."'>".$Ret["Forma_Categoria"]."</td><td style= 'background-color: ".$Ret["color"]."; color: #fff;'></td><td><a href = '/categoria?ID=".$Ret["id_categoria"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = '/categoria/editar?ID=".$Ret["id_categoria"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'VerificarCategoria(".$Ret["id_categoria"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";

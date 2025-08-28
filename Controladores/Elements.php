@@ -2899,7 +2899,7 @@ public function getMenuSeguridadUsuario($ID){
     if(mysqli_num_rows($ConsultaResult) > 0){
       $Resultado = mysqli_fetch_array($ConsultaResult);
       $cardSession = "<div class='title-session'>
-                        <a id='perfil' style='color: #e1ffff' href='view_perfilusuario.php?account_id=" . $idAccount . "'>".
+                        <a id='perfil' style='color: #e1ffff' href='cuenta?account_id=" . $idAccount . "'>".
                           $Resultado["username"] . "
                         </a>
                       </div>";

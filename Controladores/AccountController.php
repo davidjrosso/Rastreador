@@ -34,7 +34,7 @@ class AccountController
     public function listado_accounts($mensaje = null)
     {
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_usuarios.php");
         }
@@ -47,7 +47,7 @@ class AccountController
                                 $mensaje_error = null
     ){
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             header("Content-Type: text/html;charset=utf-8");
 
@@ -76,7 +76,7 @@ class AccountController
     public function datos_account($id_account)
     {
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
         } else {
             include("./Views/view_verusuarios.php");
         }
@@ -86,7 +86,7 @@ class AccountController
     public function dato_account_user($id_account = null, $mensaje = null)
     {
         if (!isset($_SESSION["Usuario"])) {
-            include("Error_Session.php");
+            include("./Views/Error_Session.php");
 
         } else {
             header("Content-Type: text/html;charset=utf-8");
