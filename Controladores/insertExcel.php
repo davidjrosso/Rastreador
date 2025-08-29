@@ -19,6 +19,7 @@
 	*/
 
 	session_start();
+	//header('Content-Type: application/json');
 	header('Content-Type: text/event-stream');
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Conexion.php';
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/sys_config.php';
