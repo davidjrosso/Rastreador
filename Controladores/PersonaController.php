@@ -8,12 +8,22 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Calle.php");
 class PersonaController 
 {
 
-    public function listado_personas()
+    public function listado_personas($mensaje = null)
     {
         header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
+
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
             include("./Views/view_personas.php");
         }
         exit();
@@ -355,5 +365,56 @@ class PersonaController
             header('Location: /home?MensajeError=' . $MensajeError);
         }
 
+    }
+
+    public function delete_persona()
+    {
+        $ID_Usuario = $_SESSION["Usuario"];
+
+        $ID_Persona = $_REQUEST["ID"];
+
+        $Fecha = date("Y-m-d");
+        $ID_TipoAccion = 3;
+        $Detalles = "El usuario con ID: $ID_Usuario ha dado de baja una Persona. Datos: Persona: $ID_Persona";
+
+        try {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            $Consulta = "update persona set estado = 0 where id_persona = $ID_Persona";
+            if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
+                throw new Exception("Problemas en la Consulta. Consulta: ".$Consulta, 0);		
+            }
+            $ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
+            if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
+                throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 1);
+            }
+
+            $ConsultarDatos = "select * from persona where id_persona = $ID_Persona";
+            $ErrorDatos = "No se pudieron consultar los datos : ";
+            if(!$RetDatos = mysqli_query($Con->Conexion,$ConsultarDatos)){
+                throw new Exception($ErrorDatos.$ConsultarDatos, 1);
+            }
+
+            $TomarDatos = mysqli_fetch_assoc($RetDatos);
+            $Apellido = $TomarDatos["apellido"];
+            $Nombre = $TomarDatos["nombre"];
+            $DNI = $TomarDatos["documento"];
+            
+            // CREANDO NOTIFICACION PARA EL USUARIO		
+            $DetalleNot = 'Se elimino la persona Nombre: '.$Apellido. ', '.$Nombre. (($DNI == null)?'':' dni: '. $DNI);
+            $Expira = date("Y-m-d", strtotime($Fecha." + 15 days"));
+            
+            $ConsultaNot = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$DetalleNot','$Fecha', '$Expira',1)";
+            if(!$RetNot = mysqli_query($Con->Conexion,$ConsultaNot)){
+                throw new Exception("Error al intentar registrar Notificacion. Consulta: ".$ConsultaNot, 3);
+            }
+
+            $Con->CloseConexion();
+            $Mensaje = "La persona se elimino Correctamente";
+            header('Location: ../personas?Mensaje='.$Mensaje);
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+}
     }
 }

@@ -68,7 +68,7 @@ try {
 	$routes[] = Route::get('personas_listado', '/personas', [PersonaController::class, 'listado_personas']);
 	$routes[] = Route::get('persona_ver', '/persona\?ID={ID}', [PersonaController::class, 'datos_persona']);
 	$routes[] = Route::get('mod_persona', '/persona/editar\?ID={id}', [PersonaController::class, 'mod_persona']);
-	$routes[] = Route::get('personas_eliminar', 'Controladores/DeletePersona.php\?ID={id}', [PersonaController::class, 'del_p_control']);
+	$routes[] = Route::get('personas_eliminar', 'delete_persona\?ID={id}', [PersonaController::class, 'delete_persona']);
 	$routes[] = Route::post('persona_mod_control', '/modificar_persona', [PersonaController::class, 'mod_persona_control']);
 	$routes[] = Route::get('personas_unificar', '/personas/unificar', [PersonaController::class, 'unif_persona']);
 	$routes[] = Route::post('personas_unif_control', 'unificarpersonas', [PersonaController::class, 'unif_persona_control']);

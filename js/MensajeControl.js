@@ -88,6 +88,27 @@ export function VerificarDeleteBarrio(xID){
         });
 }
 
+export function VerificarDeletePersona(xID){
+        swal.fire({
+            title: "¿Está seguro?",
+            icon: "warning",
+            html: `<p style="margin-bottom:0px">¿Seguro de querer eliminar esta persona?</p>
+                    <p style="margin-bottom:0px">Si se borra el registro de una persona</p>
+                    <p style="margin-bottom:0px"> también se eliminan sus movimientos</p>`,
+            showCloseButton: true,
+            confirmButtonColor: "#e64942",
+            cancelButtonColor: "#efefef",
+            cancelButtonText: '<span style="color:#555">Cancel</span>',
+            showCancelButton: true,
+            showConfirmButton: true
+        })
+        .then((willDelete) => {
+            if (willDelete.isConfirmed) {
+                window.location.href = '/delete_persona?ID=' + xID;
+            }
+        });
+}
+
 export function mensajeDeProcesamiento(mensaje) {
     swal.fire(mensaje, '', 'success');
 }

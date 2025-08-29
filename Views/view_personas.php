@@ -18,23 +18,6 @@
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-
-header("Content-Type: text/html;charset=utf-8");
-
-$Con = new Conexion();
-$Con->OpenConexion();
-
-$ID_Usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $usuario->get_id_tipo_usuario();
-$Con->CloseConexion();
-
-$mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
-$mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -54,7 +37,9 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 	<script src="dist/control.js"></script>
 
   <script>
-       $(document).ready(function(){
+      let mensajeError = '<?php echo $mensaje_error;?>';
+      let mensajeSuccess = '<?php echo $mensaje_success;?>';
+       $(document).ready(function() {
               let date_input=$('input[name="date"]'); //our date input has the name "date"
               let container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
 				      let mensajeError = '<?php echo $mensaje_error;?>';
@@ -67,48 +52,12 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
               });
 			        controlMensaje($mensaje_success, $mensaje_error);
           });
-
-       function Verificar(xID){
-              /*swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer eliminar esta persona? \n Se eliminaran los movimientos vinculados con la persona a eliminar",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'Controladores/DeletePersona.php?ID='+xID;
-                } else {        
-                }
-              });*/
-              swal.fire({
-                title: "¿Está seguro?",
-                icon: "warning",
-                html: `<p style="margin-bottom:0px">¿Seguro de querer eliminar esta persona?</p>
-                       <p style="margin-bottom:0px">Si se borra el registro de una persona</p>
-                       <p style="margin-bottom:0px"> también se eliminan sus movimientos</p>`,
-                showCloseButton: true,
-                confirmButtonColor: "#e64942",
-                cancelButtonColor: "#efefef",
-                cancelButtonText: '<span style="color:#555">Cancel</span>',
-                showCancelButton: true,
-                showConfirmButton: true
-              })
-              .then((willDelete) => {
-                if (willDelete.isConfirmed) {
-                  window.location.href = 'Controladores/DeletePersona.php?ID='+xID;
-                }
-              });
-        }
-
   </script>
 
 </head>
 <body>
 <div class = "row">
   <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_PERSONA);
   ?>
   <div class = "col-md-9">
@@ -161,23 +110,29 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
           <!-- Search -->
         <div class = "row">
           <?php  
-            if(isset($_REQUEST["Filtro"]) && $_REQUEST["Filtro"]!=null){
+            if (isset($_REQUEST["Filtro"])) {
               $Filtro = $_REQUEST["Filtro"];
               $ID_Filtro = $_REQUEST["ID_Filtro"];
-              $DTGeneral = new CtrGeneral();
 
               switch ($ID_Filtro) {
-                case 'ID': echo $DTGeneral->getPersonasxID($Filtro);break;
-                case 'Apellido': echo $DTGeneral->getPersonasxApellido($Filtro);break;
-                case 'Nombre': echo $DTGeneral->getPersonasxNombre($Filtro);break;
-                case 'DNI': echo $DTGeneral->getPersonasxDNI($Filtro);break;
-                case 'Legajo': echo $DTGeneral->getPersonasxLegajo($Filtro);break;
-                case 'Carpeta': echo $DTGeneral->getPersonasxCarpeta($Filtro);break;
-                case 'Domicilio': echo $DTGeneral->getPersonasxDomicilio($Filtro);break;
-                default: echo $DTGeneral->getPersonasxID($Filtro);break;
+                case 'ID':
+                  echo $DTGeneral->getPersonasxID($Filtro);break;
+                case 'Apellido':
+                  echo $DTGeneral->getPersonasxApellido($Filtro);break;
+                case 'Nombre':
+                  echo $DTGeneral->getPersonasxNombre($Filtro);break;
+                case 'DNI':
+                  echo $DTGeneral->getPersonasxDNI($Filtro);break;
+                case 'Legajo':
+                  echo $DTGeneral->getPersonasxLegajo($Filtro);break;
+                case 'Carpeta':
+                  echo $DTGeneral->getPersonasxCarpeta($Filtro);break;
+                case 'Domicilio':
+                  echo $DTGeneral->getPersonasxDomicilio($Filtro);break;
+                default:
+                echo $DTGeneral->getPersonasxID($Filtro);break;
               }
-            }else{
-              $DTGeneral = new CtrGeneral();
+            } else {
               echo $DTGeneral->getPersonas();
             }
           ?>
