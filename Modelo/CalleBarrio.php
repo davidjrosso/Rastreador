@@ -330,7 +330,7 @@ class CalleBarrio
 	public function get_punto_lat()
     {
         $lat_str = array();
-		$expr_reg = "~([-]{0,1}[0-9]+\.[0-9]+,|[-]{0,1}[0-9]+\.[0-9]+E[-]{0,1}[0-9]+,)~";
+		$expr_reg = "~([ ]*[-]{0,1}[0-9]+\.[0-9]+[ ]*,|[ ]*[-]{0,1}[0-9]+\.[0-9]+E[-]{0,1}[0-9]+[ ]*,)~";
         $lat = substr($this->punto, 6);
         $lat = substr($lat, 0, -1);
 		$check = preg_match($expr_reg, $lat, $lat_str);
@@ -341,7 +341,7 @@ class CalleBarrio
 	public function get_punto_lon()
     {
         $lon_str = array();
-		$expr_reg = "~(,[-]{0,1}[0-9]+\.[0-9]+|,[-]{0,1}[0-9]+\.[0-9]+E[-]{0,1}[0-9]+)~";
+		$expr_reg = "~(,[ ]*[-]{0,1}[0-9]+\.[0-9]+|,[ ]*[-]{0,1}[0-9]+\.[0-9]+E[-]{0,1}[0-9]+)~";
         $lon = substr($this->punto, 6);
         $lon = substr($lon, 0, -1);
 		$check = preg_match($expr_reg ,  $lon, $lon_str);
