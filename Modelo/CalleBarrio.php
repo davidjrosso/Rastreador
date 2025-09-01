@@ -355,11 +355,11 @@ class CalleBarrio
 
     public function geo_lat_by_number($number)
     {
-        $point = $this->get_punto_lat();
-        $min_num = $this->get_min_num();
+        $point = floatval($this->get_punto_lat());
+        $min_num = floatval($this->get_min_num());
 		$lat = $point;
 		if ($number && $this->get_pendiente()) {
-			$pendiente = $this->get_pendiente_lat();
+			$pendiente = floatval($this->get_pendiente_lat());
 			$lat += $pendiente * ($number - $min_num);
 		}
         return $lat;
@@ -367,11 +367,11 @@ class CalleBarrio
 
     public function geo_lon_by_number($number)
     {
-        $point = $this->get_punto_lon();
-        $min_num = $this->get_min_num();
+        $point = floatval($this->get_punto_lon());
+        $min_num = floatval($this->get_min_num());
 		$lon = $point;
 		if ($number && $this->get_pendiente()) {
-			$pendiente = $this->get_pendiente_lon();
+			$pendiente = floatval($this->get_pendiente_lon());
 			$lon += $pendiente * ($number - $min_num);
 		}
         return $lon;
