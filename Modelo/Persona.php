@@ -633,7 +633,8 @@ public function setCalle($xCalle)
 
 public function setNro($xNro)
 {
-	$nro_calle = trim($xNro);
+
+	$nro_calle = (!empty($xNro)) ? trim($xNro) : "";
 	$out = null;
 	$ret = null;
 	if (preg_match('~ [0-9]+$~', $nro_calle, $out)) {

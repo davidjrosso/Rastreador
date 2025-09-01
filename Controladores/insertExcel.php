@@ -1,4 +1,6 @@
 <?php
+
+use function PHPUnit\Framework\isNull;
 	/*
 	*
 	* This file is part of Rastreador3.
@@ -221,7 +223,8 @@
 				$datos = $valor;
 				break;
 			case "fecha_nacimiento":
-				$lista_fecha = explode("/", $valor);
+				$valor_dato = (!empty($valor)) ? $valor : "";
+				$lista_fecha = explode("/", $valor_dato);
 				$lista_fecha = array_reverse($lista_fecha);
 				$value = implode( "-", $lista_fecha);
 				$fecha_excel = strtotime($value);
@@ -279,7 +282,7 @@
 				$datos = $valor;
 				break;
 			default :
-				$valor_fecha = (!empty($col_header)) ? $col_header : null;
+				$valor_fecha = (!empty($col_header)) ? $col_header : "";
 				//$pattern = "/([0-9][0-9]|[1-9]).([0-9][0-9]|[1-9]).[2-9][0-9][0-9][0-9]/";
 				$pattern = "/(([0-9][0-9]).([0-9][0-9]).[2-9][0-9][0-9][0-9]|([0-9][0-9]).([0-9][0-9]).[0-9][0-9]|([0-9][0-9]).[0-9].[2-9][0-9][0-9][0-9]|([0-9][0-9]).[0-9].[0-9][0-9])/";
 				$is_fecha = preg_match(
@@ -287,8 +290,8 @@
 								$valor_fecha,
 								$result_array
 										);
-
-				$motivos_valor = preg_split("~[\s\-|]+~", trim($valor));
+				$valor_dato = (!empty($valor)) ? $valor : "";
+				$motivos_valor = preg_split("~[\s\-|]+~", trim($valor_dato));
 				$is_all_motivo = array_reduce(
 					$motivos_valor,
 				 function ($acum, $element){

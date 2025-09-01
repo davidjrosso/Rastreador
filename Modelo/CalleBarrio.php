@@ -168,12 +168,12 @@ class CalleBarrio
 
 	public function set_pendiente_by_min_max_punto()
     {
-        $punto_max_num_lat = $this->get_lat_punto_max_num();
-        $punto_max_num_lon = $this->get_lon_punto_max_num();
-        $punto_min_num_lat = $this->get_lat_punto_min_num();
-        $punto_min_num_lon = $this->get_lon_punto_min_num();
-        $max_num = $this->get_max_num();
-        $min_num = $this->get_min_num();
+        $punto_max_num_lat = floatval($this->get_lat_punto_max_num());
+        $punto_max_num_lon = floatval($this->get_lon_punto_max_num());
+        $punto_min_num_lat = floatval($this->get_lat_punto_min_num());
+        $punto_min_num_lon = floatval($this->get_lon_punto_min_num());
+        $max_num = floatval($this->get_max_num());
+        $min_num = floatval($this->get_min_num());
 		if ($max_num & $min_num) {
 			$pendiente_lat = ($punto_max_num_lat - $punto_min_num_lat)/($max_num - $min_num);
 			$pendiente_lon = ($punto_max_num_lon - $punto_min_num_lon)/($max_num - $min_num);
