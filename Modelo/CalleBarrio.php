@@ -163,7 +163,7 @@ class CalleBarrio
 
 	public function set_pendiente_lat_lon($lat, $lon)
     {
-		$this->pendiente = "POINT($lat,$lon)";
+		$this->pendiente = "POINT(" . trim($lat) . "," . trim($lon) . ")";
 	}
 
 	public function set_pendiente_by_min_max_punto()
@@ -235,8 +235,9 @@ class CalleBarrio
 	public function get_lat_punto_max_num()
     {
         $lat_str = array();
-		$expr_reg = "~([-]{0,1}[0-9]+\.[0-9]+,|[-]{0,1}[0-9]+\.[0-9]+E[-]{0,1}[0-9]+,)~";
-        $lat = substr($this->punto_max_num, 6);
+		$expr_reg = "~([ ]*[-]{0,1}[0-9]+\.[0-9]+[ ]*,|[ ]*[-]{0,1}[0-9]+\.[0-9]+E[-]{0,1}[0-9]+[ ]*,)~";
+		$punto_max_num_dato = str_replace($this->punto_max_num, " ", "");
+        $lat = substr($punto_max_num_dato, 6);
         $lat = substr($lat, 0, -1);
 		$check = preg_match($expr_reg, $lat, $lat_str);
         $lat = substr($lat_str[0], 0, -1);
@@ -246,8 +247,9 @@ class CalleBarrio
 	public function get_lon_punto_max_num()
     {
         $lon_str = array();
-		$expr_reg = "~(,[-]{0,1}[0-9]+\.[0-9]+|,[-]{0,1}[0-9]+\.[0-9]+E[-]{0,1}[0-9]+)~";
-        $lon = substr($this->punto_max_num, 6);
+		$expr_reg = "~(,[ ]*[-]{0,1}[0-9]+\.[0-9]+[ ]*|,[ ]*[-]{0,1}[0-9]+\.[0-9]+E[-]{0,1}[0-9]+[ ]*)~";
+		$punto_max_num_dato = str_replace($this->punto_max_num, " ", "");
+        $lon = substr($punto_max_num_dato, 6);
         $lon_str = substr($lon, 0, -1);
 		$check = preg_match($expr_reg , $lon, $lon_str);
         $lon = substr($lon_str[0], 1);
@@ -262,11 +264,10 @@ class CalleBarrio
 	public function get_lat_punto_min_num()
     {
         $lat_str = array();
-		$expr_reg = "~([-]{0,1}[0-9]+\.[0-9]+,|[-]{0,1}[0-9]+\.[0-9]+E[-]{0,1}[0-9]+,)~";
-        $lat = substr($this->punto_min_num, 6);
+		$expr_reg = "~([ ]*[-]{0,1}[0-9]+\.[0-9]+[ ]*,|[ ]*[-]{0,1}[0-9]+\.[0-9]+E[-]{0,1}[0-9]+[ ]*,)~";
+		$punto_min_num_dato = str_replace($this->punto_min_num, " ", "");
+        $lat = substr($punto_min_num_dato, 6);
         $lat = substr($lat, 0, -1);
-        //$check = preg_match("~[-]{0,1}[0-9]+\.[0-9]+,~", $lat, $lat_str);
-		//$check = preg_match("~[-]{0,1}[0-9]+\.[0-9]+E[-]{0,1}[0-9]+,~", $lat, $lat_str);
 		$check = preg_match($expr_reg, $lat, $lat_str);
         $lat = substr($lat_str[0], 0, -1);
 		return  $lat;
@@ -275,11 +276,10 @@ class CalleBarrio
 	public function get_lon_punto_min_num()
     {
         $lon_str = array();
-		$expr_reg = "~(,[-]{0,1}[0-9]+\.[0-9]+|,[-]{0,1}[0-9]+\.[0-9]+E[-]{0,1}[0-9]+)~";
-        $lon = substr($this->punto_min_num, 6);
+		$expr_reg = "~(,[ ]*[-]{0,1}[0-9]+\.[0-9]+[ ]*|,[ ]*[-]{0,1}[0-9]+\.[0-9]+E[-]{0,1}[0-9]+[ ]*)~";
+		$punto_min_num_dato = str_replace($this->punto_min_num, " ", "");
+        $lon = substr($punto_min_num_dato, 6);
         $lon_str = substr($lon, 0, -1);
-        //$check = preg_match("~[-]{0,1}[0-9]+\.[0-9]+,~", $lon, $lon_str);
-		//$check = preg_match("~,[-]{0,1}[0-9]+\.[0-9]+E[-]{0,1}[0-9]+~", $lon, $lon_str);
 		$check = preg_match($expr_reg , $lon, $lon_str);
         $lon = substr($lon_str[0], 1);
 		return  $lon;
@@ -293,8 +293,9 @@ class CalleBarrio
 	public function get_pendiente_lat()
     {
         $lat_str = array();
-		$expr_reg = "~([-]{0,1}[0-9]+\.[0-9]+,|[-]{0,1}[0-9]+\.[0-9]+E[-]{0,1}[0-9]+,)~";
-        $lat = substr($this->pendiente, 6);
+		$expr_reg = "~([ ]*[-]{0,1}[0-9]+\.[0-9]+,|[-]{0,1}[0-9]+\.[0-9]+E[-]{0,1}[0-9]+[ ]*,)~";
+		$pendiente_dato = str_replace($this->pendiente, " ", "");
+        $lat = substr($pendiente_dato, 6);
         $lat = substr($lat, 0, -1);
 		$check = preg_match($expr_reg, $lat, $lat_str);
         $lat = substr($lat_str[0], 0, -1);
@@ -304,8 +305,9 @@ class CalleBarrio
 	public function get_pendiente_lon()
     {
         $lon_str = array();
-		$expr_reg = "~(,[-]{0,1}[0-9]+\.[0-9]+$|,[-]{0,1}[0-9]+\.[0-9]+E[-]{0,1}[0-9]+$)~";
-        $lon = substr($this->pendiente, 6);
+		$expr_reg = "~(,[ ]*[-]{0,1}[0-9]+\.[0-9]+$|,[ ]*[-]{0,1}[0-9]+\.[0-9]+E[-]{0,1}[0-9]+$)~";
+		$pendiente_dato = str_replace($this->pendiente, " ", "");
+        $lon = substr($pendiente_dato, 6);
         $lon = substr($lon, 0, -1);
 		$check = preg_match($expr_reg ,  $lon, $lon_str);
         $lon = substr($lon_str[0], 1);
@@ -331,7 +333,8 @@ class CalleBarrio
     {
         $lat_str = array();
 		$expr_reg = "~([ ]*[-]{0,1}[0-9]+\.[0-9]+[ ]*,|[ ]*[-]{0,1}[0-9]+\.[0-9]+E[-]{0,1}[0-9]+[ ]*,)~";
-        $lat = substr($this->punto, 6);
+		$punto_dato = str_replace($this->punto, " ", "");
+        $lat = substr($punto_dato, 6);
         $lat = substr($lat, 0, -1);
 		$check = preg_match($expr_reg, $lat, $lat_str);
         $lat = substr($lat_str[0], 0, -1);
@@ -342,7 +345,8 @@ class CalleBarrio
     {
         $lon_str = array();
 		$expr_reg = "~(,[ ]*[-]{0,1}[0-9]+\.[0-9]+|,[ ]*[-]{0,1}[0-9]+\.[0-9]+E[-]{0,1}[0-9]+)~";
-        $lon = substr($this->punto, 6);
+		$punto_dato = str_replace($this->punto, " ", "");
+        $lon = substr($punto_dato, 6);
         $lon = substr($lon, 0, -1);
 		$check = preg_match($expr_reg ,  $lon, $lon_str);
         $lon = substr($lon_str[0], 1);
