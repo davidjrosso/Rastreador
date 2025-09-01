@@ -26,6 +26,9 @@
     response.domicilios.entries().forEach(function (element) {
       let personaObj = element[1].formulario.form.persona;
       let existe_c = element[1].formulario.calle_rastreador;
+      let domicilio = element[1].formulario.domicilio;
+      domicilio = (domicilio) ? domicilio : "direccion no cargada";
+
       if (!existe_c) {
         countDomicilio = true;
         if (personaObj.Apellido) {
@@ -44,7 +47,7 @@
                             "</a>" +
                           "</td>";
         tableDomicilio += "<td style='border: 2px solid; width: 15rem; text-align: left; padding: 4px; border-color: #6984a3;'>" + 
-                            element[1].formulario.domicilio + 
+                            domicilio +
                           "</td>";
         tableDomicilio += "</tr>";
       }
