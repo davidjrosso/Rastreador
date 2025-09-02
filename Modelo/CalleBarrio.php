@@ -174,7 +174,7 @@ class CalleBarrio
         $punto_min_num_lon = floatval($this->get_lon_punto_min_num());
         $max_num = floatval($this->get_max_num());
         $min_num = floatval($this->get_min_num());
-		if ($max_num & $min_num) {
+		if ($max_num && $min_num) {
 			$pendiente_lat = ($punto_max_num_lat - $punto_min_num_lat)/($max_num - $min_num);
 			$pendiente_lon = ($punto_max_num_lon - $punto_min_num_lon)/($max_num - $min_num);
 			$this->pendiente = "POINT($pendiente_lat,$pendiente_lon)";
@@ -358,6 +358,7 @@ class CalleBarrio
         $point = floatval($this->get_punto_lat());
         $min_num = floatval($this->get_min_num());
 		$lat = $point;
+		$num_domicilio = floatval($number);
 		if ($number && $this->get_pendiente()) {
 			$pendiente = floatval($this->get_pendiente_lat());
 			$lat += $pendiente * ($number - $min_num);
