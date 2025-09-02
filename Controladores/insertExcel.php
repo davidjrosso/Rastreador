@@ -387,6 +387,7 @@ use function PHPUnit\Framework\isNull;
 
 	try {
 		ob_implicit_flush(true);
+		set_time_limit(600);
 
 		$con = new Conexion();
 		$con->OpenConexion();
