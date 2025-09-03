@@ -1,27 +1,30 @@
 <?php 
-  session_start(); 
-  require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-  require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-  require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-  header("Content-Type: text/html;charset=utf-8");
+/*
+*
+* This file is part of Rastreador3.
+*
+* Rastreador3 is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* Rastreador3 is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Rastreador3; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+*/
 
-  /*     CONTROL DE USUARIOS                    */
-  if(!isset($_SESSION["Usuario"])){
-      header("Location: Error_Session.php");
-  }
-
-  $Con = new Conexion();
-  $Con->OpenConexion();
-  $id_usuario = $_SESSION["Usuario"];
-  $account = new Account(account_id: $id_usuario);
-  $tipo_usuario = $account->get_id_tipo_usuario();
-  $Con->CloseConexion();
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <title>Rastreador III</title>
   <meta charset="utf-8">
+  <base href="/">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -35,15 +38,16 @@
   <script src="js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="js/ValidarPersona.js"></script>
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script src="./dist/mapa.js"></script>
   <script src="./dist/control.js"></script>
 
   <script>
-      var map = null;
-      var objectJsonPersona = {};
-      var nombreCalle;
+      let map = null;
+      let objectJsonPersona = {};
+      let nombreCalle;
       let fullscreen = false;
+      let mensajeError = '<?php echo $mensaje_error;?>';
+      let mensajeSuccess = '<?php echo $mensaje_success;?>';
 
        $(document).ready(function(){
               var date_input=$('input[name="Fecha_Nacimiento"]'); //our date input has the name "date"
@@ -137,7 +141,9 @@
                              map
                   );
                   map.setGeoreferenciacion();
-                }
+              }
+
+			        controlMensaje(mensajeSuccess, mensajeError);
           });
 
         function ValidarDocumento(){
@@ -262,7 +268,6 @@
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($tipo_usuario, $id_usuario, $Element::PAGINA_PERSONA);
   ?>
   <div class = "col-md-9">
@@ -351,7 +356,6 @@
               <label for="ID_Barrio" class="col-md-2 col-form-label LblForm">Barrio: </label>
               <div class="col-md-10">
                 <?php 
-                $Element = new Elements();
                 echo $Element->CBBarrios();
                 ?>
               </div>
@@ -411,7 +415,6 @@
               <label for="ID_Nivel" class="col-md-2 col-form-label LblForm">Nivel Escolar: </label>
               <div class="col-md-10">
                 <?php 
-                $Element = new Elements();
                 echo $Element->CBNivelEscuelas();
                 ?>
               </div>
@@ -420,7 +423,6 @@
               <label for="ID_Escuela" class="col-md-2 col-form-label LblForm">Escuela: </label>
               <div class="col-md-10" id = "Escuelas">
                 <?php 
-                $Element = new Elements();
                 echo $Element->CBEscuelas(0);
             ?>
               </div>
@@ -608,12 +610,5 @@
     </div>
   </div>
 </div>
-<?php  
-if(isset($_REQUEST["Mensaje"])){
-  echo "<script type='text/javascript'>
-  swal('".$_REQUEST["Mensaje"]."','','success');
-</script>";
-}
-?>
 </body>
 </html>

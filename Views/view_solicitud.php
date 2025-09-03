@@ -335,7 +335,7 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
       })
         .then((willDelete) => {
           if (willDelete) {
-            window.location.href = 'Controladores/DeletePeticionModificarUsuario.php?ID=' + xID;
+            window.location.href = 'Controladores/DeletePeticion/modificar_account?ID=' + xID;
             //alert('SI');
           } else {
           }
@@ -402,7 +402,7 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
         </div>
         <div class="col-2">
           <button type="button" class="btn btn-outline-secondary"
-            onclick="location.href = 'view_inicio.php'">Volver</button>
+            onclick="location.href = '/'">Volver</button>
         </div>
         <div class="col-1"></div>
       </div>

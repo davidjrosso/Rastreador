@@ -66,8 +66,15 @@ try {
 	$routes[] = Route::post('login_control', '/login_control', [HomeController::class, 'login_control']);
 	$routes[] = Route::get('logout', '/logout', [HomeController::class, 'logout_control']);
 	$routes[] = Route::get('personas_listado', '/personas', [PersonaController::class, 'listado_personas']);
+	$routes[] = Route::get('personas_listado_success', '/personas\?Mensaje={mensaje}', [PersonaController::class, 'listado_personas']);
+	$routes[] = Route::get('personas_listado_filtrado', '/personas\?Filtro={filtro}/ID_Filtro={id_filtro}', [PersonaController::class, 'listado_personas']);
+	$routes[] = Route::post('personas_listado_filtrado_controler', '/personas_filtrar', [PersonaController::class, 'personas_filter']);
 	$routes[] = Route::get('persona_ver', '/persona\?ID={ID}', [PersonaController::class, 'datos_persona']);
 	$routes[] = Route::get('mod_persona', '/persona/editar\?ID={id}', [PersonaController::class, 'mod_persona']);
+	$routes[] = Route::get('crear_persona', '/persona/nueva', [PersonaController::class, 'crear_persona']);
+	$routes[] = Route::get('crear_persona_success', '/persona/nueva\?Mensaje={mensaje}', [PersonaController::class, 'crear_persona']);
+	$routes[] = Route::get('crear_persona_error', '/persona/nueva\?MensajeError={mensaje}', [PersonaController::class, 'crear_persona']);
+	$routes[] = Route::post('crear_persona_control', '/insertar_persona', [PersonaController::class, 'crear_persona_control']);
 	$routes[] = Route::get('personas_eliminar', 'delete_persona\?ID={id}', [PersonaController::class, 'delete_persona']);
 	$routes[] = Route::post('persona_mod_control', '/modificar_persona', [PersonaController::class, 'mod_persona_control']);
 	$routes[] = Route::get('personas_unificar', '/personas/unificar', [PersonaController::class, 'unif_persona']);

@@ -89,7 +89,7 @@ $Table =  "<table class='table table-bordered table-sm table-responsive' style='
 
     $Table .= "<tr>";
 
-    $Table .= "<td>".$Ret["Barrio"]."</td><td>".$Ret["manzana"]."</td><td>".$Ret["lote"]."</td><td>".$Ret["familia"]."</td><td><a href = 'javascript:window.open(\"view_verpersonas.php?ID=".$Ret["id_persona"]."\",\"Ventana".$Ret["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$Ret["apellido"].", ".$Ret["nombre"]."</a></td><td>".$Fecha_Nacimiento."</td>";
+    $Table .= "<td>".$Ret["Barrio"]."</td><td>".$Ret["manzana"]."</td><td>".$Ret["lote"]."</td><td>".$Ret["familia"]."</td><td><a href = 'javascript:window.open(\"persona?ID=".$Ret["id_persona"]."\",\"Ventana".$Ret["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".$Ret["apellido"].", ".$Ret["nombre"]."</a></td><td>".$Fecha_Nacimiento."</td>";
     
     ///////////////////////////////// PASAR A LA TABLA ENERO ////////////////////////////////////////////////////
     $Table .= "<td>";

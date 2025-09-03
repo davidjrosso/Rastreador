@@ -88,7 +88,7 @@ $Con->CloseConexion();
             <?php $Element = new Elements();
             $Element->getMenuHistorial(0);?>
         </div>
-        <div class="brand btn-Salir" onClick = "location.href = 'Controladores/CtrLogout.php'">Salir</div>
+        <div class="brand btn-Salir" onClick = "location.href = '/logout'">Salir</div>
     </div>
   </div>
   <?php 
@@ -119,7 +119,7 @@ $Con->CloseConexion();
             <?php $Element = new Elements();
             $Element->getMenuHistorial(0);?>
         </div>
-        <div class="brand btn-Salir" onClick = "location.href = 'Controladores/CtrLogout.php'">Salir</div>
+        <div class="brand btn-Salir" onClick = "location.href = '/logout'">Salir</div>
     </div>
   </div>
   <?php
@@ -162,7 +162,7 @@ $Con->CloseConexion();
             <?php $Element = new Elements();
             $Element->getMenuHistorial(0);?>
         </div>
-        <div class="brand btn-Salir" onClick = "location.href = 'Controladores/CtrLogout.php'">Salir</div>
+        <div class="brand btn-Salir" onClick = "location.href = '/logout'">Salir</div>
     </div>
   </div>
 <?php } ?>

@@ -42,15 +42,13 @@
        $(document).ready(function() {
               let date_input=$('input[name="date"]'); //our date input has the name "date"
               let container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-				      let mensajeError = '<?php echo $mensaje_error;?>';
-				      let mensajeSuccess = '<?php echo $mensaje_success;?>';
               date_input.datepicker({
                   format: 'dd/mm/yyyy',
                   container: container,
                   todayHighlight: true,
                   autoclose: true,
               });
-			        controlMensaje($mensaje_success, $mensaje_error);
+			        controlMensaje(mensajeSuccess, mensajeError);
           });
   </script>
 
@@ -71,7 +69,7 @@
     <div class="row">
       <div class = "col"></div>
       <div class = "col-4">
-          <center><button class = "btn btn-secondary" onClick = "location.href='view_newpersonas.php'">Agregar Nueva Persona</button></center>
+          <center><button class = "btn btn-secondary" onClick = "location.href='/persona/nueva'">Agregar Nueva Persona</button></center>
       </div>
       <div class="col-2">
                 <button type="button" class="btn btn-outline-secondary" onclick="location.href = '/'">Volver</button>
@@ -82,7 +80,7 @@
      <div class = "row">
       <div class = "col-10">
            <!-- Carga -->
-          <form method = "post" action = "Controladores/CtrBuscarPersonas.php">
+          <form method = "post" action = "/personas_filtrar">
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Buscar: </label>
               <div class="col-md-4">
@@ -110,9 +108,7 @@
           <!-- Search -->
         <div class = "row">
           <?php  
-            if (isset($_REQUEST["Filtro"])) {
-              $Filtro = $_REQUEST["Filtro"];
-              $ID_Filtro = $_REQUEST["ID_Filtro"];
+            if ($Filtro && $ID_Filtro) {
 
               switch ($ID_Filtro) {
                 case 'ID':
