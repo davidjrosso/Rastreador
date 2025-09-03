@@ -18,16 +18,6 @@
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-
-header("Content-Type: text/html;charset=utf-8");
-
-$ID_Usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $usuario->get_id_tipo_usuario();
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -77,7 +67,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_MOTIVO);
   ?>
   <div class = "col-md-9">
@@ -94,8 +83,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
           <!-- Search -->
         <div class = "row">
           <?php  
-            if(isset($_REQUEST["ID"]) && $_REQUEST["ID"]!=null){
-              $ID_Motivo = $_REQUEST["ID"];
+            if ($ID_Motivo) {
 
               $Con = new Conexion();
               $Con->OpenConexion();
@@ -150,7 +138,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Categoria: </label>
                   <div class="col-md-10">
                     <?php  
-                    $Element = new Elements();
                     echo $Element->CBModCategoria($ID_Categoria);                    
                     ?>
                   </div>

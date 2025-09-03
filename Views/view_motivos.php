@@ -18,15 +18,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-header("Content-Type: text/html;charset=utf-8");
-
-$ID_Usuario = $_SESSION["Usuario"];
-$account = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $account->get_id_tipo_usuario();
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -77,7 +68,6 @@ $TipoUsuario = $account->get_id_tipo_usuario();
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_MOTIVO);
   ?>
   <div class = "col-md-9">
@@ -91,7 +81,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
     <div class="row">
       <div class = "col"></div>
       <div class = "col-4">
-          <center><button class = "btn btn-secondary" onClick = "location.href='view_newmotivos.php'">Agregar Nuevo Motivo</button></center>
+          <center><button class = "btn btn-secondary" onClick = "location.href='/motivo/nuevo'">Agregar Nuevo Motivo</button></center>
       </div>
       <div class="col-2">
                 <button type="button" class="btn btn-outline-secondary" onclick="location.href = '/'">Volver</button>
@@ -128,21 +118,27 @@ $TipoUsuario = $account->get_id_tipo_usuario();
           <!-- Search -->
         <div class = "row">
           <?php  
-            if(isset($_REQUEST["Filtro"]) && $_REQUEST["Filtro"]!=null){
-              $Filtro = $_REQUEST["Filtro"];
-              $ID_Filtro = $_REQUEST["ID_Filtro"];
-              $DTGeneral = new CtrGeneral();
+            if ($Filtro) {
 
               switch ($ID_Filtro) {
-                case 'ID': echo $DTGeneral->getMotivosxID($Filtro);break;
-                case 'Motivo': echo $DTGeneral->getMotivosxMotivo($Filtro);break;
-                case 'Codigo': echo $DTGeneral->getMotivosxCodigo($Filtro);break;
+                case 'ID': 
+                  echo $DTGeneral->getMotivosxID($Filtro);
+                  break;
+                case 'Motivo':
+                  echo $DTGeneral->getMotivosxMotivo($Filtro);
+                  break;
+                case 'Codigo':
+                  echo $DTGeneral->getMotivosxCodigo($Filtro);
+                  break;
                 //case 'Numero': echo $DTGeneral->getMotivosxNumero($Filtro);break;
-                case 'Categoria': echo $DTGeneral->getMotivosxCategoria($Filtro);break;
-                default: echo $DTGeneral->getMotivosxID($Filtro);break;
+                case 'Categoria':
+                  echo $DTGeneral->getMotivosxCategoria($Filtro);
+                  break;
+                default:
+                  echo $DTGeneral->getMotivosxID($Filtro);
+                  break;
               }
-            }else{
-              $DTGeneral = new CtrGeneral();
+            } else {
               echo $DTGeneral->getMotivos();
             }
           ?>

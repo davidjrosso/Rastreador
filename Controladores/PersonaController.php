@@ -258,7 +258,7 @@ class PersonaController
         exit();    
     } 
 
-    public function mod_persona_control()
+    public function mod_persona_control($id, $mensaje = null, $report = null)
     {
         header("Content-Type: text/html;charset=utf-8");
 

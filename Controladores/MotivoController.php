@@ -13,9 +13,23 @@ class MotivoController
 
     public function listado_motivos($mensaje = null)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
+
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+
+            $Filtro = null;
+            $ID_Filtro = null;
+            if (isset($_REQUEST["Filtro"])) $Filtro = $_REQUEST["Filtro"];
+            if (isset($_REQUEST["ID_Filtro"])) $ID_Filtro = $_REQUEST["ID_Filtro"];
+
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+
             include("./Views/view_motivos.php");
         }
         exit();
@@ -23,9 +37,20 @@ class MotivoController
 
     public function mod_motivo($id_motivo)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
+
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+
+            $ID_Motivo = null;
+            if(isset($_REQUEST["ID"])) $ID_Motivo = $_REQUEST["ID"];
+
+            $Element = new Elements();
+
             include("./Views/view_modmotivos.php");
         }
         exit();
@@ -218,6 +243,7 @@ class MotivoController
 
     public function unif_motivo($mensaje = null)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
@@ -286,6 +312,15 @@ class MotivoController
             $MensajeError = "Debe seleccionar Primer Motivo y Segundo Motivo";
             header('Location: /homep?MensajeError=' . $MensajeError);
         }
+
+    }
+
+    public function buscar_motivos()
+    {
+        $Filtro = $_REQUEST["Search"];
+        $ID_Filtro = $_REQUEST["ID_Filtro"];
+
+        header("Location: /motivos?Filtro=" . $Filtro . "&ID_Filtro=" . $ID_Filtro);
 
     }
 }

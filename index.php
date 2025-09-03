@@ -71,6 +71,8 @@ try {
 	$routes[] = Route::post('personas_listado_filtrado_controler', '/personas_filtrar', [PersonaController::class, 'personas_filter']);
 	$routes[] = Route::get('persona_ver', '/persona\?ID={ID}', [PersonaController::class, 'datos_persona']);
 	$routes[] = Route::get('mod_persona', '/persona/editar\?ID={id}', [PersonaController::class, 'mod_persona']);
+	$routes[] = Route::get('mod_persona_success', '/persona/editar\?ID={id}/Mensaje={mensaje}/reporte={report}', [PersonaController::class, 'mod_persona']);
+	$routes[] = Route::get('mod_persona_error', '/persona/editar\?ID={id}MensajeError={mensaje}', [PersonaController::class, 'mod_persona']);
 	$routes[] = Route::get('crear_persona', '/persona/nueva', [PersonaController::class, 'crear_persona']);
 	$routes[] = Route::get('crear_persona_success', '/persona/nueva\?Mensaje={mensaje}', [PersonaController::class, 'crear_persona']);
 	$routes[] = Route::get('crear_persona_error', '/persona/nueva\?MensajeError={mensaje}', [PersonaController::class, 'crear_persona']);
@@ -109,6 +111,10 @@ try {
 	$routes[] = Route::post('buscar_categorias_desc', 'buscar_categorias_desc', [CategoriaController::class, 'buscar_categorias_desc']);
 	$routes[] = Route::post('buscar_categorias_filtrado', 'buscar_categorias_filtrado', [CategoriaController::class, 'buscar_categorias_filtrado']);
 	$routes[] = Route::get('motivos_listado', '/motivos', [MotivoController::class, 'listado_motivos']);
+	$routes[] = Route::get('motivos_listado_filtrado', '/motivos\?Filtro={filtro}/ID_Filtro={id}', [MotivoController::class, 'listado_motivos']);
+	$routes[] = Route::get('motivos_listado_success', '/motivos\?Mensaje={mensaje}', [MotivoController::class, 'listado_motivos']);
+	$routes[] = Route::get('motivos_listado_error', '/motivos\?MensajeError={mensaje}', [MotivoController::class, 'listado_motivos']);
+	$routes[] = Route::post('buscar_motivos_control', '/buscar_motivos', [MotivoController::class, 'buscar_motivos']);
 	$routes[] = Route::get('mod_motivo', '/motivo/editar\?ID={id}', [MotivoController::class, 'mod_motivo']);
 	$routes[] = Route::get('mod_motivo_succes', '/motivos\?Mensaje={mensaje}', [MotivoController::class, 'listado_motivos']);
 	$routes[] = Route::get('mod_motivo_error', '/motivo/editar\?ID={id}/MensajeError={mensaje}', [MotivoController::class, 'mod_motivo']);
