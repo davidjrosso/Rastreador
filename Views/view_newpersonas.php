@@ -282,7 +282,7 @@
       <div class="col"></div>
       <div class="col-10">
           <div class="row">
-              <center><button class = "btn btn-secondary btn-sm" onClick="location.href ='view_newmovimientos.php'">Agregar Nuevo Movimiento</button></center>
+              <center><button class = "btn btn-secondary btn-sm" onClick="location.href ='movimiento/nuevo'">Agregar Nuevo Movimiento</button></center>
           </div>
       </div>
       <div class="col"></div>
@@ -292,7 +292,7 @@
       <div class = "col-10">
           <!-- Carga -->
           <p class = "Titulos">Cargar Nueva Persona</p>
-          <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/InsertPersona.php" onSubmit = "return ValidarPersona();">
+          <form method = "post" onKeydown="return event.key != 'Enter';" action = "insertar_persona" onSubmit = "return ValidarPersona();">
             <div class="form-group row">
               <label for="Apellido" class="col-md-2 col-form-label LblForm">Apellido: </label>
               <div class="col-md-10">
