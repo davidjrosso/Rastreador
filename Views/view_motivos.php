@@ -92,7 +92,7 @@
      <div class = "row">
       <div class = "col-10">
            <!-- Carga -->
-          <form method = "post" action = "Controladores/CtrBuscarMotivos.php">
+          <form method = "post" action = "/buscar_motivos">
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Buscar: </label>
               <div class="col-md-4">
