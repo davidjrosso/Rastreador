@@ -57,6 +57,69 @@ class CentroSaludController
         exit();
     }
 
+    public function centro_salud_lista()
+    {
+        $consultaBusqueda = $_REQUEST['valorBusqueda'];
+        $id = $_REQUEST['ID'];
+
+        //Filtro anti-XSS
+        $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
+        $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
+        $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consultaBusqueda);
+
+        //Variable vacía (para evitar los E_NOTICE)
+        $mensaje = "";
+
+        if (isset($consultaBusqueda)) {
+
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            $query = "SELECT id_centro, REPLACE(centro_salud, '\'', '') as centro_salud_s
+                      FROM centros_salud
+                      WHERE centro_salud LIKE '%$consultaBusqueda%'
+                        and estado = 1";
+
+            $consulta = mysqli_query($Con->Conexion, $query);
+
+            $filas = mysqli_num_rows($consulta);
+
+            if ($filas === 0) {
+                $mensaje = "<p>No hay ningún registro con ese dato</p>";
+            } else {
+                //Si existe alguna fila que sea igual a $consultaBusqueda, entonces mostramos el siguiente mensaje
+                //echo 'Resultados para <strong>'.$consultaBusqueda.'</strong>';
+
+                $mensaje .= '<table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        <th scope="col">Centro de Salud</th>
+                        <th scope="col">Accion</th>
+                        </tr>
+                    </thead>
+                    <tbody>';
+
+                while ($resultados = mysqli_fetch_array($consulta)) {
+                    $ID_Centro = $resultados["id_centro"];
+                    $Centro_Salud = $resultados['centro_salud_s'];
+
+                    $mensaje .= '
+                        <tr>
+                        <th scope="row">' . $Centro_Salud . '</th>
+                        <td><button type = "button" class = "btn btn-outline-success" onClick="seleccionCentro(' . $id . ',\'' . $Centro_Salud . '\',' . $ID_Centro . ')" data-dismiss="modal">seleccionar</button></td>
+                        </tr>';
+
+                };
+
+                $mensaje .= '</tbody>
+                    </table>';
+
+            };
+            $Con->CloseConexion();
+        }
+        echo $mensaje;
+    }
+
     public function del_centro_control($id_centro)
     {
         $ID_Usuario = $_SESSION["Usuario"];
@@ -71,7 +134,9 @@ class CentroSaludController
             $Con = new Conexion();
             $Con->OpenConexion();
 
-            $Consulta = "update centros_salud set estado = 0 where id_centro = $ID_Centro";
+            $Consulta = "update centros_salud 
+                         set estado = 0 
+                         where id_centro = $ID_Centro";
             if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
                 throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 0);		
             }
@@ -83,7 +148,7 @@ class CentroSaludController
             $Mensaje = "El centro de salud fue eliminado Correctamente";
             header('Location: /centrosdesalud?Mensaje=' . $Mensaje);
         } catch (Exception $e) {
-            echo "Error: ".$e->getMessage();
+            echo "Error: " . $e->getMessage();
         }
         exit();
     }
@@ -172,9 +237,16 @@ class CentroSaludController
 
     public function unif_centro_salud($mensaje = null)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+
+            $Element = new Elements();
+
             include("./Views/view_unifcentros.php");
         }
         exit();

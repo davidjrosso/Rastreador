@@ -54,6 +54,80 @@ class CalleController
         exit();
     }
 
+    public function buscar_calle()
+    {
+        $consultaBusqueda = $_REQUEST['valorBusqueda'];
+
+        //Filtro anti-XSS
+        $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
+        $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
+        $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consultaBusqueda);
+        $consultaBusqueda = strtolower($consultaBusqueda);
+
+        //Variable vacía (para evitar los E_NOTICE)
+        $mensaje = "";
+
+
+        if (isset($consultaBusqueda)) {
+
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            $consultaCalles = "SELECT id_calle, codigo_calle, calle_nombre
+                            FROM calle	
+                            WHERE estado = 1
+                                and ((LOWER(calle_nombre) REGEXP '[a-z]* ".$consultaBusqueda."[a-z]*')
+                                    or (LOWER(calle_nombre) REGEXP '^".$consultaBusqueda."[a-z]*'))
+                            order by calle_nombre ASC";
+            $consulta = mysqli_query($Con->Conexion, $consultaCalles);
+
+            $filas = mysqli_num_rows($consulta);
+
+            if ($filas === 0) {
+                $mensaje = "<p>No hay ningún registro con ese nombre, documento o legajo</p>";
+            } else {
+                //Si existe alguna fila que sea igual a $consultaBusqueda, entonces mostramos el siguiente mensaje
+                //echo 'Resultados para <strong>'.$consultaBusqueda.'</strong>';
+
+                $mensaje .= '<table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        <th scope="col">Codigo</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Accion</th>
+                        </tr>
+                    </thead>
+                    <tbody>';
+
+                while($resultados = mysqli_fetch_array($consulta)) {
+                    $ID_Calle = $resultados["id_calle"];
+                    $Codigo = $resultados["codigo_calle"];
+                    $Nombre = $resultados['calle_nombre'];
+                    //Output
+                    //$fragmentos = explode(" ",$Nombre);
+                    //preg_grep();
+                    //if($Nombre){
+
+                    //}
+                    $mensaje .= '
+                        <tr>
+                        <th scope="row">'.$Codigo.'</th>
+                        <td>'.$Nombre.'</td>			
+                        <td><button type = "button" class = "btn btn-outline-success" onClick="seleccionCalle(\''.$Nombre.'\','.$ID_Calle.')" data-dismiss="modal">seleccionar</button></td>
+                        </tr>';
+                };
+
+                $mensaje .= '</tbody>
+                    </table>';
+
+            };
+            $Con->CloseConexion();
+
+        };
+
+        echo $mensaje;
+    }
+
     public function del_calle_control($id_calle)
     {
         $ID_Usuario = $_SESSION["Usuario"];

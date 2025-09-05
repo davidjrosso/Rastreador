@@ -17,25 +17,6 @@
  * along with Rastreador3; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
-
-
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Accion.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Categoria.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/CategoriaRol.php");
-
-header("Content-Type: text/html;charset=utf-8");
-
-$Con = new Conexion();
-$Con->OpenConexion();
-$ID_Usuario = $_SESSION["Usuario"];
-$account = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $account->get_id_tipo_usuario();
-$Con->CloseConexion();
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -59,54 +40,12 @@ $Con->CloseConexion();
   <script src="js/ValidarUnifPersonas.js"></script>
   <script src="./dist/control.js"></script>
   <script>
-       function buscarCategoria_1(){
-          var xBarrio = document.getElementById('SearchCategoria_1').value;
-          var textoBusqueda = xBarrio;
-          xmlhttp=new XMLHttpRequest();
-          xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-              contenidosRecibidos = xmlhttp.responseText;
-              document.getElementById("ResultadosCategoria_1").innerHTML=contenidosRecibidos;
-              }
-          }
-          xmlhttp.open('POST', 'buscarCategoria_2.php?valorBusqueda=' + textoBusqueda, true); // Método post y url invocada
-          xmlhttp.send();
-        }
-
-        function buscarCategoria_2(){
-          var xBarrio = document.getElementById('SearchCategoria_2').value;
-          var textoBusqueda = xBarrio;
-          xmlhttp=new XMLHttpRequest();
-          xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-              contenidosRecibidos = xmlhttp.responseText;
-              document.getElementById("ResultadosCategoria_2").innerHTML=contenidosRecibidos;
-              }
-          }
-          xmlhttp.open('POST', 'buscarCategoria_3.php?valorBusqueda=' + textoBusqueda, true); // Método post y url invocada
-          xmlhttp.send();
-        }
-
-        function seleccionCategoria_1(xCategoria, xID){
-          let categoria = $("#categoria_1");
-          $("#ID_Categoria_unif").val(xID);
-          categoria.html("");
-          categoria.html(xCategoria);
-        }
-
-        function seleccionCategoria_2(xCategoria, xID){
-          let categoria = $("#categoria_2");
-          $("#ID_Categoria_del").val(xID);
-          categoria.html("");
-          categoria.html(xCategoria);
-        }
   </script>
 
 </head>
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_UNIFICACION_CATEGORIA);
   ?>
   <div class = "col-md-9">
@@ -162,7 +101,7 @@ $Con->CloseConexion();
                       <div class="col"></div>
                       <div class="col-8">
                         <div class="input-group mb-3">
-                          <input class = "form-control" type="text" name="BuscarCategoria" id = "SearchCategoria_1" onKeyUp="buscarCategoria_1()" autocomplete="off">
+                          <input class = "form-control" type="text" name="BuscarCategoria" id = "SearchCategoria_1" onKeyUp="buscarCategoria(1)" autocomplete="off">
                           <div class="input-group-append">
                             <span class="input-group-text" id="basic-addon2">Buscar</span>
                           </div>  
@@ -202,7 +141,7 @@ $Con->CloseConexion();
                       <div class="col"></div>
                       <div class="col-8">
                         <div class="input-group mb-3">
-                          <input class = "form-control" type="text" name="BuscarCategoria" id="SearchCategoria_2" onKeyUp="buscarCategoria_2()" autocomplete="off">
+                          <input class = "form-control" type="text" name="BuscarCategoria" id="SearchCategoria_2" onKeyUp="buscarCategoria(2)" autocomplete="off">
                           <div class="input-group-append">
                             <span class="input-group-text" id="basic-addon2">Buscar</span>
                           </div>  

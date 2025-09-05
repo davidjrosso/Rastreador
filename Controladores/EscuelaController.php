@@ -33,6 +33,7 @@ class EscuelaController
 
     public function listado_escuelas($mensaje = null)
     {
+        header('Content-Type: text/html; charset=utf-8');
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
@@ -43,6 +44,7 @@ class EscuelaController
 
     public function mod_escuela($id_escuela)
     {
+        header('Content-Type: text/html; charset=utf-8');
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
@@ -53,12 +55,38 @@ class EscuelaController
 
     public function datos_categoria($id_escuela)
     {
+        header('Content-Type: text/html; charset=utf-8');
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
             include("./Views/view_verescuelas.php");
         }
         exit();
+    }
+
+    public function escuelas_lista()
+    {
+        $ID_Nivel = $_REQUEST["q"];
+
+        $Element = new Elements();
+
+        switch ($ID_Nivel) {
+            case '1':
+                echo $Element->CBEscuelas(1);
+                break;
+            case '2':
+                echo $Element->CBEscuelas(2);
+                break;
+            case '3':
+                echo $Element->CBEscuelas(3);
+                break;
+            case '4':
+                echo $Element->CBEscuelas(4);
+                break;	
+            default:
+                echo $Element->CBEscuelas(0);
+                break;
+        }
     }
 
     public function del_escuela_control($id_escuela)
@@ -168,6 +196,7 @@ class EscuelaController
 
     public function unif_escuelas($mensaje = null)
     {
+        header('Content-Type: text/html; charset=utf-8');
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {

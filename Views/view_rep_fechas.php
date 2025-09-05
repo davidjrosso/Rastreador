@@ -161,7 +161,7 @@ require_once "Controladores/Conexion.php";
                 if(isset($Ultimo_Mes_Datos) && $Ultimo_Mes_Datos != $Tomar_Mes){
                   $Table .= "</td><td>";
                   while ($RetEnero = mysqli_fetch_assoc($Tomar_Datos_Meses)) {
-                    $Table .= "N° <a href = 'view_vermovimientos.php?ID=".$RetEnero["id_movimiento"]."'>".$RetEnero["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetEnero["color"].";'>".$RetEnero["cod_categoria"]."</span><br>";
+                    $Table .= "N° <a href = '/movimiento?ID=".$RetEnero["id_movimiento"]."'>".$RetEnero["id_movimiento"]."</a><br><span style='padding: 5px; color: white; background-color: ".$RetEnero["color"].";'>".$RetEnero["cod_categoria"]."</span><br>";
                   }
                   $Table .= "</td>";
                 }else{

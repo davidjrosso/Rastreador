@@ -146,36 +146,6 @@
 			        controlMensaje(mensajeSuccess, mensajeError);
           });
 
-        function ValidarDocumento(){
-          var Documento = document.getElementById("idDocumento");
-          var NroDocumento = Documento.value;
-          if (NroDocumento.toString().length < 8){
-            NotShowModalError();
-            return true;
-          }
-
-          const DniNoRepetido = "<p>No hay ningún registro con ese nombre, documento o legajo</p>";
-          xmlhttp=new XMLHttpRequest();
-
-          xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-              var contenidosRecibidos = xmlhttp.responseText;
-              if(DniNoRepetido != contenidosRecibidos){ 
-                Documento.value = "";
-                swal({
-                  title: "El Documento ingresado "+ NroDocumento +" ya esta registrado",
-                  icon: "info",
-                  text: "Por favor ingrese un Documento diferente",
-                  confirmButtonText: 'OK'
-                })
-              }
-            }
-          }
-          xmlhttp.open('POST', 'buscarPersonas.php?valorBusqueda='+NroDocumento, true); // Método post y url invocada
-          xmlhttp.send();
-
-        }
-
         function ShowModalError(){
           var modal = document.getElementById("ErrorDocumento");
           modal.style.display = "block";
@@ -186,19 +156,6 @@
           var modal = document.getElementById("ErrorDocumento");
           modal.style.display = "none";
         }
-
-       function CargarEscuelas(xValor){
-       		ID_Nivel = xValor;
-       		var xMLHTTP = new XMLHttpRequest();
-
-       		xMLHTTP.onreadystatechange = function(){
-       			if(this.readyState == 4 && this.status == 200){
-       				document.getElementById("Escuelas").innerHTML = this.responseText;
-       			}
-       		};
-       		xMLHTTP.open("GET","CargarEscuelas.php?q="+xValor,true);
-       		xMLHTTP.send();
-       }
 
        function calcularEdad(){
             var Fecha_Nac = document.getElementById("Fecha_Nacimiento").value;
@@ -232,20 +189,6 @@
             
       } 
 
-      function buscarCalles(){
-      var xNombre = document.getElementById('SearchCalle').value;
-      var textoBusqueda = xNombre;
-      xmlhttp=new XMLHttpRequest();
-      xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-          contenidosRecibidos = xmlhttp.responseText;
-          document.getElementById("ResultadosCalles").innerHTML=contenidosRecibidos;
-          }
-      }
-      xmlhttp.open('POST', 'buscarCalle.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
-      xmlhttp.send();
-    }
-
     function seleccionCalle(xNombre, xID) {
           var BotonModalPersona = document.getElementById("BotonModalDireccion_1");
           var calle = document.getElementById("Calle");
@@ -262,7 +205,7 @@
                                     xID
                                    );
           }
-        }
+    }
   </script>
 </head>
 <body>

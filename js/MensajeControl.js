@@ -1,4 +1,5 @@
 import swal from 'sweetalert2';
+import XMLHttpRequest from '../node_modules/xhr2/lib/browser';
 
 export function controlMovimiento(object) {
     if (object.value == "1") {
@@ -109,8 +110,123 @@ export function VerificarDeletePersona(xID){
         });
 }
 
+export function ValidarDocumento(){
+    let Documento = document.getElementById("idDocumento");
+    let NroDocumento = Documento.value;
+    let xmlhttp = null;
+    let contenidosRecibidos = null;
+ 
+    if (NroDocumento.toString().length < 8) {
+        NotShowModalError();
+        return true;
+    }
+
+    const DniNoRepetido = "<p>No hay ningún registro con ese nombre, documento o legajo</p>";
+    xmlhttp = new XMLHttpRequest();
+
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+            contenidosRecibidos = xmlhttp.responseText;
+            if(DniNoRepetido != contenidosRecibidos){ 
+            Documento.value = "";
+            swal.fire({
+                    title: "El Documento ingresado " + NroDocumento + " ya esta registrado",
+                    icon: "info",
+                    text: "Por favor ingrese un Documento diferente",
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+    }
+    xmlhttp.open('POST', '/buscar_personas', true);
+    xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xmlhttp.send('valorBusqueda=' + NroDocumento);
+
+}
+
 export function mensajeDeProcesamiento(mensaje) {
     swal.fire(mensaje, '', 'success');
+}
+
+export function CargarEscuelas(xValor){
+    let ID_Nivel = xValor;
+    let xMLHTTP = new XMLHttpRequest();
+
+    xMLHTTP.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200){
+            document.getElementById("Escuelas").innerHTML = this.responseText;
+        }
+    };
+    xMLHTTP.open("GET","lista_escuelas?q=" + ID_Nivel, true);
+    xMLHTTP.send();
+}
+
+export function buscarCalles(){
+    let xNombre = document.getElementById('SearchCalle').value;
+    let textoBusqueda = xNombre;
+    let xmlhttp = null;
+    let contenidosRecibidos = null;
+
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        contenidosRecibidos = xmlhttp.responseText;
+        document.getElementById("ResultadosCalles").innerHTML=contenidosRecibidos;
+        }
+    }
+    xmlhttp.open('POST', 'buscar_calle', true);
+    xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xmlhttp.send('valorBusqueda=' + textoBusqueda);
+}
+
+export function buscarCategoria(id){
+    let xBarrio = document.getElementById('SearchCategoria_' + id).value;
+    let textoBusqueda = xBarrio;
+    let xmlhttp = null;
+    let contenidosRecibidos = null;
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            contenidosRecibidos = xmlhttp.responseText;
+            document.getElementById("ResultadosCategoria_" + id).innerHTML=contenidosRecibidos;
+        }
+    }
+    xmlhttp.open('POST', 'buscar_categoria_lista', true);
+    xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xmlhttp.send('valorBusqueda=' + textoBusqueda + '&ID=' + id);
+}
+
+export function seleccionCategoria(id, xCategoria, xID) {
+    let categoria = $("#categoria_" + id);
+    if (id == 1) $("#ID_Categoria_unif").val(xID);
+    if (id == 2) $("#ID_Categoria_del").val(xID);
+    categoria.html("");
+    categoria.html(xCategoria);
+}
+
+export function buscarCentros(id) {
+    let xCentro = document.getElementById('SearchCentros_' + id).value;
+    let textoBusqueda = xCentro;
+    let xmlhttp = null;
+    let contenidosRecibidos = null;
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        contenidosRecibidos = xmlhttp.responseText;
+        document.getElementById("ResultadosCentros_" + id).innerHTML = contenidosRecibidos;
+        }
+    }
+    xmlhttp.open('POST', 'centro_salud_lista', true);
+    xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xmlhttp.send('valorBusqueda=' + textoBusqueda + '&ID=' + id);
+}
+
+export function seleccionCentro(id, xCentro, xID) {
+    let Centro = document.getElementById("Centro_" + id);
+    let ID_Centro = document.getElementById("ID_Centro_" + id);
+    Centro.innerHTML = "";
+    Centro.innerHTML = "<p>" + xCentro + "</p>";
+    ID_Centro.setAttribute('value', xID);
 }
 
 export function insercionDatosFormulario() {

@@ -1,16 +1,22 @@
 <?php 
-
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-
-
-header("Content-Type: text/html;charset=utf-8");
-
-$ID_Usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $usuario->get_id_tipo_usuario();
-
+/*
+ *
+ * This file is part of Rastreador3.
+ *
+ * Rastreador3 is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Rastreador3 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Rastreador3; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 ?>
 <!DOCTYPE html>
 <html>
@@ -29,58 +35,12 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="js/ValidarUnifPersonas.js"></script>
+  <script src="./dist/control.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  <script>
-       function buscarCentros_1() {
-          var xCentro = document.getElementById('SearchCentros_1').value;
-          var textoBusqueda = xCentro;
-          xmlhttp=new XMLHttpRequest();
-          xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-              contenidosRecibidos = xmlhttp.responseText;
-              document.getElementById("ResultadosCentros_1").innerHTML=contenidosRecibidos;
-              }
-          }
-          xmlhttp.open('POST', 'buscarCentros_1.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
-          xmlhttp.send();
-        }
-
-        function buscarCentros_2() {
-          var xCentro = document.getElementById('SearchCentros_2').value;
-          var textoBusqueda = xCentro;
-          xmlhttp=new XMLHttpRequest();
-          xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-              contenidosRecibidos = xmlhttp.responseText;
-              document.getElementById("ResultadosCentros_2").innerHTML=contenidosRecibidos;
-              }
-          }
-          xmlhttp.open('POST', 'buscarCentros_2.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
-          xmlhttp.send();
-        }
-
-        function seleccionCentro_1(xCentro,xID) {
-          var Centro = document.getElementById("Centro_1");
-          var ID_Centro = document.getElementById("ID_Centro_1");
-          Centro.innerHTML = "";
-          Centro.innerHTML = "<p>"+xCentro+"</p>";
-          ID_Centro.setAttribute('value',xID);
-        }
-
-        function seleccionCentro_2(xCentro,xID) {
-          var Centro = document.getElementById("Centro_2");
-          var ID_Centro = document.getElementById("ID_Centro_2");
-          Centro.innerHTML = "";
-          Centro.innerHTML = "<p>"+xCentro+"</p>";
-          ID_Centro.setAttribute('value',xID);
-        }
-  </script>
-
 </head>
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_UNIFICACION_CENTRO_SALUD);
   ?>
   <div class = "col-md-9">
@@ -137,7 +97,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   <div class="col"></div>
                   <div class="col-8">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarCentros" id = "SearchCentros_1" onKeyUp="buscarCentros_1()" autocomplete="off">
+                      <input class = "form-control" type="text" name="BuscarCentros" id = "SearchCentros_1" onKeyUp="buscarCentros(1)" autocomplete="off">
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -177,7 +137,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   <div class="col"></div>
                   <div class="col-8">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarCentros" id = "SearchCentros_2" onKeyUp="buscarCentros_2()" autocomplete="off">
+                      <input class = "form-control" type="text" name="BuscarCentros" id = "SearchCentros_2" onKeyUp="buscarCentros(2)" autocomplete="off">
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -215,26 +175,6 @@ if(isset($_REQUEST['MensajeError'])){
   swal('".$_REQUEST['MensajeError']."','','warning');
 </script>";
 }
-?>
-<?php
-/*
- *
- * This file is part of Rastreador3.
- *
- * Rastreador3 is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Rastreador3 is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Rastreador3; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- */
 ?>
 </body>
 </html>

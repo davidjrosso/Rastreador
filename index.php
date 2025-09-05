@@ -69,6 +69,7 @@ try {
 	$routes[] = Route::get('personas_listado_success', '/personas\?Mensaje={mensaje}', [PersonaController::class, 'listado_personas']);
 	$routes[] = Route::get('personas_listado_filtrado', '/personas\?Filtro={filtro}/ID_Filtro={id_filtro}', [PersonaController::class, 'listado_personas']);
 	$routes[] = Route::post('personas_listado_filtrado_controler', '/personas_filtrar', [PersonaController::class, 'personas_filter']);
+	$routes[] = Route::post('buscar_personas', '/buscar_personas', [PersonaController::class, 'buscar_personas']);
 	$routes[] = Route::get('persona_ver', '/persona\?ID={ID}', [PersonaController::class, 'datos_persona']);
 	$routes[] = Route::get('mod_persona', '/persona/editar\?ID={id}', [PersonaController::class, 'mod_persona']);
 	$routes[] = Route::get('mod_persona_success', '/persona/editar\?ID={id}/Mensaje={mensaje}/reporte={report}', [PersonaController::class, 'mod_persona']);
@@ -97,6 +98,7 @@ try {
 	$routes[] = Route::get('listado_categorias', '/categorias', [CategoriaController::class, 'listado_categorias']);
 	$routes[] = Route::get('listado_categorias_filtro', '/categorias\?Filtro={filtro}/ID_Filtro={id}', [CategoriaController::class, 'listado_categorias']);
 	$routes[] = Route::get('listado_categorias_success', '/categorias\?Mensaje={mensaje}', [CategoriaController::class, 'listado_categorias']);
+	$routes[] = Route::post('buscar_categoria_lista', '/buscar_categoria_lista', [CategoriaController::class, 'buscar_categoria_lista']);
 	$routes[] = Route::get('datos_categoria', '/categoria\?ID={id}', [CategoriaController::class, 'datos_categoria']);
 	$routes[] = Route::get('mod_categoria', '/categoria/editar\?ID={id}', [CategoriaController::class, 'mod_categoria']);
 	$routes[] = Route::get('sol_del_control', 'pedireliminarcategoria\?ID={id}', [CategoriaController::class, 'sol_del_control']);
@@ -134,6 +136,7 @@ try {
 	$routes[] = Route::get('listado_centros_salud', '/centrosdesalud', [CentroSaludController::class, 'listado_centros_salud']);
 	$routes[] = Route::get('listado_centros_salud_filtro', '/centrosdesalud\?Filtro={filt}/ID_Filtro={idfilt}', [CentroSaludController::class, 'listado_centros_salud']);
 	$routes[] = Route::post('buscar_centos_salud', '/buscar_centros_salud', [CentroSaludController::class, 'buscar_centos_salud']);
+	$routes[] = Route::post('centro_salud_lista', '/centro_salud_lista', [CentroSaludController::class, 'centro_salud_lista']);
 	$routes[] = Route::get('mod_centro_salud', '/centrosalud/editar\?ID={id}', [CentroSaludController::class, 'mod_centro_salud']);
 	$routes[] = Route::get('mod_centro_salud_control', '/mod_centro_salud', [CentroSaludController::class, 'mod_centro_salud_control']);
 	$routes[] = Route::get('sol_del_centro_salud', '/pedireliminarcentrosalud\?ID={id}', [CentroSaludController::class, 'sol_del_responsable']);
@@ -167,6 +170,7 @@ try {
 	$routes[] = Route::post('buscar_barrio', 	'/buscar_barrio', [BarrioController::class, 'buscar_barrio']);
 	$routes[] = Route::get('listado_calles', '/calles', [CalleController::class, 'listado_calles']);
 	$routes[] = Route::get('listado_calles_succes', '/calles\?Mensaje={mensaje}', [CalleController::class, 'listado_calles']);
+	$routes[] = Route::post('buscar_calle', '/buscar_calle', [CalleController::class, 'buscar_calle']);
 	$routes[] = Route::get('mod_calle', '/calle/editar\?ID={id}', [CalleController::class, 'mod_calle']);
 	$routes[] = Route::post('mod_calle_control', '/modificar_calle', [CalleController::class, 'mod_calle_control']);
 	$routes[] = Route::get('del_calle_control', '/delete_calle\?ID={id}', [CalleController::class, 'del_calle_control']);
@@ -177,6 +181,7 @@ try {
 	$routes[] = Route::post('buscar_unif_direcciones', '/buscar_unif_direcciones\?valorBusqueda={valor}', [CalleController::class, 'buscar_unif_direcciones']);
 	$routes[] = Route::get('listado_escuelas', '/escuelas', [EscuelaController::class, 'listado_escuelas']);
 	$routes[] = Route::get('listado_escuelas_success', '/escuelas\?Mensaje={mensaje}', [EscuelaController::class, 'listado_escuelas']);
+	$routes[] = Route::get('escuela_lista', '/lista_escuelas', [EscuelaController::class, 'escuelas_lista']);
 	$routes[] = Route::get('escuelas', '/escuela/editar\?ID={id}', [EscuelaController::class, 'mod_escuela']);
 	$routes[] = Route::get('unif_escuelas', '/escuela/unificar', [EscuelaController::class, 'unif_escuelas']);
 	$routes[] = Route::post('sol_unif_escuela_control', '/pedir_unificar_escuelas', [EscuelaController::class, 'sol_unif_escuela_control']);

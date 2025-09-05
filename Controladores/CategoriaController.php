@@ -19,6 +19,8 @@
  */
 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Parametria.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Categoria.php");
@@ -495,6 +497,15 @@ class CategoriaController
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+            $ID_Usuario = $_SESSION["Usuario"];
+            $account = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $account->get_id_tipo_usuario();
+            $Con->CloseConexion();
+
+            $Element = new Elements();
+
             include("./Views/view_unifcategorias.php");
         }
         exit();
@@ -592,6 +603,70 @@ class CategoriaController
         }
         
     }
+
+    public function buscar_categoria_lista()
+    {
+        $consultaBusqueda = $_REQUEST['valorBusqueda'];
+        $id = $_REQUEST['ID'];
+        //Filtro anti-XSS
+        $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
+        $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
+        $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consultaBusqueda);
+
+        $mensaje = "";
+
+        if (isset($consultaBusqueda)) {
+
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            $query = "SELECT * 
+                    FROM categoria 
+                    WHERE categoria LIKE '%$consultaBusqueda%' 
+                        and estado = 1";
+
+            $consulta = mysqli_query($Con->Conexion, $query);
+
+            $filas = mysqli_num_rows($consulta);
+
+            if ($filas === 0) {
+                $mensaje = "<p>No hay ningún registro con ese dato</p>";
+            } else {
+                $mensaje .= '<table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        <th scope="col">Categoría</th>
+                        <th scope="col">Cod_Categoria</th>	
+                        <th scope="col">Acción</th>	
+                        </tr>
+                    </thead>
+                    <tbody>';
+
+                while($resultados = mysqli_fetch_array($consulta)) {
+                    $ID_Categoria = $resultados["id_categoria"];			
+                    $Categoria = $resultados['categoria'];
+                    $Cod_Categoria = $resultados['cod_categoria'];
+                    $mensaje .= '<tr>
+                                    <th scope="row">' . $Categoria . '</th>
+                                    <td>' . $Cod_Categoria . '</td>';
+                    $mensaje .= '<td>
+                                    <button type = "button" class = "btn btn-outline-success" onClick="seleccionCategoria(' . $id . ', \'' . $Categoria . '\',' . $ID_Categoria . ')" data-dismiss="modal">
+                                        seleccionar
+                                    </button>
+                                </td>
+                            </tr>';
+                };
+
+                $mensaje .= '</tbody>
+                    </table>';
+
+            };
+            $Con->CloseConexion();
+
+        };
+
+        echo $mensaje;
+    } 
 
     public function buscar_categorias_desc()
     {
