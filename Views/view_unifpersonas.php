@@ -17,25 +17,6 @@
  * along with Rastreador3; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
-
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-
-header("Content-Type: text/html;charset=utf-8");
-
-/*     CONTROL DE USUARIOS                    */
-if(!isset($_SESSION["Usuario"])){
-    header("Location: Error_Session.php");
-}
-
-$Con = new Conexion();
-$Con->OpenConexion();
-$ID_Usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $usuario->get_id_tipo_usuario();
-$Con->CloseConexion();
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -44,7 +25,6 @@ $Con->CloseConexion();
   <meta charset="utf-8">
   <base href="/">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
-  <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
@@ -54,86 +34,12 @@ $Con->CloseConexion();
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="js/ValidarUnifPersonas.js"></script>
+  <script src="./dist/control.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  <script>
-       function buscarPersonas_1(){
-        var xNombre = document.getElementById('SearchPersonas_1').value;
-        var textoBusqueda = xNombre;
-        xmlhttp=new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-          if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-            contenidosRecibidos = xmlhttp.responseText;
-            document.getElementById("ResultadosPersonas_1").innerHTML=contenidosRecibidos;
-            }
-        }
-        xmlhttp.open('POST', 'buscarPersonas_1.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
-        xmlhttp.send();
-      }
-
-      function buscarPersonas_2(){
-        var xNombre = document.getElementById('SearchPersonas_2').value;
-        var textoBusqueda = xNombre;
-        xmlhttp=new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-          if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-            contenidosRecibidos = xmlhttp.responseText;
-            document.getElementById("ResultadosPersonas_2").innerHTML=contenidosRecibidos;
-            }
-        }
-        xmlhttp.open('POST', 'buscarPersonas_2.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
-        xmlhttp.send();
-      }
-
-      function seleccionPersona_1(xNombre,xID){
-        var Persona = document.getElementById("Persona_1");
-        var ID_Persona = document.getElementById("ID_Persona_1");
-        Persona.innerHTML = "";
-        Persona.innerHTML = "<p>"+xNombre+"</p>";
-        ID_Persona.setAttribute('value',xID);
-      }
-
-      function seleccionPersona_2(xNombre,xID){
-        var Persona = document.getElementById("Persona_2");
-        var ID_Persona = document.getElementById("ID_Persona_2");
-        Persona.innerHTML = "";
-        Persona.innerHTML = "<p>"+xNombre+"</p>";
-        ID_Persona.setAttribute('value',xID);
-      }
-
-      function VerificarUnificacion(){
-              var ID_Persona_1 = document.getElementById("ID_Persona_1");
-              var ID_Persona_2 = document.getElementById("ID_Persona_2");
-              var Form_1= document.getElementById("form_1");
-              var Bandera = ValidarUnifPersonas();
-              if (Bandera == false){
-                return Bandera;
-              }
-
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer unificar estas personas?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((result) => {
-                if (result) {
-                  Form_1.submit();
-                  return true;
-                } else {
-                  return false;
-                }
-              });
-            }
-
-
-  </script>
-
 </head>
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_UNIFICACION_PERSONA);
   ?>
   <div class = "col-md-9">
@@ -194,7 +100,7 @@ $Con->CloseConexion();
                   <div class="col"></div>
                   <div class="col-8">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarPersona" id = "SearchPersonas_1" onKeyUp="buscarPersonas_1()" autocomplete="off" placeholder="Ingrese el nombre, apellido o documento de la persona">
+                      <input class = "form-control" type="text" name="BuscarPersona" id = "SearchPersonas_1" onKeyUp="buscarPersonas(1)" autocomplete="off" placeholder="Ingrese el nombre, apellido o documento de la persona">
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -234,7 +140,7 @@ $Con->CloseConexion();
                   <div class="col"></div>
                   <div class="col-8">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarPersona" id = "SearchPersonas_2" onKeyUp="buscarPersonas_2()" autocomplete="off" placeholder="Ingrese el nombre, apellido o documento de la persona">
+                      <input class = "form-control" type="text" name="BuscarPersona" id = "SearchPersonas_2" onKeyUp="buscarPersonas(2)" autocomplete="off" placeholder="Ingrese el nombre, apellido o documento de la persona">
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  

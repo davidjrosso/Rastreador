@@ -110,7 +110,7 @@ export function VerificarDeletePersona(xID){
         });
 }
 
-export function ValidarDocumento(){
+export function ValidarDocumento() {
     let Documento = document.getElementById("idDocumento");
     let NroDocumento = Documento.value;
     let xmlhttp = null;
@@ -125,7 +125,7 @@ export function ValidarDocumento(){
     xmlhttp = new XMLHttpRequest();
 
     xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             contenidosRecibidos = xmlhttp.responseText;
             if(DniNoRepetido != contenidosRecibidos){ 
             Documento.value = "";
@@ -142,6 +142,32 @@ export function ValidarDocumento(){
     xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xmlhttp.send('valorBusqueda=' + NroDocumento);
 
+}
+
+export function VerificarUnificacion() {
+    let ID_Persona_1 = document.getElementById("ID_Persona_1");
+    let ID_Persona_2 = document.getElementById("ID_Persona_2");
+    let Form_1= document.getElementById("form_1");
+    let Bandera = ValidarUnifPersonas();
+    if (Bandera == false){
+        return Bandera;
+    }
+
+    swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer unificar estas personas?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((result) => {
+        if (result) {
+            Form_1.submit();
+            return true;
+        } else {
+            return false;
+        }
+    });
 }
 
 export function mensajeDeProcesamiento(mensaje) {
@@ -227,6 +253,31 @@ export function seleccionCentro(id, xCentro, xID) {
     Centro.innerHTML = "";
     Centro.innerHTML = "<p>" + xCentro + "</p>";
     ID_Centro.setAttribute('value', xID);
+}
+
+export function buscarPersonas(id){
+    let xNombre = document.getElementById('SearchPersonas_' + id).value;
+    let textoBusqueda = xNombre;
+    let xmlhttp = null;
+    let contenidosRecibidos = null;
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        contenidosRecibidos = xmlhttp.responseText;
+        document.getElementById("ResultadosPersonas_"  + id).innerHTML = contenidosRecibidos;
+        }
+    }
+    xmlhttp.open('POST', 'buscar_personas', true);
+    xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xmlhttp.send('valorBusqueda=' + textoBusqueda + '&ID=' + id);
+}
+
+export function seleccionPersona(id, xNombre, xID) {
+    let Persona = document.getElementById("Persona_" + id);
+    let ID_Persona = document.getElementById("ID_Persona_" + id);
+    Persona.innerHTML = "";
+    Persona.innerHTML = "<p>" + xNombre + "</p>";
+    ID_Persona.setAttribute('value', xID);
 }
 
 export function insercionDatosFormulario() {

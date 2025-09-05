@@ -48,6 +48,7 @@ class PersonaController
         header('Content-Type: text/html; charset=utf-8');
 
         $consultaBusqueda = $_REQUEST['valorBusqueda'];
+        $id = (!empty($_REQUEST['ID'])) ? $_REQUEST['ID'] : null;
 
         //Filtro anti-XSS
         $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
@@ -125,16 +126,13 @@ class PersonaController
                     //Output
                     $mensaje .= '
                         <tr>
-                        <th scope="row">'.$Nombre.'</th>
-                        <td>'.$DNI.'</td>
-                        <td>'.$Nro_Carpeta.'</td>				
-                        <td>'.$Domicilio.'</td>
-                        <td><button type = "button" class = "btn btn-outline-success" onClick="seleccionPersona(\''.$Nombre.'\','.$ID_Persona.')" data-dismiss="modal">seleccionar</button></td>
+                        <th scope="row">' . $Nombre . '</th>
+                        <td>' . $DNI . '</td>
+                        <td>' . $Nro_Carpeta . '</td>				
+                        <td>' . $Domicilio . '</td>
+                        <td><button type = "button" class = "btn btn-outline-success" onClick="seleccionPersona(' . $id . ',\'' . $Nombre . '\',' . $ID_Persona . ')" data-dismiss="modal">seleccionar</button></td>
                         </tr>';
-
-                            //   <td>'.$Nro_Legajo.'</td>
-
-
+                        //   <td>'.$Nro_Legajo.'</td>
                 };
 
                 $mensaje .= '</tbody>
@@ -615,6 +613,15 @@ class PersonaController
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Con->CloseConexion();
+
+            $Element = new Elements();
+
             include("./Views/view_unifpersonas.php");
         }
         exit();
