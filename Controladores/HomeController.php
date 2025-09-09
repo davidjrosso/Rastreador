@@ -21,6 +21,9 @@
 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Parametria.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
 
 
 class HomeController 
@@ -28,8 +31,10 @@ class HomeController
 
     public function index()
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
+
         } else {
             $con = new Conexion();
             $con->OpenConexion();
@@ -54,6 +59,16 @@ class HomeController
                 $value->set_valor(date("Y-m-d"));
                 $value->update($con);
             }
+
+            $id_usuario = $_SESSION["Usuario"];
+            $account = new Account(account_id: $id_usuario);
+            $tipo_usuario = $account->get_id_tipo_usuario();
+
+            $CtrGeneral = new CtrGeneral();
+            $Element = new Elements();
+
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 
             include("./Views/view_inicio.php");
         }
