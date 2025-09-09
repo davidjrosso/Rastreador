@@ -17,25 +17,11 @@
  * along with Rastreador3; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
-
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-header("Content-Type: text/html;charset=utf-8");
-
-$Con = new Conexion();
-$Con->OpenConexion();
-$id_usuario = $_SESSION["Usuario"];
-$account = new Account(account_id: $id_usuario);
-$tipo_usuario = $account->get_id_tipo_usuario();
-$Con->CloseConexion();
-
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Rastreador III</title>
+  <title>Rastreador</title>
   <meta charset="utf-8">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
@@ -47,452 +33,39 @@ $Con->CloseConexion();
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+	<script src="dist/control.js"></script>
   <script>
        $(document).ready(function() {
-              var date_input=$('input[name="date"]'); //our date input has the name "date"
-              var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-              date_input.datepicker({
+            let mensajeError = '<?php echo $mensaje_error;?>';
+            let mensajeSuccess = '<?php echo $mensaje_success;?>';
+            let date_input=$('input[name="date"]'); //our date input has the name "date"
+            let container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+            date_input.datepicker({
                   format: 'dd/mm/yyyy',
                   container: container,
                   todayHighlight: true,
                   autoclose: true,
-              });
+            });
+
+			      controlMensaje(mensajeSuccess, mensajeError);
           });
 
        function CalcularPrecio() {
-        var Litros = document.getElementById("Litros").value;
-        var Combustible = document.getElementById("Combustible");
-        var PrecioxL = Combustible.options[Combustible.selectedIndex].getAttribute("name");
+        let Litros = document.getElementById("Litros").value;
+        let Combustible = document.getElementById("Combustible");
+        let PrecioxL = Combustible.options[Combustible.selectedIndex].getAttribute("name");
         
-        var Total = parseFloat(PrecioxL) * parseFloat(Litros);
+        let Total = parseFloat(PrecioxL) * parseFloat(Litros);
 
-        var Precio = document.getElementById("Precio");
+        let Precio = document.getElementById("Precio");
         Precio.setAttribute("value",parseFloat(Total).toFixed(2));
        }
-
-       function successHandler(jqxhr, textStatus) {
-          let response = jqxhr.requestJSON;
-          if (response.mensaje) {
-            swal({
-              text: response.mensaje,
-              icon: "success",
-              buttons: true,
-              dangerMode: true,
-            });
-          } else if (response.mensajeerror) {
-            swal({
-              text: response.mensajeerror,
-              icon: "warning",
-              buttons: true,
-              dangerMode: true,
-            });
-          }
-       }
-
-       function errorHandler(jqxhr, textStatus, error) {
-          swal({
-            title: "Error en la solicitud",
-            text: "Error al procesar la solicitud, comunicarse con el administrador",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-          });
-       }
-
-       function VerificarUnificacion(
-                                     xID_Registro_1,
-                                     xID_Registro_2,
-                                     xID_TipoUnif,
-                                     xID_Solicitud
-        ){
-              let mensaje = null;
-              let url = null;
-              switch (xID_TipoUnif) {
-                case 'MOTIVO':
-                  mensaje = "estos motivos";
-                  break; 
-                case 'PERSONAS':
-                  mensaje = "estas personas";
-                  break; 
-                case 'CENTROS SALUD':
-                  mensaje = "estos centros de salud";
-                  break; 
-                case 'ESCUELAS':
-                  mensaje = "estas escuelas";
-                  break; 
-                case 'BARRIOS':
-                  mensaje = "estos barrios";
-                  break; 
-                case 'CATEGORIA':
-                  mensaje = "estas categorias";
-                  break; 
-                case 'RESPONSABLE':
-                  mensaje = "estos responsables";
-                  break; 
-                default: 
-                  swal("Algo salio mal consulte con el equipo de desarrollo", "", "warning");
-                  break;
-              }
-
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer unificar " + mensaje + "?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  switch (xID_TipoUnif) {
-                    case 'MOTIVO':
-                        url = '../Controladores/unificarmotivos.php?ID_Motivo_1=' + xID_Registro_1 + '&ID_Motivo_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
-                        break;
-                    case 'PERSONAS':
-                        url = '../Controladores/unificarpersonas.php?ID_Persona_1=' + xID_Registro_1 + '&ID_Persona_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
-                        break;
-                    case 'CENTROS SALUD':
-                        url = '../Controladores/unificarcentros.php?ID_Centro_1=' + xID_Registro_1 + '&ID_Centro_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
-                        break;
-                    case 'ESCUELAS':
-                        url = '../Controladores/unificarescuelas.php?ID_Escuela_1=' + xID_Registro_1 + '&ID_Escuela_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
-                        break;
-                    case 'BARRIOS':
-                        url = '../Controladores/unificarbarrios.php?ID_Barrio_1=' + xID_Registro_1 + '&ID_Barrio_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
-                        break;
-                    case 'CATEGORIA':
-                        url = '../Controladores/unificarcategorias.php?ID=' + xID_Solicitud;
-                        break;
-                    case 'RESPONSABLE':
-                        url = '../Controladores/unificarresponsables.php?ID=' + xID_Solicitud;
-                        break;
-                    default:
-                        swal("Algo salio mal consulte con el equipo de desarrollo", "", "warning");
-                        break;
-                  }
-                  window.location.href = url;
-                  /*
-                  let request = $.ajax({
-                    url: url,
-                    async: true,
-                    success: successHandler,
-                    error: errorHandler
-                  })
-                  */
-                }
-              });
-        }
-
-        function VerificarCrearMotivo(
-                                      xID,
-                                      xFecha,
-                                      xMotivo,
-                                      xCodigo,
-                                      xNum_Motivo,
-                                      xCategoria
-        ){
-            swal({
-              title: "¿Está seguro?",
-              text: "¿Seguro de querer crear este motivo?",
-              icon: "warning",
-              buttons: true,
-              dangerMode: true,
-            })
-            .then((willDelete) => {
-              if (willDelete) {
-                window.location.href = 'Controladores/InsertMotivo.php?ID=' + xID + '&Fecha=' + xFecha + '&Motivo=' + xMotivo + '&Codigo=' + xCodigo + '&Num_Motivo=' + xNum_Motivo + '&Cod_Categoria=' + xCategoria;
-              }
-            });
-        }
-
-       function VerificarModificarMotivo(
-                                         xID,
-                                         xFecha,
-                                         xMotivo,
-                                         xCodigo,
-                                         xNum_Motivo,
-                                         xID_Motivo
-       ){
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer modificar este motivo?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'Controladores/ModificarMotivo.php?ID=' + xID + '&Fecha=' + xFecha + '&Motivo=' + xMotivo + '&Codigo=' + xCodigo + '&Num_Motivo=' + xNum_Motivo + '&ID_Motivo=' + xID_Motivo;                
-                }
-              });
-        }
-
-       function VerificarModificacion(id, valor) {
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer modificar este Responsable?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'Controladores/ModificarResponsable.php?ID=' + id + '&Responsable=' + valor;
-                }
-              });
-        }
-
-       function VerificarEliminacion(id) {
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer eliminar este Responsable?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'Controladores/DeleteResponsable.php?ID=' + id;
-                }
-              });
-        }
-
-        function VerificarCrearCategoria(xID,xFecha,xCodigo,xCategoria,xID_Forma,xColor) {
-              var ColorBase = btoa(xColor);
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer crear esta categoría?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'Controladores/InsertCategoria.php?ID=' + xID + '&Fecha=' + xFecha + '&Codigo=' + xCodigo + '&Categoria=' + xCategoria + '&ID_Forma=' + xID_Forma + '&ID_Categoria=' + xID + '&Color='+ColorBase;
-                }
-              });
-        }
-
-        function VerificarModificarCategoria(xID,xFecha,xCodigo,xCategoria,xID_Forma,xNuevoColor,xID_Categoria) {
-              var NuevoColorBase = btoa(xNuevoColor);
-
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer modificar esta categoría?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'Controladores/ModificarCategoria.php?ID=' + xID + '&Fecha=' + xFecha + '&Codigo=' + xCodigo + '&Categoria=' + xCategoria + '&ID_Forma=' + xID_Forma + '&ID_Categoria=' + xID_Categoria + '&CodigoColor='+NuevoColorBase;
-                }
-              });
-        }
-
-       function VerificarEliminarMotivo(xID_Motivo) {
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer eliminar este motivo?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'Controladores/DeleteMotivo.php?ID=' + xID_Motivo;
-                }
-              });
-        }
-
-        function VerificarEliminarCategoria(xID_Categoria) {
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer eliminar este categoria?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'Controladores/DeleteCategoria.php?ID=' + xID_Categoria;
-                }
-              });
-        }
-
-        function VerificarEliminarNotificacion(xID_Notificacion) {
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer eliminar esta notificación?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'Controladores/DeleteNotificacion.php?ID=' + xID_Notificacion;
-                } else {
-                }
-              });
-        }
-
-        function VerificarModificarUsuario(xID_Solcitud) {
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer procesar esta solicitud?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'Controladores//modificar_account?id_solcitud=' + xID_Solcitud;
-                }
-              });
-        }
-
-        function CancelarUnificacion(xID_Peticion) {
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer borrar esta petición de unificación?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'Controladores/DeletePeticion.php?ID=' + xID_Peticion;
-                }
-              });
-        }
-
-        function CancelarModificacionMotivo(xID) {
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer borrar esta petición de modificación?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'Controladores/DeletePeticionModificacionMotivo.php?ID=' + xID;
-                }
-              });
-        }
-
-        function CancelarModificacion(xID) {
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer borrar esta petición de modificación?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'Controladores/DeletePeticionModificacion.php?ID=' + xID;
-                }
-              });
-        }
-
-        function CancelarCrearMotivo(xID) {
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer borrar esta petición de creación?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'Controladores/DeletePeticionCrearMotivo.php?ID=' + xID;
-                }
-              });
-        }
-
-        function CancelarCrearCategoria(xID) {
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer borrar esta petición de creación?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'Controladores/DeletePeticionCrearCategoria.php?ID=' + xID;
-                }
-              });
-        }
-
-        function CancelarModificacionCategoria(xID) {
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer borrar esta petición de modificación?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'Controladores/DeletePeticionModificacionCategoria.php?ID=' + xID;
-                } 
-              });
-        }
-
-        function CancelarEliminacionMotivo(xID) {
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer borrar esta petición de eliminación?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'Controladores/DeletePeticionEliminacion.php?ID=' + xID;
-                }
-              });
-        }
-
-        function CancelarEliminacionCategoria(xID) {
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer borrar esta petición de eliminación?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'Controladores/DeletePeticionEliminacionCategoria.php?ID=' + xID;
-                }
-              });
-        }
-
-        function CancelarSolciitudUsuario(xID) {
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer borrar esta petición de usuario?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'Controladores/DeletePeticionSolicitudUsuario.php?ID=' + xID;
-                } else {        
-                }
-              });
-        }
   </script>
 
 </head>
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   if ($tipo_usuario == 1) {
   ?>
   <div class = "col-md-2">
@@ -660,8 +233,6 @@ $Con->CloseConexion();
     </div><br>
     <br>
     <?php 
-    $CtrGeneral = new CtrGeneral();
-
     $Notificaciones = $CtrGeneral->getNotificaciones();
 
     if ($Notificaciones["cant"] > 0) {
@@ -676,7 +247,8 @@ $Con->CloseConexion();
       <?php        
     }
     ?>
-    <?php if ($tipo_usuario == 1) { 
+    <?php
+    if ($tipo_usuario == 1) {
       $CantUnif = $CtrGeneral->getCantSolicitudes_Unificacion();
       $CantModMot = $CtrGeneral->getCantSolicitudes_Modificacion_Motivo();
       $CantCrearMot = $CtrGeneral->getCantSolicitudes_Crear_Motivo();
@@ -804,17 +376,5 @@ $Con->CloseConexion();
     <br>	
   </div>
 </div>
-<?php  
-if (isset($_REQUEST['Mensaje']) ) {
-  echo "<script type='text/javascript'>
-          swal('" . $_REQUEST['Mensaje'] . "', '', 'success');
-        </script>";
-}
-if (isset($_REQUEST['MensajeError']) ) {
-  echo "<script type='text/javascript'>
-          swal('" . $_REQUEST['MensajeError'] . "' , '', 'warning');
-        </script>";
-}
-?>
 </body>
 </html>

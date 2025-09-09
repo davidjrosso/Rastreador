@@ -2,6 +2,7 @@ import swal from 'sweetalert2';
 
 
 export class Formulario {
+
     cantMotivos;
     cantResponsables;
 
@@ -144,8 +145,8 @@ export class Formulario {
         this.agregarAtributoxElemento(btnMotivo_3,"data-target","#ModalMotivo_3");        
         this.agregarEtiqueta(btnMotivo_3,"Seleccione un Motivo");        
         let div_btnMotivo_3 = tomarElemento("Motivo_3");
-        this.resetearValorDiv(div_btnMotivo_3);        
-        this.agregarElementoxDiv(div_btnMotivo_3,btnMotivo_3);  
+        this.resetearValorDiv(div_btnMotivo_3);
+        this.agregarElementoxDiv(div_btnMotivo_3,btnMotivo_3);
         //RESETEANDO OBSERVACIONES
         this.resetearValorElemento("Observaciones");
         //RESETEANDO RESPONSABLE

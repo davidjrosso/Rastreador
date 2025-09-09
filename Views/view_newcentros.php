@@ -21,7 +21,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Rastreador III</title>
+  <title>Rastreador</title>
   <meta charset="utf-8">
   <base href="/">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
@@ -29,7 +29,6 @@
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
-  <link rel="import" href="https://sites.google.com/view/generales2019riotercero/página-principal">
 
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
@@ -84,7 +83,9 @@
       <div class="col"></div>
       <div class="col-10">
           <div class="row">
-              <center><button class = "btn btn-secondary btn-sm" onClick="location.href ='/movimientos/nuevo'">Agregar Nuevo Movimiento</button></center>
+              <center>
+                <button class = "btn btn-secondary btn-sm" onClick="location.href ='/movimientos/nuevo'">Agregar Nuevo Movimiento</button>
+              </center>
           </div>
       </div>
       <div class="col"></div>

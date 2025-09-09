@@ -55,7 +55,7 @@ export function VerificarCategoria(xID) {
         });
 }
 
-export function VerificarCrearCategoria() {
+export function VerificarCreacionCategoria() {
         let form_1= document.getElementById("form_1");
         swal.fire({
           title: "¿Está seguro?",
@@ -155,7 +155,423 @@ export function ValidarDocumento() {
 
 }
 
-export function VerificarUnificacion() {
+export function successHandler(jqxhr, textStatus) {
+    let response = jqxhr.requestJSON;
+    if (response.mensaje) {
+    swal.fire({
+        text: response.mensaje,
+        icon: "success",
+        buttons: true,
+        dangerMode: true,
+    });
+    } else if (response.mensajeerror) {
+    swal.fire({
+        text: response.mensajeerror,
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    });
+    }
+}
+
+export function errorHandler(jqxhr, textStatus, error) {
+    swal({
+    title: "Error en la solicitud",
+    text: "Error al procesar la solicitud, comunicarse con el administrador",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+    });
+}
+
+export function VerificarUnificacion(
+                                xID_Registro_1,
+                                xID_Registro_2,
+                                xID_TipoUnif,
+                                xID_Solicitud
+){
+        let mensaje = null;
+        let url = null;
+        switch (xID_TipoUnif) {
+        case 'MOTIVO':
+            mensaje = "estos motivos";
+            break; 
+        case 'PERSONAS':
+            mensaje = "estas personas";
+            break; 
+        case 'CENTROS SALUD':
+            mensaje = "estos centros de salud";
+            break; 
+        case 'ESCUELAS':
+            mensaje = "estas escuelas";
+            break; 
+        case 'BARRIOS':
+            mensaje = "estos barrios";
+            break; 
+        case 'CATEGORIA':
+            mensaje = "estas categorias";
+            break; 
+        case 'RESPONSABLE':
+            mensaje = "estos responsables";
+            break; 
+        default: 
+            swal.fire("Algo salio mal consulte con el equipo de desarrollo", "", "warning");
+            break;
+        }
+
+        swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer unificar " + mensaje + "?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+            switch (xID_TipoUnif) {
+            case 'MOTIVO':
+                url = '../Controladores/unificarmotivos.php?ID_Motivo_1=' + xID_Registro_1 + '&ID_Motivo_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
+                break;
+            case 'PERSONAS':
+                url = '../Controladores/unificarpersonas.php?ID_Persona_1=' + xID_Registro_1 + '&ID_Persona_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
+                break;
+            case 'CENTROS SALUD':
+                url = '../Controladores/unificarcentros.php?ID_Centro_1=' + xID_Registro_1 + '&ID_Centro_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
+                break;
+            case 'ESCUELAS':
+                url = '../Controladores/unificarescuelas.php?ID_Escuela_1=' + xID_Registro_1 + '&ID_Escuela_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
+                break;
+            case 'BARRIOS':
+                url = '../Controladores/unificarbarrios.php?ID_Barrio_1=' + xID_Registro_1 + '&ID_Barrio_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
+                break;
+            case 'CATEGORIA':
+                url = '../Controladores/unificarcategorias.php?ID=' + xID_Solicitud;
+                break;
+            case 'RESPONSABLE':
+                url = '../Controladores/unificarresponsables.php?ID=' + xID_Solicitud;
+                break;
+            default:
+                swal.fire("Algo salio mal consulte con el equipo de desarrollo", "", "warning");
+                break;
+            }
+            window.location.href = url;
+            /*
+            let request = $.ajax({
+            url: url,
+            async: true,
+            success: successHandler,
+            error: errorHandler
+            })
+            */
+        }
+        });
+}
+
+export function VerificarCrearMotivo(
+                                xID,
+                                xFecha,
+                                xMotivo,
+                                xCodigo,
+                                xNum_Motivo,
+                                xCategoria
+){
+    swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer crear este motivo?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+        window.location.href = 'Controladores/InsertMotivo.php?ID=' + xID + '&Fecha=' + xFecha + '&Motivo=' + xMotivo + '&Codigo=' + xCodigo + '&Num_Motivo=' + xNum_Motivo + '&Cod_Categoria=' + xCategoria;
+        }
+    });
+}
+
+export function VerificarModificarMotivo(
+                                    xID,
+                                    xFecha,
+                                    xMotivo,
+                                    xCodigo,
+                                    xNum_Motivo,
+                                    xID_Motivo
+){
+        swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer modificar este motivo?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+            window.location.href = 'Controladores/ModificarMotivo.php?ID=' + xID + '&Fecha=' + xFecha + '&Motivo=' + xMotivo + '&Codigo=' + xCodigo + '&Num_Motivo=' + xNum_Motivo + '&ID_Motivo=' + xID_Motivo;                
+        }
+        });
+}
+
+export function VerificarModificacion(id, valor) {
+        swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer modificar este Responsable?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+            window.location.href = 'Controladores/ModificarResponsable.php?ID=' + id + '&Responsable=' + valor;
+        }
+        });
+}
+
+export function VerificarEliminacion(id) {
+        swal.fire({
+            title: "¿Está seguro?",
+            text: "¿Seguro de querer eliminar este Responsable?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                window.location.href = 'Controladores/DeleteResponsable.php?ID=' + id;
+            }
+        });
+}
+
+export function VerificarCrearCategoria(xID,xFecha,xCodigo,xCategoria,xID_Forma,xColor) {
+        var ColorBase = btoa(xColor);
+        swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer crear esta categoría?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+            window.location.href = 'Controladores/InsertCategoria.php?ID=' + xID + '&Fecha=' + xFecha + '&Codigo=' + xCodigo + '&Categoria=' + xCategoria + '&ID_Forma=' + xID_Forma + '&ID_Categoria=' + xID + '&Color='+ColorBase;
+        }
+        });
+}
+
+export function VerificarModificarCategoria(xID,xFecha,xCodigo,xCategoria,xID_Forma,xNuevoColor,xID_Categoria) {
+        var NuevoColorBase = btoa(xNuevoColor);
+
+        swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer modificar esta categoría?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+            window.location.href = 'Controladores/ModificarCategoria.php?ID=' + xID + '&Fecha=' + xFecha + '&Codigo=' + xCodigo + '&Categoria=' + xCategoria + '&ID_Forma=' + xID_Forma + '&ID_Categoria=' + xID_Categoria + '&CodigoColor='+NuevoColorBase;
+        }
+        });
+}
+
+export function VerificarEliminarMotivo(xID_Motivo) {
+        swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer eliminar este motivo?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+            window.location.href = 'Controladores/DeleteMotivo.php?ID=' + xID_Motivo;
+        }
+        });
+}
+
+export function VerificarEliminarCategoria(xID_Categoria) {
+        swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer eliminar este categoria?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+            window.location.href = 'Controladores/DeleteCategoria.php?ID=' + xID_Categoria;
+        }
+        });
+}
+
+export function VerificarEliminarNotificacion(xID_Notificacion) {
+        swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer eliminar esta notificación?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+            window.location.href = 'Controladores/DeleteNotificacion.php?ID=' + xID_Notificacion;
+        } else {
+        }
+        });
+}
+
+export function VerificarModificarUsuario(xID_Solcitud) {
+        swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer procesar esta solicitud?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+            window.location.href = 'Controladores//modificar_account?id_solcitud=' + xID_Solcitud;
+        }
+        });
+}
+
+export function CancelarUnificacion(xID_Peticion) {
+        swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer borrar esta petición de unificación?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+            window.location.href = 'Controladores/DeletePeticion.php?ID=' + xID_Peticion;
+        }
+        });
+}
+
+export function CancelarModificacionMotivo(xID) {
+        swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer borrar esta petición de modificación?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+            window.location.href = 'Controladores/DeletePeticionModificacionMotivo.php?ID=' + xID;
+        }
+        });
+}
+
+export function CancelarModificacion(xID) {
+        swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer borrar esta petición de modificación?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+            window.location.href = 'Controladores/DeletePeticionModificacion.php?ID=' + xID;
+        }
+        });
+}
+
+export function CancelarCrearMotivo(xID) {
+        swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer borrar esta petición de creación?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+            window.location.href = 'Controladores/DeletePeticionCrearMotivo.php?ID=' + xID;
+        }
+        });
+}
+
+export function CancelarCrearCategoria(xID) {
+        swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer borrar esta petición de creación?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+            window.location.href = 'Controladores/DeletePeticionCrearCategoria.php?ID=' + xID;
+        }
+        });
+}
+
+export function CancelarModificacionCategoria(xID) {
+        swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer borrar esta petición de modificación?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+            window.location.href = 'Controladores/DeletePeticionModificacionCategoria.php?ID=' + xID;
+        } 
+        });
+}
+
+export function CancelarEliminacionMotivo(xID) {
+        swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer borrar esta petición de eliminación?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+            window.location.href = 'Controladores/DeletePeticionEliminacion.php?ID=' + xID;
+        }
+        });
+}
+
+export function CancelarEliminacionCategoria(xID) {
+        swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer borrar esta petición de eliminación?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+            window.location.href = 'Controladores/DeletePeticionEliminacionCategoria.php?ID=' + xID;
+        }
+        });
+}
+
+export function CancelarSolciitudUsuario(xID) {
+        swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer borrar esta petición de usuario?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+            window.location.href = 'Controladores/DeletePeticionSolicitudUsuario.php?ID=' + xID;
+        } else {        
+        }
+        });
+}
+
+export function VerificarUnificacionPersona() {
     let ID_Persona_1 = document.getElementById("ID_Persona_1");
     let ID_Persona_2 = document.getElementById("ID_Persona_2");
     let Form_1= document.getElementById("form_1");

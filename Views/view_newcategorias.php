@@ -144,7 +144,7 @@
             </div>
             <div class="form-group row">
               <div class="offset-md-2 col-md-10">
-                <button type="button" class="btn btn-outline-success" onClick ="VerificarCrearCategoria();">Guardar</button>
+                <button type="button" class="btn btn-outline-success" onClick ="VerificarCreacionCategoria();">Guardar</button>
                 <button type = "button" class = "btn btn-danger" onClick = "location.href = '/categorias'">Atrás</button>
               </div>
             </div>
