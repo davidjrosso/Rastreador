@@ -123,6 +123,7 @@ try {
 	$routes[] = Route::get('mod_motivo', '/motivo/editar\?ID={id}', [MotivoController::class, 'mod_motivo']);
 	$routes[] = Route::get('mod_motivo_succes', '/motivos\?Mensaje={mensaje}', [MotivoController::class, 'listado_motivos']);
 	$routes[] = Route::get('mod_motivo_error', '/motivo/editar\?ID={id}/MensajeError={mensaje}', [MotivoController::class, 'mod_motivo']);
+	$routes[] = Route::post('buscar_motivos_filtro', '/buscar_motivos_filtro', [MotivoController::class, 'buscar_motivos_filtro']);
 	$routes[] = Route::post('sol_mod_motivo', 'pedirmodificarmotivo', [MotivoController::class, 'sol_mod_control']);
 	$routes[] = Route::post('mod_motivo_control', 'modificarmotivo', [MotivoController::class, 'mod_motivo_control']);
 	$routes[] = Route::get('del_motivo_control', 'pedireliminarmotivo\?ID={id}', [MotivoController::class, 'del_motivo_control']);
@@ -138,10 +139,14 @@ try {
 	$routes[] = Route::post('buscar_responsable', '/buscar_responsable\?valorBusqueda={valor}/idResponsable={id}', [ResponsableController::class, 'buscar_responsable']);
 	$routes[] = Route::get('listado_centros_salud', '/centrosdesalud', [CentroSaludController::class, 'listado_centros_salud']);
 	$routes[] = Route::get('listado_centros_salud_filtro', '/centrosdesalud\?Filtro={filt}/ID_Filtro={idfilt}', [CentroSaludController::class, 'listado_centros_salud']);
+	$routes[] = Route::get('crear_centro_salud', '/centrodesalud/nuevo', [CentroSaludController::class, 'crear_centro_salud']);
+	$routes[] = Route::get('crear_centro_salud_success', '/centrodesalud/nuevo\?Mensaje={mensaje}', [CentroSaludController::class, 'crear_centro_salud']);
+	$routes[] = Route::get('crear_centro_salud_error', '/centrodesalud/nuevo\?MensajeError={mensaje}', [CentroSaludController::class, 'crear_centro_salud']);
 	$routes[] = Route::post('buscar_centos_salud', '/buscar_centros_salud', [CentroSaludController::class, 'buscar_centos_salud']);
 	$routes[] = Route::post('centro_salud_lista', '/centro_salud_lista', [CentroSaludController::class, 'centro_salud_lista']);
 	$routes[] = Route::get('mod_centro_salud', '/centrosalud/editar\?ID={id}', [CentroSaludController::class, 'mod_centro_salud']);
-	$routes[] = Route::get('mod_centro_salud_control', '/mod_centro_salud', [CentroSaludController::class, 'mod_centro_salud_control']);
+	$routes[] = Route::get('mod_centro_salud', '/centrosalud/editar\?ID={id}', [CentroSaludController::class, 'mod_centro_salud']);
+	$routes[] = Route::post('insert_centro_salud', '/insert_centro_salud', [CentroSaludController::class, 'insert_centro_salud']);
 	$routes[] = Route::get('sol_del_centro_salud', '/pedireliminarcentrosalud\?ID={id}', [CentroSaludController::class, 'sol_del_responsable']);
 	$routes[] = Route::get('unif_centro_salud', '/centrosalud/unificar', [CentroSaludController::class, 'unif_centro_salud']);
 	$routes[] = Route::get('sol_unif_centro_salud_control', '/pedirunificarcentros_salud', [CentroSaludController::class, 'sol_unif_centro_salud_control']);
