@@ -31,6 +31,7 @@ class CentroSaludController
 
     public function listado_centros_salud($mensaje = null, $id_filtro = null)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
@@ -49,10 +50,40 @@ class CentroSaludController
 
     public function mod_centro_salud($id_centro)
     {
+        header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+            
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
             include("./Views/view_modcentros.php");
+        }
+        exit();
+    }
+
+    public function crear_centro_salud()
+    {
+        header("Content-Type: text/html;charset=utf-8");
+        if (!isset($_SESSION["Usuario"])) {
+            include("./Views/Error_Session.php");
+        } else {
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+            
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
+            include("./Views/view_newcentros.php");
         }
         exit();
     }
@@ -206,6 +237,47 @@ class CentroSaludController
         exit();
     }
 
+    public function insert_centro_salud()
+    {
+        $ID_Usuario = $_SESSION["Usuario"];
+
+        $Centro_Salud = ucfirst($_REQUEST["Centro"]);
+        $Estado = 1;
+
+        $Fecha = date("Y-m-d");
+        $ID_TipoAccion = 1;
+        $Detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Centro de Salud. Datos: $Centro_Salud";
+
+        $Con = new Conexion();
+        $Con->OpenConexion();
+
+        try {
+            $ConsultarCentrosIguales = "select * from centros_salud where centro_salud = '$Centro_Salud' and estado = 1";
+            if(!$Ret = mysqli_query($Con->Conexion,$ConsultarCentrosIguales)){
+                throw new Exception("Error al consultar registros. Consulta: ".$ConsultarCentrosIguales, 0);		
+            }
+            $Resultado = mysqli_num_rows($Ret);
+            if($Resultado > 0){
+                $Con->CloseConexion();
+                $Mensaje = "Ya existe un Centro de Salud con ese Nombre";
+                header('Location: /centrodesalud/nuevo?MensajeError='.$Mensaje);
+            }else{
+                $Consulta = "insert into centros_salud(centro_salud,estado) values('$Centro_Salud',$Estado)";
+                if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
+                    throw new Exception("Error al intentar registrar. Consulta: ".$Consulta, 1);
+                }	
+                $ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
+                if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
+                    throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 2);
+                }
+                $Con->CloseConexion();
+                $Mensaje = "El Centro de Salud se registro Correctamente";
+                header('Location: /centrodesalud/nuevo?Mensaje=' . $Mensaje);
+            }
+        } catch (Exception $e) {
+            echo "Error: ".$e->getMessage();
+        }
+    }
     public function sol_unif_control()
     {
         $Fecha = Date("Y-m-d");

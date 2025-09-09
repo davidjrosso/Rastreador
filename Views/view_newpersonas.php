@@ -24,9 +24,9 @@
 <head>
   <title>Rastreador III</title>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <base href="/">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
-  <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
@@ -37,9 +37,9 @@
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-  <script src="js/ValidarPersona.js"></script>
-  <script src="./dist/mapa.js"></script>
-  <script src="./dist/control.js"></script>
+  <script defer src="js/ValidarPersona.js"></script>
+  <script defer src="./dist/mapa.js"></script>
+  <script defer src="./dist/control.js"></script>
 
   <script>
       let map = null;
@@ -49,7 +49,7 @@
       let mensajeError = '<?php echo $mensaje_error;?>';
       let mensajeSuccess = '<?php echo $mensaje_success;?>';
 
-       $(document).ready(function(){
+       $(document).ready(function() {
               var date_input=$('input[name="Fecha_Nacimiento"]'); //our date input has the name "date"
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
               date_input.datepicker({
@@ -146,18 +146,7 @@
 			        controlMensaje(mensajeSuccess, mensajeError);
           });
 
-        function ShowModalError(){
-          var modal = document.getElementById("ErrorDocumento");
-          modal.style.display = "block";
-          modal.innerText="El Documento ingresado ya Existe";
-        }
-
-        function NotShowModalError(){
-          var modal = document.getElementById("ErrorDocumento");
-          modal.style.display = "none";
-        }
-
-       function calcularEdad(){
+       function calcularEdad() {
             var Fecha_Nac = document.getElementById("Fecha_Nacimiento").value;
             var Fecha = Fecha_Nac.split('/').reverse().join('-');
             var hoy = new Date();
@@ -187,25 +176,7 @@
               Meses.value = CalcMeses;        
             }
             
-      } 
-
-    function seleccionCalle(xNombre, xID) {
-          var BotonModalPersona = document.getElementById("BotonModalDireccion_1");
-          var calle = document.getElementById("Calle");
-          nombreCalle = xNombre;
-          BotonModalPersona.innerHTML = "";
-          BotonModalPersona.innerHTML = xNombre;
-          calle.setAttribute('value',xID);
-          let nro = $("#NumeroDeCalle").val();
-          if (nro && map) {
-            $("#mapa-sig").prop('disabled', false);
-            map.addPersonMapAddress(
-                                    xNombre,
-                                    nro,
-                                    xID
-                                   );
-          }
-    }
+      }
   </script>
 </head>
 <body>

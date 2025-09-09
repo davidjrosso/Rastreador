@@ -55,8 +55,6 @@
       <div class = "col-10">
           <p class = "TextoAdvertenciaUnificar">¡ADVERTENCIA! Todos los datos y movimientos de la segunda persona seleccionada se unirán a la primera persona seleccionada. La segunda persona se eliminará.</p>
           <br>
-           <!-- Carga -->
-          <!--<form method = "post" action = "Controladores/unificarpersonas.php" onSubmit = "return VerificarUnificacion();"> -->
           <form id="form_1" method = "post" action = "unificarpersonas">
               <div class="form-group row">
                   <label for="inputPassword" class="col-md-3 col-form-label LblForm">Primera Persona: </label>

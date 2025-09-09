@@ -110,6 +110,17 @@ export function VerificarDeletePersona(xID){
         });
 }
 
+function ShowModalError(){
+    var modal = document.getElementById("ErrorDocumento");
+    modal.style.display = "block";
+    modal.innerText="El Documento ingresado ya Existe";
+}
+
+function NotShowModalError(){
+    var modal = document.getElementById("ErrorDocumento");
+    modal.style.display = "none";
+}
+
 export function ValidarDocumento() {
     let Documento = document.getElementById("idDocumento");
     let NroDocumento = Documento.value;
@@ -256,28 +267,91 @@ export function seleccionCentro(id, xCentro, xID) {
 }
 
 export function buscarPersonas(id){
-    let xNombre = document.getElementById('SearchPersonas_' + id).value;
-    let textoBusqueda = xNombre;
+    let xNombre = null;
     let xmlhttp = null;
+    let textoBusqueda = null;
     let contenidosRecibidos = null;
+    let url = null;
+
+    xNombre = (id) ? $('#SearchPersonas_' + id).val() : $('#SearchPersonas').val();
+    textoBusqueda = xNombre;
+    url = 'valorBusqueda=' + textoBusqueda;
+    if (id) url += '&ID=' + id;
+
     xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        contenidosRecibidos = xmlhttp.responseText;
-        document.getElementById("ResultadosPersonas_"  + id).innerHTML = contenidosRecibidos;
+            contenidosRecibidos = xmlhttp.responseText;
+            if (id) {
+                $("#ResultadosPersonas_"  + id).html(contenidosRecibidos);
+            } else {
+                $("#ResultadosPersonas").html(contenidosRecibidos);
+            }
         }
     }
     xmlhttp.open('POST', 'buscar_personas', true);
     xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xmlhttp.send('valorBusqueda=' + textoBusqueda + '&ID=' + id);
+    xmlhttp.send(url);
+}
+
+export function buscarMotivos(id){
+    let xMotivo = null;
+    let xmlhttp = null;
+    let textoBusqueda = null;
+    let contenidosRecibidos = null;
+    let url = null;
+
+    xMotivo = (id) ? $('#SearchMotivos_' + id).val() : $('#SearchMotivos').val();
+    textoBusqueda = xMotivo;
+    url = 'valorBusqueda=' + textoBusqueda;
+    if (id) url += '&ID=' + id;
+
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            contenidosRecibidos = xmlhttp.responseText;
+            if (id) {
+                $("#ResultadosMotivos_"  + id).html(contenidosRecibidos);
+            } else {
+                $("#ResultadosMotivos").html(contenidosRecibidos);
+            }
+        }
+    }
+    xmlhttp.open('POST', '/buscar_motivos_filtro', true);
+    xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xmlhttp.send(url);
+}
+
+export function seleccionMotivo(id, xMotivo, xID) {
+    let Motivo = (id) ? $("#Motivo_" + id) : $("#Motivo");
+    let ID_Motivo = (id) ? $("#ID_Motivo_" + id) : $("#ID_Motivo");
+    Motivo.html("<p>" + xMotivo + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo_1'><i class='fa fa-cog text-secondary'></i></button></p>");
+    ID_Motivo.prop('value', xID);
 }
 
 export function seleccionPersona(id, xNombre, xID) {
-    let Persona = document.getElementById("Persona_" + id);
-    let ID_Persona = document.getElementById("ID_Persona_" + id);
-    Persona.innerHTML = "";
-    Persona.innerHTML = "<p>" + xNombre + "</p>";
-    ID_Persona.setAttribute('value', xID);
+    let Persona = (id) ? $("#Persona_" + id) : $("#Persona");
+    let ID_Persona = (id) ? $("#ID_Persona_" + id) : $("#ID_Persona");
+    Persona.html("<p>" + xNombre + "</p>");
+    ID_Persona.prop('value', xID);
+}
+
+export function seleccionCalle(xNombre, xID) {
+        let BotonModalPersona = document.getElementById("BotonModalDireccion_1");
+        let calle = document.getElementById("Calle");
+        nombreCalle = xNombre;
+        BotonModalPersona.innerHTML = "";
+        BotonModalPersona.innerHTML = xNombre;
+        calle.setAttribute('value',xID);
+        let nro = $("#NumeroDeCalle").val();
+        if (nro && map) {
+        $("#mapa-sig").prop('disabled', false);
+        map.addPersonMapAddress(
+                                xNombre,
+                                nro,
+                                xID
+                                );
+        }
 }
 
 export function insercionDatosFormulario() {

@@ -1,29 +1,29 @@
 <?php 
-session_start(); 
-require_once "Controladores/Elements.php";
-require_once "Controladores/CtrGeneral.php";
-header("Content-Type: text/html;charset=utf-8");
-
-/*     CONTROL DE USUARIOS                    */
-if(!isset($_SESSION["Usuario"])){
-    header("Location: Error_Session.php");
-}
-
-$Con = new Conexion();
-$Con->OpenConexion();
-$ID_Usuario = $_SESSION["Usuario"];
-$ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
-$MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
-$EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
-$Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
-$TipoUsuario = $Ret["ID_TipoUsuario"];
-$Con->CloseConexion();
+/*
+ *
+ * This file is part of Rastreador3.
+ *
+ * Rastreador3 is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Rastreador3 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Rastreador3; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <title>Rastreador III</title>
   <meta charset="utf-8">
+  <base href="/">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet"> 
@@ -35,20 +35,21 @@ $Con->CloseConexion();
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   <script src="js/bootstrap-datepicker.min.js"></script>
   <script src="js/ValidarMovimiento.js"></script>
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="./dist/form.js"></script>
+  <script defer src="./dist/control.js"></script>
   <script>
-      var cantResponsables = 1;
-      var cantMotivos = 3;
+      let mensajeError = '<?php echo $mensaje_error;?>';
+      let mensajeSuccess = '<?php echo $mensaje_success;?>';
 
-       $(document).ready(function(){
-              var date_input=$('input[name="Fecha"]'); //our date input has the name "date"
-              var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+       $(document).ready(function () {
+              let date_input=$('input[name="Fecha"]');
+              let container=$('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
               date_input.datepicker({
                   format: 'dd/mm/yyyy',
                   container: container,
                   todayHighlight: true,
                   autoclose: true,
-                  closeText: 'Cerrar', /* HASTA ACA */
+                  closeText: 'Cerrar',
                   days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
                   daysShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
                   daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
@@ -59,286 +60,14 @@ $Con->CloseConexion();
                   clear: "Borrar",
                   weekStart: 1,
               });
+			        controlMensaje(mensajeSuccess, mensajeError);
           });
-
-       function buscarPersonas(){
-        var xNombre = document.getElementById('SearchPersonas').value;
-        var textoBusqueda = xNombre;
-        xmlhttp=new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-          if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-            contenidosRecibidos = xmlhttp.responseText;
-            document.getElementById("ResultadosPersonas").innerHTML=contenidosRecibidos;
-            }
-        }
-        xmlhttp.open('POST', 'buscarPersonas.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
-        xmlhttp.send();
-      }
-
-      function agregarMotivo(){
-        if (cantMotivos <= 4) {
-          cantMotivos++;
-          var divContenedor = document.getElementById('contenedorMotivos');
-          var divMotivo = document.createElement("div");
-          divMotivo.setAttribute('class','form-group row');
-          var labelMotivo = document.createElement("label");
-          labelMotivo.setAttribute('class','col-md-2 col-form-label LblForm');
-          labelMotivo.innerText = 'Motivo '+ cantMotivos +':';
-          var divBotonMotivo = document.createElement("div");
-          divBotonMotivo.setAttribute("id", "Motivo_" + cantMotivos);
-          divBotonMotivo.setAttribute('class','col-md-10');
-          var boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_" + cantMotivos + "'>Seleccione un Motivo</button>";
-          divBotonMotivo.innerHTML = boton;      
-          divMotivo.appendChild(labelMotivo);
-          divMotivo.appendChild(divBotonMotivo);
-          divContenedor.appendChild(divMotivo);
-          var divInputsGenerales = document.getElementById('InputsGenerales');
-          var divInput = document.createElement("input");
-          divInput.setAttribute("id", "ID_Motivo_" + cantMotivos);
-          divInput.setAttribute("name", "ID_Motivo_" + cantMotivos);
-          divInput.setAttribute("type", "hidden");
-          divInputsGenerales.appendChild(divInput);
-        }
-      }
-
-      function buscarMotivos_1(){
-        var xMotivo = document.getElementById('SearchMotivos_1').value;
-        var textoBusqueda = xMotivo;
-        xmlhttp=new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-          if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-            contenidosRecibidos = xmlhttp.responseText;
-            document.getElementById("ResultadosMotivos_1").innerHTML=contenidosRecibidos;
-            }
-        }
-        xmlhttp.open('POST', 'buscarMotivos_1.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
-        xmlhttp.send();
-      }
-
-      function buscarMotivos_2(){
-        var xMotivo = document.getElementById('SearchMotivos_2').value;
-        var textoBusqueda = xMotivo;
-        xmlhttp=new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-          if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-            contenidosRecibidos = xmlhttp.responseText;
-            document.getElementById("ResultadosMotivos_2").innerHTML=contenidosRecibidos;
-            }
-        }
-        xmlhttp.open('POST', 'buscarMotivos_2.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
-        xmlhttp.send();
-      }
-
-      function buscarMotivos_3(){
-        var xMotivo = document.getElementById('SearchMotivos_3').value;
-        var textoBusqueda = xMotivo;
-        xmlhttp=new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-          if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-            contenidosRecibidos = xmlhttp.responseText;
-            document.getElementById("ResultadosMotivos_3").innerHTML=contenidosRecibidos;
-            }
-        }
-        xmlhttp.open('POST', 'buscarMotivos_3.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
-        xmlhttp.send();
-      }
-
-      function buscarMotivosGeneral(id_Motivo){
-        var xMotivo = document.getElementById("SearchMotivos" + id_Motivo).value;
-        var textoBusqueda = xMotivo;
-        xmlhttp=new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-          if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-            contenidosRecibidos = xmlhttp.responseText;
-            document.getElementById("ResultadosMotivos" + id_Motivo).innerHTML=contenidosRecibidos;
-          }
-        }
-        xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda='+textoBusqueda + '&number=' + id_Motivo, true); // Método post y url invocada
-        xmlhttp.send();
-      }
-
-
-      function seleccionPersona(xNombre,xID){
-        var Persona = document.getElementById("Persona");
-        var ID_Persona = document.getElementById("ID_Persona");
-        Persona.innerHTML = "";
-        Persona.innerHTML = "<p>"+xNombre+" <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalPersona'><i class='fa fa-cog text-secondary'></i></button></p>";
-        ID_Persona.setAttribute('value',xID);
-      }
-
-      function seleccionMotivo_1(xMotivo,xID){
-        var Motivo = document.getElementById("Motivo_1");
-        var ID_Motivo = document.getElementById("ID_Motivo_1");
-        Motivo.innerHTML = "";
-        Motivo.innerHTML = "<p>"+xMotivo+" <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo_1'><i class='fa fa-cog text-secondary'></i></button></p>";
-        ID_Motivo.setAttribute('value',xID);
-      }
-
-      function seleccionMotivo_2(xMotivo,xID){
-        var Motivo = document.getElementById("Motivo_2");
-        var ID_Motivo = document.getElementById("ID_Motivo_2");
-        Motivo.innerHTML = "";
-        Motivo.innerHTML = "<p>"+xMotivo+" <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo_2'><i class='fa fa-cog text-secondary'></i></button></p>";
-        ID_Motivo.setAttribute('value',xID);
-      }
-
-      function seleccionMotivo_3(xMotivo,xID){
-        var Motivo = document.getElementById("Motivo_3");
-        var ID_Motivo = document.getElementById("ID_Motivo_3");
-        Motivo.innerHTML = "";
-        Motivo.innerHTML = "<p>"+xMotivo+" <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo_3'><i class='fa fa-cog text-secondary'></i></button></p>";
-        ID_Motivo.setAttribute('value',xID);
-      }
-
-      function seleccionMotivo(xMotivo,xID,xNumber){
-        if(xNumber > 1){
-          var Motivo = document.getElementById("Motivo_"+xNumber);
-          var ID_Motivo = document.getElementById("ID_Motivo_"+xNumber);
-          Motivo.innerHTML = "";
-          Motivo.innerHTML = "<p>"+xMotivo+"</p>";
-          ID_Motivo.setAttribute('value',xID);
-        } else{
-          var Motivo = document.getElementById("Motivo");
-          var ID_Motivo = document.getElementById("ID_Motivo");
-          Motivo.innerHTML = "";
-          Motivo.innerHTML = "<p>"+xMotivo+"</p>";
-          ID_Motivo.setAttribute('value',xID);
-        }
-    }
-
-      function agregarResponsable(){        
-        cantResponsables++;
-        if(cantResponsables < 5){
-          var divContenedor = document.getElementById('contenedorResponsables');
-          var divResponsables= document.createElement("div");
-          divResponsables.setAttribute('class','form-group row');
-          var labelResponsables= document.createElement("label");
-          labelResponsables.setAttribute('class','col-md-2 col-form-label LblForm');
-          labelResponsables.innerText = 'Responsable '+cantResponsables+':';
-          var divSelectResponsables= document.createElement("div");
-          divSelectResponsables.setAttribute('class','col-md-10');
-          var select = `<?php $Element = new Elements(); echo $Element->CBResponsables(); ?>`;
-          divSelectResponsables.innerHTML = select;      
-          divResponsables.appendChild(labelResponsables);
-          divResponsables.appendChild(divSelectResponsables);
-          divContenedor.appendChild(divResponsables);
-        }
-
-      }
-
-      function resetearForm(){
-            swal({
-              title: "¿Está seguro?",
-              text: "¿Seguro de querer resetear el formulario?",
-              icon: "warning",
-              buttons: true,
-              dangerMode: true,
-            })
-            .then((willDelete) => {
-              if (willDelete) {
-                reiniciarFormulario();
-                // window.location.href = 'Controladores/DeletePersona.php?ID='+xID;
-                //alert('SI');
-              } else {        
-              }
-            });
-      }
-
-      function tomarElemento(xID){
-        return document.getElementById(xID);
-      }
-
-      function crearElemento(xTipo){
-        return document.createElement(xTipo);
-      }
-
-      function agregarAtributoxElemento(xElemento,xAtributo,xValue){
-          xElemento.setAttribute(xAtributo,xValue);
-      }
-
-      function agregarEtiqueta(xElemento,xEtiqueta){
-        xElemento.innerHTML = xEtiqueta;
-      }
-
-      function resetearValorElemento(xID){
-        document.getElementById(xID).value = "";
-      }
-
-      function resetearValorSelect(xID){
-        document.getElementById(xID).selectedIndex = 0;
-      }
-
-      function resetearValorDiv(xDiv){
-        xDiv.innerHTML = "";
-      }
-
-      function agregarElementoxDiv(xDiv,xElemento){
-        xDiv.appendChild(xElemento);
-      }
-
-
-
-      function reiniciarFormulario(){
-        //RESETEANDO CAMPO FECHA
-        resetearValorElemento("datepicker");        
-        //RESETEANDO BOTON PERSONA
-        var btnPersona = crearElemento("button");
-        agregarAtributoxElemento(btnPersona,"type","button");
-        agregarAtributoxElemento(btnPersona,"class","btn btn-lg btn-primary btn-block");
-        agregarAtributoxElemento(btnPersona,"data-toggle","modal");
-        agregarAtributoxElemento(btnPersona,"data-target","#ModalPersona");        
-        agregarEtiqueta(btnPersona,"Seleccione una Persona");        
-        var div_btnPersona = tomarElemento("Persona");
-        resetearValorDiv(div_btnPersona);        
-        agregarElementoxDiv(div_btnPersona,btnPersona);        
-        //RESETEANDO BOTON SELECCIONE UN MOTIVO 1
-        var btnMotivo_1 = crearElemento("button");
-        agregarAtributoxElemento(btnMotivo_1,"type","button");
-        agregarAtributoxElemento(btnMotivo_1,"class","btn btn-lg btn-primary btn-block");
-        agregarAtributoxElemento(btnMotivo_1,"data-toggle","modal");
-        agregarAtributoxElemento(btnMotivo_1,"data-target","#ModalMotivo_1");        
-        agregarEtiqueta(btnMotivo_1,"Seleccione un Motivo");        
-        var div_btnMotivo_1 = tomarElemento("Motivo_1");
-        resetearValorDiv(div_btnMotivo_1);        
-        agregarElementoxDiv(div_btnMotivo_1,btnMotivo_1); 
-        //RESETEANDO BOTON SELECCIONE UN MOTIVO 2
-        var btnMotivo_2 = crearElemento("button");
-        agregarAtributoxElemento(btnMotivo_2,"type","button");
-        agregarAtributoxElemento(btnMotivo_2,"class","btn btn-lg btn-primary btn-block");
-        agregarAtributoxElemento(btnMotivo_2,"data-toggle","modal");
-        agregarAtributoxElemento(btnMotivo_2,"data-target","#ModalMotivo_2");        
-        agregarEtiqueta(btnMotivo_2,"Seleccione un Motivo");        
-        var div_btnMotivo_2 = tomarElemento("Motivo_2");
-        resetearValorDiv(div_btnMotivo_2);        
-        agregarElementoxDiv(div_btnMotivo_2,btnMotivo_2);  
-        //RESETEANDO BOTON SELECCIONE UN MOTIVO 3
-        var btnMotivo_3 = crearElemento("button");
-        agregarAtributoxElemento(btnMotivo_3,"type","button");
-        agregarAtributoxElemento(btnMotivo_3,"class","btn btn-lg btn-primary btn-block");
-        agregarAtributoxElemento(btnMotivo_3,"data-toggle","modal");
-        agregarAtributoxElemento(btnMotivo_3,"data-target","#ModalMotivo_3");        
-        agregarEtiqueta(btnMotivo_3,"Seleccione un Motivo");        
-        var div_btnMotivo_3 = tomarElemento("Motivo_3");
-        resetearValorDiv(div_btnMotivo_3);        
-        agregarElementoxDiv(div_btnMotivo_3,btnMotivo_3);  
-        //RESETEANDO OBSERVACIONES
-        resetearValorElemento("Observaciones");
-        //RESETEANDO RESPONSABLE
-        resetearValorSelect("ID_Responsable");
-        //RESETEANDO CENTRO DE SALUD
-        resetearValorSelect("ID_Centro");
-        //RESETEANDO RESPONSABLES CREADOS
-        var div_btnPersona = tomarElemento("contenedorResponsables");
-        resetearValorDiv(div_btnPersona);   
-        cantResponsables = 1; 
-      }
 
   </script>
 </head>
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_MOVIMIENTO);
   ?>
   <div class = "col-md-9">
@@ -353,10 +82,18 @@ $Con->CloseConexion();
       <div class="col"></div>
       <div class="col-10">
           <div class="row">
-              <center><button class = "btn btn-secondary btn-sm" onClick="location.href ='view_newmovimientos.php'">Agregar Nuevo Movimiento</button> <button class = "btn btn-secondary btn-sm" onClick="location.href='view_newpersonas.php'">Agregar Nueva Persona</button> <button class = "btn btn-secondary btn-sm" onClick="location.href='view_newmotivos.php'">Agregar Nuevo Motivo</button> <button class = "btn btn-secondary btn-sm" onClick="location.href='view_newresponsables.php'">Agregar Nuevo Responsable</button></center>
-          </div><br>
+              <center>
+                <button class = "btn btn-secondary btn-sm" onClick="location.href ='/movimiento/nuevo'">Agregar Nuevo Movimiento</button>
+                <button class = "btn btn-secondary btn-sm" onClick="location.href='/persona/nuevo'">Agregar Nueva Persona</button>
+                <button class = "btn btn-secondary btn-sm" onClick="location.href='/motivo/nuevo'">Agregar Nuevo Motivo</button>
+                <button class = "btn btn-secondary btn-sm" onClick="location.href='/responsable/nuevo'">Agregar Nuevo Responsable</button>
+              </center>
+          </div>
+          <br>
           <div class="row">
-              <center><button class = "btn btn-secondary btn-sm" onClick="location.href='view_newcentros.php'">Agregar Nuevo Centro</button></center>
+              <center>
+                <button class = "btn btn-secondary btn-sm" onClick="location.href='/centrodesalud/nuevo'">Agregar Nuevo Centro</button>
+              </center>
           </div>
       </div>
       <div class="col"></div>
@@ -366,7 +103,7 @@ $Con->CloseConexion();
       <div class = "col-10">
           <!-- Carga -->
           <p class = "Titulos">Cargar Nuevo Movimiento</p>
-          <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/InsertMovimiento.php" onSubmit = "return ValidarMovimiento();">
+          <form method = "post" onKeydown="return event.key != 'Enter';" action = "/insert_movimiento" onSubmit = "return ValidarMovimiento();">
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Fecha: </label>
               <div class="col-md-10">
@@ -412,7 +149,6 @@ $Con->CloseConexion();
               <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable: </label>
               <div class = "col-md-9">
                 <?php  
-                $Element = new Elements();
                 /*if(isset($_SESSION["UltResponsable"])){
                   $xID_Responsable = $_SESSION["UltResponsable"];
                   echo $Element->CBModResponsables($xID_Responsable);
@@ -432,7 +168,6 @@ $Con->CloseConexion();
               <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Centro de Salud: </label>
               <div class = "col-md-10">
                 <?php  
-                $Element = new Elements();
                 /*if(isset($_SESSION["UltCentro"])){
                   $xID_Centro = $_SESSION["UltCentro"];
                   echo $Element->CBModCentros($xID_Centro);                  
@@ -447,7 +182,6 @@ $Con->CloseConexion();
               <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Otras Instituciones: </label>
               <div class = "col-md-10">
                 <?php  
-                $Element = new Elements();
                 /*if(isset($_SESSION["UltOtraInstitucion"])){
                   $xID_OtraInstitucion = $_SESSION["UltOtraInstitucion"];
                   echo $Element->CBModOtrasInstituciones($xID_OtraInstitucion);                  
@@ -534,7 +268,7 @@ $Con->CloseConexion();
                   <div class="col"></div>
                   <div class="col-8">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos_1" onKeyUp="buscarMotivos_1()" autocomplete="off">
+                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos_1" onKeyUp="buscarMotivos(1)" autocomplete="off">
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -574,7 +308,7 @@ $Con->CloseConexion();
                   <div class="col"></div>
                   <div class="col-8">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos_2" onKeyUp="buscarMotivos_2()" autocomplete="off">
+                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos_2" onKeyUp="buscarMotivos(2)" autocomplete="off">
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -614,7 +348,7 @@ $Con->CloseConexion();
                   <div class="col"></div>
                   <div class="col-8">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos_3" onKeyUp="buscarMotivos_3()" autocomplete="off">
+                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos_3" onKeyUp="buscarMotivos(3)" autocomplete="off">
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -654,7 +388,7 @@ $Con->CloseConexion();
                   <div class="col"></div>
                   <div class="col-8">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos4" id = "SearchMotivos4" onKeyUp="buscarMotivosGeneral(4)" autocomplete="off">
+                      <input class = "form-control" type="text" name="BuscarMotivos4" id = "SearchMotivos_4" onKeyUp="buscarMotivos(4)" autocomplete="off">
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -664,7 +398,7 @@ $Con->CloseConexion();
                 </div>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-10" id = "ResultadosMotivos4">
+                  <div class="col-10" id = "ResultadosMotivos_4">
                     
                   </div>
                   <div class="col"></div>
@@ -694,7 +428,7 @@ $Con->CloseConexion();
                   <div class="col"></div>
                   <div class="col-8">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos5" id = "SearchMotivos5" onKeyUp="buscarMotivosGeneral(5)" autocomplete="off">
+                      <input class = "form-control" type="text" name="BuscarMotivos5" id = "SearchMotivos_5" onKeyUp="buscarMotivos(5)" autocomplete="off">
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -704,7 +438,7 @@ $Con->CloseConexion();
                 </div>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-10" id = "ResultadosMotivos5">
+                  <div class="col-10" id = "ResultadosMotivos_5">
                     
                   </div>
                   <div class="col"></div>
@@ -722,32 +456,5 @@ $Con->CloseConexion();
   </div>
 </div>
 </div>
-<?php  
-if(isset($_REQUEST["Mensaje"])){
-  echo "<script type='text/javascript'>
-  swal('".$_REQUEST["Mensaje"]."','','success');
-</script>";
-}
-?>
-<?php
-/*
- *
- * This file is part of Rastreador3.
- *
- * Rastreador3 is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Rastreador3 is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Rastreador3; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- */
-?>
 </body>
 </html>

@@ -315,6 +315,75 @@ class MotivoController
 
     }
 
+    public function buscar_motivos_filtro()
+    {
+        $consultaBusqueda = $_REQUEST['valorBusqueda'];
+        $id = $_REQUEST['ID'];
+
+        //Filtro anti-XSS
+        $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
+        $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
+        $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consultaBusqueda);
+
+        //Variable vacía (para evitar los E_NOTICE)
+        $mensaje = "";
+
+        if (isset($consultaBusqueda)) {
+
+            $Con = new Conexion();
+            $Con->OpenConexion();
+            $query = "SELECT * 
+                      FROM motivo 
+                      WHERE motivo LIKE '%$consultaBusqueda%' 
+                        and estado = 1";
+
+            $consulta = mysqli_query($Con->Conexion, $query);
+            $filas = mysqli_num_rows($consulta);
+
+            if ($filas === 0) {
+                $mensaje = "<p>No hay ningún registro con ese dato</p>";
+            } else {
+
+                $mensaje .= '<table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        <th scope="col">Motivo</th>
+                        <th scope="col">Código</th>	
+                        <th scope="col">Acción</th>	
+                        </tr>
+                    </thead>
+                    <tbody>';
+
+                while($resultados = mysqli_fetch_array($consulta)) {
+                    $ID_Motivo = $resultados["id_motivo"];			
+                    $Motivo = $resultados['motivo'];
+                    $codigo = $resultados['codigo'];					
+
+                    $mensaje .= '
+                        <tr>
+                        <th scope="row">' . $Motivo . '</th>
+                        <td>' . $codigo . '</td>		
+                        <td>
+                            <button type = "button" class = "btn btn-outline-success" 
+                                    onClick="seleccionMotivo(' . (($id) ? $id : 'null') . ',\'' . $Motivo .'\',' . $ID_Motivo  .')" 
+                                    data-dismiss="modal">
+                                seleccionar
+                            </button>
+                        </td>
+                        </tr>';
+                };
+
+                $mensaje .= '</tbody>
+                    </table>';
+
+            };
+            $Con->CloseConexion();
+
+        };
+
+        echo $mensaje;
+    }
+
     public function buscar_motivos()
     {
         $Filtro = $_REQUEST["Search"];

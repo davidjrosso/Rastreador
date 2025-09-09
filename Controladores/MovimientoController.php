@@ -56,6 +56,28 @@ class MovimientoController
         exit();
     }
 
+    public function crear_movimiento()
+    {
+        header("Content-Type: text/html;charset=utf-8");
+        if (!isset($_SESSION["Usuario"])) {
+            include("./Views/Error_Session.php");
+        } else {
+
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+
+            include("./Views/view_newmovimientos.php");
+        }
+        exit();  
+    }
+
     public function buscar_movimientos()
     {
         $Filtro = $_REQUEST["Search"];

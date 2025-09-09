@@ -165,12 +165,12 @@
 </div>
 </div>
 <?php  
-if(isset($_REQUEST['Mensaje'])){
+if (isset($_REQUEST['Mensaje'])) {
   echo "<script type='text/javascript'>
   swal('".$_REQUEST['Mensaje']."','','success');
 </script>";
 }
-if(isset($_REQUEST['MensajeError'])){
+if (isset($_REQUEST['MensajeError'])) {
   echo "<script type='text/javascript'>
   swal('".$_REQUEST['MensajeError']."','','warning');
 </script>";

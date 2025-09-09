@@ -130,7 +130,13 @@ class PersonaController
                         <td>' . $DNI . '</td>
                         <td>' . $Nro_Carpeta . '</td>				
                         <td>' . $Domicilio . '</td>
-                        <td><button type = "button" class = "btn btn-outline-success" onClick="seleccionPersona(' . $id . ',\'' . $Nombre . '\',' . $ID_Persona . ')" data-dismiss="modal">seleccionar</button></td>
+                        <td>
+                            <button type = "button" class = "btn btn-outline-success" 
+                                    onClick="seleccionPersona(' . (($id) ? $id : 'null') . ',\'' . $Nombre . '\',' . $ID_Persona . ')" 
+                                    data-dismiss="modal">
+                                seleccionar
+                            </button>
+                        </td>
                         </tr>';
                         //   <td>'.$Nro_Legajo.'</td>
                 };
