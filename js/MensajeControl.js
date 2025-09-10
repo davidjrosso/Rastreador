@@ -1,6 +1,10 @@
 import swal from 'sweetalert2';
 import XMLHttpRequest from '../node_modules/xhr2/lib/browser';
 
+$(function() {
+    controlMensaje(mensajeSuccess, mensajeError);
+});
+
 export function controlMovimiento(object) {
     if (object.value == "1") {
         swal.fire({
@@ -38,6 +42,21 @@ export function Verificar(xID) {
         window.location.href = 'delete_movimiento?ID=' + xID;
       }
     });
+}
+
+export function VerificarEliminarCentro(xID){
+        swal.fire({
+            title: "¿Está seguro?",
+            text: "¿Seguro de querer eliminar este centro de salud?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                window.location.href = 'delete_centro_salud?ID=' + xID;
+            }
+        });
 }
 
 export function VerificarCategoria(xID) {

@@ -49,6 +49,8 @@
     let cantCategoria = 1;
     let time = null;
     let idTime = null;
+    let mensajeError = '<?php echo $mensaje_error;?>';
+    let mensajeSuccess = '<?php echo $mensaje_success;?>';
     //let evtSource = null;
     $(document).ready(function(){
         var date_input=$('input[name="Fecha_Desde"]');

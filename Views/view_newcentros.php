@@ -36,34 +36,8 @@
   <script src="js/ValidarResponsable.js"></script>
 	<script src="dist/control.js"></script>
   <script>
-      $(document).ready(function() {
-            let mensajeError = '<?php echo $mensaje_error;?>';
-            let mensajeSuccess = '<?php echo $mensaje_success;?>';
-			      controlMensaje(mensajeSuccess, mensajeError);
-            /*
-            var date_input=$('input[name="date"]'); //our date input has the name "date"
-            var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-            date_input.datepicker({
-                format: 'dd/mm/yyyy',
-                container: container,
-                todayHighlight: true,
-                autoclose: true,
-            });
-            */
-      });
-
-       function CalcularPrecio(){
-        //var Combus = document.getElementById("Combustible").value;
-        var Litros = document.getElementById("Litros").value;
-        var Combustible = document.getElementById("Combustible");
-        var PrecioxL = Combustible.options[Combustible.selectedIndex].getAttribute("name");
-        
-        var Total = parseFloat(PrecioxL) * parseFloat(Litros);
-
-        var Precio = document.getElementById("Precio");
-        Precio.setAttribute("value",parseFloat(Total).toFixed(2));
-        //Terminar esta parte cuando termine lo demas.
-       }
+       let mensajeError = '<?php echo $mensaje_error;?>';
+       let mensajeSuccess = '<?php echo $mensaje_success;?>';
   </script>
 </head>
 <body>
@@ -78,7 +52,8 @@
         <p>Nuevo Centro</p>
       </div>
       <div class="col"></div>
-    </div><br>
+    </div>
+    <br>
     <div class="row">
       <div class="col"></div>
       <div class="col-10">

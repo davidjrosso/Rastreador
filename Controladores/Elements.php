@@ -2896,7 +2896,7 @@ public function getMenuSeguridadUsuario($ID){
                        where estado = 1
                          and accountid = $idAccount";
     $ConsultaResult = mysqli_query($Con3->Conexion,$ConsultaNombre)or die("Problemas al mostrar Personas");
-    if(mysqli_num_rows($ConsultaResult) > 0){
+    if(mysqli_num_rows($ConsultaResult) > 0) {
       $Resultado = mysqli_fetch_array($ConsultaResult);
       $cardSession = "<div class='title-session'>
                         <a id='perfil' style='color: #e1ffff' href='cuenta?account_id=" . $idAccount . "'>".

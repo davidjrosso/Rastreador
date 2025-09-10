@@ -1536,7 +1536,7 @@ class CtrGeneral{
 		$Table = "<table class='table'><thead><tr><th>Centro de Salud</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["centro_salud"]."</td><td><a href = '/centrosalud/editar?ID=".$Ret["id_centro"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_centro"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["centro_salud"]."</td><td><a href = '/centrosalud/editar?ID=".$Ret["id_centro"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'VerificarEliminarCentro(".$Ret["id_centro"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -1550,10 +1550,28 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select id_centro, centro_salud from centros_salud where id_centro = $ID and estado = 1 order by id_centro";
 		$MessageError = "Problemas al intentar mostrar Centros de Salud por ID";
-		$Table = "<table class='table'><thead><tr><th>Centro de Salud</th><th colspan='2'></th></tr></thead>";
+		$Table = "<table class='table'>
+					<thead>
+						<tr>
+							<th>Centro de Salud</th>
+							<th colspan='2'></th>
+						</tr>
+					</thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["centro_salud"]."</td><td><a href = '/centrosalud/editar?ID=".$Ret["id_centro"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_centro"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr>
+						<td>" . $Ret["centro_salud"] . "</td>
+						<td>
+							<a href = '/centrosalud/editar?ID=" . $Ret["id_centro"] . "'>
+								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+							</a>
+						</td>
+						<td>
+							<a onClick = 'VerificarEliminarCentro(" . $Ret["id_centro"] . ")'>
+								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
+							</a>
+						</td>
+					   </tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -1570,7 +1588,7 @@ class CtrGeneral{
 		$Table = "<table class='table'><thead><tr><th>Centro de Salud</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["centro_salud"]."</td><td><a href = '/centrosalud/editar?ID=".$Ret["id_centros"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_centro"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["centro_salud"]."</td><td><a href = '/centrosalud/editar?ID=".$Ret["id_centros"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'VerificarEliminarCentro(".$Ret["id_centro"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";

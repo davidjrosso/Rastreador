@@ -35,6 +35,22 @@ class CentroSaludController
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
+
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+
+            $Filtro = null;
+            $ID_Filtro = null;
+            if (isset($_REQUEST["Filtro"])) $Filtro = $_REQUEST["Filtro"];
+            if (isset($_REQUEST["ID_Filtro"])) $ID_Filtro = $_REQUEST["ID_Filtro"];
+
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
             include("./Views/view_centros.php");
         }
         exit();

@@ -24,7 +24,6 @@
   <title>Rastreador</title>
   <meta charset="utf-8">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
-  <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
@@ -35,33 +34,9 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 	<script src="dist/control.js"></script>
   <script>
-       $(document).ready(function() {
-            let mensajeError = '<?php echo $mensaje_error;?>';
-            let mensajeSuccess = '<?php echo $mensaje_success;?>';
-            let date_input=$('input[name="date"]'); //our date input has the name "date"
-            let container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-            date_input.datepicker({
-                  format: 'dd/mm/yyyy',
-                  container: container,
-                  todayHighlight: true,
-                  autoclose: true,
-            });
-
-			      controlMensaje(mensajeSuccess, mensajeError);
-          });
-
-       function CalcularPrecio() {
-        let Litros = document.getElementById("Litros").value;
-        let Combustible = document.getElementById("Combustible");
-        let PrecioxL = Combustible.options[Combustible.selectedIndex].getAttribute("name");
-        
-        let Total = parseFloat(PrecioxL) * parseFloat(Litros);
-
-        let Precio = document.getElementById("Precio");
-        Precio.setAttribute("value",parseFloat(Total).toFixed(2));
-       }
+    let mensajeError = '<?php echo $mensaje_error;?>';
+    let mensajeSuccess = '<?php echo $mensaje_success;?>';
   </script>
-
 </head>
 <body>
 <div class = "row">
