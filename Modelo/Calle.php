@@ -135,7 +135,7 @@ class Calle {
 																		REGEXP_REPLACE(
 																						REGEXP_SUBSTR(
 																								lower('$calle'), 
-																								'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
+																								'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)|cortadero( )*[()a-zA-Zá-úÁ-Ú ]+'
 																						),
 																						'( )+',
 																						'%'
@@ -199,7 +199,7 @@ class Calle {
 																		REGEXP_REPLACE(
 																						REGEXP_SUBSTR(
 																								lower('$domicilio'), 
-																								'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
+																								'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)|cortadero( )*[()a-zA-Zá-úÁ-Ú ]+'
 																						),
 																						'( )+',
 																						'%'
@@ -222,7 +222,24 @@ class Calle {
 		} else if ($domicilio && $id_bario && !$nro_calle) {
 			$consulta = "SELECT *
 						 FROM calle c INNER JOIN calles_barrios cs ON (c.id_calle = cs.id_calle)
-						 WHERE lower(calle_nombre) LIKE CONCAT(
+						 WHERE lower(calle_nombre) LIKE IF(lower('$domicilio') LIKE '%cortadero%',
+						 								   CONCAT(
+																'%',
+																REGEXP_REPLACE( 
+																		REGEXP_REPLACE(
+																						REGEXP_SUBSTR(
+																									  lower('$domicilio'), 
+																									  'cortadero( )*[()a-zA-Zá-úÁ-Ú ]+'
+																									  ),
+																						'( )+',
+																						'%'
+																						),
+																				'(\\\\.)',
+																				''
+																				),
+																'%'
+																),
+						 									CONCAT(
 																'%',
 																REGEXP_REPLACE( 
 																		REGEXP_REPLACE(
@@ -238,6 +255,7 @@ class Calle {
 																				),
 																'%'
 																)
+															)
 						  AND id_barrio = $id_bario
 						  AND c.estado = 1
 						  AND cs.estado = 1
@@ -265,7 +283,7 @@ class Calle {
 																		REGEXP_REPLACE(
 																						REGEXP_SUBSTR(
 																								lower('$xDomicilio'), 
-																								'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
+																								'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)|cortadero( )*[()a-zA-Zá-úÁ-Ú ]+'
 																						),
 																						'( )+',
 																						'%'
@@ -326,7 +344,7 @@ class Calle {
 																		REGEXP_REPLACE(
 																						REGEXP_SUBSTR(
 																								lower('$domicilio'), 
-																								'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
+																								'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)|cortadero( )*[()a-zA-Zá-úÁ-Ú ]+'
 																						),
 																						'( )+',
 																						'%'
@@ -349,7 +367,24 @@ class Calle {
 		} else if ($domicilio && $id_bario && !$nro_calle) {
 			$consulta = "SELECT *
 						 FROM calle c INNER JOIN calles_barrios cs ON (c.id_calle = cs.id_calle)
-						 WHERE lower(calle_nombre) LIKE CONCAT(
+						 WHERE lower(calle_nombre) LIKE IF(lower('$domicilio') LIKE '%cortadero%',
+						 								   CONCAT(
+																'%',
+																REGEXP_REPLACE( 
+																		REGEXP_REPLACE(
+																						REGEXP_SUBSTR(
+																									  lower('$domicilio'), 
+																									  'cortadero( )*[()a-zA-Zá-úÁ-Ú ]+'
+																									  ),
+																						'( )+',
+																						'%'
+																						),
+																				'(\\\\.)',
+																				''
+																				),
+																'%'
+																),
+						 								   CONCAT(
 																'%',
 																REGEXP_REPLACE( 
 																		REGEXP_REPLACE(
@@ -365,6 +400,7 @@ class Calle {
 																				),
 																'%'
 																)
+															)
 						  AND id_barrio = $id_bario
 						  AND c.estado = 1
 						  AND cs.estado = 1
