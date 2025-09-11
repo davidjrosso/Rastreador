@@ -818,16 +818,19 @@ public function getCalle(){
 
 public function getNroCalle()
 {
-	$LongString = strlen($this->Domicilio);
-	if ($LongString > 3) {
-	  $StringDelimitado = chunk_split($this->Domicilio,$LongString - 4,"-");
-	  $PartesDireccion = explode("-", $StringDelimitado);
-	  $NroDomActual = (int) filter_var($PartesDireccion[1], FILTER_SANITIZE_NUMBER_INT);
-	  if($NroDomActual == 0){
-		$NroDomActual = null;
-	  }
-	} else {
-	  $NroDomActual = null;
+	$NroDomActual = null;
+	if (preg_match("~[aA-zZ]* [0-9]*~", $this->Domicilio)) {
+		$LongString = strlen($this->Domicilio);
+		$has_number = preg_match("~[0-9]*~", $this->Domicilio);
+		if ($has_number && $LongString > 4) {
+		  $StringDelimitado = chunk_split($this->Domicilio,$LongString - 4,"-");
+		  $PartesDireccion = explode("-", $StringDelimitado);
+
+		  $NroDomActual = (int) filter_var($PartesDireccion[1], FILTER_SANITIZE_NUMBER_INT);
+		  if($NroDomActual == 0){
+			$NroDomActual = null;
+		  }
+		}
 	}
 	return $NroDomActual;
 }
