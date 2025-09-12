@@ -223,53 +223,45 @@ export class MapaOl {
         let pos = [parseFloat(lat), parseFloat(lon)];
         let point = new Point(pos);
         let vectorLayer = null;
-        let icon = null;
-        let list = null;
         vectorLayer = this.#mapa.getLayers();
 
-        if (vectorLayer.item(4)) {
-          list = vectorLayer.item(4).getSource().getFeatures();
-          icon = list.at(-1);
-        } else if (vectorLayer.item(2)){
-          list = vectorLayer.item(2).getSource().getFeatures();
-          icon = list.at(-1);
-        }
-
-        if (icon && icon.values_.tipo == "icono") {
-           icon.setGeometry(point);
-           icon.set('description', id_persona);
-        } else {
-          let iconFeature = new Feature({
-            geometry: point,
-            description: id_persona,
-            tipo: "icono"
-          });
-
-          if (vectorLayer.item(4)) {
-            this.#mapa.removeLayer(vectorLayer.item(4));
+        vectorLayer.forEach((layer) => {
+          if (layer.values_.descripcion == "iconoLayer") {
+            this.#mapa.removeLayer(layer);
           }
+        });
 
-          iconFeatures.push(iconFeature);
-          let vectorSource = new olSource.Vector({
-            features: iconFeatures
-          });
-          let iconStyle = new Style({
-            image: new Icon(/** @type {olx.style.IconOptions} */ ({
-              anchor: [200, 500],
-              anchorXUnits: 'pixels',
-              anchorYUnits: 'pixels',
-              scale: 0.07,
-              opacity: 0.85,
-              src: imagen
-            }))
-          });
-    
-          vectorLayer = new VectorLayer({
-            source: vectorSource,
-            style: iconStyle
-          });
-          this.#mapa.addLayer(vectorLayer);
+        let iconFeature = new Feature({
+          geometry: point,
+          description: id_persona,
+          tipo: "icono"
+        });
+
+        if (vectorLayer.item(4)) {
+          this.#mapa.removeLayer(vectorLayer.item(4));
         }
+
+        iconFeatures.push(iconFeature);
+        let vectorSource = new olSource.Vector({
+          features: iconFeatures
+        });
+        let iconStyle = new Style({
+          image: new Icon(/** @type {olx.style.IconOptions} */ ({
+            anchor: [200, 500],
+            anchorXUnits: 'pixels',
+            anchorYUnits: 'pixels',
+            scale: 0.07,
+            opacity: 0.85,
+            src: imagen
+          }))
+        });
+
+        vectorLayer = new VectorLayer({
+          source: vectorSource,
+          style: iconStyle,
+          descripcion: "iconoLayer"
+        });
+        this.#mapa.addLayer(vectorLayer);
         
         this.#mapa.getView().setCenter(pos);
     }
