@@ -197,25 +197,12 @@ export class MapaOl {
 
     removIcon() {
         let vectorLayer = null;
-        let icon = null;
-        let list = null;
         vectorLayer = this.#mapa.getLayers();
-
-        if (vectorLayer.item(4)) {
-          list = vectorLayer.item(4).getSource().getFeatures();
-          icon = list.at(-1);
-          if (icon && icon.values_.descripcion == "icono") {
-            //vectorLayer.item(4).getSource().removeFeature(icon);
-            this.#mapa.removeLayer(vectorLayer.item(4));
+        vectorLayer.forEach((layer) => {
+          if (layer.values_.descripcion == "iconoLayer") {
+            this.#mapa.removeLayer(layer);
           }
-        } else {
-          list = vectorLayer.item(2).getSource().getFeatures();
-          icon = list.at(-1);
-          if (icon && icon.values_.descripcion == "icono") {
-            //vectorLayer.item(2).getSource().removeFeature(icon);
-            this.#mapa.removeLayer(vectorLayer.item(2));
-          }
-        }
+        });
     }
 
     addIcon(lon, lat, id_persona, imagen) {
