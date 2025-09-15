@@ -293,7 +293,7 @@ class CalleBarrio
 	public function get_pendiente_lat()
     {
         $lat_str = array();
-		$expr_reg = "~([ ]*[-]{0,1}[0-9]+\.[0-9]+,|[-]{0,1}[0-9]+\.[0-9]+E[-]{0,1}[0-9]+[ ]*,)~";
+		$expr_reg = "~([ ]*[-]{0,1}[0-9]+\.[0-9]+[ ]*,|[-]{0,1}[0-9]+\.[0-9]+E[-]{0,1}[0-9]+[ ]*,)~";
 		$pendiente_dato = str_replace(" ", "", $this->pendiente);
         $lat = substr($pendiente_dato, 6);
         $lat = substr($lat, 0, -1);
