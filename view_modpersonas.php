@@ -50,6 +50,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
   <title>Rastreador III</title>
   <meta charset="utf-8">
   <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
@@ -381,7 +382,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                   </div>
                   <div class="form-group row">
                     <label for="NumeroDeCalle" class="col-md-2 col-form-label LblForm">Domicilio: </label>
-                    <div class="col-md-6">
+                    <div class="col-md-6 flex-sm-boton">
                       <?php
                       if (!empty($Persona->getId_Calle())) {
                         echo $Element->CBCallesNombre($Persona->getId_Calle());
@@ -391,7 +392,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                       ?>
 
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2 form-boton-widht">
                       <input type="number" class="form-control" name="NumeroDeCalle" id="NumeroDeCalle" placeholder="Nro"
                         min="1" autocomplete="off" <?php
                         $NroCalle = $Persona->getNro();
@@ -401,7 +402,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                           echo "value =" . (($Persona->getNroCalle()) ? $Persona->getNroCalle() : "");
                         } ?>>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2 form-boton-widht">
                       <button id="mapa-sig" type="button" class="btn btn-secondary" disabled data-toggle="modal"
                         style="background-color: #ffc6b1; color: black; border-color: white; " data-target="#map-modal">S.
                         I. G.</button>

@@ -874,3 +874,17 @@ select[class~="form-control"] {
   padding: 0rem 0.27rem;
   margin-right: 4px;
 }
+
+@media (350px <= width <= 1103px) {
+
+  .flex-sm-boton {
+    flex: 1 1 auto !important;
+    padding-right: 1% !important;
+  }
+
+  .form-boton-widht {
+    min-width: 3.6rem;
+    padding-left: 0.7% !important;
+    padding-right: 0.7% !important;
+  }
+}
