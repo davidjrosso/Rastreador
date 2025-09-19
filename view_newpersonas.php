@@ -359,10 +359,10 @@
             </div>
             <div class="form-group row" style="margin-bottom: 0.6rem;">
               <label for="BotonModalDireccion_1" class="col-md-2 col-form-label LblForm">Domicilio: </label>
-              <div class="col-md-6" id = "Persona">
+              <div class="col-md-6 flex-sm-boton" id = "Persona">
               	 	<button type = "button" id="BotonModalDireccion_1" class = "btn btn-lg btn-primary btn-block" style="padding-top: 4px;padding-bottom: 4px;" data-toggle="modal" data-target="#ModalCalle">Seleccione una Calle</button>
               </div>
-              <div class="col-md-2">
+              <div class="col-md-2 form-boton-widht">
                 <input type="number" class="form-control" style="margin-top: 1px;" name = "NumeroDeCalle" id="NumeroDeCalle" placeholder="Número" min="1" autocomplete="off">
               </div>
               <div class="col-md-2">
