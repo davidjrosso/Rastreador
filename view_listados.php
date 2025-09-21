@@ -604,7 +604,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
 
                 ?>
               </div>
-              <div class="col-md-1">
+              <div class="col-md-1 div-button-center">
                   <button type="button" class="btn btn-primary" onClick="agregarBarrio()" id="agregarBarrioID">+</button>
               </div>
             </div>
@@ -646,7 +646,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
               <div class="col-md-9" id = "Categoria">
                 <button type = "button" id="btn-categoria" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalCategoria">Seleccione una Categoria</button>  
               </div>
-              <div class="col-md-1">
+              <div class="col-md-1 div-button-center">
                   <button type="button" class="btn btn-primary" onClick="agregarCategoria()" id="agregarCategoriaID">+</button>
               </div>
             </div>
@@ -657,7 +657,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
               <div class="col-md-9" id = "Motivo">
                 <button type = "button" id="btn-motivo" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo">Seleccione un Motivo</button>   
               </div>
-                <div class="col-md-1">
+                <div class="col-md-1 div-button-center">
                   <button type="button" class="btn btn-primary" onClick="agregarMotivo()" id="agregarMotivoID">+</button>
               </div>
             </div>
