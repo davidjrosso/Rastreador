@@ -875,6 +875,11 @@ select[class~="form-control"] {
   margin-right: 4px;
 }
 
+.div-button-center {
+  display: inline-flex; 
+  align-items: center;
+}
+
 @media (350px <= width <= 1103px) {
 
   .flex-sm-boton {

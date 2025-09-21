@@ -760,8 +760,8 @@ $TipoUsuario = $account->get_id_tipo_usuario();
                 echo $Element->CBRepBarrios();
                 ?>
               </div>
-              <div class="col-md-1">
-                  <button type="button" class="btn btn-primary" onClick="agregarBarrio()" id="agregarBarrioID">+</button>
+              <div class="col-md-1 div-button-center">
+                  <button type="button" class="btn btn-primary" style="align-self:center" onClick="agregarBarrio()" id="agregarBarrioID">+</button>
               </div>
             </div>
             <div id="contenedorBarrios">              
@@ -818,7 +818,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
               <div class="col-md-9" id = "Categoria">
                 <button id="modal-categoria" type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalCategoria">Seleccione una Categoria</button>  
               </div>
-              <div class="col-md-1">
+              <div class="col-md-1 div-button-center">
                   <button type="button" class="btn btn-primary" onClick="agregarCategoria()" id="agregarCategoriaID">+</button>
               </div>
             </div>
@@ -829,7 +829,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
               <div class="col-md-9" id = "Motivo">
                 <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo">Seleccione un Motivo</button>   
               </div>
-              <div class="col-md-1">
+              <div class="col-md-1 div-button-center">
                   <button type="button" class="btn btn-primary" onClick="agregarMotivo()" id="agregarMotivoID">+</button>
               </div>
             </div>
