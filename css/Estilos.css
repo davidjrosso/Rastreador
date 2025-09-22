@@ -1,15 +1,35 @@
+body > .row {
+  margin-right: 0px !important;
+}
+
+.menu-md-2 {
+    flex: 0 0 215px !important;
+    max-width: 215px !important;
+    padding-right: 0px !important;
+    max-height: 100vh;
+}
+
+.inicio-md-2 {
+  max-width: none !important;
+  flex-grow: 1;
+  flex-basis: min-content;
+  max-height: 100vh;
+  overflow-y: scroll;
+}
+
 .nav-side-menu {
   overflow: auto;
   font-family: verdana;
   font-size: 12px;
   font-weight: 200;
   background-color: #2e353d;
-  position: fixed;
+  /*position: fixed;*/
   top: 0px;
-  width: 200px;
+  /*width: 200px*/;
   height: 100%;
   color: #e1ffff;
 }
+
 .nav-side-menu .brand {
   background-color: #23282e;
   line-height: 50px;
@@ -17,6 +37,7 @@
   text-align: center;
   font-size: 14px;
 }
+
 .nav-side-menu .toggle-btn {
   display: none;
 }
@@ -883,6 +904,10 @@ select[class~="form-control"] {
 #ID_Barrio > option {
   background-color: white !important;
   color: rgb(56, 55, 55) !important;
+}
+
+#ID_Barrio > option:not(a[selected]) {
+  font-size: 1rem;
 }
 
 @media (350px <= width <= 1103px) {
