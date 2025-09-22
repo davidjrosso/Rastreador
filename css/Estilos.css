@@ -880,6 +880,11 @@ select[class~="form-control"] {
   align-items: center;
 }
 
+#ID_Barrio > option {
+  background-color: white !important;
+  color: rgb(56, 55, 55) !important;
+}
+
 @media (350px <= width <= 1103px) {
 
   .flex-sm-boton {
