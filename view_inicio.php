@@ -67,6 +67,7 @@ $Con->CloseConexion();
 <head>
   <title>Rastreador III</title>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -527,7 +528,7 @@ $Con->CloseConexion();
   $Element = new Elements();
   if ($tipo_usuario == 1) {
   ?>
-  <div class = "col-md-2">
+  <div class = "col-md-2 menu-md-2">
     <div class="nav-side-menu">
       <?php
             echo $Element->CBSessionNombreUsuario($id_usuario);
@@ -580,7 +581,7 @@ $Con->CloseConexion();
     }
     if ($tipo_usuario == 2 || $tipo_usuario > 3) {
   ?>
-  <div class = "col-md-2">
+  <div class = "col-md-2  menu-md-2">
 <div class="nav-side-menu">
       <?php
             echo $Element->CBSessionNombreUsuario($id_usuario);
@@ -621,7 +622,7 @@ $Con->CloseConexion();
   }  
   if ($tipo_usuario == 3) {    
   ?>
-  <div class = "col-md-2">
+  <div class = "col-md-2  menu-md-2">
 <div class="nav-side-menu">
       <?php
             echo $Element->CBSessionNombreUsuario($id_usuario);
@@ -666,7 +667,7 @@ $Con->CloseConexion();
     </div>
   </div>
 <?php } ?>
-  <div class = "col-md-10">
+  <div class = "col-md-10 inicio-md-2">
     <div class="row">
       <div class="col"></div>
       <div class="col-8">
