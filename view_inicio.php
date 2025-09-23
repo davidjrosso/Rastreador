@@ -523,13 +523,13 @@ $Con->CloseConexion();
 
 </head>
 <body>
-<div class = "row">
+<div class = "row margin-right-cero">
 <?php
   $Element = new Elements();
   if ($tipo_usuario == 1) {
   ?>
   <div class = "col-md-2 menu-md-2">
-    <div class="nav-side-menu">
+    <div class="nav-side-menu position-static">
       <?php
             echo $Element->CBSessionNombreUsuario($id_usuario);
       ?>
@@ -581,8 +581,8 @@ $Con->CloseConexion();
     }
     if ($tipo_usuario == 2 || $tipo_usuario > 3) {
   ?>
-  <div class = "col-md-2  menu-md-2">
-<div class="nav-side-menu">
+  <div class = "col-md-2 menu-md-2">
+  <div class="nav-side-menu position-static">
       <?php
             echo $Element->CBSessionNombreUsuario($id_usuario);
       ?>
@@ -622,8 +622,8 @@ $Con->CloseConexion();
   }  
   if ($tipo_usuario == 3) {    
   ?>
-  <div class = "col-md-2  menu-md-2">
-<div class="nav-side-menu">
+  <div class = "col-md-2 menu-md-2">
+<div class="nav-side-menu position-static">
       <?php
             echo $Element->CBSessionNombreUsuario($id_usuario);
       ?>
