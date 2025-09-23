@@ -39,6 +39,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
   <title>Rastreador III</title>
   <meta charset="utf-8">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <script src="https://code.jquery.com/jquery-1.9.1.min.js" integrity="sha256-wS9gmOZBqsqWxgIVgA8Y9WcQOa7PgSIX+rPA0VL2rbQ=" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
@@ -648,12 +649,12 @@ $TipoUsuario = $account->get_id_tipo_usuario();
   </script>
 </head>
 <body>
-<div class = "row">
+<div class = "row margin-right-cero">
 <?php
   $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_REPORTE_GRAFICO);
   ?>
-  <div class = "col-md-9">
+  <div class = "col-md-9 inicio-md-2">
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">

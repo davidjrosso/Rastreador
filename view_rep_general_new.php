@@ -71,6 +71,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta charset="utf-8">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -825,7 +826,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             ids.add(obj.id_persona);
             flag = true;
           }
-          return flag; 
+          return flag;
       });
       map.removIcon();
       if (cantLista <= 1) {

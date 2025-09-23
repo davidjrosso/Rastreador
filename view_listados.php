@@ -23,6 +23,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
   <title>Rastreador III</title>
   <meta charset="utf-8">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <script src="https://code.jquery.com/jquery-1.9.1.min.js" integrity="sha256-wS9gmOZBqsqWxgIVgA8Y9WcQOa7PgSIX+rPA0VL2rbQ=" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
@@ -242,13 +243,13 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
     }
 
     function seleccionMotivo(xMotivo,xID,xNumber) {
-      if(xNumber > 1){
+      if (xNumber > 1) {
         var Motivo = document.getElementById("Motivo"+xNumber);
         var ID_Motivo = document.getElementById("ID_Motivo"+xNumber);
         Motivo.innerHTML = "";
-        Motivo.innerHTML = "<p>"+xMotivo+"</p>";
-        ID_Motivo.setAttribute('value',xID);
-      } else{
+        Motivo.innerHTML = "<p>" + xMotivo + "</p>";
+        ID_Motivo.setAttribute('value', xID);
+      } else {
         var Motivo = document.getElementById("Motivo");
         var ID_Motivo = document.getElementById("ID_Motivo");
         Motivo.innerHTML = "";
@@ -494,12 +495,12 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
   </script>
 </head>
 <body>
-<div class = "row">
+<div class = "row margin-right-cero">
 <?php
   $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_REPORTE_LISTADO);
   ?>
-  <div class = "col-md-9">
+  <div class = "col-md-9 inicio-md-2">
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
@@ -596,11 +597,11 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
                 <?php  
                 $Element = new Elements();
 
-                if(isset($datosNav["ID_Barrio"])){
+                if (isset($datosNav["ID_Barrio"])) {
                   echo $Element->CBModBarrios($datosNav["ID_Barrio"]);
-                }else{
+                } else {
                   echo $Element->CBRepBarrios();
-                }            
+                }
 
                 ?>
               </div>
