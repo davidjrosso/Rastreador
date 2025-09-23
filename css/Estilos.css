@@ -1,4 +1,4 @@
-body > .row {
+.margin-right-cero {
   margin-right: 0px !important;
 }
 
@@ -11,7 +11,7 @@ body > .row {
 
 .inicio-md-2 {
   max-width: none !important;
-  flex-grow: 1;
+  flex-grow: 1 !important;
   flex-basis: min-content;
   max-height: 100vh;
   overflow-y: scroll;
@@ -28,6 +28,10 @@ body > .row {
   /*width: 200px*/;
   height: 100%;
   color: #e1ffff;
+}
+
+.position-static {
+  position: static;
 }
 
 .nav-side-menu .brand {
