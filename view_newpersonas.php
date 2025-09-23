@@ -261,12 +261,12 @@
   </script>
 </head>
 <body>
-<div class = "row">
+<div class = "row margin-right-cero">
 <?php
   $Element = new Elements();
   echo $Element->menuDeNavegacion($tipo_usuario, $id_usuario, $Element::PAGINA_PERSONA);
   ?>
-  <div class = "col-md-9">
+  <div class = "col-md-9 inicio-md-2">
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
