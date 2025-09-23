@@ -230,284 +230,287 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 </head>
 
 <body>
-  <div class="row">
+  <div class="row margin-right-cero">
     <?php
     $Element = new Elements();
     echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_PERSONA);
     ?>
-    <div class="col-md-9">
-      <div class="row">
-        <div class="col"></div>
-        <div class="col-10 Titulo">
-          <p>Persona</p>
-        </div>
-        <div class="col"></div>
-      </div><br>
-      <br>
-      <div class="row">
-        <div class="col-10">
-          <!-- Search -->
-          <div class="row">
-            <?php
-            if (isset($_REQUEST["ID"]) && $_REQUEST["ID"] != null) {
-              $ID = $_REQUEST["ID"];
+    <div class="col-md-9 inicio-md-2 row">
+            <div class="col-1"></div>
+            <div class="col">
+                  <div class="row">
+                          <div class="col Titulo">
+                            <p>Persona</p>
+                          </div>
+                  </div>
+                  <br>
+                  <br>
+                  <div class="row">
+                    <div class="col">
+                      <!-- Search -->
+                      <div class="row">
+                        <?php
+                        if (isset($_REQUEST["ID"]) && $_REQUEST["ID"] != null) {
+                          $ID = $_REQUEST["ID"];
 
-              $Con = new Conexion();
-              $Con->OpenConexion();
+                          $Con = new Conexion();
+                          $Con->OpenConexion();
 
-              $ConsultarDatos = "select p.*, 
-                                        ST_X(p.georeferencia) as lat, 
-                                        ST_Y(p.georeferencia) as lon
-                                 from persona p
-                                 where id_persona = $ID";
-              $MensajeErrorDatos = "No se pudo consultar los Datos de la Persona";
+                          $ConsultarDatos = "select p.*, 
+                                                    ST_X(p.georeferencia) as lat, 
+                                                    ST_Y(p.georeferencia) as lon
+                                            from persona p
+                                            where id_persona = $ID";
+                          $MensajeErrorDatos = "No se pudo consultar los Datos de la Persona";
 
-              $EjecutarConsultarDatos = mysqli_query($Con->Conexion, $ConsultarDatos) or die($MensajeErrorDatos);
+                          $EjecutarConsultarDatos = mysqli_query($Con->Conexion, $ConsultarDatos) or die($MensajeErrorDatos);
 
-              $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
+                          $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
 
-              $ID_Persona = $Ret["id_persona"];
-              $Apellido = $Ret["apellido"];
-              $Nombre = $Ret["nombre"];
-              $DNI = $Ret["documento"];
-              $Nro_Legajo = $Ret["nro_legajo"];
-              $Edad = $Ret["edad"];
-              $Meses = $Ret["meses"];
-              $Fecha_Nacimiento = implode("/", array_reverse(explode("-", $Ret["fecha_nac"])));
-              $Nro_Carpeta = $Ret["nro_carpeta"];
-              $Obra_Social = $Ret["obra_social"];
-              $Domicilio = $Ret["domicilio"];
-              $Barrio = $Ret["ID_Barrio"];
-              $Localidad = $Ret["localidad"];
-              $Circunscripcion = $Ret["circunscripcion"];
-              $Seccion = $Ret["seccion"];
-              $Manzana = $Ret["manzana"];
-              $Lote = $Ret["lote"];
-              $Familia = $Ret["familia"];
-              $Observaciones = $Ret["observacion"];
-              $Cambio_Domicilio = $Ret["cambio_domicilio"];
-              $Telefono = $Ret["telefono"];
-              $Mail = $Ret["mail"];
-              $Estado = $Ret["estado"];
-              $ID_Escuela = $Ret["ID_Escuela"];
-              $Trabajo = $Ret["Trabajo"];
+                          $ID_Persona = $Ret["id_persona"];
+                          $Apellido = $Ret["apellido"];
+                          $Nombre = $Ret["nombre"];
+                          $DNI = $Ret["documento"];
+                          $Nro_Legajo = $Ret["nro_legajo"];
+                          $Edad = $Ret["edad"];
+                          $Meses = $Ret["meses"];
+                          $Fecha_Nacimiento = implode("/", array_reverse(explode("-", $Ret["fecha_nac"])));
+                          $Nro_Carpeta = $Ret["nro_carpeta"];
+                          $Obra_Social = $Ret["obra_social"];
+                          $Domicilio = $Ret["domicilio"];
+                          $Barrio = $Ret["ID_Barrio"];
+                          $Localidad = $Ret["localidad"];
+                          $Circunscripcion = $Ret["circunscripcion"];
+                          $Seccion = $Ret["seccion"];
+                          $Manzana = $Ret["manzana"];
+                          $Lote = $Ret["lote"];
+                          $Familia = $Ret["familia"];
+                          $Observaciones = $Ret["observacion"];
+                          $Cambio_Domicilio = $Ret["cambio_domicilio"];
+                          $Telefono = $Ret["telefono"];
+                          $Mail = $Ret["mail"];
+                          $Estado = $Ret["estado"];
+                          $ID_Escuela = $Ret["ID_Escuela"];
+                          $Trabajo = $Ret["Trabajo"];
 
-              $Persona = new Persona($ID_Persona);
-              $Con->CloseConexion();
+                          $Persona = new Persona($ID_Persona);
+                          $Con->CloseConexion();
 
-              ?>
-              <div class="col-10">
-                <form id="form-mod-persona" method="post" onKeydown="return event.key != 'Enter';" action="Controladores/ModificarPersona.php">
-                  <input type="hidden" name="ID" value="<?php echo $Persona->getID_Persona(); ?>">
-                  <div class="form-group row">
-                    <label for="apellido" class="col-md-2 col-form-label LblForm">Apellido: </label>
-                    <div class="col-md-10">
-                      <input type="text" class="form-control" name="Apellido" id="apellido" autocomplete="off"
-                        value="<?php echo strtoupper($Persona->getApellido()); ?>">
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="nombre" class="col-md-2 col-form-label LblForm">Nombre: </label>
-                    <div class="col-md-10">
-                      <input type="text" class="form-control" name="Nombre" id="nombre" autocomplete="off"
-                        value="<?php echo $Persona->getNombre(); ?>">
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="documento" class="col-md-2 col-form-label LblForm">Documento: </label>
-                    <div class="col-md-10">
-                      <input type="text" class="form-control" name="DNI" id="documento" autocomplete="off"
-                        value="<?php echo $Persona->getDNI(); ?>">
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="Fecha_Nacimiento" class="col-md-2 col-form-label LblForm" style="margin-bottom: -8px;">Fecha
-                      de Nacimiento: </label>
-                    <div class="col-md-10">
-                      <input type="text" class="form-control" name="Fecha_Nacimiento" id="Fecha_Nacimiento"
-                        autocomplete="off" <?php if ($Fecha_Nacimiento != "null") {
-                          echo "value = '" . $Persona->getFecha_Nacimiento() . "'";
-                        }
-                        ; ?>>
-                    </div>
-                  </div>
-                  <div class="row LblForm col-md-2" style="margin-bottom: 1.04%; font-size: 1.031rem">
-                    Edad <br>
-                  </div>
-                  <div class="form-group row">
-                    <label for="Edad" class="col-md-2 col-form-label LblForm">Años: </label>
-                    <div class="col-md-10">
-                      <input type="text" class="form-control" name="Edad" id="Edad" autocomplete="off" readonly
-                        value="<?php echo $Persona->getEdad(); ?>">
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="Meses" class="col-md-2 col-form-label LblForm">Meses: </label>
-                    <div class="col-md-10">
-                      <input type="text" class="form-control" name="Meses" id="Meses" autocomplete="off" readonly
-                        value="<?php echo $Persona->getMeses(); ?>">
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="nro_carpeta" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
-                    <div class="col-md-10">
-                      <input type="text" class="form-control" name="Nro_Carpeta" id="nro_carpeta" autocomplete="off"
-                        value="<?php echo $Persona->getNro_Carpeta(); ?>">
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="Nro_Legajo" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
-                    <div class="col-md-10">
-                      <input type="text" class="form-control" name="Nro_Legajo" id="Nro_Legajo" autocomplete="off" <?php if ($Nro_Legajo != "null") {
-                        echo "value = '" . $Persona->getNro_Legajo() . "'";
-                      }
-                      ; ?>>
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="localidad" class="col-md-2 col-form-label LblForm">Localidad: </label>
-                    <div class="col-md-10">
-                      <input type="text" class="form-control" name="Localidad" id="localidad" autocomplete="off"
-                        value="<?php echo $Persona->getLocalidad(); ?>">
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="ID_Barrio" class="col-md-2 col-form-label LblForm">Barrio: </label>
-                    <div class="col-md-10">
-                      <?php
-                      $Element = new Elements();
-                      echo $Element->CBModBarrios($Persona->getId_Barrio());
-                      ?>
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="NumeroDeCalle" class="col-md-2 col-form-label LblForm">Domicilio: </label>
-                    <div class="col-md-6 flex-sm-boton">
-                      <?php
-                      if (!empty($Persona->getId_Calle())) {
-                        echo $Element->CBCallesNombre($Persona->getId_Calle());
-                      } else {
-                        echo $Element->CBCallesNombre($Persona->getCalle());
-                      }
-                      ?>
+                          ?>
+                          <div class="col-10">
+                            <form id="form-mod-persona" method="post" onKeydown="return event.key != 'Enter';" action="Controladores/ModificarPersona.php">
+                              <input type="hidden" name="ID" value="<?php echo $Persona->getID_Persona(); ?>">
+                              <div class="form-group row">
+                                <label for="apellido" class="col-md-2 col-form-label LblForm">Apellido: </label>
+                                <div class="col-md-10">
+                                  <input type="text" class="form-control" name="Apellido" id="apellido" autocomplete="off"
+                                    value="<?php echo strtoupper($Persona->getApellido()); ?>">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="nombre" class="col-md-2 col-form-label LblForm">Nombre: </label>
+                                <div class="col-md-10">
+                                  <input type="text" class="form-control" name="Nombre" id="nombre" autocomplete="off"
+                                    value="<?php echo $Persona->getNombre(); ?>">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="documento" class="col-md-2 col-form-label LblForm">Documento: </label>
+                                <div class="col-md-10">
+                                  <input type="text" class="form-control" name="DNI" id="documento" autocomplete="off"
+                                    value="<?php echo $Persona->getDNI(); ?>">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="Fecha_Nacimiento" class="col-md-2 col-form-label LblForm" style="margin-bottom: -8px;">Fecha
+                                  de Nacimiento: </label>
+                                <div class="col-md-10">
+                                  <input type="text" class="form-control" name="Fecha_Nacimiento" id="Fecha_Nacimiento"
+                                    autocomplete="off" <?php if ($Fecha_Nacimiento != "null") {
+                                      echo "value = '" . $Persona->getFecha_Nacimiento() . "'";
+                                    }
+                                    ; ?>>
+                                </div>
+                              </div>
+                              <div class="row LblForm col-md-2" style="margin-bottom: 1.04%; font-size: 1.031rem">
+                                Edad <br>
+                              </div>
+                              <div class="form-group row">
+                                <label for="Edad" class="col-md-2 col-form-label LblForm">Años: </label>
+                                <div class="col-md-10">
+                                  <input type="text" class="form-control" name="Edad" id="Edad" autocomplete="off" readonly
+                                    value="<?php echo $Persona->getEdad(); ?>">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="Meses" class="col-md-2 col-form-label LblForm">Meses: </label>
+                                <div class="col-md-10">
+                                  <input type="text" class="form-control" name="Meses" id="Meses" autocomplete="off" readonly
+                                    value="<?php echo $Persona->getMeses(); ?>">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="nro_carpeta" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
+                                <div class="col-md-10">
+                                  <input type="text" class="form-control" name="Nro_Carpeta" id="nro_carpeta" autocomplete="off"
+                                    value="<?php echo $Persona->getNro_Carpeta(); ?>">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="Nro_Legajo" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
+                                <div class="col-md-10">
+                                  <input type="text" class="form-control" name="Nro_Legajo" id="Nro_Legajo" autocomplete="off" <?php if ($Nro_Legajo != "null") {
+                                    echo "value = '" . $Persona->getNro_Legajo() . "'";
+                                  }
+                                  ; ?>>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="localidad" class="col-md-2 col-form-label LblForm">Localidad: </label>
+                                <div class="col-md-10">
+                                  <input type="text" class="form-control" name="Localidad" id="localidad" autocomplete="off"
+                                    value="<?php echo $Persona->getLocalidad(); ?>">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="ID_Barrio" class="col-md-2 col-form-label LblForm">Barrio: </label>
+                                <div class="col-md-10">
+                                  <?php
+                                  $Element = new Elements();
+                                  echo $Element->CBModBarrios($Persona->getId_Barrio());
+                                  ?>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="NumeroDeCalle" class="col-md-2 col-form-label LblForm">Domicilio: </label>
+                                <div class="col-md-6 flex-sm-boton">
+                                  <?php
+                                  if (!empty($Persona->getId_Calle())) {
+                                    echo $Element->CBCallesNombre($Persona->getId_Calle());
+                                  } else {
+                                    echo $Element->CBCallesNombre($Persona->getCalle());
+                                  }
+                                  ?>
 
-                    </div>
-                    <div class="col-md-2 form-boton-widht">
-                      <input type="number" class="form-control" name="NumeroDeCalle" id="NumeroDeCalle" placeholder="Nro"
-                        min="1" autocomplete="off" <?php
-                        $NroCalle = $Persona->getNro();
-                        if ($NroCalle !== null) {
-                          echo "value = '$NroCalle'";
+                                </div>
+                                <div class="col-md-2 form-boton-widht">
+                                  <input type="number" class="form-control" name="NumeroDeCalle" id="NumeroDeCalle" placeholder="Nro"
+                                    min="1" autocomplete="off" <?php
+                                    $NroCalle = $Persona->getNro();
+                                    if ($NroCalle !== null) {
+                                      echo "value = '$NroCalle'";
+                                    } else {
+                                      echo "value =" . (($Persona->getNroCalle()) ? $Persona->getNroCalle() : "");
+                                    } ?>>
+                                </div>
+                                <div class="col-md-2 form-boton-widht">
+                                  <button id="mapa-sig" type="button" class="btn btn-secondary" disabled data-toggle="modal"
+                                    style="background-color: #ffc6b1; color: black; border-color: white; " data-target="#map-modal">S.
+                                    I. G.</button>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="manzana" class="col-md-2 col-form-label LblForm">Manzana: </label>
+                                <div class="col-md-10">
+                                  <input type="text" class="form-control" name="Manzana" id="manzana" autocomplete="off" <?php if ($Manzana != "null") {
+                                    echo "value = '" . $Persona->getManzana() . "'";
+                                  }
+                                  ; ?>>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="lote" class="col-md-2 col-form-label LblForm">Lote: </label>
+                                <div class="col-md-10">
+                                  <input type="text" class="form-control" name="Lote" id="lote" autocomplete="off"
+                                    value="<?php echo $Persona->getLote(); ?>">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="familia" class="col-md-2 col-form-label LblForm">Sub-lote: </label>
+                                <div class="col-md-10">
+                                  <input type="text" class="form-control" name="Familia" id="familia" autocomplete="off"
+                                    value="<?php echo $Persona->getFamilia(); ?>">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="telefono" class="col-md-2 col-form-label LblForm">Telefono: </label>
+                                <div class="col-md-10">
+                                  <input type="text" class="form-control" name="Telefono" id="telefono" autocomplete="off"
+                                    value="<?php echo $Persona->getTelefono(); ?>">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="mail" class="col-md-2 col-form-label LblForm">Mail: </label>
+                                <div class="col-md-10">
+                                  <input type="text" class="form-control" name="Mail" id="mail" autocomplete="off"
+                                    value="<?php echo $Persona->getMail(); ?>">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="obra-social" class="col-md-2 col-form-label LblForm">Obra Social(Si/No): </label>
+                                <div class="col-md-10">
+                                  <input type="text" class="form-control" name="Obra_Social" id="obra-social" autocomplete="off"
+                                    value="<?php echo $Persona->getObra_Social(); ?>">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="ID_Escuela" class="col-md-2 col-form-label LblForm">Escuela: </label>
+                                <div class="col-md-10">
+                                  <?php
+                                  echo $Element->CBModEscuelas($Persona->getID_Escuela());
+                                  ?>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="trabajo" class="col-md-2 col-form-label LblForm">Lugar de Trabajo: </label>
+                                <div class="col-md-10">
+                                  <input type="text" class="form-control" name="Trabajo" id="trabajo" autocomplete="off"
+                                    value="<?php echo $Persona->getTrabajo(); ?>">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="observaciones" class="col-md-2 col-form-label LblForm">Observación: </label>
+                                <div class="col-md-10">
+                                  <textarea class="form-control" row="3" name="Observaciones" id="observaciones"
+                                    value="<?php echo $Persona->getObservaciones(); ?>"><?php echo $Persona->getObservaciones(); ?></textarea>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="cambio-domicilio" class="col-md-2 col-form-label LblForm">Cambio de Domicilio:
+                                </label>
+                                <div class="col-md-10">
+                                  <textarea class="form-control" row="3" name="Cambio_Domicilio" id="cambio-domicilio"
+                                    value="<?php echo $Persona->getCambio_Domicilio(); ?>"><?php echo $Persona->getCambio_Domicilio(); ?></textarea>
+                                </div>
+                              </div>
+                              <input type="hidden" id="lat" name="lat" value="">
+                              <input type="hidden" id="lon" name="lon" value="">
+                              <div class="form-group row">
+                                <div class="offset-md-2 col-md-10">
+                                  <button type="submit" class="btn btn-outline-success">Guardar</button>
+                                  <button type="button" class="btn btn-danger"
+                                    onClick="location.href = 'personas'">Atras</button>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                          <?php
                         } else {
-                          echo "value =" . (($Persona->getNroCalle()) ? $Persona->getNroCalle() : "");
-                        } ?>>
-                    </div>
-                    <div class="col-md-2 form-boton-widht">
-                      <button id="mapa-sig" type="button" class="btn btn-secondary" disabled data-toggle="modal"
-                        style="background-color: #ffc6b1; color: black; border-color: white; " data-target="#map-modal">S.
-                        I. G.</button>
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="manzana" class="col-md-2 col-form-label LblForm">Manzana: </label>
-                    <div class="col-md-10">
-                      <input type="text" class="form-control" name="Manzana" id="manzana" autocomplete="off" <?php if ($Manzana != "null") {
-                        echo "value = '" . $Persona->getManzana() . "'";
-                      }
-                      ; ?>>
+                          $Mensaje = "No se pudo consultar los Datos porque no se pudo obtener el ID de la Persona";
+                          echo $Mensaje;
+                        }
+                        ?>
+                      </div>
+                      <div class="row">
+                        <div class="col-10"></div>
+                        <div class="col-2">
+                          <!-- <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = 'personas'">Volver</button> -->
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div class="form-group row">
-                    <label for="lote" class="col-md-2 col-form-label LblForm">Lote: </label>
-                    <div class="col-md-10">
-                      <input type="text" class="form-control" name="Lote" id="lote" autocomplete="off"
-                        value="<?php echo $Persona->getLote(); ?>">
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="familia" class="col-md-2 col-form-label LblForm">Sub-lote: </label>
-                    <div class="col-md-10">
-                      <input type="text" class="form-control" name="Familia" id="familia" autocomplete="off"
-                        value="<?php echo $Persona->getFamilia(); ?>">
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="telefono" class="col-md-2 col-form-label LblForm">Telefono: </label>
-                    <div class="col-md-10">
-                      <input type="text" class="form-control" name="Telefono" id="telefono" autocomplete="off"
-                        value="<?php echo $Persona->getTelefono(); ?>">
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="mail" class="col-md-2 col-form-label LblForm">Mail: </label>
-                    <div class="col-md-10">
-                      <input type="text" class="form-control" name="Mail" id="mail" autocomplete="off"
-                        value="<?php echo $Persona->getMail(); ?>">
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="obra-social" class="col-md-2 col-form-label LblForm">Obra Social(Si/No): </label>
-                    <div class="col-md-10">
-                      <input type="text" class="form-control" name="Obra_Social" id="obra-social" autocomplete="off"
-                        value="<?php echo $Persona->getObra_Social(); ?>">
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="ID_Escuela" class="col-md-2 col-form-label LblForm">Escuela: </label>
-                    <div class="col-md-10">
-                      <?php
-                      echo $Element->CBModEscuelas($Persona->getID_Escuela());
-                      ?>
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="trabajo" class="col-md-2 col-form-label LblForm">Lugar de Trabajo: </label>
-                    <div class="col-md-10">
-                      <input type="text" class="form-control" name="Trabajo" id="trabajo" autocomplete="off"
-                        value="<?php echo $Persona->getTrabajo(); ?>">
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="observaciones" class="col-md-2 col-form-label LblForm">Observación: </label>
-                    <div class="col-md-10">
-                      <textarea class="form-control" row="3" name="Observaciones" id="observaciones"
-                        value="<?php echo $Persona->getObservaciones(); ?>"><?php echo $Persona->getObservaciones(); ?></textarea>
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="cambio-domicilio" class="col-md-2 col-form-label LblForm">Cambio de Domicilio:
-                    </label>
-                    <div class="col-md-10">
-                      <textarea class="form-control" row="3" name="Cambio_Domicilio" id="cambio-domicilio"
-                        value="<?php echo $Persona->getCambio_Domicilio(); ?>"><?php echo $Persona->getCambio_Domicilio(); ?></textarea>
-                    </div>
-                  </div>
-                  <input type="hidden" id="lat" name="lat" value="">
-                  <input type="hidden" id="lon" name="lon" value="">
-                  <div class="form-group row">
-                    <div class="offset-md-2 col-md-10">
-                      <button type="submit" class="btn btn-outline-success">Guardar</button>
-                      <button type="button" class="btn btn-danger"
-                        onClick="location.href = 'personas'">Atras</button>
-                    </div>
-                  </div>
-                </form>
-              </div>
-              <?php
-            } else {
-              $Mensaje = "No se pudo consultar los Datos porque no se pudo obtener el ID de la Persona";
-              echo $Mensaje;
-            }
-            ?>
-          </div>
-          <div class="row">
-            <div class="col-10"></div>
-            <div class="col-2">
-              <!-- <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = 'personas'">Volver</button> -->
             </div>
-          </div>
-        </div>
-      </div>
+            <div class="col-2"></div>
     </div>
   </div>
   <div class="modal fade modal--show-overall" id="map-modal" tabindex="-1" role="dialog"
