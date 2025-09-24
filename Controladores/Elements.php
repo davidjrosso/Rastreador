@@ -40,16 +40,16 @@ class Elements
 	public function getMenuGeneral($ID)
   {
     switch ($ID) {
-      case 1: echo '<div class="menu-list">
-                      <ul id="menu-content" class="menu-content collapse out">
+      case 1: echo '<div class="menu-list menu-x media-col-2">
+                      <ul id="menu-content" class="menu-content collapse show  out item-menu-x">
                           <li class="collapsed active" onClick = "location.href = \'view_movimientos.php\'">
                             <a href="view_movimientos.php"><i class="fa fa-file-text fa-lg"></i> Movimientos</a>
                           </li>
                       </ul>
                     </div>';
         break;
-      default: echo '<div class="menu-list">
-                      <ul id="menu-content" class="menu-content collapse out">
+      default: echo '<div class="menu-list menu-x media-col-2">
+                      <ul id="menu-content" class="menu-content collapse show  out item-menu-x">
                           <li class="collapsed" onClick = "location.href = \'view_movimientos.php\'">
                             <a href="view_movimientos.php"><i class="fa fa-file-text fa-lg"></i> Movimientos</a>
                           </li>
@@ -64,7 +64,7 @@ public function getMenuGeneralUsuario($ID)
   switch ($ID) {
     case self::PAGINA_MOVIMIENTO : 
         $menu = '<div class="menu-list">
-                    <ul id="menu-content" class="menu-content collapse out">
+                    <ul id="menu-content" class="menu-content collapse show  out">
                         <li class="collapsed active" onClick = "location.href = \'view_movimientos.php\'">
                           <a href="view_movimientos.php"><i class="fa fa-file-text fa-lg"></i> Movimientos</a>
                         </li>
@@ -73,7 +73,7 @@ public function getMenuGeneralUsuario($ID)
         break;
     default: 
         $menu = '<div class="menu-list">
-                    <ul id="menu-content" class="menu-content collapse out">
+                    <ul id="menu-content" class="menu-content collapse show  out">
                         <li class="collapsed" onClick = "location.href = \'view_movimientos.php\'">
                           <a href="view_movimientos.php"><i class="fa fa-file-text fa-lg"></i> Movimientos</a>
                         </li>
@@ -88,7 +88,7 @@ public function getMenuGeneralUsuario($ID)
 		switch ($ID) {
 			case  self::PAGINA_PERSONA:
             echo '<div class="menu-list">
-                    <ul id="menu-content" class="menu-content collapse out">
+                    <ul id="menu-content" class="menu-content collapse show  out">
                         <li class="collapsed active" onClick = "location.href = \'view_personas.php\'">
                           <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
                         </li>
@@ -121,7 +121,7 @@ public function getMenuGeneralUsuario($ID)
             break;
 			case self::PAGINA_MOTIVO:
            echo '<div class="menu-list">
-              <ul id="menu-content" class="menu-content collapse out">
+              <ul id="menu-content" class="menu-content collapse show  out">
                   <li onClick = "location.href = \'view_personas.php\'">
                     <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
                   </li>
@@ -155,7 +155,7 @@ public function getMenuGeneralUsuario($ID)
 			case self::PAGINA_CATEGORIA:
            echo '<div class="menu-list">
     
-              <ul id="menu-content" class="menu-content collapse out">
+              <ul id="menu-content" class="menu-content collapse show  out">
                   <li onClick = "location.href = \'view_personas.php\'">
                     <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
                   </li>
@@ -189,7 +189,7 @@ public function getMenuGeneralUsuario($ID)
      		case self::PAGINA_RESPONSABLE:
             echo '<div class="menu-list">
   
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_personas.php\'">
                   <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
                 </li>
@@ -223,7 +223,7 @@ public function getMenuGeneralUsuario($ID)
      		case self::PAGINA_CENTRO_SALUD:
             echo '<div class="menu-list">
   
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_personas.php\'">
                   <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
                 </li>
@@ -257,7 +257,7 @@ public function getMenuGeneralUsuario($ID)
         	case self::PAGINA_ESCUELA:
             echo '<div class="menu-list">
   
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_personas.php\'">
                   <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
                 </li>
@@ -290,7 +290,7 @@ public function getMenuGeneralUsuario($ID)
           break; 
           case self::PAGINA_OTRAS_INSTITUCIONES:
             echo '<div class="menu-list">
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_personas.php\'">
                   <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
                 </li>
@@ -322,7 +322,7 @@ public function getMenuGeneralUsuario($ID)
           </div>';break;        
           case self::PAGINA_BARRIO:
               echo '<div class="menu-list">
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_personas.php\'">
                   <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
                 </li>
@@ -354,7 +354,7 @@ public function getMenuGeneralUsuario($ID)
           </div>';break;
           case self::PAGINA_CALLE:
             echo '<div class="menu-list">
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_personas.php\'">
                   <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
                 </li>
@@ -386,7 +386,7 @@ public function getMenuGeneralUsuario($ID)
           </div>';break;
 			default:
         echo '<div class="menu-list">
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_personas.php\'">
                   <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
                 </li>
@@ -422,35 +422,35 @@ public function getMenuGeneralUsuario($ID)
 
   public function getMenuReportes($ID){
     switch ($ID) {
-      case 1:echo '<div class="menu-list">
+      case 1:echo '<div class="menu-list menu-x media-col-vs">
   
-            <ul id="menu-content" class="menu-content collapse out">
-                <li class="collapsed active" onClick = "location.href = \'view_general_new.php\'">
+            <ul id="menu-content" class="menu-content collapse show  out media-inline-block">
+                <li class="collapsed active item-menu-x media-inline-block" onClick = "location.href = \'view_general_new.php\'">
                   <a href="view_general_new.php"><i class="fa fa-file-text fa-lg"></i> Gráfico</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_listados.php\'">
+                <li class="collapsed item-menu-x media-inline-block" onClick = "location.href = \'view_listados.php\'">
                   <a href="view_listados.php"><i class="fa fa-file-text fa-lg"></i> Listados</a>
                 </li>
             </ul>
         </div>';break;
-      case 2:echo '<div class="menu-list">
+      case 2:echo '<div class="menu-list menu-x media-col-vs">
   
-            <ul id="menu-content" class="menu-content collapse out">
-                <li class="collapsed" onClick = "location.href = \'view_general_new.php\'">
+            <ul id="menu-content" class="menu-content collapse show  out media-inline-block">
+                <li class="collapsed item-menu-x media-inline-block" onClick = "location.href = \'view_general_new.php\'">
                   <a href="view_general_new.php"><i class="fa fa-file-text fa-lg"></i> Gráfico</a>
                 </li>
-                <li class="collapsed active" onClick = "location.href = \'view_listados.php\'">
+                <li class="collapsed active item-menu-x media-inline-block" onClick = "location.href = \'view_listados.php\'">
                   <a href="view_listados.php"><i class="fa fa-file-text fa-lg"></i> Listados</a>
                 </li>
             </ul>
         </div>';break;
-      default:echo '<div class="menu-list">
+      default:echo '<div class="menu-list menu-x media-col-vs">
   
-            <ul id="menu-content" class="menu-content collapse out">
-                <li class="collapsed" onClick = "location.href = \'view_general_new.php\'">
+            <ul id="menu-content" class="menu-content collapse show  out media-inline-block">
+                <li class="collapsed item-menu-x media-inline-block" onClick = "location.href = \'view_general_new.php\'">
                   <a href="view_general_new.php"><i class="fa fa-file-text fa-lg"></i> Gráfico</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_listados.php\'">
+                <li class="collapsed item-menu-x media-inline-block" onClick = "location.href = \'view_listados.php\'">
                   <a href="view_listados.php"><i class="fa fa-file-text fa-lg"></i> Listados</a>
                 </li>
             </ul>
@@ -463,7 +463,7 @@ public function getMenuGeneralUsuario($ID)
     switch ($ID) {
       case self::PAGINA_UNIFICACION_PERSONA:
           echo '<div class="menu-list">
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li class="collapsed active" onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                 </li>
@@ -495,7 +495,7 @@ public function getMenuGeneralUsuario($ID)
         </div>';break;
       case self::PAGINA_UNIFICACION_MOTIVO:
           echo '<div class="menu-list">
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                 </li>
@@ -527,7 +527,7 @@ public function getMenuGeneralUsuario($ID)
         </div>';break;
         case self::PAGINA_UNIFICACION_CENTRO_SALUD:
           echo '<div class="menu-list">
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                 </li>
@@ -559,7 +559,7 @@ public function getMenuGeneralUsuario($ID)
         </div>';break;
         case self::PAGINA_UNIFICACION_ESCUELA:
           echo '<div class="menu-list">
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                 </li>
@@ -591,7 +591,7 @@ public function getMenuGeneralUsuario($ID)
         </div>';break;
         case self::PAGINA_UNIFICACION_BARRIO:
           echo '<div class="menu-list">
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                 </li>
@@ -623,7 +623,7 @@ public function getMenuGeneralUsuario($ID)
         </div>';break;
         case self::PAGINA_UNIFICACION_OTRA_INSTITUCION:
           echo '<div class="menu-list">
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                 </li>
@@ -655,7 +655,7 @@ public function getMenuGeneralUsuario($ID)
         </div>';break;
         case self::PAGINA_UNIFICACION_CATEGORIA:
           echo '<div class="menu-list">
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                 </li>
@@ -688,7 +688,7 @@ public function getMenuGeneralUsuario($ID)
         break;
         case self::PAGINA_UNIFICACION_CALLE:
           echo '<div class="menu-list">
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                 </li>
@@ -721,7 +721,7 @@ public function getMenuGeneralUsuario($ID)
         break;
         case self::PAGINA_UNIFICACION_RESPONSABLE:
           echo '<div class="menu-list">
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                 </li>
@@ -754,7 +754,7 @@ public function getMenuGeneralUsuario($ID)
         break;
       default:
         echo '<div class="menu-list">
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                 </li>
@@ -793,7 +793,7 @@ public function getMenuSeguridad($ID){
     switch ($ID) {
       case 1:echo '<div class="menu-list">
   
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li class="collapsed active" onClick = "location.href = \'view_usuarios.php\'">
                   <a href="view_usuarios.php"><i class="fa fa-file-text fa-lg"></i> Usuarios</a>
                 </li>
@@ -801,7 +801,7 @@ public function getMenuSeguridad($ID){
         </div>';break;
       case 2:echo '<div class="menu-list">
   
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_usuarios.php\'">
                   <a href="view_usuarios.php"><i class="fa fa-file-text fa-lg"></i> Usuarios</a>
                 </li>
@@ -809,7 +809,7 @@ public function getMenuSeguridad($ID){
         </div>';break;
       default:echo '<div class="menu-list">
   
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_usuarios.php\'">
                   <a href="view_usuarios.php"><i class="fa fa-file-text fa-lg"></i> Usuarios</a>
                 </li>
@@ -822,7 +822,7 @@ public function getMenuSeguridad($ID){
   public function getMenuHistorial($ID){
     switch ($ID) {
       case 1:echo '<div class="menu-list">  
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li class="collapsed active" onClick = "location.href = \'para_que_sirve.pdf\'">
                   <a href="para_que_sirve.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Para qué sirve?</a>
                 </li>
@@ -836,7 +836,7 @@ public function getMenuSeguridad($ID){
             </ul>
         </div>';break;
 	   case 2:echo '<div class="menu-list">
-	        <ul id="menu-content" class="menu-content collapse out">
+	        <ul id="menu-content" class="menu-content collapse show  out">
 	            <li class="collapsed" onClick = "location.href = \'para_que_sirve.pdf\'">
 	              <a href="para_que_sirve.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Para qué sirve?</a>
 	            </li>
@@ -850,7 +850,7 @@ public function getMenuSeguridad($ID){
 	        </ul>
 	    </div>';break;
       case 3:echo '<div class="menu-list">
-	        <ul id="menu-content" class="menu-content collapse out">
+	        <ul id="menu-content" class="menu-content collapse show  out">
 	            <li class="collapsed" onClick = "location.href = \'para_que_sirve.pdf\'">
 	              <a href="para_que_sirve.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Para qué sirve?</a>
 	            </li>
@@ -864,7 +864,7 @@ public function getMenuSeguridad($ID){
 	        </ul>
 	    </div>';break;
       default:echo '<div class="menu-list">
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'para_que_sirve.pdf\'">
                   <a href="para_que_sirve.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Para qué sirve?</a>
                 </li>
@@ -884,7 +884,7 @@ public function getMenuSeguridad($ID){
     switch ($ID) {
       case 11:
           $menu = '<div class="menu-list">
-                    <ul id="menu-content" class="menu-content collapse out">
+                    <ul id="menu-content" class="menu-content collapse show  out">
                         <li class="collapsed active" onClick = "location.href = \'view_general_new.php\'">
                           <a href="view_general_new.php"><i class="fa fa-file-text fa-lg"></i> Gráfico</a>
                         </li>
@@ -896,7 +896,7 @@ public function getMenuSeguridad($ID){
                   break;
       case 12:
           $menu = '<div class="menu-list">
-                    <ul id="menu-content" class="menu-content collapse out">
+                    <ul id="menu-content" class="menu-content collapse show  out">
                         <li class="collapsed" onClick = "location.href = \'view_general_new.php\'">
                           <a href="view_general_new.php"><i class="fa fa-file-text fa-lg"></i> Gráfico</a>
                         </li>
@@ -908,7 +908,7 @@ public function getMenuSeguridad($ID){
           break;
       default:
           $menu = '<div class="menu-list">
-                    <ul id="menu-content" class="menu-content collapse out">
+                    <ul id="menu-content" class="menu-content collapse show  out">
                         <li class="collapsed" onClick = "location.href = \'view_general_new.php\'">
                           <a href="view_general_new.php"><i class="fa fa-file-text fa-lg"></i> Gráfico</a>
                         </li>
@@ -927,7 +927,7 @@ public function getMenuSeguridad($ID){
     switch ($ID) {
         case self::PAGINA_AUDITORIA_NOTIFICACION:
              $menu = '<div class="menu-list">
-                    <ul id="menu-content" class="menu-content collapse out">
+                    <ul id="menu-content" class="menu-content collapse show  out">
                         <li class="collapsed active" onClick="location.href=\'view_notificacion.php\'">
                           <a href="view_notificacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
                         </li>
@@ -942,7 +942,7 @@ public function getMenuSeguridad($ID){
              break;
         case self::PAGINA_AUDITORIA_SOLICITUD:
              $menu = '<div class="menu-list">
-                        <ul id="menu-content" class="menu-content collapse out">
+                        <ul id="menu-content" class="menu-content collapse show  out">
                             <li class="collapsed" onClick="location.href=\'view_notificacion.php\'">
                               <a href="view_notificacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
                             </li>
@@ -957,7 +957,7 @@ public function getMenuSeguridad($ID){
              break;
         case self::PAGINA_AUDITORIA_ACCION:
               $menu = '<div class="menu-list">
-                        <ul id="menu-content" class="menu-content collapse out">
+                        <ul id="menu-content" class="menu-content collapse show  out">
                             <li class="collapsed" onClick="location.href=\'view_notificacion.php\'">
                               <a href="view_notificacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
                             </li>
@@ -972,7 +972,7 @@ public function getMenuSeguridad($ID){
               break;
         default:
               $menu = '<div class="menu-list">
-                        <ul id="menu-content" class="menu-content collapse out">
+                        <ul id="menu-content" class="menu-content collapse show  out">
                             <li class="collapsed" onClick="location.href=\'view_notificacion.php\'">
                               <a href="view_notificacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
                             </li>
@@ -994,7 +994,7 @@ public function getMenuSeguridad($ID){
     switch ($ID) {
         case self::PAGINA_AUDITORIA_NOTIFICACION:
              echo '<div class="menu-list">
-                    <ul id="menu-content" class="menu-content collapse out">
+                    <ul id="menu-content" class="menu-content collapse show  out">
                         <li class="collapsed active" onClick="location.href=\'view_notificacion.php\'">
                           <a href="view_notificacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
                         </li>
@@ -1009,7 +1009,7 @@ public function getMenuSeguridad($ID){
              break;
         case self::PAGINA_AUDITORIA_SOLICITUD:
              echo '<div class="menu-list">
-                        <ul id="menu-content" class="menu-content collapse out">
+                        <ul id="menu-content" class="menu-content collapse show  out">
                             <li class="collapsed" onClick="location.href=\'view_notificacion.php\'">
                               <a href="view_notificacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
                             </li>
@@ -1024,7 +1024,7 @@ public function getMenuSeguridad($ID){
              break;
         case self::PAGINA_AUDITORIA_ACCION:
               echo '<div class="menu-list">
-                        <ul id="menu-content" class="menu-content collapse out">
+                        <ul id="menu-content" class="menu-content collapse show  out">
                             <li class="collapsed" onClick="location.href=\'view_notificacion.php\'">
                               <a href="view_notificacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
                             </li>
@@ -1039,7 +1039,7 @@ public function getMenuSeguridad($ID){
               break;
         default:
               echo '<div class="menu-list">
-                        <ul id="menu-content" class="menu-content collapse out">
+                        <ul id="menu-content" class="menu-content collapse show  out">
                             <li class="collapsed" onClick="location.href=\'view_notificacion.php\'">
                               <a href="view_notificacion.php"><i class="fa fa-file-text fa-lg"></i>Notificacion</a>
                             </li>
@@ -1061,7 +1061,7 @@ public function getMenuSeguridad($ID){
       case self::PAGINA_UNIFICACION_PERSONA:
           $menu = '<div class="menu-list">
   
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li class="collapsed active" onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                 </li>
@@ -1094,7 +1094,7 @@ public function getMenuSeguridad($ID){
       case self::PAGINA_UNIFICACION_MOTIVO:
           $menu = '<div class="menu-list">
   
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                 </li>
@@ -1127,7 +1127,7 @@ public function getMenuSeguridad($ID){
         case self::PAGINA_UNIFICACION_CENTRO_SALUD:
             $menu = '<div class="menu-list">
   
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                 </li>
@@ -1160,7 +1160,7 @@ public function getMenuSeguridad($ID){
         case self::PAGINA_UNIFICACION_ESCUELA:
             $menu = '<div class="menu-list">
   
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                 </li>
@@ -1193,7 +1193,7 @@ public function getMenuSeguridad($ID){
         case self::PAGINA_UNIFICACION_BARRIO:
             $menu =  '<div class="menu-list">
   
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                 </li>
@@ -1225,7 +1225,7 @@ public function getMenuSeguridad($ID){
         </div>';break;
         case self::PAGINA_UNIFICACION_OTRA_INSTITUCION:
             $menu =  '<div class="menu-list">
-                        <ul id="menu-content" class="menu-content collapse out">
+                        <ul id="menu-content" class="menu-content collapse show  out">
                             <li onClick = "location.href = \'view_unifpersonas.php\'">
                               <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                             </li>
@@ -1259,7 +1259,7 @@ public function getMenuSeguridad($ID){
         case self::PAGINA_UNIFICACION_CALLE:
             $menu =  '<div class="menu-list">
   
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                 </li>
@@ -1293,7 +1293,7 @@ public function getMenuSeguridad($ID){
         case self::PAGINA_UNIFICACION_CATEGORIA:
             $menu =  '<div class="menu-list">
   
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                 </li>
@@ -1327,7 +1327,7 @@ public function getMenuSeguridad($ID){
         case self::PAGINA_UNIFICACION_RESPONSABLE:
             $menu =  '<div class="menu-list">
   
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                 </li>
@@ -1361,7 +1361,7 @@ public function getMenuSeguridad($ID){
       default:
           $menu =  '<div class="menu-list">
   
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_unifpersonas.php\'">
                   <a href="view_unifpersonas.php"><i class="fa fa-file-text fa-lg"></i> Personas</a>
                 </li>
@@ -1400,7 +1400,7 @@ public function getMenuSeguridadUsuario($ID){
       case self::PAGINA_USUARIO: 
           $menu = '<div class="menu-list">
   
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li class="collapsed active" onClick = "location.href = \'view_usuarios.php\'">
                   <a href="view_usuarios.php"><i class="fa fa-file-text fa-lg"></i> Usuarios</a>
                 </li>
@@ -1408,7 +1408,7 @@ public function getMenuSeguridadUsuario($ID){
         </div>';break;
       case 2:
           $menu =  '<div class="menu-list">            
-                      <ul id="menu-content" class="menu-content collapse out">
+                      <ul id="menu-content" class="menu-content collapse show  out">
                           <li onClick = "location.href = \'view_usuarios.php\'">
                             <a href="view_usuarios.php"><i class="fa fa-file-text fa-lg"></i> Usuarios</a>
                           </li>
@@ -1417,7 +1417,7 @@ public function getMenuSeguridadUsuario($ID){
           break;
       default:
           $menu =  '<div class="menu-list">
-                      <ul id="menu-content" class="menu-content collapse out">
+                      <ul id="menu-content" class="menu-content collapse show  out">
                           <li onClick = "location.href = \'view_usuarios.php\'">
                             <a href="view_usuarios.php"><i class="fa fa-file-text fa-lg"></i> Usuarios</a>
                           </li>
@@ -1432,7 +1432,7 @@ public function getMenuSeguridadUsuario($ID){
     switch ($ID) {
       case 21: 
           $menu = '<div class="menu-list">  
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li class="collapsed active" onClick = "location.href = \'para_que_sirve.pdf\'">
                   <a href="para_que_sirve.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Para qué sirve?</a>
                 </li>
@@ -1448,7 +1448,7 @@ public function getMenuSeguridadUsuario($ID){
         break;
 	   case 22: 
           $menu = '<div class="menu-list">
-                  <ul id="menu-content" class="menu-content collapse out">
+                  <ul id="menu-content" class="menu-content collapse show  out">
                       <li class="collapsed" onClick = "location.href = \'para_que_sirve.pdf\'">
                         <a href="para_que_sirve.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Para qué sirve?</a>
                       </li>
@@ -1464,7 +1464,7 @@ public function getMenuSeguridadUsuario($ID){
           break;
       case 23: 
           $menu = '<div class="menu-list">
-                    <ul id="menu-content" class="menu-content collapse out">
+                    <ul id="menu-content" class="menu-content collapse show  out">
                         <li class="collapsed" onClick = "location.href = \'para_que_sirve.pdf\'">
                           <a href="para_que_sirve.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Para qué sirve?</a>
                         </li>
@@ -1480,7 +1480,7 @@ public function getMenuSeguridadUsuario($ID){
           break;
       default: 
           $menu = '<div class="menu-list">
-                    <ul id="menu-content" class="menu-content collapse out">
+                    <ul id="menu-content" class="menu-content collapse show  out">
                         <li onClick = "location.href = \'para_que_sirve.pdf\'">
                           <a href="para_que_sirve.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Para qué sirve?</a>
                         </li>
@@ -1501,7 +1501,7 @@ public function getMenuSeguridadUsuario($ID){
 		switch ($ID) {
 			case self::PAGINA_PERSONA:
           $menu =  '<div class="menu-list">
-                    <ul id="menu-content" class="menu-content collapse out">
+                    <ul id="menu-content" class="menu-content collapse show  out">
                         <li class="collapsed active" onClick = "location.href = \'view_personas.php\'">
                           <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
                         </li>
@@ -1535,7 +1535,7 @@ public function getMenuSeguridadUsuario($ID){
 			case self::PAGINA_MOTIVO:
           $menu =  '<div class="menu-list">
   
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_personas.php\'">
                   <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
                 </li>
@@ -1568,7 +1568,7 @@ public function getMenuSeguridadUsuario($ID){
 			case self::PAGINA_CATEGORIA:
           $menu =  '<div class="menu-list">
   
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_personas.php\'">
                   <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
                 </li>
@@ -1601,7 +1601,7 @@ public function getMenuSeguridadUsuario($ID){
      		case self::PAGINA_RESPONSABLE:
             $menu =  '<div class="menu-list">
   
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_personas.php\'">
                   <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
                 </li>
@@ -1634,7 +1634,7 @@ public function getMenuSeguridadUsuario($ID){
      		case self::PAGINA_CENTRO_SALUD:
             $menu =  '<div class="menu-list">
   
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_personas.php\'">
                   <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
                 </li>
@@ -1667,7 +1667,7 @@ public function getMenuSeguridadUsuario($ID){
         	case self::PAGINA_ESCUELA:
               $menu =  '<div class="menu-list">
   
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_personas.php\'">
                   <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
                 </li>
@@ -1700,7 +1700,7 @@ public function getMenuSeguridadUsuario($ID){
           case self::PAGINA_OTRAS_INSTITUCIONES:
               $menu =  '<div class="menu-list">
   
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_personas.php\'">
                   <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
                 </li>
@@ -1733,7 +1733,7 @@ public function getMenuSeguridadUsuario($ID){
           case self::PAGINA_BARRIO:
               $menu =  '<div class="menu-list">
   
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_personas.php\'">
                   <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
                 </li>
@@ -1766,7 +1766,7 @@ public function getMenuSeguridadUsuario($ID){
           case self::PAGINA_CALLE:
               $menu =  '<div class="menu-list">
   
-          <ul id="menu-content" class="menu-content collapse out">
+          <ul id="menu-content" class="menu-content collapse show  out">
               <li onClick = "location.href = \'view_personas.php\'">
                 <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
               </li>
@@ -1799,7 +1799,7 @@ public function getMenuSeguridadUsuario($ID){
 			default:
           $menu = '<div class="menu-list">
   
-            <ul id="menu-content" class="menu-content collapse out">
+            <ul id="menu-content" class="menu-content collapse show  out">
                 <li onClick = "location.href = \'view_personas.php\'">
                   <a href="view_personas.php"><i class="fa fa-file-text fa-lg"></i> Persona</a>
                 </li>
@@ -2880,7 +2880,7 @@ public function getMenuSeguridadUsuario($ID){
     $ConsultaResult = mysqli_query($Con3->Conexion,$ConsultaNombre)or die("Problemas al mostrar Personas");
     if(mysqli_num_rows($ConsultaResult) > 0){
       $Resultado = mysqli_fetch_array($ConsultaResult);
-      $cardSession = "<div class='title-session'>
+      $cardSession = "<div class='title-session item-menu-x'>
                         <a id='perfil' style='color: #e1ffff' href='view_perfilusuario.php?account_id=" . $idAccount . "'>".
                           $Resultado["username"] . "
                         </a>

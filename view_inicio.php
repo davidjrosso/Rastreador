@@ -89,6 +89,15 @@ $Con->CloseConexion();
                   todayHighlight: true,
                   autoclose: true,
               });
+              $("#button-menu").on("click", function () {
+                if ($(".nav-side-menu").hasClass("menu-item-selected")) {
+                  $(".nav-side-menu").removeClass("menu-item-selected");
+                  $(".col.inicio-md-2").hide();
+                } else {
+                  $(".nav-side-menu").addClass("menu-item-selected");
+                  $(".col.inicio-md-2").show();
+                }
+              })
           });
 
        function CalcularPrecio() {
@@ -523,57 +532,38 @@ $Con->CloseConexion();
 
 </head>
 <body>
-<div class = "row margin-right-cero">
+<div class = "row margin-right-cero media-menu-wrap" style="flex-wrap: nowrap;">
 <?php
   $Element = new Elements();
   if ($tipo_usuario == 1) {
   ?>
   <div class = "col-md-2 menu-md-2">
-    <div class="nav-side-menu position-static">
+    <div class="nav-side-menu position-static media-nav-flex menu-item-selected">
       <?php
             echo $Element->CBSessionNombreUsuario($id_usuario);
       ?>
       <div class="brand">General</div>
-        <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
-        <div class="menu-list">
-  
+        <i id="button-menu" class="fa fa-bars fa-2x toggle-btn media-col-1" data-toggle="collapse"></i>
             <?php
             $Element->getMenuGeneral($Element::PAGINA_INICIO);?>
-        </div>
         <div class="brand">Actualizaciones</div>
-        <div class="menu-list">
-  
             <?php
             $Element->getMenuActualizaciones($Element::PAGINA_INICIO);?>
-        </div>
         <div class="brand">Reportes</div>
-        <div class="menu-list">
-  
             <?php
             $Element->getMenuReportes($Element::PAGINA_INICIO);?>
-        </div>
         <div class="brand">Unificación</div>
-        <div class="menu-list">
-  
             <?php
             $Element->getMenuUnificacion($Element::PAGINA_INICIO);?>
-        </div>
         <div class="brand">Seguridad</div>
-        <div class="menu-list">
-  
             <?php
             $Element->getMenuSeguridad($Element::PAGINA_INICIO);?>
-        </div>
         <div class="brand">Auditoria</div>
-        <div class="menu-list">
             <?php
           $Element->getMenuNotificacion($Element::PAGINA_INICIO);?>
-        </div>
         <div class="brand">Documentación</div>
-        <div class="menu-list">
             <?php
             $Element->getMenuHistorial($Element::PAGINA_INICIO);?>
-        </div>
         <div class="brand btn-Salir" onClick = "location.href = 'Controladores/CtrLogout.php'">Salir</div>
     </div>
   </div>
@@ -587,34 +577,23 @@ $Con->CloseConexion();
             echo $Element->CBSessionNombreUsuario($id_usuario);
       ?>
     <div class="brand">General</div>
-    <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
-  
-        <div class="menu-list">
+    <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse"></i>
   
             <?php
             $Element->getMenuGeneral($Element::PAGINA_INICIO);?>
-        </div>
         <div class="brand">Actualizaciones</div>
-        <div class="menu-list">
   
             <?php
             $Element->getMenuActualizaciones($Element::PAGINA_INICIO);?>
-        </div>
         <div class="brand">Reportes</div>
-        <div class="menu-list">
             <?php
             $Element->getMenuReportes($Element::PAGINA_INICIO);?>
-        </div>
         <div class="brand">Auditoria</div>
-        <div class="menu-list">
             <?php
           $Element->getMenuNotificacion($Element::PAGINA_INICIO);?>
-        </div>
         <div class="brand">Documentación</div>
-        <div class="menu-list">
             <?php
             $Element->getMenuHistorial($Element::PAGINA_INICIO);?>
-        </div>
         <div class="brand btn-Salir" onClick = "location.href = 'Controladores/CtrLogout.php'">Salir</div>
     </div>
   </div>
@@ -628,7 +607,7 @@ $Con->CloseConexion();
             echo $Element->CBSessionNombreUsuario($id_usuario);
       ?>
     <div class="brand">General</div>
-    <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
+    <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse"></i>
 
         <div class="menu-list">
   
@@ -667,7 +646,7 @@ $Con->CloseConexion();
     </div>
   </div>
 <?php } ?>
-  <div class = "col-md-10 inicio-md-2">
+  <div class = "col inicio-md-2">
     <div class="row">
       <div class="col"></div>
       <div class="col-8">
@@ -730,12 +709,11 @@ $Con->CloseConexion();
          || $CantDelResp > 0
       ) {
       ?>
-      <div class = "row">
-        <div class="col-1"></div>
+      <div class = "row" style="justify-content: center; align-content: space-between;">
         <div class="col-4 Contenedor-Imagen-Inicio">
           <img src="images/FondoInicio.jpg" class = "FondoInicio">
-        </div>      
-        <div class="col-6">
+        </div>
+        <div class="col-6 solicitudes">
           <h3 class="bg-secondary text-light" style="text-align: center; padding: 10px;">Solicitudes por autorizar</h3>
           <?php 
             if ($CantUnif > 0) {
@@ -744,7 +722,7 @@ $Con->CloseConexion();
               <?php
               echo $CtrGeneral->getSolicitudes_Unificacion();
             }
-            
+
             if ($CantCrearMot > 0 ) {
               ?>
                 <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Crear Motivos</h3>
@@ -807,7 +785,6 @@ $Con->CloseConexion();
             }
           ?>
         </div>  
-        <div class="col-1"></div> 
       </div>     
   <?php } else { ?>
       <div class = "row">
