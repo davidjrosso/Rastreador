@@ -239,7 +239,8 @@ use function PHPUnit\Framework\isNull;
 				$datos = $col_header . " : " . $observ;
 				break;
 			case "direccion":
-				$direccion_datos = explode("/", $valor);
+				$dir = str_replace(".", " ", $valor);
+				$direccion_datos = explode("/", $dir);
 				$direccion = preg_replace("/(?<!Cortadero)[ ]+\([aA-zZ0-9 ]*\)/", "", $direccion_datos[0]);
 				$datos["direccion"] = $direccion;
 				if (count($direccion_datos) > 1) {
