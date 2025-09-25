@@ -240,8 +240,9 @@ use function PHPUnit\Framework\isNull;
 				break;
 			case "direccion":
 				$dir = str_replace(".", " ", $valor);
+				$dir = str_replace(" s/n", " ", strtolower($dir));
 				$direccion_datos = explode("/", $dir);
-				$direccion = preg_replace("/(?<!Cortadero)[ ]+\([aA-zZ0-9 ]*\)/", "", $direccion_datos[0]);
+				$direccion = preg_replace("/(?<!cortadero)[ ]+\([aA-zZ0-9 ]*\)/", "", $direccion_datos[0]);
 				$datos["direccion"] = $direccion;
 				if (count($direccion_datos) > 1) {
 					$result_array = [];
