@@ -359,9 +359,11 @@ class CalleBarrio
         $min_num = floatval($this->get_min_num());
 		$lat = $point;
 		$num_domicilio = floatval($number);
+		$dir_par = ($num_domicilio % 2) * 2 - 1;
 		if ($number && $this->get_pendiente()) {
 			$pendiente = floatval($this->get_pendiente_lat());
 			$lat += $pendiente * ($number - $min_num);
+			$lat += (-1/$pendiente) *  $dir_par * 0.00000000001;
 		}
         return $lat;
     }
@@ -371,9 +373,12 @@ class CalleBarrio
         $point = floatval($this->get_punto_lon());
         $min_num = floatval($this->get_min_num());
 		$lon = $point;
+		$num_domicilio = floatval($number);
+		$dir_par = ($num_domicilio % 2) * 2 - 1;
 		if ($number && $this->get_pendiente()) {
 			$pendiente = floatval($this->get_pendiente_lon());
 			$lon += $pendiente * ($number - $min_num);
+			$lon += (-1/$pendiente) *  $dir_par * 0.00000000001;
 		}
         return $lon;
     }
