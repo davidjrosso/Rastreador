@@ -22,6 +22,11 @@
     display: none;
   }
 
+  .col-media-title {
+    flex: 1 0 100%;
+    max-width: none;
+  }
+
   .justify-content-center {
     justify-content: center;
   }
@@ -42,6 +47,9 @@
 }
 
 @media (max-width: 610px) {
+  h3, h4 {
+    font-size: 1.35rem;
+  }
   .menu-md-2 {
     flex: 1 0 0px !important;
     max-width: none !important;
@@ -336,7 +344,6 @@ body {
   font-weight: bold;
   text-align: left;
   font-family: times;
-  position: relative;
 }
 
 /*.btn-Salir{

@@ -630,18 +630,18 @@ $Con->CloseConexion();
 <?php } ?>
   <div class = "col inicio-md-2">
     <div class="row">
-      <div class="col"></div>
-      <div class="col-8">
+      <div class="col col-display-none"></div>
+      <div class="col-8 col-media-title">
         <div class="row">
           <div class="col-1">
             <img src="images/escudo.png" width="100%" height="auto">
           </div>
-          <div class="col-11">
-    	       <p class = "CopyRight">Desarrollado en cooperación con la Dirección de Cómputos de la Municipalidad de Río Tercero</p>
+          <div class="col-11 CopyRight">
+    	       <p>Desarrollado en cooperación con la Dirección de Cómputos de la Municipalidad de Río Tercero</p>
           </div>
         </div>
       </div>
-      <div class="col"></div>
+      <div class="col col-display-none"></div>
     </div>
     <br>
     <div class="row justify-content-center">
@@ -651,7 +651,7 @@ $Con->CloseConexion();
         <p style="font-family: times; font-weight: bold;">RASTREADOR <br><i>GRÁFICO DE CO-EVOLUCIÓN PARA LA EVALUACIÓN COMUNITARIA DE COBERTURA</i><br> Sistema Orientado a la Georeferenciación</p>
       </div>
       <div class="col col-display-none"></div>
-    </div><br>
+    </div>
     <br>
     <?php 
     $CtrGeneral = new CtrGeneral();
