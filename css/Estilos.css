@@ -99,6 +99,13 @@
     justify-content:space-between;
   }
 
+  .Contenedor-Imagen-Inicio {
+    flex: 0 0 90%;
+  }
+  .FondoInicio {
+    max-width: 100%;
+  }
+
   .solicitudes {
     padding-left: 3px;
     padding-right: 3px;
