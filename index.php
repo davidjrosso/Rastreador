@@ -9,9 +9,11 @@ header("Content-Type: text/html;charset=utf-8");
   <meta charset="UTF-8">
   <title>Rastreador III</title>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
@@ -42,7 +44,7 @@ header("Content-Type: text/html;charset=utf-8");
 </head>
 <body>
   <body>
-	<div class="login">
+	<div class="row login">
 		<div class="login-screen">
 			<div class="app-title">
 				<h1>Acceder</h1>
