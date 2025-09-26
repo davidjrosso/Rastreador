@@ -578,11 +578,9 @@ $Con->CloseConexion();
       ?>
     <div class="brand">General</div>
     <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse"></i>
-  
             <?php
             $Element->getMenuGeneral($Element::PAGINA_INICIO);?>
         <div class="brand">Actualizaciones</div>
-  
             <?php
             $Element->getMenuActualizaciones($Element::PAGINA_INICIO);?>
         <div class="brand">Reportes</div>
@@ -608,40 +606,24 @@ $Con->CloseConexion();
       ?>
     <div class="brand">General</div>
     <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse"></i>
-
-        <div class="menu-list">
-  
             <?php
             $Element->getMenuGeneral($Element::PAGINA_INICIO);?>
-        </div>
         <div class="brand">Actualizaciones</div>
-        <div class="menu-list">
-  
             <?php
             $Element->getMenuActualizaciones($Element::PAGINA_INICIO);?>
-        </div>
         <div class="brand">Reportes</div>
-        <div class="menu-list">
-  
             <?php
             $Element->getMenuReportes($Element::PAGINA_INICIO);?>
-        </div>
         <div class="brand">Unificación</div>
-        <div class="menu-list">
-  
             <?php
             $Element->getMenuUnificacion($Element::PAGINA_INICIO);?>
         </div>
         <div class="brand">Auditoria</div>
-        <div class="menu-list">
             <?php
           $Element->getMenuNotificacion($Element::PAGINA_INICIO);?>
-        </div>
         <div class="brand">Documentación</div>
-        <div class="menu-list">
             <?php
             $Element->getMenuHistorial($Element::PAGINA_INICIO);?>
-        </div>
         <div class="brand btn-Salir" onClick = "location.href = 'Controladores/CtrLogout.php'">Salir</div>
     </div>
   </div>
@@ -662,13 +644,13 @@ $Con->CloseConexion();
       <div class="col"></div>
     </div>
     <br>
-    <div class="row">
-      <div class="col"></div>
+    <div class="row justify-content-center">
+      <div class="col col-display-none"></div>
       <div class="col-11 Titulo">
         <br>
         <p style="font-family: times; font-weight: bold;">RASTREADOR <br><i>GRÁFICO DE CO-EVOLUCIÓN PARA LA EVALUACIÓN COMUNITARIA DE COBERTURA</i><br> Sistema Orientado a la Georeferenciación</p>
       </div>
-      <div class="col"></div>
+      <div class="col col-display-none"></div>
     </div><br>
     <br>
     <?php 

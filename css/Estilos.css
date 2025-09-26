@@ -18,6 +18,14 @@
 }
 
 @media (max-width: 970px) {
+  .col-display-none {
+    display: none;
+  }
+
+  .justify-content-center {
+    justify-content: center;
+  }
+
   .solicitudes {
     flex: 0 0 83.333333% !important;
     max-width: 83.333333% !important;
@@ -40,6 +48,15 @@
   }
   .media-menu-wrap {
     flex-wrap: wrap !important;
+  }
+
+  .inicio-md-2 {
+    padding-right: 0px !important;
+  }
+
+  .inicio-md-2 .row {
+    margin-right: 0px;
+    margin-left: 0px;
   }
 
   #button-menu {
@@ -80,6 +97,11 @@
   .media-section-flex {
     display: flex;
     justify-content:space-between;
+  }
+
+  .solicitudes {
+    padding-left: 3px;
+    padding-right: 3px;
   }
 }
 
