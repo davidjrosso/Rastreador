@@ -532,7 +532,7 @@ $Con->CloseConexion();
 
 </head>
 <body>
-<div class = "row margin-right-cero" style="flex-wrap: nowrap;">
+<div class = "row margin-right-cero media-menu-wrap" style="flex-wrap: nowrap;">
 <?php
   $Element = new Elements();
   if ($tipo_usuario == 1) {
@@ -572,12 +572,12 @@ $Con->CloseConexion();
     if ($tipo_usuario == 2 || $tipo_usuario > 3) {
   ?>
   <div class = "col-md-2 menu-md-2">
-  <div class="nav-side-menu position-static">
+  <div class="nav-side-menu position-static media-nav-flex menu-item-selected">
       <?php
             echo $Element->CBSessionNombreUsuario($id_usuario);
       ?>
     <div class="brand">General</div>
-    <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse"></i>
+    <i class="fa fa-bars fa-2x toggle-btn media-col-1" data-toggle="collapse"></i>
             <?php
             $Element->getMenuGeneral($Element::PAGINA_INICIO);?>
         <div class="brand">Actualizaciones</div>
@@ -600,12 +600,12 @@ $Con->CloseConexion();
   if ($tipo_usuario == 3) {    
   ?>
   <div class = "col-md-2 menu-md-2">
-<div class="nav-side-menu position-static">
+<div class="nav-side-menu position-static media-nav-flex menu-item-selected">
       <?php
             echo $Element->CBSessionNombreUsuario($id_usuario);
       ?>
     <div class="brand">General</div>
-    <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse"></i>
+    <i class="fa fa-bars fa-2x toggle-btn media-col-1" data-toggle="collapse"></i>
             <?php
             $Element->getMenuGeneral($Element::PAGINA_INICIO);?>
         <div class="brand">Actualizaciones</div>
