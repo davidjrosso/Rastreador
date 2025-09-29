@@ -131,9 +131,9 @@ export function carga(map, listReferencias) {
           offsetY = Math.sin(indice * puntos) * (longuitud * 0.00001);
         } else {
           //offsetX = 4.5;
-          offsetX = 0.000067060;
+          offsetX = 0;
           //offsetY = -8.3;
-          offsetY = -0.00006002;
+          offsetY = 0;
           //positionFormas = positionFormas.add(-8.3, 4.5);
         }
         feature = map.addIconLayerR(
