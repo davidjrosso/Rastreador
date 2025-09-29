@@ -532,7 +532,7 @@ $Con->CloseConexion();
 
 </head>
 <body>
-<div class = "row margin-right-cero media-menu-wrap" style="flex-wrap: nowrap;">
+<div class = "row margin-right-cero" style="flex-wrap: nowrap;">
 <?php
   $Element = new Elements();
   if ($tipo_usuario == 1) {
