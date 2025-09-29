@@ -577,7 +577,7 @@ $Con->CloseConexion();
             echo $Element->CBSessionNombreUsuario($id_usuario);
       ?>
     <div class="brand">General</div>
-    <i class="fa fa-bars fa-2x toggle-btn media-col-1" data-toggle="collapse"></i>
+    <i id="button-menu" class="fa fa-bars fa-2x toggle-btn media-col-1" data-toggle="collapse"></i>
             <?php
             $Element->getMenuGeneral($Element::PAGINA_INICIO);?>
         <div class="brand">Actualizaciones</div>
@@ -605,7 +605,7 @@ $Con->CloseConexion();
             echo $Element->CBSessionNombreUsuario($id_usuario);
       ?>
     <div class="brand">General</div>
-    <i class="fa fa-bars fa-2x toggle-btn media-col-1" data-toggle="collapse"></i>
+    <i id="button-menu" class="fa fa-bars fa-2x toggle-btn media-col-1" data-toggle="collapse"></i>
             <?php
             $Element->getMenuGeneral($Element::PAGINA_INICIO);?>
         <div class="brand">Actualizaciones</div>
@@ -617,7 +617,6 @@ $Con->CloseConexion();
         <div class="brand">Unificación</div>
             <?php
             $Element->getMenuUnificacion($Element::PAGINA_INICIO);?>
-        </div>
         <div class="brand">Auditoria</div>
             <?php
           $Element->getMenuNotificacion($Element::PAGINA_INICIO);?>
