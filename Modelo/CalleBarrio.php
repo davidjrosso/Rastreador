@@ -363,7 +363,7 @@ class CalleBarrio
 		if ($number && $this->get_pendiente()) {
 			$pendiente = floatval($this->get_pendiente_lat());
 			$lat += $pendiente * ($number - $min_num);
-			$lat += (-1/$pendiente) *  $dir_par * 0.000000000007;
+			$lat += (-1/$pendiente) * $dir_par * 0.000000000003;
 		}
         return $lat;
     }
@@ -378,7 +378,7 @@ class CalleBarrio
 		if ($number && $this->get_pendiente()) {
 			$pendiente = floatval($this->get_pendiente_lon());
 			$lon += $pendiente * ($number - $min_num);
-			$lon += (-1/$pendiente) *  $dir_par * 0.000000000007;
+			$lon += (1/$pendiente) * $dir_par * 0.000000000003;
 		}
         return $lon;
     }
