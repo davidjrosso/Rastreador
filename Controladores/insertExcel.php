@@ -653,6 +653,7 @@ use function PHPUnit\Framework\isNull;
 						} else {
 							$modificacion = $persona->setCalleNro($direccion);
 						}
+						
 						if (is_numeric($departam)) $persona->setFamilia($departam);
 						$persona->setNro($nro_calle);
 
