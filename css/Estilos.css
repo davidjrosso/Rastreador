@@ -27,6 +27,10 @@
     max-width: none;
   }
 
+  .text-alig-center-media {
+    text-align: center !important;
+  }
+
   .justify-content-center {
     justify-content: center;
   }
@@ -36,6 +40,10 @@
     max-width: 83.333333% !important;
     margin-top: 15px;
   }
+
+  #button-menu {
+    display: none;
+  }
 }
 
 @media (max-width: 710px) {
@@ -44,6 +52,7 @@
     max-width: 95.666667% !important;
     margin-top: 15px;
   }
+
 }
 
 @media (max-width: 610px) {
@@ -70,6 +79,7 @@
   #button-menu {
     display: inline-block;
   }
+
   .media-menu-wrap .menu-item-selected > div:not([class~="menu-x"]) {
     display: none !important;
   }

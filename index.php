@@ -49,7 +49,6 @@ header("Content-Type: text/html;charset=utf-8");
 			<div class="app-title">
 				<h1>Acceder</h1>
 			</div>
-
 			<div class="login-form">
 				<form method = "post" action = "Controladores/CtrLogin.php" autocomplete="off">
 				<div class="control-group">
@@ -60,7 +59,7 @@ header("Content-Type: text/html;charset=utf-8");
 				<div class="control-group" style="position:relative">
 					<input type="password" autocomplete="off" class="login-field" value="" placeholder="Contraseña" id="login-pass" name = "UserPass" >
 					<label class="login-field-icon fui-lock" for="login-pass"></label>
-					<span id="spanMostrar" class="form-clear d-none">
+					<span id="spanMostrar" class="form-clear">
 						<i id="iconMostrar" class="material-icons mdc-text-field__icon">
 							visibility
 						</i>
