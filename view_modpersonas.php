@@ -235,7 +235,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
     $Element = new Elements();
     echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_PERSONA);
     ?>
-    <div class="col-md-9 inicio-md-2 row">
+    <div class="col-md-9 inicio-md-2 row margin-right-cero">
             <div class="col-1"></div>
             <div class="col">
                   <div class="row">
