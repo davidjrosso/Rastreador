@@ -14,8 +14,14 @@ padding: 50px;
 .login {
   margin: 20px auto;
   width: 300px;
+  justify-content: center;
 }
 
+@media (max-width: 402px) {
+  .login {
+      width: auto;
+  }
+}
 .login-screen {
   flex-grow: 1;
   background-color: #FFF;
