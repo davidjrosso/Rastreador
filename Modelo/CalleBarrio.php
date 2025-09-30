@@ -357,13 +357,26 @@ class CalleBarrio
     {
         $point = floatval($this->get_punto_lat());
         $min_num = floatval($this->get_min_num());
+		$sign_pendiente = 1;
 		$lat = $point;
 		$num_domicilio = floatval($number);
 		$dir_par = ($num_domicilio % 2) * -2 + 1;
-		if ($number && $this->get_pendiente()) {
+
+		$pendiente_vector = $this->get_pendiente();
+		$pendiente_lat_sign = 1;
+		if ($number && $pendiente_vector) {
+			$pendiente_lat = floatval($this->get_pendiente_lat());
+			$pendiente_lon = floatval($this->get_pendiente_lon());
+			if ($pendiente_lat > 0 && $pendiente_lon < 0) $pendiente_lat_sign = 1;
+			if ($pendiente_lat < 0 && $pendiente_lon < 0) $pendiente_lat_sign = -1;
+			if ($pendiente_lat < 0 && $pendiente_lon > 0) $pendiente_lat_sign = 1;
+			if ($pendiente_lat > 0 && $pendiente_lon > 0) $pendiente_lat_sign = -1;
+		}
+
+		if ($number && $pendiente_vector) {
 			$pendiente = floatval($this->get_pendiente_lat());
 			$lat += $pendiente * ($number - $min_num);
-			$lat += (-1/$pendiente) * $dir_par * 0.000000000003;
+			$lat += (1/$pendiente) * $pendiente_lat_sign * $dir_par * 0.000000000003;
 		}
         return $lat;
     }
@@ -375,10 +388,22 @@ class CalleBarrio
 		$lon = $point;
 		$num_domicilio = floatval($number);
 		$dir_par = ($num_domicilio % 2) * -2 + 1;
+
+		$pendiente_vector = $this->get_pendiente();
+		$pendiente_lon_sign = 1;
+		if ($number && $pendiente_vector) {
+			$pendiente_lat = floatval($this->get_pendiente_lat());
+			$pendiente_lon = floatval($this->get_pendiente_lon());
+			if ($pendiente_lat > 0 && $pendiente_lon < 0) $pendiente_lon_sign = -1;
+			if ($pendiente_lat < 0 && $pendiente_lon < 0) $pendiente_lon_sign = 1;
+			if ($pendiente_lat < 0 && $pendiente_lon > 0) $pendiente_lon_sign = -1;
+			if ($pendiente_lat > 0 && $pendiente_lon > 0) $pendiente_lon_sign = 1;
+		}
+
 		if ($number && $this->get_pendiente()) {
 			$pendiente = floatval($this->get_pendiente_lon());
 			$lon += $pendiente * ($number - $min_num);
-			$lon += (1/$pendiente) * $dir_par * 0.000000000003;
+			$lon += (1/$pendiente) * $pendiente_lon_sign * $dir_par * 0.000000000003;
 		}
         return $lon;
     }
