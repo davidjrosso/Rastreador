@@ -367,6 +367,7 @@ class CalleBarrio
 		if ($number && $pendiente_vector) {
 			$pendiente_lat = floatval($this->get_pendiente_lat());
 			$pendiente_lon = floatval($this->get_pendiente_lon());
+			$modulo = sqrt((1/$pendiente_lat) ** 2 + (1/$pendiente_lon) ** 2);
 			if ($pendiente_lat > 0 && $pendiente_lon < 0) $pendiente_lat_sign = 1;
 			if ($pendiente_lat < 0 && $pendiente_lon < 0) $pendiente_lat_sign = -1;
 			if ($pendiente_lat < 0 && $pendiente_lon > 0) $pendiente_lat_sign = 1;
@@ -376,7 +377,7 @@ class CalleBarrio
 		if ($number && $pendiente_vector) {
 			$pendiente = floatval($this->get_pendiente_lat());
 			$lat += $pendiente * ($number - $min_num);
-			$lat += (1/$pendiente) * $pendiente_lat_sign * $dir_par * 0.000000000003;
+			$lat += (1/($pendiente * $modulo)) * $pendiente_lat_sign * $dir_par * 0.0001;
 		}
         return $lat;
     }
@@ -394,6 +395,7 @@ class CalleBarrio
 		if ($number && $pendiente_vector) {
 			$pendiente_lat = floatval($this->get_pendiente_lat());
 			$pendiente_lon = floatval($this->get_pendiente_lon());
+			$modulo = sqrt((1/$pendiente_lat) ** 2 + (1/$pendiente_lon) ** 2);
 			if ($pendiente_lat > 0 && $pendiente_lon < 0) $pendiente_lon_sign = -1;
 			if ($pendiente_lat < 0 && $pendiente_lon < 0) $pendiente_lon_sign = 1;
 			if ($pendiente_lat < 0 && $pendiente_lon > 0) $pendiente_lon_sign = -1;
@@ -403,7 +405,7 @@ class CalleBarrio
 		if ($number && $this->get_pendiente()) {
 			$pendiente = floatval($this->get_pendiente_lon());
 			$lon += $pendiente * ($number - $min_num);
-			$lon += (1/$pendiente) * $pendiente_lon_sign * $dir_par * 0.000000000003;
+			$lon += (1/($pendiente * $modulo)) * $pendiente_lon_sign * $dir_par * 0.0001;
 		}
         return $lon;
     }
