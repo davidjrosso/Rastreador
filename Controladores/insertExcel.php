@@ -326,63 +326,122 @@ use function PHPUnit\Framework\isNull;
 		$highestRow = count(value: $rows_excel) - 1;
 		$list_ignore_row = explode("-", $config_datos["ignore"]);
 		$break_row = (isset($config_datos["break"])) ? $config_datos["break"] : null;
-		$indixe_col_h = (isset($config_datos["col"])) ? $config_datos["col"] : null;
 		$dni_col = (isset($config_datos["dni_col"])) ? $config_datos["dni_col"] : null;
 		$nombre_col = (isset($config_datos["nombre_col"])) ? $config_datos["nombre_col"] : null;
+		$indixe_col_h = (isset($config_datos["col"])) ? $config_datos["col"] : null;
 		$com_row = (isset($config_datos["row"])) ? $config_datos["row"] : 0;
 		$com_col = (isset($config_datos["col_init"])) ? $config_datos["col"] : 0;
 
-		for ($row = $com_row; $row <= $highestRow; $row++) {
-			if (count($rows_excel[$row]) == 0 
-				|| (!is_null($nombre_col) && empty($rows_excel[$row][$nombre_col]))
-				|| (!is_null($dni_col) && empty($rows_excel[$row][$dni_col]))
-				|| in_array($rows_excel[$row][0], $list_ignore_row)) {
-				continue;
-			}
+		$id_calle_migrados = Calle::get_id_by_nombre("Sin Datos");
+		$calle_migrados = new Calle(id_calle: $id_calle_migrados);
 
-			if ($break_row && $rows_excel[$row][0] == $break_row) {
-				break;
-			}
+		if (!empty($config_datos["con_palabra_en_columna"])) {
 
-			$lista_valores = null;
-			$lista_valores["observacion"] = "";
-			$highestColumnIndex = count($rows_excel[$row]) - 1;
+			for ($row = $com_row; $row <= $highestRow; $row++) {
+				if (count($rows_excel[$row]) == 0 
+					|| in_array($rows_excel[$row][0], $list_ignore_row)) {
+					continue;
+				}
 
-			for ($col = $com_col; $col <= $highestColumnIndex; $col++) {
-				$value = (!empty($rows_excel[$row][$col])) ? $rows_excel[$row][$col] : null;
-				$col_excel = colExcel($col);
-				$col_header = (!empty($rows_excel[$indixe_col_h][$col])) ? $rows_excel[$indixe_col_h][$col] : null;
-				$col_config = (isset($config_datos[$col_excel])) ? $config_datos[$col_excel] : "default";
-				$valor = objetoExcel(
-									obj: $col_config,
-									valor: $value,
-									connection: $connection,
-									col_header: $col_header
-									);
-				if ($col_config == "observacion") {
-						$lista_valores["observacion"] .= " - " . $valor;
-				} else if ($col_config == "motivo" && isset($valor["motivo"])
-						   && (count($valor["motivo"]) >= 1)) {
-						foreach ($valor["motivo"] as $val_motivo) {
-							$row_motivo["fecha"] = $valor["fecha"];
-							$row_motivo["motivo"] = $val_motivo;
-							$lista_valores["motivos"][] = $row_motivo;
-						}
-				} else if ($col_config == "default") {
-					if (is_array($valor)) {
-						foreach ($valor["motivo"] as $val_motivo) {
-							$row_motivo["fecha"] = $valor["fecha"];
-							$row_motivo["motivo"] = $val_motivo;
-							$lista_valores["motivos"][] = $row_motivo;
+				if ($break_row && $rows_excel[$row][0] == $break_row) {
+					break;
+				}
+
+				$lista_valores = null;
+				$lista_valores["observacion"] = "";
+				$highestColumnIndex = count($rows_excel[$row]) - 1;
+
+				for ($col = $com_col; $col <= $highestColumnIndex; $col++) {
+					$value = (!empty($rows_excel[$row][$col])) ? $rows_excel[$row][$col] : null;
+					$value = trim($value);
+					$col_header = (!empty($rows_excel[$indixe_col_h][$col])) ? $rows_excel[$indixe_col_h][$col] : null;
+					$col_config = ((isset($config_datos[$col_header])) ?  $config_datos[$col_header] : "default");
+					//if ($col_config == "direccion" && $config_datos["migracion"] == $value) $value = $calle_migrados->get_calle_nombre(); 
+					$valor = objetoExcel(
+										 obj: $col_config,
+										 valor: $value,
+										 connection: $connection,
+										 col_header: $col_header
+										);
+					if ($col_config == "observacion") {
+							$lista_valores["observacion"] .= " - " . $valor;
+					} else if (isset($valor["motivo"])
+							&& (count($valor["motivo"]) >= 1)) {
+							foreach ($valor["motivo"] as $val_motivo) {
+								$row_motivo["fecha"] = $valor["fecha"];
+								$row_motivo["motivo"] = $val_motivo;
+								$lista_valores["motivos"][] = $row_motivo;
+							}
+					}  else if ($col_config == "default") {
+						if (is_array($valor)) {
+							foreach ($valor["motivo"] as $val_motivo) {
+								$row_motivo["fecha"] = $valor["fecha"];
+								$row_motivo["motivo"] = $val_motivo;
+								$lista_valores["motivos"][] = $row_motivo;
+							}
+						} else {
+							$lista_valores["observacion"] .= " - " . $valor;
 						}
 					} else {
-						$lista_valores["observacion"] .= " - " . $valor;
+						$lista_valores[$col_config] = $valor;
 					}
-				} else {
-					$lista_valores[$config_datos[$col_excel]] = $valor;
 				}
+				$lista_personas[] = $lista_valores;
 			}
-			$lista_personas[] = $lista_valores;
+		} else {
+
+			for ($row = $com_row; $row <= $highestRow; $row++) {
+				if (count($rows_excel[$row]) == 0 
+					|| (!is_null($nombre_col) && empty($rows_excel[$row][$nombre_col]))
+					|| (!is_null($dni_col) && empty($rows_excel[$row][$dni_col]))
+					|| in_array($rows_excel[$row][0], $list_ignore_row)) {
+					continue;
+				}
+
+				if ($break_row && $rows_excel[$row][0] == $break_row) {
+					break;
+				}
+
+				$lista_valores = null;
+				$lista_valores["observacion"] = "";
+				$highestColumnIndex = count($rows_excel[$row]) - 1;
+
+				for ($col = $com_col; $col <= $highestColumnIndex; $col++) {
+					$value = (!empty($rows_excel[$row][$col])) ? $rows_excel[$row][$col] : null;
+					$col_excel = colExcel($col);
+					$col_header = (!empty($rows_excel[$indixe_col_h][$col])) ? $rows_excel[$indixe_col_h][$col] : null;
+					$col_config = (isset($config_datos[$col_excel])) ? $config_datos[$col_excel] : "default";
+					$valor = objetoExcel(
+										obj: $col_config,
+										valor: $value,
+										connection: $connection,
+										col_header: $col_header
+										);
+					if ($col_config == "observacion") {
+							$lista_valores["observacion"] .= " - " . $valor;
+					} else if ($col_config == "motivo" && isset($valor["motivo"])
+							&& (count($valor["motivo"]) >= 1)) {
+							foreach ($valor["motivo"] as $val_motivo) {
+								$row_motivo["fecha"] = $valor["fecha"];
+								$row_motivo["motivo"] = $val_motivo;
+								$lista_valores["motivos"][] = $row_motivo;
+							}
+					} else if ($col_config == "default") {
+						if (is_array($valor)) {
+							foreach ($valor["motivo"] as $val_motivo) {
+								$row_motivo["fecha"] = $valor["fecha"];
+								$row_motivo["motivo"] = $val_motivo;
+								$lista_valores["motivos"][] = $row_motivo;
+							}
+						} else {
+							$lista_valores["observacion"] .= " - " . $valor;
+						}
+					} else {
+						$lista_valores[$config_datos[$col_excel]] = $valor;
+					}
+				}
+				$lista_personas[] = $lista_valores;
+			}
 		}
 		return $lista_personas;
 	}
@@ -411,6 +470,8 @@ use function PHPUnit\Framework\isNull;
 		$config_datos = $archivo->get_configuracion();
 		$private_key = Parametria::get_value_by_code($con, 'SECRET_KEY');
 		$time_send = Parametria::get_value_by_code($con, 'TIME_SEND');
+		$id_calle_migrados = Calle::get_id_by_nombre("Sin Datos");
+		$calle_migrados = new Calle(id_calle: $id_calle_migrados);
 		$con->CloseConexion();
 		$con = null;
 		$list_conf_datos = explode("|", $config_datos);
@@ -499,6 +560,7 @@ use function PHPUnit\Framework\isNull;
 			$geo_lon = null;
 			$lista_motivos = (!empty($dato["motivos"])) ? $dato["motivos"] : [];
 			$dni = $dato["dni"];
+			if (empty($dni)) continue;
 			if (!empty($dato["nombre_apellido"])) {
 				$nombre_apellido = $dato["nombre_apellido"];
 				$nombre = $nombre_apellido["nombre"];
