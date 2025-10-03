@@ -489,7 +489,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                                 <div class="offset-md-2 col-md-10">
                                   <button type="submit" class="btn btn-outline-success">Guardar</button>
                                   <button type="button" class="btn btn-danger"
-                                    onClick="location.href = 'personas'">Atras</button>
+                                    onClick="location.href = '/view_personas.php'">Atras</button>
                                 </div>
                               </div>
                             </form>
