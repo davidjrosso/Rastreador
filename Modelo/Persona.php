@@ -732,38 +732,47 @@ public function getDNI(){
 	return $this->DNI;
 }
 
-public function getNro_Legajo(){
+public function getNro_Legajo()
+{
 	return $this->Nro_Legajo;
 }
-public function getEdad(){
+public function getEdad()
+{
 	return $this->Edad;
 }
 
-public function getMeses(){
+public function getMeses()
+{
 	return $this->Meses;
 }
 
-public function getFecha_Nacimiento(){
+public function getFecha_Nacimiento()
+{
 	return $this->Fecha_Nacimiento;
 }
 
-public function getNro_Carpeta(){
+public function getNro_Carpeta()
+{
 	return $this->Nro_Carpeta;
 }
 
-public function getObra_Social(){
+public function getObra_Social()
+{
 	return $this->Obra_Social;
 }
 
-public function getDomicilio(){
+public function getDomicilio()
+{
 	return $this->Domicilio;
 }
 
-public function getId_Calle(){
+public function getId_Calle()
+{
 	return $this->Calle;
 }
 
-public function getNombre_Calle(){
+public function getNombre_Calle()
+{
 	$con = new Conexion();
 	$con->OpenConexion();
 	$calle_open = null;
@@ -783,17 +792,19 @@ public function getNombre_Calle(){
 	return $calle_open;
 }
 
-public function getNro(){
+public function getNro()
+{
 	return $this->Nro;
 }
 
-public function getCalle(){
-	$LongString = strlen($this->Domicilio); 
-	if($LongString > 1){
+public function getCalle()
+{
+	$LongString = strlen($this->Domicilio);
+	if ($LongString > 4) {
 	  $StringDelimitado = chunk_split($this->Domicilio,$LongString - 4,"-");
 	  $PartesDireccion = explode("-", $StringDelimitado);
 	  $DomActual = $PartesDireccion[0];
-	  if(!preg_match("~[0-9]~", $PartesDireccion[1])){
+	  if (!preg_match("~[0-9]~", $PartesDireccion[1])) {
 	    $DomActual = $this->Domicilio;
 	  } else {
 		$NroCalle = $this->getNroCalle();
@@ -810,7 +821,7 @@ public function getCalle(){
 			}
 		}
 	  }
-	} else{
+	} else {
 	  $DomActual = null;
 	}
 	return $DomActual;
