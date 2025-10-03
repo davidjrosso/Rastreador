@@ -467,6 +467,7 @@ use function PHPUnit\Framework\isNull;
 		$id_centro_salud = $archivo->get_centro_salud();
 		$centro_salud = new CentroSalud(id_centro: $id_centro_salud, coneccion_base: $con);
 		$id_barrio_centro = $centro_salud->get_id_barrio();
+		$id_barrio = null;
 		$config_datos = $archivo->get_configuracion();
 		$private_key = Parametria::get_value_by_code($con, 'SECRET_KEY');
 		$time_send = Parametria::get_value_by_code($con, 'TIME_SEND');
@@ -578,13 +579,20 @@ use function PHPUnit\Framework\isNull;
 			$hc = (!empty($dato["hc"])) ? $dato["hc"] : null;
 			$obra_social = (!empty($dato["obra_social"])) ? $dato["obra_social"] : null;
 			$telefono = (!empty($dato["telefono"])) ? $dato["telefono"] : null;
-			$id_barrio = (!empty($dato["barrio"])) ? $dato["barrio"] : $id_barrio_centro;
 			$estado = 1;
 			$ID_TipoAccion = 1;
 			$email = null;
 			$ID_Usuario = 100;
 			$con = new Conexion();
 			$con->OpenConexion();
+
+			$id_barrio = Calle::get_id_barrio_con_calle_nro(
+															calle: $direccion,
+															nro_calle: $nro_calle,
+															connection: $con
+															);
+			$id_barrio = (!empty($id_barrio)) ? $id_barrio : $id_barrio_centro;
+			$id_barrio = (!empty($dato["barrio"])) ? $dato["barrio"] : $id_barrio;
 			$is_calle_rastreador = Calle::existe_calle($direccion);
 			$is_calle_con_barrio = Calle::existe_calle_con_barrio(
 																domicilio: $direccion, 
