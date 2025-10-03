@@ -4,6 +4,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Elements.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/CtrGeneral.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Conexion.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Persona.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Calle.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Barrio.php';
 header("Content-Type: text/html;charset=utf-8");
 
@@ -32,16 +33,12 @@ $Con->CloseConexion();
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-  <!--<link href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-  <!--<script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script> -->
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-  <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script>
        $(document).ready(function(){
@@ -131,7 +128,7 @@ $Con->CloseConexion();
                                         obra_social, domicilio, localidad, circunscripcion,
                                         seccion, manzana, lote, familia, mail, observacion,
                                         cambio_domicilio, estado, ID_Escuela, meses, Trabajo,
-                                        ID_Barrio, telefono
+                                        ID_Barrio, telefono, calle
                                  from persona where id_persona = $xID_Persona and estado = 1 limit 1";
               $MensajeErrorDatos = "No se pudo consultar los Datos de la Persona";
 
@@ -146,6 +143,8 @@ $Con->CloseConexion();
                                   );
               $RetBarrio = $barrio->get_barrio();
               
+              $calle = new Calle(id_calle : $Ret["calle"]);
+              $domicilio_calle = $calle->get_calle_nombre();
               $ID_Persona = $Ret["id_persona"];
               $Apellido = $Ret["apellido"];
               $Nombre = $Ret["nombre"];
@@ -203,8 +202,8 @@ $Con->CloseConexion();
               $Table .= "<tr><td>Nro. Carpeta</td><td>".(($Nro_Carpeta!="null")?$Persona->getNro_Carpeta():"")."</td></tr>";               
               $Table .= "<tr><td>Nro. Legajo</td><td>".(($Nro_Legajo!="null")? $Persona->getNro_Legajo():"")."</td></tr>";             
               $Table .= "<tr><td>Localidad</td><td>".$Persona->getLocalidad()."</td></tr>";
-              $Table .= "<tr><td>Barrio</td><td>".$Persona->getBarrio()."</td></tr>";  
-              $Table .= "<tr><td>Domicilio</td><td>".$Persona->getDomicilio()."</td></tr>";              
+              $Table .= "<tr><td>Barrio</td><td>".$Persona->getBarrio()."</td></tr>";
+              $Table .= "<tr><td>Domicilio</td><td>" . $domicilio_calle . " " . $Persona->getNro() . "</td></tr>";              
               $Table .= "<tr><td>Manzana</td><td>".(($Manzana!="null")? $Persona->getManzana():"")."</td></tr>";
               $Table .= "<tr><td>Lote</td><td>".(($Lote!="null")? $Persona->getLote():"")."</td></tr>";
               $Table .= "<tr><td>Sub-lote</td><td>".$Persona->getFamilia()."</td></tr>";
