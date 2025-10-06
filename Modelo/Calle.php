@@ -159,6 +159,45 @@ class Calle {
 		return $calle;
 	}
 
+	public static function get_id_barrio_con_calle_nro(
+														$calle=null,
+														$nro_calle=null,
+														$connection=null
+														)
+	{
+		$id_barrio = null;
+		if ($calle && $nro_calle) {
+			$consulta = "SELECT *
+						 FROM calle c INNER JOIN calles_barrios cs ON (c.id_calle = cs.id_calle)
+						 WHERE lower(calle_nombre) LIKE CONCAT(
+																'%',
+																REGEXP_REPLACE( 
+																		REGEXP_REPLACE(
+																						REGEXP_SUBSTR(
+																								lower('$calle'), 
+																								'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)|cortadero( )*[()a-zA-Zá-úÁ-Ú ]+'
+																						),
+																						'( )+',
+																						'%'
+																						),
+																				'(\\\\.)',
+																				''
+																				),
+																'%'
+																)
+						  AND $nro_calle BETWEEN cs.min_num AND cs.max_num
+						  AND c.estado = 1
+						  AND cs.estado = 1
+						 ORDER BY c.calle_nombre ASC;";
+			$query_object = mysqli_query($connection->Conexion, $consulta) or die("Error al consultar datos");
+			if (mysqli_num_rows($query_object) > 0) {
+				$ret = mysqli_fetch_assoc($query_object);
+				$id_barrio = $ret["ID_Barrio"];
+			};
+		}
+		return $id_barrio;
+	}
+
 
 	public static function existe_calle_con_barrio(
 													$domicilio=null,
