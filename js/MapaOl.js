@@ -30,6 +30,7 @@ export class MapaOl {
     #listaFeatures=[];
     #windowsOpened=[];
     #handler;
+    #id_request = 0;
 
     constructor(
       target,
@@ -94,10 +95,13 @@ export class MapaOl {
       let addres = "../Controladores/georeferenciadomiciliopersona.php?calle=" + calleId + "&nro=" + nro;
       let barrio = null;
       let barrioResp = null;
-      let request = $.ajax({
+      let id_request = null;
+      this.#id_request++;
+      id_request = this.#id_request;
+      $.ajax({
         url : addres,
         success : function (data, status, requestHttp) {
-            if (requestHttp.responseJSON) {
+            if (requestHttp.responseJSON && id_request == this.#id_request) {
               let lon = requestHttp.responseJSON.lon;
               let lat = requestHttp.responseJSON.lat;
               let imagen = './images/icons/location.png';
@@ -116,6 +120,7 @@ export class MapaOl {
               $("#desplegable").show();
               $("#lat").val(lat);
               $("#lon").val(lon);
+              this.#id_request = 0;
             }
         }.bind(this),
         error: function (data, status, requestHttp) {
