@@ -829,7 +829,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
           return flag;
       });
       map.removIcon();
-      if (cantLista <= 1) {
+      if (cantLista < 1) {
         let personas = list.sort(function (elementA, elementB) {
           if (elementA.persona < elementB.persona) {
             return -1;
