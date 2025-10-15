@@ -332,9 +332,6 @@ use function PHPUnit\Framework\isNull;
 		$com_row = (isset($config_datos["row"])) ? $config_datos["row"] : 0;
 		$com_col = (isset($config_datos["col_init"])) ? $config_datos["col"] : 0;
 
-		$id_calle_migrados = Calle::get_id_by_nombre("Sin Datos");
-		$calle_migrados = new Calle(id_calle: $id_calle_migrados);
-
 		if (!empty($config_datos["con_palabra_en_columna"])) {
 
 			for ($row = $com_row; $row <= $highestRow; $row++) {
@@ -471,12 +468,14 @@ use function PHPUnit\Framework\isNull;
 		$config_datos = $archivo->get_configuracion();
 		$private_key = Parametria::get_value_by_code($con, 'SECRET_KEY');
 		$time_send = Parametria::get_value_by_code($con, 'TIME_SEND');
+		$id_barrio_migrados = Barrio::get_id_by_name($con, "Migró");
 		$id_calle_migrados = Calle::get_id_by_nombre("Sin Datos");
+		$barrio_migrados = new Barrio($con, $id_barrio_migrados);
 		$calle_migrados = new Calle(id_calle: $id_calle_migrados);
 		$con->CloseConexion();
 		$con = null;
 		$list_conf_datos = explode("|", $config_datos);
-		$lista_datos = array();	
+		$lista_datos = array();
 		foreach ($list_conf_datos as $value) {
 			$row_data = explode("-", $value);
 			$lista_datos[$row_data[0]] = $row_data[1];
@@ -492,10 +491,6 @@ use function PHPUnit\Framework\isNull;
 		$client_drive->addScope([Google_Service_Drive::DRIVE]);
 		$client_drive->addScope([Google_Service_Sheets::SPREADSHEETS]);
 		$service = new Google_Service_Drive($client_drive);
-
-		$file = new Google_Service_Drive_DriveFile();
-		$file->setName('FILE_TEMPORAL.xlsx');
-		$file->setMimeType('application/vnd.google-apps.spreadsheet');
 
 		$file_drive = $service->files->get($file_id, ["alt" => "media"]);
 		$body = $file_drive->getBody();
@@ -559,6 +554,8 @@ use function PHPUnit\Framework\isNull;
 			$calle_info = true;
 			$geo_lat = null;
 			$geo_lon = null;
+			$is_migracion = false;
+			$observacion = "";
 			$lista_motivos = (!empty($dato["motivos"])) ? $dato["motivos"] : [];
 			$dni = $dato["dni"];
 			if (empty($dni)) continue;
@@ -579,6 +576,7 @@ use function PHPUnit\Framework\isNull;
 			$hc = (!empty($dato["hc"])) ? $dato["hc"] : null;
 			$obra_social = (!empty($dato["obra_social"])) ? $dato["obra_social"] : null;
 			$telefono = (!empty($dato["telefono"])) ? $dato["telefono"] : null;
+			$observacion = (!empty($dato["observacion"])) ? $dato["observacion"] : "";
 			$estado = 1;
 			$ID_TipoAccion = 1;
 			$email = null;
@@ -605,6 +603,13 @@ use function PHPUnit\Framework\isNull;
 																			id_bario: $id_barrio,
 																			connection: $con
 																			);
+			$direccion_sin_acentos = str_replace("ó", "o", $direccion);
+            if (isset($lista_datos[$direccion_sin_acentos])
+				&& $lista_datos[$direccion_sin_acentos] = "migracion") {
+				$id_barrio = $id_barrio_migrados;
+				$id_calle = $id_calle_migrados;
+				$is_migracion = true;
+			}
 
 			if (!$lista_motivos) {
 				$id_persona = (empty($dni)) ? null : Persona::get_id_persona_by_dni($con,
@@ -625,10 +630,11 @@ use function PHPUnit\Framework\isNull;
 					if (!empty($hc)) $persona->setNro_Carpeta($hc);
 					if (is_numeric($id_barrio)) $persona->setBarrio($id_barrio);
 					$persona->setNro($nro_calle);
+					if ($is_migracion) $persona->setObservaciones($observacion);
 					$persona->setManzana($manzana);
 
 					if (($is_calle_rastreador || $is_calle_con_barrio)
-						&& !$modificacion) {
+						&& !$modificacion && !$is_migracion) {
 						$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
 
 						$calle_obj = new Calle(id_calle: $id_calle);
@@ -686,9 +692,13 @@ use function PHPUnit\Framework\isNull;
 
 						$persona->update_direccion();
 					}
-					$persona->update_familia();
-					$persona->update_NroCarpeta();
-					$persona->update_barrio();
+						$persona->update_NroCarpeta();
+						if ($is_migracion) {
+							$persona->update_direccion();
+						} else {
+							$persona->update_familia();
+							$persona->update_barrio();
+						}
 
 					if ($calle_info) {
 						$row_json["calle_rastreador"] = ($is_calle_con_barrio) ? $is_calle_con_barrio : $is_calle_rastreador;
@@ -726,8 +736,9 @@ use function PHPUnit\Framework\isNull;
 						
 						if (is_numeric($departam)) $persona->setFamilia($departam);
 						$persona->setNro($nro_calle);
+						if ($is_migracion) $persona->setObservaciones($observacion);
 
-						if ($is_calle_rastreador || $is_calle_con_barrio) {
+						if (($is_calle_rastreador || $is_calle_con_barrio) && !$is_migracion) {
 							$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
 
 							$calle_obj = new Calle(id_calle: $id_calle);
@@ -833,10 +844,11 @@ use function PHPUnit\Framework\isNull;
 						if (!empty($hc)) $persona->setNro_Carpeta($hc);
 						if (is_numeric($id_barrio)) $persona->setBarrio($id_barrio);
 						$persona->setNro($nro_calle);
+						if ($is_migracion) $persona->setObservaciones($observacion);
 						$persona->setManzana($manzana);
 
 						if (($is_calle_rastreador || $is_calle_con_barrio)
-							&& !$modificacion) {
+							&& !$modificacion && !$is_migracion) {
 							$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
 
 							$calle_obj = new Calle(id_calle: $id_calle);
@@ -894,9 +906,13 @@ use function PHPUnit\Framework\isNull;
 							
 							$persona->update_direccion();
 						}
-						$persona->update_familia();
 						$persona->update_NroCarpeta();
-						$persona->update_barrio();	
+						if ($is_migracion) {
+							$persona->update_direccion();
+						} else {
+							$persona->update_familia();
+							$persona->update_barrio();
+						}
 						if ($calle_info) {
 							$row_json["calle_rastreador"] = ($is_calle_con_barrio) ? $is_calle_con_barrio : $is_calle_rastreador;
 							$row_json["domicilio"] = $direccion;
@@ -954,8 +970,9 @@ use function PHPUnit\Framework\isNull;
 					}
 					if (is_numeric($departam)) $persona->setFamilia($departam);
 					$persona->setNro($nro_calle);
+					if ($is_migracion) $persona->setObservaciones($observacion);
 
-					if ($is_calle_rastreador || $is_calle_con_barrio) {
+					if (($is_calle_rastreador || $is_calle_con_barrio) && !$is_migracion) {
 						$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
 
 						$calle_obj = new Calle(id_calle: $id_calle);
@@ -1044,10 +1061,11 @@ use function PHPUnit\Framework\isNull;
 						if (!empty($hc)) $persona->setNro_Carpeta($hc);
 						if (is_numeric($id_barrio)) $persona->setBarrio($id_barrio);
 						$persona->setNro($nro_calle);
+						if ($is_migracion) $persona->setObservaciones($observacion);
 						$persona->setManzana($manzana);
 
 						if (($is_calle_rastreador || $is_calle_con_barrio)
-							&& !$modificacion) {
+							&& !$modificacion && !$is_migracion) {
 							$calle_url = str_replace(" ", "+", $persona->getNombre_Calle());
 
 							$calle_obj = new Calle(id_calle: $id_calle);
@@ -1105,9 +1123,13 @@ use function PHPUnit\Framework\isNull;
 
 							$persona->update_direccion();
 						}
-						$persona->update_familia();
 						$persona->update_NroCarpeta();
-						$persona->update_barrio();
+						if ($is_migracion) {
+							$persona->update_direccion();
+						} else {
+							$persona->update_familia();
+							$persona->update_barrio();
+						}
 						$consulta_osm = false;
 					}
 				}
