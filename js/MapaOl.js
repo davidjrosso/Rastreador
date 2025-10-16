@@ -239,7 +239,7 @@ export class MapaOl {
         });
         let iconStyle = new Style({
           image: new Icon(/** @type {olx.style.IconOptions} */ ({
-            anchor: [200, 500],
+            anchor: [200, 600],
             anchorXUnits: 'pixels',
             anchorYUnits: 'pixels',
             scale: 0.07,
