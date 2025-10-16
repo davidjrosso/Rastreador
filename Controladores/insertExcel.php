@@ -351,7 +351,7 @@ use function PHPUnit\Framework\isNull;
 				for ($col = $com_col; $col <= $highestColumnIndex; $col++) {
 					$value = (!empty($rows_excel[$row][$col])) ? $rows_excel[$row][$col] : null;
 					$value = trim($value);
-					$col_header = (!empty($rows_excel[$indixe_col_h][$col])) ? $rows_excel[$indixe_col_h][$col] : null;
+					$col_header = (!empty($rows_excel[$indixe_col_h][$col])) ? trim($rows_excel[$indixe_col_h][$col]) : null;
 					$col_config = ((isset($config_datos[$col_header])) ?  $config_datos[$col_header] : "default");
 					//if ($col_config == "direccion" && $config_datos["migracion"] == $value) $value = $calle_migrados->get_calle_nombre(); 
 					$valor = objetoExcel(
@@ -464,6 +464,10 @@ use function PHPUnit\Framework\isNull;
 		$id_centro_salud = $archivo->get_centro_salud();
 		$centro_salud = new CentroSalud(id_centro: $id_centro_salud, coneccion_base: $con);
 		$id_barrio_centro = $centro_salud->get_id_barrio();
+
+		$is_spreadsheet = false;
+		if (strlen($file_id) > 40) $is_spreadsheet = true;
+
 		$id_barrio = null;
 		$config_datos = $archivo->get_configuracion();
 		$private_key = Parametria::get_value_by_code($con, 'SECRET_KEY');
@@ -490,25 +494,32 @@ use function PHPUnit\Framework\isNull;
 									"signing_algorithm" => "HS256"));
 		$client_drive->addScope([Google_Service_Drive::DRIVE]);
 		$client_drive->addScope([Google_Service_Sheets::SPREADSHEETS]);
-		$service = new Google_Service_Drive($client_drive);
 
-		$file_drive = $service->files->get($file_id, ["alt" => "media"]);
-		$body = $file_drive->getBody();
-		$content = $body->getContents();
+		if (!$is_spreadsheet) {
+			$service = new Google_Service_Drive($client_drive);
 
-		$file_temp = tmpfile();
-		$info = stream_get_meta_data($file_temp);
-		$tmp_file_name = $info['uri'];
-		$flag = fwrite($file_temp, $content);
-		$tmp_file_name_xlsx = str_replace(".tmp", ".xlsx", $tmp_file_name);
-		$flag = rename($tmp_file_name, $tmp_file_name_xlsx);
-		$file_type = \PhpOffice\PhpSpreadsheet\IOFactory::identify($tmp_file_name_xlsx);
-
-		$reader_file = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($file_type);
-		$spreadsheet = $reader_file->load($tmp_file_name_xlsx);
-		$spreadsheet->setActiveSheetIndexByName($seccion);
-		$result = $spreadsheet->getActiveSheet()->toArray();
-		$flag = fclose($file_temp);
+			$file_drive = $service->files->get($file_id, ["alt" => "media"]);
+			$body = $file_drive->getBody();
+			$content = $body->getContents();
+	
+			$file_temp = tmpfile();
+			$info = stream_get_meta_data($file_temp);
+			$tmp_file_name = $info['uri'];
+			$flag = fwrite($file_temp, $content);
+			$tmp_file_name_xlsx = str_replace(".tmp", ".xlsx", $tmp_file_name);
+			$flag = rename($tmp_file_name, $tmp_file_name_xlsx);
+			$file_type = \PhpOffice\PhpSpreadsheet\IOFactory::identify($tmp_file_name_xlsx);
+	
+			$reader_file = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($file_type);
+			$spreadsheet = $reader_file->load($tmp_file_name_xlsx);
+			$spreadsheet->setActiveSheetIndexByName($seccion);
+			$result = $spreadsheet->getActiveSheet()->toArray();
+			$flag = fclose($file_temp);
+		} else {
+			$service_sheets = new Google_Service_Sheets($client_drive);
+			$response = $service_sheets->spreadsheets_values->get($file_id, $seccion);
+			$result = array_values(array_filter($response->values));
+		}
 
 		if (($seccion == "11 Años") || ($seccion == "EMBARAZADAS")) {
 			$fila = '!A3:';
