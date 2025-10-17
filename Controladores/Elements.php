@@ -2566,7 +2566,8 @@ public function getMenuSeguridadUsuario($ID){
   }
 
   ///////////////////////////////////////////// CATEGORIAS ///////////////////////////////////////////////////////
-  public function CBFormas_Categoria(){
+  public function CBFormas_Categoria()
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' name = 'ID_Forma' id = 'ID_Forma'>";
@@ -2579,7 +2580,8 @@ public function getMenuSeguridadUsuario($ID){
     return $Select;
   }
 
-  public function CBModFormas_Categoria($xID_Forma){
+  public function CBModFormas_Categoria($xID_Forma)
+  {
   	$Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' name = 'ID_Forma' id = 'ID_Forma'>";
@@ -2596,20 +2598,25 @@ public function getMenuSeguridadUsuario($ID){
     return $Select;
   }
 
-  public function CBTipos_Usuario(){
-    $Con3 = new Conexion();
-    $Con3->OpenConexion();
-    $Select = "<select class='form-control'  multiple='multiple' name = 'Tipo_Usuario[]' id = 'Tipo_Usuario'>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from Tipo_Usuarios order by TipoUsuario")or die("Problemas al mostrar las Formas de las Categorías");
-    while ($Ret = mysqli_fetch_array($Consulta)) {      
-        $Select .= "<option value = '".$Ret['ID_TipoUsuario']."'>".$Ret['descripcion']."</option>";
+  public function CBTipos_Usuario()
+  {
+    $con3 = new Conexion();
+    $con3->OpenConexion();
+    $select = "<select class='form-control'  style='display:none' multiple='multiple' name = 'Tipo_Usuario[]' id = 'Tipo_Usuario'>";
+    $query = "SELECT *
+              FROM Tipo_Usuarios
+              ORDER BY TipoUsuario";
+    $Consulta = mysqli_query($con3->Conexion, $query) or die("Problemas al mostrar las Formas de las Categorías");
+    while ($ret = mysqli_fetch_array($Consulta)) {
+        $select .= "<option value = '" . $ret['ID_TipoUsuario']."'>" . $ret['descripcion'] . "</option>";
     }          
-    $Select .= "</select>";
-    $Con3->CloseConexion();
-    return $Select;
+    $select .= "</select>";
+    $con3->CloseConexion();
+    return $select;
   }
 
-  public function CBCategorias_Roles_ID($XID){
+  public function CBCategorias_Roles_ID($XID)
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control'  multiple='multiple' name = 'Tipo_Usuario[]' id = 'Tipo_Usuario'>";
