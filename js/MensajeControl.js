@@ -369,9 +369,24 @@ export function VerificarCrearCategoria(xID,xFecha,xCodigo,xCategoria,xID_Forma,
         buttons: true,
         dangerMode: true,
         })
-        .then((willDelete) => {
-        if (willDelete) {
-            window.location.href = 'Controladores/InsertCategoria.php?ID=' + xID + '&Fecha=' + xFecha + '&Codigo=' + xCodigo + '&Categoria=' + xCategoria + '&ID_Forma=' + xID_Forma + '&ID_Categoria=' + xID + '&Color='+ColorBase;
+        .then((option) => {
+        if (option) {
+            let datos = 'ID=' + xID + '&Fecha=' + xFecha + '&Codigo=' + xCodigo + '&Categoria=' + xCategoria + '&ID_Forma=' + xID_Forma + '&ID_Categoria=' + xID + '&Color='+ColorBase;
+            let addres = '/insertar_categoria';
+            let request = $.ajax({
+                type:"POST",
+                url : addres,
+                async: false,
+                contentType: 'application/x-www-form-urlencoded',
+                data: datos,
+                success : function (data, status, requestHttp) {
+                    if (requestHttp.responseJSON.mensaje) {
+                        controlMensaje(requestHttp.responseJSON.mensaje, null);
+                    } else if (requestHttp.responseJSON.mensaje_error) {
+                        controlMensaje(null, requestHttp.responseJSON.mensaje_error);
+                    }
+                }
+            });
         }
         });
 }
