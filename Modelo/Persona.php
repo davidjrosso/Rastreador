@@ -1,4 +1,6 @@
 <?php
+
+use function PHPUnit\Framework\isNull;
 require_once($_SERVER['DOCUMENT_ROOT'] . '/Modelo/Accion.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/Modelo/Parametria.php');
 
@@ -201,7 +203,7 @@ class Persona implements JsonSerializable {
 			$this->Estado = ($xEstado) ? $xEstado : $estado;
 			$this->Trabajo = ($xTrabajo) ? $xTrabajo : $trabajo;
 			$this->Georeferencia = ($xGeoreferencia) ? $xGeoreferencia : $georefencia;
-			$this->Nro = ($xNro) ? $xNro : $nro;
+			$this->Nro = (!is_null($xNro)) ? $xNro : $nro;
 			$this->Calle = ($xCalle) ? $xCalle : $calle;
 			$Con->CloseConexion();
 		}
