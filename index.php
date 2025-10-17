@@ -110,6 +110,7 @@ try {
 	$routes[] = Route::get('crear_categoria', '/categoria/nueva', [CategoriaController::class, 'crear_categoria']);
 	$routes[] = Route::get('crear_categoria_error', '/categoria/nueva\?MensajeError={mensaje}', [CategoriaController::class, 'crear_categoria']);
 	$routes[] = Route::get('crear_categoria_success', '/categoria/nueva\?Mensaje={mensaje}', [CategoriaController::class, 'crear_categoria']);
+	$routes[] = Route::post('insertar_categoria', '/insertar_categoria', [CategoriaController::class, 'insertar_categoria_control']);
 	$routes[] = Route::get('color_categoria', '/categoria/colorcategoria\?ID={id}/ID_Forma={forma}', [CategoriaController::class, 'color_categoria']);
 	$routes[] = Route::post('crear_categoria_control', '/crear_categoria', [CategoriaController::class, 'crear_categoria_control']);
 	$routes[] = Route::post('sol_unif_control', 'pedirunificarcategoria', [CategoriaController::class, 'sol_unif_control']);
