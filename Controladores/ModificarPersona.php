@@ -200,12 +200,6 @@ try {
 		$Persona_Viejo->setNro($Persona->getNro());
 		$Persona_Viejo->setCalle($Persona->getId_Calle());
 
-		if ($Persona->getId_Calle() && $Persona->getNro()){
-			$Persona_Viejo->setDomicilio();	
-		} else {
-			$Persona_Viejo->setDomicilio($Persona->getDomicilio());
-		}
-
 		if ($georeferencia_point) {
 			$Persona_Viejo->setGeoreferencia(xGeoreferencia: $georeferencia_point);
 		}
