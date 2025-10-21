@@ -397,11 +397,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                                   <input type="number" class="form-control" name="NumeroDeCalle" id="NumeroDeCalle" placeholder="Nro"
                                     min="1" autocomplete="off" <?php
                                     $NroCalle = $Persona->getNro();
-                                    if ($NroCalle !== null) {
-                                      echo "value = '$NroCalle'";
-                                    } else {
-                                      echo "value =" . (($Persona->getNroCalle()) ? $Persona->getNroCalle() : "");
-                                    } ?>>
+                                    echo "value = '$NroCalle'"; ?>>
                                 </div>
                                 <div class="col-md-2 form-boton-widht">
                                   <button id="mapa-sig" type="button" class="btn btn-secondary" disabled data-toggle="modal"
