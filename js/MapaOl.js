@@ -75,7 +75,7 @@ export class MapaOl {
             controls : [],
             target: this.#target,
             view: new View({
-              maxZoom: 18,
+              maxZoom: 19,
               projection: 'EPSG:4326',
               center: this.#center,
               zoom: this.#zoom,
