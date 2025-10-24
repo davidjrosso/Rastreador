@@ -44,9 +44,9 @@ export function mensajeDeProcesamiento(mensaje) {
 }
 
 export function insercionDatosFormulario() {
-    let check_calle = $("#control-calle").is(":checked");
-    let check_nro = $("#control-nro").is(":checked");
-    let check_barrio = $("#control-barrio").is(":checked");
+    let check_calle = ($("#control-calle").text() != "no disponible") ? 1 : 0;
+    let check_nro = ($("#control-nro").text() != "no disponible") ? 1 : 0;
+    let check_barrio = ($("#control-barrio").text() != "no disponible") ? 1 : 0;
     let request = null;
     let query = "?";
     if (check_calle) {
