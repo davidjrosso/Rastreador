@@ -54,14 +54,18 @@ class Barrio
 
 	public static function get_id_by_name($coneccion, $name)
 	{
-		$consulta = "select ID_Barrio 
-					from barrios
-					where lower(Barrio) like lower('%" . $name . "%')
-					and estado = 1";
-		$rs = mysqli_query($coneccion->Conexion,
-						   $consulta) or die("Problemas al consultar las acciones.");
-		$ret = mysqli_fetch_assoc($rs);
-		$id = (!empty($ret["ID_Barrio"])) ? $ret["ID_Barrio"] : null;
+		$id = null;
+		if (!empty($name)) {
+			$consulta = "select ID_Barrio 
+						from barrios
+						where lower(Barrio) like lower('%" . $name . "%')
+						and estado = 1";
+			$rs = mysqli_query($coneccion->Conexion,
+							   $consulta) or die("Problemas al consultar las acciones.");
+			$ret = mysqli_fetch_assoc($rs);
+			if (!empty($ret["ID_Barrio"])) $id = $ret["ID_Barrio"];
+
+		}
 		return $id;
 	}
 

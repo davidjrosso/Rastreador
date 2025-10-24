@@ -9,8 +9,9 @@ header("Content-Type: application/json;charset=utf-8");
 
 $ID_Usuario = $_SESSION["Usuario"];
 
-$calle_id = trim($_REQUEST["calle"]);
-$numero = trim($_REQUEST["nro"]);
+$calle_id = (isset($_REQUEST["calle"])) ? trim($_REQUEST["calle"]) : null;
+$numero = (isset($_REQUEST["nro"]))? trim($_REQUEST["nro"]) : null;
+$barrio_nombre = (isset($_REQUEST["barrio"]))? trim($_REQUEST["barrio"]) : null;
 
 try {
 	$con = new Conexion();
@@ -39,11 +40,30 @@ try {
             $resp_json["lat"] = $georeferencia->get_punto_lat();
             $resp_json["lon"] = $georeferencia->get_punto_lon();
         }
-        $id_barrio = $georeferencia->get_id_barrio();
-        $barrio = new Barrio(
-                                coneccion: $con,
-                                id_barrio: $id_barrio
-                            );
+        if (!$barrio_nombre) {
+            $id_barrio = $georeferencia->get_id_barrio();
+            $barrio = new Barrio(
+                                    coneccion: $con,
+                                    id_barrio: $id_barrio
+                                );
+        } else {
+            $existe = Barrio::existe_barrio(
+                                            coneccion: $con,
+                                            name: $barrio_nombre
+                                            );
+            if ($existe) {
+                $id_barrio = Barrio::get_id_by_name(
+                                                    coneccion: $con,
+                                                    name: $barrio_nombre
+                                                    );
+            }
+            if ($id_barrio) {
+                $barrio = new Barrio(
+                                     coneccion: $con,
+                                     id_barrio: $id_barrio
+                                    );
+            }
+        }
         $resp_json["barrio"] = (!empty($barrio->get_barrio())) ? $barrio->get_barrio() : null;
 
     } else if (!$existe_geo && $existe_calle) {

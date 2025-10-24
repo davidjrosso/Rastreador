@@ -385,11 +385,11 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                                 <label for="NumeroDeCalle" class="col-md-2 col-form-label LblForm">Domicilio: </label>
                                 <div class="col-md-6 flex-sm-boton">
                                   <?php
-                                  if (!empty($Persona->getId_Calle())) {
-                                    echo $Element->CBCallesNombre($Persona->getId_Calle());
-                                  } else {
-                                    echo $Element->CBCallesNombre($Persona->getCalle());
-                                  }
+                                    if (!empty($Persona->getId_Calle())) {
+                                      echo $Element->CBCallesNombre($Persona->getId_Calle());
+                                    } else {
+                                      echo $Element->CBCallesNombre($Persona->getCalle());
+                                    }
                                   ?>
 
                                 </div>
@@ -566,11 +566,6 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                   <td  id="calle-georeferencia">
                     <?php echo $Persona->getNombre_Calle();?>
                   </td>
-                  <td id="calle-buttom" style="background-color: transparent; border: none; display: none;">
-                      <div>
-                        <input type="checkbox" class="desplegable-button--checked" value="" id="control-calle">
-                      </div>
-                  </td>
                 </tr>
                 <tr>
                   <td>
@@ -578,11 +573,6 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                   </td>
                   <td id="nro-georeferencia">
                     <?php echo $Persona->getNro();?>
-                  </td>
-                  <td id="nro-buttom" style="background-color: transparent; border: none; display: none;">
-                      <div>
-                        <input type="checkbox" class="desplegable-button--checked" value="" id="control-nro">
-                      </div>
                   </td>
                 </tr>
                 <tr>
@@ -592,25 +582,22 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                   <td id="barrio-georeferencia">
                     <?php echo $Persona->getBarrio();?>
                   </td>
-                  <td id="barrio-buttom" style="background-color: transparent; border: none; display: none;">
-                      <div>
-                        <input type="checkbox" class="desplegable-button--checked" value="" id="control-barrio">
-                      </div>
-                  </td>
                 </tr>
               </tbody>
           </table>
-          <button type="button" id="formulario-save" class="btn btn-danger btn-sm" 
-                  style="width: 44%; display: none;" onclick="insercionDatosFormulario();" aria-label="mapa-ok">
-            OK
-          </button>
-          <button type="button" id="formulario-cancel" class="btn btn-primary btn-sm" 
-                  style="width: 44%; display: none;" onclick="clearDatosFormulario();" aria-label="mapa-cancel">
-            Cancel
-          </button>
+          <div style="display:flex; justify-content: space-around">
+            <button type="button" id="formulario-save" class="btn btn-danger btn-sm" 
+                    style="display: none; flex-grow: 1; flex-basis: 40%" onclick="insercionDatosFormulario();" aria-label="mapa-ok">
+              OK
+            </button>
+            <button type="button" id="formulario-cancel" class="btn btn-primary btn-sm" 
+                    style="display: none; flex-grow: 1; flex-basis: 40%" onclick="clearDatosFormulario();" aria-label="mapa-cancel">
+              Cancel
+            </button>
+          </div>
           <button type="button" id="formulario-succes" class="btn btn-success btn-sm"
-                  style="width: 44%; display: none;" aria-label="mapa-succes">
-            Success
+                  style="width: 100%; display: none;" aria-label="mapa-succes">
+            Formulario actualizado
           </button>
         </div>
       </div>
