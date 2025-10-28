@@ -498,7 +498,14 @@ use function PHPUnit\Framework\isNull;
 		if (!$is_spreadsheet) {
 			$service = new Google_Service_Drive($client_drive);
 
-			$file_drive = $service->files->get($file_id, ["alt" => "media"]);
+			try {
+				$array_revisions = $service->revisions->listRevisions($file_id)->getRevisions();
+				if (count($array_revisions)) $revision_id = end($array_revisions)->getId();
+				$file_drive = $service->revisions->get($file_id, $revision_id, ['alt' => 'media']);
+			} catch (\Google\Service\Exception $e) {
+				$file_drive = $service->files->get($file_id, ["alt" => "media"]);
+			}
+
 			$body = $file_drive->getBody();
 			$content = $body->getContents();
 	
