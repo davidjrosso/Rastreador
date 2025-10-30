@@ -114,8 +114,8 @@ export class MapaOl {
               this.#mapa.getView().setCenter([lon, lat]);
               barrioResp = requestHttp.responseJSON.barrio;
               barrio = (barrioResp) ? barrioResp : "no disponible";
-              $("#calle-georeferencia").text(calleNombre);
-              $("#nro-georeferencia").text(nro);
+              $("#input-calle").val(calleNombre);
+              $("#input-nro").val(nro);
               $("#barrio-georeferencia").text(barrio);
               $("#desplegable").show();
               $("#lat").val(lat);
@@ -124,8 +124,8 @@ export class MapaOl {
             }
         }.bind(this),
         error: function (data, status, requestHttp) {
-          $("#calle-georeferencia").text("no disponible");
-          $("#nro-georeferencia").text("no disponible");
+          $("#input-calle").val("no disponible");
+          $("#input-nro").val("no disponible");
           $("#barrio-georeferencia").text("no disponible");
           $("#desplegable").show();
         }
@@ -140,15 +140,15 @@ export class MapaOl {
       numero = (numero) ? numero.trim() : "no disponible";
       barrio = (barrio) ? barrio.trim() : "no disponible";
 
-      $("#calle-georeferencia").text(calle);
-      $("#nro-georeferencia").text(numero);
+      $("#input-calle").val(calle);
+      $("#input-nro").val(numero);
       $("#barrio-georeferencia").text(barrio);
       $("#desplegable").show();
     }
 
     errorSearchAddress(response) {
-      $("#calle-georeferencia").text("no disponible");
-      $("#nro-georeferencia").text("no disponible");
+      $("#input-calle").val("no disponible");
+      $("#input-nro").val("no disponible");
       $("#barrio-georeferencia").text("no disponible");
       $("#desplegable").show();
     }
