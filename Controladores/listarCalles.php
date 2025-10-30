@@ -30,7 +30,7 @@ $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consulta
 $consultaBusqueda = strtolower($consultaBusqueda);
 $resultados = [];
 
-if ($consultaBusqueda) {
+if (!is_null($consultaBusqueda)) {
 
 	$con = new Conexion();
 	$con->OpenConexion();

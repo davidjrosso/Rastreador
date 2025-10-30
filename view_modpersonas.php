@@ -584,7 +584,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                               Nro
                             </td>
                             <td id="nro-georeferencia">
-                              <input id="input-nro" style="appearance: none;" type="text" value="<?php echo $Persona->getNro();?>">
+                              <input id="input-nro" style="appearance: none;" type="number" value="<?php echo $Persona->getNro();?>">
                             </td>
                           </tr>
                           <tr>
