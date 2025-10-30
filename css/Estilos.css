@@ -1044,3 +1044,14 @@ select[class~="form-control"] {
     padding-right: 0.7% !important;
   }
 }
+
+#input-calle, #input-nro {
+  border: 0px !important;
+  width: 100%;
+  text-align: center;
+}
+
+#input-calle:focus, #input-nro:focus {
+  border: 0px !important;
+  width: 100%;
+}

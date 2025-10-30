@@ -115,6 +115,18 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
         };
       });
 
+      $("#input-calle").on("keyup",function (e) {
+        listadoDeCalles(map);
+      });
+
+      $("#input-nro").on("click ",function (e) {
+        $("#lista-calles-georeferencia").hide();
+      });
+
+      $("#input-nro").on("keyup",function (e) {
+        queryDatosDomicilio(map);
+      });
+
       $("#boton-min").on("click", function (e) {
         $("button[class='ol-zoom-out']").click();
       });
@@ -226,7 +238,6 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
       Meses.value = CalcMeses;
     }
   </script>
-
 </head>
 
 <body>
@@ -362,7 +373,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                                   <input type="text" class="form-control" name="Nro_Legajo" id="Nro_Legajo" autocomplete="off" <?php if ($Nro_Legajo != "null") {
                                     echo "value = '" . $Persona->getNro_Legajo() . "'";
                                   }
-                                  ; ?>>
+                                  ?>>
                                 </div>
                               </div>
                               <div class="form-group row">
@@ -552,53 +563,60 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
         <div class="modal-body" style="padding-top: 0px">
           <div id="basicMap"></div>
         </div>
-        <div id="desplegable" style="display: none; position: absolute; top: 30px; left: 20px; z-index: 1000">
-          <table class="tabla-direccion">
-              <thead>
-                <th> </th>
-                <th> </th>
-              </thead>
-              <tbody> 
-                <tr>
-                  <td>
-                    Calle
-                  </td>
-                  <td  id="calle-georeferencia">
-                    <?php echo $Persona->getNombre_Calle();?>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    Nro
-                  </td>
-                  <td id="nro-georeferencia">
-                    <?php echo $Persona->getNro();?>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    Barrio
-                  </td>
-                  <td id="barrio-georeferencia">
-                    <?php echo $Persona->getBarrio();?>
-                  </td>
-                </tr>
-              </tbody>
-          </table>
-          <div style="display:flex; justify-content: space-around">
-            <button type="button" id="formulario-save" class="btn btn-danger btn-sm" 
-                    style="display: none; flex-grow: 1; flex-basis: 40%" onclick="insercionDatosFormulario();" aria-label="mapa-ok">
-              OK
-            </button>
-            <button type="button" id="formulario-cancel" class="btn btn-primary btn-sm" 
-                    style="display: none; flex-grow: 1; flex-basis: 40%" onclick="clearDatosFormulario();" aria-label="mapa-cancel">
-              Cancel
-            </button>
-          </div>
-          <button type="button" id="formulario-succes" class="btn btn-success btn-sm"
-                  style="width: 100%; display: none;" aria-label="mapa-succes">
-            Formulario actualizado
-          </button>
+        <div id="desplegable" style="display: flex; position: absolute; top: 30px; left: 20px; z-index: 1000">
+              <div style="display: flex; flex-direction: column;">
+                    <table class="tabla-direccion">
+                        <thead>
+                          <th></th>
+                          <th></th>
+                        </thead>
+                        <tbody> 
+                          <tr>
+                            <td>
+                              Calle
+                            </td>
+                            <td  id="calle-georeferencia">
+                              <input id="input-calle" style="appearance: none;" type="text" value="<?php echo $Persona->getNombre_Calle();?>">
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              Nro
+                            </td>
+                            <td id="nro-georeferencia">
+                              <input id="input-nro" style="appearance: none;" type="text" value="<?php echo $Persona->getNro();?>">
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              Barrio
+                            </td>
+                            <td id="barrio-georeferencia">
+                              <?php echo $Persona->getBarrio();?>
+                            </td>
+                          </tr>
+                        </tbody>
+                    </table>
+                    <div style="display:flex; justify-content: space-around">
+                          <button type="button" id="formulario-save" class="btn btn-danger btn-sm" 
+                                  style="display: none; flex-grow: 1; flex-basis: 40%" onclick="insercionDatosFormulario();" aria-label="mapa-ok">
+                            OK
+                          </button>
+                          <button type="button" id="formulario-cancel" class="btn btn-primary btn-sm" 
+                                  style="display: none; flex-grow: 1; flex-basis: 40%" onclick="clearDatosFormulario();" aria-label="mapa-cancel">
+                            Cancel
+                          </button>
+                          <button type="button" id="formulario-succes" class="btn btn-success btn-sm"
+                                  style="width: 100%; display: none;" aria-label="mapa-succes">
+                            Formulario actualizado
+                          </button>
+                    </div>
+              </div>
+              <div id="lista-calles-georeferencia" style="display: none" class="dropdown" aria-labelledby="dropdownMenuButton1">
+                  <div  id="listado-calles" class="dropdown-menu" style="display: block; top: 1px; max-height: 325px; overflow-y: auto; overflow-x: hidden; width: 255px; font-size: 0.90rem; position: static; margin-top: 6px; padding: 0px;">
+                    <h6 class="dropdown-header" style="text-align: center; padding-top: 5px;">Calles</h6>
+                  </div>
+              </div>
         </div>
       </div>
     </div>
