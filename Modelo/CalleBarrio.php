@@ -103,7 +103,7 @@ class CalleBarrio
 			if (mysqli_num_rows($query_object) > 0) {
 				$ret = mysqli_fetch_assoc($query_object);
 				$id_geo = $ret["id_geo"];
-			};
+			}
 		} else if ($id_calle && !$num_calle) {
 			$consulta = "SELECT *
 						 FROM calles_barrios
@@ -115,7 +115,7 @@ class CalleBarrio
 			if (mysqli_num_rows($query_object) > 0) {
 				$ret = mysqli_fetch_assoc($query_object);
 				$id_geo = $ret["id_geo"];
-			};
+			}
 		}
 		return $id_geo;
 	}
