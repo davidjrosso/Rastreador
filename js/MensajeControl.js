@@ -121,11 +121,9 @@ function listadoDeCallesError() {
 
 export function listadoDeCalles(mapa) {
     let lista = $("#listado-calles");
-    let listaLength = $("#listado-calles li").length;
     let request = null;
     let query = "?";
     $("#lista-calles-georeferencia").show();
-    if (listaLength > 0) $("#listado-calles li").remove();
     query += "calle=" + $("#input-calle").val();
     request = $.ajax({
         type: "GET",
@@ -137,6 +135,8 @@ export function listadoDeCalles(mapa) {
         success: function (response) {
             let count = 1;
             let nro = $("#input-nro").val();
+            let listaLength = $("#listado-calles li").length;
+            if (listaLength > 0) $("#listado-calles li").remove();
             response.forEach(element => {
                 let obj = $("<li id='" + element.id_calle + "' class='dropdown-item'>" + 
                                 count++ + " " + element.calle_nombre + "</li>");
