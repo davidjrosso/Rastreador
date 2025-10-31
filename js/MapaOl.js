@@ -479,7 +479,11 @@ export class MapaOl {
 
     queryDatosSuccess(id_request, response, textStatus, jqXHR) {
         let index = null;
-        if (response.id_calle && this.#id_request == id_request) {
+        let nroCalle = $("#input-nro").val();
+        if (response.id_calle 
+            && this.#id_request == id_request
+            && nroCalle == response.nro
+          ) {
             if (!$("#calle_" + response.id_calle)[0]) {
                 $("#Calle").val(response.id_calle);
                 $("#BotonModalDireccion_1").text(response.nombre_calle);
