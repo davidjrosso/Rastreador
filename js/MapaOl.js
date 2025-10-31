@@ -113,7 +113,7 @@ export class MapaOl {
                           );
               this.#mapa.getView().setCenter([lon, lat]);
               barrioResp = requestHttp.responseJSON.barrio;
-              barrio = (barrioResp) ? barrioResp : "no disponible";
+              barrio = (barrioResp) ? barrioResp.trim() : "no disponible";
               $("#input-calle").val(calleNombre);
               $("#input-nro").val(nro);
               $("#barrio-georeferencia").text(barrio);
@@ -517,7 +517,7 @@ export class MapaOl {
 
         if (!isNaN(nro)) {
             if (check_calle) {
-                query += "calle=" + $("#input-calle").val();
+                query += "calle=" + $("#input-calle").val().trim();
             }
         
             if (nro > 0) {
@@ -527,7 +527,7 @@ export class MapaOl {
         
             if (check_barrio) {
                 query += (check_calle || nro > 0) ? "&" : "";
-                query += "barrio=" + $("#barrio-georeferencia").text();
+                query += "barrio=" + $("#barrio-georeferencia").text().trim();
             }
         
             request = $.ajax({
