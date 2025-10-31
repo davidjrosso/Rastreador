@@ -137,7 +137,7 @@ export class MapaOl {
       let numero = response.address.house_number;
       let barrio = response.address.neighbourhood;
       calle = (calle) ? calle.trim() : "no disponible";
-      numero = (numero) ? numero.trim() : "no disponible";
+      numero = (numero) ? numero.trim() : "0";
       barrio = (barrio) ? barrio.trim() : "no disponible";
 
       $("#input-calle").val(calle);
@@ -148,7 +148,7 @@ export class MapaOl {
 
     errorSearchAddress(response) {
       $("#input-calle").val("no disponible");
-      $("#input-nro").val("no disponible");
+      $("#input-nro").val("0");
       $("#barrio-georeferencia").text("no disponible");
       $("#desplegable").show();
     }
