@@ -110,6 +110,18 @@
                 }
               });
 
+              $("#input-calle").on("keyup",function (e) {
+                listadoDeCalles(map);
+              });
+
+              $("#input-nro").on("click ",function (e) {
+                $("#lista-calles-georeferencia").hide();
+              });
+
+              $("#input-nro").on("keyup",function (e) {
+                map.queryDatosDomicilio();
+              });
+
               $("#boton-desplegale").on("click", function (e) {
                 $("#desplegable").toggle();
               });
@@ -546,64 +558,59 @@
         <div class="modal-body" style="padding-top: 0px">
           <div id="basicMap"></div>
         </div>
-        <div id="desplegable" style="display: none; position: absolute; top: 30px; left: 20px; z-index: 1000">
-          <table class="tabla-direccion">
-              <thead>
-                <th> </th>
-                <th> </th>
-                <th> </th>
-              </thead>
-              <tbody> 
-                <tr>
-                  <td>
-                    Calle
-                  </td>
-                  <td  id="calle-georeferencia">
-                  </td>
-                  <td id="calle-buttom" style="background-color: transparent; border: none;">
-                      <div>
-                        <input type="checkbox" class="desplegable-button--checked" value="" id="control-calle">
-                      </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    Nro
-                  </td>
-                  <td id="nro-georeferencia">
-                  </td>
-                  <td id="nro-buttom" style="background-color: transparent; border: none;">
-                      <div>
-                        <input type="checkbox" value="" id="control-nro">
-                      </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    Barrio
-                  </td>
-                  <td id="barrio-georeferencia">
-                  </td>
-                  <td id="barrio-buttom" style="background-color: transparent; border: none;">
-                      <div>
-                        <input type="checkbox" value="" id="control-barrio">
-                      </div>
-                  </td>
-                </tr>
-              </tbody>
-          </table>
-          <button type="button" id="formulario-save" class="btn btn-danger btn-sm" style="width: 44%;" 
-                  onclick="insercionDatosFormulario();" aria-label="mapa-ok">
-            OK
-          </button>
-          <button type="button" id="formulario-cancel" class="btn btn-primary btn-sm" style="width: 44%;" 
-                  onclick="clearDatosFormulario();" aria-label="mapa-cancel">
-            Cancel
-          </button>
-          <button type="button" id="formulario-succes" class="btn btn-success btn-sm" 
-                  style="width: 44%; display: none;" aria-label="mapa-succes">
-            Success
-          </button>
+        <div id="desplegable" style="display: flex; position: absolute; top: 30px; left: 20px; z-index: 1000">
+              <div style="display: flex; flex-direction: column;">
+                    <table class="tabla-direccion">
+                        <thead>
+                          <th></th>
+                          <th></th>
+                        </thead>
+                        <tbody> 
+                          <tr>
+                            <td>
+                              Calle
+                            </td>
+                            <td  id="calle-georeferencia">
+                              <input id="input-calle" style="appearance: none;" type="text" value="">
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              Nro
+                            </td>
+                            <td id="nro-georeferencia">
+                              <input id="input-nro" style="appearance: none;" type="number" value="0">
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              Barrio
+                            </td>
+                            <td id="barrio-georeferencia">
+                            </td>
+                          </tr>
+                        </tbody>
+                    </table>
+                    <div style="display:flex; justify-content: space-around">
+                          <button type="button" id="formulario-save" class="btn btn-danger btn-sm" 
+                                  style="display: none; flex-grow: 1; flex-basis: 40%" onclick="insercionDatosFormulario();" aria-label="mapa-ok">
+                            OK
+                          </button>
+                          <button type="button" id="formulario-cancel" class="btn btn-primary btn-sm" 
+                                  style="display: none; flex-grow: 1; flex-basis: 40%" onclick="clearDatosFormulario();" aria-label="mapa-cancel">
+                            Cancel
+                          </button>
+                          <button type="button" id="formulario-succes" class="btn btn-success btn-sm"
+                                  style="width: 100%; display: none;" aria-label="mapa-succes">
+                            Dirección actualizada
+                          </button>
+                    </div>
+              </div>
+              <div id="lista-calles-georeferencia" style="display: none" class="dropdown" aria-labelledby="dropdownMenuButton1">
+                  <div  id="listado-calles" class="dropdown-menu" style="display: block; top: 1px; max-height: 325px; overflow-y: auto; overflow-x: hidden; width: 255px; font-size: 0.90rem; position: static; margin-top: 6px; padding: 0px;">
+                    <h6 class="dropdown-header" style="text-align: center; padding-top: 5px;">Calles</h6>
+                  </div>
+              </div>
         </div>
       </div>
     </div>

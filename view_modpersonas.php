@@ -608,7 +608,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                           </button>
                           <button type="button" id="formulario-succes" class="btn btn-success btn-sm"
                                   style="width: 100%; display: none;" aria-label="mapa-succes">
-                            Dirección actualizado
+                            Dirección actualizada
                           </button>
                     </div>
               </div>
