@@ -124,7 +124,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
       });
 
       $("#input-nro").on("keyup",function (e) {
-        queryDatosDomicilio(map);
+        map.queryDatosDomicilio();
       });
 
       $("#boton-min").on("click", function (e) {

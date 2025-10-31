@@ -470,4 +470,81 @@ export class MapaOl {
       )
       return value;
     }
+
+    queryDatosError(response) {
+        $("#input-calle").val("Error");
+        $("#input-nro").val("0");
+        $("#control-barrio").text("Error");
+    }
+
+    queryDatosSuccess(id_request, response, textStatus, jqXHR) {
+        let index = null;
+        if (response.id_calle && this.#id_request == id_request) {
+            if (!$("#calle_" + response.id_calle)[0]) {
+                $("#Calle").val(response.id_calle);
+                $("#BotonModalDireccion_1").text(response.nombre_calle);
+
+            } else {
+                index = $("#calle_" + response.id_calle)[0].index;
+                $("#ID_Calle")[0].selectedIndex = index;
+            }
+            this.addPersonMapAddress($(
+                                        "#input-calle").val(),
+                                        response.nro, 
+                                        response.id_calle
+                                        );
+        }
+
+        if (response.nro) {
+            $("#NumeroDeCalle").val(response.nro);
+        }
+
+        if (response.id_barrio) {
+            index = $("#barrio_" + response.id_barrio)[0].index;
+            $("#ID_Barrio")[0].selectedIndex = index;
+        }
+    }
+
+    queryDatosDomicilio() {
+        let nro = parseInt($("#input-nro").val());
+        let check_calle = ($("#input-calle").val() != "no disponible") ? 1 : 0;
+        let check_barrio = ($("#control-barrio").text() != "no disponible") ? 1 : 0;
+        let request = null;
+        let query = "?";
+        let id_request = null;
+        this.#id_request++;
+        id_request = this.#id_request;
+
+        if (!isNaN(nro)) {
+            if (check_calle) {
+                query += "calle=" + $("#input-calle").val();
+            }
+        
+            if (nro > 0) {
+                query += (check_calle) ? "&" : "";
+                query += "nro=" + $("#input-nro").val();
+            }
+        
+            if (check_barrio) {
+                query += (check_calle || nro > 0) ? "&" : "";
+                query += "barrio=" + $("#barrio-georeferencia").text();
+            }
+        
+            request = $.ajax({
+                type: "POST",
+                cache: false,
+                url: "/Controladores/UbicacionesInformacion.php" + query,
+                async: true,
+                processData: false,
+                contentType: false,
+                success: this.queryDatosSuccess.bind(this, id_request),
+                error: this.queryDatosError
+            });
+        
+            $("#control-calle").css("display", "none");
+            $("#control-nro").css("display", "none");
+            $("#control-barrio").css("display", "none");
+        }
+    }
+    
 }

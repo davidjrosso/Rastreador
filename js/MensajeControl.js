@@ -144,85 +144,12 @@ export function listadoDeCalles(mapa) {
                 obj.on("click", function (e) {
                     $("#input-calle").val(element.calle_nombre);
                     $("#lista-calles-georeferencia").hide();
-                    if (!isNaN(parseInt(nro))) queryDatosDomicilio(mapa);;
+                    if (!isNaN(parseInt(nro))) mapa.queryDatosDomicilio();
                 })
             });
         },
         error: listadoDeCallesError
     });
-}
-
-function queryDatosError(response) {
-    $("#input-calle").val("Error");
-    $("#input-nro").val("0");
-    $("#control-barrio").text("Error");
-}
-
-function queryDatosSuccess(mapa, response, textStatus, jqXHR) {
-    let index = null;
-    if (response.id_calle) {
-        if (!$("#calle_" + response.id_calle)[0]) {
-            $("#Calle").val(response.id_calle);
-            $("#BotonModalDireccion_1").text(response.nombre_calle);
-
-        } else {
-            index = $("#calle_" + response.id_calle)[0].index;
-            $("#ID_Calle")[0].selectedIndex = index;
-        }
-        mapa.addPersonMapAddress($(
-                                    "#input-calle").val(),
-                                    response.nro, 
-                                    response.id_calle
-                                    );
-    }
-
-    if (response.nro) {
-        $("#NumeroDeCalle").val(response.nro);  
-    }
-
-    if (response.id_barrio) {
-        index = $("#barrio_" + response.id_barrio)[0].index;
-        $("#ID_Barrio")[0].selectedIndex = index;
-    }
-}
-
-export function queryDatosDomicilio(mapa) {
-    let nro = parseInt($("#input-nro").val());
-    let check_calle = ($("#input-calle").val() != "no disponible") ? 1 : 0;
-    let check_barrio = ($("#control-barrio").text() != "no disponible") ? 1 : 0;
-    let request = null;
-    let query = "?";
-
-    if (!isNaN(nro)) {
-        if (check_calle) {
-            query += "calle=" + $("#input-calle").val();
-        }
-    
-        if (nro > 0) {
-            query += (check_calle) ? "&" : "";
-            query += "nro=" + $("#input-nro").val();
-        }
-    
-        if (check_barrio) {
-            query += (check_calle || nro > 0) ? "&" : "";
-            query += "barrio=" + $("#barrio-georeferencia").text();
-        }
-    
-        request = $.ajax({
-            type: "POST",
-            cache: false,
-            url: "/Controladores/UbicacionesInformacion.php" + query,
-            async: true,
-            processData: false,
-            contentType: false,
-            success: queryDatosSuccess.bind(this, mapa),
-            error: queryDatosError
-        });
-    
-        $("#control-calle").css("display", "none");
-        $("#control-nro").css("display", "none");
-        $("#control-barrio").css("display", "none");
-    }
 }
 
 export function clearDatosFormulario() {
