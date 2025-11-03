@@ -484,28 +484,11 @@ export class MapaOl {
             && this.#id_request == id_request
             && nroCalle == response.nro
           ) {
-            if (!$("#calle_" + response.id_calle)[0]) {
-                $("#Calle").val(response.id_calle);
-                $("#BotonModalDireccion_1").text(response.nombre_calle);
-
-            } else {
-                index = $("#calle_" + response.id_calle)[0].index;
-                $("#ID_Calle")[0].selectedIndex = index;
-            }
             this.addPersonMapAddress($(
                                         "#input-calle").val(),
                                         response.nro, 
                                         response.id_calle
                                         );
-        }
-
-        if (response.nro) {
-            $("#NumeroDeCalle").val(response.nro);
-        }
-
-        if (response.id_barrio) {
-            index = $("#barrio_" + response.id_barrio)[0].index;
-            $("#ID_Barrio")[0].selectedIndex = index;
         }
     }
 
