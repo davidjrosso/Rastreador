@@ -110,7 +110,7 @@
                 }
               });
 
-              $("#input-calle").on("keydown",function (e) {
+              $("#input-calle").on("input",function (e) {
                 listadoDeCalles(map);
               });
 
@@ -118,7 +118,7 @@
                 $("#lista-calles-georeferencia").hide();
               });
 
-              $("#input-nro").on("keydown",function (e) {
+              $("#input-nro").on("input",function (e) {
                 map.queryDatosDomicilio();
               });
 
