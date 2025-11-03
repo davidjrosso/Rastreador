@@ -115,7 +115,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
         };
       });
 
-      $("#input-calle").on("keyup",function (e) {
+      $("#input-calle").on("keydown",function (e) {
         listadoDeCalles(map);
       });
 
@@ -123,7 +123,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
         $("#lista-calles-georeferencia").hide();
       });
 
-      $("#input-nro").on("keyup",function (e) {
+      $("#input-nro").on("keydown",function (e) {
         map.queryDatosDomicilio();
       });
 
