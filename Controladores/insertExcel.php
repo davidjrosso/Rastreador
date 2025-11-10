@@ -377,7 +377,9 @@ use function PHPUnit\Framework\isNull;
 								$lista_valores["motivos"][] = $row_motivo;
 							}
 						} else {
-							$lista_valores["observacion"] .= " - " . $valor;
+							if (isset($config_datos["observacion_todo_default"])) {
+								$lista_valores["observacion"] .= " - " . $valor;
+							}
 						}
 					} else {
 						$lista_valores[$col_config] = $valor;
