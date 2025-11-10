@@ -164,12 +164,12 @@ $ID_Config = $_REQUEST["ID_Config"];
   </script>  
 </head>
 <body>
-<div class = "row menu-col-2">
+<div class = "row menu-col-2 margin-right-cero" style="overflow: hidden;">
   <?php
     $Element = new Elements();
     echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_REPORTE_LISTADO);
   ?>
-  <div class = "col-md-10">
+  <div class = "col-md-10" style="max-height: 100vh; overflow-y: scroll;">
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
