@@ -20,7 +20,7 @@ require_once 'Conexion.php';
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-$ID_Usuario = $_SESSION["Usuario"];
+$ID_Responsable = $_SESSION["Usuario"];
 
 $ID_Usuario = $_REQUEST["ID"];
 
