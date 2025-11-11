@@ -14,6 +14,7 @@ module.exports = {
     control : './js/MensajeControl.js',
     form : './js/form.js',
     reporte : './js/ReporteMovimiento.js',
+    excel : './js/excel.js'
   },
   output: {
     libraryTarget: 'umd',
