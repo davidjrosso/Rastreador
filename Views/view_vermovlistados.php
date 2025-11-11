@@ -36,6 +36,13 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="dist/reporte.js"></script>
   <!--<script src="./dist/grafico.js"></script>-->
+  <script src="https://jsuites.net/v5/jsuites.js"></script>
+  <link rel="./node_modules/jspreadsheet-ce/dist/jspreadsheet.css">
+  <link rel="stylesheet" href="https://bossanova.uk/jspreadsheet/v5/jspreadsheet.css" type="text/css" />
+  <link rel="stylesheet" href="https://jsuites.net/v5/jsuites.css" type="text/css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons" />
+  <script src="/dist/excel.js"></script>
+
   <script>
       let fechaDesde = null;
       let fechaHasta = null;
@@ -61,6 +68,10 @@
               thTable = $("thead > tr > th");
 
               //grafico();
+
+              $("#excel").on("click", function (e) {
+                excel();
+              })
 
               $("#boton-fullscreen").on("click", function (e) {
                 if (!fullscreen) {
@@ -149,7 +160,8 @@
       }
 
 
-  </script>  
+  </script>
+
 </head>
 <body>
 <div class = "row menu-col-2">
@@ -806,7 +818,7 @@
                 Analisis de Datos
             </button>
             -->
-            <button type = "button" class = "btn btn-secondary" data-toggle="modal" 
+            <button id="excel" type = "button" class = "btn btn-secondary" data-toggle="modal" 
                     data-target="#excel-modal">
                 Excel Planilla
             </button>
@@ -2509,8 +2521,8 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body" style="padding: 0rem;">
-        <iframe src="/excel?ID=19" width="100%" height="100%"> </iframe>
+      <div id="excel_rev" class="modal-body modal-excel" style="padding: 0rem;">
+        <!--<iframe src="/excel?ID=19" width="100%" height="100%"> </iframe>-->
       </div>
     </div>
   </div>
