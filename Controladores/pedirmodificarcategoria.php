@@ -1,6 +1,7 @@
 <?php
 session_start(); 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Categoria.php");	
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/SolicitudPermiso.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_ModificarCategoria.php");
 
@@ -23,10 +24,12 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_ModificarCategoria.p
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+$con = new Conexion();
+$con->OpenConexion();
 $ID_Usuario = $_SESSION["Usuario"];
 $Grupo_Usuarios = $_REQUEST["Tipo_Usuario"];
 $ID_Categoria = $_REQUEST["ID"];
-$Codigo = strtoupper($_REQUEST["Codigo"]);
+if (!empty($_REQUEST["Codigo"])) $Codigo = strtoupper($_REQUEST["Codigo"]);
 $Categoria = $_REQUEST["Categoria"];
 $ID_Forma = $_REQUEST["ID_Forma"];
 $NuevoColor = $_REQUEST["CodigoColor"];
@@ -34,10 +37,10 @@ $NuevoColor = $_REQUEST["CodigoColor"];
 $Fecha = date("Y-m-d");
 $Estado = 1;
 
-if ($ID_Categoria > 0) {
-	$con = new Conexion();
-	$con->OpenConexion();
-
+$check = Categoria::exist_categoria($con, $ID_Categoria);
+if ($ID_Categoria > 0 && $check) {
+	$categ_obj = new Categoria(xConecction: $con, xID_Categoria: $ID_Categoria);	
+	if (!isset($Codigo)) $Codigo = $categ_obj->getCod_Categoria();
 	$solicitud = new Solicitud_ModificarCategoria(
 												  coneccion_base: $con,
 												  xFecha: $Fecha,
