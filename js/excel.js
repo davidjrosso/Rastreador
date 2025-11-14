@@ -55,6 +55,9 @@ export function excel() {
             worksheets: [{
                 data: elems,
                 columns: list,
+                filters: true,
+                allowComments:true
+                }],
                 toolbar:[{
                         type: 'i',
                         content: 'undo',
@@ -120,11 +123,7 @@ export function excel() {
                         content: 'format_color_fill',
                         k: 'background-color'
                     },
-                ],
-                filters: true,
-                allowComments:true
-
-                }]
+                ]
         });
     }
     
