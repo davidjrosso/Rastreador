@@ -57,10 +57,12 @@ export function excel() {
                 columns: list,
                 filters: true,
                 allowComments:true,
-                search: true
+                search: true,
+                worksheetName: "reporte"
                 }],
                 search: true,
-                toolbar:true
+                toolbar:true,
+                tabs: true
         });
     }
     
