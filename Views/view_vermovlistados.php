@@ -82,6 +82,12 @@
                   fullscreen = false;
                 }
               });
+              $("button[class='close']").on("click", function (e) {
+                  if (fullscreen) {
+                    document.exitFullscreen();
+                    fullscreen = false;
+                  }
+              });
       });
 
       function CalcularPrecio() {
