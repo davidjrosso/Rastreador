@@ -58,7 +58,7 @@ export function excel() {
                 filters: true,
                 allowComments:true,
                 search: true,
-                worksheetName: "reporte"
+                worksheetName: "Excel"
                 }],
                 search: true,
                 toolbar:true,
