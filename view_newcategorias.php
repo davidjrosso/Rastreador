@@ -49,16 +49,17 @@ $Con->CloseConexion();
   <!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>-->
   <script src="js/ValidarCategoria.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-<!-- Include the plugin's CSS and JS: -->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/davidstutz/bootstrap-multiselect@master/dist/css/bootstrap-multiselect.min.css">
-<link rel="stylesheet" href="https://cdn.rawgit.com/davidstutz/bootstrap-multiselect/master/dist/css/bootstrap-multiselect.css">
-<script src="https://cdn.rawgit.com/davidstutz/bootstrap-multiselect/master/dist/js/bootstrap-multiselect.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/davidstutz/bootstrap-multiselect@master/dist/js/bootstrap-multiselect.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@floating-ui/core@1.6.2"></script>
-<script src="https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.6.5"></script>
-
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" 	crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" 		crossorigin="anonymous"></script>
+  
+  <!-- Include the plugin's CSS and JS: -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/davidstutz/bootstrap-multiselect@master/dist/css/bootstrap-multiselect.min.css">
+  <link rel="stylesheet" href="https://cdn.rawgit.com/davidstutz/bootstrap-multiselect/master/dist/css/bootstrap-multiselect.css">
+  <script src="https://cdn.rawgit.com/davidstutz/bootstrap-multiselect/master/dist/js/bootstrap-multiselect.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/davidstutz/bootstrap-multiselect@master/dist/js/bootstrap-multiselect.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@floating-ui/core@1.6.2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.6.5"></script>
 
   <script type="text/javascript">
       /*var getImport = document.quearySelector ('link [rel = import]'); 
