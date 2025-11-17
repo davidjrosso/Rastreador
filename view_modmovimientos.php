@@ -257,7 +257,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
           <!-- Search -->
         <div class = "row">
           <?php  
-            if(isset($_REQUEST["ID"]) && $_REQUEST["ID"]!=null){
+            if(isset($_REQUEST["ID"])){
               $ID_Movimiento = $_REQUEST["ID"];
 
               $Con = new Conexion();
@@ -274,7 +274,8 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                                       INNER JOIN responsable R ON (M.id_resp = R.id_resp) 
                                       LEFT JOIN centros_salud C ON (M.id_centro = C.id_centro)
                                       LEFT JOIN otras_instituciones I ON (M.id_otrainstitucion = I.ID_OtraInstitucion )
-                                 where M.id_movimiento = $ID_Movimiento";
+                                 where M.id_movimiento = $ID_Movimiento
+                                 and MEMT.estado = 1";
 
               $MensajeErrorDatos = "No se pudo consultar los Datos del Movimiento";
 
