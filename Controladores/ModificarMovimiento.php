@@ -124,7 +124,7 @@ if (Movimiento::is_exist($con, $ID_Movimiento)) {
 			$movimiento_motivo = new MovimientoMotivo(
 													connection: $con,
 													id_movimiento: $ID_Movimiento,
-													id_motivo: $ret
+													id_motivo: $ret["id_motivo"]
 			);
 			$movimiento_motivo->delete();
 		}
