@@ -66,7 +66,7 @@ try {
 			$user->update();
 			if ($userpass) {
 				$solicitud = new Solicitud_Usuario(
-					usuario: $ID_Usuario,
+					usuario: $account_id,
 					descripcion: "Modificacion de contraseña ",
 					password: md5($userpass),
 					estado: 1,
