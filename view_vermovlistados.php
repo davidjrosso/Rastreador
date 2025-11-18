@@ -102,7 +102,7 @@ $ID_Config = $_REQUEST["ID_Config"];
         //configColumnasTabla();
         let reporte = null;
         if (objectJsonTabla["movimientos_general"] !== undefined) {
-          reporte = new RerpoteMovimiento( 
+          reporte = new RerpoteMovimiento(
                                           objectJsonTabla["movimientos_general"],
                                           objectJsonTabla["header_movimientos_general"],
                                           objectJsonTabla["head_movimientos_persona"],
@@ -112,11 +112,11 @@ $ID_Config = $_REQUEST["ID_Config"];
           reporte.sendRequest();
         } else if (objectJsonTabla["movimientos_persona"] !== undefined) {
           reporte = new RerpoteMovimiento(
-                                          null,
-                                          objectJsonTabla["header_movimientos_general"],
                                           objectJsonTabla["movimientos_persona"],
                                           objectJsonTabla["header_movimientos_general"],
-                                          objectJsonTabla["head_movimientos_persona"]
+                                          objectJsonTabla["head_movimientos_persona"],
+                                          objectJsonTabla["det_persona"],
+                                          null
                                         );
           reporte.sendRequest();
         }
