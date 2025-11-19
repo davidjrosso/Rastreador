@@ -58,11 +58,20 @@ $ID_Config = $_REQUEST["ID_Config"];
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="dist/reporte.js"></script>
+  <script src="https://jsuites.net/v5/jsuites.js"></script>
+  <link rel="./node_modules/jspreadsheet-ce/dist/jspreadsheet.css">
+  <link rel="stylesheet" href="https://bossanova.uk/jspreadsheet/v5/jspreadsheet.css" type="text/css" />
+  <link rel="stylesheet" href="https://jsuites.net/v5/jsuites.css" type="text/css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons" />
+  <script src="/dist/excel.js"></script>
+
   <script>
       let fechaDesde = null;
       let fechaHasta = null;
       let filtroSeleccionados = null;
       let listaOrden = new Map();
+      let fullscreen = false;
+
       $(document).ready(function(){
               var date_input=$('input[name="date"]');
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
@@ -80,8 +89,20 @@ $ID_Config = $_REQUEST["ID_Config"];
               nroPaginaPdf = 0;
               thTable = $("thead > tr > th");
 
-              $("tbody ul li buttom").on("click", function () {
-                $()
+              $("#boton-fullscreen").on("click", function (e) {
+                if (!fullscreen) {
+                  $("#excel-modal div[class='modal-content']")[0].requestFullscreen();
+                  fullscreen = true;
+                } else {
+                  document.exitFullscreen();
+                  fullscreen = false;
+                }
+              });
+              $("button[class='close']").on("click", function (e) {
+                  if (fullscreen) {
+                    document.exitFullscreen();
+                    fullscreen = false;
+                  }
               });
       });
 
@@ -2471,6 +2492,26 @@ $ID_Config = $_REQUEST["ID_Config"];
       <div class="modal-footer modal-footer-flex-center">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
         <button type="button" class="btn btn-primary" onClick="ordenResultados()" data-dismiss="modal">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="excel-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="class_modal-dialog modal-dialog" role="document"  id="id_modal-dialog">
+    <div class="modal-content" style="height: 600px; width: 800px;">
+      <div class="modal-header" style="padding: 0rem;">
+          <button type="button" id="boton-fullscreen" class="button-fullscreen" aria-label="fullscreen">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
+              </svg>
+          </button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div id="excel_rev" class="modal-body modal-excel" style="padding: 0rem;">
+        <!--<iframe src="/excel?ID=19" width="100%" height="100%"> </iframe>-->
       </div>
     </div>
   </div>

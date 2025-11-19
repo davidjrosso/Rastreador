@@ -12,7 +12,9 @@ module.exports = {
     reporte : './js/acciones-reporte-grafico.js',
     alerta : './js/Enlace-Drive.js',
     control : './js/MensajeControl.js',
+    form : './js/form.js',
     reporte : './js/ReporteMovimiento.js',
+    excel : './js/excel.js'
   },
   output: {
     libraryTarget: 'umd',

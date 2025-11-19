@@ -56,7 +56,6 @@ if (isset($consultaBusqueda)) {
 			  <thead class="thead-dark">
 			    <tr>
 			      <th scope="col">Categoría</th>
-			      <th scope="col">Cod_Categoria</th>	
 			      <th scope="col">Acción</th>	
 			    </tr>
 			  </thead>
@@ -69,8 +68,7 @@ if (isset($consultaBusqueda)) {
 			$Categoria = $resultados['categoria'];
 			$Cod_Categoria = $resultados['cod_categoria'];
 			$mensaje .= '<tr>
-							<th scope="row">' . $Categoria . '</th>
-							<td>' . $Cod_Categoria . '</td>';
+							<th scope="row">' . $Categoria . '</th>';
 
 			if (in_array($ID_Categoria, $valores_categorias)) {
 				$mensaje .= '<td>
