@@ -200,11 +200,19 @@ $ID_Config = $_REQUEST["ID_Config"];
     </div><br>
     <br>
     <div class="row">
-        <div class="col-md-2" style="padding-right: 0px;padding-left: 0pc;">
-          <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_listados.php'">Atras</button>
-          <button type="button" class="btn btn-secondary" onclick="enviarImprimirPdf();"> Imprimir</button>
+        <div class="col-md-4" style="padding-right: 0px;padding-left: 0pc;">
+          <button type="button" class="btn btn-secondary" onclick="enviarImprimirPdf();">
+              Imprimir
+          </button>
+          <button type="button" class="btn btn-secondary" onClick="htmlExcel('tabla-movimiento-general', 'excel');">
+              Excel descargar
+          </button>
+          <button id="excel" type = "button" class = "btn btn-secondary" data-toggle="modal" 
+                  data-target="#excel-modal">
+              Excel desplegar
+          </button>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
         <?php
         $Con = new Conexion();
         $Con->OpenConexion();
@@ -831,8 +839,8 @@ $ID_Config = $_REQUEST["ID_Config"];
                     data-target="#configModal">
                 config. columnas
             </button>
-            <button type="button" class="btn btn-secondary" onClick="htmlExcel('tabla-movimiento-general', 'excel');">
-                Excel
+            <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_listados.php'">
+                Atras
             </button>
         </div>
      </div>
