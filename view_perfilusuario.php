@@ -17,7 +17,7 @@ $MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
 $EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
 $Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
 $TipoUsuario = $Ret["ID_TipoUsuario"];
-$AccountID = $_REQUEST["account_id"];
+$AccountID = $_REQUEST["accountid"];
 $ConsultarUsuario = "select * from accounts where accountid = $AccountID";
 $MensajeErrorConsultarModificacion = "No se pudo consultar el Tipo de Usuario";
 $EjecutarConsultarUsuario = mysqli_query($Con->Conexion,$ConsultarUsuario) or die($MensajeErrorConsultarModificacion);
