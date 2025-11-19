@@ -441,6 +441,35 @@ class Account implements JsonSerializable
 		$Con->CloseConexion();
 	}
 
+	public function update_sin_password()
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "update accounts 
+					set firstname = " . ((!is_null($this->get_first_name())) ? "'" . $this->get_first_name() . "'" : "null") . ", 
+						lastname = " . ((!is_null($this->get_last_name())) ? "'" . $this->get_last_name() . "'" : "null") . ", 
+						initials = " . ((!is_null($this->get_initials())) ? "'" . $this->get_initials() . "'" : "null") . ", 
+						username = " . ((!is_null($this->get_user_name())) ? "'" . $this->get_user_name() . "'" : "null") . ", 
+						email = " . ((!is_null($this->get_email())) ? "'" . $this->get_email() . "'" : "null") . ", 
+						hintquestion = " . ((!is_null($this->get_hint_question())) ? "'" . $this->get_hint_question() . "'" : "null") . ", 
+						hintanswer = " . ((!is_null($this->get_hint_answer())) ? "'" . $this->get_hint_answer() . "'" : "null") . ", 
+						expired = " . ((!is_null($this->get_expired())) ? "'" . $this->get_expired() . "'" : "null") . ", 
+						expireddate = " . ((!is_null($this->get_expired_date()->format('Y-m-d'))) ? "'" . $this->get_expired_date()->format('Y-m-d') . "'" : "null") . ", 
+						tries = " . ((!is_null($this->get_tries())) ? "'" . $this->get_tries() . "'" : "null") . ", 
+						lasttrieddate = " . ((!is_null($this->get_last_tried_date())) ? "'" . $this->get_last_tried_date() . "'" : "null") . ", 
+						matricula = " . ((!is_null($this->get_matricula())) ? "'" . $this->get_matricula() . "'" : "null") . ", 
+						iva = " . ((!is_null($this->get_iva())) ? "'" . $this->get_iva() . "'" : "null") . ", 
+						ID_TipoUsuario = " . ((!is_null($this->get_id_tipo_usuario())) ? "'" . $this->get_id_tipo_usuario() . "'" : "null") . ", 
+						estado = " . ((!is_null($this->get_estado())) ? $this->get_estado() : "null") . " 
+					where accountid = " . $this->get_account_id();
+
+		$MensajeErrorConsultar = "No se pudo actualizar la Persona";
+		if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+			throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+		}
+		$Con->CloseConexion();
+	}
+
 	public function save()
 	{
 		$Con = new Conexion();

@@ -12,12 +12,12 @@ if(!isset($_SESSION["Usuario"])){
 $Con = new Conexion();
 $Con->OpenConexion();
 $ID_Usuario = $_SESSION["Usuario"];
-$ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
+$ConsultarTipoUsuario = "select ID_TipoUsuario, accountid from accounts where accountid = $ID_Usuario";
 $MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
 $EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
 $Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
 $TipoUsuario = $Ret["ID_TipoUsuario"];
-$AccountID = $_REQUEST["accountid"];
+$AccountID = $_REQUEST["account_id"];
 $ConsultarUsuario = "select * from accounts where accountid = $AccountID";
 $MensajeErrorConsultarModificacion = "No se pudo consultar el Tipo de Usuario";
 $EjecutarConsultarUsuario = mysqli_query($Con->Conexion,$ConsultarUsuario) or die($MensajeErrorConsultarModificacion);
