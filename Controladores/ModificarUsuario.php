@@ -58,7 +58,7 @@ try {
 			if (!($has8characters && $hasAlpha && $hasNum && !$hasNonAlphaNum)) {
 				$mensaje = "La contraseña debe contener 8 caracteres, alfabeticos y numericos";
 				header("Location: ../view_modusuario.php?account_id={$account_id}&MensajeError="  . $mensaje);
-				exit();
+					exit();
 			}
 			$user->set_password($userpass);
 		}
@@ -68,7 +68,7 @@ try {
 			header("Location: ../view_modusuario.php?account_id={$account_id}&MensajeError=" . $Mensaje);
 		} else {
 			$user->update_sin_password();
-			if ($userpass) {
+			if ($userpass && $ID_Usuario != $account_id) {
 				$solicitud = new Solicitud_Usuario(
 					usuario: $account_id,
 					descripcion: "Modificacion de contraseña ",
@@ -78,8 +78,12 @@ try {
 				);
 				$solicitud->save();
 				$Mensaje = "La peticion de modificacion de contaseña fue enviada la administrador";
+			} elseif ($userpass && $ID_Usuario == $account_id) {
+				$user->update_con_password();
+				$Mensaje = "El Usuario fue modificado Correctamente";
 			} else {
 				$Mensaje = "El Usuario fue modificado Correctamente";
+
 			}
 			header("Location: ../view_modusuario.php?account_id={$account_id}&Mensaje=" . $Mensaje);
 		}

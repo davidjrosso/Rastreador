@@ -441,6 +441,21 @@ class Account implements JsonSerializable
 		$Con->CloseConexion();
 	}
 
+	public function update_con_password()
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "update accounts 
+					set password = " . ((!is_null($this->get_password())) ? "'" . $this->get_password() . "'" : "null") . "
+					where accountid = " . $this->get_account_id();
+
+		$MensajeErrorConsultar = "No se pudo actualizar la Persona";
+		if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+			throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+		}
+		$Con->CloseConexion();
+	}
+
 	public function update_sin_password()
 	{
 		$Con = new Conexion();
