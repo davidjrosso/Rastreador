@@ -1061,3 +1061,7 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
+.modal-excel {
+  overflow: scroll;
+}
