@@ -89,6 +89,10 @@ $ID_Config = $_REQUEST["ID_Config"];
               nroPaginaPdf = 0;
               thTable = $("thead > tr > th");
 
+              $("#excel").on("click", function (e) {
+                excel();
+              });
+
               $("#boton-fullscreen").on("click", function (e) {
                 if (!fullscreen) {
                   $("#excel-modal div[class='modal-content']")[0].requestFullscreen();
@@ -98,6 +102,7 @@ $ID_Config = $_REQUEST["ID_Config"];
                   fullscreen = false;
                 }
               });
+
               $("button[class='close']").on("click", function (e) {
                   if (fullscreen) {
                     document.exitFullscreen();
