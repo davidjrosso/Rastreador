@@ -64,7 +64,7 @@
                   monthsTitle: "Meses",
                   clear: "Borrar",
                   weekStart: 1,
-              });
+              }).on("changeDate", calcularEdad);
 
               $("#boton-min").on("click", function (e) {
                 $("button[class='ol-zoom-out']").click();
@@ -324,7 +324,7 @@
             <div class="form-group row">
               <label for="Fecha_Nacimiento" class="col-md-2 col-form-label LblForm" style="margin-bottom: -8px;">Fecha de Nacimiento: </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "Fecha_Nacimiento" id="Fecha_Nacimiento" autocomplete="off" placeholder="Ejemplo: 01/01/2010" onFocusOut="calcularEdad()"> 
+                <input type="text" class="form-control" name = "Fecha_Nacimiento" id="Fecha_Nacimiento" autocomplete="off" placeholder="Ejemplo: 01/01/2010" onclick="calcularEdad()"> 
               </div>
             </div>
             <div class="row LblForm col-md-2" style="margin-bottom: 1.04%; font-size: 1.031rem">
