@@ -2268,9 +2268,21 @@ $ID_Config = $_REQUEST["ID_Config"];
           </li>
           <li>
             <input type="checkbox" id="boton-10" class="form-check-input"
-                    onclick="orderOptionCheck(10)">
+                    onclick="orderOptionCheck(14)">
             <label class="form-check-label" for="boton-1"></label>
-              Domicilio
+              Centro de Salud
+          </li>
+          <li>
+            <input type="checkbox" id="boton-10" class="form-check-input"
+                    onclick="orderOptionCheck(7)">
+            <label class="form-check-label" for="boton-1"></label>
+              Años
+          </li>
+          <li>
+            <input type="checkbox" id="boton-10" class="form-check-input"
+                    onclick="orderOptionCheck(8)">
+            <label class="form-check-label" for="boton-1"></label>
+              Meses
           </li>
           <!--
           <li>
@@ -2755,7 +2767,6 @@ $ID_Config = $_REQUEST["ID_Config"];
     let chkDomicilio = document.getElementById('chkDomicilio').checked;
     let chkBarrio = document.getElementById('chkBarrio').checked;
     let chkLocalidad= document.getElementById('chkLocalidad').checked;
-
 
     let chkObservaciones= document.getElementById('chkObservaciones').checked;
     let chkResponsable= document.getElementById('chkResponsable').checked;
