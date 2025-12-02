@@ -247,12 +247,17 @@ use function PHPUnit\Framework\isNull;
 				if (count($direccion_datos) > 1) {
 					$result_array = [];
 					$is_departament = preg_match(
-						"~[0-9]+~",
+						"~([0-9]+$|([0-9]+[ ]+[aA-zZ]+$)|([ ]+[aA-zZ]+[ ]+[0-9]+$))~",
 						$direccion_datos[1],
 
 						$result_array
 								);
-					$datos["departamento"] = ($is_departament) ? $result_array[0] : null;
+					if (!$is_departament) {
+						$dep = preg_split("~[ -]+~", $direccion_datos[1]);
+						$datos["departamento"] = $dep[1];
+					} else {
+						$datos["departamento"] = ($is_departament) ? $result_array[0] : null;
+					}
 				}
 				break;
 			case "barrio":
@@ -330,7 +335,7 @@ use function PHPUnit\Framework\isNull;
 		$nombre_col = (isset($config_datos["nombre_col"])) ? $config_datos["nombre_col"] : null;
 		$indixe_col_h = (isset($config_datos["col"])) ? $config_datos["col"] : null;
 		$com_row = (isset($config_datos["row"])) ? $config_datos["row"] : 0;
-		$com_col = (isset($config_datos["col_init"])) ? $config_datos["col"] : 0;
+		$com_col = (isset($config_datos["col_init"])) ? $config_datos["col_init"] : 0;
 
 		if (!empty($config_datos["con_palabra_en_columna"])) {
 
@@ -646,7 +651,7 @@ use function PHPUnit\Framework\isNull;
 					} else {
 						$modificacion = $persona->setCalleNro($direccion);
 					}
-					if (is_numeric($departam)) $persona->setFamilia($departam);
+					if (!empty($departam)) $persona->setFamilia($departam);
 					if (!empty($hc)) $persona->setNro_Carpeta($hc);
 					if (is_numeric($id_barrio)) $persona->setBarrio($id_barrio);
 					$persona->setNro($nro_calle);
@@ -754,7 +759,7 @@ use function PHPUnit\Framework\isNull;
 							$modificacion = $persona->setCalleNro($direccion);
 						}
 						
-						if (is_numeric($departam)) $persona->setFamilia($departam);
+						if (!empty($departam)) $persona->setFamilia($departam);
 						$persona->setNro($nro_calle);
 						if ($is_migracion) $persona->setObservaciones($observacion);
 
@@ -860,7 +865,7 @@ use function PHPUnit\Framework\isNull;
 						} else {
 							$modificacion = $persona->setCalleNro($direccion);
 						}
-						if (is_numeric($departam)) $persona->setFamilia($departam);
+						if (!empty($departam)) $persona->setFamilia($departam);
 						if (!empty($hc)) $persona->setNro_Carpeta($hc);
 						if (is_numeric($id_barrio)) $persona->setBarrio($id_barrio);
 						$persona->setNro($nro_calle);
@@ -988,7 +993,7 @@ use function PHPUnit\Framework\isNull;
 					} else {
 						$modificacion = $persona->setCalleNro($direccion);
 					}
-					if (is_numeric($departam)) $persona->setFamilia($departam);
+					if (!empty($departam)) $persona->setFamilia($departam);
 					$persona->setNro($nro_calle);
 					if ($is_migracion) $persona->setObservaciones($observacion);
 
@@ -1077,7 +1082,7 @@ use function PHPUnit\Framework\isNull;
 						} else {
 							$modificacion = $persona->setCalleNro($direccion);
 						}
-						if (is_numeric($departam)) $persona->setFamilia($departam);
+						if (!empty($departam)) $persona->setFamilia($departam);
 						if (!empty($hc)) $persona->setNro_Carpeta($hc);
 						if (is_numeric($id_barrio)) $persona->setBarrio($id_barrio);
 						$persona->setNro($nro_calle);
