@@ -225,7 +225,7 @@ try {
             $page_height = 650;
         }
 
-        $height = 170;
+        $height = 150;
         $cell_height = round($page_height/$count, 2);
         if ($height < $cell_height) {
             $cell_height = $height;
@@ -243,7 +243,7 @@ try {
             $row .= "<tr>";
             for ($h = 0; $h < count($header_mov_general); $h++) {
                 if (isset($array_filas[$i][$header_mov_general[$h]])) {
-                    $row .= "<td style='height: " . $cell_height . "px'>" . 
+                    $row .= "<td style='max-height: " . $cell_height . "px; min-height: " . $cell_height . "px'>" . 
                                 substr(
                                 $array_filas[$i][$header_mov_general[$h]],
                                 0, 
