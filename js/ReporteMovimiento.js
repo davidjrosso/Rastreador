@@ -22,11 +22,17 @@ export class RerpoteMovimiento {
                 headersTodos = null,
                 headersPers = null,
                 detallePersona = null,
-                detalleHeaderPers = null
+                detalleHeaderPers = null,
+                listConfigResult = null
             ) {
-        this.listaDeMovimientos = movimientos;
-        this.listaHeaderTotal = headersTodos;
-        this.listaHeaderPers = headersPers;
+        this.listaDeMovimientos = movimientos.map(function (velem, index, array) {
+            listConfigResult.forEach(function (elemen, index, array) {
+                delete velem[elemen];
+            });
+            return velem;
+        });
+        this.listaHeaderTotal = (headersTodos) ? headersTodos.filter(c => !listConfigResult.includes(c)) : null;
+        this.listaHeaderPers = (headersPers) ? headersPers.filter(d => !listConfigResult.includes(d)) : null;
         this.detPersona = detallePersona;
         this.detHeaderPers = detalleHeaderPers;
     }
@@ -110,6 +116,7 @@ export class RerpoteMovimiento {
             this.rowsRequest["header_movimientos_general"] = this.listaHeaderTotal;
             this.rowsRequest["head_movimientos_persona"] = this.listaHeaderPers;
             this.rowsRequest["cont_movimientos"] = this.indexList;
+            if (index == arrayL) this.rowsRequest["last"] = true;
 
             let request = new XMLHttpRequest();
             request.open("POST", "Controladores/GeneradorPdf.php", true);
@@ -166,8 +173,11 @@ export class RerpoteMovimiento {
             this.idRequestField++;
             this.countList = 0;
             this.indexList = 0;
-        } else if ((this.countList >= 15 || index == arrayL) 
+        } else if ((this.countList >= 15 || index == arrayL)
                    && this.idRequestField == 0) {
+            
+            if (index == arrayL) this.rowsRequest["last"] = true;
+
             this.rowsRequest["header_movimientos_general"] = this.listaHeaderTotal;
             this.rowsRequest["head_movimientos_persona"] = this.listaHeaderPers;
             this.rowsRequest["head_det_persona"] = this.detHeaderPers;
@@ -175,7 +185,7 @@ export class RerpoteMovimiento {
             this.rowsRequest["fecha_desde"] = fechaDesde;
             this.rowsRequest["fecha_hasta"] = fechaHasta;
             this.rowsRequest["fitros"] = filtroSeleccionados;
-            this.rowsRequest["cont_movimientos"] = this.indexList;
+            this.rowsRequest["cont_movimientos"] = this.indexList; 
 
             let request = new XMLHttpRequest();
             request.open("POST", "Controladores/GeneradorPdf.php", true);

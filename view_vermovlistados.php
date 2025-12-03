@@ -124,8 +124,30 @@ $ID_Config = $_REQUEST["ID_Config"];
         //Terminar esta parte cuando termine lo demas.
       }
 
+  function listConfigResultados() {
+    let list = [];
+    if (!document.getElementById('chkFecha').checked) list.push('Fecha');
+    if (!document.getElementById('chkMotivos').checked) list.push('Motivos');
+    if (!document.getElementById('chkPersona').checked) list.push('Persona');
+    if (!document.getElementById('chkDNI').checked) list.push('DNI');
+    if (!document.getElementById('chkFechaNac').checked) list.push('FechaNac');
+    if (!document.getElementById('chkEdad').checked) list.push('Años');
+    if (!document.getElementById('chkMeses').checked) list.push('Meses');
+    if (!document.getElementById('chkObraSocial').checked) list.push('ObraSocial');
+    if (!document.getElementById('chkDomicilio').checked) list.push('Domicilio');
+    if (!document.getElementById('chkBarrio').checked) list.push('Barrio');
+    if (!document.getElementById('chkLocalidad').checked) list.push('Localidad');
+
+    if (!document.getElementById('chkObservaciones').checked) list.push('Observaciones');
+    if (!document.getElementById('chkResponsable').checked) list.push('Responsable');
+    if (!document.getElementById('chkCentrosSalud').checked) list.push('CentrosSalud');
+    if (!document.getElementById('chkOtrasInstituciones').checked) list.push('OtrasInstituciones');
+
+    return list;
+  }
       function enviarImprimirPdf() {
         //configColumnasTabla();
+        let listConfigResult = listConfigResultados();
         let reporte = null;
         if (objectJsonTabla["movimientos_general"] !== undefined) {
           reporte = new RerpoteMovimiento(
@@ -133,7 +155,8 @@ $ID_Config = $_REQUEST["ID_Config"];
                                           objectJsonTabla["header_movimientos_general"],
                                           objectJsonTabla["head_movimientos_persona"],
                                           null,
-                                          null
+                                          null,
+                                          listConfigResult
                                         );
           reporte.sendRequest();
         } else if (objectJsonTabla["movimientos_persona"] !== undefined) {
@@ -142,7 +165,8 @@ $ID_Config = $_REQUEST["ID_Config"];
                                           objectJsonTabla["header_movimientos_general"],
                                           objectJsonTabla["head_movimientos_persona"],
                                           objectJsonTabla["det_persona"],
-                                          null
+                                          null,
+                                          listConfigResult
                                         );
           reporte.sendRequest();
         }
