@@ -270,17 +270,15 @@ try {
             $inicio = "<p id='InformacionDeCentro'>
                             DESDE : ". $etiqueta_Fecha_Inicio . " HASTA : " . $etiqueta_Fecha_Fin ."
                         </p>
-                        <p id='encabezado'> <span id='frase'> Rastreador </span><br>
+                        <p id='encabezado'>
+                            <span id='frase'> Rastreador </span>
+                            <br>
                            " . $filtro .  "
                         </p>
                         <p id='InformacionDeCiudad'>
-                            Municipialidad de Rio Tercero
-                        </p>
-                        <p id='InformacionDeCiudad'>
-                            Secertaria de Salud
-                        </p>
-                        <p id='InformacionDeCiudad'>
-                            Progama Rastreador
+                            Municipialidad de Rio Tercero <br>
+                            Secertaria de Salud <br>
+                            Progama Rastreador <br>
                         </p>";
             $tabla_detalle_persona = "";
             if ($det_persona) {
