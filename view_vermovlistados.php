@@ -127,13 +127,17 @@ $ID_Config = $_REQUEST["ID_Config"];
   function listConfigResultados() {
     let list = [];
     if (!document.getElementById('chkFecha').checked) list.push('Fecha');
-    if (!document.getElementById('chkMotivos').checked) list.push('Motivos');
+    if (!document.getElementById('chkMotivos').checked) {
+      list.push('Motivo 1');
+      list.push('Motivo 2');
+      list.push('Motivo 3');
+    }
     if (!document.getElementById('chkPersona').checked) list.push('Persona');
     if (!document.getElementById('chkDNI').checked) list.push('DNI');
-    if (!document.getElementById('chkFechaNac').checked) list.push('FechaNac');
+    if (!document.getElementById('chkFechaNac').checked) list.push('Fecha Nac');
     if (!document.getElementById('chkEdad').checked) list.push('Años');
     if (!document.getElementById('chkMeses').checked) list.push('Meses');
-    if (!document.getElementById('chkObraSocial').checked) list.push('ObraSocial');
+    if (!document.getElementById('chkObraSocial').checked) list.push('Obra Social');
     if (!document.getElementById('chkDomicilio').checked) list.push('Domicilio');
     if (!document.getElementById('chkBarrio').checked) list.push('Barrio');
     if (!document.getElementById('chkLocalidad').checked) list.push('Localidad');
