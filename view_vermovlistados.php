@@ -2556,6 +2556,7 @@ $ID_Config = $_REQUEST["ID_Config"];
   fechaDesde = "<?php echo $Fecha_Inicio;?>";
   fechaHasta = "<?php echo $Fecha_Fin;?>";
   filtroSeleccionados = <?php echo json_encode($filtros); ?>;
+  cantFiltros = <?php echo count($filtros); ?>;
 
 
   function characterAscii(elem) {

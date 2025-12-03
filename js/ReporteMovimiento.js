@@ -100,6 +100,11 @@ export class RerpoteMovimiento {
         this.rowsRequest[this.indexList] = objectJson;
         this.indexList++;
 
+        if (this.idRequestField == 0) {
+            height = ((cantFiltros > 2) ? 1 : 0);
+            this.countList += height;
+        }
+
         if ((this.countList >= 19 || index == arrayL) 
             && this.idRequestField >= 1) {
             this.rowsRequest["header_movimientos_general"] = this.listaHeaderTotal;

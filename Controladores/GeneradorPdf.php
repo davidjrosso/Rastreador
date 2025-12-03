@@ -258,7 +258,9 @@ try {
         $inicio = "";
         if ($nro_paquete == 0) {
             $etiqueta_Fecha_Inicio = $array_filas["fecha_desde"];
+            $etiqueta_Fecha_Inicio = implode("/", array_reverse(explode("-", $etiqueta_Fecha_Inicio)));
             $etiqueta_Fecha_Fin = $array_filas["fecha_hasta"];
+            $etiqueta_Fecha_Fin = implode("/", array_reverse(explode("-", $etiqueta_Fecha_Fin)));
             $filtros = $array_filas["fitros"];
             $filtro = "";
             foreach ($filtros as $value) {
@@ -269,10 +271,16 @@ try {
                             DESDE : ". $etiqueta_Fecha_Inicio . " HASTA : " . $etiqueta_Fecha_Fin ."
                         </p>
                         <p id='encabezado'> <span id='frase'> Rastreador </span><br>
-                            Filtro : " . $filtro .  "
+                           " . $filtro .  "
                         </p>
                         <p id='InformacionDeCiudad'>
                             Municipialidad de Rio Tercero
+                        </p>
+                        <p id='InformacionDeCiudad'>
+                            Secertaria de Salud
+                        </p>
+                        <p id='InformacionDeCiudad'>
+                            Progama Rastreador
                         </p>";
             $tabla_detalle_persona = "";
             if ($det_persona) {
