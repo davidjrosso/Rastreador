@@ -219,17 +219,26 @@ try {
     } elseif ($from_reporte_listado) {
         $header_mov_general = (isset($array_filas["header_movimientos_general"])) ? $array_filas["header_movimientos_general"] : $array_filas["head_movimientos_persona"];
         $count = $array_filas["cont_movimientos"];
+        $flag = (!empty($array_filas["last"])) ? $array_filas["last"] : null;
         if ($nro_paquete == 0) {
             $page_height = 563;
         } else {
             $page_height = 650;
         }
 
+        //$height = 150;
         $height = 150;
         $cell_height = round($page_height/$count, 2);
         if ($height < $cell_height) {
             $cell_height = $height;
         }
+
+        if ($flag && $nro_paquete != 0) {
+            $hight_text = "'max-height: " . $cell_height . "px; min-height: " . $cell_height . "px;'"; 
+        } else {
+            $hight_text = "'height: " . $cell_height . "px;'";
+        }
+
         $row_head .= "<tr>";
         for ($h = 0; $h < count($header_mov_general); $h++) {
             if (isset($header_mov_general[$h])) {
@@ -243,7 +252,8 @@ try {
             $row .= "<tr>";
             for ($h = 0; $h < count($header_mov_general); $h++) {
                 if (isset($array_filas[$i][$header_mov_general[$h]])) {
-                    $row .= "<td style='max-height: " . $cell_height . "px; min-height: " . $cell_height . "px'>" . 
+                    //$row .= "<td style='max-height: " . $cell_height . "px; min-height: " . $cell_height . "px'>" . 
+                    $row .= "<td style=" . $hight_text . ">" . 
                                 substr(
                                 $array_filas[$i][$header_mov_general[$h]],
                                 0, 
@@ -273,13 +283,12 @@ try {
                             DESDE : ". $etiqueta_Fecha_Inicio . " HASTA : " . $etiqueta_Fecha_Fin ."
                         </p>
                         <p id='encabezado'>
-                            <span id='frase'> Rastreador </span>
                             <br>
                            " . $filtro .  "
                         </p>
                         <p id='InformacionDeCiudad'>
                             Municipialidad de Rio Tercero <br>
-                            Secertaria de Salud <br>
+                            Secertaría de Salud y Desarrollo Social<br>
                             Progama Rastreador <br>
                         </p>";
             $tabla_detalle_persona = "";
