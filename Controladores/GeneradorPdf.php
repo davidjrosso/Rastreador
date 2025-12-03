@@ -258,9 +258,9 @@ try {
         $inicio = "";
         if ($nro_paquete == 0) {
             $etiqueta_Fecha_Inicio = $array_filas["fecha_desde"];
-            $etiqueta_Fecha_Inicio = implode("/", array_reverse(explode("-", $etiqueta_Fecha_Inicio)));
+            $etiqueta_Fecha_Inicio = implode("-", array_reverse(explode("-", $etiqueta_Fecha_Inicio)));
             $etiqueta_Fecha_Fin = $array_filas["fecha_hasta"];
-            $etiqueta_Fecha_Fin = implode("/", array_reverse(explode("-", $etiqueta_Fecha_Fin)));
+            $etiqueta_Fecha_Fin = implode("-", array_reverse(explode("-", $etiqueta_Fecha_Fin)));
             $filtros = $array_filas["fitros"];
             $filtro = "";
             foreach ($filtros as $value) {
