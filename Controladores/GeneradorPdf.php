@@ -138,17 +138,12 @@ try {
                             margin: 15px !important;
                             padding: 15px !important;
                             }
-                            .table--border-colapsed{
-                            border-collapse: collapse;
-                            width: 100%;
-                            }
+
                             .thead-dark{
                             background-color: #ccc;
                             font-size: 12px;
                             }
-                            .table_pdf {
-                            width: 100%;
-                            }
+
                             tr td {
                             text-align: center;
                             font-size: 12px;
@@ -164,8 +159,9 @@ try {
                             }
 
                             #InformacionDeCentro {
-                            float: right; 
-                            text-align: left;
+                                width: 33%;
+                                float: right; 
+                                text-align: left;
                             }
 
                             #frase {
@@ -173,15 +169,17 @@ try {
                             }
 
                             #encabezado {
-                            text-align: center;
-                            float: right;
-                            padding-right: 13rem;
+                                width: 33%;
+                                text-align: center;
+                                float: right;
+                                padding-right: 13rem;
                             }
 
                             #InformacionDeCiudad {
-                            text-align: left;
-                            margin-bottom: 2rem;
-                            margin-top: 2rem;
+                                width: 33%;
+                                text-align: left;
+                                margin-bottom: 2rem;
+                                margin-top: 2rem;
                             }
 
                             table, th, td {
@@ -222,12 +220,12 @@ try {
         $header_mov_general = (isset($array_filas["header_movimientos_general"])) ? $array_filas["header_movimientos_general"] : $array_filas["head_movimientos_persona"];
         $count = $array_filas["cont_movimientos"];
         if ($nro_paquete == 0) {
-            $page_widht = 563;
+            $page_height = 563;
         } else {
-            $page_widht = 650;
+            $page_height = 650;
         }
 
-        $cell_widht = round($page_widht/$count, 2);
+        $cell_height = round($page_height/$count, 2);
         $row_head .= "<tr>";
         for ($h = 0; $h < count($header_mov_general); $h++) {
             if (isset($header_mov_general[$h])) {
@@ -238,10 +236,10 @@ try {
         }
         $row_head .= "</tr>";
         for ($i = 0; $i < $count; $i++) {
-            $row .= "<tr>";
+            $row .= "<tr style='max-height: " . $cell_height . "px'>";
             for ($h = 0; $h < count($header_mov_general); $h++) {
                 if (isset($array_filas[$i][$header_mov_general[$h]])) {
-                    $row .= "<td style='height: " . $cell_widht . "px'>" . 
+                    $row .= "<td style='height: " . $cell_height . "px'>" . 
                                 substr(
                                 $array_filas[$i][$header_mov_general[$h]],
                                 0, 
