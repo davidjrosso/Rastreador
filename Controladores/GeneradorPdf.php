@@ -135,27 +135,35 @@ try {
                         <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
                         <style>
                             @page {
-                            margin: 15px !important;
-                            padding: 15px !important;
+                                margin: 15px !important;
+                                padding: 15px !important;
+                            }
+                            .table--border-colapsed{
+                                border-collapse: collapse;
+                                width: 100%;
+                            }
+
+                            .table_pdf {
+                                width: 100%;
                             }
 
                             .thead-dark{
-                            background-color: #ccc;
-                            font-size: 12px;
+                                background-color: #ccc;
+                                font-size: 12px;
                             }
 
                             tr td {
-                            text-align: center;
-                            font-size: 12px;
+                                text-align: center;
+                                font-size: 12px;
                             }
 
                             table thead tr th {
-                            background-color: #ccc;
+                                background-color: #ccc;
                             }
 
                             h5, h2{
-                            text-align: center;
-                            margin-bottom: 0px
+                                text-align: center;
+                                margin-bottom: 0px
                             }
 
                             #InformacionDeCentro {
@@ -226,7 +234,6 @@ try {
             $page_height = 650;
         }
 
-        //$height = 150;
         $height = 150;
         $cell_height = round($page_height/$count, 2);
         if ($height < $cell_height) {
@@ -252,7 +259,6 @@ try {
             $row .= "<tr>";
             for ($h = 0; $h < count($header_mov_general); $h++) {
                 if (isset($array_filas[$i][$header_mov_general[$h]])) {
-                    //$row .= "<td style='max-height: " . $cell_height . "px; min-height: " . $cell_height . "px'>" . 
                     $row .= "<td style=" . $hight_text . ">" . 
                                 substr(
                                 $array_filas[$i][$header_mov_general[$h]],
@@ -279,11 +285,11 @@ try {
                 $filtro .= $value . "<br>";
             }
             $det_persona = (isset($array_filas["det_persona"]) ? $array_filas["det_persona"] : null);
+            
             $inicio = "<p id='InformacionDeCentro'>
                             DESDE : ". $etiqueta_Fecha_Inicio . " HASTA : " . $etiqueta_Fecha_Fin ."
                         </p>
                         <p id='encabezado'>
-                            <br>
                            " . $filtro .  "
                         </p>
                         <p id='InformacionDeCiudad'>
@@ -422,7 +428,7 @@ try {
                     </head> 
                     <body> " . $inicio . $tabla_detalle_persona;
                     if (count($header_mov_general) > 0) {
-                        $table .= "<table class='table--border-colapsed' style='height:200px'>
+                        $table .= "<table class='table--border-colapsed'>
                                      <thead>
                                         " . $row_head . "
                                      </thead>
@@ -459,6 +465,7 @@ function concatMotivo($acumulado, $elemento)
                    </div>";
     return $acumulado;
 }
+
 function bloqueMotivos($array_motivos)
 {   $bloque = "<div>";
     if (count($array_motivos) > 5) {
