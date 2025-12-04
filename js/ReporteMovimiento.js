@@ -173,7 +173,7 @@ export class RerpoteMovimiento {
             this.idRequestField++;
             this.countList = 0;
             this.indexList = 0;
-        } else if ((this.countList >= 15 || index == arrayL)
+        } else if ((this.countList >= 14 || index == arrayL)
                    && this.idRequestField == 0) {
             
             if (index == arrayL) this.rowsRequest["last"] = true;
