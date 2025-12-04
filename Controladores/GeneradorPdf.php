@@ -234,7 +234,7 @@ try {
             $page_height = 650;
         }
 
-        $height = 150;
+        $height = 45;
         $cell_height = round($page_height/$count, 2);
         if ($height < $cell_height) {
             $cell_height = $height;
@@ -259,13 +259,65 @@ try {
             $row .= "<tr>";
             for ($h = 0; $h < count($header_mov_general); $h++) {
                 if (isset($array_filas[$i][$header_mov_general[$h]])) {
-                    $row .= "<td style=" . $hight_text . ">" . 
-                                substr(
+                    $row .= "<td style=" . $hight_text . ">";
+                    if ($header_mov_general[$h] == "Persona"
+                        || $header_mov_general[$h] == "Domicilio"
+                        || $header_mov_general[$h] == "Responsable") {
+                        $list = explode(" ", $array_filas[$i][$header_mov_general[$h]]);
+                        $row .= implode("<br>", $list);
+                        continue;
+                    }
+                    $row .= substr(
+                            $array_filas[$i][$header_mov_general[$h]],
+                            0, 
+                            70
+                            );
+                    $row .= "<br>";
+                    /*
+                    if ($header_mov_general[$h] != "Motivo 1"
+                        && $header_mov_general[$h] != "Motivo 2"
+                        && $header_mov_general[$h] != "Motivo 3"
+                    ) {
+                        $row .= substr(
                                 $array_filas[$i][$header_mov_general[$h]],
                                 0, 
                                 70
-                                ) . "
-                            </td>";
+                                );
+                        $row .= "<br>";
+                        continue;
+                    }
+                    $row .= substr(
+                            $array_filas[$i][$header_mov_general[$h]],
+                            0, 
+                            21
+                            );
+                    $row .= "<br>";
+
+                    if (strlen($array_filas[$i][$header_mov_general[$h]]) > 21) {
+                        $row .= substr(
+                                $array_filas[$i][$header_mov_general[$h]],
+                                21, 
+                                21
+                                );
+                        $row .= "<br>";
+                        if (strlen($array_filas[$i][$header_mov_general[$h]]) > 43) {
+                            $row .= substr(
+                                    $array_filas[$i][$header_mov_general[$h]],
+                                    43, 
+                                    21
+                                    );
+                            $row .= "<br>";
+                            if (strlen($array_filas[$i][$header_mov_general[$h]]) > 65) {
+                                $row .= substr(
+                                        $array_filas[$i][$header_mov_general[$h]],
+                                        65, 
+                                        21
+                                        );
+                            }   
+                        }
+                    }
+                    */
+                    $row .= "</td>";
                 } else {
                     $row .=  "<td></td>";
                 }
