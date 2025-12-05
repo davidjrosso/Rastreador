@@ -144,8 +144,8 @@ $ID_Config = $_REQUEST["ID_Config"];
 
     if (!document.getElementById('chkObservaciones').checked) list.push('Observaciones');
     if (!document.getElementById('chkResponsable').checked) list.push('Responsable');
-    if (!document.getElementById('chkCentrosSalud').checked) list.push('CentrosSalud');
-    if (!document.getElementById('chkOtrasInstituciones').checked) list.push('OtrasInstituciones');
+    if (!document.getElementById('chkCentrosSalud').checked) list.push('Centro Salud');
+    if (!document.getElementById('chkOtrasInstituciones').checked) list.push('Otra Institucion');
 
     return list;
   }
@@ -237,7 +237,7 @@ $ID_Config = $_REQUEST["ID_Config"];
           <button type="button" class="btn btn-secondary" onclick="enviarImprimirPdf();">
               Imprimir
           </button>
-          <button type="button" class="btn btn-secondary" onClick="htmlExcel('tabla-movimiento-general', 'excel');">
+          <button type="button" class="btn btn-secondary" onClick="excel_download();">
               Excel descargar
           </button>
           <button id="excel" type = "button" class = "btn btn-secondary" data-toggle="modal" 
