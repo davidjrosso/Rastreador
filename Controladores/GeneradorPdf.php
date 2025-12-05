@@ -266,13 +266,13 @@ try {
                     if ($header_mov_general[$h] == "Persona"
                         || $header_mov_general[$h] == "Domicilio"
                         || $header_mov_general[$h] == "Responsable") {
-                        $list = explode(" ", $array_filas[$i][$header_mov_general[$h]]);
-                        $row .= implode("<br>", $list);
+                        $list = explode(" ", ucwords(strtolower($array_filas[$i][$header_mov_general[$h]])));
+                        $row .= implode("<br>",  $list);
                         continue;
                     }
                     $row .= substr(
-                            $array_filas[$i][$header_mov_general[$h]],
-                            0, 
+                            ucfirst(strtolower($array_filas[$i][$header_mov_general[$h]])),
+                            0,
                             70
                             );
                     $row .= "<br>";
