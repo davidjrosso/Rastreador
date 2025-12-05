@@ -240,11 +240,14 @@ try {
             $cell_height = $height;
         }
 
+        /*
         if ($flag && $nro_paquete != 0) {
             $hight_text = "'max-height: " . $cell_height . "px; min-height: " . $cell_height . "px;'"; 
         } else {
             $hight_text = "'height: " . $cell_height . "px;'";
         }
+        */
+        $hight_text = "'height: " . $cell_height . "px;'";
 
         $row_head .= "<tr>";
         for ($h = 0; $h < count($header_mov_general); $h++) {
