@@ -1266,6 +1266,21 @@ public function update_direccion()
 	$Con->CloseConexion();
 }
 
+public function update_nombre_apellido()
+{
+	$Con = new Conexion();
+	$Con->OpenConexion();
+	$Consulta = "update persona 
+				 set apellido = " . ((!is_null($this->getApellido())) ? "'" . $this->getApellido() . "'" : "null") . ", 
+				 	 nombre = " . ((!is_null($this->getNombre())) ? "'" . $this->getNombre() . "'" : "null") . " 
+				 where id_persona = " . $this->getID_Persona();
+				 $MensajeErrorConsultar = "No se pudo actualizar la Persona";
+				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+					throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+				}
+				 $Con->CloseConexion();
+}
+
 public function update()
 {
 	$Con = new Conexion();
