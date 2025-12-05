@@ -642,6 +642,11 @@ use function PHPUnit\Framework\isNull;
 																					);
 				if (!is_null($id_persona) && is_numeric($id_persona)) {
 					$persona = new Persona(ID_Persona: $id_persona);
+					$name = $persona->getNombre();
+					$apellid = $persona->getApellido();
+					if (!empty($name)) $persona->setNombre($nombre);
+					if (!empty($apellid)) $persona->setApellido($apellido);
+
 					if ($is_calle_con_barrio && is_numeric($id_barrio)) {
 						$modificacion = $persona->setCalleNroConBarrio(
 																	domicilio: $direccion, 
@@ -855,6 +860,11 @@ use function PHPUnit\Framework\isNull;
 
 					if (!is_null($id_persona) && is_numeric($id_persona)) {
 						$persona = new Persona(ID_Persona: $id_persona);
+						$name = $persona->getNombre();
+						$apellid = $persona->getApellido();
+						if (!empty($name)) $persona->setNombre($nombre);
+						if (!empty($apellid)) $persona->setApellido($apellido);
+
 						$georeferencia = $persona->getGeoreferencia();
 						if ($is_calle_con_barrio && is_numeric($id_barrio)) {
 							$modificacion = $persona->setCalleNroConBarrio(
@@ -1071,6 +1081,10 @@ use function PHPUnit\Framework\isNull;
 					}
 
 					$persona = new Persona(ID_Persona: $id_persona);
+					$name = $persona->getNombre();
+					$apellid = $persona->getApellido();
+					if (!empty($name)) $persona->setNombre($nombre);
+					if (!empty($apellid)) $persona->setApellido($apellid);
 					if ($consulta_osm) {
 						$georeferencia = $persona->getGeoreferencia();
 						if ($is_calle_con_barrio && is_numeric($id_barrio)) {
