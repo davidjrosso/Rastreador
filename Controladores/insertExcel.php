@@ -61,17 +61,17 @@ use function PHPUnit\Framework\isNull;
 			case 'CDSO':
 				$result = "CDSO";
 				break;
-			case 'EPAD':
-				$result = "EPAD";
+			case 'CEAD':
+				$result = "CEAD";
 				break;
-			case 'EPAT':
-				$result = "EPAT";
+			case 'CEAT':
+				$result = "CEAT";
 				break;
-			case 'EPOS':
-				$result = "EPOS";
+			case 'CEOS':
+				$result = "CEOS";
 				break;
-			case 'EPSO':
-				$result = "EPSO";
+			case 'CESO':
+				$result = "CESO";
 				break;
 			case 'VC':
 				$result = "VC";
