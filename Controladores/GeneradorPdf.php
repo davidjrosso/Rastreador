@@ -266,7 +266,7 @@ try {
                     if ($header_mov_general[$h] == "Persona"
                         || $header_mov_general[$h] == "Domicilio"
                         || $header_mov_general[$h] == "Responsable") {
-                        $list = explode(" ", ucwords(strtolower($array_filas[$i][$header_mov_general[$h]])));
+                        $list = preg_split("~[ ]+~", ucwords(strtolower($array_filas[$i][$header_mov_general[$h]])));
                         $row .= implode("<br>",  $list);
                         continue;
                     }
