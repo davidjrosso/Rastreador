@@ -46,7 +46,7 @@
       var nombreCalle;
       let fullscreen = false;
 
-       $(document).ready(function(){
+       $(document).ready(function () {
               var date_input=$('input[name="Fecha_Nacimiento"]'); //our date input has the name "date"
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
               date_input.datepicker({
@@ -153,123 +153,120 @@
                 }
           });
 
-        function ValidarDocumento(){
-          var Documento = document.getElementById("idDocumento");
-          var NroDocumento = Documento.value;
-          if (NroDocumento.toString().length < 8){
-            NotShowModalError();
-            return true;
-          }
+          function ValidarDocumento(){
+            var Documento = document.getElementById("idDocumento");
+            var NroDocumento = Documento.value;
+            if (NroDocumento.toString().length < 8){
+              NotShowModalError();
+              return true;
+            }
 
-          const DniNoRepetido = "<p>No hay ningún registro con ese nombre, documento o legajo</p>";
-          xmlhttp=new XMLHttpRequest();
+            const DniNoRepetido = "<p>No hay ningún registro con ese nombre, documento o legajo</p>";
+            xmlhttp=new XMLHttpRequest();
 
-          xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-              var contenidosRecibidos = xmlhttp.responseText;
-              if(DniNoRepetido != contenidosRecibidos){ 
-                Documento.value = "";
-                swal({
-                  title: "El Documento ingresado "+ NroDocumento +" ya esta registrado",
-                  icon: "info",
-                  text: "Por favor ingrese un Documento diferente",
-                  confirmButtonText: 'OK'
-                })
+            xmlhttp.onreadystatechange = function() {
+              if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                var contenidosRecibidos = xmlhttp.responseText;
+                if(DniNoRepetido != contenidosRecibidos){ 
+                  Documento.value = "";
+                  swal({
+                    title: "El Documento ingresado "+ NroDocumento +" ya esta registrado",
+                    icon: "info",
+                    text: "Por favor ingrese un Documento diferente",
+                    confirmButtonText: 'OK'
+                  })
+                }
               }
             }
+            xmlhttp.open('POST', 'buscarPersonas.php?valorBusqueda='+NroDocumento, true); // Método post y url invocada
+            xmlhttp.send();
+
           }
-          xmlhttp.open('POST', 'buscarPersonas.php?valorBusqueda='+NroDocumento, true); // Método post y url invocada
-          xmlhttp.send();
 
-        }
-
-        function ShowModalError(){
-          var modal = document.getElementById("ErrorDocumento");
-          modal.style.display = "block";
-          modal.innerText="El Documento ingresado ya Existe";
-        }
-
-        function NotShowModalError(){
-          var modal = document.getElementById("ErrorDocumento");
-          modal.style.display = "none";
-        }
-
-       function CargarEscuelas(xValor){
-       		ID_Nivel = xValor;
-       		var xMLHTTP = new XMLHttpRequest();
-
-       		xMLHTTP.onreadystatechange = function(){
-       			if(this.readyState == 4 && this.status == 200){
-       				document.getElementById("Escuelas").innerHTML = this.responseText;
-       			}
-       		};
-       		xMLHTTP.open("GET","CargarEscuelas.php?q="+xValor,true);
-       		xMLHTTP.send();
-       }
-
-       function calcularEdad(){
-            var Fecha_Nac = document.getElementById("Fecha_Nacimiento").value;
-            var Fecha = Fecha_Nac.split('/').reverse().join('-');
-            var hoy = new Date();
-            var cumpleanos = new Date(Fecha);
-            var edad = hoy.getFullYear() - cumpleanos.getFullYear();
-            var m = hoy.getMonth() - cumpleanos.getMonth();
-
-            if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
-                edad--;
-            }
-
-            var Anios = document.getElementById("Edad");
-            if(!isNaN(edad)){
-              Anios.value = edad;
-            }
-            
-
-            var CalcMeses = 0;
-            if(m<0){
-              CalcMeses = (12 + m);
-            }else{
-              CalcMeses = m;
-            }
-            
-            var Meses = document.getElementById("Meses");
-            if(!isNaN(CalcMeses)){
-              Meses.value = CalcMeses;        
-            }
-            
-      } 
-
-      function buscarCalles(){
-      var xNombre = document.getElementById('SearchCalle').value;
-      var textoBusqueda = xNombre;
-      xmlhttp=new XMLHttpRequest();
-      xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-          contenidosRecibidos = xmlhttp.responseText;
-          document.getElementById("ResultadosCalles").innerHTML=contenidosRecibidos;
+          function ShowModalError(){
+            var modal = document.getElementById("ErrorDocumento");
+            modal.style.display = "block";
+            modal.innerText="El Documento ingresado ya Existe";
           }
+
+          function NotShowModalError(){
+            var modal = document.getElementById("ErrorDocumento");
+            modal.style.display = "none";
+          }
+
+        function CargarEscuelas(xValor){
+            ID_Nivel = xValor;
+            var xMLHTTP = new XMLHttpRequest();
+
+            xMLHTTP.onreadystatechange = function(){
+              if(this.readyState == 4 && this.status == 200){
+                document.getElementById("Escuelas").innerHTML = this.responseText;
+              }
+            };
+            xMLHTTP.open("GET","CargarEscuelas.php?q="+xValor,true);
+            xMLHTTP.send();
+        }
+
+        function calcularEdad() {
+          let Fecha_Nac = document.getElementById("Fecha_Nacimiento").value;
+          let fecha = Fecha_Nac.split('/').reverse().join('-');
+          let hoy = new Date();
+          let cumpleanos = new Date(fecha + " GMT-0300");
+          let edad = hoy.getFullYear() - cumpleanos.getFullYear();
+          let meses = hoy.getMonth() - cumpleanos.getMonth();
+          let dia = hoy.getDate() - cumpleanos.getDate();
+
+          if (meses < 0 || (meses === 0 && hoy.getDate() < cumpleanos.getDate())) {
+              edad--;
+              meses = 12 + meses;
+          }
+
+          if (meses === 0 && hoy.getDate() < cumpleanos.getDate()) {
+              meses = 0;
+          }
+
+          if (meses > 0 && hoy.getDate() < cumpleanos.getDate()) {
+              meses--;
+          }
+
+          let Anios = document.getElementById("Edad");
+          Anios.value = edad;
+
+          let Meses = document.getElementById("Meses");
+          Meses.value = meses;
+        }
+
+        function buscarCalles(){
+        var xNombre = document.getElementById('SearchCalle').value;
+        var textoBusqueda = xNombre;
+        xmlhttp=new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+            contenidosRecibidos = xmlhttp.responseText;
+            document.getElementById("ResultadosCalles").innerHTML=contenidosRecibidos;
+            }
+        }
+        xmlhttp.open('POST', 'buscarCalle.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
+        xmlhttp.send();
       }
-      xmlhttp.open('POST', 'buscarCalle.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
-      xmlhttp.send();
-    }
 
-    function seleccionCalle(xNombre, xID) {
-          var BotonModalPersona = document.getElementById("BotonModalDireccion_1");
-          var calle = document.getElementById("Calle");
-          nombreCalle = xNombre;
-          BotonModalPersona.innerHTML = "";
-          BotonModalPersona.innerHTML = xNombre;
-          calle.setAttribute('value',xID);
-          let nro = $("#NumeroDeCalle").val();
-          if (nro && map) {
-            $("#mapa-sig").prop('disabled', false);
-            map.addPersonMapAddress(
-                                    xNombre,
-                                    nro,
-                                    xID
-                                   );
-          }
+      function seleccionCalle(xNombre, xID) {
+        let BotonModalPersona = document.getElementById("BotonModalDireccion_1");
+        let calle = document.getElementById("Calle");
+        nombreCalle = xNombre;
+        BotonModalPersona.innerHTML = "";
+        BotonModalPersona.innerHTML = xNombre;
+        calle.setAttribute('value',xID);
+        let nro = $("#NumeroDeCalle").val();
+        if (nro && map) {
+          $("#mapa-sig").prop('disabled', false);
+          map.addPersonMapAddress(
+                                  xNombre,
+                                  nro,
+                                  xID
+                                );
         }
+      }
   </script>
 </head>
 <body>
