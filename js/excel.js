@@ -84,7 +84,7 @@ export async function excel_download(objectJsonTabla) {
     let values = [];
     let count = objectJsonTabla.movimientos_general.length;
 
-    for(let row = 2; row < count; row++) {
+    for(let row = 1; row < count; row++) {
         if (row == 1) {
             worksheet.getRow(row).border = {
                                             top: {style:'thick', color: {argb:'000000'}},
