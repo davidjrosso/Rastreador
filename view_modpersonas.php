@@ -97,10 +97,11 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
         clear: "Borrar",
         weekStart: 1
       }).on('changeDate', calcularEdad);
+
       $("#map-modal").on("transitionend", function(e) {
         if (!map) {
           map = init(
-                     objectJsonPersona.lat, 
+                     objectJsonPersona.lat,
                      objectJsonPersona.lon,
                      map
                   );
@@ -211,31 +212,26 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 
     function calcularEdad() {
       let Fecha_Nac = document.getElementById("Fecha_Nacimiento").value;
-      let Fecha = Fecha_Nac.split('/').reverse().join('-');
+      let fecha = Fecha_Nac.split('/').reverse().join('-');
       let hoy = new Date();
-      let cumpleanos = new Date(Fecha);
+      let cumpleanos = new Date(fecha + " GMT-0300");
       let edad = hoy.getFullYear() - cumpleanos.getFullYear();
-      let m = hoy.getMonth() - cumpleanos.getMonth();
-      if (m < 0 || (m === 0 && hoy.getDay() < cumpleanos.getDay())) {
-        edad--;
+      let meses = hoy.getMonth() - cumpleanos.getMonth();
+
+      if (meses < 0 || (meses === 0 && hoy.getDate() < cumpleanos.getDate())) {
+          edad--;
+          meses = 12 + meses;
       }
+
+      if (meses === 0 && hoy.getDate() < cumpleanos.getDate()) {
+          meses = 0;
+      }
+
       let Anios = document.getElementById("Edad");
       Anios.value = edad;
 
-      let CalcMeses = 0;
-      if (m < 0) {
-        CalcMeses = (12 + m);
-      } else if (m == 0) {
-        if (hoy.getDay() < cumpleanos.getDay()) {
-          m = 11;
-        }
-        CalcMeses = m;
-      } else {
-        CalcMeses = m;
-      }
-
       let Meses = document.getElementById("Meses");
-      Meses.value = CalcMeses;
+      Meses.value = meses;
     }
   </script>
 </head>
