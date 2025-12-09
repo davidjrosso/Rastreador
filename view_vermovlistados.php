@@ -93,6 +93,19 @@ $ID_Config = $_REQUEST["ID_Config"];
                 excel();
               });
 
+              $("#excel_descarga").on("click", function (e) {
+                let vic = null;
+                vic = excel_download(objectJsonTabla);
+                vic.then(function (result) {
+                  let url = null;
+                  let blob = new Blob([result], {
+                      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                    });
+                  url = URL.createObjectURL(blob);
+                  let w = window.open(url);
+                })
+              });
+
               $("#boton-fullscreen").on("click", function (e) {
                 if (!fullscreen) {
                   $("#excel-modal div[class='modal-content']")[0].requestFullscreen();
@@ -176,45 +189,6 @@ $ID_Config = $_REQUEST["ID_Config"];
         }
       }
 
-
-      function htmlExcel(idTabla, nombreArchivo = '') {
-        let linkDescarga;
-        let tipoDatos = 'application/vnd.ms-excel';
-        let tablaDatos = document.getElementById(idTabla);
-        //let tablaHTML = tablaDatos.outerHTML.replace(/ /g, '%20');
-        let tablaHTML = tablaDatos.outerHTML;
-        // Nombre del archivo
-        nombreArchivo = nombreArchivo ? nombreArchivo + '.xlsx' : 'Reporte_Puntos_Canjeados.xlsx';
-
-        // Crear el link de descarga
-        linkDescarga = document.createElement("a");
-        linkDescarga.setAttribute("target", "_blank");
-        document.body.appendChild(linkDescarga);
-        let url = null;
-        let blob = new Blob(['\ufeff', tablaHTML], {
-            type: tipoDatos
-          });
-        url = URL.createObjectURL(blob);
-        var w = window.open(url);
-        /*if (navigator.msSaveOrOpenBlob) {
-          let blob = new Blob(['\ufeff', tablaHTML], {
-            type: tipoDatos
-          });
-          url = URL.createObjectURL(blob);
-          navigator.msSaveOrOpenBlob(blob, nombreArchivo);
-        } else {
-          // Crear el link al archivo
-          linkDescarga.href = 'data:' + tipoDatos + ', ' + tablaHTML;
-          var w = window.open(url);
-          // Setear el nombre de archivo
-          //linkDescarga.download = nombreArchivo;
-
-          //Ejecutar la función
-          linkDescarga.click();
-        }*/
-      }
-
-
   </script>  
 </head>
 <body>
@@ -237,7 +211,7 @@ $ID_Config = $_REQUEST["ID_Config"];
           <button type="button" class="btn btn-secondary" onclick="enviarImprimirPdf();">
               Imprimir
           </button>
-          <button type="button" class="btn btn-secondary" onClick="excel_download();">
+          <button id="excel_descarga" type="button" class="btn btn-secondary" onClick="excel_download(objectJsonTabla);">
               Excel descargar
           </button>
           <button id="excel" type = "button" class = "btn btn-secondary" data-toggle="modal" 
