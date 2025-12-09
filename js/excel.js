@@ -1,4 +1,6 @@
 import jspreadsheet from "../node_modules/jspreadsheet-ce";
+import ExcelJS from "../node_modules/exceljs";
+
 
 export function excel() {
     let list = [];
@@ -62,8 +64,58 @@ export function excel() {
                 }],
                 search: true,
                 toolbar:true,
-                tabs: true
+                tabs: true,
+                onbeforecreateworksheet: function(config, index) {
+                    return {
+                        minDimensions: [5, 5],
+                        worksheetName: 'excel  ' + index
+                    }
+                }
         });
     }
     
+}
+
+export async function excel_download(objectJsonTabla) {
+
+    const vic = new ExcelJS.Workbook();
+    let worksheet = vic.addWorksheet('rastreador', {properties:{tabColor: {argb: 'FFC0000'}}})
+
+    let values = [];
+    let count = objectJsonTabla.movimientos_general.length;
+
+    for(let row = 2; row < count; row++) {
+        if (row == 1) {
+            worksheet.getRow(row).border = {
+                                            top: {style:'thick', color: {argb:'000000'}},
+                                            left: {style:'thick', color: {argb:'000000'}},
+                                            bottom: {style:'thick', color: {argb:'000000'}},
+                                            right: {style:'thick', color: {argb:'000000'}}
+                                        };
+            worksheet.getRow(row).alignment = { vertical: 'middle', horizontal: 'center' };
+            worksheet.getRow(row).height = 25;
+
+            worksheet.getRow(row).fill = {
+                                        type: 'pattern',
+                                        pattern:'solid',
+                                        fgColor:{argb:'bbc7d1'},
+                                        };
+            continue;
+        }
+        worksheet.getRow(row).values  = Object.values(objectJsonTabla.movimientos_general[row]).slice(1);
+        worksheet.getRow(row).font = {bgColor:{argb:'FFC000'}};
+        worksheet.getRow(row).alignment = { vertical: 'middle', horizontal: 'center' };
+        worksheet.getRow(row).style  = {bgColor:{argb:'FFC000'}};
+        worksheet.getRow(row).height = 20;
+    }
+
+    values = objectJsonTabla.header_movimientos_general.map(function (e) {
+        let val = {header: e, key: e, width: 30,  filterButton: true};
+        return val;
+    });
+
+    worksheet.columns = values;
+    const buffer = await vic.xlsx.writeBuffer();
+    return buffer;
+
 }
