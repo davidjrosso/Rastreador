@@ -212,9 +212,15 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 
     function calcularEdad() {
       let Fecha_Nac = document.getElementById("Fecha_Nacimiento").value;
-      let fecha = Fecha_Nac.split('/').reverse().join('-');
+      let fecha = null;
+      let cumpleanos = null;
+      if (Fecha_Nac !== null && Fecha_Nac.length != 0) {
+        fecha = Fecha_Nac.split('/').reverse().join('-');
+        cumpleanos = new Date(fecha + " GMT-0300");
+      } else {
+        cumpleanos = new Date();
+      }
       let hoy = new Date();
-      let cumpleanos = new Date(fecha + " GMT-0300");
       let edad = hoy.getFullYear() - cumpleanos.getFullYear();
       let meses = hoy.getMonth() - cumpleanos.getMonth();
       let dia = hoy.getDate() - cumpleanos.getDate();
