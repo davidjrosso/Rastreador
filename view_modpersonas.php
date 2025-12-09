@@ -217,6 +217,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
       let cumpleanos = new Date(fecha + " GMT-0300");
       let edad = hoy.getFullYear() - cumpleanos.getFullYear();
       let meses = hoy.getMonth() - cumpleanos.getMonth();
+      let dia = hoy.getDay() - cumpleanos.getDay();
 
       if (meses < 0 || (meses === 0 && hoy.getDate() < cumpleanos.getDate())) {
           edad--;
@@ -225,6 +226,10 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 
       if (meses === 0 && hoy.getDate() < cumpleanos.getDate()) {
           meses = 0;
+      }
+
+      if (meses > 0 && hoy.getDay() < cumpleanos.getDay()) {
+          meses--;
       }
 
       let Anios = document.getElementById("Edad");
