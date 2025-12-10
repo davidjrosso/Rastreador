@@ -1,5 +1,6 @@
 import jspreadsheet from "../node_modules/jspreadsheet-ce";
 import ExcelJS from "../node_modules/exceljs";
+import Chart from 'chart.js/auto';
 
 
 export function excel() {
@@ -53,27 +54,136 @@ export function excel() {
             })
             elems.push(rowlist);
         });
-        jspreadsheet(document.getElementById('excel_rev'), {
+        let spreadsheet = jspreadsheet(document.getElementById('excel_rev'), {
             worksheets: [{
                 data: elems,
                 columns: list,
                 filters: true,
                 allowComments:true,
                 search: true,
-                worksheetName: "Excel"
+                worksheetName: "Excel",
+                allowDeleteWorksheet: true,
+                allowRenameWorksheet: true,
+                allowMoveWorksheet: true,
                 }],
                 search: true,
                 toolbar:true,
                 tabs: true,
+                allowDeleteWorksheet: true,
+                allowRenameWorksheet: true,
+                allowMoveWorksheet: true,
                 onbeforecreateworksheet: function(config, index) {
                     return {
                         minDimensions: [5, 5],
                         worksheetName: 'excel  ' + index
                     }
-                }
+                },
+                contextMenu: function(o, x, y, e, items, section) {
+                        let itemsArr = [];
+
+                        if (section == 'header') {
+                            itemsArr.push({
+                                title: 'Execute one action',
+                                onclick: function() {
+                                    alert('test')
+                                }
+                            });
+
+                            itemsArr.push({ type: 'line' });
+                        }
+
+                        if (section == 'tabs') {
+                            itemsArr.push({
+                                title: 'delete excel',
+                                onclick: function() {
+                                    spreadsheet[0].deleteWorksheet(x);
+                                }
+                            });
+
+                            itemsArr.push({
+                                title: 'add excel',
+                                onclick: function() {
+                                    let name = prompt("Ingrese el nombre del excel");
+                                    spreadsheet[0].createWorksheet({worksheetName: name, minDimensions: [15, 15]}, x);
+                                }
+                            });
+
+                            itemsArr.push({ type: 'line' });
+                        }
+
+                        if (section == 'cell') {
+                            let s = spreadsheet[0].getSelected(false);
+                            
+                            itemsArr.push({
+                                title: 'insert grafico',
+                                onclick: function() {
+                                    addChart(e.target);
+                                }
+                            });
+                        }
+
+                        if (section == 'cell') {
+                            let s = spreadsheet[0].getSelected(false);
+
+                            itemsArr.push({
+                                title: 'insert grafico radar',
+                                onclick: function() {
+                                    addChartRadar(e.target);
+                                }
+                            });
+
+                            s = spreadsheet[0].getSelected(false);
+
+                            itemsArr.push({
+                                title: 'insert grafico P',
+                                onclick: function() {
+                                    addChartP(e.target);
+                                }
+                            });
+
+                            s = spreadsheet[0].getSelected(false);
+
+                            itemsArr.push({
+                                title: 'insert grafico C',
+                                onclick: function() {
+                                    addChartC(e.target);
+                                }
+                            });
+                        }
+
+                        /*
+                        itemsArr.push({
+                            title: 'Save as',
+                            shortcut: 'Ctrl + S',
+                            icon: 'save',
+                            onclick: function () {
+                                o.download();
+                            }
+                        });
+                        */
+                        /*
+                        // About
+                        itemsArr.push({
+                            title: 'About',
+                            onclick: function() {
+                                alert('https://jspreadsheet.com');
+                            }
+                        });
+                        */
+                        let list = [];
+                        itemsArr.forEach((e) => list.push(e));
+                        items.forEach((e) => list.push(e));
+                        return list;
+            },
+            columnDrag: true
         });
+        let text = $(".jss_filter label").html().replace("Search", "Buscar");
+        let text2 = "FX <input type='text' class='' id='bar-element'>";
+        $(".jss_filter label").text("");
+        $(".jss_filter label").html(text);
+        //$(".jss_filter label").append(text);
+        $(".jss_filter").prepend("<label>" + text2 + "</label>");
     }
-    
 }
 
 export async function excel_download(objectJsonTabla) {
@@ -118,4 +228,152 @@ export async function excel_download(objectJsonTabla) {
     const buffer = await vic.xlsx.writeBuffer();
     return buffer;
 
+}
+
+export function addChart(object) {
+    object.innerHTML = "<canvas></canvas>";
+    const chart = new Chart(object, {
+        type: 'line',
+        data: {
+                labels: ['A', 'B', 'C'],
+                datasets: [
+                    {
+                    label: 'Dataset 1',
+                    data: [1, 2, 3],
+                    borderColor: '#000000',
+                    backgroundColor: '#000000',
+                    },
+                    {
+                    label: 'Dataset 2',
+                    data: [2, 3, 4],
+                    borderColor: '#FF6384',
+                    backgroundColor: '#FFB1C1',
+                    }
+                ]
+        },
+        options: {
+            onClick: (e) => {
+            const canvasPosition = getRelativePosition(e, chart);
+
+            const dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
+            const dataY = chart.scales.y.getValueForPixel(canvasPosition.y);
+            }
+        }
+    });
+}
+
+export function addChartRadar(object) {
+    object.innerHTML = "<canvas></canvas>";
+    const chart = new Chart(object, {
+        type: 'radar',
+        data: {
+                labels: [
+                    'Eating',
+                    'Drinking',
+                    'Sleeping',
+                    'Designing',
+                    'Coding',
+                    'Cycling',
+                    'Running'
+                ],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [65, 59, 90, 81, 56, 55, 40],
+                    fill: true,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    pointBackgroundColor: 'rgb(255, 99, 132)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(255, 99, 132)'
+                }, {
+                    label: 'My Second Dataset',
+                    data: [28, 48, 40, 19, 96, 27, 100],
+                    fill: true,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgb(54, 162, 235)',
+                    pointBackgroundColor: 'rgb(54, 162, 235)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(54, 162, 235)'
+                }]
+        },
+        options: {
+            onClick: (e) => {
+            const canvasPosition = getRelativePosition(e, chart);
+
+            const dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
+            const dataY = chart.scales.y.getValueForPixel(canvasPosition.y);
+            }
+        }
+    });
+}
+
+export function addChartP(object) {
+    object.innerHTML = "<canvas></canvas>";
+    const chart = new Chart(object, {
+        type: 'polarArea',
+        data: {
+                labels: [
+                    'Red',
+                    'Green',
+                    'Yellow',
+                    'Grey',
+                    'Blue'
+                ],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [11, 16, 7, 3, 14],
+                    backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(75, 192, 192)',
+                    'rgb(255, 205, 86)',
+                    'rgb(201, 203, 207)',
+                    'rgb(54, 162, 235)'
+                    ]
+                }]
+        },
+        options: {
+            onClick: (e) => {
+            const canvasPosition = getRelativePosition(e, chart);
+
+            const dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
+            const dataY = chart.scales.y.getValueForPixel(canvasPosition.y);
+            }
+        }
+    });
+}
+
+export function addChartC(object) {
+    object.innerHTML = "<canvas></canvas>";
+    const chart = new Chart(object, {
+        type: 'scatter',
+        data: {
+                datasets: [{
+                    label: 'Scatter Dataset',
+                    data: [{
+                    x: -10,
+                    y: 0
+                    }, {
+                    x: 0,
+                    y: 10
+                    }, {
+                    x: 10,
+                    y: 5
+                    }, {
+                    x: 0.5,
+                    y: 5.5
+                    }],
+                    backgroundColor: 'rgb(255, 99, 132)'
+                }],
+                },
+        options: {
+            onClick: (e) => {
+            const canvasPosition = getRelativePosition(e, chart);
+
+            const dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
+            const dataY = chart.scales.y.getValueForPixel(canvasPosition.y);
+            }
+        }
+    });
 }
