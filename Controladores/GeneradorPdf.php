@@ -188,6 +188,7 @@ try {
                                 text-align: left;
                                 margin-bottom: 2rem;
                                 margin-top: 2rem;
+                                float: right;
                             }
 
                             table, th, td {
@@ -252,7 +253,14 @@ try {
         $row_head .= "<tr>";
         for ($h = 0; $h < count($header_mov_general); $h++) {
             if (isset($header_mov_general[$h])) {
-                $row_head .= "<th>" . 
+                if ($header_mov_general[$h] == "Años"
+                    || $header_mov_general[$h] == "Meses") {
+                    $row_head .= "<th style='max-width:5px; overflow: hidden;'>" . 
+                                    $header_mov_general[$h] . "
+                                </th>";
+                    continue;
+                }
+                $row_head .= "<th style='width:40px'>" . 
                                 $header_mov_general[$h] . "
                               </th>";
             }
@@ -270,6 +278,36 @@ try {
                         $row .= implode("<br>",  $list);
                         continue;
                     }
+
+                    /*
+                    if ($header_mov_general[$h] == "Observaciones") {
+                        $row .= substr(
+                            ucfirst(strtolower($array_filas[$i][$header_mov_general[$h]])),
+                            0, 
+                            34
+                            );
+                        $row .= "<br>";
+
+                        if (strlen($array_filas[$i][$header_mov_general[$h]]) > 34) {
+                            $row .= substr(
+                                    ucfirst(strtolower($array_filas[$i][$header_mov_general[$h]])),
+                                    33, 
+                                    34
+                                    );
+                            $row .= "<br>";
+                            if (strlen($array_filas[$i][$header_mov_general[$h]]) > 68) {
+                                $row .= substr(
+                                        ucfirst(strtolower($array_filas[$i][$header_mov_general[$h]])),
+                                        67,
+                                        34
+                                        );
+                                $row .= "<br>";
+                            }
+                        }
+                        continue;
+                    }
+                    */
+
                     $row .= substr(
                             ucfirst(strtolower($array_filas[$i][$header_mov_general[$h]])),
                             0,
