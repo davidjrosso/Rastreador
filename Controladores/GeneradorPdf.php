@@ -393,6 +393,7 @@ try {
                             Secertaría de Salud y Desarrollo Social<br>
                             Progama Rastreador <br>
                         </p>
+                        <br>
                         <br>";
             $tabla_detalle_persona = "";
             if ($det_persona) {
