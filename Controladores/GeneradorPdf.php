@@ -183,6 +183,7 @@ try {
                                 float: right;
                                 margin-right: 13rem;
                                 margin-left: 13rem;
+                                margin-bottom: 200px;
                             }
 
                             #InformacionDeCiudad {
@@ -191,6 +192,7 @@ try {
                                 margin-bottom: 2rem;
                                 margin-top: 2rem;
                                 float: right;
+                                margin-bottom: 200px;
                             }
 
                             table, th, td {
@@ -255,13 +257,6 @@ try {
         $row_head .= "<tr>";
         for ($h = 0; $h < count($header_mov_general); $h++) {
             if (isset($header_mov_general[$h])) {
-                if ($header_mov_general[$h] == "Años"
-                    || $header_mov_general[$h] == "Meses") {
-                    $row_head .= "<th style='max-width:5px; overflow: hidden;'>" . 
-                                    $header_mov_general[$h] . "
-                                </th>";
-                    continue;
-                }
                 $row_head .= "<th style='width:40px'>" . 
                                 $header_mov_general[$h] . "
                               </th>";
@@ -396,7 +391,8 @@ try {
                             Municipialidad de Rio Tercero <br>
                             Secertaría de Salud y Desarrollo Social<br>
                             Progama Rastreador <br>
-                        </p>";
+                        </p>
+                        <br>";
             $tabla_detalle_persona = "";
             if ($det_persona) {
                 $tabla_detalle_persona = "<table id='detalle-persona' class='table--border-colapsed'>
@@ -509,6 +505,7 @@ try {
                             text-align: center;
                             float: right;
                             padding-right: 20rem;
+                            margin-bottom: 2rem;
                         }
 
                         #detalle-persona {
