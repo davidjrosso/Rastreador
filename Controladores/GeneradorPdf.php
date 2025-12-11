@@ -138,6 +138,7 @@ try {
                                 margin: 15px !important;
                                 padding: 15px !important;
                             }
+
                             .table--border-colapsed{
                                 border-collapse: collapse;
                                 width: 100%;
@@ -161,7 +162,7 @@ try {
                                 background-color: #ccc;
                             }
 
-                            h5, h2{
+                            h5, h2 {
                                 text-align: center;
                                 margin-bottom: 0px
                             }
@@ -193,7 +194,7 @@ try {
                             }
 
                             table, th, td {
-                            border: 1px solid;
+                                border: 1px solid;
                             }
                         </style>
                     </head> 
@@ -376,7 +377,8 @@ try {
             $filtros = $array_filas["fitros"];
             $filtro = "";
             foreach ($filtros as $value) {
-                if (str_contains($value, "Motivos")) {
+                if (str_contains($value, "Motivos")
+                    || str_contains($value, "Categorias")) {
                     $filtro .= implode("<br>", explode("-", $value));
                     continue;
                 }
