@@ -167,24 +167,25 @@ try {
                             }
 
                             #InformacionDeCentro {
-                                width: 33%;
+                                width: 70px;
                                 float: right; 
                                 text-align: left;
                             }
 
                             #frase {
-                            font-weight: bold;
+                                font-weight: bold;
                             }
 
                             #encabezado {
-                                width: 33%;
+                                width: 70px;
                                 text-align: center;
                                 float: right;
-                                padding-right: 13rem;
+                                margin-right: 13rem;
+                                margin-left: 13rem;
                             }
 
                             #InformacionDeCiudad {
-                                width: 33%;
+                                width: 70px;
                                 text-align: left;
                                 margin-bottom: 2rem;
                                 margin-top: 2rem;
@@ -375,6 +376,10 @@ try {
             $filtros = $array_filas["fitros"];
             $filtro = "";
             foreach ($filtros as $value) {
+                if (str_contains($value, "Motivos")) {
+                    $filtro .= implode("<br>", explode("-", $value));
+                    continue;
+                }
                 $filtro .= $value . "<br>";
             }
             $det_persona = (isset($array_filas["det_persona"]) ? $array_filas["det_persona"] : null);
