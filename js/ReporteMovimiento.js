@@ -107,7 +107,7 @@ export class RerpoteMovimiento {
         this.indexList++;
 
         if (this.idRequestField == 0) {
-            height = ((cantFiltros > 2) ? 1 : 0);
+            height = ((cantFiltros > 2) ? 2 : 0);
             this.countList += height;
         }
 
