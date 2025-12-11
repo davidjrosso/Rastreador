@@ -375,6 +375,7 @@ try {
                 if (str_contains($value, "Motivos")
                     || str_contains($value, "Categorias")) {
                     $filtro .= implode("<br>", explode("-", $value));
+                    $filtro .= "<br>";
                     continue;
                 }
                 $filtro .= $value . "<br>";
