@@ -1,13 +1,13 @@
 <?php
 //session_start();
+require_once($_SERVER['DOCUMENT_ROOT'] . "/vendor/autoload.php");
 require_once '../dompdf/autoload.inc.php';
 use Dompdf\Dompdf;
 
-//$mesesHeader = (isset($_SESSION["meses"])) ? $_SESSION["meses"] : null;
-//session_write_close();
 $from_reporte_listado = (preg_match("~view_vermovlistados~", $_SERVER["HTTP_REFERER"])) ? true : false;
 $from_reporte_grafico = (preg_match("~view_rep_general_new~", $_SERVER["HTTP_REFERER"])) ? true : false;
 $nro_paquete = getallheaders()["x-request-id"];
+ini_set('pcre.backtrack_limit', 5000000);
 
 try {
     $json_filas = file_get_contents('php://input');
@@ -181,9 +181,6 @@ try {
                                 width: 70px;
                                 text-align: center;
                                 float: right;
-                                margin-right: 13rem;
-                                margin-left: 13rem;
-                                margin-bottom: 200px;
                             }
 
                             #InformacionDeCiudad {
@@ -191,12 +188,11 @@ try {
                                 text-align: left;
                                 margin-bottom: 2rem;
                                 margin-top: 2rem;
-                                float: right;
                                 margin-bottom: 200px;
                             }
 
                             table, th, td {
-                                border: 1px solid;
+                                border: 0.5px solid;
                             }
                         </style>
                     </head> 
@@ -231,7 +227,7 @@ try {
             </html>";
     } elseif ($from_reporte_listado) {
         $header_mov_general = (isset($array_filas["header_movimientos_general"])) ? $array_filas["header_movimientos_general"] : $array_filas["head_movimientos_persona"];
-        $count = $array_filas["cont_movimientos"];
+        $count = (isset($array_filas["cant"])) ? $array_filas["cant"] : 0;
         $flag = (!empty($array_filas["last"])) ? $array_filas["last"] : null;
         if ($nro_paquete == 0) {
             $page_height = 563;
@@ -257,8 +253,9 @@ try {
         $row_head .= "<tr>";
         for ($h = 0; $h < count($header_mov_general); $h++) {
             if (isset($header_mov_general[$h])) {
+                $list = preg_split("~[ ]+~", $header_mov_general[$h]);
                 $row_head .= "<th style='width:40px'>" . 
-                                $header_mov_general[$h] . "
+                                implode("<br>",  $list) . "
                               </th>";
             }
         }
@@ -268,11 +265,24 @@ try {
             for ($h = 0; $h < count($header_mov_general); $h++) {
                 if (isset($array_filas[$i][$header_mov_general[$h]])) {
                     $row .= "<td style=" . $hight_text . ">";
-                    if ($header_mov_general[$h] == "Persona"
+                    if ($header_mov_general[$h] == "Localidad"
                         || $header_mov_general[$h] == "Domicilio"
                         || $header_mov_general[$h] == "Responsable") {
                         $list = preg_split("~[ ]+~", ucwords(strtolower($array_filas[$i][$header_mov_general[$h]])));
                         $row .= implode("<br>",  $list);
+                        continue;
+                    }
+
+                    if ($header_mov_general[$h] == "Persona") {
+                        $list = preg_split("~[ ]+~", ucwords(strtolower($array_filas[$i][$header_mov_general[$h]])));
+                        $list[0] = strtoupper($list[0]);
+                        $row .= implode("<br>",  $list);
+                        continue;
+                    }
+
+                    if ($header_mov_general[$h] == "Centro Salud") {
+                        $list = preg_split("~[()]+~", $array_filas[$i][$header_mov_general[$h]], limit: -1, flags: PREG_SPLIT_NO_EMPTY);
+                        $row .= strtolower(implode("<br>",  $list));
                         continue;
                     }
 
@@ -304,6 +314,23 @@ try {
                         continue;
                     }
                     */
+
+                    if ($header_mov_general[$h] == "Fecha") {
+                        $list = preg_split("~[-]+~", $array_filas[$i][$header_mov_general[$h]]);
+                        $row .= $list[0] . "-" . $list[1] . "<br>" . $list[2];
+                        continue;
+                    }
+
+                    if ($header_mov_general[$h] == "Fecha Nac") {
+                        $is_fech = preg_match("~[-]+~", $array_filas[$i][$header_mov_general[$h]]);
+                        if ($is_fech) {
+                            $list = preg_split("~[-]+~", $array_filas[$i][$header_mov_general[$h]]);
+                            $row .= $list[0] . "-" . $list[1] . "<br>" . $list[2];
+                        } else {
+                            $row .= $array_filas[$i][$header_mov_general[$h]];
+                        }
+                        continue;
+                    }
 
                     $row .= substr(
                             ucfirst(strtolower($array_filas[$i][$header_mov_general[$h]])),
@@ -392,7 +419,7 @@ try {
                             Municipialidad de Rio Tercero <br>
                             Secertaría de Salud y Desarrollo Social<br>
                             Progama Rastreador <br>
-                        </p>
+                        </p> 
                         <br>
                         <br>";
             $tabla_detalle_persona = "";
@@ -450,8 +477,6 @@ try {
                                                 </tbody>
                                             </table>";
             }
-
-    
         }
 
         $table = "<html>
@@ -461,27 +486,34 @@ try {
 
                     <style>
                         @page {
-                        margin: 15px !important;
-                        padding: 15px !important;
+                        margin-left: 11px !important;
+                        margin-right: 11px !important;
+                        margin-top: 11px !important;
+                        padding: 11px !important;
+                        margin-bottom: 3px !important;
                         }
+
                         .table--border-colapsed{
                             border-collapse: collapse;
                             width: 100%;
                         }
+
                         .thead-dark{
                             background-color: #ccc;
-                            font-size: 12px;
+                            font-size: 11px;
                         }
                         .table_pdf {
                             width: 100%;
                         }
+
                         tr td {
                             text-align: center;
-                            font-size: 11px;
+                            font-size: 10px;
                         }
+
                         tr th {
                         text-align: center;
-                            font-size: 14px;
+                            font-size: 11px;
                         }
 
                         table thead tr th {
@@ -495,8 +527,9 @@ try {
 
                         #InformacionDeCentro {
                             float: right;
-                            text-align: left;
-                            padding-top: 11px;
+                            width:400px;
+                            text-align: right;
+                            font-size: 13.5px;
                         }
 
                         #frase {
@@ -504,10 +537,10 @@ try {
                         }
 
                         #encabezado {
-                            text-align: center;
                             float: right;
-                            padding-right: 20rem;
-                            margin-bottom: 2rem;
+                            width: 400px;
+                            text-align: center;
+                            font-size: 13.5px;
                         }
 
                         #detalle-persona {
@@ -515,13 +548,14 @@ try {
                         }
 
                         #InformacionDeCiudad {
+                            float: right;
                             text-align: left;
-                            margin-bottom: 2rem;
-                            margin-top: 2rem;
+                            font-size: 13.5px;
                         }
 
                         table, th, td {
-                            border: 1px solid;
+                            border: 0.001px inset;
+                            border-width: 0.001px;
                         }
                     </style>
                     </head> 
@@ -539,11 +573,22 @@ try {
                     $table .= "</body>
                             </html>";
     }
+    /*
     $dompdf = new Dompdf();
     $dompdf->loadHtml(mb_convert_encoding($table, 'HTML-ENTITIES', 'UTF-8'));
     $dompdf->setPaper('legal', 'landscape');
     $dompdf->render();
     $output = $dompdf->output();
+    */
+
+    $mpdf = new \Mpdf\Mpdf([
+        'mode' => 'utf-8',
+        'format' => 'A4-L', // 'A4-L' es para A4 apaisado (Landscape)
+        'orientation' => 'L' // Alternativa directa
+    ]);
+    $mpdf->WriteHTML(mb_convert_encoding($table, 'HTML-ENTITIES', 'UTF-8'));
+    $output = $mpdf->OutputBinaryData();
+
     $data = base64_encode($output);
     header('Content-Type: application/pdf');
     header("X-Request-ID: $nro_paquete");

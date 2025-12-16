@@ -47,6 +47,37 @@ export class RerpoteMovimiento {
                                                     });
     }
 
+    sendRequestOne() {
+        let request = new XMLHttpRequest();
+        let lista = {};
+        request.open("POST", "Controladores/GeneradorPdf.php", true);
+        request.setRequestHeader("x-request-id", this.idRequestField);
+        request.onreadystatechange = async function(element) {
+            if (request.readyState == 4 && request.status == 200) {
+                let response = element.currentTarget.response;
+                let arrBuffer = this.base64ToArrayBuffer(response);
+                this.listaDePdf[0] = arrBuffer;
+                this.documentoPdf = await this.mergePdfs();
+                let blob = new Blob([this.documentoPdf], {type: "application/pdf"});
+                let url1 = window.URL.createObjectURL(blob);
+                window.open(url1);
+            }
+        }.bind(this);
+        lista = this.listaDeMovimientos.reduce((obj, item, index) => {
+            obj[index] = item;
+            return obj;
+        }, {});
+        lista["header_movimientos_general"] = this.listaHeaderTotal;
+        lista["head_movimientos_persona"] = this.listaHeaderPers;
+        lista["head_det_persona"] = this.detHeaderPers;
+        lista["det_persona"] = this.detPersona;
+        lista["fecha_desde"] = fechaDesde;
+        lista["fecha_hasta"] = fechaHasta;
+        lista["fitros"] = filtroSeleccionados;
+        lista["cant"] = this.listaDeMovimientos.length;
+        request.send(JSON.stringify(lista));
+    }
+
     base64ToArrayBuffer(data) {
         var binaryString = window.atob(data);
         var binaryLen = binaryString.length;
@@ -77,7 +108,7 @@ export class RerpoteMovimiento {
         }
         const mergedPdfFile = await this.documentoPdf.save();
         return mergedPdfFile;
-      }
+    }
 
     async addPdf(element, index, array) {
         let response = element.currentTarget.response;
@@ -173,7 +204,7 @@ export class RerpoteMovimiento {
             this.idRequestField++;
             this.countList = 0;
             this.indexList = 0;
-        } else if ((this.countList >= 10 || index == arrayL)
+        } else if ((this.countList >= 11 || index == arrayL)
                    && this.idRequestField == 0) {
             
             if (index == arrayL) this.rowsRequest["last"] = true;
@@ -244,7 +275,6 @@ export class RerpoteMovimiento {
             this.indexList = 0;
         }
     }
-    
 
     envioDeFilasEnBloques(elemento, index, array) {
         let objectJson = elemento;

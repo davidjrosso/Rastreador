@@ -175,7 +175,7 @@ $ID_Config = $_REQUEST["ID_Config"];
                                           null,
                                           listConfigResult
                                         );
-          reporte.sendRequest();
+          reporte.sendRequestOne();
         } else if (objectJsonTabla["movimientos_persona"] !== undefined) {
           reporte = new RerpoteMovimiento(
                                           objectJsonTabla["movimientos_persona"],
@@ -185,7 +185,7 @@ $ID_Config = $_REQUEST["ID_Config"];
                                           null,
                                           listConfigResult
                                         );
-          reporte.sendRequest();
+          reporte.sendRequestOne();
         }
       }
 
