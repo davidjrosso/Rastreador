@@ -10,6 +10,7 @@ $nro_paquete = getallheaders()["x-request-id"];
 ini_set('pcre.backtrack_limit', 5000000);
 ini_set('memory_limit', '-1');
 ini_set( 'max_execution_time', '120');
+
 try {
     $json_filas = file_get_contents('php://input');
     $array_filas = json_decode($json_filas, true);
@@ -266,10 +267,16 @@ try {
             for ($h = 0; $h < count($header_mov_general); $h++) {
                 if (isset($array_filas[$i][$header_mov_general[$h]])) {
                     $row .= "<td style=" . $hight_text . ">";
-                    if ($header_mov_general[$h] == "Localidad"
-                        || $header_mov_general[$h] == "Domicilio"
+                    if ($header_mov_general[$h] == "Domicilio"
                         || $header_mov_general[$h] == "Responsable") {
                         $list = preg_split("~[ ]+~", ucwords(strtolower($array_filas[$i][$header_mov_general[$h]])));
+                        $row .= implode("<br>",  $list);
+                        continue;
+                    }
+
+                    if ($header_mov_general[$h] == "Localidad") {
+                        $list = preg_split("~[-]+~", ucwords(strtolower($array_filas[$i][$header_mov_general[$h]])));
+                        $list = preg_split("~[ ]+~", ucwords(strtolower($list[0])));
                         $row .= implode("<br>",  $list);
                         continue;
                     }
