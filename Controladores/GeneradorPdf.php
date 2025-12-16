@@ -9,7 +9,7 @@ $from_reporte_grafico = (preg_match("~view_rep_general_new~", $_SERVER["HTTP_REF
 $nro_paquete = getallheaders()["x-request-id"];
 ini_set('pcre.backtrack_limit', 5000000);
 ini_set('memory_limit', '-1');
-
+ini_set( 'max_execution_time', '120');
 try {
     $json_filas = file_get_contents('php://input');
     $array_filas = json_decode($json_filas, true);
