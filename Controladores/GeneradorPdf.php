@@ -584,7 +584,8 @@ try {
     $mpdf = new \Mpdf\Mpdf([
         'mode' => 'utf-8',
         'format' => 'A4-L', // 'A4-L' es para A4 apaisado (Landscape)
-        'orientation' => 'L' // Alternativa directa
+        'orientation' => 'L', // Alternativa directa
+        'tempDir' => sys_get_temp_dir()
     ]);
     $mpdf->WriteHTML(mb_convert_encoding($table, 'HTML-ENTITIES', 'UTF-8'));
     $output = $mpdf->OutputBinaryData();
