@@ -274,6 +274,13 @@ try {
                         continue;
                     }
 
+                    if ($header_mov_general[$h] == "Responsable") {
+                        $list = preg_split("~[-]+~", ucwords(strtolower($array_filas[$i][$header_mov_general[$h]])));
+                        $list = preg_split("~[ ]+~", ucwords(strtolower($list[0])));
+                        $row .= implode("<br>",  $list);
+                        continue;
+                    }
+
                     if ($header_mov_general[$h] == "Localidad") {
                         $list = preg_split("~[-]+~", ucwords(strtolower($array_filas[$i][$header_mov_general[$h]])));
                         $list = preg_split("~[ ]+~", ucwords(strtolower($list[0])));
