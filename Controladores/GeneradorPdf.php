@@ -8,6 +8,7 @@ $from_reporte_listado = (preg_match("~view_vermovlistados~", $_SERVER["HTTP_REFE
 $from_reporte_grafico = (preg_match("~view_rep_general_new~", $_SERVER["HTTP_REFERER"])) ? true : false;
 $nro_paquete = getallheaders()["x-request-id"];
 ini_set('pcre.backtrack_limit', 5000000);
+ini_set('memory_limit', '-1');
 
 try {
     $json_filas = file_get_contents('php://input');
