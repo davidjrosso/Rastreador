@@ -267,8 +267,7 @@ try {
             for ($h = 0; $h < count($header_mov_general); $h++) {
                 if (isset($array_filas[$i][$header_mov_general[$h]])) {
                     $row .= "<td style=" . $hight_text . ">";
-                    if ($header_mov_general[$h] == "Domicilio"
-                        || $header_mov_general[$h] == "Responsable") {
+                    if ($header_mov_general[$h] == "Domicilio") {
                         $list = preg_split("~[ ]+~", ucwords(strtolower($array_filas[$i][$header_mov_general[$h]])));
                         $row .= implode("<br>",  $list);
                         continue;
