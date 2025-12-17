@@ -1730,7 +1730,7 @@ $ID_Config = $_REQUEST["ID_Config"];
                       $DtoMovimiento->setMotivo_5($motivo_mov);
                       $ID_Motivo_5 = $RetTodos["id_motivo"];
                     }
-                    continue;
+                    if ($count < mysqli_num_rows($TomarMovimientos)) continue;
                   }
 
                   $movimientoVisible = false;
