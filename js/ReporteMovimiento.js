@@ -17,7 +17,7 @@ export class RerpoteMovimiento {
     countList = 0;
     indexList = 0;
     documentoPdf = PDFDocument.create();
-    progress = 0.1;
+    progress = 0;
     timer;
 
     constructor(
