@@ -1,4 +1,5 @@
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import swal from '../node_modules/sweetalert2';
 
 export class RerpoteMovimiento {
 
@@ -16,9 +17,11 @@ export class RerpoteMovimiento {
     countList = 0;
     indexList = 0;
     documentoPdf = PDFDocument.create();
+    progress = 0.1;
+    timer;
 
     constructor(
-                movimientos = null, 
+                movimientos = null,
                 headersTodos = null,
                 headersPers = null,
                 detallePersona = null,
@@ -44,12 +47,30 @@ export class RerpoteMovimiento {
                                                                                             index,
                                                                                             array
                                                                                            );
-                                                    });
+        });
     }
 
     sendRequestOne() {
         let request = new XMLHttpRequest();
         let lista = {};
+        let animacion = `<div class='icon-printer'>
+                            <img class='icon-printer' src="/images/icons/impresora.gif" alt="an illustration of a gear" />
+                        </div>
+                        <progress id="bar-progress" max="100" value="0">70%</progress>`;
+        let timer = null;
+        swal.fire({
+            title: "Proceso de impresion",
+            html: animacion,
+            text: "Los movimientos estan siendo incluidos en la impresion",
+            icon: "warning",
+            showConfirmButton: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $("#liveToast").show();
+                $("#liveToast").on("click", this.modalImpresionDeMovimiento);
+            }
+        });
+
         request.open("POST", "Controladores/GeneradorPdf.php", true);
         request.setRequestHeader("x-request-id", this.idRequestField);
         request.onreadystatechange = async function(element) {
@@ -60,7 +81,9 @@ export class RerpoteMovimiento {
                 this.documentoPdf = await this.mergePdfs();
                 let blob = new Blob([this.documentoPdf], {type: "application/pdf"});
                 let url1 = window.URL.createObjectURL(blob);
+                this.impresionMovimientos(url1);
                 window.open(url1);
+                clearInterval(this.timer);
             }
         }.bind(this);
         lista = this.listaDeMovimientos.reduce((obj, item, index) => {
@@ -76,6 +99,7 @@ export class RerpoteMovimiento {
         lista["fitros"] = filtroSeleccionados;
         lista["cant"] = this.listaDeMovimientos.length;
         request.send(JSON.stringify(lista));
+        this.timer = setInterval(this.dialogOnProgress.bind(this), 3100);
     }
 
     base64ToArrayBuffer(data) {
@@ -326,6 +350,78 @@ export class RerpoteMovimiento {
             this.listaDeRequest.push(request);
             this.rowsRequest = {};
         }
+    }
+
+    dialogImpresionMovimientos(data = null,status = null, request = null) {
+        $("#liveToast").hide();
+
+        let mensaje = "";
+
+        swal.fire({
+            title: "<strong>La impresion finalizó</strong>",
+            icon: "success",
+            html: mensaje,
+            showCloseButton: true,
+            focusConfirm: false,
+            confirmButtonText: `<i class="fa fa-thumbs-up"></i> OK`,
+            confirmButtonAriaLabel: "Thumbs up, great!",
+            cancelButtonAriaLabel: "Thumbs down"
+        });
+    }
+
+    dialogErrorImpresion(data, status, request) {
+        swal.fire({
+          title: "Fallo de la Impresion",
+          text: "Los movimientos no han sido impresos",
+          icon: "error",
+          showCancelButton: false
+        });
+    }
+
+    modalImpresionDeMovimiento() {
+        let progreso = $("#progress-toast").text()
+        let animacion = `<div>
+                            <img class='icon-printer' src="/images/icons/impresora.gif" alt="an illustration of printer" />
+                         </div>
+                         <progress id="bar-progress-modal" max="100" value="` + progreso + `">70%</progress>`;
+        $("#liveToast").hide();
+        swal.fire({
+          title: "Proceso de carga",
+          html: animacion,
+          text: "Los registros estan siendo cargados al sistema",
+          icon: "warning",
+          showConfirmButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            $("#liveToast").show();
+          }
+        });
+    }
+
+    impresionMovimientos(url) {
+        $("#liveToast").hide();
+
+        let mensaje = `<a href='` + url + `' target='_blank'>
+                         <img class='icon-printer' src="/images/icons/descargar.gif" alt="an illustration of printer">
+                       </a>`;
+
+        swal.fire({
+            title: "<strong>La impresion finalizó</strong>",
+            icon: "success",
+            html: mensaje,
+            showCloseButton: false,
+            focusConfirm: false,
+            confirmButtonText: `<i class="fa fa-thumbs-up"></i> OK`,
+            confirmButtonAriaLabel: "Thumbs up, great!",
+            cancelButtonAriaLabel: "Thumbs down"
+        });
+    }
+
+    dialogOnProgress() {
+        this.progress += 0.05;
+        $("#bar-progress").val(this.progress * 100);
+        $("#progress-toast").text(parseInt(this.progress * 100));
+        $("#bar-progress-modal").val(parseInt(this.progress * 100));
     }
 
 }

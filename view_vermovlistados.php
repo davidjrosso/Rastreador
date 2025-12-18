@@ -51,6 +51,8 @@ $ID_Config = $_REQUEST["ID_Config"];
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+  <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
@@ -188,7 +190,6 @@ $ID_Config = $_REQUEST["ID_Config"];
           reporte.sendRequestOne();
         }
       }
-
   </script>  
 </head>
 <body>
@@ -208,7 +209,7 @@ $ID_Config = $_REQUEST["ID_Config"];
     <br>
     <div class="row">
         <div class="col-md-4" style="padding-right: 0px;padding-left: 0pc;">
-          <button type="button" class="btn btn-secondary" onclick="enviarImprimirPdf();">
+          <button id="enviar_imprimir" type="button" class="btn btn-secondary">
               Imprimir
           </button>
           <button id="excel_descarga" type="button" class="btn btn-secondary" onClick="excel_download(objectJsonTabla);">
@@ -2544,6 +2545,16 @@ $ID_Config = $_REQUEST["ID_Config"];
   </div>
 </div>
 
+<!-- TOAST PROGRESO IMPRESION -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 5100; width: auto;">
+  <div id="liveToast" class="toast hide" style="width:auto;" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-body">
+      Impresion Progreso : <span id="progress-toast">0</span> %
+    </div>
+  </div>
+</div>
+<!-- FIN TOAST PROGRESO IMPRESION -->
+
 <script>
         // <input type="checkbox" id="chkPersona"> Persona 
         // <input type="checkbox" id="chkDNI"> DNI 
@@ -2560,6 +2571,7 @@ $ID_Config = $_REQUEST["ID_Config"];
   filtroSeleccionados = <?php echo json_encode($filtros); ?>;
   cantFiltros = <?php echo count($filtros); ?>;
 
+  $("#enviar_imprimir").on("click", enviarImprimirPdf);
 
   function characterAscii(elem) {
         let caracter = null;
