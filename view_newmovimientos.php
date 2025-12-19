@@ -422,13 +422,12 @@ $Con->CloseConexion();
               <div class = "col-md-9">
                 <?php  
                 $Element = new Elements();
-                /*if(isset($_SESSION["UltResponsable"])){
+                if (!empty($_SESSION["UltResponsable"])) {
                   $xID_Responsable = $_SESSION["UltResponsable"];
                   echo $Element->CBModResponsables($xID_Responsable);
-                }else{
+                } else {
                   echo $Element->CBResponsables();
-                }*/
-                echo $Element->CBResponsables();
+                }
                 ?>
               </div>
               <div class="col-md-1">
@@ -442,13 +441,12 @@ $Con->CloseConexion();
               <div class = "col-md-10">
                 <?php  
                 $Element = new Elements();
-                /*if(isset($_SESSION["UltCentro"])){
+                if (!empty($_SESSION["UltCentro"])) {
                   $xID_Centro = $_SESSION["UltCentro"];
                   echo $Element->CBModCentros($xID_Centro);                  
-                }else{
+                } else {
                   echo $Element->CBCentros();
-                }*/
-                echo $Element->CBCentros();
+                }
                 ?>
               </div>
             </div>
