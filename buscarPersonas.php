@@ -48,14 +48,16 @@ if (isset($consultaBusqueda)) {
 									  ORDER BY upper(apellido) ASC, upper(nombre) ASC, upper(documento) ASC"
 									);
 		}
-	}else{
+	} else {
 		$consulta = mysqli_query(
 						  $Con->Conexion, 
 						  "SELECT id_persona, UPPER(apellido) AS apellido, 
 						  				 CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
 							  			 documento, nro_carpeta, domicilio 
 								  FROM persona 
-								  WHERE (apellido LIKE '%$consultaBusqueda%' or nombre LIKE '%$consultaBusqueda%') and estado = 1 order by upper(apellido) ASC, upper(nombre) ASC, upper(documento) ASC"
+								  WHERE (apellido REGEXP '^$consultaBusqueda' or nombre REGEXP '^$consultaBusqueda') 
+								  	and estado = 1 
+								  ORDER BY upper(apellido) ASC, upper(nombre) ASC, upper(documento) ASC"
 								);
 	}
 
@@ -97,7 +99,12 @@ if (isset($consultaBusqueda)) {
 			      <td>'.$DNI.'</td>
 			      <td>'.$Nro_Carpeta.'</td>				
 			      <td>'.$Domicilio.'</td>
-			      <td><button type = "button" class = "btn btn-outline-success" onClick="seleccionPersona(\''.$Nombre.'\','.$ID_Persona.')" data-dismiss="modal">seleccionar</button></td>
+			      <td>
+				  	<button type = "button" class = "btn btn-outline-success" 
+							onClick="seleccionPersona(\''.$Nombre.'\','.$ID_Persona.')" data-dismiss="modal">
+						seleccionar
+					</button>
+				  </td>
 			    </tr>';
 
 					//   <td>'.$Nro_Legajo.'</td>
