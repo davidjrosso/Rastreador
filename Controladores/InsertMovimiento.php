@@ -68,10 +68,10 @@ if($ID_Motivo_5 == 0){
 }
 
 
-if(empty($ID_Responsable[0])){
+if (empty($ID_Responsable)) {
 	$ID_Responsable = 64;
-}else{
-	$_SESSION["UltResponsable"] = $ID_Responsable[0];
+} else {
+	$_SESSION["UltResponsable"] = $ID_Responsable;
 }
 
 if(empty($ID_Centro)){
