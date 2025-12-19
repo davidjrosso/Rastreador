@@ -433,9 +433,7 @@ try {
                             Municipialidad de Rio Tercero <br>
                             Secertaría de Salud y Desarrollo Social<br>
                             Progama Rastreador <br>
-                        </p> 
-                        <br>
-                        <br>";
+                        </p>";
             $tabla_detalle_persona = "";
             if ($det_persona) {
                 $tabla_detalle_persona = "<table id='detalle-persona' class='table--border-colapsed'>
@@ -603,7 +601,6 @@ try {
     ]);
     $mpdf->WriteHTML(mb_convert_encoding($table, 'HTML-ENTITIES', 'UTF-8'));
     $output = $mpdf->OutputBinaryData();
-
     $data = base64_encode($output);
     header('Content-Type: application/pdf');
     header("X-Request-ID: $nro_paquete");
