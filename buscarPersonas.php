@@ -55,7 +55,7 @@ if (isset($consultaBusqueda)) {
 						  				 CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
 							  			 documento, nro_carpeta, domicilio 
 								  FROM persona 
-								  WHERE (apellido REGEXP '^$consultaBusqueda' or nombre REGEXP '^$consultaBusqueda') 
+								  WHERE (apellido REGEXP '[ ]*$consultaBusqueda' or nombre REGEXP '[ ]*$consultaBusqueda') 
 								  	and estado = 1 
 								  ORDER BY upper(apellido) ASC, upper(nombre) ASC, upper(documento) ASC"
 								);
