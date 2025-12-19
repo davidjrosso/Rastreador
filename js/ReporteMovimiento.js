@@ -59,7 +59,7 @@ export class RerpoteMovimiento {
                         <progress id="bar-progress" max="100" value="0">70%</progress>`;
         let timer = null;
         swal.fire({
-            title: "Proceso de impresion",
+            title: "planilla para imprimir",
             html: animacion,
             text: "Los movimientos estan siendo incluidos en la impresion",
             icon: "warning",
@@ -358,7 +358,7 @@ export class RerpoteMovimiento {
         let mensaje = "";
 
         swal.fire({
-            title: "<strong>La impresion finalizó</strong>",
+            title: "<strong>el proceso finalizó</strong>",
             icon: "success",
             html: mensaje,
             showCloseButton: true,
@@ -401,12 +401,12 @@ export class RerpoteMovimiento {
     impresionMovimientos(url) {
         $("#liveToast").hide();
 
-        let mensaje = `<a href='` + url + `' target='_blank'>
+        let mensaje = `<a href='` + url + `' target='_blank' download='rastreador_movimientos'>
                          <img class='icon-printer' src="/images/icons/descargar.gif" alt="an illustration of printer">
                        </a>`;
 
         swal.fire({
-            title: "<strong>La impresion finalizó</strong>",
+            title: "<strong>el proceso finalizó</strong>",
             icon: "success",
             html: mensaje,
             showCloseButton: false,
