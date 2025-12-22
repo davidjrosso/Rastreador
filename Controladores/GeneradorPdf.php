@@ -413,12 +413,14 @@ try {
             $filtros = $array_filas["fitros"];
             $filtro = "";
             foreach ($filtros as $value) {
+                /*
                 if (str_contains($value, "Motivos")
                     || str_contains($value, "Categorias")) {
                     $filtro .= implode("<br>", explode("-", $value));
                     $filtro .= "<br>";
                     continue;
                 }
+                */
                 $filtro .= $value . "<br>";
             }
             $det_persona = (isset($array_filas["det_persona"]) ? $array_filas["det_persona"] : null);
