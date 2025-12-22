@@ -6,8 +6,9 @@
   header("Content-Type: text/html;charset=utf-8");
 
   /*     CONTROL DE USUARIOS                    */
-  if(!isset($_SESSION["Usuario"])){
+  if(!isset($_SESSION["Usuario"])) {
       header("Location: Error_Session.php");
+      exit();
   }
 
   $Con = new Conexion();
@@ -216,8 +217,8 @@
                   cumpleanos = new Date();
                 }
 
-                let mes = cumpleanos.getMonth();
-                let ano = cumpleanos.getFullYear();;
+                let mes = cumpleanos.getMonth() + 1;
+                let ano = cumpleanos.getFullYear();
                 let dia = cumpleanos.getDate();
 
                 let fecha_hoy = new Date();
@@ -229,9 +230,11 @@
                 if (ahora_mes < mes) {
                     edad--;
                 }
+
                 if ((mes == ahora_mes) && (ahora_dia < dia)) {
                     edad--;
                 }
+
                 if (edad > 1900) {
                     edad -= 1900;
                 }
@@ -253,7 +256,7 @@
                 Anios.value = edad;
 
                 let Meses = document.getElementById("Meses");
-                Meses.value = meses - 1;
+                Meses.value = meses;
           }
 
         function buscarCalles(){

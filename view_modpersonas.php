@@ -211,53 +211,55 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
     });
 
     function calcularEdad() {
-            let fecha = document.getElementById("Fecha_Nacimiento").value;
-            if (fecha !== null && fecha.length != 0) {
-              fecha = fecha.split('/').reverse().join('-');
-              cumpleanos = new Date(fecha + " GMT-0300");
-            } else {
-              cumpleanos = new Date();
-            }
+        let fecha = document.getElementById("Fecha_Nacimiento").value;
+        if (fecha !== null && fecha.length != 0) {
+          fecha = fecha.split('/').reverse().join('-');
+          cumpleanos = new Date(fecha + " GMT-0300");
+        } else {
+          cumpleanos = new Date();
+        }
 
-            let mes = cumpleanos.getMonth();
-            let ano = cumpleanos.getFullYear();;
-            let dia = cumpleanos.getDate();
+        let mes = cumpleanos.getMonth() + 1;
+        let ano = cumpleanos.getFullYear();
+        let dia = cumpleanos.getDate();
 
-            let fecha_hoy = new Date();
-            let ahora_ano = fecha_hoy.getYear();
-            let ahora_mes = fecha_hoy.getMonth() + 1;
-            let ahora_dia = fecha_hoy.getDate();
+        let fecha_hoy = new Date();
+        let ahora_ano = fecha_hoy.getYear();
+        let ahora_mes = fecha_hoy.getMonth() + 1;
+        let ahora_dia = fecha_hoy.getDate();
 
-            let edad = (ahora_ano + 1900) - ano;
-            if (ahora_mes < mes) {
-                edad--;
-            }
-            if ((mes == ahora_mes) && (ahora_dia < dia)) {
-                edad--;
-            }
-            if (edad > 1900) {
-                edad -= 1900;
-            }
+        let edad = (ahora_ano + 1900) - ano;
+        if (ahora_mes < mes) {
+            edad--;
+        }
 
-            let meses = 0;
+        if ((mes == ahora_mes) && (ahora_dia < dia)) {
+            edad--;
+        }
 
-            if (ahora_mes > mes && dia > ahora_dia)
-                meses = ahora_mes - mes - 1;
-            else if (ahora_mes > mes)
-                meses = ahora_mes - mes
-            if (ahora_mes < mes && dia < ahora_dia)
-                meses = 12 - (mes - ahora_mes);
-            else if (ahora_mes < mes)
-                meses = 12 - (mes - ahora_mes + 1);
-            if (ahora_mes == mes && dia > ahora_dia)
-                meses = 11;
+        if (edad > 1900) {
+            edad -= 1900;
+        }
 
-            let Anios = document.getElementById("Edad");
-            Anios.value = edad;
+        let meses = 0;
 
-            let Meses = document.getElementById("Meses");
-            Meses.value = meses - 1;
-      }
+        if (ahora_mes > mes && dia > ahora_dia)
+            meses = ahora_mes - mes - 1;
+        else if (ahora_mes > mes)
+            meses = ahora_mes - mes
+        if (ahora_mes < mes && dia < ahora_dia)
+            meses = 12 - (mes - ahora_mes);
+        else if (ahora_mes < mes)
+            meses = 12 - (mes - ahora_mes + 1);
+        if (ahora_mes == mes && dia > ahora_dia)
+            meses = 11;
+
+        let Anios = document.getElementById("Edad");
+        Anios.value = edad;
+
+        let Meses = document.getElementById("Meses");
+        Meses.value = meses;
+    }
   </script>
 </head>
 
