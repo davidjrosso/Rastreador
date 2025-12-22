@@ -132,7 +132,7 @@ $Con->CloseConexion();
                 <select name = "ID_Filtro" class = "form-control">                    
                     <option value = "Apellido">Apellido</option>
                     <option value = "Nombre">Nombre</option>
-                    <option value = "DNI">Documento</option>
+                    <option value = "DNI" selected>Documento</option>
                     <!-- <option value = "ID">Id</option> -->
                     <option value = "Legajo">Nro. Legajo</option>
                     <option value = "Carpeta">Nro. Carpeta</option>
