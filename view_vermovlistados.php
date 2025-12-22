@@ -124,6 +124,8 @@ $ID_Config = $_REQUEST["ID_Config"];
                     fullscreen = false;
                   }
               });
+
+              configResultados();
       });
 
       function CalcularPrecio(){
@@ -2231,11 +2233,11 @@ $ID_Config = $_REQUEST["ID_Config"];
           <li><input type="checkbox" id="chkObraSocial" checked> Obra Social </li>
           <li><input type="checkbox" id="chkDomicilio" checked> Domicilio </li>
           <li><input type="checkbox" id="chkBarrio" checked> Barrio </li>
-          <li><input type="checkbox" id="chkLocalidad" checked> Localidad </li>
+          <li><input type="checkbox" id="chkLocalidad"> Localidad </li>
           <li><input type="checkbox" id="chkObservaciones" checked> Observaciones</li>
           <li><input type="checkbox" id="chkResponsable" checked> Responsable</li>
-          <li><input type="checkbox" id="chkCentrosSalud" checked> Centro de salud </li>
-          <li><input type="checkbox" id="chkOtrasInstituciones" checked > Otras instituciones</li>
+          <li><input type="checkbox" id="chkCentrosSalud"> Centro de salud </li>
+          <li><input type="checkbox" id="chkOtrasInstituciones"> Otras instituciones</li>
         </ul>
       </div>
       <div class="modal-footer modal-footer-flex-center">
