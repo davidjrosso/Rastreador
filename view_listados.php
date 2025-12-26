@@ -121,6 +121,18 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
                   $("#meses-hasta-dato").html(toastMessage("meses"));
                   $("#meses-hasta-toast").show();
               });
+
+
+              $("#close-categorias").on("click", function (e) {
+                    $("#SearchCategorias").val("");
+                    $("#ResultadosCategorias").html("");
+              });
+
+
+              $("#cerrar-categorias").on("click", function (e) {
+                    $("#SearchCategorias").val("");
+                    $("#ResultadosCategorias").html("");
+              });
           });
 
     function buscarPersonas(){
@@ -340,8 +352,10 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
           $("#Categoria" + index).html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalCategoria'>Seleccione una Categoria</button>");
           $("#ID_Categoria" + index).val(null);
         }
-        
       }
+
+      $("#SearchCategorias").val("");
+      $("#ResultadosCategorias").html("");
     }
 
     function seleccionCategoria(xCategoria, xID){
@@ -1006,7 +1020,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLongTitle">Selección de Categoria</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <button type="button" class="close" id="close-categorias" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -1035,7 +1049,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" onclick="seleccionMultipleCategoria()" data-dismiss="modal">OK</button>
-              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+              <button type="button" class="btn btn-primary" id="cerrar-categorias" data-dismiss="modal">Cerrar</button>
             </div>
           </div>
         </div>
@@ -1087,7 +1101,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
                     echo $Element->CBDrive();
                   ?>
                 </div>
-              </div>            
+              </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             

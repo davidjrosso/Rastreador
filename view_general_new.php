@@ -151,6 +151,17 @@ $TipoUsuario = $account->get_id_tipo_usuario();
         }
 
         );
+
+        $("#close-categorias").on("click", function (e) {
+              $("#SearchCategorias").val("");
+              $("#ResultadosCategorias").html("");
+        });
+
+
+        $("#cerrar-categorias").on("click", function (e) {
+              $("#SearchCategorias").val("");
+              $("#ResultadosCategorias").html("");
+        });
     });
    
     function buscarPersonas() {
@@ -354,8 +365,10 @@ $TipoUsuario = $account->get_id_tipo_usuario();
           $("#Categoria" + index).html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalCategoria'>Seleccione una Categoria</button>");
           $("#ID_Categoria" + index).val(null);
         }
-        
       }
+
+      $("#SearchCategorias").val("");
+      $("#ResultadosCategorias").html("");
     }
 
     function seleccionMotivo(xMotivo,xID,xNumber) {
@@ -1196,7 +1209,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLongTitle">Selección de Categoria</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <button type="button" class="close" id="close-categorias" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -1206,7 +1219,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
                   <div class="col"></div>
                   <div class="col-8">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarCategorias" id = "SearchCategorias" onKeyUp="buscarCategorias()" autocomplete="off">
+                      <input class = "form-control" type="text" name="BuscarCategorias" id="SearchCategorias" onKeyUp="buscarCategorias()" autocomplete="off">
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -1225,7 +1238,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" onclick="seleccionMultipleCategoria()" data-dismiss="modal">OK</button>
-              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+              <button type="button" class="btn btn-primary" id="cerrar-categorias" data-dismiss="modal">Cerrar</button>
             </div>
           </div>
         </div>
