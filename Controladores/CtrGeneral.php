@@ -1054,7 +1054,7 @@ class CtrGeneral{
 							documento, 
 							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
 					 from persona
-					 where apellido like '%$Apellido%' 
+					 where (TRIM(apellido) REGEXP '^$Apellido' or TRIM(apellido) REGEXP '[ ]+$Apellido')
 					   and estado = 1 
 					 order by apellido, nombre";
 		$MessageError = "Problemas al intentar mostrar Personas por Apellido";
@@ -1078,7 +1078,7 @@ class CtrGeneral{
 							documento, 
 							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
 					 from persona
-					 where nombre like '%$Nombre%'
+					 where (TRIM(nombre) REGEXP '^$Nombre' or TRIM(nombre) REGEXP '[ ]+$Nombre')
 					   and estado = 1 
 					 order by apellido, nombre";
 		$MessageError = "Problemas al intentar mostrar Personas por Nombre";
