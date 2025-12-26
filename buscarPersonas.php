@@ -14,7 +14,6 @@ $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consulta
 //Variable vacía (para evitar los E_NOTICE)
 $mensaje = "";
 
-
 //Comprueba si $consultaBusqueda está seteado
 if (isset($consultaBusqueda)) {
 
@@ -24,7 +23,8 @@ if (isset($consultaBusqueda)) {
 	//donde el nombre sea igual a $consultaBusqueda, 
 	//o el apellido sea igual a $consultaBusqueda, 
 	//o $consultaBusqueda sea igual a nombre + (espacio) + apellido
-	if(is_numeric($consultaBusqueda)){
+	$caracater = str_contains($consultaBusqueda, ",");
+	if(is_numeric($consultaBusqueda)) {
 		if(strlen((string)$consultaBusqueda) >= 8){
 			$consulta = mysqli_query(
 							  $Con->Conexion, 
@@ -49,14 +49,66 @@ if (isset($consultaBusqueda)) {
 									);
 		}
 	} else {
+
+		$query_filter = "";
+
+		if ($caracater) {
+			$consulta = preg_replace("~[ ]+~", " ", $consultaBusqueda);
+			$elements = array_map("trim", explode(",", $consulta));
+			$apellidos = false;
+			$nombres = false;
+			if ($elements[0]) $apellidos = preg_split("~[ ]+~", $elements[0]);
+			if ($elements[1]) $nombres = preg_split("~[ ]+~", $elements[1]);
+
+			$cant_apellido = ($apellidos) ? count($apellidos) : 0;
+			$cant_nombres = ($nombres) ? count($nombres) : 0;
+			$query_apellido = "(";
+
+			if (!$apellidos) $apellidos = [];
+
+			foreach ($apellidos as $key => $value) {
+				$query_apellido .= "(TRIM(apellido) REGEXP '^$value')";
+				if ($key < $cant_apellido - 1) $query_apellido .= " or ";
+			}
+			$query_apellido .= ")";
+
+			$query_nombre = "(";
+
+			if (!$nombres) $nombres = [];
+
+			foreach ($nombres as $key => $value) {
+				$query_nombre .= "(TRIM(nombre) REGEXP '^$value')";
+				if ($key < $cant_nombres - 1) $query_nombre .= " or ";
+			}
+			$query_nombre .= ")";
+
+			if (!$cant_apellido) $query_apellido = "";
+
+			$query_filter .= $query_apellido;
+			if ($cant_nombres > 0) {
+				if ($cant_apellido) $query_filter .= " and ";
+				$query_filter .= $query_nombre; 
+			}
+
+			if ($cant_apellido || $cant_nombres) {
+				$query_filter = " and " . $query_filter;
+			}
+
+			if (!$cant_apellido && !$cant_nombres) $query_filter = "";
+
+		} else {
+			$query_filter = " and ((TRIM(apellido) REGEXP '^$consultaBusqueda' or TRIM(apellido) REGEXP '[ ]+$consultaBusqueda') 
+								  	 or (TRIM(nombre) REGEXP '^$consultaBusqueda' or TRIM(nombre) REGEXP '[ ]+$consultaBusqueda'))";
+		}
+
 		$consulta = mysqli_query(
 						  $Con->Conexion, 
 						  "SELECT id_persona, UPPER(apellido) AS apellido, 
 						  				 CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
 							  			 documento, nro_carpeta, domicilio 
 								  FROM persona 
-								  WHERE (apellido REGEXP '[ ]*$consultaBusqueda' or nombre REGEXP '[ ]*$consultaBusqueda') 
-								  	and estado = 1 
+								  WHERE  estado = 1
+								  		 $query_filter
 								  ORDER BY upper(apellido) ASC, upper(nombre) ASC, upper(documento) ASC"
 								);
 	}
