@@ -2821,7 +2821,7 @@ public function getMenuSeguridadUsuario($ID){
                      FROM archivos
                      WHERE centro_salud = " . $Ret['id_centro'] . "
                        AND estado = 1
-                     ORDER BY planilla RLIKE '2026' DESC";
+                     ORDER BY REGEXP_SUBSTR(planilla, '[0-9][0-9][0-9][0-9]') DESC";
         $result = mysqli_query($con->Conexion,$consulta) or die("Problemas al mostrar los archivos");
         while ($row = mysqli_fetch_array($result)) {
             $div .= "<tr>
