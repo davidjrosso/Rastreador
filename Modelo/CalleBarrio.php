@@ -10,6 +10,7 @@ class CalleBarrio
     private $punto_min_num;
 	private $pendiente;
 	private $punto;
+	private $offset_calle;
     private $figura;
 	private $id_barrio;
 	private $estado;
@@ -23,6 +24,7 @@ class CalleBarrio
         $punto_min_num=null,
         $pendiente=null,
 		$punto=null,
+		$offset_calle=null,
         $figura=null,
         $id_barrio=null,
 		$estado=null,
@@ -38,6 +40,7 @@ class CalleBarrio
             $this->punto_min_num = $punto_min_num;
             $this->pendiente = $pendiente;
 			$this->punto = $punto;
+			$this->offset_calle = (!empty($offset_calle)) ? $offset_calle : 1;
 			$this->figura = $figura;
 			$this->id_barrio = $id_barrio;
 			$this->estado = $estado;
@@ -70,6 +73,7 @@ class CalleBarrio
 			$row_punto_max_num = "POINT(" . $ret["lat_point_max_num"] . "," . $ret["lon_point_max_num"]  . ")";
 			$row_punto_min_num = "POINT(" . $ret["lat_point_min_num"] . "," . $ret["lon_point_min_num"]  . ")";
 			$row_pendiente = "POINT(" . $ret["lat_pendiente"] . "," . $ret["lon_pendiente"]  . ")";
+			$row_offset_calle = (!empty($ret["offset_calle"])) ? $ret["offset_calle"] : 1;
 			$row_figura = $ret["figura"];
 			$row_id_barrio = $ret["ID_Barrio"];
 			$row_estado = $ret["estado"];
@@ -82,6 +86,7 @@ class CalleBarrio
 			$this->punto_min_num = $row_punto_min_num;
 			$this->pendiente = $row_pendiente;
 			$this->punto = $row_punto;
+			$this->offset_calle = $row_offset_calle;
 			$this->figura = $row_figura;
             $this->id_barrio = $row_id_barrio;
 			$this->estado = $row_estado;
@@ -184,6 +189,11 @@ class CalleBarrio
 	public function set_punto($punto)
     {
 		$this->punto = $punto;
+	}
+
+	public function set_offset_calle($offset_calle)
+    {
+		$this->offset_calle = $offset_calle;
 	}
 
 	public function set_punto_lat_lon($lan, $lon)
@@ -314,6 +324,11 @@ class CalleBarrio
 		return $lon;
 	}
 
+	public function get_offset_calle()
+    {
+		return $this->offset_calle;
+	}
+
     public function get_figura()
     {
 		return $this->figura;
@@ -361,9 +376,10 @@ class CalleBarrio
 		$lat = $point;
 		$num_domicilio = floatval($number);
 		$dir_par = ($num_domicilio % 2) * -2 + 1;
-
+		
 		$pendiente_vector = $this->get_pendiente();
 		$pendiente_lat_sign = 1;
+		$offset_calle = $this->get_offset_calle();
 		if ($number && $pendiente_vector) {
 			$pendiente_lat = floatval($this->get_pendiente_lat());
 			$pendiente_lon = floatval($this->get_pendiente_lon());
@@ -377,7 +393,7 @@ class CalleBarrio
 		if ($number && $pendiente_vector) {
 			$pendiente = floatval($this->get_pendiente_lat());
 			$lat += $pendiente * ($number - $min_num);
-			$lat += (1/($pendiente * $modulo)) * $pendiente_lat_sign * $dir_par * 0.0001;
+			$lat += (1/($pendiente * $modulo)) * $pendiente_lat_sign * $dir_par * 0.0001 * $offset_calle;
 		}
         return $lat;
     }
@@ -392,6 +408,8 @@ class CalleBarrio
 
 		$pendiente_vector = $this->get_pendiente();
 		$pendiente_lon_sign = 1;
+		$offset_calle = $this->get_offset_calle();
+
 		if ($number && $pendiente_vector) {
 			$pendiente_lat = floatval($this->get_pendiente_lat());
 			$pendiente_lon = floatval($this->get_pendiente_lon());
@@ -405,7 +423,7 @@ class CalleBarrio
 		if ($number && $this->get_pendiente()) {
 			$pendiente = floatval($this->get_pendiente_lon());
 			$lon += $pendiente * ($number - $min_num);
-			$lon += (1/($pendiente * $modulo)) * $pendiente_lon_sign * $dir_par * 0.0001;
+			$lon += (1/($pendiente * $modulo)) * $pendiente_lon_sign * $dir_par * 0.0001 * $offset_calle;
 		}
         return $lon;
     }
@@ -421,6 +439,7 @@ class CalleBarrio
 						punto_min_num = " . ((!is_null($this->get_punto_min_num())) ? "'" . $this->get_punto_min_num() . "'" : "null") . ", 
 						pendiente = " . ((!is_null($this->get_pendiente())) ? "'" . $this->get_pendiente() . "'" : "null") . ", 
 						punto = " . ((!is_null($this->get_punto())) ? "'" . $this->get_punto() . "'" : "null") . ",
+						offset_calle = " . ((!is_null($this->get_offset_calle())) ? $this->get_offset_calle() : "0") . ",
 						figura = " . ((!is_null($this->get_figura())) ? $this->get_figura() : "null") . ",
                         ID_Barrio = " . ((!is_null($this->get_id_barrio())) ? $this->get_id_barrio() : "null") . ",
 						estado = " . ((!is_null($this->get_estado())) ? "'" . $this->get_estado() . "'" : "null") . " 
