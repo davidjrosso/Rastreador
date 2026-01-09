@@ -120,10 +120,8 @@ export function excel() {
                                     addChart(e.target);
                                 }
                             });
-                        }
 
-                        if (section == 'cell') {
-                            let s = spreadsheet[0].getSelected(false);
+                            s = spreadsheet[0].getSelected(false);
 
                             itemsArr.push({
                                 title: 'insert grafico radar',
@@ -232,7 +230,7 @@ export async function excel_download(objectJsonTabla) {
 
 export function addChart(object) {
     object.innerHTML = "<canvas></canvas>";
-    const chart = new Chart(object, {
+    const chart = new Chart(object.firstChild(), {
         type: 'line',
         data: {
                 labels: ['A', 'B', 'C'],
