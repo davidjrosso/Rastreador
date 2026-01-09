@@ -262,7 +262,7 @@ export function addChart(object) {
 
 export function addChartRadar(object) {
     object.innerHTML = "<canvas></canvas>";
-    const chart = new Chart(object, {
+    const chart = new Chart(object.firstChild, {
         type: 'radar',
         data: {
                 labels: [
@@ -309,7 +309,7 @@ export function addChartRadar(object) {
 
 export function addChartP(object) {
     object.innerHTML = "<canvas></canvas>";
-    const chart = new Chart(object, {
+    const chart = new Chart(object.firstChild, {
         type: 'polarArea',
         data: {
                 labels: [
@@ -344,7 +344,7 @@ export function addChartP(object) {
 
 export function addChartC(object) {
     object.innerHTML = "<canvas></canvas>";
-    const chart = new Chart(object, {
+    const chart = new Chart(object.firstChild, {
         type: 'scatter',
         data: {
                 datasets: [{
