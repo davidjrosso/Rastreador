@@ -61,11 +61,12 @@ export function excel() {
                 filters: true,
                 allowComments:true,
                 search: true,
-                worksheetName: "Excel",
+                worksheetName: "Rastreador",
                 allowDeleteWorksheet: true,
                 allowRenameWorksheet: true,
                 allowMoveWorksheet: true,
                 }],
+                onselection: selectionActive,
                 search: true,
                 toolbar:true,
                 tabs: true,
@@ -80,7 +81,6 @@ export function excel() {
                 },
                 contextMenu: function(o, x, y, e, items, section) {
                         let itemsArr = [];
-
                         if (section == 'header') {
                             itemsArr.push({
                                 title: 'Execute one action',
@@ -94,17 +94,26 @@ export function excel() {
 
                         if (section == 'tabs') {
                             itemsArr.push({
-                                title: 'delete excel',
+                                title: 'Eliminar Excel',
                                 onclick: function() {
                                     spreadsheet[0].deleteWorksheet(x);
                                 }
                             });
 
                             itemsArr.push({
-                                title: 'add excel',
+                                title: 'Agregar Excel',
                                 onclick: function() {
                                     let name = prompt("Ingrese el nombre del excel");
                                     spreadsheet[0].createWorksheet({worksheetName: name, minDimensions: [15, 15]}, x);
+                                }
+                            });
+
+                            itemsArr.push({
+                                title: 'Renombrar Excel',
+                                onclick: function() {
+                                    let name = prompt("Ingrese el nombre del excel");
+                                     e.target.innerText = name;
+
                                 }
                             });
 
@@ -112,41 +121,81 @@ export function excel() {
                         }
 
                         if (section == 'cell') {
-                            let s = spreadsheet[0].getSelected(false);
-                            
+                            let data = new Map();
+                            let s = o.getSelected(false);
+                            s.forEach(function (val, ind, array) {
+                                let text = (val.element.innerText) ? val.element.innerText : "";
+                                if (data.has(val.x)) {
+                                    data.get(val.x).push(text);
+                                } else {
+                                     data.set(val.x, []);
+                                }
+                            })
+
                             itemsArr.push({
-                                title: 'insert grafico',
+                                title: 'Insertar grafico Personalizado',
                                 onclick: function() {
-                                    addChart(e.target);
+                                    addChartLine(e.target, data);
                                 }
                             });
 
-                            s = spreadsheet[0].getSelected(false);
-
                             itemsArr.push({
-                                title: 'insert grafico radar',
+                                title: 'Insertar grafico Lineal',
                                 onclick: function() {
-                                    addChartRadar(e.target);
+                                    addChartLine(e.target, data);
                                 }
                             });
 
-                            s = spreadsheet[0].getSelected(false);
-
                             itemsArr.push({
-                                title: 'insert grafico P',
+                                title: 'Insertar grafico Intervalo',
                                 onclick: function() {
-                                    addChartP(e.target);
+                                    addChartIntervalo(e.target, data);
                                 }
                             });
 
-                            s = spreadsheet[0].getSelected(false);
-
                             itemsArr.push({
-                                title: 'insert grafico C',
+                                title: 'Insertar grafico Radar',
                                 onclick: function() {
-                                    addChartC(e.target);
+                                    addChartRadar(e.target, data);
                                 }
                             });
+
+                            itemsArr.push({
+                                title: 'Insertar grafico P Area',
+                                onclick: function() {
+                                    addChartP(e.target, data);
+                                }
+                            });
+
+                            itemsArr.push({
+                                title: 'Insertar grafico Scatter',
+                                onclick: function() {
+                                    addChartC(e.target, data);
+                                }
+                            });
+
+                            itemsArr.push({
+                                title: 'Insertar grafico Torta',
+                                onclick: function() {
+                                    addChartTorta(e.target, data);
+                                }
+                            });
+
+                            itemsArr.push({
+                                title: 'Insertar grafico Dona',
+                                onclick: function() {
+                                    addChartDona(e.target, data);
+                                }
+                            });
+
+                            itemsArr.push({
+                                title: 'Insertar grafico Bubble',
+                                onclick: function() {
+                                    addChartBubble(e.target, data);
+                                }
+                            });
+
+                            itemsArr.push({ type: 'line' });
                         }
 
                         /*
@@ -169,8 +218,7 @@ export function excel() {
                         });
                         */
                         let list = [];
-                        itemsArr.forEach((e) => list.push(e));
-                        items.forEach((e) => list.push(e));
+                        list = itemsArr.concat(items.slice(0, -2));
                         return list;
             },
             columnDrag: true
@@ -180,7 +228,7 @@ export function excel() {
         $(".jss_filter label").text("");
         $(".jss_filter label").html(text);
         //$(".jss_filter label").append(text);
-        $(".jss_filter").prepend("<label>" + text2 + "</label>");
+        $(".jss_filter").prepend("<div style='flex-grow: 1; flex-basis: 60%'> <label>" + text2 + "</label> </div>");
     }
 }
 
@@ -228,39 +276,28 @@ export async function excel_download(objectJsonTabla) {
 
 }
 
-export function addChart(object) {
+export function addChartLine(object, data) {
+    let list = [];
     object.innerHTML = "<canvas></canvas>";
+    data.forEach(function (val, ind, map) {
+        list.push({
+            label: 'Dataset ' + ind,
+            data: val,
+            borderColor: '#000000',
+            backgroundColor: '#000000'
+        });
+    });
     const chart = new Chart(object.firstChild, {
         type: 'line',
         data: {
-                labels: ['A', 'B', 'C'],
-                datasets: [
-                    {
-                    label: 'Dataset 1',
-                    data: [1, 2, 3],
-                    borderColor: '#000000',
-                    backgroundColor: '#000000',
-                    },
-                    {
-                    label: 'Dataset 2',
-                    data: [2, 3, 4],
-                    borderColor: '#FF6384',
-                    backgroundColor: '#FFB1C1',
-                    }
-                ]
+                labels: list[0].data,
+                datasets: list.slice(1)
         },
-        options: {
-            onClick: (e) => {
-            const canvasPosition = getRelativePosition(e, chart);
-
-            const dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
-            const dataY = chart.scales.y.getValueForPixel(canvasPosition.y);
-            }
-        }
+        options: {}
     });
 }
 
-export function addChartRadar(object) {
+export function addChartRadar(object, data) {
     object.innerHTML = "<canvas></canvas>";
     const chart = new Chart(object.firstChild, {
         type: 'radar',
@@ -307,7 +344,7 @@ export function addChartRadar(object) {
     });
 }
 
-export function addChartP(object) {
+export function addChartP(object, data) {
     object.innerHTML = "<canvas></canvas>";
     const chart = new Chart(object.firstChild, {
         type: 'polarArea',
@@ -342,7 +379,7 @@ export function addChartP(object) {
     });
 }
 
-export function addChartC(object) {
+export function addChartC(object, data) {
     object.innerHTML = "<canvas></canvas>";
     const chart = new Chart(object.firstChild, {
         type: 'scatter',
@@ -350,17 +387,17 @@ export function addChartC(object) {
                 datasets: [{
                     label: 'Scatter Dataset',
                     data: [{
-                    x: -10,
-                    y: 0
-                    }, {
-                    x: 0,
-                    y: 10
-                    }, {
-                    x: 10,
-                    y: 5
-                    }, {
-                    x: 0.5,
-                    y: 5.5
+                            x: -10,
+                            y: 0
+                        }, {
+                            x: 0,
+                            y: 10
+                        }, {
+                            x: 10,
+                            y: 5
+                        }, {
+                            x: 0.5,
+                            y: 5.5
                     }],
                     backgroundColor: 'rgb(255, 99, 132)'
                 }],
@@ -374,4 +411,129 @@ export function addChartC(object) {
             }
         }
     });
+}
+
+export function addChartTorta(object, data) {
+    object.innerHTML = "<canvas></canvas>";
+    const chart = new Chart(object.firstChild, {
+        type: 'pie',
+        data: {
+            labels: [
+                    'Red',
+                    'Blue',
+                    'Yellow'
+            ],
+            datasets: [{
+                label: 'My First Dataset',
+                data: [300, 50, 100],
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)'
+                ],
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            onClick: (e) => {
+            const canvasPosition = getRelativePosition(e, chart);
+
+            const dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
+            const dataY = chart.scales.y.getValueForPixel(canvasPosition.y);
+            }
+        }
+    });
+}
+
+export function addChartDona(object, data) {
+    object.innerHTML = "<canvas></canvas>";
+    const chart = new Chart(object.firstChild, {
+        type: 'doughnut',
+        data: {
+            labels: [
+                'Red',
+                'Blue',
+                'Yellow'
+            ],
+            datasets: [{
+                label: 'My First Dataset',
+                data: [300, 50, 100],
+                backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 205, 86)'
+                ],
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            onClick: (e) => {
+            const canvasPosition = getRelativePosition(e, chart);
+
+            const dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
+            const dataY = chart.scales.y.getValueForPixel(canvasPosition.y);
+            }
+        }
+    });
+}
+
+export function addChartBubble(object, data) {
+    object.innerHTML = "<canvas></canvas>";
+    const chart = new Chart(object.firstChild, {
+        type: 'bubble',
+        data: {
+            datasets: [{
+                label: 'First Dataset',
+                data: [{
+                        x: 20,
+                        y: 30,
+                        r: 15
+                    }, {
+                        x: 40,
+                        y: 10,
+                        r: 10
+                    }],
+                    backgroundColor: 'rgb(255, 99, 132)'
+                }]
+            },
+        options: {}
+    });
+}
+
+export function addChartIntervalo(object, data) {
+    object.innerHTML = "<canvas></canvas>";
+    const chart = new Chart(object.firstChild, {
+        type: 'bar',
+        data: {
+            labels: Utils.months({count: 7}),
+            datasets: [{
+                label: 'My First Dataset',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 205, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(201, 203, 207, 0.2)'
+                ],
+                borderColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 159, 64)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(54, 162, 235)',
+                    'rgb(153, 102, 255)',
+                    'rgb(201, 203, 207)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+        options: {}
+    });
+}
+
+function selectionActive(instance, x1, y1, x2, y2, origin) {
+    $("#bar-element").val(instance.getSelected()[0].element.childNodes[0].nodeValue);
 }
