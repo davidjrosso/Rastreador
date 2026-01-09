@@ -230,7 +230,7 @@ export async function excel_download(objectJsonTabla) {
 
 export function addChart(object) {
     object.innerHTML = "<canvas></canvas>";
-    const chart = new Chart(object.firstChild(), {
+    const chart = new Chart(object.firstChild, {
         type: 'line',
         data: {
                 labels: ['A', 'B', 'C'],
