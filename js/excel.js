@@ -22,23 +22,38 @@ export function excel() {
                     }];
     if (length == 0) {
         th.each(function (index) {
-            if ($(this).text().trim() == "Años") return true;
-            if ($(this).text().trim() == "Meses") return true;
+            let typeData = "text";
+            let text = $(this).text().trim();
 
-            if ($(this).text().trim() != "Edad") {
-                list.push({
-                        type: 'text',
-                        title: $(this).text().trim(),
-                        width:'300px'
-                });
+            if (text == "Años") return true;
+            if (text == "Meses") return true;
+            if (text == "Fecha") typeData = "calendar";
+            if (text == "Fecha Nac.") typeData = "calendar";
+
+            if (text != "Edad") {
+                if (typeData == "calendar") {
+                    list.push({
+                            type: typeData,
+                            options: { format:'DD/MM/YYYY' },
+                            title: $(this).text().trim(),
+                            width:'300px'
+                    });
+                } else {
+                    list.push({
+                            type: typeData,
+                            title: $(this).text().trim(),
+                            width:'300px'
+                    });
+                }
+
             } else {
                 list.push({
-                        type: 'text',
+                        type: typeData,
                         title: "Años",
                         width:'300px'
                 });
                 list.push({
-                        type: 'text',
+                        type: typeData,
                         title: "Meses",
                         width:'300px'
                 });
@@ -54,6 +69,59 @@ export function excel() {
             })
             elems.push(rowlist);
         });
+
+        let dictionary = {
+            'Insert a new column before': 'Insertar una nueva columna antes',
+            'Insert a new column after': 'Insertar una nueva columna despues',
+            'Insert a new row before': 'Insertar una nueva fila antes',
+            'Insert a new row after': 'Insertar una nueva fila despues',
+            'Delete selected columns': 'Eliminar columnas seleccionadas',
+            'Delete selected rows': 'Eliminar filas seleccionadas',
+            'Rename this column': 'Renombrar esta columna',
+            'Add comments': 'Agregar comentario',
+            'Copy': 'Copiar',
+            'Paste': 'Pegar',
+            'Order ascending': 'Orden ascendente',
+            'Order descending': 'Orden descendente',
+            'Edit comments': 'Editar comentarios',
+            'Jan': 'Enero',
+            'Feb': 'Febrero',
+            'Mar': 'Marzo',
+            'Apr': 'Abril',
+            'May': 'Mayo',
+            'Jun': 'Junio',
+            'Jul': 'Julio',
+            'Aug': 'Agosto',
+            'Sep': 'Septiembre',
+            'Oct': 'Octubre',
+            'Nov': 'Noviembre',
+            'Dec': 'Diciembre',
+            'January': 'Enero',
+            'February': 'Febrero',
+            'March': 'Marzo',
+            'April': 'Abril',
+            'May': 'Mayo',
+            'June': 'Junio',
+            'July': 'Julio',
+            'August': 'Agosto',
+            'September': 'Septiembre',
+            'October': 'Octubre',
+            'November': 'Noviembre',
+            'December': 'Diciembre',
+            'Sunday': 'Domingo',
+            'Monday': 'Lunes',
+            'Tuesday': 'Martes',
+            'Wednesday': 'Mircoles',
+            'Thursday': 'Jueves',
+            'Friday': 'Virenes',
+            'Saturday': 'Sabado',
+            'Done': 'Hecho',
+            'Reset': 'Apagar',
+            'Update': 'Atualizar',
+        }
+
+        jspreadsheet.setDictionary(dictionary);
+
         let spreadsheet = jspreadsheet(document.getElementById('excel_rev'), {
             worksheets: [{
                     data: elems,
@@ -61,6 +129,7 @@ export function excel() {
                     filters: true,
                     allowComments:true,
                     search: true,
+                    tableOverflow: true,
                     worksheetName: "Reporte",
                     allowDeleteWorksheet: true,
                     allowRenameWorksheet: true,
@@ -71,6 +140,7 @@ export function excel() {
                     filters: true,
                     allowComments:true,
                     search: true,
+                    tableOverflow: true,
                     worksheetName: "Totales y Graficos",
                     allowDeleteWorksheet: true,
                     allowRenameWorksheet: true,
@@ -554,7 +624,9 @@ export function addChartIntervalo(object, data) {
 }
 
 function selectionActive(instance, x1, y1, x2, y2, origin) {
-    $("#bar-element").val(instance.getSelected()[0].element.childNodes[0].nodeValue);
+    if ($("#bar-element").length) {
+        $("#bar-element").val(instance.getSelected()[0].element.childNodes[0].nodeValue);
+    }
 }
 
 function getContextMenu(o, x, y, e, items, section) {
