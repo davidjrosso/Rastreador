@@ -35,13 +35,13 @@ export function excel() {
                     list.push({
                             type: typeData,
                             options: { format:'DD/MM/YYYY' },
-                            title: $(this).text().trim(),
+                            title: text,
                             width:'300px'
                     });
                 } else {
                     list.push({
                             type: typeData,
-                            title: $(this).text().trim(),
+                            title: text,
                             width:'300px'
                     });
                 }
@@ -66,7 +66,7 @@ export function excel() {
                 rowlist.push(
                     $(this).text().trim()
                 );            
-            })
+            });
             elems.push(rowlist);
         });
 
@@ -118,6 +118,7 @@ export function excel() {
             'Done': 'Hecho',
             'Reset': 'Apagar',
             'Update': 'Atualizar',
+            'Search': 'Buscar'
         }
 
         jspreadsheet.setDictionary(dictionary);
@@ -133,7 +134,8 @@ export function excel() {
                     worksheetName: "Reporte",
                     allowDeleteWorksheet: true,
                     allowRenameWorksheet: true,
-                    allowMoveWorksheet: true
+                    allowMoveWorksheet: true,
+                    columnDrag: true
                 },
                 {
                     minDimensions: [14, 14],
@@ -144,7 +146,8 @@ export function excel() {
                     worksheetName: "Totales y Graficos",
                     allowDeleteWorksheet: true,
                     allowRenameWorksheet: true,
-                    allowMoveWorksheet: true
+                    allowMoveWorksheet: true,
+                    columnDrag: true
                 }],
                 onselection: selectionActive,
                 search: true,
@@ -312,12 +315,9 @@ export function excel() {
             },
             columnDrag: true
         });
-        let text = $(".jss_filter label").html().replace("Search", "Buscar");
-        let text2 = "FX <input type='text' class='' id='bar-element'>";
-        $(".jss_filter label").text("");
-        $(".jss_filter label").html(text);
+        let text2 = "FX <input type='text' style='width: 80%; border-color: rgb(197 197 197); border-style: solid; border-width: 1.8px;' id='bar-element'>";
         //$(".jss_filter label").append(text);
-        $(".jss_filter").prepend("<div style='flex-grow: 1; flex-basis: 60%'> <label>" + text2 + "</label> </div>");
+        $(".jss_filter").prepend("<div style='flex-grow: 1; flex-basis: 60%;'> <label style='width: 100%; margin-bottom: 0rem;'>" + text2 + "</label> </div>");
     }
 }
 
@@ -624,7 +624,7 @@ export function addChartIntervalo(object, data) {
 }
 
 function selectionActive(instance, x1, y1, x2, y2, origin) {
-    if ($("#bar-element").length) {
+    if ($("#bar-element").length && instance.getSelected()[0].element.childNodes.length) {
         $("#bar-element").val(instance.getSelected()[0].element.childNodes[0].nodeValue);
     }
 }
