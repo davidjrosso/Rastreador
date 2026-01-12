@@ -315,7 +315,7 @@ export function excel() {
             },
             columnDrag: true
         });
-        let text2 = "FX <input type='text' style='width: 80%; border-color: rgb(197 197 197); border-style: solid; border-width: 1.8px;' id='bar-element'>";
+        let text2 = "FX <input type='text' style='width: 90%; border-color: rgb(197 197 197); border-style: solid; border-width: 1.8px;' id='bar-element'>";
         //$(".jss_filter label").append(text);
         $(".jss_filter").prepend("<div style='flex-grow: 1; flex-basis: 60%;'> <label style='width: 100%; margin-bottom: 0rem;'>" + text2 + "</label> </div>");
     }
