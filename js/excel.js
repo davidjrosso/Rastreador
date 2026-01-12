@@ -56,15 +56,25 @@ export function excel() {
         });
         let spreadsheet = jspreadsheet(document.getElementById('excel_rev'), {
             worksheets: [{
-                data: elems,
-                columns: list,
-                filters: true,
-                allowComments:true,
-                search: true,
-                worksheetName: "Rastreador",
-                allowDeleteWorksheet: true,
-                allowRenameWorksheet: true,
-                allowMoveWorksheet: true,
+                    data: elems,
+                    columns: list,
+                    filters: true,
+                    allowComments:true,
+                    search: true,
+                    worksheetName: "Reporte",
+                    allowDeleteWorksheet: true,
+                    allowRenameWorksheet: true,
+                    allowMoveWorksheet: true
+                },
+                {
+                    minDimensions: [14, 14],
+                    filters: true,
+                    allowComments:true,
+                    search: true,
+                    worksheetName: "Totales y Graficos",
+                    allowDeleteWorksheet: true,
+                    allowRenameWorksheet: true,
+                    allowMoveWorksheet: true
                 }],
                 onselection: selectionActive,
                 search: true,
@@ -104,7 +114,17 @@ export function excel() {
                                 title: 'Agregar Excel',
                                 onclick: function() {
                                     let name = prompt("Ingrese el nombre del excel");
-                                    spreadsheet[0].createWorksheet({worksheetName: name, minDimensions: [15, 15]}, x);
+                                    let options = {
+                                        minDimensions: [14, 14],
+                                        filters: true,
+                                        allowComments:true,
+                                        search: true,
+                                        worksheetName: name,
+                                        allowDeleteWorksheet: true,
+                                        allowRenameWorksheet: true,
+                                        allowMoveWorksheet: true
+                                    };
+                                    spreadsheet[0].createWorksheet(options, x);
                                 }
                             });
 
@@ -112,8 +132,7 @@ export function excel() {
                                 title: 'Renombrar Excel',
                                 onclick: function() {
                                     let name = prompt("Ingrese el nombre del excel");
-                                     e.target.innerText = name;
-
+                                    if (name) e.target.innerText = name;
                                 }
                             });
 
@@ -536,4 +555,146 @@ export function addChartIntervalo(object, data) {
 
 function selectionActive(instance, x1, y1, x2, y2, origin) {
     $("#bar-element").val(instance.getSelected()[0].element.childNodes[0].nodeValue);
+}
+
+function getContextMenu(o, x, y, e, items, section) {
+    let itemsArr = [];
+    if (section == 'header') {
+        itemsArr.push({
+            title: 'Execute one action',
+            onclick: function() {
+                alert('test')
+            }
+        });
+
+        itemsArr.push({ type: 'line' });
+    }
+
+    if (section == 'tabs') {
+        itemsArr.push({
+            title: 'Eliminar Excel',
+            onclick: function() {
+                spreadsheet[0].deleteWorksheet(x);
+            }
+        });
+
+        itemsArr.push({
+            title: 'Agregar Excel',
+            onclick: function() {
+                let name = prompt("Ingrese el nombre del excel");
+                spreadsheet[0].createWorksheet({worksheetName: name, minDimensions: [15, 15]}, x);
+            }
+        });
+
+        itemsArr.push({
+            title: 'Renombrar Excel',
+            onclick: function() {
+                let name = prompt("Ingrese el nombre del excel");
+                if (name) e.target.innerText = name;
+            }
+        });
+
+        itemsArr.push({ type: 'line' });
+    }
+
+    if (section == 'cell') {
+        let data = new Map();
+        let s = o.getSelected(false);
+        s.forEach(function (val, ind, array) {
+            let text = (val.element.innerText) ? val.element.innerText : "";
+            if (data.has(val.x)) {
+                data.get(val.x).push(text);
+            } else {
+                    data.set(val.x, []);
+            }
+        })
+
+        itemsArr.push({
+            title: 'Insertar grafico Personalizado',
+            onclick: function() {
+                addChartLine(e.target, data);
+            }
+        });
+
+        itemsArr.push({
+            title: 'Insertar grafico Lineal',
+            onclick: function() {
+                addChartLine(e.target, data);
+            }
+        });
+
+        itemsArr.push({
+            title: 'Insertar grafico Intervalo',
+            onclick: function() {
+                addChartIntervalo(e.target, data);
+            }
+        });
+
+        itemsArr.push({
+            title: 'Insertar grafico Radar',
+            onclick: function() {
+                addChartRadar(e.target, data);
+            }
+        });
+
+        itemsArr.push({
+            title: 'Insertar grafico P Area',
+            onclick: function() {
+                addChartP(e.target, data);
+            }
+        });
+
+        itemsArr.push({
+            title: 'Insertar grafico Scatter',
+            onclick: function() {
+                addChartC(e.target, data);
+            }
+        });
+
+        itemsArr.push({
+            title: 'Insertar grafico Torta',
+            onclick: function() {
+                addChartTorta(e.target, data);
+            }
+        });
+
+        itemsArr.push({
+            title: 'Insertar grafico Dona',
+            onclick: function() {
+                addChartDona(e.target, data);
+            }
+        });
+
+        itemsArr.push({
+            title: 'Insertar grafico Bubble',
+            onclick: function() {
+                addChartBubble(e.target, data);
+            }
+        });
+
+        itemsArr.push({ type: 'line' });
+    }
+
+    /*
+    itemsArr.push({
+        title: 'Save as',
+        shortcut: 'Ctrl + S',
+        icon: 'save',
+        onclick: function () {
+            o.download();
+        }
+    });
+    */
+    /*
+    // About
+    itemsArr.push({
+        title: 'About',
+        onclick: function() {
+            alert('https://jspreadsheet.com');
+        }
+    });
+    */
+    let list = [];
+    list = itemsArr.concat(items.slice(0, -2));
+    return list;
 }
