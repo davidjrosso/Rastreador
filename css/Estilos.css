@@ -1069,3 +1069,11 @@ input::-webkit-inner-spin-button {
 .modal-excel {
   overflow: scroll;
 }
+
+.jss_filter > div {
+  padding-bottom: 0px !important;
+}
+
+.jss_filter > div > label {
+  margin-bottom: 0.4rem !important;
+}
