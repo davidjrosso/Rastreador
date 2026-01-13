@@ -291,15 +291,15 @@ export function excel() {
                             itemsArr.push({ type: 'line' });
 
                             itemsArr.push({
-                                title: 'Zoom mas',
+                                title: 'Zoom + (mas)',
                                 onclick: function() {
-                                    if (zoom < 90) zoom += 10;
+                                    if (zoom < 150) zoom += 10;
                                     o.table.style.zoom = zoom + "%";
                                 }
                             });
 
                             itemsArr.push({
-                                title: 'Zoom menos',
+                                title: 'Zoom - (menos)',
                                 onclick: function() {
                                     if (zoom > 10) zoom -= 10;
                                     o.table.style.zoom = zoom + "%";
