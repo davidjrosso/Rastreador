@@ -166,6 +166,30 @@ export function excel() {
                         worksheetName: 'excel  ' + index
                     }
                 },
+                toolbar: function (toolbar) {
+                    toolbar.items.push({
+                        tooltip: 'zoom + (mas)',
+                        type: 'icon',
+                        content: 'control_point',
+                        onclick: function(e, x, y, n, items, section) {
+                            if (zoom < 150) zoom += 10;
+                            //o.table.style.zoom = zoom + "%";
+                            spreadsheet[0].table.style.zoom = zoom + "%";
+                        }
+                    });
+
+                    toolbar.items.push({
+                        tooltip: 'zoom - (menos)',
+                        type: 'icon',
+                        content: 'remove_circle_outline',
+                        onclick: function(e, x, y, n, items, section) {
+                            if (zoom > 10) zoom -= 10;
+                            spreadsheet[0].table.style.zoom = zoom + "%";
+                        }
+                    });
+
+                    return toolbar;
+                },
                 contextMenu: function(o, x, y, e, items, section) {
                         let itemsArr = [];
                         if (section == 'header') {
@@ -305,6 +329,8 @@ export function excel() {
                                     o.table.style.zoom = zoom + "%";
                                 }
                             });
+
+                            itemsArr.push({ type: 'line' });                            
                         }
 
                         let list = [];
