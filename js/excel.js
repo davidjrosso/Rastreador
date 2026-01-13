@@ -132,7 +132,7 @@ export function excel() {
                     allowComments:true,
                     search: true,
                     tableOverflow: true,
-                    worksheetName: "Reporte",
+                    worksheetName: "Excel",
                     allowDeleteWorksheet: true,
                     allowRenameWorksheet: true,
                     allowMoveWorksheet: true,
@@ -157,9 +157,6 @@ export function excel() {
                 allowDeleteWorksheet: true,
                 allowRenameWorksheet: true,
                 allowMoveWorksheet: true,
-                ondblclick: function (instance, cell, col, row, value, event) {
-                    console.log("por aca");
-                },
                 onbeforecreateworksheet: function(config, index) {
                     return {
                         minDimensions: [5, 5],
