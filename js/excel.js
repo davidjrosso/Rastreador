@@ -2,6 +2,7 @@ import jspreadsheet from "../node_modules/jspreadsheet-ce";
 import ExcelJS from "../node_modules/exceljs";
 import Chart from 'chart.js/auto';
 
+let zoom = 100;
 
 export function excel() {
     let list = [];
@@ -288,6 +289,22 @@ export function excel() {
                             });
 
                             itemsArr.push({ type: 'line' });
+
+                            itemsArr.push({
+                                title: 'Zoom mas',
+                                onclick: function() {
+                                    if (zoom < 90) zoom += 10;
+                                    o.table.style.zoom = zoom + "%";
+                                }
+                            });
+
+                            itemsArr.push({
+                                title: 'Zoom menos',
+                                onclick: function() {
+                                    if (zoom > 10) zoom -= 10;
+                                    o.table.style.zoom = zoom + "%";
+                                }
+                            });
                         }
 
                         let list = [];
@@ -817,6 +834,20 @@ function getContextMenu(o, x, y, e, items, section) {
         });
 
         itemsArr.push({ type: 'line' });
+
+        itemsArr.push({
+            title: 'Zoom mas',
+            onclick: function() {
+                addChartBubble(e.target, data);
+            }
+        });
+
+        itemsArr.push({
+            title: 'Zoom menos',
+            onclick: function() {
+                addChartBubble(e.target, data);
+            }
+        });
     }
 
     /*
