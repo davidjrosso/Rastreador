@@ -156,6 +156,9 @@ export function excel() {
                 allowDeleteWorksheet: true,
                 allowRenameWorksheet: true,
                 allowMoveWorksheet: true,
+                ondblclick: function (instance, cell, col, row, value, event) {
+
+                },
                 onbeforecreateworksheet: function(config, index) {
                     return {
                         minDimensions: [5, 5],
@@ -186,13 +189,11 @@ export function excel() {
                             itemsArr.push({
                                 title: 'Agregar Excel',
                                 onclick: function() {
-                                    let name = prompt("Ingrese el nombre del excel");
                                     let options = {
                                         minDimensions: [14, 14],
                                         filters: true,
                                         allowComments:true,
                                         search: true,
-                                        worksheetName: name,
                                         allowDeleteWorksheet: true,
                                         allowRenameWorksheet: true,
                                         allowMoveWorksheet: true
@@ -203,9 +204,8 @@ export function excel() {
 
                             itemsArr.push({
                                 title: 'Renombrar Excel',
-                                onclick: function() {
-                                    let name = prompt("Ingrese el nombre del excel");
-                                    if (name) e.target.innerText = name;
+                                onclick: function(event) {
+                                    insertInputTab(e.target);
                                 }
                             });
 
@@ -290,34 +290,19 @@ export function excel() {
                             itemsArr.push({ type: 'line' });
                         }
 
-                        /*
-                        itemsArr.push({
-                            title: 'Save as',
-                            shortcut: 'Ctrl + S',
-                            icon: 'save',
-                            onclick: function () {
-                                o.download();
-                            }
-                        });
-                        */
-                        /*
-                        // About
-                        itemsArr.push({
-                            title: 'About',
-                            onclick: function() {
-                                alert('https://jspreadsheet.com');
-                            }
-                        });
-                        */
                         let list = [];
                         list = itemsArr.concat(items.slice(0, -2));
                         return list;
             },
             columnDrag: true
         });
-        let text2 = "FX <input type='text' style='width: 90%; border-color: rgb(197 197 197); border-style: solid; border-width: 1.8px;' id='bar-element'>";
+        let text2 = "FX <input type='text' style='width: 90%; border-color: rgb(197 197 197); border-style: solid; border-width: 1.8px;' data-x='1' data-y='2' id='bar-element'>";
         //$(".jss_filter label").append(text);
         $(".jss_filter").prepend("<div style='flex-grow: 1; flex-basis: 60%;'> <label style='width: 100%; margin-bottom: 0rem;'>" + text2 + "</label> </div>");
+        $("#bar-element").on("click", setFocusActive.bind(this, spreadsheet));
+        $("#bar-element").on("blur", setFocus.bind(this, spreadsheet));
+        $("#bar-element").on("keydown", setFocus.bind(this, spreadsheet));
+        $("#bar-element").on("input", selectionChange.bind(this, spreadsheet));
     }
 }
 
@@ -626,7 +611,78 @@ export function addChartIntervalo(object, data) {
 function selectionActive(instance, x1, y1, x2, y2, origin) {
     if ($("#bar-element").length && instance.getSelected()[0].element.childNodes.length) {
         $("#bar-element").val(instance.getSelected()[0].element.childNodes[0].nodeValue);
+        $("#bar-element").prop("data-x", x1);
+        $("#bar-element").prop("data-y", y1);
     }
+}
+
+function selectionChange(spreadsheet, e) {
+    let x = $("#bar-element").prop("data-x");
+    let y = $("#bar-element").prop("data-y");
+    let element = null;
+    if ((x || x == 0)  && (y || y == 0)) {
+        element = $("#bar-element").prop("value");
+        spreadsheet[0].setValueFromCoords(x, y, element);
+    }
+}
+
+function setFocusActive(spreadsheet) {
+    let x = $("#bar-element").prop("data-x");
+    let y = $("#bar-element").prop("data-y");
+    let element = null;
+    if ((x || x == 0)  && (y || y == 0)) {
+        //spreadsheet[0].updateSelectionFromCoords(x, y, x, y);
+        element = spreadsheet[0].getCellFromCoords(x, y);
+        element.blur();
+        element.classList.add("highlight-selected");
+        element.classList.add("highlight");
+        element.classList.add("highlight-top");
+        element.classList.add("highlight-bottom");
+        element.classList.add("highlight-left");
+        element.classList.add("highlight-right");
+    }
+}
+
+function setFocus(spreadsheet, e) {
+    let x = $("#bar-element").prop("data-x");
+    let y = $("#bar-element").prop("data-y");
+    let element = null;
+    if ((x || x == 0)  && (y || y == 0) 
+        && (e.key === "Enter" || e.type === "blur")) {
+        //spreadsheet[0].updateSelectionFromCoords(x, y, x, y);
+        element = spreadsheet[0].getCellFromCoords(x, y);
+        element.classList.remove("highlight-selected");
+        element.classList.remove("highlight");
+        element.classList.remove("highlight-top");
+        element.classList.remove("highlight-bottom");
+        element.classList.remove("highlight-left");
+        element.classList.remove("highlight-right");
+    }
+}
+
+function setValActive(spreadsheet) {
+    let x = $("#bar-element").prop("data-x");
+    let y = $("#bar-element").prop("data-y");
+    if ((x || x == 0)  && (y || y == 0)) {
+        spreadsheet[0].setValueFromCoords(x, y, $("#bar-element").val());
+    }
+}
+
+function insertInputTab(tab) {
+    let excel = tab.innerText;
+    let text = "<input type='text' style='width: 100%; border-color: rgb(197 197 197); border-style: solid; border-width: 1.8px;' value='" + excel + "' data-prev='" + excel + "' id='tab-element'>";
+    tab.innerHTML = text;
+    tab.childNodes[0].focus();
+    $("#tab-element").on("blur", function (e) {
+        let val = $("#tab-element").val();
+        if (val) tab.innerHTML = val;
+    });
+    $("#tab-element").on("keydown", function (e) {
+        let val = $("#tab-element").val();
+        let prev = $("#tab-element").prop("data-prev");
+        if (!val) val = prev;
+        if (e.key === "Enter") tab.innerHTML = val;
+    });
 }
 
 function getContextMenu(o, x, y, e, items, section) {
