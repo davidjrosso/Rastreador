@@ -157,7 +157,7 @@ export function excel() {
                 allowRenameWorksheet: true,
                 allowMoveWorksheet: true,
                 ondblclick: function (instance, cell, col, row, value, event) {
-
+                    console.log("por aca");
                 },
                 onbeforecreateworksheet: function(config, index) {
                     return {
@@ -372,40 +372,26 @@ export function addChartLine(object, data) {
 }
 
 export function addChartRadar(object, data) {
+    let list = [];
     object.innerHTML = "<canvas></canvas>";
+    data.forEach(function (val, ind, map) {
+        list.push({
+            label: 'Dataset ' + ind,
+            data: val,
+            fill: true,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgb(255, 99, 132)',
+            pointBackgroundColor: 'rgb(255, 99, 132)',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: 'rgb(255, 99, 132)'
+        });
+    });
     const chart = new Chart(object.firstChild, {
         type: 'radar',
         data: {
-                labels: [
-                    'Eating',
-                    'Drinking',
-                    'Sleeping',
-                    'Designing',
-                    'Coding',
-                    'Cycling',
-                    'Running'
-                ],
-                datasets: [{
-                    label: 'My First Dataset',
-                    data: [65, 59, 90, 81, 56, 55, 40],
-                    fill: true,
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderColor: 'rgb(255, 99, 132)',
-                    pointBackgroundColor: 'rgb(255, 99, 132)',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: 'rgb(255, 99, 132)'
-                }, {
-                    label: 'My Second Dataset',
-                    data: [28, 48, 40, 19, 96, 27, 100],
-                    fill: true,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgb(54, 162, 235)',
-                    pointBackgroundColor: 'rgb(54, 162, 235)',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: 'rgb(54, 162, 235)'
-                }]
+            labels: list[0].data,
+            datasets: list.slice(1)
         },
         options: {
             onClick: (e) => {
@@ -419,28 +405,28 @@ export function addChartRadar(object, data) {
 }
 
 export function addChartP(object, data) {
+    let list = [];
     object.innerHTML = "<canvas></canvas>";
+    data.forEach(function (val, ind, map) {
+        list.push({
+            label: 'Dataset ' + ind,
+            data: val,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+            ]
+        });
+    });
     const chart = new Chart(object.firstChild, {
         type: 'polarArea',
         data: {
-                labels: [
-                    'Red',
-                    'Green',
-                    'Yellow',
-                    'Grey',
-                    'Blue'
-                ],
-                datasets: [{
-                    label: 'My First Dataset',
-                    data: [11, 16, 7, 3, 14],
-                    backgroundColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(75, 192, 192)',
-                    'rgb(255, 205, 86)',
-                    'rgb(201, 203, 207)',
-                    'rgb(54, 162, 235)'
-                    ]
-                }]
+            labels: list[0].data,
+            datasets: list.slice(1)
         },
         options: {
             onClick: (e) => {
@@ -488,25 +474,38 @@ export function addChartC(object, data) {
 }
 
 export function addChartTorta(object, data) {
+    let list = [];
     object.innerHTML = "<canvas></canvas>";
+    data.forEach(function (val, ind, map) {
+        list.push({
+            label: 'Dataset ' + ind,
+            data: val,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+            ],
+            borderColor: [
+                'rgb(255, 99, 132)',
+                'rgb(255, 159, 64)',
+                'rgb(255, 205, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(54, 162, 235)',
+                'rgb(153, 102, 255)',
+                'rgb(201, 203, 207)'
+            ],
+            hoverOffset: 4
+        });
+    });
     const chart = new Chart(object.firstChild, {
         type: 'pie',
         data: {
-            labels: [
-                    'Red',
-                    'Blue',
-                    'Yellow'
-            ],
-            datasets: [{
-                label: 'My First Dataset',
-                data: [300, 50, 100],
-                backgroundColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(54, 162, 235)',
-                    'rgb(255, 205, 86)'
-                ],
-                hoverOffset: 4
-            }]
+            labels: list[0].data,
+            datasets: list.slice(1)
         },
         options: {
             onClick: (e) => {
@@ -520,25 +519,38 @@ export function addChartTorta(object, data) {
 }
 
 export function addChartDona(object, data) {
+    let list = [];
     object.innerHTML = "<canvas></canvas>";
+    data.forEach(function (val, ind, map) {
+        list.push({
+            label: 'Dataset ' + ind,
+            data: val,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+            ],
+            borderColor: [
+                'rgb(255, 99, 132)',
+                'rgb(255, 159, 64)',
+                'rgb(255, 205, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(54, 162, 235)',
+                'rgb(153, 102, 255)',
+                'rgb(201, 203, 207)'
+            ],
+            borderWidth: 1
+        });
+    });
     const chart = new Chart(object.firstChild, {
         type: 'doughnut',
         data: {
-            labels: [
-                'Red',
-                'Blue',
-                'Yellow'
-            ],
-            datasets: [{
-                label: 'My First Dataset',
-                data: [300, 50, 100],
-                backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)',
-                'rgb(255, 205, 86)'
-                ],
-                hoverOffset: 4
-            }]
+            labels: list[0].data,
+            datasets: list.slice(1)
         },
         options: {
             onClick: (e) => {
@@ -575,34 +587,38 @@ export function addChartBubble(object, data) {
 }
 
 export function addChartIntervalo(object, data) {
+    let list = [];
     object.innerHTML = "<canvas></canvas>";
+    data.forEach(function (val, ind, map) {
+        list.push({
+            label: 'Dataset ' + ind,
+            data: val,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+            ],
+            borderColor: [
+                'rgb(255, 99, 132)',
+                'rgb(255, 159, 64)',
+                'rgb(255, 205, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(54, 162, 235)',
+                'rgb(153, 102, 255)',
+                'rgb(201, 203, 207)'
+            ],
+            borderWidth: 1
+        });
+    });
     const chart = new Chart(object.firstChild, {
         type: 'bar',
         data: {
-            labels: Utils.months({count: 7}),
-            datasets: [{
-                label: 'My First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                    'rgba(255, 205, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(201, 203, 207, 0.2)'
-                ],
-                borderColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(255, 159, 64)',
-                    'rgb(255, 205, 86)',
-                    'rgb(75, 192, 192)',
-                    'rgb(54, 162, 235)',
-                    'rgb(153, 102, 255)',
-                    'rgb(201, 203, 207)'
-                    ],
-                    borderWidth: 1
-                }]
+            labels: list[0].data,
+            datasets: list.slice(1)
             },
         options: {}
     });
