@@ -73,6 +73,7 @@ $ID_Config = $_REQUEST["ID_Config"];
       let filtroSeleccionados = null;
       let listaOrden = new Map();
       let fullscreen = false;
+      let excel = null;
 
       $(document).ready(function(){
               var date_input=$('input[name="date"]');
@@ -92,7 +93,7 @@ $ID_Config = $_REQUEST["ID_Config"];
               thTable = $("thead > tr > th");
 
               $("#excel").on("click", function (e) {
-                excel();
+                excel.init();
               });
 
               $("#excel_descarga").on("click", function (e) {
@@ -126,6 +127,7 @@ $ID_Config = $_REQUEST["ID_Config"];
               });
 
               configResultados();
+              excel = new Excel();
       });
 
       function CalcularPrecio(){
@@ -2529,7 +2531,7 @@ $ID_Config = $_REQUEST["ID_Config"];
 
 <div class="modal fade" id="excel-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="class_modal-dialog modal-dialog" role="document"  id="id_modal-dialog">
-    <div class="modal-content" style="height: 600px; width: 800px;">
+    <div class="modal-content" style="height: 600px; width: 953px;">
       <div class="modal-header" style="padding: 0rem;">
           <button type="button" id="boton-fullscreen" class="button-fullscreen" aria-label="fullscreen">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
