@@ -28,24 +28,24 @@ if (isset($consultaBusqueda)) {
 		if(strlen((string)$consultaBusqueda) >= 8){
 			$consulta = mysqli_query(
 							  $Con->Conexion, 
-							  "SELECT id_persona, UPPER(apellido) AS apellido, 
-							  				 CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
-							  				 documento, nro_carpeta, domicilio
-							  		  FROM persona 
-									  WHERE documento LIKE '%$consultaBusqueda%' 
+							  "SELECT p.id_persona, UPPER(p.apellido) AS apellido, 
+						  				 CONCAT(UPPER(SUBSTRING(p.nombre,1,1)),LOWER(SUBSTRING(p.nombre,2))) as nombre,
+							  			 p.documento, p.nro_carpeta, CONCAT(c.calle_nombre, ' ', p.nro) as domicilio 
+								  	  FROM persona p INNER JOIN calle c ON (p.calle = c.id_calle) 
+									  WHERE p.documento LIKE '%$consultaBusqueda%' 
 									  	and estado = 1 
-									  order by upper(apellido) ASC, upper(nombre) ASC, upper(documento) ASC"
+									  order by upper(p.apellido) ASC, upper(p.nombre) ASC, upper(p.documento) ASC"
 									);
 	    } else {
 			$consulta = mysqli_query(
 							  $Con->Conexion, 
-							  "SELECT id_persona, UPPER(apellido) AS apellido, 
-							  				 CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
-							  				 documento, nro_carpeta, domicilio
-									  FROM persona 
-									  WHERE nro_legajo LIKE '%$consultaBusqueda%' 
-										AND estado = 1 
-									  ORDER BY upper(apellido) ASC, upper(nombre) ASC, upper(documento) ASC"
+							  "SELECT p.id_persona, UPPER(p.apellido) AS apellido, 
+						  				 CONCAT(UPPER(SUBSTRING(p.nombre,1,1)),LOWER(SUBSTRING(p.nombre,2))) as nombre,
+							  			 p.documento, p.nro_carpeta, CONCAT(c.calle_nombre, ' ', p.nro) as domicilio 
+								  	  FROM persona p INNER JOIN calle c ON (p.calle = c.id_calle)
+									  WHERE p.nro_legajo LIKE '%$consultaBusqueda%' 
+										AND p.estado = 1 
+									  ORDER BY upper(p.apellido) ASC, upper(p.nombre) ASC, upper(p.documento) ASC"
 									);
 		}
 	} else {
@@ -103,13 +103,13 @@ if (isset($consultaBusqueda)) {
 
 		$consulta = mysqli_query(
 						  $Con->Conexion, 
-						  "SELECT id_persona, UPPER(apellido) AS apellido, 
-						  				 CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
-							  			 documento, nro_carpeta, domicilio 
-								  FROM persona 
-								  WHERE  estado = 1
+						  "SELECT p.id_persona, UPPER(p.apellido) AS apellido, 
+						  				 CONCAT(UPPER(SUBSTRING(p.nombre,1,1)),LOWER(SUBSTRING(p.nombre,2))) as nombre,
+							  			 p.documento, p.nro_carpeta, CONCAT(c.calle_nombre, ' ', p.nro) as domicilio 
+								  FROM persona p INNER JOIN calle c ON (p.calle = c.id_calle)
+								  WHERE  p.estado = 1
 								  		 $query_filter
-								  ORDER BY upper(apellido) ASC, upper(nombre) ASC, upper(documento) ASC"
+								  ORDER BY upper(p.apellido) ASC, upper(p.nombre) ASC, upper(p.documento) ASC"
 								);
 	}
 
