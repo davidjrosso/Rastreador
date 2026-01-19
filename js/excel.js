@@ -1,12 +1,12 @@
 import jspreadsheet from "../node_modules/jspreadsheet-ce";
 import ExcelJS from "../node_modules/exceljs";
 import Chart from 'chart.js/auto';
-
+import Jsuit from 'jsuites';
 export class Excel {
     #zoom = null;
     #charts = new Map();
     #spreadsheet = null;
-
+    #chart = null;
     constructor() {
         this.#zoom = 100;
     }
@@ -157,7 +157,7 @@ export class Excel {
                         allowMoveWorksheet: true,
                         columnDrag: true
                     }],
-                    onselection: this.selectionActive,
+                    onselection: this.selectionActive.bind(this),
                     search: true,
                     toolbar:true,
                     tabs: true,
@@ -430,6 +430,34 @@ export class Excel {
                                     }.bind(this)
                                 });
 
+                                if (this.existChart(x, y)) {
+                                    itemsArr.push({
+                                        title: 'Editar',
+                                        onclick: function() {
+                                            let chart = this.#charts.get(x + "-" + y);
+                                            if (this.#chart) this.#chart.destroy();
+                                            $("#modal-crs")[0].modal.open();
+                                            this.#chart = new Chart(document.getElementById('charts'), {
+                                                    type: chart.config._config.type,
+                                                    data: chart.config._config.data,
+                                                    options: chart.config._config.options,
+                                                    plugins: chart.config._config.plugins
+                                                });
+                                            this.#chart.resize(300, 300);
+                                            this.#spreadsheet[0].resetSelection(true)
+                                        }.bind(this)
+                                    });
+
+                                    itemsArr.push({
+                                        title: 'Eliminar Grafico',
+                                        onclick: function() {
+                                            let chart = this.#charts.get(x + "-" + y);
+                                            let cell = this.#spreadsheet[0].getCellFromCoords(x, y);
+                                            cell.removeChild(cell.firstChild);
+                                            chart.destroy()
+                                        }.bind(this)
+                                    })
+                                }
                                 itemsArr.push({ type: 'line' });
 
                                 itemsArr.push({
@@ -464,6 +492,157 @@ export class Excel {
             $("#bar-element").on("blur", this.setFocus.bind(this, this.#spreadsheet));
             $("#bar-element").on("keydown", this.setFocus.bind(this, this.#spreadsheet));
             $("#bar-element").on("input", this.selectionChange.bind(this, this.#spreadsheet));
+            $(".jss_container").append($(`<div id='modal-crs' title='Editor de Grafico'>
+                                                <div style='display:flex'>
+                                                <div id='chart'>
+                                                    <canvas id='charts'>
+                                                    </canvas>
+                                                </div>
+                                                <div id='form'>
+                                                    <form id='root'>
+                                                        <div class='row'>
+                                                            <div class='column'>
+                                                                <div class='form-group'>
+                                                                    <label>Titulo</label>
+                                                                    <input type='text' id='titulo' name='titulo' value='grafico' data-validation='titulo'>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class='row'>
+                                                            <div class='column'>
+                                                                <div class='form-group'>
+                                                                    <label>Subtitulo</label>
+                                                                    <input type='text' id='subtitulo' name='subtitulo' value='grafico' data-validation='subtitulo'>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class='row'>
+                                                            <div class='column'>
+                                                                <div class='form-group'>
+                                                                    <label>Etiqueta de Eje</label>
+                                                                    <input id='etiqueta' type='text' name='etiqueta' value='Etiqueta'>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class='row'>
+                                                            <div class='column'>
+                                                                <div class='form-group'>
+                                                                    <label>Eje</label>
+                                                                    <select id='eje' name='eje'>
+                                                                    <option value="0">X</option>
+                                                                    <option value="1">Y</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class='row'>
+                                                            <div class='column'>
+                                                                <div class='form-group'>
+                                                                    <label>Ancho de imagen</label>
+                                                                    <input type='number' id='width' value='200' name='width' data-validation='width'>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class='row'>
+                                                            <div class='column'>
+                                                                <div class='form-group'>
+                                                                    <label>Alto de imagen</label>
+                                                                    <input type='number' id='height' value='200' name='height' data-validation='height'>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class='row'>
+                                                            <div class='column'>
+                                                                <div class='form-group'>
+                                                                    <label>Color</label>
+                                                                    <input id='color' value="#009688" data-validation='color'/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class='row'>
+                                                            <div class='column'>
+                                                                <div class='form-group'>
+                                                                    <label>Datos</label>
+                                                                    <select id='datos' name='datos'>
+                                                                    <option value="-1">Seleccionar Dato</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class='row'>
+                                                            <div class='column'>
+                                                                <div class='form-group'>
+                                                                    <label>Color Dato</label>
+                                                                    <input id='color-datos' value="#009688" data-validation='color-datos'/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        </form>
+                                                </div>
+                                            </div>
+                                        </div>`)
+                                        );
+
+            let modal = jSuites.modal(document.getElementById('modal-crs'), {
+                closed: true,
+                width: 500,
+                validations: {
+                    color: function(value) {
+                        console.log("");
+                    }.bind(this),
+                    titulo: function(value) {
+                        this.#chart.options.plugins.title.text = value;
+                        this.#chart.update()
+                    }.bind(this)
+                },
+                height: 300
+            });
+            jSuites.color(document.getElementById('color'), {
+                onchange: function(e, color) {
+                            this.#chart.config._config.options.plugins.customCanvasBackgroundColor.color = color;
+                            this.#chart.update()
+                          }.bind(this),
+                palette: [
+                    ['#001969', '#233178', '#394a87', '#4d6396', '#607ea4', '#7599b3' ],
+                    ['#00429d', '#2b57a7', '#426cb0', '#5681b9', '#6997c2', '#7daeca' ],
+                    ['#3659b8', '#486cbf', '#597fc5', '#6893cb', '#78a6d1', '#89bad6' ],
+                    ['#003790', '#315278', '#48687a', '#5e7d81', '#76938c', '#8fa89a' ],
+                ]
+            });
+            $("#titulo").on("input", function(e) {
+                            this.#chart.config._config.options.plugins.title.text = $("#titulo").prop("value");
+                            this.#chart.update()
+                        }.bind(this));
+            $("#subtitulo").on("input", function(e) {
+                            this.#chart.config._config.options.plugins.subtitle.text = $("#subtitulo").prop("value");
+                            this.#chart.update()
+            }.bind(this));
+            $("#etiqueta").on("input", function(e) {
+                            let option = $("#eje")[0].children[$("#eje").prop("value")].firstChild.nodeValue.toLowerCase();
+                            this.#chart.config._config.options.plugins.scales[option].title = $("#etiqueta").prop("value");
+                            this.#chart.update()
+            }.bind(this));
+            $("#color").on("input", function(e) {
+                            this.#chart.config._config.options.plugins.customCanvasBackgroundColor.color = $("#color").prop("value");
+                            this.#chart.render()
+            }.bind(this));
+            $("#width").on("input", function(e) {
+                            this.#chart.resize($("#width").prop("value"), this.#chart.height);
+                            this.#chart.width = $("#width").prop("value");
+                            this.#chart.render()
+                        }.bind(this));
+            $("#height").on("input", function(e) {
+                            this.#chart.resize(this.#chart.width, $("#height").prop("value"));
+                            this.#chart.height = $("#height").prop("value");
+                            this.#chart.render()
+                        }.bind(this));
         }
     }
 
@@ -513,6 +692,17 @@ export class Excel {
 
     addChartLine(object, data) {
         let list = [];
+        const plugin = {
+            id: 'customCanvasBackgroundColor',
+            beforeDraw: (chart, args, options) => {
+                const {ctx} = chart;
+                ctx.save();
+                ctx.globalCompositeOperation = 'destination-over';
+                ctx.fillStyle = options.color || '#99ffff';
+                ctx.fillRect(0, 0, chart.width, chart.height);
+                ctx.restore();
+            }
+        };
         object.innerHTML = "<canvas></canvas>";
         data.forEach(function (val, ind, map) {
             list.push({
@@ -528,13 +718,52 @@ export class Excel {
                     labels: list[0].data,
                     datasets: list.slice(1)
             },
-            options: {}
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: "",
+                    },
+                    subtitle: {
+                        display: true,
+                        text: ''
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            title: "Rosario",
+                            color: "black"
+                        },
+                        y: {
+                            display: true,
+                            title: "Gigena",
+                            color: "black"
+                        }
+                    },
+                    customCanvasBackgroundColor: {
+                            color: 'white',
+                    }
+                },
+                devicePixelRatio: 3
+            },
+            plugins: [plugin]
         });
         return chart;
     }
 
     addChartRadar(object, data) {
         let list = [];
+        const plugin = {
+            id: 'customCanvasBackgroundColor',
+            beforeDraw: (chart, args, options) => {
+                const {ctx} = chart;
+                ctx.save();
+                ctx.globalCompositeOperation = 'destination-over';
+                ctx.fillStyle = options.color || '#99ffff';
+                ctx.fillRect(0, 0, chart.width, chart.height);
+                ctx.restore();
+            }
+        };
         object.innerHTML = "<canvas></canvas>";
         data.forEach(function (val, ind, map) {
             list.push({
@@ -556,18 +785,51 @@ export class Excel {
                 datasets: list.slice(1)
             },
             options: {
-                onClick: (e) => {
-                const canvasPosition = getRelativePosition(e, chart);
-
-                const dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
-                const dataY = chart.scales.y.getValueForPixel(canvasPosition.y);
-                }
-            }
+                plugins: {
+                    title: {
+                        display: true,
+                        text: "",
+                    },
+                    customCanvasBackgroundColor: {
+                            color: 'white',
+                    },
+                    subtitle: {
+                        display: true,
+                        text: ''
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            title: "",
+                            color: "#0000"
+                        },
+                        y: {
+                            display: true,
+                            title: "",
+                            color: "#0000"
+                        }
+                    }
+                },
+                devicePixelRatio: 3
+            },
+            plugins: [plugin]
         });
+        return chart;
     }
 
     addChartP(object, data) {
         let list = [];
+        const plugin = {
+            id: 'customCanvasBackgroundColor',
+            beforeDraw: (chart, args, options) => {
+                const {ctx} = chart;
+                ctx.save();
+                ctx.globalCompositeOperation = 'destination-over';
+                ctx.fillStyle = options.color || '#99ffff';
+                ctx.fillRect(0, 0, chart.width, chart.height);
+                ctx.restore();
+            }
+        };
         object.innerHTML = "<canvas></canvas>";
         data.forEach(function (val, ind, map) {
             list.push({
@@ -581,8 +843,25 @@ export class Excel {
                     'rgba(54, 162, 235, 0.2)',
                     'rgba(153, 102, 255, 0.2)',
                     'rgba(201, 203, 207, 0.2)'
-                ]
-            });
+                ],
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: "",
+                        },
+                        customCanvasBackgroundColor: {
+                                color: 'white',
+                        },
+                        subtitle: {
+                            display: true,
+                            text: ''
+                        }
+                    },
+                devicePixelRatio: 3
+            },
+            plugins: [plugin]
+        });
         });
         const chart = new Chart(object.firstChild, {
             type: 'polarArea',
@@ -596,12 +875,51 @@ export class Excel {
 
                 const dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
                 const dataY = chart.scales.y.getValueForPixel(canvasPosition.y);
-                }
-            }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: "",
+                    },
+                    customCanvasBackgroundColor: {
+                            color: 'white',
+                    },
+                    subtitle: {
+                        display: true,
+                        text: ''
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            title: "",
+                            color: "#0000"
+                        },
+                        y: {
+                            display: true,
+                            title: "",
+                            color: "#0000"
+                        }
+                    }
+                },
+                devicePixelRatio: 3
+            },
+            plugins: [plugin]
         });
+        return chart;
     }
 
     addChartC(object, data) {
+        const plugin = {
+            id: 'customCanvasBackgroundColor',
+            beforeDraw: (chart, args, options) => {
+                const {ctx} = chart;
+                ctx.save();
+                ctx.globalCompositeOperation = 'destination-over';
+                ctx.fillStyle = options.color || '#99ffff';
+                ctx.fillRect(0, 0, chart.width, chart.height);
+                ctx.restore();
+            }
+        };
         object.innerHTML = "<canvas></canvas>";
         const chart = new Chart(object.firstChild, {
             type: 'scatter',
@@ -630,13 +948,52 @@ export class Excel {
 
                 const dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
                 const dataY = chart.scales.y.getValueForPixel(canvasPosition.y);
-                }
-            }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: "",
+                    },
+                    customCanvasBackgroundColor: {
+                            color: 'white',
+                    },
+                    subtitle: {
+                        display: true,
+                        text: ''
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            title: "",
+                            color: "#0000"
+                        },
+                        y: {
+                            display: true,
+                            title: "",
+                            color: "#0000"
+                        }
+                    }
+                },
+                devicePixelRatio: 3
+            },
+            plugins: [plugin]
         });
+        return chart;
     }
 
     addChartTorta(object, data) {
         let list = [];
+        const plugin = {
+            id: 'customCanvasBackgroundColor',
+            beforeDraw: (chart, args, options) => {
+                const {ctx} = chart;
+                ctx.save();
+                ctx.globalCompositeOperation = 'destination-over';
+                ctx.fillStyle = options.color || '#99ffff';
+                ctx.fillRect(0, 0, chart.width, chart.height);
+                ctx.restore();
+            }
+        };
         object.innerHTML = "<canvas></canvas>";
         data.forEach(function (val, ind, map) {
             list.push({
@@ -675,13 +1032,52 @@ export class Excel {
 
                 const dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
                 const dataY = chart.scales.y.getValueForPixel(canvasPosition.y);
-                }
-            }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: "",
+                    },
+                    customCanvasBackgroundColor: {
+                            color: 'white',
+                    },
+                    subtitle: {
+                        display: true,
+                        text: ''
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            title: "",
+                            color: "#0000"
+                        },
+                        y: {
+                            display: true,
+                            title: "",
+                            color: "#0000"
+                        }
+                    }
+                },
+                devicePixelRatio: 3
+            },
+            plugins: [plugin]
         });
+        return chart;
     }
 
     addChartDona(object, data) {
         let list = [];
+        const plugin = {
+            id: 'customCanvasBackgroundColor',
+            beforeDraw: (chart, args, options) => {
+                const {ctx} = chart;
+                ctx.save();
+                ctx.globalCompositeOperation = 'destination-over';
+                ctx.fillStyle = options.color || '#99ffff';
+                ctx.fillRect(0, 0, chart.width, chart.height);
+                ctx.restore();
+            }
+        };
         object.innerHTML = "<canvas></canvas>";
         data.forEach(function (val, ind, map) {
             list.push({
@@ -720,12 +1116,51 @@ export class Excel {
 
                 const dataX = chart.scales.x.getValueForPixel(canvasPosition.x);
                 const dataY = chart.scales.y.getValueForPixel(canvasPosition.y);
-                }
-            }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: "",
+                    },
+                    customCanvasBackgroundColor: {
+                            color: 'white',
+                    },
+                    subtitle: {
+                        display: true,
+                        text: ''
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            title: "",
+                            color: "#0000"
+                        },
+                        y: {
+                            display: true,
+                            title: "",
+                            color: "#0000"
+                        }
+                    }
+                },
+                devicePixelRatio: 3
+            },
+            plugins: [plugin]
         });
+        return chart;
     }
 
     addChartBubble(object, data) {
+        const plugin = {
+            id: 'customCanvasBackgroundColor',
+            beforeDraw: (chart, args, options) => {
+                const {ctx} = chart;
+                ctx.save();
+                ctx.globalCompositeOperation = 'destination-over';
+                ctx.fillStyle = options.color || '#99ffff';
+                ctx.fillRect(0, 0, chart.width, chart.height);
+                ctx.restore();
+            }
+        };
         object.innerHTML = "<canvas></canvas>";
         const chart = new Chart(object.firstChild, {
             type: 'bubble',
@@ -744,12 +1179,52 @@ export class Excel {
                         backgroundColor: 'rgb(255, 99, 132)'
                     }]
                 },
-            options: {}
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: "",
+                    },
+                    customCanvasBackgroundColor: {
+                            color: 'white',
+                    },
+                    subtitle: {
+                        display: true,
+                        text: ''
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            title: "",
+                            color: "#0000"
+                        },
+                        y: {
+                            display: true,
+                            title: "",
+                            color: "#0000"
+                        }
+                    }
+                },
+                devicePixelRatio: 3
+            },
+            plugins: [plugin]
         });
+        return chart;
     }
 
     addChartIntervalo(object, data) {
         let list = [];
+        const plugin = {
+            id: 'customCanvasBackgroundColor',
+            beforeDraw: (chart, args, options) => {
+                const {ctx} = chart;
+                ctx.save();
+                ctx.globalCompositeOperation = 'destination-over';
+                ctx.fillStyle = options.color || '#99ffff';
+                ctx.fillRect(0, 0, chart.width, chart.height);
+                ctx.restore();
+            }
+        };
         object.innerHTML = "<canvas></canvas>";
         data.forEach(function (val, ind, map) {
             list.push({
@@ -782,8 +1257,38 @@ export class Excel {
                 labels: list[0].data,
                 datasets: list.slice(1)
                 },
-            options: {}
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: "",
+                    },
+                    customCanvasBackgroundColor: {
+                            color: 'white',
+                    },
+                    subtitle: {
+                        display: true,
+                        text: ''
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            title: "",
+                            color: "#0000"
+
+                        },
+                        y: {
+                            display: true,
+                            title: "",
+                            color: "#0000"
+                        }
+                    }
+                },
+                devicePixelRatio: 3
+            },
+            plugins: [plugin]
         });
+        return chart;
     }
 
     selectionActive(instance, x1, y1, x2, y2, origin) {
@@ -801,6 +1306,7 @@ export class Excel {
         if ((x || x == 0)  && (y || y == 0)) {
             element = $("#bar-element").prop("value");
             this.#spreadsheet[0].setValueFromCoords(x, y, element);
+            this.#spreadsheet[0].resetSelection(true)
         }
     }
 
@@ -812,6 +1318,7 @@ export class Excel {
             //spreadsheet[0].updateSelectionFromCoords(x, y, x, y);
             element = this.#spreadsheet[0].getCellFromCoords(x, y);
             element.blur();
+            this.#spreadsheet[0].resetSelection(true)
             element.classList.add("highlight-selected");
             element.classList.add("highlight");
             element.classList.add("highlight-top");
@@ -843,6 +1350,7 @@ export class Excel {
         let y = $("#bar-element").prop("data-y");
         if ((x || x == 0)  && (y || y == 0)) {
             this.#spreadsheet[0].setValueFromCoords(x, y, $("#bar-element").val());
+            this.#spreadsheet[0].resetSelection(true)
         }
     }
 

@@ -636,7 +636,8 @@ class CtrGeneral{
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
-					   and CS.estado = 1  
+					   and CS.estado = 1
+					 group by M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable
 					 order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";

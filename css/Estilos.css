@@ -1077,3 +1077,7 @@ input::-webkit-inner-spin-button {
 .jss_filter > div > label {
   margin-bottom: 0.4rem !important;
 }
+
+.jmodal_backdrop {
+  background-color: rgba(0, 0, 0, 0) !important;
+}
