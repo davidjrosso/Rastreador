@@ -141,6 +141,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                            onclick="validarNombreArchivo()" >
                   </div>
                 </div>
+                <!-- 
                 <?php 
                   $max_count = mysqli_num_rows($result);
                   $count = 0;
@@ -190,7 +191,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                 }
                 ?>
                 <div id="contenedor-archivos">
-                </div>
+                </div> -->
                 <div class="form-group row">
                   <div class="offset-md-2 col-md-10">
                     <button type="submit" class="btn btn-outline-success">Guardar</button>
