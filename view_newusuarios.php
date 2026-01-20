@@ -151,6 +151,15 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row">
+              <label for="ID_Centro" class="col-md-2 col-form-label LblForm">Centro Salud: </label>
+              <div class="col-md-10">
+                <?php  
+                $Element = new Elements();
+                echo $Element->CBRepCentros();
+                ?>
+              </div>
+            </div>
+            <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Permiso: </label>
               <div class="col-md-10">
                 <?php $Element = new Elements();

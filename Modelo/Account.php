@@ -11,6 +11,7 @@ class Account implements JsonSerializable
 	private $expired_date;
 	private $first_name;
 	private $hint_answer;
+	private $centro_salud;
 	private $hint_question;
 	private $id_tipo_usuario;
 	private $initials;
@@ -30,6 +31,7 @@ class Account implements JsonSerializable
 		$expired_date = null,
 		$first_name = null,
 		$hint_answer = null,
+		$centro_salud = null,
 		$hint_question = null,
 		$id_tipo_usuario = null,
 		$initials = null,
@@ -48,6 +50,7 @@ class Account implements JsonSerializable
 			$this->expired_date = ($expired_date) ? $expired_date : $fecha_actual;
 			$this->first_name = $first_name;
 			$this->hint_answer = $hint_answer;
+			$this->centro_salud = $centro_salud;
 			$this->hint_question = $hint_question;
 			$this->id_tipo_usuario = $id_tipo_usuario;
 			$this->initials = $initials;
@@ -78,6 +81,7 @@ class Account implements JsonSerializable
 				$usr_initials = $ret["initials"];
 				$usr_user_name = $ret["username"];
 				$usr_password = $ret["password"];
+				$usr_id_centro = $ret["id_centro"];
 				$usr_iva = $ret["iva"];
 				$usr_matricula = $ret["matricula"];
 				$usr_estado = $ret["estado"];
@@ -90,13 +94,14 @@ class Account implements JsonSerializable
 				$usr_hint_answer = $ret["hintanswer"];
 				$usr_hint_question = $ret["hintquestion"];
 				$usr_estado = $ret["estado"];	
-	
+
 				$this->account_id = $usr_account_id;
 				$this->email = ($email) ? $email : $usr_email;
 				$this->expired = ($expired) ? $expired : $usr_expired;
 				$this->expired_date = ($usr_expired_date) ? $usr_expired_date : $fecha_actual;
 				$this->first_name = ($first_name) ? $first_name : $usr_first_name;
 				$this->hint_answer = ($hint_answer) ? $hint_answer : $usr_hint_answer;
+				$this->centro_salud = ($centro_salud) ? $centro_salud : $usr_id_centro;
 				$this->hint_question = ($hint_question) ? $hint_question : $usr_hint_question;
 				$this->id_tipo_usuario = ($id_tipo_usuario) ? $id_tipo_usuario : $usr_id_tipo_usuario;
 				$this->initials = ($initials) ? $initials : $usr_initials;
@@ -147,6 +152,11 @@ class Account implements JsonSerializable
 	public function set_hint_answer($hint_answer)
 	{
 		$this->hint_answer = $hint_answer;
+	}
+
+	public function set_centro_salud($centro_salud)
+	{
+		$this->centro_salud = $centro_salud;
 	}
 
 	public function set_hint_question($hint_question)
@@ -308,6 +318,12 @@ class Account implements JsonSerializable
 		return $this->hint_answer;
 	}
 
+	public function get_centro_salud()
+	{
+		return $this->centro_salud;
+	}
+
+
 	public function get_hint_question()
 	{
 		return $this->hint_question;
@@ -423,6 +439,7 @@ class Account implements JsonSerializable
 						password = " . ((!is_null($this->get_password())) ? "'" . $this->get_password() . "'" : "null") . ", 
 						email = " . ((!is_null($this->get_email())) ? "'" . $this->get_email() . "'" : "null") . ", 
 						hintquestion = " . ((!is_null($this->get_hint_question())) ? "'" . $this->get_hint_question() . "'" : "null") . ", 
+						id_centro = " . ((!is_null($this->get_centro_salud())) ? $this->get_centro_salud() : "null") . ",
 						hintanswer = " . ((!is_null($this->get_hint_answer())) ? "'" . $this->get_hint_answer() . "'" : "null") . ", 
 						expired = " . ((!is_null($this->get_expired())) ? "'" . $this->get_expired() . "'" : "null") . ", 
 						expireddate = " . ((!is_null($this->get_expired_date()->format('Y-m-d'))) ? "'" . $this->get_expired_date()->format('Y-m-d') . "'" : "null") . ", 
@@ -467,6 +484,7 @@ class Account implements JsonSerializable
 						username = " . ((!is_null($this->get_user_name())) ? "'" . $this->get_user_name() . "'" : "null") . ", 
 						email = " . ((!is_null($this->get_email())) ? "'" . $this->get_email() . "'" : "null") . ", 
 						hintquestion = " . ((!is_null($this->get_hint_question())) ? "'" . $this->get_hint_question() . "'" : "null") . ", 
+						id_centro = " . ((!is_null($this->get_centro_salud())) ? $this->get_centro_salud() : "null") . ",
 						hintanswer = " . ((!is_null($this->get_hint_answer())) ? "'" . $this->get_hint_answer() . "'" : "null") . ", 
 						expired = " . ((!is_null($this->get_expired())) ? "'" . $this->get_expired() . "'" : "null") . ", 
 						expireddate = " . ((!is_null($this->get_expired_date()->format('Y-m-d'))) ? "'" . $this->get_expired_date()->format('Y-m-d') . "'" : "null") . ", 
@@ -516,6 +534,7 @@ class Account implements JsonSerializable
 							" . ((!is_null($this->get_password())) ? "'" . $this->get_password() . "'" : "null") . ",
 							" . ((!is_null($this->get_email())) ? "'" . $this->get_email() . "'" : "null") . ", 
 							" . ((!is_null($this->get_hint_question())) ? "'" . $this->get_hint_question() . "'" : "null") . ", 
+                            " . ((!is_null($this->get_centro_salud())) ? $this->get_centro_salud() : "null") . ",
 							" . ((!is_null($this->get_hint_answer())) ? "'" . $this->get_hint_answer() . "'" : "null") . ", 
 							" . ((!is_null($this->get_expired())) ? "'" . $this->get_expired() . "'" : "null") . ", 
 							" . ((!is_null($this->get_expired_date()->format('Y/m/d'))) ? "'" . $this->get_expired_date()->format('Y/m/d') . "'" : "null") . ", 

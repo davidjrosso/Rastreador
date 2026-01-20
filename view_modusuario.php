@@ -28,6 +28,7 @@ $initials = strtoupper($Registros["initials"]);
 $username = $Registros["username"];
 $userpass = $Registros["password"];
 $email = $Registros["email"];
+$centro_salud = (isset($Registros["centro_salud"])) ? $Registros["centro_salud"] : null;
 $ID_Tipo = $Registros["ID_TipoUsuario"];
 
 
@@ -139,9 +140,21 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row">
+              <label for="ID_Centro" class="col-md-2 col-form-label LblForm">Centro Salud: </label>
+              <div class="col-md-10">
+                <?php  
+                if ($centro_salud) {
+                    echo $Element->CBRepModCentros($centro_salud);
+                } else {
+                    echo $Element->CBRepCentros();  
+                }
+                ?>
+              </div>
+            </div>
+            <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Permiso: </label>
               <div class="col-md-10">
-                <?php $Element = new Elements();
+                <?php
                 echo $Element->CBTipoUsuariosID($ID_Tipo);?>
               </div>
             </div>
