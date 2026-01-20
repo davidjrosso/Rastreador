@@ -28,7 +28,7 @@ $initials = strtoupper($Registros["initials"]);
 $username = $Registros["username"];
 $userpass = $Registros["password"];
 $email = $Registros["email"];
-$centro_salud = (isset($Registros["centro_salud"])) ? $Registros["centro_salud"] : null;
+$centro_salud = (isset($Registros["id_centro"])) ? $Registros["id_centro"] : null;
 $ID_Tipo = $Registros["ID_TipoUsuario"];
 
 
