@@ -29,6 +29,7 @@ $initials = (isset($_REQUEST["initials"])) ? strtoupper($_REQUEST["initials"]) :
 $username = (isset($_REQUEST["username"])) ? $_REQUEST["username"]: null;
 $userpass = (!empty($_REQUEST["userpass"])) ? $_REQUEST["userpass"] : null;
 $email = (isset($_REQUEST["email"])) ? $_REQUEST["email"] : null;
+$centro_salud = (isset($_REQUEST["ID_CentroSalud"])) ? $_REQUEST["ID_CentroSalud"] : null;
 $ID_TipoUsuario = (isset($_REQUEST["ID_TipoUsuario"])) ? $_REQUEST["ID_TipoUsuario"] : null;
 $id_solicitud = (isset($_REQUEST["id_solcitud"])) ? $_REQUEST["id_solcitud"] : null;
 
@@ -47,6 +48,7 @@ try {
 							initials: $initials,
 							user_name: $username,
 							email: $email,
+							centro_salud: $centro_salud,
 							id_tipo_usuario: $ID_TipoUsuario
 		);
 
@@ -58,7 +60,7 @@ try {
 			if (!($has8characters && $hasAlpha && $hasNum && !$hasNonAlphaNum)) {
 				$mensaje = "La contraseña debe contener 8 caracteres, alfabeticos y numericos";
 				header("Location: ../view_modusuario.php?account_id={$account_id}&MensajeError="  . $mensaje);
-					exit();
+                exit();
 			}
 			$user->set_password($userpass);
 		}

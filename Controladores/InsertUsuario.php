@@ -21,10 +21,11 @@ require_once '../Modelo/Account.php';
 
 $lastname = ucfirst($_REQUEST["lastname"]);
 $firstname = ucwords($_REQUEST["firstname"]);
-$initials = strtoupper($_REQUEST["initials"]);
+$initials = (isset($_REQUEST["initials"])) ? strtoupper($_REQUEST["initials"]) : null;
 $username = $_REQUEST["username"];
 $userpass = $_REQUEST["userpass"];
 $email = $_REQUEST["email"];
+$centro_salud = (isset($_REQUEST["ID_CentroSalud"])) ? $_REQUEST["ID_CentroSalud"] : null;
 $estado = 1;
 $ID_TipoUsuario = $_REQUEST["ID_TipoUsuario"];
 
@@ -51,6 +52,7 @@ try {
 					 user_name: $username,
 					  password: $userpass,
 						 email: $email,
+						 centro_salud: $centro_salud,
 						estado: $estado,
 			   id_tipo_usuario: $ID_TipoUsuario
 	   		   );
