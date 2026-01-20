@@ -1637,7 +1637,10 @@ class CtrGeneral{
 	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select accountid, firstname, lastname, username, email from accounts where estado = 1 order by lastname";
+		$Consulta = "SELECT accountid, firstname, lastname, username, email, c.centro_salud
+					 FROM accounts a LEFT JOIN centros_salud c ON (a.id_centro = c.id_centro) 
+					 WHERE a.estado = 1 
+					 ORDER BY lastname";
 		$MessageError = "Problemas al intentar mostrar Usuarios";
 		$Table = "<table class='table'>
 					<thead>
@@ -1647,6 +1650,7 @@ class CtrGeneral{
 							<th>Nombre</th>
 							<th>Nombre de Usuario</th>
 							<th>E-Mail</th>
+							<th>Centro de salud</th>
 							<th></th>
 							<th></th>
 						</tr>
@@ -1654,17 +1658,18 @@ class CtrGeneral{
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Table .= "<tr>
-							<td>".$Ret["accountid"]."</td>
-							<td>".$Ret["lastname"]."</td>
-							<td>".$Ret["firstname"]."</td>
-							<td>".$Ret["username"]."</td>
-							<td>".$Ret["email"]."</td>
+							<td>" . $Ret["accountid"] . "</td>
+							<td>" . $Ret["lastname"] . "</td>
+							<td>" . $Ret["firstname"] . "</td>
+							<td>" . $Ret["username"] . "</td>
+							<td>" . $Ret["email"] . "</td>
+							<td>" . $Ret["centro_salud"] . "</td>
 							<td>
-								<a  href = 'view_modusuario.php?account_id=".$Ret["accountid"]."'> 
+								<a  href = 'view_modusuario.php?account_id=" . $Ret["accountid"] . "'> 
 									<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
 								</a>
 							<td>
-							<td><a onClick='Verificar(".$Ret["accountid"].")'>
+							<td><a onClick='Verificar(" . $Ret["accountid"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a>
 							</td>
 						</tr>";
@@ -1681,7 +1686,11 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Table = "";
 		if(is_numeric($ID)){
-			$Consulta = "select accountid, firstname, lastname, username, email from accounts where accountid = $ID and estado = 1 order by lastname";
+			$Consulta = "SELECT accountid, firstname, lastname, username, email, c.centro_salud
+						 FROM accounts a LEFT JOIN centros_salud c ON (a.id_centro = c.id_centro)
+						 FROM accountid = $ID 
+						  AND a.estado = 1 
+						 ORDER BY lastname";
 			$MessageError = "Problemas al intentar mostrar Usuarios por ID";
 			$Table = "<table class='table'>
 						<thead>
@@ -1691,6 +1700,7 @@ class CtrGeneral{
 								<th>Nombre</th>
 								<th>Nombre de Usuario</th>
 								<th>E-Mail</th>
+								<th>Centro de salud</th>
 								<th></th>
 								<th></th>
 							</tr>
@@ -1698,18 +1708,18 @@ class CtrGeneral{
 			$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 			while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 				$Table .= "<tr>
-								<td>".$Ret["accountid"]."</td>
-								<td>".$Ret["lastname"]."</td>
-								<td>".$Ret["firstname"]."</td>
-								<td>".$Ret["username"]."</td>
-								<td>".$Ret["email"]."</td>
+								<td>" . $Ret["accountid"] . "</td>
+								<td>" . $Ret["lastname"] . "</td>
+								<td>" . $Ret["firstname"] . "</td>
+								<td>" . $Ret["username"] . "</td>
+								<td>" . $Ret["email"] . "</td>
 								<td>
-								<a  href = 'view_modusuario.php?account_id=".$Ret["accountid"]."'>
+								<a  href = 'view_modusuario.php?account_id=" . $Ret["accountid"] . "'>
 										<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
 									</a>
 								<td>
 								<td>
-									<a onClick='Verificar(".$Ret["accountid"].")'>
+									<a onClick='Verificar(" . $Ret["accountid"] . ")'>
 										<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 									</a>
 								</td>
@@ -1726,7 +1736,11 @@ class CtrGeneral{
 	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select accountid, firstname, lastname, username, email from accounts where username like '%$xUserName%' and estado = 1 order by lastname";
+		$Consulta = "SELECT accountid, firstname, lastname, username, email, c.centro_salud
+					 FROM accounts a LEFT JOIN centros_salud c ON (a.id_centro = c.id_centro)
+					 WHERE username like '%$xUserName%' 
+					   AND a.estado = 1
+					 ORDER BY lastname";
 		$MessageError = "Problemas al intentar mostrar Usuarios por UserName";
 		$Table = "<table class='table'>
 					<thead>
@@ -1736,6 +1750,7 @@ class CtrGeneral{
 							<th>Nombre</th>
 							<th>Nombre de Usuario</th>
 							<th>E-Mail</th>
+							<th>Centro de salud</th>
 							<th></th>
 							<th></th>
 						</tr>
@@ -1743,18 +1758,18 @@ class CtrGeneral{
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Table .= "<tr>
-							<td>".$Ret["accountid"]."</td>
-							<td>".$Ret["lastname"]."</td>
-							<td>".$Ret["firstname"]."</td>
-							<td>".$Ret["username"]."</td>
-							<td>".$Ret["email"]."</td>
+							<td>" . $Ret["accountid"] . "</td>
+							<td>" . $Ret["lastname"] . "</td>
+							<td>" . $Ret["firstname"] . "</td>
+							<td>" . $Ret["username"] . "</td>
+							<td>" . $Ret["email"] . "</td>
 							<td>
-								<a  href = 'view_modusuario.php?account_id=".$Ret["accountid"]."'>
+								<a  href = 'view_modusuario.php?account_id=" . $Ret["accountid"] . "'>
 									<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
 								</a>
 							<td>
 							<td>
-								<a onClick='Verificar(".$Ret["accountid"].")'>
+								<a onClick='Verificar(" . $Ret["accountid"] . ")'>
 									<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 								</a>
 							</td>
