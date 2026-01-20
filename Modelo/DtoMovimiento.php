@@ -76,11 +76,11 @@ class DtoMovimiento {
 		$this->Motivo_3 = $xMotivo_3;
 	}
 
-	public function setMotivo_4($xMotivo_3){
-		$this->Motivo_3 = $xMotivo_3;
+	public function setMotivo_4($xMotivo_4){
+		$this->Motivo_4 = $xMotivo_4;
 	}
-	public function setMotivo_5($xMotivo_3){
-		$this->Motivo_3 = $xMotivo_3;
+	public function setMotivo_5($xMotivo_5){
+		$this->Motivo_5 = $xMotivo_5;
 	}
 	public function setObservaciones($xObservaciones){
 		$this->Observaciones = $xObservaciones;

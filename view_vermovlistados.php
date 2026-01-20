@@ -880,7 +880,7 @@ $ID_Config = $_REQUEST["ID_Config"];
           <!-- Search -->
         <div class = "row">
           <?php
-            if(isset($_REQUEST["ID_Persona"]) && $_REQUEST["ID_Persona"]!=null && $_REQUEST["ID_Persona"] > 0){
+            if (isset($_REQUEST["ID_Persona"]) && $_REQUEST["ID_Persona"] > 0) {
               $ID_Persona = $_REQUEST["ID_Persona"];
 
               //$Con = new Conexion();
@@ -903,199 +903,173 @@ $ID_Config = $_REQUEST["ID_Config"];
               $jsonTable = array();
               $head_det_persona = [];
               $head_movimientos = [];
-              if($ID_Config == 'grid'){
-                $Table = "<table class='table'><thead><tr><th></th><th>Detalles de la Persona</th></tr></thead>";
-                $tablePrint = "<table class='table'><thead><tr><th></th><th>Detalles de la Persona</th></tr></thead>";
-                $Table .= "<tr><td>Id</td><td>" . $Persona->getID_Persona() . "</td></tr>";
-                $tablePrint .= "<tr><td>Id</td><td>" . $Persona->getID_Persona() . "</td></tr>";
-                $jsonTable["det_persona"]["id"] = $Persona->getID_Persona();
-                $head_det_persona[] = "id";
-                $Table .= "<tr><td>Apellido</td><td>" . $Persona->getApellido() . "</td></tr>";
-                $tablePrint .= "<tr><td>Apellido</td><td>" . $Persona->getApellido() . "</td></tr>";
-                $jsonTable["det_persona"]["apellido"] = $Persona->getApellido();
-                $head_det_persona[] = "apellido";
-                $Table .= "<tr><td>Nombre</td><td>" . $Persona->getNombre() . "</td></tr>";
-                $tablePrint .= "<tr><td>Nombre</td><td>" . $Persona->getNombre() . "</td></tr>";
-                $jsonTable["det_persona"]["nombre"] = $Persona->getNombre();
-                $head_det_persona[] = "nombre";
-                $Table .= "<tr><td>Documento</td><td>" . $Persona->getDNI() . "</td></tr>";
-                $tablePrint .= "<tr><td>Documento</td><td>" . $Persona->getDNI() . "</td></tr>";
-                $jsonTable["det_persona"]["documento"] = $Persona->getDNI();
-                $head_det_persona[] = "documento";
-                $Table .= "<tr><td>Fecha de Nacimiento</td><td>" . $Persona->getFecha_Nacimiento() . "</td></tr>";
-                $tablePrint .= "<tr><td>Fecha de Nacimiento</td><td>" . $Persona->getFecha_Nacimiento() . "</td></tr>";
-                $jsonTable["det_persona"]["fecha_nacimiento"] = $Persona->getFecha_Nacimiento();
-                $head_det_persona[] = "fecha_nacimiento";
-                if($Persona->getEdad() == 2020){
-                  $Table .= "<tr><td>Edad</td><td>No se cargo fecha de nacimiento</td></tr>";
-                  $tablePrint .= "<tr><td>Edad</td><td>No se cargo fecha de nacimiento</td></tr>";
-                  $jsonTable["det_persona"]["Años"] = "sin datos";
-                  $head_det_persona[] = "Años";
-                }else{
-                  $Table .= "<tr><td>Edad</td><td>" . $Persona->getEdad() . "</td></tr>";
-                  $tablePrint .= "<tr><td>Edad</td><td>" . $Persona->getEdad() . "</td></tr>";
-                  $jsonTable["det_persona"]["Años"] = $Persona->getEdad();
-                  $head_det_persona[] = "Años";
-                }
-                $Table .= "<tr><td>Meses</td><td>" . $Persona->getMeses() . "</td></tr>";              
-                $tablePrint .= "<tr><td>Meses</td><td>" . $Persona->getMeses() . "</td></tr>";
-                $jsonTable["det_persona"]["Meses"] = $Persona->getMeses();
-                $head_det_persona[] = "Meses";
-                $Table .= "<tr><td>Localidad</td><td>" . $Persona->getLocalidad() . "</td></tr>";
-                $tablePrint .= "<tr><td>Localidad</td><td>" . $Persona->getLocalidad() . "</td></tr>";
-                $jsonTable["det_persona"]["Localidad"] = $Persona->getLocalidad();
-                $head_det_persona[] = "Localidad";
-                $Table .= "<tr><td>Barrio</td><td>" . $Persona->getBarrio() . "</td></tr>";      
-                $tablePrint .= "<tr><td>Barrio</td><td>" . $Persona->getBarrio() . "</td></tr>";      
-                $jsonTable["det_persona"]["Barrio"] = $Persona->getBarrio();
-                $head_det_persona[] = "Barrio";
-                $Table .= "<tr><td>Domicilio</td><td>" . $Persona->getDomicilio() . "</td></tr>";
-                $tablePrint .= "<tr><td>Domicilio</td><td>" . $Persona->getDomicilio() . "</td></tr>";
-                $jsonTable["det_persona"]["Domicilio"] = $Persona->getDomicilio();
-                $head_det_persona[] = "Domicilio";
-                $Table .= "<tr><td>Manzana</td><td>" . $Persona->getManzana() . "</td></tr>";
-                $tablePrint .= "<tr><td>Manzana</td><td>" . $Persona->getManzana() . "</td></tr>";
-                $jsonTable["det_persona"]["manzana"] = $Persona->getManzana();
-                $head_det_persona[] = "manzana";
-                $Table .= "<tr><td>Lote</td><td>" . $Persona->getLote() . "</td></tr>";
-                $tablePrint .= "<tr><td>Lote</td><td>" . $Persona->getLote() . "</td></tr>";
-                $jsonTable["det_persona"]["lote"] = $Persona->getLote();
-                $head_det_persona[] = "lote";
-                $Table .= "<tr><td>Sub-lote</td><td>" . $Persona->getFamilia() . "</td></tr>";
-                $tablePrint .= "<tr><td>Sub-lote</td><td>" . $Persona->getFamilia() . "</td></tr>";
-                $jsonTable["det_persona"]["sub_lote"] = $Persona->getFamilia();
-                $head_det_persona[] = "sub_lote";
-                $Table .= "<tr><td>Telefono</td><td>" . $Persona->getTelefono() . "</td></tr>";
-                $tablePrint .= "<tr><td>Telefono</td><td>" . $Persona->getTelefono() . "</td></tr>";
-                $jsonTable["det_persona"]["telefono"] = $Persona->getTelefono();
-                $head_det_persona[] = "telefono";
-                $Table .= "<tr><td>E-Mail</td><td>" . $Persona->getMail() . "</td></tr>";
-                $tablePrint .= "<tr><td>E-Mail</td><td>" . $Persona->getMail() . "</td></tr>";
-                $jsonTable["det_persona"]["mail"] = $Persona->getMail();
-                $head_det_persona[] = "mail";
-                $Table .= "<tr><td>Obra Social</td><td>" . $Persona->getObra_Social() . "</td></tr>";
-                $tablePrint .= "<tr><td>Obra Social</td><td>" . $Persona->getObra_Social() . "</td></tr>";
-                $jsonTable["det_persona"]["Obra Social"] = $Persona->getObra_Social();
-                $head_det_persona[] = "Obra Social";
-                $Table .= "<tr><td>Escuela</td><td>" . $Persona->getEscuela() . "</td></tr>";
-                $tablePrint .= "<tr><td>Escuela</td><td>" . $Persona->getEscuela() . "</td></tr>";
-                $jsonTable["det_persona"]["escuela"] = $Persona->getEscuela();
-                $head_det_persona[] = "escuela";
-                $Table .= "<tr><td>Nro. Legajo</td><td>" . $Persona->getNro_legajo() . "</td></tr>";
-                $tablePrint .= "<tr><td>Nro. Legajo</td><td>" . $Persona->getNro_legajo() . "</td></tr>";
-                $jsonTable["det_persona"]["nro_legajo"] = $Persona->getNro_Legajo();
-                $head_det_persona[] = "nro_legajo";
-                $Table .= "<tr><td>Nro. Carpeta</td><td>" . $Persona->getNro_Carpeta() . "</td></tr>";
-                $tablePrint .= "<tr><td>Nro. Carpeta</td><td>" . $Persona->getNro_Carpeta() . "</td></tr>";
-                $jsonTable["det_persona"]["nro_carpeta"] = $Persona->getNro_Carpeta();
-                $head_det_persona[] = "nro_carpeta";
-                $Table .= "<tr><td>Observación</td><td>" . $Persona->getObservaciones() . "</td></tr>";
-                $tablePrint .= "<tr><td>Observación</td><td>" . $Persona->getObservaciones() ."</td></tr>";
-                $jsonTable["det_persona"]["observacion"] = $Persona->getObservaciones();
-                $head_det_persona[] = "observacion";
-                $Table .= "<tr><td>Cambio de Domicilio</td><td>" . $Persona->getCambio_Domicilio() . "</td></tr>";
-                $tablePrint .= "<tr><td>Cambio de Domicilio</td><td>" . $Persona->getCambio_Domicilio() . "</td></tr>";
-                $jsonTable["det_persona"]["cmb_domicilio"] = $Persona->getCambio_Domicilio();
-                $head_det_persona[] = "cmb_domicilio";
-                $Table .= "</table>";
-                $tablePrint .= "</table>";
+              $Table = "<table class='table'>
+                          <thead>
+                            <tr>
+                              <th></th>
+                              <th>Detalles de la Persona</th>
+                            </tr>
+                          </thead>";
+              $tablePrint = "<table class='table'><thead><tr><th></th><th>Detalles de la Persona</th></tr></thead>";
+              $Table .= "<tr>
+                            <td>Id</td>
+                            <td>" . $Persona->getID_Persona() . "</td>
+                          </tr>";
+              $tablePrint .= "<tr><td>Id</td><td>" . $Persona->getID_Persona() . "</td></tr>";
+              $jsonTable["det_persona"]["id"] = $Persona->getID_Persona();
+              $head_det_persona[] = "id";
+              $Table .= "<tr>
+                            <td>Apellido</td>
+                            <td>" . $Persona->getApellido() . "</td>
+                         </tr>";
+              $tablePrint .= "<tr><td>Apellido</td><td>" . $Persona->getApellido() . "</td></tr>";
+              $jsonTable["det_persona"]["apellido"] = $Persona->getApellido();
+              $head_det_persona[] = "apellido";
+              $Table .= "<tr>
+                            <td>Nombre</td>
+                            <td>" . $Persona->getNombre() . "</td>
+                         </tr>";
+              $tablePrint .= "<tr><td>Nombre</td><td>" . $Persona->getNombre() . "</td></tr>";
+              $jsonTable["det_persona"]["nombre"] = $Persona->getNombre();
+              $head_det_persona[] = "nombre";
+              $Table .= "<tr>
+                          <td>Documento</td>
+                          <td>" . $Persona->getDNI() . "</td>
+                         </tr>";
+              $tablePrint .= "<tr><td>Documento</td><td>" . $Persona->getDNI() . "</td></tr>";
+              $jsonTable["det_persona"]["documento"] = $Persona->getDNI();
+              $head_det_persona[] = "documento";
+              $Table .= "<tr>
+                            <td>Fecha de Nacimiento</td>
+                            <td>" . $Persona->getFecha_Nacimiento() . "</td>
+                         </tr>";
+              $tablePrint .= "<tr><td>Fecha de Nacimiento</td><td>" . $Persona->getFecha_Nacimiento() . "</td></tr>";
+              $jsonTable["det_persona"]["fecha_nacimiento"] = $Persona->getFecha_Nacimiento();
+              $head_det_persona[] = "fecha_nacimiento";
+              if ($Persona->getEdad() == 2020) {
+                $Table .= "<tr>
+                              <td>Edad</td>
+                              <td>No se cargo fecha de nacimiento</td>
+                            </tr>";
+                $tablePrint .= "<tr><td>Edad</td><td>No se cargo fecha de nacimiento</td></tr>";
+                $jsonTable["det_persona"]["Años"] = "sin datos";
+                $head_det_persona[] = "Años";
               }else{
-                $Table = "<table class='table'><thead><tr><th></th><th>Detalles de la Persona</th></tr></thead>";
-                $tablePrint = "<table class='table'><thead><tr><th></th><th>Detalles de la Persona</th></tr></thead>";
-                $Table .= "<tr><td>Id</td><td>" . $Persona->getID_Persona() . "</td></tr>";
-                $tablePrint .= "<tr><td>Id</td><td>" . $Persona->getID_Persona() . "</td></tr>";
-                $jsonTable["det_persona"]["id"] = $Persona->getID_Persona();
-                $head_det_persona[] = "id";
-                $Table .= "<tr><td>Apellido</td><td>" . $Persona->getApellido() . "</td></tr>";
-                $tablePrint .= "<tr><td>Apellido</td><td>" . $Persona->getApellido() . "</td></tr>";
-                $head_det_persona[] = "apellido";
-                $jsonTable["det_persona"]["apellido"] = $Persona->getApellido();
-                $Table .= "<tr><td>Nombre</td><td>" . $Persona->getNombre() . "</td></tr>";
-                $tablePrint .= "<tr><td>Nombre</td><td>" . $Persona->getNombre() . "</td></tr>";
-                $jsonTable["det_persona"]["nombre"] = $Persona->getNombre();
-                $head_det_persona[] = "nombre";
-                $Table .= "<tr><td>Documento</td><td>" . $Persona->getDNI() . "</td></tr>";
-                $tablePrint .= "<tr><td>Documento</td><td>" . $Persona->getDNI() . "</td></tr>";
-                $jsonTable["det_persona"]["documento"] = $Persona->getDNI();
-                $head_det_persona[] = "documento";
-                $Table .= "<tr><td>Fecha de Nacimiento</td><td>" . $Persona->getFecha_Nacimiento() . "</td></tr>";
-                $tablePrint .= "<tr><td>Fecha de Nacimiento</td><td>" . $Persona->getFecha_Nacimiento() . "</td></tr>";
-                $jsonTable["det_persona"]["fecha_nacimiento"] = $Persona->getFecha_Nacimiento();
-                $head_det_persona[] = "fecha_nacimiento";
-                if($Persona->getEdad() == 2020){
-                  $Table .= "<tr><td>Edad</td><td>No se cargo fecha de nacimiento</td></tr>";
-                  $tablePrint .= "<tr><td>Edad</td><td>No se cargo fecha de nacimiento</td></tr>";
-                  $jsonTable["det_persona"]["Años"] = "sin datos";
-                  $head_det_persona[] = "Años";
-                }else{
-                  $Table .= "<tr><td>Edad</td><td>" . $Persona->getEdad() . "</td></tr>";
-                  $tablePrint .= "<tr><td>Edad</td><td>" . $Persona->getEdad() . "</td></tr>";
-                  $jsonTable["det_persona"]["Años"] = $Persona->getEdad();
-                  $head_det_persona[] = "Años";
-                }                            
-                $Table .= "<tr><td>Meses</td><td>" . $Persona->getMeses() . "</td></tr>";
-                $tablePrint .= "<tr><td>Meses</td><td>" . $Persona->getMeses() . "</td></tr>";
-                $jsonTable["det_persona"]["Meses"] = $Persona->getMeses();
-                $head_det_persona[] = "Meses";
-                $Table .= "<tr><td>Localidad</td><td>" . $Persona->getLocalidad() . "</td></tr>";
-                $tablePrint .= "<tr><td>Localidad</td><td>" . $Persona->getLocalidad() . "</td></tr>";
-                $jsonTable["det_persona"]["Localidad"] = $Persona->getLocalidad();
-                $head_det_persona[] = "Localidad";
-                $Table .= "<tr><td>Barrio</td><td>" . $Persona->getBarrio() . "</td></tr>";
-                $tablePrint .= "<tr><td>Barrio</td><td>" . $Persona->getBarrio() . "</td></tr>";
-                $jsonTable["det_persona"]["Barrio"] = $Persona->getBarrio();
-                $head_det_persona[] = "Barrio";
-                $Table .= "<tr><td>Domicilio</td><td>" . $Persona->getDomicilio() . "</td></tr>";
-                $tablePrint .= "<tr><td>Domicilio</td><td>" . $Persona->getDomicilio() . "</td></tr>";
-                $jsonTable["det_persona"]["Domicilio"] = $Persona->getDomicilio();
-                $head_det_persona[] = "Domicilio";
-                $Table .= "<tr><td>Manzana</td><td>" . $Persona->getManzana() . "</td></tr>";
-                $tablePrint .= "<tr><td>Manzana</td><td>" . $Persona->getManzana() . "</td></tr>";
-                $jsonTable["det_persona"]["manzana"] = $Persona->getManzana();
-                $head_det_persona[] = "manzana";
-                $Table .= "<tr><td>Lote</td><td>" . $Persona->getLote() . "</td></tr>";
-                $tablePrint .= "<tr><td>Lote</td><td>" . $Persona->getLote() . "</td></tr>";
-                $jsonTable["det_persona"]["lote"] = $Persona->getLote();
-                $head_det_persona[] = "lote";
-                $Table .= "<tr><td>Sub-lote</td><td>" . $Persona->getFamilia() . "</td></tr>";
-                $tablePrint .= "<tr><td>Sub-lote</td><td>" . $Persona->getFamilia() . "</td></tr>";
-                $jsonTable["det_persona"]["sub_lote"] = $Persona->getFamilia();
-                $head_det_persona[] = "sub_lote";
-                $Table .= "<tr><td>Telefono</td><td>" . $Persona->getTelefono() . "</td></tr>";
-                $tablePrint .= "<tr><td>Telefono</td><td>" . $Persona->getTelefono() . "</td></tr>";
-                $jsonTable["det_persona"]["telefono"] = $Persona->getTelefono();
-                $head_det_persona[] = "telefono";
-                $Table .= "<tr><td>E-Mail</td><td>" . $Persona->getMail() . "</td></tr>";
-                $tablePrint .= "<tr><td>E-Mail</td><td>" . $Persona->getMail() . "</td></tr>";
-                $jsonTable["det_persona"]["mail"] = $Persona->getMail();
-                $head_det_persona[] = "email";
-                $Table .= "<tr><td>Obra Social</td><td>" . $Persona->getObra_Social() . "</td></tr>";
-                $tablePrint .= "<tr><td>Obra Social</td><td>" . $Persona->getObra_Social() . "</td></tr>";
-                $jsonTable["det_persona"]["Obra Social"] = $Persona->getObra_Social();
-                $head_det_persona[] = "Obra Social";
-                $Table .= "<tr><td>Escuela</td><td>" . $Persona->getEscuela() . "</td></tr>";
-                $tablePrint .= "<tr><td>Escuela</td><td>" . $Persona->getEscuela() . "</td></tr>";
-                $jsonTable["det_persona"]["escuela"] = $Persona->getEscuela();
-                $head_det_persona[] = "escuela";
-                $Table .= "<tr><td>Nro. Legajo</td><td>" . $Persona->getNro_Legajo() . "</td></tr>";
-                $tablePrint .= "<tr><td>Nro. Legajo</td><td>" . $Persona->getNro_Legajo() . "</td></tr>";
-                $jsonTable["det_persona"]["nro_legajo"] = $Persona->getNro_Legajo();
-                $head_det_persona[] = "nro_legajo";
-                $Table .= "<tr><td>Nro. Carpeta</td><td>" . $Persona->getNro_Carpeta() . "</td></tr>";
-                $tablePrint .= "<tr><td>Nro. Carpeta</td><td>" . $Persona->getNro_Carpeta() . "</td></tr>";
-                $jsonTable["det_persona"]["nro_carpeta"] = $Persona->getNro_Carpeta();
-                $head_det_persona[] = "nro_carpeta";
-                $Table .= "<tr><td>Observación</td><td>" . $Persona->getObservaciones() . "</td></tr>";
-                $tablePrint .= "<tr><td>Observación</td><td>" . $Persona->getObservaciones() . "</td></tr>";
-                $jsonTable["det_persona"]["observacion"] = $Persona->getObservaciones();
-                $head_det_persona[] = "observacion";
-                $Table .= "<tr><td>Cambio de Domicilio</td><td>" . $Persona->getCambio_Domicilio() . "</td></tr>";
-                $tablePrint .= "<tr><td>Cambio de Domicilio</td><td>" . $Persona->getCambio_Domicilio() . "</td></tr>";
-                $jsonTable["det_persona"]["cmb_domicilio"] = $Persona->getCambio_Domicilio();
-                $head_det_persona[] = "cmb_domicilio";
-                $Table .= "</table>";
-                $tablePrint .= "</table>";
+                $Table .= "<tr>
+                              <td>Edad</td>
+                              <td>" . $Persona->getEdad() . "</td>
+                            </tr>";
+                $tablePrint .= "<tr><td>Edad</td><td>" . $Persona->getEdad() . "</td></tr>";
+                $jsonTable["det_persona"]["Años"] = $Persona->getEdad();
+                $head_det_persona[] = "Años";
               }
+              $Table .= "<tr>
+                            <td>Meses</td>
+                            <td>" . $Persona->getMeses() . "</td>
+                          </tr>";              
+              $tablePrint .= "<tr><td>Meses</td><td>" . $Persona->getMeses() . "</td></tr>";
+              $jsonTable["det_persona"]["Meses"] = $Persona->getMeses();
+              $head_det_persona[] = "Meses";
+              $Table .= "<tr>
+                            <td>Localidad</td>
+                            <td>" . $Persona->getLocalidad() . "</td>
+                          </tr>";
+              $tablePrint .= "<tr><td>Localidad</td><td>" . $Persona->getLocalidad() . "</td></tr>";
+              $jsonTable["det_persona"]["Localidad"] = $Persona->getLocalidad();
+              $head_det_persona[] = "Localidad";
+              $Table .= "<tr>
+                            <td>Barrio</td>
+                            <td>" . $Persona->getBarrio() . "</td>
+                          </tr>";      
+              $tablePrint .= "<tr><td>Barrio</td><td>" . $Persona->getBarrio() . "</td></tr>";      
+              $jsonTable["det_persona"]["Barrio"] = $Persona->getBarrio();
+              $head_det_persona[] = "Barrio";
+              $Table .= "<tr>
+                            <td>Domicilio</td>
+                            <td>" . $Persona->getDomicilio() . "</td>
+                          </tr>";
+              $tablePrint .= "<tr><td>Domicilio</td><td>" . $Persona->getDomicilio() . "</td></tr>";
+              $jsonTable["det_persona"]["Domicilio"] = $Persona->getDomicilio();
+              $head_det_persona[] = "Domicilio";
+              $Table .= "<tr>
+                            <td>Manzana</td>
+                            <td>" . $Persona->getManzana() . "</td>
+                         </tr>";
+              $tablePrint .= "<tr><td>Manzana</td><td>" . $Persona->getManzana() . "</td></tr>";
+              $jsonTable["det_persona"]["manzana"] = $Persona->getManzana();
+              $head_det_persona[] = "manzana";
+              $Table .= "<tr>
+                            <td>Lote</td>
+                            <td>" . $Persona->getLote() . "</td>
+                         </tr>";
+              $tablePrint .= "<tr><td>Lote</td><td>" . $Persona->getLote() . "</td></tr>";
+              $jsonTable["det_persona"]["lote"] = $Persona->getLote();
+              $head_det_persona[] = "lote";
+              $Table .= "<tr>
+                            <td>Sub-lote</td>
+                            <td>" . $Persona->getFamilia() . "</td>
+                         </tr>";
+              $tablePrint .= "<tr><td>Sub-lote</td><td>" . $Persona->getFamilia() . "</td></tr>";
+              $jsonTable["det_persona"]["sub_lote"] = $Persona->getFamilia();
+              $head_det_persona[] = "sub_lote";
+              $Table .= "<tr>
+                            <td>Telefono</td>
+                            <td>" . $Persona->getTelefono() . "</td>
+                         </tr>";
+              $tablePrint .= "<tr><td>Telefono</td><td>" . $Persona->getTelefono() . "</td></tr>";
+              $jsonTable["det_persona"]["telefono"] = $Persona->getTelefono();
+              $head_det_persona[] = "telefono";
+              $Table .= "<tr>
+                            <td>E-Mail</td>
+                            <td>" . $Persona->getMail() . "</td>
+                         </tr>";
+              $tablePrint .= "<tr><td>E-Mail</td><td>" . $Persona->getMail() . "</td></tr>";
+              $jsonTable["det_persona"]["mail"] = $Persona->getMail();
+              $head_det_persona[] = "mail";
+              $Table .= "<tr>
+                            <td>Obra Social</td>
+                            <td>" . $Persona->getObra_Social() . "</td>
+                         </tr>";
+              $tablePrint .= "<tr><td>Obra Social</td><td>" . $Persona->getObra_Social() . "</td></tr>";
+              $jsonTable["det_persona"]["Obra Social"] = $Persona->getObra_Social();
+              $head_det_persona[] = "Obra Social";
+              $Table .= "<tr>
+                            <td>Escuela</td>
+                            <td>" . $Persona->getEscuela() . "</td>
+                         </tr>";
+              $tablePrint .= "<tr><td>Escuela</td><td>" . $Persona->getEscuela() . "</td></tr>";
+              $jsonTable["det_persona"]["escuela"] = $Persona->getEscuela();
+              $head_det_persona[] = "escuela";
+              $Table .= "<tr>
+                            <td>Nro. Legajo</td>
+                            <td>" . $Persona->getNro_legajo() . "</td>
+                         </tr>";
+              $tablePrint .= "<tr><td>Nro. Legajo</td><td>" . $Persona->getNro_legajo() . "</td></tr>";
+              $jsonTable["det_persona"]["nro_legajo"] = $Persona->getNro_Legajo();
+              $head_det_persona[] = "nro_legajo";
+              $Table .= "<tr>
+                            <td>Nro. Carpeta</td>
+                            <td>" . $Persona->getNro_Carpeta() . "</td>
+                         </tr>";
+              $tablePrint .= "<tr><td>Nro. Carpeta</td><td>" . $Persona->getNro_Carpeta() . "</td></tr>";
+              $jsonTable["det_persona"]["nro_carpeta"] = $Persona->getNro_Carpeta();
+              $head_det_persona[] = "nro_carpeta";
+              $Table .= "<tr>
+                            <td>Observación</td>
+                            <td>" . $Persona->getObservaciones() . "</td>
+                         </tr>";
+              $tablePrint .= "<tr><td>Observación</td><td>" . $Persona->getObservaciones() ."</td></tr>";
+              $jsonTable["det_persona"]["observacion"] = $Persona->getObservaciones();
+              $head_det_persona[] = "observacion";
+              $Table .= "<tr>
+                            <td>Cambio de Domicilio</td>
+                            <td>" . $Persona->getCambio_Domicilio() . "</td>
+                         </tr>";
+              $tablePrint .= "<tr><td>Cambio de Domicilio</td><td>" . $Persona->getCambio_Domicilio() . "</td></tr>";
+              $jsonTable["det_persona"]["cmb_domicilio"] = $Persona->getCambio_Domicilio();
+              $head_det_persona[] = "cmb_domicilio";
+              $Table .= "</table>";
+              $tablePrint .= "</table>";
               $jsonTable["head_det_persona"] = $head_det_persona;
 
               echo $Table;
@@ -1176,378 +1150,21 @@ $ID_Config = $_REQUEST["ID_Config"];
               ];
               $jsonTable["head_movimientos_persona"] = $head_movimientos;
               $json_row = [];
-              while($RetTodos = mysqli_fetch_assoc($TomarMovimientosPersona)) {
-                if($RetTodos["fecha_nac"] == 'null'){
-                  $Fecha_Nacimiento = "Sin Datos";
-                } else {
-                  $Fecha_Nacimiento = implode("-", array_reverse(explode("-",$RetTodos["fecha_nac"])));
-                }
-                
-                $ID_Movimiento = $RetTodos["id_movimiento"];
-                $Fecha = implode("-", array_reverse(explode("-",$RetTodos["fecha"])));
-                $Apellido = $RetTodos["apellido"];
-                $Nombre = $RetTodos["nombre"];
+            }
 
-                ///////////////////////////////////////////////////////////
-                $DNI = $RetTodos["documento"];
-                $Edad = $RetTodos["edad"];
-                $Meses = $RetTodos["meses"];
-                $Obra_Social = $RetTodos["obra_social"];
-                $Domicilio = $RetTodos["domicilio"];
-                $Barrio = $RetTodos["Barrio"];
-                $Localidad = $RetTodos["localidad"];
+            $MensajeErrorMovimientos = "No se pudo consultar los movimientos de la persona";
 
-                //////////////////////////////////////////////////////////
+            $TomarMovimientos = mysqli_query($Con->Conexion, $Consulta) or die($MensajeErrorMovimientos);
+            $Rows = mysqli_num_rows($TomarMovimientos);
 
-                $ID_Motivo_1 = $RetTodos["motivo_1"];
-                $ConsultarMotivo_1 = "select M.id_motivo IN (SELECT id_motivo 
-                                                             FROM INN) as ConPermisoParaUsr,
-                                             M.id_motivo IN (SELECT id_motivo
-                                                             FROM GIN) as ConPermisoGeneral,
-                                             motivo
-                                      from motivo M
-                                      where id_motivo = $ID_Motivo_1";
-
-                // echo "DEBUG: ".var_dump($ConsultarMotivo_1);
-
-                $MensajeErrorMotivo_1 = "No se pudo consultar el motivo 1";
-                $RetMotivo_1 = mysqli_query($Con->Conexion,$ConsultarMotivo_1) or die($MensajeErrorMotivo_1);
-                $RetMotivo_1 = mysqli_fetch_assoc($RetMotivo_1);
-
-                if(count(array_filter($MotivosOpciones)) > 0){
-                  if(in_array($ID_Motivo_1, array_values($MotivosOpciones))){
-                    $Motivo_1 = ($RetMotivo_1["ConPermisoParaUsr"] || $RetMotivo_1["ConPermisoGeneral"])?$RetMotivo_1["motivo"]:"";
-                  } else {
-                    $Motivo_1 = "";
-                  }
-                } else {
-                  $Motivo_1 = ($RetMotivo_1["ConPermisoParaUsr"] || $RetMotivo_1["ConPermisoGeneral"])?$RetMotivo_1["motivo"]:"";
-                }
-
-                $ID_Motivo_2 = $RetTodos["motivo_2"];
-                $ConsultarMotivo_2 = "select M.id_motivo IN (SELECT id_motivo 
-                                                                      FROM INN) as ConPermisoParaUsr,
-                                             M.id_motivo IN (SELECT id_motivo
-                                                               FROM GIN) as ConPermisoGeneral,
-                                             motivo
-                                      from motivo M
-                                      where id_motivo = $ID_Motivo_2";
-                $RetMotivo_2 = mysqli_query($Con->Conexion,$ConsultarMotivo_2) or die($MensajeErrorMotivo_2);
-                $RetMotivo_2 = mysqli_fetch_assoc($RetMotivo_2);
-                if(count(array_filter($MotivosOpciones)) > 0){
-                  if(in_array($ID_Motivo_2, array_values($MotivosOpciones))){
-                    $Motivo_2 = ($RetMotivo_2["ConPermisoParaUsr"] || $RetMotivo_2["ConPermisoGeneral"])?$RetMotivo_2["motivo"]:"";
-                  } else {
-                    $Motivo_2 = "";
-                  }
-                } else {
-                  $Motivo_2 = ($RetMotivo_2["ConPermisoParaUsr"] || $RetMotivo_2["ConPermisoGeneral"])?$RetMotivo_2["motivo"]:"";
-                }
-
-                $ID_Motivo_3 = $RetTodos["motivo_3"];
-                $ConsultarMotivo_3 = "select M.id_motivo IN (SELECT id_motivo 
-                                                                      FROM INN) as ConPermisoParaUsr,
-                                             M.id_motivo IN (SELECT id_motivo
-                                                               FROM GIN) as ConPermisoGeneral,
-                                             motivo
-                                      from motivo M
-                                      where id_motivo = $ID_Motivo_3";
-                $RetMotivo_3 = mysqli_query($Con->Conexion,$ConsultarMotivo_3) or die($MensajeErrorMotivo_3);
-                $RetMotivo_3 = mysqli_fetch_assoc($RetMotivo_3);
-
-                if(count(array_filter($MotivosOpciones)) > 0){
-                  if(in_array($ID_Motivo_3, array_values($MotivosOpciones))){
-                    $Motivo_3 = ($RetMotivo_3["ConPermisoParaUsr"] || $RetMotivo_3["ConPermisoGeneral"])?$RetMotivo_3["motivo"]:"";
-                  } else {
-                    $Motivo_3 = "";
-                  }
-                } else {
-                  $Motivo_3 = ($RetMotivo_3["ConPermisoParaUsr"] || $RetMotivo_3["ConPermisoGeneral"])?$RetMotivo_3["motivo"]:"";
-                }
-
-                $ID_Motivo_4 = $RetTodos["motivo_4"];
-                $ConsultarMotivo_4 = "select M.id_motivo IN (SELECT id_motivo 
-                                                                      FROM INN) as ConPermisoParaUsr,
-                                               M.id_motivo IN (SELECT id_motivo
-                                                               FROM GIN) as ConPermisoGeneral,
-                                               motivo
-                                      from motivo M
-                                      where id_motivo = $ID_Motivo_4";
-                $RetMotivo_4 = mysqli_query($Con->Conexion,$ConsultarMotivo_4) or die($MensajeErrorMotivo_4);
-                $RetMotivo_4 = mysqli_fetch_assoc($RetMotivo_4);
-
-                if(count(array_filter($MotivosOpciones)) > 0){
-                  if(in_array($ID_Motivo_4, array_values($MotivosOpciones))){
-                    $Motivo_4 = ($RetMotivo_4["ConPermisoParaUsr"] || $RetMotivo_4["ConPermisoGeneral"])?$RetMotivo_4["motivo"]:"";
-                  } else {
-                    $Motivo_4 = "";
-                  }
-                } else {
-                  $Motivo_4 = ($RetMotivo_4["ConPermisoParaUsr"] || $RetMotivo_4["ConPermisoGeneral"])?$RetMotivo_4["motivo"]:"";
-                }
-
-                $ID_Motivo_5 = $RetTodos["motivo_5"];
-                $ConsultarMotivo_5 = "select M.id_motivo IN (SELECT id_motivo 
-                                                                      FROM INN) as ConPermisoParaUsr,
-                                               M.id_motivo IN (SELECT id_motivo
-                                                               FROM GIN) as ConPermisoGeneral,
-                                               motivo
-                                      from motivo M
-                                      where id_motivo = $ID_Motivo_5";
-                $RetMotivo_5 = mysqli_query($Con->Conexion,$ConsultarMotivo_5) or die($MensajeErrorMotivo_3);
-                $RetMotivo_5 = mysqli_fetch_assoc($RetMotivo_5);
-
-                if(count(array_filter($MotivosOpciones)) > 0){
-                  if(in_array($ID_Motivo_5, array_values($MotivosOpciones))){
-                    $Motivo_5 = ($RetMotivo_5["ConPermisoParaUsr"] || $RetMotivo_5["ConPermisoGeneral"])?$RetMotivo_5["motivo"]:"";
-                  } else {
-                    $Motivo_5 = "";
-                  }
-                } else {
-                  $Motivo_5 = ($RetMotivo_5["ConPermisoParaUsr"] || $RetMotivo_5["ConPermisoGeneral"])?$RetMotivo_5["motivo"]:"";
-                }
-
-                $movimientoVisible = false;
-                $movimientoVisible = $movimientoVisible || ($Motivo_1 != "");
-                $movimientoVisible = $movimientoVisible || ($Motivo_2 != "");
-                $movimientoVisible = $movimientoVisible || ($Motivo_3 != "");
-                $movimientoVisible = $movimientoVisible || ($Motivo_4 != "");
-                $movimientoVisible = $movimientoVisible || ($Motivo_5 != "");
-
-                if (!$movimientoVisible){
-                  continue;
-                }
-
-                $Observaciones = $RetTodos["observaciones"];
-                $Responsable = $RetTodos["responsable"];
-                  //solucionar el error!
-                  //  variables inventadas solo para que arme la tabla
-
-                $CentroSalud = $RetTodos["centro_salud"]; //centro_salud
-                $OtraInstitucion = $RetTodos["NombreInst"]; //otraInstitucion                
-                $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Motivo_4,$Motivo_5,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);
-                $json_row["height"] = 0;
-                if($ID_Config == 'grid'){
-                  $TableMov = "<table class='table table-dark'>";                
-                  $TableMov .= "<tr class='trFecha'><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>" . $DtoMovimiento->getFecha() . "</td></tr>";
-                  $json_row["Fecha"] = $DtoMovimiento->getFecha();
-                  if($ID_Motivo > 0 || $ID_Motivo2 > 0 || $ID_Motivo3 > 0){                                          
-                    if($ID_Motivo == $ID_Motivo_1){
-
-                      $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
-                      $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
-                      $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
-                    }
-                    if($ID_Motivo2 == $ID_Motivo_2){
-                      $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
-                      $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
-                      $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 2"])) ? strlen($json_row["Motivo 2"]) : $json_row["height"];
-                    }
-                    if($ID_Motivo3 == $ID_Motivo_3){
-                      $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";                      
-                      $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
-                      $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 3"])) ? strlen($json_row["Motivo 3"]) : $json_row["height"];
-                    }
-
-                  }else{                    
-                    $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
-                    $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
-                    $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
-                    $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
-                    $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
-                    $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 2"])) ? strlen($json_row["Motivo 2"]) : $json_row["height"];
-                    $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";
-                    $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
-                    $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 3"])) ? strlen($json_row["Motivo 3"]) : $json_row["height"];
-                  }
-                  $TableMov .= "<tr class='trObservaciones'><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'><div style='max-height: 30px;'>" . $DtoMovimiento->getObservaciones() . "</div></td></tr>";
-                  $json_row["obseravciones"] = $DtoMovimiento->getObservaciones();
-                  $TableMov .= "<tr class='trResponsable'><td style = 'width: 30%;'>Responsable</td><td style = 'width: 70%;'>" . $DtoMovimiento->getResponsable() . "</td></tr>";
-                  $json_row["Responsable"] = $DtoMovimiento->getResponsable();
-                  $TableMov .= "<tr class='trCentrosSalud'><td style = 'width: 30%;'>Centro de salud</td><td style = 'width: 70%;'>" . $DtoMovimiento->getCentroSalud() . "</td></tr>";
-                  $json_row["Centro Salud"] = $DtoMovimiento->getCentroSalud();
-                  $TableMov .= "<tr class='trOtrasInstituciones'><td style = 'width: 30%;'>Otras instituciones</td><td style = 'width: 70%;'>" . $DtoMovimiento->getOtraInstitucion() . "</td></tr>";
-                  $json_row["Otra Institucion"] = $DtoMovimiento->getOtraInstitucion();
-                  $TableMov .= "</table>";
-                  echo $TableMov;
-                }else{
-                  $TableMov .= "<tr>";
-                  $TableMov .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td>";
-                  $json_row["Fecha"] = $DtoMovimiento->getFecha();
-                  $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
-                  $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
-                  $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
-                  $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td>";
-                  $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
-                  $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 2"])) ? strlen($json_row["Motivo 2"]) : $json_row["height"];
-                  $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_3() . "</td>";
-                  $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
-                  $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 3"])) ? strlen($json_row["Motivo 3"]) : $json_row["height"];
-                  $TableMov .= "<td class='trPersona' style = 'width: auto;'>" . $Apellido.", " . $Nombre."</td>";
-                  $json_row["Persona"] = $Apellido." " . $Nombre;
-                  $TableMov .= "<td class='trDNI' style = 'width: auto;'>" . $DNI."</td>";
-                  $json_row["DNI"] = $DNI;
-                  $TableMov .= "<td class='trFechaNac' style = 'width: auto;'>" . $Fecha_Nacimiento."</td>";
-                  $json_row["Fecha Nac"] = $Fecha_Nacimiento;
-                  $TableMov .= "<td class='trEdad' style = 'width: auto;'>" . $Edad."</td>";
-                  $json_row["Años"] = $Edad;
-                  $TableMov .= "<td class='trMeses' style = 'width: auto;'>" . $Meses."</td>";
-                  $json_row["Meses"] = $Meses;
-                  $TableMov .= "<td class='trObraSocial' style = 'width: auto;'>" . $Obra_Social."</td>";
-                  $json_row["Obra Social"] = $Obra_Social;
-                  $TableMov .= "<td class='trDomicilio' style = 'width: auto;'>" . $Domicilio."</td>";
-                  $json_row["Domicilio"] = $Domicilio;
-                  $TableMov .= "<td class='trBarrio' style = 'width: auto;'>" . $Barrio."</td>";
-                  $json_row["Barrio"] = $Barrio;
-                  $TableMov .= "<td class='trLocalidad' style = 'width: auto;'>" . $Localidad."</td>";
-                  $json_row["Localidad"] = $Localidad;
-                  $TableMov .= "<td class='trObservaciones' style = 'width: auto;'>" . $DtoMovimiento->getObservaciones() . "</td>";
-                  $json_row["Observaciones"] = $DtoMovimiento->getObservaciones();
-                  $TableMov .= "<td class='trResponsable' style = 'width: auto;'>" . $DtoMovimiento->getResponsable() . "</td>";
-                  $json_row["Responsable"] = $DtoMovimiento->getResponsable();
-                  $TableMov .= "<td class='trCentrosSalud' style = 'width: auto;'>" . $DtoMovimiento->getCentroSalud() . "</td>";
-                  $json_row["Centro Salud"] = $DtoMovimiento->getCentroSalud();
-                  $TableMov .= "<td class='trOtrasInstituciones' style = 'width: auto;'>" . $DtoMovimiento->getOtraInstitucion() . "</td>";
-                  $json_row["Otra Institucion"] = $DtoMovimiento->getOtraInstitucion();
-                  $TableMov .= "</tr>"; 
-                }
-                // Fin de Ciclo de creacion de tabla o grid de un determinado movimiento.
-                $jsonTable["movimientos_persona"][] = $json_row;
-                $json_row["height"] = 0;
-              }
-
-              if($ID_Config == 'table'){
-                $TableMov .= "</table>";
-
-                $classAReemplazar[0] = "~class='table'~";
-                $classAReemplazar[] = "~class='table table-dark'~";
-                $classAReemplazar[] = "~class='trMeses'~";
-                $classAReemplazar[] = "~class='trEdad'~";
-                $classAReemplazar[] = "~class='trFechaNac'~";
-                $classAReemplazar[] = "~class='trDNI'~";
-                $classAReemplazar[] = "~class='trPersona'~";
-                $classAReemplazar[] = "~<class='trFecha'~";
-                $classAReemplazar[] = "~class='trMotivos'~";
-                $classAReemplazar[] = "~class='trOtrasInstituciones'~";
-                $classAReemplazar[] = "~class='trCentrosSalud'~";
-                $classAReemplazar[] = "~class='trResponsable'~";
-                $classAReemplazar[] = "~class='trLocalidad'~";
-                $classAReemplazar[] = "~class='trBarrio'~";
-                $classAReemplazar[] = "~class='trDomicilio'~";
-                $classAReemplazar[] = "~class='trObraSocial'~";
-                //$TableMovPrint = preg_replace( $tdReemplazar, "", $TableMov);
-                $TableMovPrint = $TableMov;
-
-                echo $TableMov;
-              }
-
-              if($ID_Motivo > 0){
-                $ConsultarFiltroMotivo = "select id_motivo, motivo from motivo where id_motivo = $ID_Motivo";
-                $ErrorConsultarFiltroMotivo = "No se pudo consultar el motivo del filtro ID_Motivo";
-                $RetConsFiltroMotivo = mysqli_query($Con->Conexion,$ConsultarFiltroMotivo) or die($ErrorConsultarFiltroMotivo);
-                $RetConsMotivo = mysqli_fetch_assoc($RetConsFiltroMotivo);
-                $filtrosSeleccionados["ID_Motivo"] = $RetConsMotivo["id_motivo"];  
-                $filtrosSeleccionados["Motivo"] = $RetConsMotivo["motivo"];  
-                $_SESSION["datosNav"]["ID_Motivo"] = $filtrosSeleccionados["ID_Motivo"];
-                $_SESSION["datosNav"]["Motivo"] = $filtrosSeleccionados["Motivo"];
-              }
-
-              if($ID_Motivo2 > 0){                
-                $ConsultarFiltroMotivo2 = "select id_motivo, motivo from motivo where id_motivo = $ID_Motivo2";
-                $ErrorConsultarFiltroMotivo2 = "No se pudo consultar el motivo del filtro ID_Motivo2";
-                $RetConsFiltroMotivo2 = mysqli_query($Con->Conexion,$ConsultarFiltroMotivo2) or die($ErrorConsultarFiltroMotivo2);
-                $RetConsMotivo2 = mysqli_fetch_assoc($RetConsFiltroMotivo2);
-                $filtrosSeleccionados["ID_Motivo2"] = $RetConsMotivo2["id_motivo"];  
-                $filtrosSeleccionados["Motivo2"] = $RetConsMotivo2["motivo"];  
-                $_SESSION["datosNav"]["ID_Motivo2"] = $filtrosSeleccionados["ID_Motivo2"];
-                $_SESSION["datosNav"]["Motivo2"] = $filtrosSeleccionados["Motivo2"];
-              }
-
-              if($ID_Motivo3 > 0){                
-                $ConsultarFiltroMotivo3 = "select id_motivo, motivo from motivo where id_motivo = $ID_Motivo3";
-                $ErrorConsultarFiltroMotivo3 = "No se pudo consultar el motivo del filtro ID_Motivo3";
-                $RetConsFiltroMotivo3 = mysqli_query($Con->Conexion,$ConsultarFiltroMotivo3) or die($ErrorConsultarFiltroMotivo3);
-                $RetConsMotivo3 = mysqli_fetch_assoc($RetConsFiltroMotivo3);
-                $filtrosSeleccionados["ID_Motivo3"] = $RetConsMotivo3["id_motivo"];  
-                $filtrosSeleccionados["Motivo3"] = $RetConsMotivo3["motivo"];  
-                $_SESSION["datosNav"]["ID_Motivo3"] = $filtrosSeleccionados["ID_Motivo3"];
-                $_SESSION["datosNav"]["Motivo3"] = $filtrosSeleccionados["Motivo3"];
-              }
-
-                //               while ($RetMovimientos = mysqli_fetch_assoc($TomarMovimientosPersona)) {
-                //                 $ID_Movimiento = $RetMovimientos["id_movimiento"];
-                //                 $Fecha = implode("-", array_reverse(explode("-",$RetMovimientos["fecha"])));
-                //                 $Apellido = $RetMovimientos["apellido"];
-                //                 $Nombre = $RetMovimientos["nombre"];
-
-                //                 $ID_Motivo_1 = $RetMovimientos["motivo_1"];
-                //                 $ConsultarMotivo_1 = "select motivo from motivo where id_motivo = $ID_Motivo_1";
-
-                //                 // echo "DEBUG: ".var_dump($ConsultarMotivo_1);
-
-                //                 $MensajeErrorMotivo_1 = "No se pudo consultar el motivo 1";
-                //                 $RetMotivo_1 = mysqli_query($Con->Conexion,$ConsultarMotivo_1) or die($MensajeErrorMotivo_1);
-                //                 $RetMotivo_1 = mysqli_fetch_assoc($RetMotivo_1);
-                //                 $Motivo_1 = $RetMotivo_1["motivo"];
-
-                //                 $ID_Motivo_2 = $RetMovimientos["motivo_2"];
-                //                 $ConsultarMotivo_2 = "select motivo from motivo where id_motivo = $ID_Motivo_2";
-                //                 $RetMotivo_2 = mysqli_query($Con->Conexion,$ConsultarMotivo_2) or die($MensajeErrorMotivo_2);
-                //                 $RetMotivo_2 = mysqli_fetch_assoc($RetMotivo_2);
-                //                 $Motivo_2 = $RetMotivo_2["motivo"];
-
-                //                 $ID_Motivo_3 = $RetMovimientos["motivo_3"];
-                //                 $ConsultarMotivo_3 = "select motivo from motivo where id_motivo = $ID_Motivo_3";
-                //                 $RetMotivo_3 = mysqli_query($Con->Conexion,$ConsultarMotivo_3) or die($MensajeErrorMotivo_3);
-                //                 $RetMotivo_3 = mysqli_fetch_assoc($RetMotivo_3);
-                //                 $Motivo_3 = $RetMotivo_3["motivo"];
-
-                //                 $Observaciones = $RetMovimientos["observaciones"];
-                //                 $Responsable = $RetMovimientos["responsable"];
-                // //solucionar el error!
-                // //  variables inventadas solo para que arme la tabla
-
-                //                 $CentroSalud=$RetMovimientos["nombre"]; //centro_salud
-                //                 $OtraInstitucion=$RetMovimientos["nombre"]; //otraInstitucion
-                //                 $DtoMovimiento = new DtoMovimiento($ID_Movimiento,$Fecha,$Apellido,$Nombre,$Motivo_1,$Motivo_2,$Motivo_3,$Observaciones,$Responsable,$CentroSalud,$OtraInstitucion);                
-
-                //                 $TableMov = "<table class='table table-dark'>";                
-                //                 $TableMov .= "<tr><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>" . $DtoMovimiento->getFecha() . "</td></tr>";
-                //                 $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
-                //                 $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
-                //                 $TableMov .= "<tr><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";
-                //                 $TableMov .= "<tr><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>" . $DtoMovimiento->getObservaciones() . "</td></tr>";
-                //                 $TableMov .= "<tr><td style = 'width: 30%;'>Responsable</td><td style = 'width: 70%;'>" . $DtoMovimiento->getResponsable() . "</td></tr>";
-                //                 $TableMov .= "<tr><td style = 'width: 30%;'>Centro de salud</td><td style = 'width: 70%;'>" . $DtoMovimiento->getCentroSalud() . "</td></tr>";
-                //                 $TableMov .= "<tr><td style = 'width: 30%;'>Otras instituciones</td><td style = 'width: 70%;'>" . $DtoMovimiento->getOtraInstitucion() . "</td></tr>";
-                //                 $TableMov .= "</table>";
-                //                 echo $TableMov;
-
-                //               }
-
-                              //$Con->CloseConexion();
-              
-
-            } else {
+            if ($Rows > 0) {
               // En este bloque se ingresa si no se se ha seleccionado una persona determinada en los filtros de personas. 
 
               //////////////////////////////////////////////////////TABLAS MOVIMIENTOS DE LAS PERSONAS /////////////////////////////            
 
               // $Con = new Conexion();
               // $Con->OpenConexion();
-              $MensajeErrorMovimientos = "No se pudo consultar los movimientos de la persona";
-
-              $TomarMovimientos = mysqli_query($Con->Conexion, $Consulta) or die($MensajeErrorMovimientos);
-              $Rows = mysqli_num_rows($TomarMovimientos);
-
-              if($Rows == 0){
-                echo "<div class = 'col'></div>";
-                echo "<div class = 'col-6'>";
-                echo "<p class = 'TextoSinResultados'>No se encontraron Resultados</p><center><button class = 'btn btn-danger' onClick = 'location.href= \"view_movpersonas.php\"'>Atras</button></center>";
-                echo "</div>";
-                echo "<div class = 'col'></div>";
-              }
-
+ 
               $header_movimientos_general = [];
               if($ID_Config == 'table'){
                 $MotivosTh = "";
@@ -1714,29 +1331,25 @@ $ID_Config = $_REQUEST["ID_Config"];
                     $json_row["height"] = (isset($json_row["height"])) ? $json_row["height"] : 0;
                     $carga = false;
                   }
-                  
+
                   if ($RetTodos["id_movimiento"] 
                       && ($view == $RetTodos["id_movimiento"]) 
                       && !$imprimir
                       && $con_movimiento) {
                     $motivo_mov = (!empty($RetTodos["motivo"])) ? $RetTodos["motivo"] : "";
-                    if (!empty($RetTodos["nro_motivo"]) && $RetTodos["nro_motivo"] == '1') {
+                    if ($motivo_mov && $DtoMovimiento->getMotivo_1() == null) {
                       $DtoMovimiento->setMotivo_1($motivo_mov);
                       $ID_Motivo_1 = $RetTodos["id_motivo"];
-                    }
-                    if (!empty($RetTodos["nro_motivo"]) && $RetTodos["nro_motivo"] == '2') {
+                    } else if ($motivo_mov && $DtoMovimiento->getMotivo_2() == null) {
                       $DtoMovimiento->setMotivo_2($motivo_mov);
                       $ID_Motivo_2 = $RetTodos["id_motivo"];
-                    }
-                    if (!empty($RetTodos["nro_motivo"]) && $RetTodos["nro_motivo"] == '3') {
+                    } else if ($motivo_mov && $DtoMovimiento->getMotivo_3() == null) {
                       $DtoMovimiento->setMotivo_3($motivo_mov);
                       $ID_Motivo_3 = $RetTodos["id_motivo"];
-                    }
-                    if (!empty($RetTodos["nro_motivo"]) && $RetTodos["nro_motivo"] == '4') {
+                    } else if ($motivo_mov && $DtoMovimiento->getMotivo_4() == null) {
                       $DtoMovimiento->setMotivo_4($motivo_mov);
                       $ID_Motivo_4 = $RetTodos["id_motivo"];
-                    }
-                    if (!empty($RetTodos["nro_motivo"]) && $RetTodos["nro_motivo"] == '5') {
+                    } else if ($motivo_mov && $DtoMovimiento->getMotivo_5() == null) {
                       $DtoMovimiento->setMotivo_5($motivo_mov);
                       $ID_Motivo_5 = $RetTodos["id_motivo"];
                     }
@@ -1912,7 +1525,7 @@ $ID_Config = $_REQUEST["ID_Config"];
                   $jsonTable["movimientos_general"][] = $json_row;
                   $json_row["height"] = 0;
               }
-              
+
               $view = 0;
               $count = 0;
               $imprimir = false;
@@ -2206,6 +1819,12 @@ $ID_Config = $_REQUEST["ID_Config"];
               $Con->CloseConexion();
               // $Mensaje = "No se pudo consultar los Datos porque no se pudo obtener el ID de la Persona";
               // echo $Mensaje;
+            } else {
+                echo "<div class = 'col'></div>";
+                echo "<div class = 'col-6'>";
+                echo "<p class = 'TextoSinResultados'>No se encontraron Resultados</p><center><button class = 'btn btn-danger' onClick = 'location.href= \"view_movpersonas.php\"'>Atras</button></center>";
+                echo "</div>";
+                echo "<div class = 'col'></div>";
             }
 
             // ACA PONER
