@@ -641,9 +641,14 @@ $ID_Config = $_REQUEST["ID_Config"];
               $persona_query .= " and id_persona = $ID_Persona";
             }
 
+            $query_movimiento_motivo = "SELECT *
+                                        FROM movimiento_motivo
+                                        WHERE estado = 1";
+
+
             if ($Mostrar) {
                 $Consulta .=  " FROM ($movimiento_query) M
-                                  INNER JOIN movimiento_motivo MST 
+                                  INNER JOIN ($query_movimiento_motivo) MST 
                                   ON (M.id_movimiento = MST.id_movimiento)
                                   INNER JOIN $motivo_query MT
                                   ON (MST.id_motivo = MT.id_motivo)
@@ -664,7 +669,7 @@ $ID_Config = $_REQUEST["ID_Config"];
                                 
             } else {
                 $Consulta .=  " FROM ($movimiento_query) M
-                                  INNER JOIN movimiento_motivo MST 
+                                  INNER JOIN ($query_movimiento_motivo) MST 
                                   ON (M.id_movimiento = MST.id_movimiento)
                                   INNER JOIN $motivo_query MT
                                   ON (MST.id_motivo = MT.id_motivo)
