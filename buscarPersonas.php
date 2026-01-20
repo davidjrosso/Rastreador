@@ -33,7 +33,7 @@ if (isset($consultaBusqueda)) {
 							  			 p.documento, p.nro_carpeta, CONCAT(c.calle_nombre, ' ', p.nro) as domicilio 
 								  	  FROM persona p RIGHT JOIN calle c ON (p.calle = c.id_calle) 
 									  WHERE p.documento LIKE '%$consultaBusqueda%' 
-									  	and estado = 1 
+									  	and p.estado = 1 
 									  order by upper(p.apellido) ASC, upper(p.nombre) ASC, upper(p.documento) ASC"
 									);
 	    } else {
