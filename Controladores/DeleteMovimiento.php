@@ -25,6 +25,7 @@ $ID_Usuario = $_SESSION["Usuario"];
 $ID_Movimiento = $_REQUEST["ID"];
 
 $Fecha = date("Y-m-d");
+$Fecha_accion = date("Y-m-d");
 $ID_TipoAccion = 3;
 $Detalles = "El usuario con ID: $ID_Usuario ha dado de baja un Movimiento. Datos: Movimiento: $ID_Movimiento";
 
@@ -57,9 +58,9 @@ try {
 
 	// CREANDO NOTIFICACION PARA EL USUARIO
 	$DetalleNot = 'Se elimino el movimiento vinculado a : '.$Apellido. ', '.$Nombre. (($Fecha == null)?'':' fecha: '. $Fecha);
-	$Expira = date("Y-m-d", strtotime($Fecha . " + 15 days"));
+	$Expira = date("Y-m-d", strtotime($Fecha_accion . " + 15 days"));
 
-	$ConsultaNot = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$DetalleNot','$Fecha', '$Expira',1)";
+	$ConsultaNot = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$DetalleNot','$Fecha_accion', '$Expira',1)";
 	if(!$RetNot = mysqli_query($Con->Conexion,$ConsultaNot)){
 		throw new Exception("Error al intentar registrar Notificacion. Consulta: ".$ConsultaNot, 3);
 	}
