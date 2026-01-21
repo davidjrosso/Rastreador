@@ -98,7 +98,7 @@ $ID_Config = $_REQUEST["ID_Config"];
 
               $("#excel_descarga").on("click", function (e) {
                 let vic = null;
-                vic = excel_download(objectJsonTabla);
+                vic = excel.excel_download(objectJsonTabla);
                 vic.then(function (result) {
                   let url = null;
                   let blob = new Blob([result], {
