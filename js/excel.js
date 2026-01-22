@@ -7,6 +7,7 @@ export class Excel {
     #charts = new Map();
     #spreadsheet = null;
     #chart = null;
+    #cellSelection = [];
     constructor() {
         this.#zoom = 100;
     }
@@ -435,14 +436,15 @@ export class Excel {
                                         title: 'Editar',
                                         onclick: function() {
                                             let chart = this.#charts.get(x + "-" + y);
+                                            let datos = chart.config._config.data;
                                             if (this.#chart) this.#chart.destroy();
                                             $("#modal-crs")[0].modal.open();
                                             this.#chart = new Chart(document.getElementById('charts'), {
                                                     type: chart.config._config.type,
-                                                    data: chart.config._config.data,
+                                                    data: datos,
                                                     options: chart.config._config.options,
                                                     plugins: chart.config._config.plugins
-                                                });
+                                            });
                                             this.#chart.resize(300, 300);
                                             this.#spreadsheet[0].resetSelection(true)
                                         }.bind(this)
@@ -490,7 +492,6 @@ export class Excel {
             $(".jss_filter").prepend("<div style='flex-grow: 1; flex-basis: 60%;'> <label style='width: 100%; margin-bottom: 0rem;'>" + text2 + "</label> </div>");
             $("#bar-element").on("click", this.setFocusActive.bind(this, this.#spreadsheet));
             $("#bar-element").on("blur", this.setFocus.bind(this, this.#spreadsheet));
-            $("#bar-element").on("keydown", this.setFocus.bind(this, this.#spreadsheet));
             $("#bar-element").on("input", this.selectionChange.bind(this, this.#spreadsheet));
             $(".jss_container").append($(`<div id='modal-crs' title='Editor de Grafico'>
                                                 <div style='display:flex'>
@@ -605,6 +606,18 @@ export class Excel {
                 height: 300
             });
             jSuites.color(document.getElementById('color'), {
+                onchange: function(e, color) {
+                            this.#chart.config._config.options.plugins.customCanvasBackgroundColor.color = color;
+                            this.#chart.update()
+                          }.bind(this),
+                palette: [
+                    ['#001969', '#233178', '#394a87', '#4d6396', '#607ea4', '#7599b3' ],
+                    ['#00429d', '#2b57a7', '#426cb0', '#5681b9', '#6997c2', '#7daeca' ],
+                    ['#3659b8', '#486cbf', '#597fc5', '#6893cb', '#78a6d1', '#89bad6' ],
+                    ['#003790', '#315278', '#48687a', '#5e7d81', '#76938c', '#8fa89a' ],
+                ]
+            });
+            jSuites.color(document.getElementById('color-datos'), {
                 onchange: function(e, color) {
                             this.#chart.config._config.options.plugins.customCanvasBackgroundColor.color = color;
                             this.#chart.update()
@@ -731,12 +744,12 @@ export class Excel {
                     scales: {
                         x: {
                             display: true,
-                            title: "Rosario",
+                            title: "R",
                             color: "black"
                         },
                         y: {
                             display: true,
-                            title: "Gigena",
+                            title: "G",
                             color: "black"
                         }
                     },
@@ -1292,7 +1305,16 @@ export class Excel {
     }
 
     selectionActive(instance, x1, y1, x2, y2, origin) {
-        if ($("#bar-element").length && instance.getSelected()[0].element.childNodes.length) {
+        this.setFocus(instance, x1, y1, origin);
+        if (origin && $("#bar-element").length && instance.getSelected()[0].element.childNodes.length) {
+            if (origin.ctrlKey) {
+                this.#cellSelection.push(instance.getSelection());
+                this.#cellSelection.forEach(element => {
+                    instance.updateSelectionFromCoords(element[0], element[1], element[2], element[3]);
+                });
+            } else {
+                this.#cellSelection = [instance.getSelection()];
+            }
             $("#bar-element").val(instance.getSelected()[0].element.childNodes[0].nodeValue);
             $("#bar-element").prop("data-x", x1);
             $("#bar-element").prop("data-y", y1);
@@ -1309,6 +1331,8 @@ export class Excel {
             this.#spreadsheet[0].resetSelection(true)
         }
     }
+
+
 
     setFocusActive(spreadsheet) {
         let x = $("#bar-element").prop("data-x");
@@ -1328,14 +1352,17 @@ export class Excel {
         }
     }
 
-    setFocus(spreadsheet, e) {
+    setFocus(spreadsheet, xselect, yselect, e) {
         let x = $("#bar-element").prop("data-x");
         let y = $("#bar-element").prop("data-y");
         let element = null;
         if ((x || x == 0)  && (y || y == 0) 
-            && (e.key === "Enter" || e.type === "blur")) {
+            && (x != xselect || y != yselect)
+            && (e.key === "Enter" || e.type === "mousedown"
+                 || e.type === "blur")) {
             //spreadsheet[0].updateSelectionFromCoords(x, y, x, y);
-            element = this.#spreadsheet[0].getCellFromCoords(x, y);
+            //element = this.#spreadsheet[0].getCellFromCoords(x, y);
+            element = spreadsheet.getCellFromCoords(x, y);
             element.classList.remove("highlight-selected");
             element.classList.remove("highlight");
             element.classList.remove("highlight-top");
