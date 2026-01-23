@@ -659,13 +659,23 @@ export class Excel {
         }
     }
 
-    async excel_download(objectJsonTabla) {
+    async excel_download(
+                         objectJsonTabla,
+                         listConfig
+                        ) {
 
         const vic = new ExcelJS.Workbook();
         let worksheet = vic.addWorksheet('rastreador', {properties:{tabColor: {argb: 'FFC0000'}}})
 
         let values = [];
         let count = objectJsonTabla.movimientos_general.length;
+
+        let listaDeMovimientos = objectJsonTabla.movimientos_general.map(function (velem, index, array) {
+            listConfig.forEach(function (elemen, index, array) {
+                delete velem[elemen];
+            });
+            return velem;
+        });
 
         for(let row = 1; row < count; row++) {
             if (row == 1) {
@@ -685,14 +695,18 @@ export class Excel {
                                             };
                 continue;
             }
-            worksheet.getRow(row).values  = Object.values(objectJsonTabla.movimientos_general[row]).slice(1);
+            worksheet.getRow(row).values  = Object.values(listaDeMovimientos[row]).slice(1);
             worksheet.getRow(row).font = {bgColor:{argb:'FFC000'}};
             worksheet.getRow(row).alignment = { vertical: 'middle', horizontal: 'center' };
             worksheet.getRow(row).style  = {bgColor:{argb:'FFC000'}};
             worksheet.getRow(row).height = 20;
         }
 
-        values = objectJsonTabla.header_movimientos_general.map(function (e) {
+        values = objectJsonTabla.header_movimientos_general.filter(function (e) {
+            return !listConfig.includes(e);
+        });
+
+        values = values.map(function (e) {
             let val = {header: e, key: e, width: 30,  filterButton: true};
             return val;
         });
@@ -1305,13 +1319,30 @@ export class Excel {
     }
 
     selectionActive(instance, x1, y1, x2, y2, origin) {
+        let isInner = null;
         if (origin.type == "mousedown") this.setFocus(instance, x1, y1, origin);
         if (origin && $("#bar-element").length && instance.getSelected()[0].element.childNodes.length) {
             if (origin.ctrlKey) {
-                this.#cellSelection.push(instance.getSelection());
+                this.#cellSelection = this.#cellSelection.filter(function (e) {
+                    console.log(e);
+                    console.log(x1 + "-" + y1 + "-" + x2 + "-" + y2);
+                    if (this.isSubset(e, x1, y1, x2, y2)) {
+                        console.log("is subset");
+                        this.setListFocus(e);
+                        return false;
+                    }
+                    console.log("subset");
+                    return true;
+                }.bind(this));
+
+                isInner = this.isInnerSet(instance.getSelection());
+                if (!isInner) this.#cellSelection.push(instance.getSelection());
+
                 this.#cellSelection.forEach(element => {
                     let elem = null;
                     let classList = null;
+
+
                     for (let x = element[0]; x <= element[2]; x++) {
                         elem = this.#spreadsheet[0].getCellFromCoords(x, element[1]);
                         classList = elem.classList;
@@ -1333,6 +1364,7 @@ export class Excel {
                         classList.add("highlight");
                     }
                 });
+
             } else {
                 if (origin.type == "mousedown") {
                     this.#cellSelection.forEach(element => {
@@ -1342,7 +1374,6 @@ export class Excel {
                             }                        
                         }
                     });
-
                 }
                 this.#cellSelection = [instance.getSelection()];
             }
@@ -1362,8 +1393,6 @@ export class Excel {
             this.#spreadsheet[0].resetSelection(true)
         }
     }
-
-
 
     setFocusActive(spreadsheet) {
         let x = $("#bar-element").prop("data-x");
@@ -1394,7 +1423,6 @@ export class Excel {
         classList.add("highlight-right");
 
     }
-
     
     setFocousOut(spreadsheet, x ,y) {
         let element = spreadsheet.getCellFromCoords(x, y);
@@ -1407,7 +1435,49 @@ export class Excel {
         classList.remove("highlight-right");
 
     }
-    
+
+    isSubset(list, x1, y1, x2, y2) {
+        let check = false;
+        if (list[0] >= x1 && list[2] <= x2) {
+            if (list[1] >= y1 && list[3] <= y2) check = true;
+        }
+        return check;
+    }
+
+    isInnerSet(list) {
+        let check = false;
+        check = this.#cellSelection.reduce(function (acumulador, value) {
+            return acumulador || this.isSubset(list, value[0], value[1],value[2], value[3]);
+        }.bind(this), false);
+        return check;
+    }
+
+    setListFocus(element) {
+        let elem = null;
+        let classList = null;
+
+        for (let x = element[0]; x <= element[2]; x++) {
+            elem = this.#spreadsheet[0].getCellFromCoords(x, element[1]);
+            classList = elem.classList;
+            classList.remove("highlight-top");
+            classList.remove("highlight");
+            elem = this.#spreadsheet[0].getCellFromCoords(x, element[3]);
+            classList = elem.classList;
+            classList.remove("highlight-bottom");
+            classList.remove("highlight");
+        }
+        for (let e = element[1]; e <= element[3]; e++) {
+            elem = this.#spreadsheet[0].getCellFromCoords(element[0], e);
+            classList = elem.classList;
+            classList.remove("highlight-left");
+            classList.remove("highlight");
+            elem = this.#spreadsheet[0].getCellFromCoords(element[2], e);
+            classList = elem.classList;
+            classList.remove("highlight-right");
+            classList.remove("highlight");
+        }
+    }
+
     setFocus(spreadsheet, xselect, yselect, e) {
         let x = $("#bar-element").prop("data-x");
         let y = $("#bar-element").prop("data-y");

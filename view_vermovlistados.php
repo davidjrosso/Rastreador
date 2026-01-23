@@ -98,7 +98,8 @@ $ID_Config = $_REQUEST["ID_Config"];
 
               $("#excel_descarga").on("click", function (e) {
                 let vic = null;
-                vic = excel.excel_download(objectJsonTabla);
+                let listConfigResult = listConfigResultados();
+                vic = excel.excel_download(objectJsonTabla, listConfigResult);
                 vic.then(function (result) {
                   let url = null;
                   let blob = new Blob([result], {
@@ -216,7 +217,7 @@ $ID_Config = $_REQUEST["ID_Config"];
           <button id="enviar_imprimir" type="button" class="btn btn-secondary">
               Imprimir
           </button>
-          <button id="excel_descarga" type="button" class="btn btn-secondary" onClick="excel_download(objectJsonTabla);">
+          <button id="excel_descarga" type="button" class="btn btn-secondary">
               Excel descargar
           </button>
           <button id="excel" type = "button" class = "btn btn-secondary" data-toggle="modal" 
