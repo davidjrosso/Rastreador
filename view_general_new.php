@@ -327,10 +327,10 @@ $TipoUsuario = $account->get_id_tipo_usuario();
       });
       for (let index = motivoNumero; index <= 5; index++) {
         if (index == 1) {
-          $("#Motivo").html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo'>Seleccione un Motivo</button>");
+          $("#Motivo").html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo'>Seleccione Motivo</button>");
           $("#ID_Motivo").val(null);
         } else {
-          $("#Motivo" + index).html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo" + index + "'>Seleccione un Motivo</button>");
+          $("#Motivo" + index).html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo" + index + "'>Seleccione Motivo</button>");
           $("#ID_Motivo" + index).val(null);
         }
         
@@ -359,10 +359,10 @@ $TipoUsuario = $account->get_id_tipo_usuario();
       });
       for (let index = categoriaNumero; index <= 5; index++) {
         if (index == 1) {
-          $("#Categoria").html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalCategoria'>Seleccione una Categoria</button>");
+          $("#Categoria").html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalCategoria'>Seleccione Categoría</button>");
           $("#ID_Categoria").val(null);
         } else {
-          $("#Categoria" + index).html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalCategoria'>Seleccione una Categoria</button>");
+          $("#Categoria" + index).html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalCategoria'>Seleccione Categoría</button>");
           $("#ID_Categoria" + index).val(null);
         }
       }
@@ -497,7 +497,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
         agregarAtributoxElemento(btnMotivo_1,"class","btn btn-lg btn-primary btn-block");
         agregarAtributoxElemento(btnMotivo_1,"data-toggle","modal");
         agregarAtributoxElemento(btnMotivo_1,"data-target","#ModalMotivo");        
-        agregarEtiqueta(btnMotivo_1,"Seleccione un Motivo");        
+        agregarEtiqueta(btnMotivo_1,"Seleccione Motivo");        
         var div_btnMotivo_1 = tomarElemento("Motivo");
         resetearValorDiv(div_btnMotivo_1);        
         agregarElementoxDiv(div_btnMotivo_1,btnMotivo_1); 
@@ -507,7 +507,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
         agregarAtributoxElemento(btnMotivo_2,"class","btn btn-lg btn-primary btn-block");
         agregarAtributoxElemento(btnMotivo_2,"data-toggle","modal");
         agregarAtributoxElemento(btnMotivo_2,"data-target","#ModalMotivo2");        
-        agregarEtiqueta(btnMotivo_2,"Seleccione un Motivo");        
+        agregarEtiqueta(btnMotivo_2,"Seleccione Motivo");        
         var div_btnMotivo_2 = tomarElemento("Motivo2");
         resetearValorDiv(div_btnMotivo_2);        
         agregarElementoxDiv(div_btnMotivo_2,btnMotivo_2);  
@@ -517,7 +517,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
         agregarAtributoxElemento(btnMotivo_3,"class","btn btn-lg btn-primary btn-block");
         agregarAtributoxElemento(btnMotivo_3,"data-toggle","modal");
         agregarAtributoxElemento(btnMotivo_3,"data-target","#ModalMotivo3");        
-        agregarEtiqueta(btnMotivo_3,"Seleccione un Motivo");        
+        agregarEtiqueta(btnMotivo_3,"Seleccione Motivo");        
         var div_btnMotivo_3 = tomarElemento("Motivo3");
         resetearValorDiv(div_btnMotivo_3);        
         agregarElementoxDiv(div_btnMotivo_3,btnMotivo_3);      
@@ -527,7 +527,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
         agregarAtributoxElemento(btnCategoria,"class","btn btn-lg btn-primary btn-block");
         agregarAtributoxElemento(btnCategoria,"data-toggle","modal");
         agregarAtributoxElemento(btnCategoria,"data-target","#ModalCategoria");        
-        agregarEtiqueta(btnCategoria,"Seleccione una Categoria");       
+        agregarEtiqueta(btnCategoria,"Seleccione Categoría");       
         var div_btnCategoria = tomarElemento("Categoria");
         resetearValorDiv(div_btnCategoria);        
         agregarElementoxDiv(div_btnCategoria,btnCategoria);              
@@ -619,7 +619,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
         var divBotonMotivo = document.createElement("div");
         divBotonMotivo.setAttribute("id", "Motivo" + cantMotivos);
         divBotonMotivo.setAttribute('class','col-md-10');
-        var boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo" + cantMotivos + "'>Seleccione un Motivo</button>";
+        var boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo" + cantMotivos + "'>Seleccione Motivo</button>";
         divBotonMotivo.innerHTML = boton;      
         divMotivo.appendChild(labelMotivo);
         divMotivo.appendChild(divBotonMotivo);
@@ -769,7 +769,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
             <div class="form-group row">
               <label for="ID_Barrio" class="col-md-2 col-form-label LblForm">Barrio: </label>
               <div class="col-md-9">
-                <?php  
+                <?php
                 $Element = new Elements();
                 echo $Element->CBRepBarrios();
                 ?>
@@ -830,7 +830,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
             <div class="form-group row">
               <label for="modal-categoria" class="col-md-2 col-form-label LblForm">Categoría: </label>
               <div class="col-md-9" id = "Categoria">
-                <button id="modal-categoria" type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalCategoria">Seleccione una Categoria</button>  
+                <button id="modal-categoria" type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalCategoria">Seleccione Categoría</button>  
               </div>
               <div class="col-md-1 div-button-center">
                   <button type="button" class="btn btn-primary" onClick="agregarCategoria()" id="agregarCategoriaID">+</button>
@@ -841,7 +841,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 1: </label>
               <div class="col-md-9" id = "Motivo">
-                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo">Seleccione un Motivo</button>   
+                <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo">Seleccione Motivo</button>   
               </div>
               <div class="col-md-1 div-button-center">
                   <button type="button" class="btn btn-primary" onClick="agregarMotivo()" id="agregarMotivoID">+</button>
@@ -1208,7 +1208,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Selección de Categoria</h5>
+              <h5 class="modal-title" id="exampleModalLongTitle">Seleccióne Categoría</h5>
               <button type="button" class="close" id="close-categorias" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
