@@ -1305,14 +1305,45 @@ export class Excel {
     }
 
     selectionActive(instance, x1, y1, x2, y2, origin) {
-        this.setFocus(instance, x1, y1, origin);
+        if (origin.type == "mousedown") this.setFocus(instance, x1, y1, origin);
         if (origin && $("#bar-element").length && instance.getSelected()[0].element.childNodes.length) {
             if (origin.ctrlKey) {
                 this.#cellSelection.push(instance.getSelection());
                 this.#cellSelection.forEach(element => {
-                    instance.updateSelectionFromCoords(element[0], element[1], element[2], element[3]);
+                    let elem = null;
+                    let classList = null;
+                    for (let x = element[0]; x <= element[2]; x++) {
+                        elem = this.#spreadsheet[0].getCellFromCoords(x, element[1]);
+                        classList = elem.classList;
+                        classList.add("highlight-top");
+                        classList.add("highlight");
+                        elem = this.#spreadsheet[0].getCellFromCoords(x, element[3]);
+                        classList = elem.classList;
+                        classList.add("highlight-bottom");
+                        classList.add("highlight");
+                    }
+                    for (let e = element[1]; e <= element[3]; e++) {
+                        elem = this.#spreadsheet[0].getCellFromCoords(element[0], e);
+                        classList = elem.classList;
+                        classList.add("highlight-left");
+                        classList.add("highlight");
+                        elem = this.#spreadsheet[0].getCellFromCoords(element[2], e);
+                        classList = elem.classList;
+                        classList.add("highlight-right");
+                        classList.add("highlight");
+                    }
                 });
             } else {
+                if (origin.type == "mousedown") {
+                    this.#cellSelection.forEach(element => {
+                        for (let x = element[0]; x <= element[2]; x++) {
+                            for (let e = element[1]; e <= element[3]; e++) {
+                                this.setFocousOut(instance, x, e);                            
+                            }                        
+                        }
+                    });
+
+                }
                 this.#cellSelection = [instance.getSelection()];
             }
             $("#bar-element").val(instance.getSelected()[0].element.childNodes[0].nodeValue);
@@ -1352,6 +1383,31 @@ export class Excel {
         }
     }
 
+    setFocousIn(spreadsheet, x ,y) {
+        let element = spreadsheet.getCellFromCoords(x, y);
+        let classList = element.classList;
+        classList.add("highlight-selected");
+        classList.add("highlight");
+        classList.add("highlight-top");
+        classList.add("highlight-bottom");
+        classList.add("highlight-left");
+        classList.add("highlight-right");
+
+    }
+
+    
+    setFocousOut(spreadsheet, x ,y) {
+        let element = spreadsheet.getCellFromCoords(x, y);
+        let classList = element.classList;
+        classList.remove("highlight-selected");
+        classList.remove("highlight");
+        classList.remove("highlight-top");
+        classList.remove("highlight-bottom");
+        classList.remove("highlight-left");
+        classList.remove("highlight-right");
+
+    }
+    
     setFocus(spreadsheet, xselect, yselect, e) {
         let x = $("#bar-element").prop("data-x");
         let y = $("#bar-element").prop("data-y");
