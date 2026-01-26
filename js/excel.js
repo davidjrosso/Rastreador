@@ -596,7 +596,6 @@ export class Excel {
                 width: 500,
                 validations: {
                     color: function(value) {
-                        console.log("");
                     }.bind(this),
                     titulo: function(value) {
                         this.#chart.options.plugins.title.text = value;
@@ -1324,14 +1323,10 @@ export class Excel {
         if (origin && $("#bar-element").length && instance.getSelected()[0].element.childNodes.length) {
             if (origin.ctrlKey) {
                 this.#cellSelection = this.#cellSelection.filter(function (e) {
-                    console.log(e);
-                    console.log(x1 + "-" + y1 + "-" + x2 + "-" + y2);
                     if (this.isSubset(e, x1, y1, x2, y2)) {
-                        console.log("is subset");
                         this.setListFocus(e);
                         return false;
                     }
-                    console.log("subset");
                     return true;
                 }.bind(this));
 

@@ -2739,7 +2739,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
                                           $nroMotivosEnFecha += 1;
                                           $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
                                           $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center; " . $value["div_hidden"] . "'>
-                                                        <a style='text-decoration: none;' href = 'javascript:window.open(\"view_vermovimientos.php?ID=" . $RetTodos["id_movimiento"] . "\",\"Ventana" . $RetTodos["id_movimiento"] . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
+                                                        <a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $RetTodos["id_movimiento"] . "\",\"Ventana" . $RetTodos["id_movimiento"] . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
                                                           <span style='font-size: 30px; color: " . $RetTodos["color"] . ";'>" .
                                                             $RetTodos["Forma_Categoria"] . "
                                                             <center>
