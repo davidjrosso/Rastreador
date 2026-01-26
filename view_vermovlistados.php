@@ -74,6 +74,7 @@ $ID_Config = $_REQUEST["ID_Config"];
       let listaOrden = new Map();
       let fullscreen = false;
       let excel = null;
+      let intervalo = null;
 
       $(document).ready(function(){
               var date_input=$('input[name="date"]');
@@ -91,6 +92,36 @@ $ID_Config = $_REQUEST["ID_Config"];
               let floorPag = Math.floor((nroFilasTabla + 2) / 16);
               nroPaginaPdf = 0;
               thTable = $("thead > tr > th");
+
+              $("#input-zoom").on("input", function (e) {
+                toggleZoom($('#input-zoom').prop("value"));
+              });
+
+              $("#zoomIncrementar").on("mousedown", function (e) {
+                intervalo = setInterval(function () {
+                  let value = null;
+                  $('#input-zoom')[0].stepUp();
+                  value = $('#input-zoom').prop("value");
+                  toggleZoom(value);
+                }, 37);
+              });
+
+              $("#zoomIncrementar").on("mouseup", function (e) {
+                clearInterval(intervalo);
+              });
+
+              $("#zoomDecrementar").on("mousedown", function (e) {
+                intervalo = setInterval(function () {
+                  let value = null;
+                  $('#input-zoom')[0].stepDown();
+                  value = $('#input-zoom').prop("value");
+                  toggleZoom(value);
+                }, 37);
+              });
+
+              $("#zoomDecrementar").on("mouseup", function (e) {
+                clearInterval(intervalo);
+              });
 
               $("#excel").on("click", function (e) {
                 if (excel) {
@@ -148,31 +179,37 @@ $ID_Config = $_REQUEST["ID_Config"];
         //Terminar esta parte cuando termine lo demas.
       }
 
-  function listConfigResultados() {
-    let list = [];
-    if (!document.getElementById('chkFecha').checked) list.push('Fecha');
-    if (!document.getElementById('chkMotivos').checked) {
-      list.push('Motivo 1');
-      list.push('Motivo 2');
-      list.push('Motivo 3');
-    }
-    if (!document.getElementById('chkPersona').checked) list.push('Persona');
-    if (!document.getElementById('chkDNI').checked) list.push('DNI');
-    if (!document.getElementById('chkFechaNac').checked) list.push('Fecha Nac');
-    if (!document.getElementById('chkEdad').checked) list.push('Años');
-    if (!document.getElementById('chkMeses').checked) list.push('Meses');
-    if (!document.getElementById('chkObraSocial').checked) list.push('Obra Social');
-    if (!document.getElementById('chkDomicilio').checked) list.push('Domicilio');
-    if (!document.getElementById('chkBarrio').checked) list.push('Barrio');
-    if (!document.getElementById('chkLocalidad').checked) list.push('Localidad');
+      function toggleZoom(porcentaje) {
+        let Tabla = document.getElementById("tabla-movimiento-general");
+        Tabla.style.zoom = porcentaje + "%";
+      }
 
-    if (!document.getElementById('chkObservaciones').checked) list.push('Observaciones');
-    if (!document.getElementById('chkResponsable').checked) list.push('Responsable');
-    if (!document.getElementById('chkCentrosSalud').checked) list.push('Centro Salud');
-    if (!document.getElementById('chkOtrasInstituciones').checked) list.push('Otra Institucion');
 
-    return list;
-  }
+      function listConfigResultados() {
+        let list = [];
+        if (!document.getElementById('chkFecha').checked) list.push('Fecha');
+        if (!document.getElementById('chkMotivos').checked) {
+          list.push('Motivo 1');
+          list.push('Motivo 2');
+          list.push('Motivo 3');
+        }
+        if (!document.getElementById('chkPersona').checked) list.push('Persona');
+        if (!document.getElementById('chkDNI').checked) list.push('DNI');
+        if (!document.getElementById('chkFechaNac').checked) list.push('Fecha Nac');
+        if (!document.getElementById('chkEdad').checked) list.push('Años');
+        if (!document.getElementById('chkMeses').checked) list.push('Meses');
+        if (!document.getElementById('chkObraSocial').checked) list.push('Obra Social');
+        if (!document.getElementById('chkDomicilio').checked) list.push('Domicilio');
+        if (!document.getElementById('chkBarrio').checked) list.push('Barrio');
+        if (!document.getElementById('chkLocalidad').checked) list.push('Localidad');
+
+        if (!document.getElementById('chkObservaciones').checked) list.push('Observaciones');
+        if (!document.getElementById('chkResponsable').checked) list.push('Responsable');
+        if (!document.getElementById('chkCentrosSalud').checked) list.push('Centro Salud');
+        if (!document.getElementById('chkOtrasInstituciones').checked) list.push('Otra Institucion');
+
+        return list;
+      }
       function enviarImprimirPdf() {
         //configColumnasTabla();
         let listConfigResult = listConfigResultados();
@@ -216,6 +253,14 @@ $ID_Config = $_REQUEST["ID_Config"];
       <div class="col"></div>
     </div><br>
     <br>
+    <div class="row">
+      <div class="number-input">
+        <button id="zoomIncrementar" class="plus"></button>
+        <input id="input-zoom" value="60" class="quantity" style="padding-right: 3px;" min="0" name="quantity"  type="number">
+        <div id="divporcentaje">%</div>
+        <button id="zoomDecrementar"></button>
+      </div>
+    </div>
     <div class="row">
         <div class="col-md-4" style="padding-right: 0px;padding-left: 0pc;">
           <button id="enviar_imprimir" type="button" class="btn btn-secondary">
