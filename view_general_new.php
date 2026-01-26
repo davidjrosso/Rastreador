@@ -634,7 +634,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
     }
 
     function agregarCategoria() {
-      if (cantCategoria <= 4) {
+      if (cantCategoria <= 7) {
         cantCategoria++;
         let divContenedor = document.getElementById('contenedorCategoria');
         let divCategoria = document.createElement("div");
