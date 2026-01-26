@@ -384,7 +384,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
 
     }
     function agregarMotivo(){
-      if (cantMotivos <= 4) {
+      if (cantMotivos <= 7) {
         cantMotivos++;
         var divContenedor = document.getElementById('contenedorMotivos');
         var divMotivo = document.createElement("div");

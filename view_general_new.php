@@ -608,7 +608,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
       }
 
       function agregarMotivo() {
-      if (cantMotivos <= 4) {
+      if (cantMotivos <= 7) {
         cantMotivos++;
         var divContenedor = document.getElementById('contenedorMotivos');
         var divMotivo = document.createElement("div");
