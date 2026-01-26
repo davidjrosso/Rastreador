@@ -1384,7 +1384,7 @@ $ID_Config = $_REQUEST["ID_Config"];
                                       Persona
                                     </td>
                                     <td style = 'width: 70%;'>
-                                      <a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $id_persona ."\",\"Ventana" . $id_persona ."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".
+                                      <a href = 'javascript:window.open(\"view_modpersonas.php?ID=" .  $DtoMovimiento->getId_Persona() ."\",\"Ventana" . $DtoMovimiento->getId_Persona() ."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".
                                         $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "
                                       </a>
                                     </td>
@@ -1400,31 +1400,68 @@ $ID_Config = $_REQUEST["ID_Config"];
                     $json_row["Persona"] = $DtoMovimiento->getApellido() . " " . $DtoMovimiento->getNombre();
 
                     if (count(array_filter($MotivosOpciones)) == 1) {
-                      $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
+                      $TableMov .= "<tr class='trMotivos'>
+                                      <td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . 
+                                        "<a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $DtoMovimiento->getID_Movimiento() . "\",\"Ventana" . $DtoMovimiento->getID_Movimiento() . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>" .
+                                          $DtoMovimiento->getMotivo_1() . 
+                                        "</a>
+                                     </td>
+                                    </tr>";
                       $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
                       $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                       $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
                     } elseif (count(array_filter($MotivosOpciones)) == 2) {
-                      $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
+                      $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td>
+                                      <td style = 'width: 70%;'>" . 
+                                        $DtoMovimiento->getMotivo_1() . 
+                                     "</td>
+                                    </tr>";
                       $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
                       $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                       $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
 
-                      $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
+                      $TableMov .= "<tr class='trMotivos'>
+                                      <td style = 'width: 30%;'>Motivo 2</td>
+                                      <td style = 'width: 70%;'>" . 
+                                        "<a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $DtoMovimiento->getID_Movimiento() . "\",\"Ventana" . $DtoMovimiento->getID_Movimiento() . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>" .
+                                          $DtoMovimiento->getMotivo_2() . 
+                                        "</a>
+                                      </td>
+                                    </tr>";
                       $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
                       $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
                       $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 2"])) ? strlen($json_row["Motivo 2"]) : $json_row["height"];
                     } else {
-                      $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
+                      $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td>
+                                      <td style = 'width: 70%;'>" . 
+                                        "<a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $DtoMovimiento->getID_Movimiento() . "\",\"Ventana" . $RetTodos["id_movimiento"] . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>" .
+                                          $DtoMovimiento->getMotivo_1() . 
+                                        "</a>
+                                     </td>
+                                    </tr>";
                       $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
                       $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                       $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
 
-                      $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
+                      $TableMov .= "<tr class='trMotivos'>
+                                      <td style = 'width: 30%;'>Motivo 2</td>
+                                      <td style = 'width: 70%;'>" . 
+                                        "<a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $DtoMovimiento->getID_Movimiento() . "\",\"Ventana" . $DtoMovimiento->getID_Movimiento() . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>" .
+                                          $DtoMovimiento->getMotivo_2() . 
+                                        "</a>
+                                      </td>
+                                    </tr>";
                       $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
                       $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
                       $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 2"])) ? strlen($json_row["Motivo 2"]) : $json_row["height"];
-                      $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";
+                      $TableMov .= "<tr class='trMotivos'>
+                                      <td style = 'width: 30%;'>Motivo 3</td>
+                                      <td style = 'width: 70%;'>" . 
+                                        "<a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $DtoMovimiento->getID_Movimiento() . "\",\"Ventana" . $DtoMovimiento->getID_Movimiento() . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>" .
+                                            $DtoMovimiento->getMotivo_3() . 
+                                        "</a>
+                                      </td>
+                                    </tr>";
                       $TableMovPrint .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";
                       $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
                       $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 3"])) ? strlen($json_row["Motivo 3"]) : $json_row["height"];
@@ -1458,12 +1495,20 @@ $ID_Config = $_REQUEST["ID_Config"];
                     $json_row["Persona"] = $DtoMovimiento->getApellido() . " " . $DtoMovimiento->getNombre();
 
                     if (count(array_filter($MotivosOpciones)) == 1) {
-                      $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
+                      $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . 
+                                        "<a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $DtoMovimiento->getID_Movimiento() . "\",\"Ventana" . $DtoMovimiento->getID_Movimiento() . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>" .
+                                          $DtoMovimiento->getMotivo_1() . 
+                                        "</a>
+                                   </td>";
                       $TableMovPrint .=  "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
                       $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                       $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
                     } elseif (count(array_filter($MotivosOpciones)) == 2) {
-                      $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
+                      $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . 
+                                      "<a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $DtoMovimiento->getID_Movimiento() . "\",\"Ventana" . $DtoMovimiento->getID_Movimiento() . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>" .
+                                        $DtoMovimiento->getMotivo_1() . 
+                                      "</a>
+                                    </td>";
                       $TableMovPrint .=  "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
                       $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                       $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
@@ -1472,15 +1517,27 @@ $ID_Config = $_REQUEST["ID_Config"];
                       $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
                       $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 2"])) ? strlen($json_row["Motivo 2"]) : $json_row["height"];
                     } else {
-                      $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
+                      $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . 
+                                      "<a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $DtoMovimiento->getID_Movimiento() . "\",\"Ventana" . $DtoMovimiento->getID_Movimiento() . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>" .
+                                        $DtoMovimiento->getMotivo_1() . 
+                                      "</a>
+                                    </td>";
                       $TableMovPrint .=  "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
                       $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                       $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
-                      $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td>";
+                      $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . 
+                                      "<a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $DtoMovimiento->getID_Movimiento() . "\",\"Ventana" . $DtoMovimiento->getID_Movimiento() . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>" .
+                                        $DtoMovimiento->getMotivo_2() . 
+                                      "</a>
+                                    </td>";
                       $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td>";
                       $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
                       $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 2"])) ? strlen($json_row["Motivo 2"]) : $json_row["height"];
-                      $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_3() . "</td>";  
+                      $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . 
+                                        "<a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $DtoMovimiento->getID_Movimiento() . "\",\"Ventana" . $DtoMovimiento->getID_Movimiento() . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>" .
+                                          $DtoMovimiento->getMotivo_3() . 
+                                        "</a>
+                                   </td>";  
                       $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_3() . "</td>";  
                       $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
                       $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 3"])) ? strlen($json_row["Motivo 3"]) : $json_row["height"];
@@ -1671,13 +1728,32 @@ $ID_Config = $_REQUEST["ID_Config"];
                   $json_row["Fecha"] = $DtoMovimiento->getFecha();
                   $TableMov .= "<tr><td style = 'width: 30%;'>Persona</td><td style = 'width: 70%;'>" . $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "</td></tr>";
                   $json_row["Persona"] = $DtoMovimiento->getApellido() . " " . $DtoMovimiento->getNombre();
-                  $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 1</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
+                  $TableMov .= "<tr class='trMotivos'>
+                                  <td style = 'width: 30%;'>Motivo 1</td>
+                                  <td style = 'width: 70%;'>" . 
+                                    "<a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $DtoMovimiento->getID_Movimiento() . "\",\"Ventana" . $DtoMovimiento->getID_Movimiento() . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>" .
+                                      $DtoMovimiento->getMotivo_1() . 
+                                    "</a>
+                                  </td>
+                                </tr>";
                   $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                   $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
-                  $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 2</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
+                  $TableMov .= "<tr class='trMotivos'>
+                                  <td style = 'width: 30%;'>Motivo 2</td>
+                                  <td style = 'width: 70%;'>" . 
+                                    "<a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $DtoMovimiento->getID_Movimiento() . "\",\"Ventana" . $DtoMovimiento->getID_Movimiento() . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>" .
+                                      $DtoMovimiento->getMotivo_2() . 
+                                    "</a>
+                                  </td></tr>";
                   $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
                   $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 2"])) ? strlen($json_row["Motivo 2"]) : $json_row["height"];
-                  $TableMov .= "<tr class='trMotivos'><td style = 'width: 30%;'>Motivo 3</td><td style = 'width: 70%;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";
+                  $TableMov .= "<tr class='trMotivos'>
+                                  <td style = 'width: 30%;'>Motivo 3</td>
+                                  <td style = 'width: 70%;'>" . 
+                                    "<a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $DtoMovimiento->getID_Movimiento() . "\",\"Ventana" . $DtoMovimiento->getID_Movimiento() . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>" .
+                                      $DtoMovimiento->getMotivo_3() . 
+                                    "</a>
+                                  </td></tr>";
                   $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
                   $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 3"])) ? strlen($json_row["Motivo 3"]) : $json_row["height"];
                   $TableMov .= "<tr class='trObservaciones'><td style = 'width: 30%;'>Observaciones</td><td style = 'width: 70%;'>" . $DtoMovimiento->getObservaciones() . "</td></tr>";
@@ -1715,12 +1791,27 @@ $ID_Config = $_REQUEST["ID_Config"];
                   $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
                   $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                   $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
-                  $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
+                  $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . 
+                                  "<a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $DtoMovimiento->getID_Movimiento() . "\",\"Ventana" . $DtoMovimiento->getID_Movimiento() . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>" .
+                                    $DtoMovimiento->getMotivo_2() . 
+                                  "</a>
+                                </td>
+                              </tr>";
                   $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td></tr>";
                   $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
                   $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 2"])) ? strlen($json_row["Motivo 2"]) : $json_row["height"];
-                  $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";
-                  $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_3() . "</td></tr>";
+                  $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . 
+                                  "<a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $DtoMovimiento->getID_Movimiento() . "\",\"Ventana" . $DtoMovimiento->getID_Movimiento() . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>" .
+                                      $DtoMovimiento->getMotivo_3() . 
+                                  "</a>
+                                </td>
+                              </tr>";
+                  $TableMovPrint .= "<td class='trMotivos' style = 'width: auto;'>" . 
+                                      "<a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $DtoMovimiento->getID_Movimiento() . "\",\"Ventana" . $DtoMovimiento->getID_Movimiento() . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>" .
+                                        $DtoMovimiento->getMotivo_3() . 
+                                      "</a>
+                                     </td>
+                                  </tr>";
                   $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
                   $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 3"])) ? strlen($json_row["Motivo 3"]) : $json_row["height"];
                   $TableMov .= "<td class='trDNI' style = 'width: auto;'>" . $DNI."</td>";
