@@ -93,6 +93,10 @@ $ID_Config = $_REQUEST["ID_Config"];
               thTable = $("thead > tr > th");
 
               $("#excel").on("click", function (e) {
+                if (excel) {
+                  excel.delete();
+                }
+                excel = new Excel();
                 excel.init();
               });
 
@@ -1916,6 +1920,13 @@ $ID_Config = $_REQUEST["ID_Config"];
             <label class="form-check-label" for="boton-1"></label>
               Meses
           </li>
+          <li>
+            <input type="checkbox" id="boton-10" class="form-check-input"
+                    onclick="orderOptionCheck(5)">
+            <label class="form-check-label" for="boton-1"></label>
+              DNI
+          </li>
+
           <!--
           <li>
             <button type="button" id="boton-disable-0" class="btn buttom-order-list btn-outline-light"
@@ -2433,6 +2444,7 @@ $ID_Config = $_REQUEST["ID_Config"];
     let trResponsable= document.getElementsByClassName('trResponsable');
     let trCentrosSalud= document.getElementsByClassName('trCentrosSalud');
     let trOtrasInstituciones = document.getElementsByClassName('trOtrasInstituciones');
+    excel = null;
 
     if(!chkFecha){
       for (let i = 0; i < trFecha.length; i++) {        
