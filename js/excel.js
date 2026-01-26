@@ -15,7 +15,7 @@ export class Excel {
     init() {
         let list = [];
         let elems = [];
-        let th = $("table th");
+        let th = $("table thead th:not([hidden='true'])");
         let length = $("#excel_rev").children().length;
         let columnsadd = [{
                             type: 'text',
@@ -69,7 +69,7 @@ export class Excel {
                 }
             });
 
-            $("tbody tr").each(function (index) {
+            $("tbody tr td:not([hidden='true'])").each(function (index) {
                 let rowlist = [];
                 $(this).children().each(function (e) {
                     rowlist.push(
@@ -1684,5 +1684,9 @@ export class Excel {
         return this.#charts.has(x + "-" + y);
     }
 
+    delete() {
+        if (this.#spreadsheet) this.#spreadsheet[0].destroyAll();
+    }
+    
 }
 
