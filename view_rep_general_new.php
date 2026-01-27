@@ -324,6 +324,10 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
         animacionCronDeMapa(map);
       });
 
+      $("#rep_movimientos").on("click", function (e) {
+        sendToRepMovimientos();
+      });
+
       $("#boton-fullscreen").on("click", function (e) {
         if (!fullscreen) {
           $("#map-modal div[class='modal-content']")[0].requestFullscreen();
@@ -925,6 +929,40 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
                       error: errorHandler
                       });
     }
+
+    function sendToRepMovimientos() {
+        const form = document.createElement('form');
+        let datos = <?php echo json_encode($_REQUEST)?>;
+        form.method = 'POST';
+        form.action = "/view_vermovlistados.php";
+        form.style.display = 'none';
+
+        for (const key in datos) {
+            if (Object.prototype.hasOwnProperty.call(datos, key)) {
+                if (datos[key] instanceof Array) {
+                  datos[key].forEach(function (e) {
+                      const input = document.createElement('input');
+                      input.type = 'hidden';
+                      input.name = key + "[]";
+                      input.value = e;
+                      form.appendChild(input);
+                  })
+                } else {
+                  const input = document.createElement('input');
+                  input.type = 'hidden';
+                  input.name = key;
+                  input.value = datos[key];
+                  form.appendChild(input);
+                }
+            }
+        }
+
+        document.body.appendChild(form);
+        form.submit(); // Submit the form to initiate the navigation
+
+    }      
+
+
 
     
   </script>
@@ -1709,7 +1747,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             if(count((Array)$Barrio) > 1){
               $filtroBarrios = 'Barrios:';
               foreach($Barrio as $key => $valueBarrio){
-                if ($key == $Barrio->array_key_first) {
+                if ($key == array_key_first($Barrio)) {
                   $persona_query .= " and (";
                 }
                 if ($valueBarrio > 0) {
@@ -1727,7 +1765,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
 
                   $EjecutarConsultarBarrio = mysqli_query($Con->Conexion,$ConsultarBarrio) or die("Problemas al consultar filtro Barrios");
                   $RetConsultarBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);
-                  if ($key == $Barrio->array_key_first) {
+                  if ($key == array_key_first($Barrio)) {
                     $filtroBarrios .= " " . $RetConsultarBarrio['Barrio'];
                     $geo_lat_barrio = $RetConsultarBarrio['lat'];
                     $geo_lon_barrio = $RetConsultarBarrio['lon'];
@@ -1953,6 +1991,9 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             <button id="boton-mapa-georeferencia" type="button" class="btn btn-secondary" data-toggle="modal"
               style="background-color: #ffc6b1; color: black; border-color: white; " data-target="#map-modal">S. I. G.</button>
             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#configModal">Config</button>
+            <button id="rep_movimientos" type = "button" class = "btn btn-secondary">
+                reporte listado
+            </button>
           </div>
         </div>
         <?php

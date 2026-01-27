@@ -39,7 +39,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
 
 $_SESSION["reporte_listado"] = true;
 $_SESSION["reporte_grafico"] = false;
-$ID_Config = $_REQUEST["ID_Config"];
+$ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
 
 ?>
 <!DOCTYPE html>
@@ -129,6 +129,10 @@ $ID_Config = $_REQUEST["ID_Config"];
                 }
                 excel = new Excel();
                 excel.init();
+              });
+
+              $("#rep_grafico").on("click", function (e) {
+                sendToRepGrafico();
               });
 
               $("#excel_descarga").on("click", function (e) {
@@ -236,6 +240,38 @@ $ID_Config = $_REQUEST["ID_Config"];
           reporte.sendRequestOne();
         }
       }
+
+      function sendToRepGrafico() {
+          const form = document.createElement('form');
+          let datos = <?php echo json_encode($_REQUEST)?>;
+          form.method = 'POST';
+          form.action = "/view_rep_general_new.php";
+          form.style.display = 'none';
+
+          for (const key in datos) {
+              if (Object.prototype.hasOwnProperty.call(datos, key)) {
+                  if (datos[key] instanceof Array) {
+                    datos[key].forEach(function (e) {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = key + "[]";
+                        input.value = e;
+                        form.appendChild(input);
+                    })
+                  } else {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = datos[key];
+                    form.appendChild(input);
+                  }
+              }
+          }
+
+          document.body.appendChild(form);
+          form.submit(); 
+      }      
+
   </script>  
 </head>
 <body>
@@ -582,7 +618,7 @@ $ID_Config = $_REQUEST["ID_Config"];
             if(count((Array)$Barrio) > 1){
               $filtroBarrios = 'Barrios:';
               foreach($Barrio as $key => $valueBarrio){
-                if($key == $Barrio->array_key_first){
+                if($key == array_key_first($Barrio)){
                   $persona_query .= " and (";
                 }
                 if($valueBarrio > 0){
@@ -598,7 +634,7 @@ $ID_Config = $_REQUEST["ID_Config"];
 
                   $EjecutarConsultarBarrio = mysqli_query($Con->Conexion,$ConsultarBarrio) or die("Problemas al consultar filtro Barrios");
                   $RetConsultarBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);
-                  if($key == $Barrio->array_key_first){
+                  if($key == array_key_first($Barrio)){
                     $filtroBarrios .= " " . $RetConsultarBarrio['Barrio'];
                   }else{
                     $filtroBarrios .= " - " . $RetConsultarBarrio['Barrio'];
@@ -905,6 +941,9 @@ $ID_Config = $_REQUEST["ID_Config"];
             <button type = "button" class = "btn btn-secondary" data-toggle="modal" 
                     data-target="#configModal">
                 config. columnas
+            </button>
+            <button id="rep_grafico" type = "button" class = "btn btn-secondary">
+                reporte grafico
             </button>
             <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_listados.php'">
                 Atras
