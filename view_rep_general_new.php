@@ -1462,7 +1462,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
         <div class="col"></div>
       </div><br>
       <div class="row" style="margin-bottom: 0.5rem;">
-        <div class="col-3">
+        <div class="col-4">
           <!--<button class="btn btn-info btn-sm" onClick="toggleZoomScreen()">Zoom +</button> 
             <button class="btn btn-info btn-sm" onClick="toggleZoomScreenNormal()">Zoom -</button>-->
           <div class="number-input">
@@ -1977,7 +1977,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             $Etiqueta_Fecha_Fin = implode("-", array_reverse(explode("-", $Fecha_Fin)));
 
           ?>
-          <div class="col-5">
+          <div class="col-3">
             <center>
               <p class="LblForm">ENTRE: <?php echo $Etiqueta_Fecha_Inicio . " Y " . $Etiqueta_Fecha_Fin; ?></p>
             </center>
