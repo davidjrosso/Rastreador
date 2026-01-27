@@ -2002,7 +2002,7 @@ $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
             } else {
                 echo "<div class = 'col'></div>";
                 echo "<div class = 'col-6'>";
-                echo "<p class = 'TextoSinResultados'>No se encontraron Resultados</p><center><button class = 'btn btn-danger' onClick = 'location.href= \"view_movpersonas.php\"'>Atras</button></center>";
+                echo "<p class = 'TextoSinResultados'>No se encontraron Resultados</p><center><button class = 'btn btn-danger' onClick = 'location.href= \"view_listados.php\"'>Atras</button></center>";
                 echo "</div>";
                 echo "<div class = 'col'></div>";
             }
