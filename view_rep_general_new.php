@@ -1984,8 +1984,10 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             <!-- <span><i class="fa fa-filter"></i> Filtros </span> -->
           </div>
           <div class="col-4">
-            <button type="button" class="btn btn-danger" style="margin-left: 27%;"
-              onclick="location.href = 'view_general_new.php'">Atrás</button>
+            <button type="button" class="btn btn-danger"
+                    onclick="location.href = 'view_general_new.php'">
+                Atrás
+            </button>
             <!--<button type="button" class="btn btn-secondary" onclick="enviarImprimir()">**Imprimir</button>-->
             <!--button type="button" class="btn btn-secondary" onclick="enviarImprimirPdf();"> Imprimir</button>-->
             <button id="boton-mapa-georeferencia" type="button" class="btn btn-secondary" data-toggle="modal"
