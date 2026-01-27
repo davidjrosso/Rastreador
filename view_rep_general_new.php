@@ -1983,8 +1983,8 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             </center>
             <!-- <span><i class="fa fa-filter"></i> Filtros </span> -->
           </div>
-          <div class="col-4">
-            <button type="button" class="btn btn-danger"
+          <div class="col-5">
+            <button type="button" class="btn btn-danger" style="margin-left: 14%;"
                     onclick="location.href = 'view_general_new.php'">
                 Atrás
             </button>
