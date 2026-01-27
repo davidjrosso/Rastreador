@@ -942,11 +942,11 @@ $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
                     data-target="#configModal">
                 config. columnas
             </button>
-            <button id="rep_grafico" type = "button" class = "btn btn-secondary">
-                reporte grafico
-            </button>
             <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_listados.php'">
                 Atras
+            </button>
+            <button id="rep_grafico" type = "button" class = "btn btn-secondary">
+                reporte grafico
             </button>
         </div>
      </div>
