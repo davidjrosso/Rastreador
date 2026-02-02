@@ -205,6 +205,25 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
         }
       });
 
+      $("#opcion_f").on("click", function (e) {
+          $("#opcion_m").prop("checked", false);
+          $("#opcion_x").prop("checked", false);
+      });
+
+      $("#opcion_m").on("click", function (e) {
+          $("#opcion_f").prop("checked", false);
+          $("#opcion_x").prop("checked", false);
+      });
+
+      $("#opcion_x").on("click", function (e) {
+          $("#opcion_f").prop("checked", false);
+          $("#opcion_m").prop("checked", false);
+      });
+
+      $("#indications").on("click", function (e) {
+        $("#liveToast").toggle();
+      });
+
       if($("#ID_Calle").find(":selected").val()) {
         $("#mapa-sig").prop('disabled', false);
       }
@@ -284,7 +303,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                       <!-- Search -->
                       <div class="row">
                         <?php
-                        if (isset($_REQUEST["ID"]) && $_REQUEST["ID"] != null) {
+                        if (isset($_REQUEST["ID"])) {
                           $ID = $_REQUEST["ID"];
 
                           $Con = new Conexion();
@@ -330,9 +349,13 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                           $Persona = new Persona($ID_Persona);
                           $Con->CloseConexion();
 
+                          $opcion_f = ($Persona->getSexo() == 'f') ? true : false;
+                          $opcion_m = ($Persona->getSexo() == 'm') ? true : false;
+                          $opcion_x = ($Persona->getSexo() == 'x') ? true : false;
+
                           ?>
                           <div class="col-10">
-                            <form id="form-mod-persona" method="post" onKeydown="return event.key != 'Enter';" action="Controladores/ModificarPersona.php">
+                            <form id="form-mod-persona" method="post" onsubmit="return ValidarPersona()" action="Controladores/ModificarPersona.php">
                               <input type="hidden" name="ID" value="<?php echo $Persona->getID_Persona(); ?>">
                               <div class="form-group row">
                                 <label for="apellido" class="col-md-2 col-form-label LblForm">Apellido: </label>
@@ -381,6 +404,36 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                                 <div class="col-md-10">
                                   <input type="text" class="form-control" name="Meses" id="Meses" autocomplete="off" readonly
                                     value="<?php echo $Persona->getMeses(); ?>">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="opcion_f" class="col-md-2 col-form-label LblForm">Sexo: </label>
+                                <div class="col-md-10">
+                                  <div class="form-check form-check-inline" style="margin-left: 2%; margin-top: 1%;">
+                                    <input class="form-check-input" type="radio" name="opcion_f" id="opcion_f" <?php if ($opcion_f) echo "checked" ?> value="f">
+                                    <label class="form-check-label" for="opcion_f">f</label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="opcion_m" id="opcion_m" <?php if ($opcion_m) echo "checked" ?> value="m">
+                                    <label class="form-check-label" for="opcion_m">m</label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="opcion_x" id="opcion_x" <?php if ($opcion_x) echo "checked" ?> value="x">
+                                    <label class="form-check-label" for="opcion_x">x</label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <button type="button" name="indications" style="background-color: transparent; border: 0px;" id="indications">
+                                      <svg xmlns="http://www.w3.org/2000/svg" style="vertical-align: baseline;" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+                                      </svg>
+                                    </button>
+                                  </div>
+                                  <!-- TOAST PROGRESO ENLACE -->
+                                  <span id="liveToast" class="position-relative top-0 end-0 p-3 toast hide">
+                                      Progeso
+                                  </span>
+                                  <!-- FIN TOAST PROGRESO ENLACE -->
                                 </div>
                               </div>
                               <div class="form-group row">

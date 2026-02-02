@@ -23,6 +23,7 @@ class Persona implements JsonSerializable {
 	private $Localidad;
 	private $Lote;
 	private $Mail;
+	private $sexo;
 	private $Manzana;
 	private $Meses;
 	private $Nombre;
@@ -59,6 +60,7 @@ class Persona implements JsonSerializable {
 		$xCambio_Domicilio  = null,
 		$xTelefono = null,
 		$xMail = null,
+		$xSexo = null,
 		$xID_Escuela = null,
 		$xEstado = null,
 		$xTrabajo = null,
@@ -83,6 +85,7 @@ class Persona implements JsonSerializable {
 			$this->Localidad = $xLocalidad;
 			$this->Lote = $xLote;
 			$this->Mail = $xMail;
+			$this->sexo = $xSexo;
 			$this->Manzana = $xManzana;
 			$this->Meses = $xMeses;
 			$this->Nombre = $xNombre;
@@ -171,6 +174,7 @@ class Persona implements JsonSerializable {
 			$cambio_Domicilio = $ret["cambio_domicilio"];
 			$telefono = $ret["telefono"];
 			$mail = $ret["mail"];
+			$sexo = $ret["sexo"];
 			$ID_Escuela = $ret["ID_Escuela"];
 			$estado = $ret["estado"];
 			$trabajo = $ret["Trabajo"];
@@ -199,6 +203,7 @@ class Persona implements JsonSerializable {
 			$this->Cambio_Domicilio = ($xCambio_Domicilio) ? $xCambio_Domicilio : $cambio_Domicilio;
 			$this->Telefono = ($xTelefono) ? $xTelefono : $telefono;
 			$this->Mail = ($xMail) ? $xMail : $mail;
+			$this->sexo = ($xMail) ? $xSexo : $sexo;
 			$this->ID_Escuela = ($xID_Escuela) ? $xID_Escuela : $ID_Escuela;	
 			$this->Estado = ($xEstado) ? $xEstado : $estado;
 			$this->Trabajo = ($xTrabajo) ? $xTrabajo : $trabajo;
@@ -689,6 +694,10 @@ public function setGeoreferencia($xGeoreferencia){
 	$this->Georeferencia = $xGeoreferencia;
 }
 
+public function setSexo($xSexo){
+	$this->sexo = $xSexo;
+}
+
 public function setObservaciones($xObservaciones){
 	$this->Observaciones = $xObservaciones;
 }
@@ -930,6 +939,10 @@ public function getLatitud()
 	$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
 	$ret = mysqli_fetch_assoc($query_object);
 	return $ret["lat"];
+}
+
+public function getSexo(){
+	return $this->sexo;
 }
 
 public function getObservaciones()
@@ -1312,6 +1325,7 @@ public function update()
 					 manzana = " . ((!is_null($this->getManzana())) ? "'" . $this->getManzana() . "'" : "null") . ", 
 					 lote = " . ((!is_null($this->getLote())) ? $this->getLote() : "null") . ", 
 					 familia = " . ((!is_null($this->getFamilia())) ? "'" . $this->getFamilia() . "'" : "null") . ", 
+					 sexo = " . ((!is_null($this->getSexo())) ? "'" . $this->getSexo() . "'" : "null") . ", 
 					 observacion = " . ((!is_null($this->getObservaciones())) ? "'" . $this->getObservaciones() . "'" : "null") . ", 
 					 cambio_domicilio = " . ((!is_null($this->getCambio_Domicilio())) ? "'" . $this->getCambio_Domicilio() . "'" : "null") . ", 
 					 telefono = " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono() . "'" : "null") . ", 
@@ -1322,13 +1336,12 @@ public function update()
 					 calle = " . ((!is_null($this->getId_Calle())) ? $this->getId_Calle() : "null") . ", 
 					 nro = " . ((!is_null($this->getNro())) ? $this->getNro() : "null") . " 
 				 where id_persona = " . $this->getID_Persona();
-				 $MensajeErrorConsultar = "No se pudo actualizar la Persona";
-				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
-					throw new Exception($MensajeErrorConsultar . $Consulta, 2);
-				}
-				 $Con->CloseConexion();
+	$MensajeErrorConsultar = "No se pudo actualizar la Persona";
+	if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+		throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+	}
+	$Con->CloseConexion();
 }
-
 
 public function update_edad_meses()
 {
@@ -1417,6 +1430,7 @@ public function save(){
 									  manzana, 
 									  lote, 
 									  familia, 
+									  sexo,
 									  observacion, 
 									  cambio_domicilio,
 									  ID_Escuela, 
@@ -1445,6 +1459,7 @@ public function save(){
 						 " . ((!is_null($this->getManzana())) ? "'" . $this->getManzana() . "'" : "null") . ", 
 						 " . ((!is_null($this->getLote())) ? $this->getLote() : "null") . ", 
 						 " . ((!is_null($this->getFamilia())) ? "'" . $this->getFamilia() . "'" : "null") . ", 
+						 " . ((!is_null($this->getSexo())) ? "'" . $this->getSexo() . "'" : "null") . ", 
 						 " . ((!is_null($this->getObservaciones())) ? "'" . $this->getObservaciones() . "'" : "null") . ", 
 						 " . ((!is_null($this->getCambio_Domicilio())) ? "'" . $this->getCambio_Domicilio() . "'" : "null") . ", 
 						 " . ((!is_null($this->getID_Escuela())) ? $this->getID_Escuela() : "null") . ", 

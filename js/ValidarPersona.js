@@ -1,19 +1,32 @@
-function ValidarPersona(){
-	var Apellido = document.getElementById("Apellido").value;
-	var Nombre = document.getElementById("Nombre").value;
-	var Fecha_Nacimiento = document.getElementById("Fecha_Nacimiento").value;
+function ValidarPersona() {
+	let apellido = document.getElementById("Apellido").value;
+	let nombre = document.getElementById("Nombre").value;
+	let Fecha_Nacimiento = document.getElementById("Fecha_Nacimiento").value;
 
-	var division = Fecha_Nacimiento.split("/");
-	var Anios = division[0];
+	let division = Fecha_Nacimiento.split("/");
+	let anios = division[0];
 
+	let opcion_f = $("#opcion_f").prop("checked");
+	opcion_f = $("#opcion_m").prop("checked") || opcion_f;
+	opcion_f = $("#opcion_x").prop("checked") || opcion_f;
 
+	let calle = $("#Calle").prop("value");
 	/*
 	var Fecha_Nacimiento = document.getElementById("Fecha_Nacimiento").value;
 	var ID_Barrio = document.getElementById("ID_Barrio").value;
 	var ID_Escuela = document.getElementById("ID_Escuela").value;
 	*/
-	var Bandera = true;
-	var Mensaje = "";
+	let bandera = true;
+	let Mensaje = "";
+
+	if (!opcion_f) Mensaje = "Seleccione una opcion de sexo"
+
+	if (!calle) {
+		Mensaje = "Seleccion una calle";
+		bandera = false;
+	}
+
+	bandera = opcion_f && bandera;
 
 	// if(Apellido == "" || Apellido == null){
 	// 	Mensaje += "Debe ingresar un Apellido.";
@@ -49,11 +62,11 @@ function ValidarPersona(){
 	}
 	*/
 
-	if(Bandera == false){
+	if (bandera == false) {
 		swal(Mensaje,'','warning');
-		return Bandera;
-	}else{
-		return Bandera;
+		return bandera;
+	} else {
+		return bandera;
 	}
 
 }

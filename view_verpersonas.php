@@ -128,7 +128,7 @@ $Con->CloseConexion();
                                         obra_social, domicilio, localidad, circunscripcion,
                                         seccion, manzana, lote, familia, mail, observacion,
                                         cambio_domicilio, estado, ID_Escuela, meses, Trabajo,
-                                        ID_Barrio, telefono, calle
+                                        ID_Barrio, telefono, calle, sexo
                                  from persona where id_persona = $xID_Persona and estado = 1 limit 1";
               $MensajeErrorDatos = "No se pudo consultar los Datos de la Persona";
 
@@ -176,7 +176,7 @@ $Con->CloseConexion();
               $ID_Escuela = $Ret["ID_Escuela"];
               $Meses = $Ret["meses"];
               $Trabajo = $Ret["Trabajo"];
-
+              $sexo = $Ret["sexo"];
               $Persona = new Persona($ID_Persona);
 
               $ConsultarEscuela = "select Escuela from escuelas where ID_Escuela = $ID_Escuela";
@@ -214,6 +214,9 @@ $Con->CloseConexion();
               $Table .= "<tr><td>Lugar de Trabajo</td><td>".$Persona->getTrabajo()."</td></tr>";                            
               $Table .= "<tr><td>Observación</td><td>".$Persona->getObservaciones()."</td></tr>";
               $Table .= "<tr><td>Cambio de Domicilio</td><td>".$Persona->getCambio_Domicilio()."</td></tr>";
+              if ($Persona->getSexo() == 'f') $Table .= "<tr><td>Sexo</td><td> Femenino </td></tr>";
+              if ($Persona->getSexo() == 'm') $Table .= "<tr><td>Sexo</td><td> Masculino </td></tr>";
+              if ($Persona->getSexo() == 'x') $Table .= "<tr><td>Sexo</td><td> X </td></tr>";
 
 
               $Table .= "</table>";

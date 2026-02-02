@@ -1081,3 +1081,20 @@ input::-webkit-inner-spin-button {
 .jmodal_backdrop {
   background-color: rgba(0, 0, 0, 0) !important;
 }
+
+input[type="radio"] {
+  transform: scale(1.3); /* Makes the radio button 50% larger */
+}
+
+.form-check-inline {
+  margin-right: 1.55rem;
+}
+
+#indications:focus {
+  outline: 0px dotted;
+}
+
+#liveToast {
+  z-index: 1;
+  display: none;
+}

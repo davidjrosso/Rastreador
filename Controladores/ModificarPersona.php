@@ -18,7 +18,12 @@ $Nro_Legajo = $_REQUEST["Nro_Legajo"];
 $Edad = $_REQUEST["Edad"];
 $Meses = $_REQUEST["Meses"];
 
-if(empty($_REQUEST["Fecha_Nacimiento"])){
+$sexo = null;
+$sexo = (isset($_REQUEST["opcion_f"]))? $_REQUEST["opcion_f"] : $sexo;
+$sexo = (isset($_REQUEST["opcion_m"]))? $_REQUEST["opcion_m"] : $sexo;
+$sexo = (isset($_REQUEST["opcion_x"]))? $_REQUEST["opcion_x"] : $sexo;
+
+if (empty($_REQUEST["Fecha_Nacimiento"])) {
 	$Fecha_Nacimiento = 'null';
 } else {
 	$Fecha_Nacimiento = implode("-", array_reverse(explode("/",$_REQUEST["Fecha_Nacimiento"])));
@@ -127,6 +132,7 @@ $Persona = new Persona(
 					   xEdad : $Edad,
 					   xMeses : $Meses,
 					   xFecha_Nacimiento: $Fecha_Nacimiento,
+					   xSexo: $sexo,
 					   xNro_Carpeta: $Nro_Carpeta,
 					   xObra_Social: $Obra_Social,
 					   xDomicilio : $Domicilio,
@@ -182,6 +188,7 @@ try {
 		$Persona_Viejo->setDNI($Persona->getDNI());
 		$Persona_Viejo->setEdad($Persona->getEdad());
 		$Persona_Viejo->setNombre($Persona->getNombre());
+		$Persona_Viejo->setSexo($Persona->getSexo());
 		$Persona_Viejo->setNro_Legajo($Persona->getNro_Legajo());
 		$Persona_Viejo->setFamilia($Persona->getFamilia());
 		$Persona_Viejo->setFecha_Nacimiento($Persona->getFecha_Nacimiento());

@@ -1910,7 +1910,7 @@ public function getMenuSeguridadUsuario($ID){
   public function CBBarrios(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' name = 'ID_Barrio' id = 'ID_Barrio'>";
+    $Select = "<select class='form-control' name = 'ID_Barrio' id = 'ID_Barrio' required>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from barrios where estado = 1 order by Barrio")or die("Problemas al mostrar Barrios");
     $Select .= "<option value = '0' disabled = 'disabled' selected = 'true'>- Seleccione un Barrio -</option>";
     while ($Ret = mysqli_fetch_array($Consulta)) {
@@ -1926,7 +1926,7 @@ public function getMenuSeguridadUsuario($ID){
   public function CBModBarrios($xID_Barrio){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' name = 'ID_Barrio' id = 'ID_Barrio'>";
+    $Select = "<select class='form-control' name = 'ID_Barrio' id = 'ID_Barrio' required>";
     if (!$xID_Barrio){
       $Select .= "<option value = '0' disabled = 'disabled' selected = 'true'>- Seleccione un Barrio -</option>";
     }

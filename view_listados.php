@@ -16,6 +16,8 @@ $TipoUsuario = $account->get_id_tipo_usuario();
 
 $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
 
+$Element = new Elements();
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -373,17 +375,17 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
       divBarrio.setAttribute('class','form-group row');
       var labelBarrio = document.createElement("label");
       labelBarrio.setAttribute('class','col-md-2 col-form-label LblForm');
-      labelBarrio.innerText = 'Barrio '+cantBarrios+':';
+      labelBarrio.innerText = 'Barrio ' + cantBarrios + ':';
       var divSelectBarrio = document.createElement("div");
       divSelectBarrio.setAttribute('class','col-md-10');
-      var select = `<?php $Element = new Elements(); echo $Element->CBRepBarrios(); ?>`;
+      var select = `<?php echo $Element->CBRepBarrios(); ?>`;
       divSelectBarrio.innerHTML = select;      
       divBarrio.appendChild(labelBarrio);
       divBarrio.appendChild(divSelectBarrio);
       divContenedor.appendChild(divBarrio);
 
     }
-    function agregarMotivo(){
+    function agregarMotivo() {
       if (cantMotivos <= 7) {
         cantMotivos++;
         var divContenedor = document.getElementById('contenedorMotivos');
@@ -608,7 +610,7 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
             <div class="form-group row">
               <label for="ID_Barrio" class="col-md-2 col-form-label LblForm">Barrio: </label>
               <div class="col-md-9">
-                <?php  
+                <?php
                 $Element = new Elements();
 
                 if (isset($datosNav["ID_Barrio"])) {

@@ -33,6 +33,12 @@ if (empty($_REQUEST["Fecha_Nacimiento"])) {
 	$Fecha_Nacimiento = implode("-", array_reverse(explode("/",$_REQUEST["Fecha_Nacimiento"])));
 }
 
+$sexo = null;
+$sexo = (isset($_REQUEST["opcion_f"]))? $_REQUEST["opcion_f"] : $sexo;
+$sexo = (isset($_REQUEST["opcion_m"]))? $_REQUEST["opcion_m"] : $sexo;
+$sexo = (isset($_REQUEST["opcion_x"]))? $_REQUEST["opcion_x"] : $sexo;
+
+
 $Nro_Carpeta = $_REQUEST["Nro_Carpeta"];
 if (empty($Nro_Carpeta)) {
 	$Nro_Carpeta = null;
@@ -148,7 +154,8 @@ try {
 			xObra_Social: $Obra_Social,
 			xSeccion : $Seccion,
 			xTelefono : $Telefono,
-			xTrabajo : $Trabajo
+			xTrabajo : $Trabajo,
+			xSexo: $sexo
 		);
 		$Persona->setDomicilio();
 		if (!empty($georeferencia_point)) {
