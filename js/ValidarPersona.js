@@ -11,6 +11,7 @@ function ValidarPersona() {
 	opcion_f = $("#opcion_x").prop("checked") || opcion_f;
 
 	let calle = $("#Calle").prop("value");
+	let barrio = $("#ID_Barrio").prop("value");
 	/*
 	var Fecha_Nacimiento = document.getElementById("Fecha_Nacimiento").value;
 	var ID_Barrio = document.getElementById("ID_Barrio").value;
@@ -22,9 +23,15 @@ function ValidarPersona() {
 	if (!opcion_f) Mensaje = "Seleccione una opcion de sexo"
 
 	if (!calle) {
-		Mensaje = "Seleccion una calle";
+		Mensaje = "Seleccione una calle";
 		bandera = false;
 	}
+
+	if (barrio == "0") {
+		Mensaje = "Seleccione un barrio";
+		bandera = false;
+	}
+
 
 	bandera = opcion_f && bandera;
 
