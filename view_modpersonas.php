@@ -421,11 +421,11 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                                     <input class="form-check-input" type="radio" name="opcion_x" id="opcion_x" <?php if ($opcion_x) echo "checked" ?> value="x">
                                     <label class="form-check-label" for="opcion_x">x</label>
                                   </div>
-                                  <!-- TOAST PROGRESO ENLACE -->
-                                    <span id="liveToast" class="position-relative top-0 end-0 p-3 toast dat-toast" style="border-radius: 10%;top: 7%; color: #020202; background-color: rgb(150 127 127 / 61%); right: -11%;">
+                                  <!-- TOAST DATO SEXO -->
+                                    <span id="liveToast" class="position-relative top-0 end-0 p-3 toast" style="border-radius: 10%;top: 7%; color: #020202; background-color: rgb(150 127 127 / 61%); right: -11%;">
                                         Ley N° 26.743 - Decreto 476/202
                                     </span>
-                                  <!-- FIN TOAST PROGRESO ENLACE -->
+                                  <!-- FIN TOAST DATO SEXO -->
                                 </div>
                               </div>
                               <div class="form-group row">
