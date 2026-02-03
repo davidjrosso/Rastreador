@@ -144,6 +144,25 @@
                 }
               });
 
+              $("#opcion_f").on("click", function (e) {
+                  $("#opcion_m").prop("checked", false);
+                  $("#opcion_x").prop("checked", false);
+              });
+
+              $("#opcion_m").on("click", function (e) {
+                  $("#opcion_f").prop("checked", false);
+                  $("#opcion_x").prop("checked", false);
+              });
+
+              $("#opcion_x").on("click", function (e) {
+                  $("#opcion_f").prop("checked", false);
+                  $("#opcion_m").prop("checked", false);
+              });
+
+              $("#indications").on("click", function (e) {
+                $("#liveToast").toggle();
+              });
+              
               if (!map) {
                   map = init(
                              objectJsonPersona.lat, 
@@ -259,7 +278,7 @@
                 Meses.value = meses;
           }
 
-        function buscarCalles(){
+      function buscarCalles(){
         var xNombre = document.getElementById('SearchCalle').value;
         var textoBusqueda = xNombre;
         xmlhttp=new XMLHttpRequest();
@@ -320,7 +339,7 @@
       <div class = "col-10">
           <!-- Carga -->
           <p class = "Titulos">Cargar Nueva Persona</p>
-          <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/InsertPersona.php" onSubmit = "return ValidarPersona();">
+          <form method = "post" action = "Controladores/InsertPersona.php" onSubmit = "return ValidarPersona();">
             <div class="form-group row">
               <label for="Apellido" class="col-md-2 col-form-label LblForm">Apellido: </label>
               <div class="col-md-10">
@@ -344,7 +363,7 @@
             <div class="form-group row">
               <label for="Fecha_Nacimiento" class="col-md-2 col-form-label LblForm" style="margin-bottom: -8px;">Fecha de Nacimiento: </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "Fecha_Nacimiento" id="Fecha_Nacimiento" autocomplete="off" placeholder="Ejemplo: 01/01/2010" onclick="calcularEdad()"> 
+                <input type="text" class="form-control" name = "Fecha_Nacimiento" id="Fecha_Nacimiento" autocomplete="off" placeholder="Ejemplo: 01/01/2010" required onclick="calcularEdad()"> 
               </div>
             </div>
             <div class="row LblForm col-md-2" style="margin-bottom: 1.04%; font-size: 1.031rem">
@@ -360,6 +379,36 @@
               <label for="Meses" class="col-md-2 col-form-label LblForm">Meses: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Meses" id="Meses" autocomplete="off" readonly>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="opcion_f" class="col-md-2 col-form-label LblForm">Sexo: </label>
+              <div class="col-md-10">
+                <div class="form-check form-check-inline" style="margin-left: 2%; margin-top: 1%;">
+                  <input class="form-check-input" type="radio" name="opcion_f" id="opcion_f" value="f">
+                  <label class="form-check-label" for="opcion_f">f</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="opcion_m" id="opcion_m" value="m">
+                  <label class="form-check-label" for="opcion_m">m</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="opcion_x" id="opcion_x" value="x">
+                  <label class="form-check-label" for="opcion_x">x</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <button type="button" name="indications" style="background-color: transparent; border: 0px;" id="indications">
+                    <svg xmlns="http://www.w3.org/2000/svg" style="vertical-align: baseline;" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                      <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+                    </svg>
+                  </button>
+                </div>
+                <!-- TOAST PROGRESO ENLACE -->
+                <span id="liveToast" class="position-relative top-0 end-0 p-3 toast hide dat-toast" style="border-radius: 10%;top: -40%;">
+                    Progeso
+                </span>
+                <!-- FIN TOAST PROGRESO ENLACE -->
               </div>
             </div>
             <div class="form-group row">
@@ -384,8 +433,8 @@
               <label for="ID_Barrio" class="col-md-2 col-form-label LblForm">Barrio: </label>
               <div class="col-md-10">
                 <?php 
-                $Element = new Elements();
-                echo $Element->CBBarrios();
+                  $Element = new Elements();
+                  echo $Element->CBBarrios();
                 ?>
               </div>
             </div>
