@@ -422,8 +422,6 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                                     <label class="form-check-label" for="opcion_x">x</label>
                                   </div>
                                   <!-- TOAST PROGRESO ENLACE -->
-                                  <span id="liverToast" class="position-relative p-3 toast hide dat-toast" style="border-radius: 50% 50% 50% 10%;">
-                                  </span>
                                     <span id="liveToast" class="position-relative top-0 end-0 p-3 toast dat-toast" style="border-radius: 10%;top: 7%; color: #020202; background-color: rgb(150 127 127 / 61%); right: -11%;">
                                         Ley N° 26.743 - Decreto 476/202
                                     </span>
