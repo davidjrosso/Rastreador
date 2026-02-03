@@ -69,12 +69,14 @@ export class Excel {
                 }
             });
 
-            $("tbody tr td:not([hidden='true'])").each(function (index) {
+            $("tbody tr").each(function (index) {
                 let rowlist = [];
                 $(this).children().each(function (e) {
-                    rowlist.push(
-                        $(this).text().trim()
-                    );            
+                    if (!e.hidden) {
+                        rowlist.push(
+                            $(this).text().trim()
+                        );            
+                    }
                 });
                 elems.push(rowlist);
             });
@@ -1680,7 +1682,9 @@ export class Excel {
     }
 
     delete() {
-        if (this.#spreadsheet) this.#spreadsheet[0].destroyAll();
+        if (this.#spreadsheet && this.#spreadsheet[0]) {
+            this.#spreadsheet[0].destroyAll();
+        }
     }
     
 }
