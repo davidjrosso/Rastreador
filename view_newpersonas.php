@@ -158,10 +158,6 @@
                   $("#opcion_f").prop("checked", false);
                   $("#opcion_m").prop("checked", false);
               });
-
-              $("#indications").on("click", function (e) {
-                $("#liveToast").toggle();
-              });
               
               if (!map) {
                   map = init(
@@ -397,7 +393,7 @@
                   <label class="form-check-label" for="opcion_x">x</label>
                 </div>
                 <!-- TOAST PROGRESO ENLACE -->
-                <span id="liveToast" class="position-relative top-0 end-0 p-3 toast hide dat-toast" style="border-radius: 10%;top: 7%; color: #020202; background-color: rgb(150 127 127 / 61%)">
+                <span id="liveToast" class="position-relative top-0 end-0 p-3 toast dat-toast" style="border-radius: 10%;top: 7%; color: #020202; background-color: rgb(150 127 127 / 61%)">
                     Ley N° 26.743 - Decreto 476/202
                 </span>
                 <!-- FIN TOAST PROGRESO ENLACE -->
