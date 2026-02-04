@@ -741,7 +741,7 @@ $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
             if (count(array_filter($MotivosOpciones))) {
               $motivo_query = "(" . $motivo_query;
               if (count(array_filter($CategoriasOpciones))) {
-                $motivo_query .= " and ";
+                $motivo_query .= " or ";
               }
 
               $motivo_query .= " id_motivo in $listaDeMotivos)";

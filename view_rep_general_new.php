@@ -1867,7 +1867,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             if (count(array_filter($MotivosOpciones))) {
               $motivo_query = "(" . $motivo_query;
               if (count(array_filter($CategoriasOpciones))) {
-                $motivo_query .= " and ";
+                $motivo_query .= " or ";
               }
               $motivo_query .= " id_motivo in $listaDeMotivos)";
               $filtros[] = $filtro_motivo;
