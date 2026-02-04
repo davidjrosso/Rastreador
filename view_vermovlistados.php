@@ -479,6 +479,27 @@ $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
                                           );
               $listaDeCategorias = "(" . implode(",", array_filter($CategoriasOpciones)) . ")";
               
+              if (count(array_filter($CategoriasOpciones))) {
+                  $query_cod_categoria = "SELECT cod_categoria
+                                          FROM categoria
+                                          WHERE id_categoria IN $listaDeCategorias";
+                  $listaCodCategorias = mysqli_query(
+                                    $Con->Conexion, $query_cod_categoria
+                                    ) or die($MessageError);
+
+                  $listaCodCategorias = mysqli_fetch_all($listaCodCategorias, MYSQLI_NUM);                  
+
+                  $listaCodCategorias = array_reduce($listaCodCategorias, 
+                                              function ($categoria, $valor){
+                                                          array_push($categoria, "'" . $valor[0] . "'");
+                                                          return $categoria;
+                                                      },
+                                              []
+                                              );
+              }
+
+              $listaCodCategorias = "(" . implode(",", $listaCodCategorias) . ")";
+
               $listaDeMotivos = "(".implode(",",array_filter($MotivosOpciones)).")";
 
           	  $Consulta = "SELECT M.id_movimiento, M.fecha, M.id_persona, MONTH(M.fecha) as 'Mes',
@@ -680,6 +701,7 @@ $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
 
             if (count(array_filter($CategoriasOpciones))) {
               $categoria_query .= " WHERE id_categoria in $listaDeCategorias";
+              $motivo_query .= "cod_categoria in $listaCodCategorias";
               $filtros[] = $filtro_categoria;
             }
 
@@ -718,6 +740,10 @@ $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
 
             if (count(array_filter($MotivosOpciones))) {
               $motivo_query = "(" . $motivo_query;
+              if (count(array_filter($CategoriasOpciones))) {
+                $motivo_query .= " and ";
+              }
+
               $motivo_query .= " id_motivo in $listaDeMotivos)";
               $filtros[] = $filtro_motivo;
             } else {
@@ -1032,7 +1058,10 @@ $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
                             <td>Fecha de Nacimiento</td>
                             <td>" . $Persona->getFecha_Nacimiento() . "</td>
                          </tr>";
-              $tablePrint .= "<tr><td>Fecha de Nacimiento</td><td>" . $Persona->getFecha_Nacimiento() . "</td></tr>";
+              $tablePrint .= "<tr>
+                                <td>Fecha de Nacimiento</td>
+                                <td>" . $Persona->getFecha_Nacimiento() . "</td>
+                              </tr>";
               $jsonTable["det_persona"]["fecha_nacimiento"] = $Persona->getFecha_Nacimiento();
               $head_det_persona[] = "fecha_nacimiento";
               if ($Persona->getEdad() == 2020) {

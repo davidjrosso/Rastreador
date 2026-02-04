@@ -960,11 +960,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
         document.body.appendChild(form);
         form.submit(); // Submit the form to initiate the navigation
 
-    }      
-
-
-
-    
+    }    
   </script>
   <style>
     body {
@@ -1606,6 +1602,25 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             $listaDeMotivos = "(" . implode(",", array_filter($MotivosOpciones)) . ")";
             $listaDeCategorias = "(" . implode(",", array_filter($CategoriasOpciones)) . ")";
 
+            if (count(array_filter($CategoriasOpciones))) {
+                $query_cod_categoria = "SELECT cod_categoria
+                                        FROM categoria
+                                        WHERE id_categoria IN $listaDeCategorias";
+                $listaCodCategorias = mysqli_query(
+                                  $Con->Conexion, $query_cod_categoria
+                                  ) or die($MessageError);
+
+                $listaCodCategorias = mysqli_fetch_all($listaCodCategorias, MYSQLI_NUM);                  
+
+                $listaCodCategorias = array_reduce($listaCodCategorias, 
+                                            function ($categoria, $valor){
+                                                        array_push($categoria, "'" . $valor[0] . "'");
+                                                        return $categoria;
+                                                    },
+                                            []
+                                            );
+            }
+
             $consultaGeneralPermisos = "CREATE TEMPORARY TABLE GIN " ;
             $consultaUsuarioPermisos = "CREATE TEMPORARY TABLE INN ";
         
@@ -1812,6 +1827,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
 
             if (count(array_filter($CategoriasOpciones))) {
               $categoria_query .= " WHERE id_categoria in $listaDeCategorias";
+              $motivo_query .= "cod_categoria in $listaCodCategorias";
               $filtros[] = $filtro_categoria;
             }
 
@@ -1850,6 +1866,9 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
 
             if (count(array_filter($MotivosOpciones))) {
               $motivo_query = "(" . $motivo_query;
+              if (count(array_filter($CategoriasOpciones))) {
+                $motivo_query .= " and ";
+              }
               $motivo_query .= " id_motivo in $listaDeMotivos)";
               $filtros[] = $filtro_motivo;
             } else {
@@ -2005,7 +2024,6 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
         <?php
             foreach ($filtros as $value) {
               echo "<span class='etFiltros'>" . $value . "</span> ";
-
             }
         ?>
         </p>
