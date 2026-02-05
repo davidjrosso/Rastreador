@@ -427,7 +427,6 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                                   </span>
                                   <!-- FIN TOAST PROGRESO ENLACE -->
                                 </div>
-                                </div>
                               </div>
                               <div class="form-group row">
                                 <label for="nro_carpeta" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
