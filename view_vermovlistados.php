@@ -725,7 +725,7 @@ $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
             if (count(array_filter($CategoriasOpciones))) {
               $categoria_query .= " WHERE id_categoria in $listaDeCategorias";
               if (count(array_filter($MotivosOpciones))) {
-                $categoria_query .= " or $listaCodMotivo";
+                $categoria_query .= " or cod_categoria in $listaCodMotivo";
               }              
               $motivo_query .= "cod_categoria in $listaCodCategorias";
               $filtros[] = $filtro_categoria;
