@@ -1065,20 +1065,20 @@ $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
         <div class="col-md-4" style="display: flex; row-gap:2px; column-gap: 4px; padding-left: 2px; padding-right: 2px; flex-wrap: wrap;">
             <button type = "button" class = "btn btn-secondary" data-toggle="modal" 
                     data-target="#orden-modal">
-                config. filas
+                Filas
             </button>
             <button type = "button" class = "btn btn-secondary" data-toggle="modal" 
                     data-target="#configModal">
-                config. columnas
+                Columnas
             </button>
             <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_listados.php'">
-                Atras
+                Atrás
             </button>
             <button id="rep_grafico" type = "button" class = "btn btn-secondary">
-                reporte grafico
+                Gráfico
             </button>
             <button id="grilla_tabla" type = "button" class = "btn btn-secondary">
-                <?php echo ($_REQUEST["ID_Config"] == "table") ? "grilla" : "tabla";?>
+                <?php echo ($_REQUEST["ID_Config"] == "table") ? "Grilla" : "Tabla";?>
             </button>
           </div>
      </div>
