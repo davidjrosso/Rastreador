@@ -2039,7 +2039,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
               style="background-color: #ffc6b1; color: black; border-color: white; " data-target="#map-modal">S. I. G.</button>
             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#configModal">Config</button>
             <button id="rep_movimientos" type = "button" class = "btn btn-secondary">
-                reporte listado
+                Listado
             </button>
           </div>
         </div>
