@@ -410,22 +410,23 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                                 <label for="opcion_f" class="col-md-2 col-form-label LblForm">Sexo: </label>
                                 <div class="col-md-10">
                                   <div class="form-check form-check-inline" style="margin-left: 2%; margin-top: 1%;">
-                                    <input class="form-check-input" type="radio" name="opcion_f" id="opcion_f" <?php if ($opcion_f) echo "checked" ?> value="f">
-                                    <label class="form-check-label" for="opcion_f">f</label>
+                                    <input class="form-check-input" type="radio" name="opcion_f" id="opcion_f" value="f">
+                                    <label class="form-check-label" style="font-size: 1.2rem; margin-left: 7px;" for="opcion_f">f</label>
                                   </div>
                                   <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="opcion_m" id="opcion_m" <?php if ($opcion_m) echo "checked" ?> value="m">
-                                    <label class="form-check-label" for="opcion_m">m</label>
+                                    <input class="form-check-input" type="radio" name="opcion_m" id="opcion_m" value="m">
+                                    <label class="form-check-label" style="font-size: 1.2rem; margin-left: 7px;" for="opcion_m">m</label>
                                   </div>
                                   <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="opcion_x" id="opcion_x" <?php if ($opcion_x) echo "checked" ?> value="x">
-                                    <label class="form-check-label" for="opcion_x">x</label>
+                                    <input class="form-check-input" type="radio" name="opcion_x" id="opcion_x" value="x">
+                                    <label class="form-check-label" style="font-size: 1.2rem; margin-left: 7px;" for="opcion_x">x</label>
                                   </div>
-                                  <!-- TOAST DATO SEXO -->
-                                    <span id="liveToast" class="position-relative top-0 end-0 p-3 toast" style="border-radius: 10%;top: 7%; color: #020202; background-color: rgb(150 127 127 / 61%); right: -11%;">
-                                        Ley N° 26.743 - Decreto 476/202
-                                    </span>
-                                  <!-- FIN TOAST DATO SEXO -->
+                                  <!-- TOAST PROGRESO ENLACE -->
+                                  <span id="liveToast" class="position-relative top-0 end-0 toast" style="border-radius: 10%;top: 7%; color: #020202; background-color: rgb(150 127 127 / 61%); right: -11%; padding: 10px;">
+                                      Ley N° 26.743 - Decreto 476/202
+                                  </span>
+                                  <!-- FIN TOAST PROGRESO ENLACE -->
+                                </div>
                                 </div>
                               </div>
                               <div class="form-group row">
