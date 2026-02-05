@@ -1062,7 +1062,7 @@ $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
       	?>
         <center><p class = "LblForm">ENTRE: <?php echo $Etiqueta_Fecha_Inicio." Y " . $Etiqueta_Fecha_Fin; ?></p></center>
         </div>
-        <div class="col-md-4" style="padding-left: 2px; padding-right: 2px;">
+        <div class="col-md-4" style="display: flex; row-gap:2px; column-gap: 4px; padding-left: 2px; padding-right: 2px; flex-wrap: wrap;">
             <button type = "button" class = "btn btn-secondary" data-toggle="modal" 
                     data-target="#orden-modal">
                 config. filas
