@@ -1096,4 +1096,9 @@ input[type="radio"] {
 
 #liveToast {
   z-index: 1;
+  right: -11%;
+}
+
+.tdIcon {
+  cursor: pointer;
 }
