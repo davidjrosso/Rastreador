@@ -296,18 +296,15 @@ $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
                     const input = document.createElement('input');
                     input.type = 'hidden';
                     input.name = key;
-                    input.value = datos[key];
+                    if (key == "ID_Persona") {
+                      input.value = idPersona;
+                    } else {
+                      input.value = datos[key];
+                    }
                     form.appendChild(input);
                   }
               }
           }
-          const input = document.createElement('input');
-          input.type = 'hidden';
-          input.name = 'ID_Persona';
-          input.value = idPersona;
-          form.appendChild(input);
-
-
           document.body.appendChild(form);
           form.submit(); 
       }      
