@@ -166,6 +166,9 @@ $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
                   }
               });
 
+              $("#grilla_tabla").on("click", function (e) {
+                sendToRepGrillaLista();
+              })
               configResultados();
               excel = new Excel();
       });
@@ -271,6 +274,83 @@ $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
           document.body.appendChild(form);
           form.submit(); 
       }      
+
+      function sendToRepListado(idPersona) {
+          const form = document.createElement('form');
+          let datos = <?php echo json_encode($_REQUEST)?>;
+          form.method = 'POST';
+          form.action = "/view_vermovlistados.php";
+          form.style.display = 'none';
+
+          for (const key in datos) {
+              if (Object.prototype.hasOwnProperty.call(datos, key)) {
+                  if (datos[key] instanceof Array) {
+                    datos[key].forEach(function (e) {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = key + "[]";
+                        input.value = e;
+                        form.appendChild(input);
+                    })
+                  } else {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = datos[key];
+                    form.appendChild(input);
+                  }
+              }
+          }
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = 'ID_Persona';
+          input.value = idPersona;
+          form.appendChild(input);
+
+
+          document.body.appendChild(form);
+          form.submit(); 
+      }      
+
+      function sendToRepGrillaLista() {
+          const form = document.createElement('form');
+          let datos = <?php echo json_encode($_REQUEST)?>;
+          form.method = 'POST';
+          form.action = "/view_vermovlistados.php";
+          form.style.display = 'none';
+
+          for (const key in datos) {
+              if (Object.prototype.hasOwnProperty.call(datos, key)) {
+                  if (datos[key] instanceof Array) {
+                    datos[key].forEach(function (e) {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = key + "[]";
+                        input.value = e;
+                        form.appendChild(input);
+                    })
+                  } else {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    if (key == "ID_Config") {
+                      if (datos[key] == "table") {
+                        input.value = "grid";
+                      } else {
+                        input.value = "table";
+                      }
+                    } else {
+                      input.value = datos[key];
+                    }
+                    form.appendChild(input);
+                  }
+              }
+          }
+
+          document.body.appendChild(form);
+          form.submit(); 
+      }      
+
 
   </script>  
 </head>
@@ -1000,7 +1080,10 @@ $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
             <button id="rep_grafico" type = "button" class = "btn btn-secondary">
                 reporte grafico
             </button>
-        </div>
+            <button id="grilla_tabla" type = "button" class = "btn btn-secondary">
+                <?php echo ($_REQUEST["ID_Config"] == "table") ? "grilla" : "tabla";?>
+            </button>
+          </div>
      </div>
      <div class = "row">
       <div class="col-md-2"></div>
@@ -1336,6 +1419,7 @@ $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
                               <thead>
                                 <tr rowspan='2' class='thead-dark'>
                                   <th rowspan='2' class='trFecha' style='min-width: 150px;'>Fecha</th>
+                                  <th rowspan='2' class='trIcon'></th>
                                   <th rowspan='2' class='trPersona'>Persona</th>";
                 $TableMov .= $MotivosTh;
 
@@ -1627,6 +1711,7 @@ $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
                     $TableMov .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td>";
                     $TableMovPrint .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td>";
                     $json_row["Fecha"] = $DtoMovimiento->getFecha();
+                    $TableMov .= "<td class='trIcon' style = 'width: auto;' onclick='sendToRepListado(" . $RetTodos["id_persona"] . ")'></td>";
                     $TableMov .= "<td class='trPersona' style = 'width: auto;'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $id_persona . "\",\"Ventana" . $id_persona . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" . $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "</a></td>";
                     $TableMovPrint .= "<td class='trPersona' style = 'width: auto;'>".
                                           $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "
@@ -1920,6 +2005,7 @@ $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
                   $TableMov .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td></tr>";
                   $TableMovPrint .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td></tr>";
                   $json_row["Fecha"] = $DtoMovimiento->getFecha();
+                  $TableMov .= "<td class='trIcon' style = 'width: auto;' onclick='sendToRepListado(" . $RetTodos["id_persona"] . ")'></td>";
                   $TableMov .= "<td class='trPersona' style = 'width: auto;'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $RetTodos["id_persona"]."\",\"Ventana" . $RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" . $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "</a></td></tr>";
                   $TableMovPrint .= "<td class='trPersona' style = 'width: auto;'>".
                                       $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "
