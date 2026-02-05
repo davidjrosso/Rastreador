@@ -1606,20 +1606,43 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
                 $query_cod_categoria = "SELECT cod_categoria
                                         FROM categoria
                                         WHERE id_categoria IN $listaDeCategorias";
-                $listaCodCategorias = mysqli_query(
+                $codCategorias = mysqli_query(
                                   $Con->Conexion, $query_cod_categoria
                                   ) or die($MessageError);
 
-                $listaCodCategorias = mysqli_fetch_all($listaCodCategorias, MYSQLI_NUM);                  
+                $categorias = mysqli_fetch_all($codCategorias, MYSQLI_NUM);                  
 
-                $listaCodCategorias = array_reduce($listaCodCategorias, 
+                $categorias = array_reduce($categorias, 
                                             function ($categoria, $valor){
                                                         array_push($categoria, "'" . $valor[0] . "'");
                                                         return $categoria;
                                                     },
                                             []
                                             );
+                $listaCodCategorias = "(" . implode(",", array_filter($categorias)) . ")";
             }
+
+            if (count(array_filter($motivos))) {
+                $query_cod_motivo = "SELECT cod_categoria
+                                        FROM motivo
+                                        WHERE id_motivo IN $listaDeMotivos";
+                $codMotivo = mysqli_query(
+                                  $Con->Conexion, $query_cod_motivo
+                                  ) or die($MessageError);
+
+                $motivos = mysqli_fetch_all($codMotivo, MYSQLI_NUM);                  
+
+                $motivos = array_reduce($motivos, 
+                                            function ($categoria, $valor){
+                                                        array_push($categoria, "'" . $valor[0] . "'");
+                                                        return $categoria;
+                                                    },
+                                            []
+                                            );
+                $listaCodMotivo = "(" . implode(",", array_filter($motivos)) . ")";
+
+            }
+
 
             $consultaGeneralPermisos = "CREATE TEMPORARY TABLE GIN " ;
             $consultaUsuarioPermisos = "CREATE TEMPORARY TABLE INN ";
@@ -1827,6 +1850,9 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
 
             if (count(array_filter($CategoriasOpciones))) {
               $categoria_query .= " WHERE id_categoria in $listaDeCategorias";
+              if (count(array_filter($MotivosOpciones))) {
+                $categoria_query .= " or $listaCodMotivo";
+              }              
               $motivo_query .= "cod_categoria in $listaCodCategorias";
               $filtros[] = $filtro_categoria;
             }
