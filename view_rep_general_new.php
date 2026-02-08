@@ -1649,18 +1649,18 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
         
             $motivosVisiblesParaUsuario =  "SELECT MT.id_motivo
                                             FROM motivo MT,
-                                                categoria  C,
-                                                categorias_roles CS
+                                                 categoria  C,
+                                                 categorias_roles CS
                                             WHERE C.cod_categoria = MT.cod_categoria
                                               and MT.estado = 1
                                               and C.estado = 1
                                               and CS.id_categoria = C.id_categoria
                                               and CS.id_tipousuario = $TipoUsuario
                                               and CS.estado = 1";
-        
+
             $motivosVisiblesParaTodoUsuario = "SELECT MT.id_motivo
                                                 FROM motivo MT,
-                                                    categoria  C
+                                                     categoria  C
                                             WHERE C.cod_categoria = MT.cod_categoria
                                               and MT.estado = 1
                                               and C.estado = 1
@@ -1902,11 +1902,6 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             }
 
             if ($ID_Persona > 0) {
-              $countPostfield = count(array_filter($_POST, function ($element) {
-                return $element;
-              }));
-
-              $ConsultaFlia = $Consulta;
               $ConsultarPersona = "select apellido, 
                                           nombre, 
                                           domicilio,
@@ -1922,19 +1917,15 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
               $RetConsultarPersona = mysqli_fetch_assoc($EjecutarConsultarPersona);
               $lon_person = (!empty($RetConsultarPersona["lon"])) ? $RetConsultarPersona["lon"]: null; 
               $lat_person = (!empty($RetConsultarPersona["lat"])) ? $RetConsultarPersona["lat"]: null;
-              if (($countPostfield - 3) == 1) {
-                if (!(empty($RetConsultarPersona["domicilio"]) && (empty($RetConsultarPersona["calle"]) || empty($RetConsultarPersona["nro"])))) {
+              if (mysqli_num_rows($EjecutarConsultarPersona)) {
+                if ($RetConsultarPersona["calle"] && $RetConsultarPersona["nro"]) {
                   $domicilio = $RetConsultarPersona["domicilio"];
                   $persona = new Persona(ID_Persona: $ID_Persona);
-                  $domicilioPersona = "";
-                  if ($persona->getCalle() && $persona->getNroCalle()) {
-                    $domicilioPersona = "domicilio like '%" . $persona->getCalle() . "%" . $persona->getNroCalle() . "%' or ";
-                  }
-                  $ConsultarPersdomicilio = "select id_persona
-                                            from persona
-                                            where ($domicilioPersona (calle = " . (($persona->getId_Calle()) ? $persona->getId_Calle() : "null") . "
-                                                  and nro = " . (($persona->getNro()) ? $persona->getNro() : "null") . "))
-                                              and estado = 1";
+                  $ConsultarPersdomicilio = "SELECT id_persona
+                                             FROM persona
+                                             WHERE calle = " . $persona->getId_Calle() . "
+                                               AND nro = " . $persona->getNro() . "
+                                               AND estado = 1";
                   $persona_query  .= " and id_persona in ($ConsultarPersdomicilio)";
                 } else {
                   $persona_query  .= " and id_persona = $ID_Persona";
@@ -2006,9 +1997,9 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
 
 
             if ($ID_Persona > 0) {
-              $Consulta .= " group by M.id_movimiento 
+              $Consulta .= " group by M.id_movimiento
                              order by B.Barrio DESC, P.domicilio DESC, P.manzana DESC, P.lote DESC, P.familia DESC,
-                                   P.domicilio DESC, P.apellido DESC, M.fecha ASC, M.id_movimiento ASC";
+                                   P.domicilio DESC, P.apellido DESC, P.id_persona ASC, M.fecha ASC, M.id_movimiento ASC";
               //$Consulta .= " order by esPersona DESC, B.Barrio DESC, P.domicilio DESC, P.manzana DESC, P.lote DESC, P.familia DESC,
               //                     P.domicilio DESC, P.apellido DESC, M.fecha DESC, M.id_movimiento DESC";
             } else {
