@@ -1107,7 +1107,7 @@ if (empty($_REQUEST["ID_Persona"])) {
                     data-target="#configModal">
                 Columnas
             </button>
-            <button type = "button" class = "btn btn-danger" onClick = "<?php echo (empty($_REQUEST["ID_Persona"])) ? "location.href = 'view_listados.php'" : "sendToRepL()" ;?>">
+            <button type = "button" class = "btn btn-danger" onClick = "<?php echo (isset($_SESSION["retorno"]) && empty($_REQUEST["ID_Persona"])) ? "location.href = 'view_listados.php'" : "sendToRepL()" ;?>">
                 Atrás
             </button>
             <button id="rep_grafico" type = "button" class = "btn btn-secondary">

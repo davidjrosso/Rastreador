@@ -2057,7 +2057,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
           </div>
           <div class="col-5">
             <button type="button" class="btn btn-danger" style="margin-left: 14%;"
-                    onclick="<?php echo (isset($_SESSION["retorno"]))? "senToRepL()" : "location.href = 'view_general_new.php'" ;?>">
+                    onclick="<?php echo (isset($_SESSION["retorno"]) && empty($_REQUEST["ID_Persona"]))? "location.href = 'view_general_new.php'" : "senToRepL()";?>">
                 Atrás
             </button>
             <!--<button type="button" class="btn btn-secondary" onclick="enviarImprimir()">**Imprimir</button>-->
