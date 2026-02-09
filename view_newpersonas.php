@@ -393,7 +393,7 @@
                   <label class="form-check-label" style="font-size: 1.2rem; margin-left: 7px;" for="opcion_x">x</label>
                 </div>
                 <!-- TOAST PROGRESO ENLACE -->
-                <span id="liveToast" class="position-relative top-0 end-0 toast" style="border-radius: 10%;top: 7%; color: #020202; background-color: rgb(150 127 127 / 61%); right: -11%; padding: 5px;">
+                <span id="liveToast" class="position-relative top-0 end-0 toast" style="border-radius: 10%;top: 7%; color: #020202; background-color: rgb(150 127 127 / 61%); right: -11%; padding: 5px; font-size: 0.9rem;">
                     Ley N° 26.743 - Decreto 476/202
                 </span>
                 <!-- FIN TOAST PROGRESO ENLACE -->
