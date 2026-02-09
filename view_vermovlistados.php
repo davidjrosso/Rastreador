@@ -41,6 +41,10 @@ $_SESSION["reporte_listado"] = true;
 $_SESSION["reporte_grafico"] = false;
 $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
 
+if (empty($_REQUEST["ID_Persona"])) {
+  $_SESSION["retorno"] = $_REQUEST;
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -243,6 +247,38 @@ $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
           reporte.sendRequestOne();
         }
       }
+
+    function sendToRepL() {
+        const form = document.createElement('form');
+        let datos = <?php echo (!empty($_SESSION["retorno"]))? json_encode($_SESSION["retorno"]) : "{}" ;?>;
+        form.method = 'POST';
+        form.action = "/view_vermovlistados.php";
+        form.style.display = 'none';
+
+        for (const key in datos) {
+            if (Object.prototype.hasOwnProperty.call(datos, key)) {
+                if (datos[key] instanceof Array) {
+                  datos[key].forEach(function (e) {
+                      const input = document.createElement('input');
+                      input.type = 'hidden';
+                      input.name = key + "[]";
+                      input.value = e;
+                      form.appendChild(input);
+                  })
+                } else {
+                  const input = document.createElement('input');
+                  input.type = 'hidden';
+                  input.name = key;
+                  input.value = datos[key];
+                  form.appendChild(input);
+                }
+            }
+        }
+
+        document.body.appendChild(form);
+        form.submit(); // Submit the form to initiate the navigation
+    }    
+
 
       function sendToRepGrafico() {
           const form = document.createElement('form');
@@ -1071,7 +1107,7 @@ $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
                     data-target="#configModal">
                 Columnas
             </button>
-            <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_listados.php'">
+            <button type = "button" class = "btn btn-danger" onClick = "<?php echo (empty($_REQUEST["ID_Persona"])) ? "location.href = 'view_listados.php'" : "sendToRepL()" ;?>">
                 Atrás
             </button>
             <button id="rep_grafico" type = "button" class = "btn btn-secondary">
@@ -2518,7 +2554,7 @@ $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
         // <input type="checkbox" id="chkDomicilio"> Domicilio 
         // <input type="checkbox" id="chkBarrio"> Barrio 
         // <input type="checkbox" id="chkLocalidad"> Localidad 
-  objectJsonTabla = <?php echo json_encode($jsonTable);?>;
+  objectJsonTabla = <?php echo (!empty($jsonTable)) ? json_encode($jsonTable) : "{}";?>;
   fechaDesde = "<?php echo $Fecha_Inicio;?>";
   fechaHasta = "<?php echo $Fecha_Fin;?>";
   filtroSeleccionados = <?php echo json_encode($filtros); ?>;

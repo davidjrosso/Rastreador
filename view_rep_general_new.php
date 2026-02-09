@@ -45,6 +45,10 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
 $_SESSION["reporte_grafico"] = true;
 $width_dispay = (isset($_REQUEST["width-display"])) ? $_REQUEST["width-display"] : null;
 
+if (empty($_REQUEST["ID_Persona"])) {
+  $_SESSION["retorno"] = $_REQUEST;
+}
+
 if (isset($_REQUEST["Fecha_Desde"])) {
   $lista_animacion = explode("/", $_REQUEST["Fecha_Desde"]);
   $Fecha_Inicio = implode("-", array_reverse($lista_animacion));
@@ -55,6 +59,7 @@ if (isset($_REQUEST["Fecha_Desde"])) {
 } else {
   $Fecha_Inicio = null;
 }
+
 if (isset($_REQUEST["Fecha_Hasta"])) {
   $Fecha_Fin = implode("-", array_reverse(explode("/", $_REQUEST["Fecha_Hasta"])));
   $fecha_end_animacion = $Fecha_Fin;
@@ -929,6 +934,37 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
                       error: errorHandler
                       });
     }
+
+    function sendToRepL() {
+        const form = document.createElement('form');
+        let datos = <?php echo json_encode($_REQUEST)?>;
+        form.method = 'POST';
+        form.action = "/view_vermovlistados.php";
+        form.style.display = 'none';
+
+        for (const key in datos) {
+            if (Object.prototype.hasOwnProperty.call(datos, key)) {
+                if (datos[key] instanceof Array) {
+                  datos[key].forEach(function (e) {
+                      const input = document.createElement('input');
+                      input.type = 'hidden';
+                      input.name = key + "[]";
+                      input.value = e;
+                      form.appendChild(input);
+                  })
+                } else {
+                  const input = document.createElement('input');
+                  input.type = 'hidden';
+                  input.name = key;
+                  input.value = datos[key];
+                  form.appendChild(input);
+                }
+            }
+        }
+
+        document.body.appendChild(form);
+        form.submit(); // Submit the form to initiate the navigation
+    }    
 
     function sendToRepMovimientos() {
         const form = document.createElement('form');
@@ -2021,7 +2057,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
           </div>
           <div class="col-5">
             <button type="button" class="btn btn-danger" style="margin-left: 14%;"
-                    onclick="location.href = 'view_general_new.php'">
+                    onclick="<?php echo (isset($_SESSION["retorno"]))? "senToRepL()" : "location.href = 'view_general_new.php'" ;?>">
                 Atrás
             </button>
             <!--<button type="button" class="btn btn-secondary" onclick="enviarImprimir()">**Imprimir</button>-->
