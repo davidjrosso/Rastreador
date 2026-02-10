@@ -248,7 +248,7 @@ $Element = new Elements();
       var Persona = document.getElementById("Persona");
       var ID_Persona = document.getElementById("ID_Persona");
       Persona.innerHTML = "";
-      Persona.innerHTML = "<p>"+xNombre+"</p>";
+      Persona.innerHTML = "<p>" + xNombre + "<button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalPersona'><i class='fa fa-cog text-secondary'></i></button></p>";
       ID_Persona.setAttribute('value',xID);
       var BtnBarrios = document.getElementById("agregarBarrio");
       BtnBarrios.setAttribute('disabled', true);      
@@ -385,6 +385,7 @@ $Element = new Elements();
       divContenedor.appendChild(divBarrio);
 
     }
+
     function agregarMotivo() {
       if (cantMotivos <= 7) {
         cantMotivos++;
