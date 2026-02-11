@@ -2240,40 +2240,46 @@ if (empty($_REQUEST["ID_Persona"])) {
       <div class="modal-body">
         <ul type=none>
           <li>
-            <input type="checkbox" id="boton-0" class="form-check-input"
+            <input type="checkbox" id="boton-0" data-name="fecha" class="form-check-input"
                     onclick="orderOptionCheck(0)">
             <label class="form-check-label" for="boton-0"></label>
               Fecha
           </li>
           <li>
-            <input type="checkbox" id="boton-11" class="form-check-input"
-                    onclick="orderOptionCheck(11)">
-            <label class="form-check-label" for="boton-2"></label>
+            <input type="checkbox" id="boton-12" data-name="fecha" class="form-check-input"
+                    onclick="orderOptionCheck(12)">
+            <label class="form-check-label" for="boton-12"></label>
               Barrio
           </li>
           <li>
-            <input type="checkbox" id="boton-10" class="form-check-input"
-                    onclick="orderOptionCheck(14)">
-            <label class="form-check-label" for="boton-1"></label>
+            <input type="checkbox" id="boton-15" class="form-check-input"
+                    onclick="orderOptionCheck(15)">
+            <label class="form-check-label" for="boton-15"></label>
               Centro de Salud
           </li>
           <li>
-            <input type="checkbox" id="boton-10" class="form-check-input"
-                    onclick="orderOptionCheck(7)">
-            <label class="form-check-label" for="boton-1"></label>
+            <input type="checkbox" id="boton-8" class="form-check-input"
+                    onclick="orderOptionCheck(8)">
+            <label class="form-check-label" for="boton-8"></label>
               Años
           </li>
           <li>
-            <input type="checkbox" id="boton-10" class="form-check-input"
-                    onclick="orderOptionCheck(8)">
-            <label class="form-check-label" for="boton-1"></label>
+            <input type="checkbox" id="boton-9" class="form-check-input"
+                    onclick="orderOptionCheck(9)">
+            <label class="form-check-label" for="boton-9"></label>
               Meses
           </li>
           <li>
-            <input type="checkbox" id="boton-10" class="form-check-input"
-                    onclick="orderOptionCheck(5)">
-            <label class="form-check-label" for="boton-1"></label>
+            <input type="checkbox" id="boton-6" class="form-check-input"
+                    onclick="orderOptionCheck(6)">
+            <label class="form-check-label" for="boton-6"></label>
               DNI
+          </li>
+          <li>
+            <input type="checkbox" id="boton-2" class="form-check-input"
+                    onclick="orderOptionCheck(2)">
+            <label class="form-check-label" for="boton-2"></label>
+              Alfabetico
           </li>
 
           <!--
