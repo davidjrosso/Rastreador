@@ -20,7 +20,7 @@ function ValidarPersona() {
 	let bandera = true;
 	let Mensaje = "";
 
-	if (!opcion_f) Mensaje = "Seleccione una opcion de sexo"
+	if (!opcion_f) Mensaje = "Seleccione una opcion de sexo";
 
 	if (!calle) {
 		Mensaje = "Seleccione una calle";

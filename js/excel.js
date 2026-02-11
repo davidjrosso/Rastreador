@@ -15,7 +15,8 @@ export class Excel {
     init() {
         let list = [];
         let elems = [];
-        let th = $("table thead th:not([hidden='true'])");
+        let tableCount = $("table").length;
+        let th = null;
         let length = $("#excel_rev").children().length;
         let columnsadd = [{
                             type: 'text',
@@ -30,6 +31,12 @@ export class Excel {
                             width:200,
                         }];
         if (length == 0) {
+            if (tableCount == 1) {
+                th = $("table thead th:not([hidden='true'])");
+            } else {
+                th = $("table:nth-child(1) tbody tr td:nth-child(1)");
+            }
+
             th.each(function (index) {
                 let typeData = "text";
                 let text = $(this).text().trim();
@@ -69,17 +76,33 @@ export class Excel {
                 }
             });
 
-            $("tbody tr").each(function (index) {
-                let rowlist = [];
-                $(this).children().each(function (e) {
-                    if (!e.hidden) {
-                        rowlist.push(
-                            $(this).text().trim()
-                        );            
-                    }
+            if (tableCount == 1) {
+                $("tbody tr").each(function (index) {
+                    let rowlist = [];
+                    $(this).children().each(function (e) {
+                        if (!e.hidden) {
+                            rowlist.push(
+                                $(this).text().trim()
+                            );            
+                        }
+                    });
+                    elems.push(rowlist);
                 });
-                elems.push(rowlist);
-            });
+            } else {
+                $("tbody").each(function (index) {
+                    let rowlist = [];
+                    $(this).children().each(function (e) {
+                        $(this).children(":nth-child(2)").each(function (e) {
+                            if (!e.hidden) {
+                                rowlist.push(
+                                    $(this).text().trim()
+                                );            
+                            }
+                        });
+                    });
+                    elems.push(rowlist);
+                });
+            }
 
             let dictionary = {
                 'Insert a new column before': 'Insertar una nueva columna antes',
