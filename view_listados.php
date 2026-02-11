@@ -530,7 +530,8 @@ $Element = new Elements();
       <div class="col">
         <button id="btn-enlace-driver" class="btn btn-md btn-secondary" data-toggle="modal" data-target="#modal-enlace-drive">Enlace</button>
       </div>
-      <div class="offset-md-7 col-md-2">
+      <div class="offset-md-7 col-md-3">
+        <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
         <button class="btn btn-md btn-secondary" data-toggle="modal" data-target="#ModalConfig">Config</button>
       </div>
     </div>
@@ -760,12 +761,11 @@ $Element = new Elements();
               </div>
             </div>
             <div class="form-group row">
-              <div class="offset-md-2 col-md-10" id = "InputsGenerales">
+              <div class="offset-md-1 col-md-10" id = "InputsGenerales">
                 <input type="hidden" name="ID_Motivo" id = "ID_Motivo" value = "0">
                 <input type="hidden" name="ID_Categoria" id = "ID_Categoria" value = "0">
                 <input type="hidden" name="ID_Config" id="ID_Config" value="table">
-                <button type="submit" class="btn btn-outline-success">Aceptar</button>
-                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
+                <button type="submit" style="display:block; margin: auto;" class="btn btn-outline-success">Aceptar</button>
               </div>
             </div>
           </form>

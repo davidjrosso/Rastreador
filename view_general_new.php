@@ -145,12 +145,10 @@ $TipoUsuario = $account->get_id_tipo_usuario();
           $("#meses-hasta-toast").show();
         });
 
-        $("#liveToast").on("click", function () {
+        $("#liveToast").on("click", function (e) {
           $(this).hide();
           modalCargaDeMovimiento();
-        }
-
-        );
+        });
 
         $("#close-categorias").on("click", function (e) {
               $("#SearchCategorias").val("");
@@ -677,15 +675,18 @@ $TipoUsuario = $account->get_id_tipo_usuario();
     </div><br>
     <br>
     <div class = "row">
-      <div class = "col-10" style="margin-bottom: 0.6rem;">
-      <button id="btn-enlace-driver" 
-              class="btn btn-md btn-secondary" 
-              data-toggle="modal" 
-              data-target="#modal-enlace-drive">
-          Enlace
-      </button>
-
+      <div class = "col-9" style="margin-bottom: 0.6rem;">
+        <button id="btn-enlace-driver" 
+                class="btn btn-md btn-secondary" 
+                data-toggle="modal" 
+                data-target="#modal-enlace-drive">
+            Enlace
+        </button>
       </div>
+        <div class="col-md-2">
+          <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
+        </div>
+
     </div>
     <div class = "row">
       <div class = "col-10">
@@ -910,13 +911,12 @@ $TipoUsuario = $account->get_id_tipo_usuario();
             </div>
             <div class="form-group row">
               <div class="offset-md-2 col-md-10">
-                <div class="offset-md-2 col-md-10" id = "InputsGenerales">
+                <div class="offset-md-3 col-md-10" id = "InputsGenerales">
                     <input type="hidden" name="ID_Motivo" id = "ID_Motivo" value = "0">
                     <input type="hidden" name="ID_Categoria" id = "ID_Categoria" value = "0">
                     <input type="hidden" name="width-display" id = "width-display" value = "0">
                     <button type="submit" class="btn btn-outline-success">Aceptar</button>
                     <button type="button" class="btn btn-outline-secondary" onClick="resetearForm()">Cancel</button>
-                    <button type = "button" class = "btn btn-outline-secondary" onClick = "location.href = 'view_inicio.php'">Volver</button>
                   </div>
               </div>
             </div>
