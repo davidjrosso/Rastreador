@@ -1138,7 +1138,7 @@ if (empty($_REQUEST["ID_Persona"])) {
         </div>
       <div class="col-md-3"></div>
     </div>
-     <div class = "row" style="justify-content: center;">
+     <div class = "row" <?php echo ($_REQUEST["ID_Config"] == "grid") ? "style='justify-content: center;'" : ""; ?>>
       <div class = "col-10">
           <!-- Search -->
         <div class = "row">
