@@ -61,6 +61,7 @@ if (empty($_REQUEST["ID_Persona"])) {
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
+  <script src="js/Utils.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="dist/reporte.js"></script>
@@ -388,12 +389,17 @@ if (empty($_REQUEST["ID_Persona"])) {
   </script>  
 </head>
 <body>
+<div class="col-md-2" id="expandir" style="padding-left: 6px; position: fixed; z-index: 1000" hidden>
+  <a id="abrir" class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="mostrar()">
+    <i class="fa fa-arrows-alt fa-lg" color="tomato"></i>
+  </a>
+</div>
 <div class = "row menu-col-2 margin-right-cero" style="overflow: hidden;">
   <?php
     $Element = new Elements();
     echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_REPORTE_LISTADO);
   ?>
-  <div class = "col-md-10" style="max-height: 100vh; overflow-y: scroll;">
+  <div id="ContenidoTabla" class = "col-md-10" style="max-height: 100vh; overflow-y: scroll; max-width: 100%; flex-grow: 1;">
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
@@ -1132,7 +1138,7 @@ if (empty($_REQUEST["ID_Persona"])) {
         </div>
       <div class="col-md-3"></div>
     </div>
-     <div class = "row">
+     <div class = "row" style="justify-content: center;">
       <div class = "col-10">
           <!-- Search -->
         <div class = "row">
@@ -1640,7 +1646,7 @@ if (empty($_REQUEST["ID_Persona"])) {
                                       Persona
                                     </td>
                                     <td style = 'width: 70%;'>
-                                      <a href = 'javascript:window.open(\"view_modpersonas.php?ID=" .  $DtoMovimiento->getId_Persona() ."\",\"Ventana" . $DtoMovimiento->getId_Persona() ."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".
+                                      <a href = 'javascript:window.open(\"view_modpersonas.php?ID=" .  $id_persona ."\",\"Ventana" . $id_persona ."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".
                                         $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "
                                       </a>
                                     </td>

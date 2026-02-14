@@ -1102,3 +1102,7 @@ input[type="radio"] {
 .tdIcon {
   cursor: pointer;
 }
+
+.div--padding-left-menu-active {
+  padding-left: 38px !important;
+}
