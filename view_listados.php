@@ -513,6 +513,13 @@ $Element = new Elements();
   </script>
 </head>
 <body>
+
+<div class='col-md-2' id='expandir' style='padding-left: 6px; position: fixed; z-index: 1000' hidden>
+  <a id='abrir' class='btn btn-secondary btn-sm' href='javascript:void(0)' onclick='mostrar()'>
+    <i class='fa fa-arrows-alt fa-lg' color='tomato'></i>
+  </a>
+</div>
+
 <div class = "row margin-right-cero">
 <?php
   $Element = new Elements();
