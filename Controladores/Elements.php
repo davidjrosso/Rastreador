@@ -2897,7 +2897,7 @@ public function getMenuSeguridadUsuario($ID){
     $ConsultaResult = mysqli_query($Con3->Conexion,$ConsultaNombre)or die("Problemas al mostrar Personas");
     if(mysqli_num_rows($ConsultaResult) > 0){
       $Resultado = mysqli_fetch_array($ConsultaResult);
-      $cardSession = "<div class='title-session item-menu-x'>
+      $cardSession = "<div class='title-session item-menu-x' style='display: inline-block'>
                         <a id='perfil' style='color: #e1ffff' href='view_perfilusuario.php?account_id=" . $idAccount . "'>".
                           $Resultado["username"] . "
                         </a>
@@ -2912,8 +2912,11 @@ public function getMenuSeguridadUsuario($ID){
   public function menuDeNavegacion($TipoUsuario, $ID_Usuario, $pagina) 
   {
     if ($TipoUsuario == 1) {
-      $menu = "<div class='col-md-3 menu-md-2'>
-                  <div class='nav-side-menu'>" . 
+      $menu = "<div id='ContenidoMenu' class='col-md-3 menu-md-2'>
+                  <div class='nav-side-menu'>
+                    <a id='cerrar' class='btn btn-secondary btn-sm' href='javascript:void(0)' onclick='ocultar()'>
+                      <i class='fa fa-arrow-left fa-lg'></i>
+                    </a>" . 
                     self::CBSessionNombreUsuario($ID_Usuario) . 
                     "<div class='brand'>General</div>
                        <i class='fa fa-bars fa-2x toggle-btn' data-toggle='collapse' data-target='#menu-content'></i>
