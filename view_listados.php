@@ -528,594 +528,600 @@ $Element = new Elements();
     </div><br>
     <br>
     <div class="row" style="margin-bottom: 0.6rem;">
-      <div class="col">
+      <div style="flex: 0 0 4.333333%; max-width: 4.333333%;">
+      </div>
+      <div class="col-2">
         <button id="btn-enlace-driver" class="btn btn-md btn-secondary" data-toggle="modal" data-target="#modal-enlace-drive">Enlace</button>
       </div>
-      <div class="offset-md-7 col-md-3">
+      <div class="col-md-7">
+      </div>
+      <div class="col-md-2">
         <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
         <button class="btn btn-md btn-secondary" data-toggle="modal" data-target="#ModalConfig">Config</button>
       </div>
     </div>
-     <div class = "row">
-      <div class = "col-10">
-          <!-- Carga -->
-          <p class = "Titulos">Parámetros</p>
-          <form method = "post" onKeydown="return event.key != 'Enter';" action = "view_vermovlistados.php" onSubmit = "return ValidarGeneral();">
-            <div class="form-group row">
-                <label for="Fecha_Desde" class="col-md-2 col-form-label LblForm">Fecha desde *: </label>
-                <div class="col-md-10">
-                    <input type="text" name="Fecha_Desde" id = "Fecha_Desde" class="form-control" autocomplete="off" value = "<?= (isset($datosNav["Fecha_Desde"])) ? $datosNav["Fecha_Desde"] : implode("/", array_reverse(explode("-",date('Y-m-d',strtotime(date('Y-m-d')."- 1 year"))))) ?>">
-                </div>
-            </div> 
-            <div class="form-group row">
-                <label for="Fecha_Hasta" class="col-md-2 col-form-label LblForm">Fecha hasta *: </label>
-                <div class="col-md-10">
-                    <input type="text" name="Fecha_Hasta" id = "Fecha_Hasta" class="form-control" autocomplete="off" value = "<?= (isset($datosNav["Fecha_Hasta"])) ? $datosNav["Fecha_Hasta"] : implode("/", array_reverse(explode("-",date('Y-m-d')))) ?>">
-                </div>
-            </div>
-            <div class="form-group row" style="margin-bottom: 0.6rem;">
-              <label for="btn-persona" class="col-md-2 col-form-label LblForm">Persona: </label>
-              <div class="col-md-10" id = "Persona">
-              	 	<button type = "button" id="btn-persona" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalPersona">Seleccione una Persona</button>                  
-              </div>
-            </div>
-            <div class="row LblForm col-md-2" style="margin-bottom: 1.04%; font-size: 1.031rem">
-              Edad <br>
-            </div>
-            <div class="form-group row">
-                  <label for="Edad_Desde" class="col-md-2 col-form-label LblForm">Desde (Años): </label>
+    <div style="justify-content: center" class = "row">
+        <div class = "col-10">
+            <!-- Carga -->
+            <p class = "Titulos">Parámetros</p>
+            <form method = "post" onKeydown="return event.key != 'Enter';" action = "view_vermovlistados.php" onSubmit = "return ValidarGeneral();">
+              <div class="form-group row">
+                  <label for="Fecha_Desde" class="col-md-2 col-form-label LblForm">Fecha desde *: </label>
                   <div class="col-md-10">
-                      <input type="number" name="Edad_Desde" id="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarMeses(this)" value="<?= (isset($datosNav["Edad_Desde"])) ? $datosNav["Edad_Desde"] : '' ?>">                      
-                      <input type="hidden" name="ID_Persona" id = "ID_Persona" value = "0">
-                      <script>
-                        <?php
-                          if(isset($datosNav["ID_Persona"])){
-                        ?>
-                            seleccionPersona(<?= "'".$datosNav["NombrePersona"]."'" ?>, <?= $datosNav["ID_Persona"] ?>);                            
-                        <?php   
-                          }
-                        ?>                        
-                      </script>
+                      <input type="text" name="Fecha_Desde" id = "Fecha_Desde" class="form-control" autocomplete="off" value = "<?= (isset($datosNav["Fecha_Desde"])) ? $datosNav["Fecha_Desde"] : implode("/", array_reverse(explode("-",date('Y-m-d',strtotime(date('Y-m-d')."- 1 year"))))) ?>">
                   </div>
-            </div> 
-            <div class="form-group row" style="position: relative;">
-                <label for="Edad_Hasta" class="col-md-2 col-form-label LblForm">Hasta (Años): </label>
-                <div class="col-md-10">
-                    <input type="number" name="Edad_Hasta" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarMeses(this)" value="<?= (isset($datosNav["Edad_Hasta"])) ? $datosNav["Edad_Hasta"] : '' ?>">
+              </div> 
+              <div class="form-group row">
+                  <label for="Fecha_Hasta" class="col-md-2 col-form-label LblForm">Fecha hasta *: </label>
+                  <div class="col-md-10">
+                      <input type="text" name="Fecha_Hasta" id = "Fecha_Hasta" class="form-control" autocomplete="off" value = "<?= (isset($datosNav["Fecha_Hasta"])) ? $datosNav["Fecha_Hasta"] : implode("/", array_reverse(explode("-",date('Y-m-d')))) ?>">
+                  </div>
+              </div>
+              <div class="form-group row" style="margin-bottom: 0.6rem;">
+                <label for="btn-persona" class="col-md-2 col-form-label LblForm">Persona: </label>
+                <div class="col-md-10" id = "Persona">
+                    <button type = "button" id="btn-persona" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalPersona">Seleccione una Persona</button>                  
                 </div>
-                <div class="position-absolute" style="z-index: 1100; width: auto; right: -20%; top: -83%" data-bs-delay="10">
-                  <div id="edad-hasta-toast" class="toast hide dat-toast" style="width:auto;" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="toast-body">
-                      <span id="edad-hasta-dato">0</span>
+              </div>
+              <div class="row LblForm col-md-2" style="margin-bottom: 1.04%; font-size: 1.031rem">
+                Edad <br>
+              </div>
+              <div class="form-group row">
+                    <label for="Edad_Desde" class="col-md-2 col-form-label LblForm">Desde (Años): </label>
+                    <div class="col-md-10">
+                        <input type="number" name="Edad_Desde" id="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarMeses(this)" value="<?= (isset($datosNav["Edad_Desde"])) ? $datosNav["Edad_Desde"] : '' ?>">                      
+                        <input type="hidden" name="ID_Persona" id = "ID_Persona" value = "0">
+                        <script>
+                          <?php
+                            if(isset($datosNav["ID_Persona"])){
+                          ?>
+                              seleccionPersona(<?= "'".$datosNav["NombrePersona"]."'" ?>, <?= $datosNav["ID_Persona"] ?>);                            
+                          <?php   
+                            }
+                          ?>                        
+                        </script>
+                    </div>
+              </div> 
+              <div class="form-group row" style="position: relative;">
+                  <label for="Edad_Hasta" class="col-md-2 col-form-label LblForm">Hasta (Años): </label>
+                  <div class="col-md-10">
+                      <input type="number" name="Edad_Hasta" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarMeses(this)" value="<?= (isset($datosNav["Edad_Hasta"])) ? $datosNav["Edad_Hasta"] : '' ?>">
+                  </div>
+                  <div class="position-absolute" style="z-index: 1100; width: auto; right: -20%; top: -83%" data-bs-delay="10">
+                    <div id="edad-hasta-toast" class="toast hide dat-toast" style="width:auto;" role="alert" aria-live="assertive" aria-atomic="true">
+                      <div class="toast-body">
+                        <span id="edad-hasta-dato">0</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-            </div> 
-            <div class="form-group row">
-                  <label for="Meses_Desde" class="col-md-2 col-form-label LblForm">Desde (Meses): </label>
+              </div> 
+              <div class="form-group row">
+                    <label for="Meses_Desde" class="col-md-2 col-form-label LblForm">Desde (Meses): </label>
+                    <div class="col-md-10">
+                        <input type="number" name="Meses_Desde" id="Meses_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarEdad(this)" value="<?= (isset($datosNav["Meses_Desde"])) ? $datosNav["Meses_Desde"] : '' ?>">
+                    </div>
+              </div> 
+              <div class="form-group row" style="position: relative;">
+                  <label for="Meses_Hasta" class="col-md-2 col-form-label LblForm">Hasta (Meses): </label>
                   <div class="col-md-10">
-                      <input type="number" name="Meses_Desde" id="Meses_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarEdad(this)" value="<?= (isset($datosNav["Meses_Desde"])) ? $datosNav["Meses_Desde"] : '' ?>">
+                      <input type="number" name="Meses_Hasta" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" max="11" onkeyup="habilitarEdad(this)" value="<?= (isset($datosNav["Meses_Hasta"])) ? $datosNav["Meses_Hasta"] : '' ?>">
                   </div>
-            </div> 
-            <div class="form-group row" style="position: relative;">
-                <label for="Meses_Hasta" class="col-md-2 col-form-label LblForm">Hasta (Meses): </label>
-                <div class="col-md-10">
-                    <input type="number" name="Meses_Hasta" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" max="11" onkeyup="habilitarEdad(this)" value="<?= (isset($datosNav["Meses_Hasta"])) ? $datosNav["Meses_Hasta"] : '' ?>">
-                </div>
-                <div class="position-absolute" style="z-index: 1100; width: auto; right: -20%; top: -83%">
-                  <div id="meses-hasta-toast" class="toast hide dat-toast" style="width:auto;" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="toast-body">
-                      <span id="meses-hasta-dato">0</span>
+                  <div class="position-absolute" style="z-index: 1100; width: auto; right: -20%; top: -83%">
+                    <div id="meses-hasta-toast" class="toast hide dat-toast" style="width:auto;" role="alert" aria-live="assertive" aria-atomic="true">
+                      <div class="toast-body">
+                        <span id="meses-hasta-dato">0</span>
+                      </div>
                     </div>
                   </div>
+              </div>
+              <div class="form-group row">
+                <label for="ID_Barrio" class="col-md-2 col-form-label LblForm">Barrio: </label>
+                <div class="col-md-9">
+                  <?php
+                  $Element = new Elements();
+
+                  if (isset($datosNav["ID_Barrio"])) {
+                    echo $Element->CBModBarrios($datosNav["ID_Barrio"]);
+                  } else {
+                    echo $Element->CBRepBarrios();
+                  }
+
+                  ?>
                 </div>
-            </div>
-            <div class="form-group row">
-              <label for="ID_Barrio" class="col-md-2 col-form-label LblForm">Barrio: </label>
-              <div class="col-md-9">
-                <?php
-                $Element = new Elements();
-
-                if (isset($datosNav["ID_Barrio"])) {
-                  echo $Element->CBModBarrios($datosNav["ID_Barrio"]);
-                } else {
-                  echo $Element->CBRepBarrios();
-                }
-
-                ?>
-              </div>
-              <div class="col-md-1 div-button-center">
-                  <button type="button" class="btn btn-primary" onClick="agregarBarrio()" id="agregarBarrioID">+</button>
-              </div>
-            </div>
-            <div id="contenedorBarrios">              
-            </div> 
-            <div class="form-group row">
-              <label for="domicilio" class="col-md-2 col-form-label LblForm">Domicilio/Familia: </label>
-              <div class="col-md-10">
-                <input type="text" class="form-control" name = "Domicilio" id="domicilio" autocomplete="off" value="<?= (isset($datosNav["Domicilio"])) ? $datosNav["Domicilio"] : '' ?>">
-              </div>
-            </div>
-            <div class="form-group row">
-              <label for="manzana" class="col-md-2 col-form-label LblForm">Manzana: </label>
-              <div class="col-md-10">
-                <input type="text" class="form-control" name = "Manzana" id="manzana" autocomplete="off" value="<?= (isset($datosNav["Manzana"])) ? $datosNav["Manzana"] : '' ?>">
-              </div>
-            </div>
-            <div class="form-group row">
-              <label for="lote" class="col-md-2 col-form-label LblForm">Lote: </label>
-              <div class="col-md-10">
-                <input type="number" class="form-control" name = "Lote" id="lote" autocomplete="off" value="<?= (isset($datosNav["Lote"])) ? $datosNav["Lote"] : '' ?>">
-              </div>
-            </div>
-            <div class="form-group row">
-              <label for="familia" class="col-md-2 col-form-label LblForm">Sub-lote: </label>
-              <div class="col-md-10">
-                <input type="number" class="form-control" name = "Familia" id="familia" autocomplete="off" value="<?= (isset($datosNav["Familia"])) ? $datosNav["Familia"] : '' ?>">
-              </div>
-            </div>
-
-            <!--<div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Trabajo: </label>
-              <div class="col-md-10">
-                <input type="text" class="form-control" name = "Trabajo" id="inputPassword" autocomplete="off" value="<?= (isset($datosNav["Trabajo"])) ? $datosNav["Trabajo"] : '' ?>">
-              </div>
-            </div>-->
-            <div class="form-group row">
-              <label for="btn-categoria" class="col-md-2 col-form-label LblForm">Categoría: </label>
-              <div class="col-md-9" id = "Categoria">
-                <button type = "button" id="btn-categoria" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalCategoria">Seleccione Categoría</button>  
-              </div>
-              <div class="col-md-1 div-button-center">
-                  <button type="button" class="btn btn-primary" onClick="agregarCategoria()" id="agregarCategoriaID">+</button>
-              </div>
-            </div>
-            <div id="contenedorCategoria">              
-            </div>
-            <div class="form-group row">
-              <label for="btn-motivo" class="col-md-2 col-form-label LblForm">Motivo 1: </label>
-              <div class="col-md-9" id = "Motivo">
-                <button type = "button" id="btn-motivo" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo">Seleccione Motivo</button>   
-              </div>
                 <div class="col-md-1 div-button-center">
-                  <button type="button" class="btn btn-primary" onClick="agregarMotivo()" id="agregarMotivoID">+</button>
+                    <button type="button" class="btn btn-primary" onClick="agregarBarrio()" id="agregarBarrioID">+</button>
+                </div>
               </div>
-            </div>
-            <div id="contenedorMotivos">              
-            </div>
-            <div class="form-group row">
-              <label for="ID_Centro" class="col-md-2 col-form-label LblForm">Centro Salud: </label>
-              <div class="col-md-10">
-                <?php  
-                $Element = new Elements();
+              <div id="contenedorBarrios">              
+              </div> 
+              <div class="form-group row">
+                <label for="domicilio" class="col-md-2 col-form-label LblForm">Domicilio/Familia: </label>
+                <div class="col-md-10">
+                  <input type="text" class="form-control" name = "Domicilio" id="domicilio" autocomplete="off" value="<?= (isset($datosNav["Domicilio"])) ? $datosNav["Domicilio"] : '' ?>">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="manzana" class="col-md-2 col-form-label LblForm">Manzana: </label>
+                <div class="col-md-10">
+                  <input type="text" class="form-control" name = "Manzana" id="manzana" autocomplete="off" value="<?= (isset($datosNav["Manzana"])) ? $datosNav["Manzana"] : '' ?>">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="lote" class="col-md-2 col-form-label LblForm">Lote: </label>
+                <div class="col-md-10">
+                  <input type="number" class="form-control" name = "Lote" id="lote" autocomplete="off" value="<?= (isset($datosNav["Lote"])) ? $datosNav["Lote"] : '' ?>">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="familia" class="col-md-2 col-form-label LblForm">Sub-lote: </label>
+                <div class="col-md-10">
+                  <input type="number" class="form-control" name = "Familia" id="familia" autocomplete="off" value="<?= (isset($datosNav["Familia"])) ? $datosNav["Familia"] : '' ?>">
+                </div>
+              </div>
 
-                if(isset($datosNav["ID_CentroSalud"])){
-                  echo $Element->CBRepModCentros($datosNav["ID_CentroSalud"]);
-                }else{
-                  echo $Element->CBRepCentros();
-                }
-                ?>
+              <!--<div class="form-group row">
+                <label for="inputPassword" class="col-md-2 col-form-label LblForm">Trabajo: </label>
+                <div class="col-md-10">
+                  <input type="text" class="form-control" name = "Trabajo" id="inputPassword" autocomplete="off" value="<?= (isset($datosNav["Trabajo"])) ? $datosNav["Trabajo"] : '' ?>">
+                </div>
+              </div>-->
+              <div class="form-group row">
+                <label for="btn-categoria" class="col-md-2 col-form-label LblForm">Categoría: </label>
+                <div class="col-md-9" id = "Categoria">
+                  <button type = "button" id="btn-categoria" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalCategoria">Seleccione Categoría</button>  
+                </div>
+                <div class="col-md-1 div-button-center">
+                    <button type="button" class="btn btn-primary" onClick="agregarCategoria()" id="agregarCategoriaID">+</button>
+                </div>
               </div>
-            </div>
-            <div class="form-group row">
-              <label for="Nro_Carpeta" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
-              <div class="col-md-10">
-                <input type="text" class="form-control" name = "Nro_Carpeta" id="Nro_Carpeta" autocomplete="off" value="<?= (isset($datosNav["Nro_Carpeta"])) ? $datosNav["Nro_Carpeta"] : '' ;?>">
+              <div id="contenedorCategoria">              
               </div>
-            </div>
-            <div class="form-group row">
-              <label for="Nro_Legajo" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
-              <div class="col-md-10">
-                <input type="text" class="form-control" name = "Nro_Legajo" id="Nro_Legajo" autocomplete="off" value="<?= (isset($datosNav["Nro_Legajo"])) ? $datosNav["Nro_Legajo"] : '' ;?>">
+              <div class="form-group row">
+                <label for="btn-motivo" class="col-md-2 col-form-label LblForm">Motivo 1: </label>
+                <div class="col-md-9" id = "Motivo">
+                  <button type = "button" id="btn-motivo" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo">Seleccione Motivo</button>   
+                </div>
+                  <div class="col-md-1 div-button-center">
+                    <button type="button" class="btn btn-primary" onClick="agregarMotivo()" id="agregarMotivoID">+</button>
+                </div>
               </div>
-            </div>
-            
-            <div class="form-group row">
-              <label for="ID_OtraInstitucion" class="col-md-2 col-form-label LblForm">Otras Instituciones: </label>
-              <div class="col-md-10">
-                <?php  
-                $Element = new Elements();
-                
-                if(isset($datosNav["ID_OtraInstitucion"])){
-                  echo $Element->CBRepModOtrasInstituciones($datosNav["ID_OtraInstitucion"]);
-                }else{
-                  echo $Element->CBRepOtrasInstituciones();
-                }
-                ?>
+              <div id="contenedorMotivos">              
               </div>
-            </div>
-            <div class="form-group row">
-              <label for="ID_Escuela" class="col-md-2 col-form-label LblForm">Escuela: </label>
-              <div class="col-md-10">
-                <?php  
-                $Element = new Elements();
+              <div class="form-group row">
+                <label for="ID_Centro" class="col-md-2 col-form-label LblForm">Centro Salud: </label>
+                <div class="col-md-10">
+                  <?php  
+                  $Element = new Elements();
 
-                if(isset($datosNav["ID_Escuela"])){
-                  echo $Element->CBModEscuelas($datosNav["ID_Escuela"]);
-                }else{
-                  echo $Element->CBRepEscuelas();
-                }
-                ?>
+                  if(isset($datosNav["ID_CentroSalud"])){
+                    echo $Element->CBRepModCentros($datosNav["ID_CentroSalud"]);
+                  }else{
+                    echo $Element->CBRepCentros();
+                  }
+                  ?>
+                </div>
               </div>
-            </div>
-            <div class="form-group row">
-              <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable: </label>
-              <div class="col-md-10">
-                <?php  
-                $Element = new Elements();
+              <div class="form-group row">
+                <label for="Nro_Carpeta" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
+                <div class="col-md-10">
+                  <input type="text" class="form-control" name = "Nro_Carpeta" id="Nro_Carpeta" autocomplete="off" value="<?= (isset($datosNav["Nro_Carpeta"])) ? $datosNav["Nro_Carpeta"] : '' ;?>">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="Nro_Legajo" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
+                <div class="col-md-10">
+                  <input type="text" class="form-control" name = "Nro_Legajo" id="Nro_Legajo" autocomplete="off" value="<?= (isset($datosNav["Nro_Legajo"])) ? $datosNav["Nro_Legajo"] : '' ;?>">
+                </div>
+              </div>
+              
+              <div class="form-group row">
+                <label for="ID_OtraInstitucion" class="col-md-2 col-form-label LblForm">Otras Instituciones: </label>
+                <div class="col-md-10">
+                  <?php  
+                  $Element = new Elements();
+                  
+                  if(isset($datosNav["ID_OtraInstitucion"])){
+                    echo $Element->CBRepModOtrasInstituciones($datosNav["ID_OtraInstitucion"]);
+                  }else{
+                    echo $Element->CBRepOtrasInstituciones();
+                  }
+                  ?>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="ID_Escuela" class="col-md-2 col-form-label LblForm">Escuela: </label>
+                <div class="col-md-10">
+                  <?php  
+                  $Element = new Elements();
 
-                if(isset($datosNav["ID_Responsable"])){
-                  echo $Element->CBRepModResponsables($datosNav["ID_Responsable"]);
-                }else{
-                  echo $Element->CBRepResponsable();
-                }
-                ?>
+                  if(isset($datosNav["ID_Escuela"])){
+                    echo $Element->CBModEscuelas($datosNav["ID_Escuela"]);
+                  }else{
+                    echo $Element->CBRepEscuelas();
+                  }
+                  ?>
+                </div>
               </div>
-            </div>
-            <div class="form-group row">
-              <label for="inpMostrar" class="col-md-2 col-form-label LblForm">Mostrar Personas: </label>
-              <div class="col-md-10">
-                <select class="form-control" name="Mostrar" id="inpMostrar">
-                	<option value="0" selected>Con Movimientos</option>
-                	<option value="1">Todos</option>
-                </select>
+              <div class="form-group row">
+                <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable: </label>
+                <div class="col-md-10">
+                  <?php  
+                  $Element = new Elements();
+
+                  if(isset($datosNav["ID_Responsable"])){
+                    echo $Element->CBRepModResponsables($datosNav["ID_Responsable"]);
+                  }else{
+                    echo $Element->CBRepResponsable();
+                  }
+                  ?>
+                </div>
               </div>
-            </div>
-            <div class="form-group row">
-              <div class="offset-md-1 col-md-10" id = "InputsGenerales">
-                <input type="hidden" name="ID_Motivo" id = "ID_Motivo" value = "0">
-                <input type="hidden" name="ID_Categoria" id = "ID_Categoria" value = "0">
-                <input type="hidden" name="ID_Config" id="ID_Config" value="table">
-                <button type="submit" style="display:block; margin: auto;" class="btn btn-outline-success">Aceptar</button>
-              </div>
-            </div>
-          </form>
-          <br><br><br>
-          <!-- Fin Carga -->
-          <!-- SECCION DE MODALES -->
-			<!-- Modal SELECCION PERSONAS -->
-			<div class="modal fade bd-example-modal-lg" id="ModalPersona" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-			  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-			    <div class="modal-content">
-			      <div class="modal-header">
-			        <h5 class="modal-title" id="exampleModalLongTitle">Selección de Persona</h5>
-			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			          <span aria-hidden="true">&times;</span>
-			        </button>
-			      </div>
-			      <div class="modal-body">
-			        <form>
-			        	<div class="row">
-			        		<div class="col"></div>
-			        		<div class="col-8">
-			        			<div class="input-group mb-3">
-				        			<input class = "form-control" type="text" name="BuscarPersona" id = "SearchPersonas" onKeyUp="buscarPersonas()" autocomplete="off" placeholder="Ingrese el nombre, apellido, documento o legajo">
-				        			<div class="input-group-append">
-				        				<span class="input-group-text" id="basic-addon2">Buscar</span>
-								      </div>	
-								    </div>		        				
-			        		</div>
-			        		<div class="col"></div>
-			        	</div>
-			        	<div class="row">
-			        		<div class="col"></div>
-			        		<div class="col-10" id = "ResultadosPersonas">
-			        			
-			        		</div>
-			        		<div class="col"></div>
-			        	</div>			        	
-			        </form>
-			      </div>
-			      <div class="modal-footer">
-			        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>			        
-			      </div>
-			    </div>
-			  </div>
-			</div>
-      <!-- FIN MODAL SELECCION PERSONAS -->
-      <!-- Modal SELECCION MOTIVO -->
-      <div class="modal fade bd-example-modal-lg" id="ModalMotivo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Selección de Motivo</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form>
-                <div class="row">
-                  <div class="col"></div>
-                  <div class="col-8">
-                    <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos" onKeyUp="buscarMotivos()" autocomplete="off">
-                      <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2">Buscar</span>
-                      </div>  
-                    </div>                    
-                  </div>
-                  <div class="col"></div>
-                </div>
-                <div class="row">
-                  <div class="col"></div>
-                  <div class="col-10" id = "ResultadosMotivos">
-                    
-                  </div>
-                  <div class="col"></div>
-                </div>                
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
-              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>           
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- FIN MODAL SELECCION MOTIVO -->
-      <!-- Modal SELECCION MOTIVO 2 -->
-      <div class="modal fade bd-example-modal-lg" id="ModalMotivo2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Selección de Motivo</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form>
-                <div class="row">
-                  <div class="col"></div>
-                  <div class="col-8">
-                    <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos2" id = "SearchMotivos2" onKeyUp="buscarMotivos2()" autocomplete="off">
-                      <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2">Buscar</span>
-                      </div>  
-                    </div>                    
-                  </div>
-                  <div class="col"></div>
-                </div>
-                <div class="row">
-                  <div class="col"></div>
-                  <div class="col-10" id = "ResultadosMotivos2">
-                    
-                  </div>
-                  <div class="col"></div>
-                </div>                
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
-              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>            
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- FIN MODAL SELECCION MOTIVO -->
-      <!-- Modal SELECCION MOTIVO 3 -->
-      <div class="modal fade bd-example-modal-lg" id="ModalMotivo3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Selección de Motivo</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form>
-                <div class="row">
-                  <div class="col"></div>
-                  <div class="col-8">
-                    <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos3" id = "SearchMotivos3" onKeyUp="buscarMotivos3()" autocomplete="off">
-                      <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2">Buscar</span>
-                      </div>  
-                    </div>                    
-                  </div>
-                  <div class="col"></div>
-                </div>
-                <div class="row">
-                  <div class="col"></div>
-                  <div class="col-10" id = "ResultadosMotivos3">
-                    
-                  </div>
-                  <div class="col"></div>
-                </div>                
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
-              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>             
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- FIN MODAL SELECCION MOTIVO -->
-      <!-- Modal SELECCION MOTIVO 4 -->
-      <div class="modal fade bd-example-modal-lg" id="ModalMotivo4" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Selección de Motivo</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form>
-                <div class="row">
-                  <div class="col"></div>
-                  <div class="col-8">
-                    <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos4" id = "SearchMotivos4" onKeyUp="buscarMotivosGeneral(4)" autocomplete="off">
-                      <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2">Buscar</span>
-                      </div>  
-                    </div>                    
-                  </div>
-                  <div class="col"></div>
-                </div>
-                <div class="row">
-                  <div class="col"></div>
-                  <div class="col-10" id = "ResultadosMotivos4">
-                    
-                  </div>
-                  <div class="col"></div>
-                </div>                
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
-              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>          
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- FIN MODAL SELECCION MOTIVO -->
-      <!-- Modal SELECCION MOTIVO 5 -->
-      <div class="modal fade bd-example-modal-lg" id="ModalMotivo5" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Selección de Motivo</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form>
-                <div class="row">
-                  <div class="col"></div>
-                  <div class="col-8">
-                    <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos5" id = "SearchMotivos5" onKeyUp="buscarMotivosGeneral(5)" autocomplete="off">
-                      <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2">Buscar</span>
-                      </div>  
-                    </div>                    
-                  </div>
-                  <div class="col"></div>
-                </div>
-                <div class="row">
-                  <div class="col"></div>
-                  <div class="col-10" id = "ResultadosMotivos5">
-                    
-                  </div>
-                  <div class="col"></div>
-                </div>                
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
-              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>           
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- FIN MODAL SELECCION MOTIVO -->
-      <!-- Modal SELECCION CATEGORIA -->
-      <div class="modal fade bd-example-modal-lg" id="ModalCategoria" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Selección de Categoria</h5>
-              <button type="button" class="close" id="close-categorias" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form>
-                <div class="row">
-                  <div class="col"></div>
-                  <div class="col-8">
-                    <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarCategorias" id = "SearchCategorias" onKeyUp="buscarCategorias()" autocomplete="off">
-                      <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2">Buscar</span>
-                      </div>  
-                    </div>                    
-                  </div>
-                  <div class="col"></div>
-                </div>
-                <div class="row">
-                  <div class="col"></div>
-                  <div class="col-10" id = "ResultadosCategorias">
-                    
-                  </div>
-                  <div class="col"></div>
-                </div>                
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" onclick="seleccionMultipleCategoria()" data-dismiss="modal">OK</button>
-              <button type="button" class="btn btn-primary" id="cerrar-categorias" data-dismiss="modal">Cerrar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- FIN MODAL SELECCION CATEGORIA -->
-      <!-- Modal CONFIGURACION-->
-      <div class="modal fade bd-example-modal-lg" id="ModalConfig" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header" style="justify-content: center;">
-              <h1>Configuración</h1>
-            </div>
-            <div class="modal-body">
-              <div class="row">
-                <div class="offset-4 col-2">
-                  <label for="formatConfig">Formato: </label>
-                </div>
-                <div class="col-4">
-                  <select class="input-group mb-3" name="formatConfig" id="formatConfig" onchange="cambiarConfig()">
-                    <option value="grid">Grilla</option>
-                    <option value="table" selected>Tabla</option>
+              <div class="form-group row">
+                <label for="inpMostrar" class="col-md-2 col-form-label LblForm">Mostrar Personas: </label>
+                <div class="col-md-10">
+                  <select class="form-control" name="Mostrar" id="inpMostrar">
+                    <option value="0" selected>Con Movimientos</option>
+                    <option value="1">Todos</option>
                   </select>
                 </div>
-              </div>              
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">OK</button>             
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- FIN MODAL SELECCION CONFIGURACION -->
-      <!-- Modal ENLACE DRIVER-->
-      <div class="modal fade bd-example-modal-lg" id="modal-enlace-drive" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header" style="justify-content: center;">
-              <h1>Enlaces Drive</h1>
-            </div>
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-4">
-                  <?php 
-                    echo $Element->CBCSDrives();
-                  ?>
+              </div>
+              <div class="form-group row">
+                <div class="offset-md-1 col-md-10" id = "InputsGenerales">
+                  <input type="hidden" name="ID_Motivo" id = "ID_Motivo" value = "0">
+                  <input type="hidden" name="ID_Categoria" id = "ID_Categoria" value = "0">
+                  <input type="hidden" name="ID_Config" id="ID_Config" value="table">
+                  <button type="submit" style="display:block; margin: auto;" class="btn btn-outline-success">Aceptar</button>
                 </div>
-                <div class="col-8">
-                  <?php 
-                    echo $Element->CBDrive();
-                  ?>
+              </div>
+            </form>
+            <br><br><br>
+            <!-- Fin Carga -->
+            <!-- SECCION DE MODALES -->
+            <!-- Modal SELECCION PERSONAS -->
+            <div class="modal fade bd-example-modal-lg" id="ModalPersona" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Selección de Persona</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form>
+                      <div class="row">
+                        <div class="col"></div>
+                        <div class="col-8">
+                          <div class="input-group mb-3">
+                            <input class = "form-control" type="text" name="BuscarPersona" id = "SearchPersonas" onKeyUp="buscarPersonas()" autocomplete="off" placeholder="Ingrese el nombre, apellido, documento o legajo">
+                            <div class="input-group-append">
+                              <span class="input-group-text" id="basic-addon2">Buscar</span>
+                            </div>	
+                          </div>		        				
+                        </div>
+                        <div class="col"></div>
+                      </div>
+                      <div class="row">
+                        <div class="col"></div>
+                        <div class="col-10" id = "ResultadosPersonas">
+                          
+                        </div>
+                        <div class="col"></div>
+                      </div>			        	
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>			        
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+            <!-- FIN MODAL SELECCION PERSONAS -->
+            <!-- Modal SELECCION MOTIVO -->
+            <div class="modal fade bd-example-modal-lg" id="ModalMotivo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Selección de Motivo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form>
+                      <div class="row">
+                        <div class="col"></div>
+                        <div class="col-8">
+                          <div class="input-group mb-3">
+                            <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos" onKeyUp="buscarMotivos()" autocomplete="off">
+                            <div class="input-group-append">
+                              <span class="input-group-text" id="basic-addon2">Buscar</span>
+                            </div>  
+                          </div>                    
+                        </div>
+                        <div class="col"></div>
+                      </div>
+                      <div class="row">
+                        <div class="col"></div>
+                        <div class="col-10" id = "ResultadosMotivos">
+                          
+                        </div>
+                        <div class="col"></div>
+                      </div>                
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>           
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+            <!-- FIN MODAL SELECCION MOTIVO -->
+            <!-- Modal SELECCION MOTIVO 2 -->
+            <div class="modal fade bd-example-modal-lg" id="ModalMotivo2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Selección de Motivo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form>
+                      <div class="row">
+                        <div class="col"></div>
+                        <div class="col-8">
+                          <div class="input-group mb-3">
+                            <input class = "form-control" type="text" name="BuscarMotivos2" id = "SearchMotivos2" onKeyUp="buscarMotivos2()" autocomplete="off">
+                            <div class="input-group-append">
+                              <span class="input-group-text" id="basic-addon2">Buscar</span>
+                            </div>  
+                          </div>                    
+                        </div>
+                        <div class="col"></div>
+                      </div>
+                      <div class="row">
+                        <div class="col"></div>
+                        <div class="col-10" id = "ResultadosMotivos2">
+                          
+                        </div>
+                        <div class="col"></div>
+                      </div>                
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>            
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- FIN MODAL SELECCION MOTIVO -->
+            <!-- Modal SELECCION MOTIVO 3 -->
+            <div class="modal fade bd-example-modal-lg" id="ModalMotivo3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Selección de Motivo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form>
+                      <div class="row">
+                        <div class="col"></div>
+                        <div class="col-8">
+                          <div class="input-group mb-3">
+                            <input class = "form-control" type="text" name="BuscarMotivos3" id = "SearchMotivos3" onKeyUp="buscarMotivos3()" autocomplete="off">
+                            <div class="input-group-append">
+                              <span class="input-group-text" id="basic-addon2">Buscar</span>
+                            </div>  
+                          </div>                    
+                        </div>
+                        <div class="col"></div>
+                      </div>
+                      <div class="row">
+                        <div class="col"></div>
+                        <div class="col-10" id = "ResultadosMotivos3">
+                          
+                        </div>
+                        <div class="col"></div>
+                      </div>                
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>             
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- FIN MODAL SELECCION MOTIVO -->
+            <!-- Modal SELECCION MOTIVO 4 -->
+            <div class="modal fade bd-example-modal-lg" id="ModalMotivo4" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Selección de Motivo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form>
+                      <div class="row">
+                        <div class="col"></div>
+                        <div class="col-8">
+                          <div class="input-group mb-3">
+                            <input class = "form-control" type="text" name="BuscarMotivos4" id = "SearchMotivos4" onKeyUp="buscarMotivosGeneral(4)" autocomplete="off">
+                            <div class="input-group-append">
+                              <span class="input-group-text" id="basic-addon2">Buscar</span>
+                            </div>  
+                          </div>                    
+                        </div>
+                        <div class="col"></div>
+                      </div>
+                      <div class="row">
+                        <div class="col"></div>
+                        <div class="col-10" id = "ResultadosMotivos4">
+                          
+                        </div>
+                        <div class="col"></div>
+                      </div>                
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>          
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- FIN MODAL SELECCION MOTIVO -->
+            <!-- Modal SELECCION MOTIVO 5 -->
+            <div class="modal fade bd-example-modal-lg" id="ModalMotivo5" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Selección de Motivo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form>
+                      <div class="row">
+                        <div class="col"></div>
+                        <div class="col-8">
+                          <div class="input-group mb-3">
+                            <input class = "form-control" type="text" name="BuscarMotivos5" id = "SearchMotivos5" onKeyUp="buscarMotivosGeneral(5)" autocomplete="off">
+                            <div class="input-group-append">
+                              <span class="input-group-text" id="basic-addon2">Buscar</span>
+                            </div>  
+                          </div>                    
+                        </div>
+                        <div class="col"></div>
+                      </div>
+                      <div class="row">
+                        <div class="col"></div>
+                        <div class="col-10" id = "ResultadosMotivos5">
+                          
+                        </div>
+                        <div class="col"></div>
+                      </div>                
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>           
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- FIN MODAL SELECCION MOTIVO -->
+            <!-- Modal SELECCION CATEGORIA -->
+            <div class="modal fade bd-example-modal-lg" id="ModalCategoria" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Selección de Categoria</h5>
+                    <button type="button" class="close" id="close-categorias" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form>
+                      <div class="row">
+                        <div class="col"></div>
+                        <div class="col-8">
+                          <div class="input-group mb-3">
+                            <input class = "form-control" type="text" name="BuscarCategorias" id = "SearchCategorias" onKeyUp="buscarCategorias()" autocomplete="off">
+                            <div class="input-group-append">
+                              <span class="input-group-text" id="basic-addon2">Buscar</span>
+                            </div>  
+                          </div>                    
+                        </div>
+                        <div class="col"></div>
+                      </div>
+                      <div class="row">
+                        <div class="col"></div>
+                        <div class="col-10" id = "ResultadosCategorias">
+                          
+                        </div>
+                        <div class="col"></div>
+                      </div>                
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="seleccionMultipleCategoria()" data-dismiss="modal">OK</button>
+                    <button type="button" class="btn btn-primary" id="cerrar-categorias" data-dismiss="modal">Cerrar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- FIN MODAL SELECCION CATEGORIA -->
+            <!-- Modal CONFIGURACION-->
+            <div class="modal fade bd-example-modal-lg" id="ModalConfig" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header" style="justify-content: center;">
+                    <h1>Configuración</h1>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="offset-4 col-2">
+                        <label for="formatConfig">Formato: </label>
+                      </div>
+                      <div class="col-4">
+                        <select class="input-group mb-3" name="formatConfig" id="formatConfig" onchange="cambiarConfig()">
+                          <option value="grid">Grilla</option>
+                          <option value="table" selected>Tabla</option>
+                        </select>
+                      </div>
+                    </div>              
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">OK</button>             
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- FIN MODAL SELECCION CONFIGURACION -->
+            <!-- Modal ENLACE DRIVER-->
+            <div class="modal fade bd-example-modal-lg" id="modal-enlace-drive" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header" style="justify-content: center;">
+                    <h1>Enlaces Drive</h1>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="col-4">
+                        <?php 
+                          echo $Element->CBCSDrives();
+                        ?>
+                      </div>
+                      <div class="col-8">
+                        <?php 
+                          echo $Element->CBDrive();
+                        ?>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- FIN MODAL SELECCION ENLACE DRIVER -->
+            <!-- FIN SECCION DE MODALES -->
       </div>
-      <!-- FIN MODAL SELECCION ENLACE DRIVER -->
-      <!-- FIN SECCION DE MODALES -->
-  </div>
+      <div class = "col-1">
+    </div>
 </div>
 </div>
 <?php
