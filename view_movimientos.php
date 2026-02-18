@@ -73,8 +73,10 @@ $Con->CloseConexion();
         <div class="col"></div>
       </div><br>
       <div class="row">
+        <div class="col-1">
+        </div>
         <div class="col-2">
-        <button id="btn-enlace-driver" class="btn btn-md btn-secondary" data-toggle="modal" data-target="#modal-enlace-drive">Enlace</button>
+          <button id="btn-enlace-driver" class="btn btn-md btn-secondary" data-toggle="modal" data-target="#modal-enlace-drive">Enlace</button>
         </div>
         <div class="col-4">
           <center><button class="btn btn-secondary" onClick="location.href='view_newmovimientos.php'">Agregar Nuevo
@@ -87,7 +89,7 @@ $Con->CloseConexion();
         <div class="col"></div>
       </div>
       <br>
-      <div class="row">
+      <div class="row" style="justify-content: center;">
         <div class="col-10">
           <form method="post" action="Controladores/CtrBuscarMovimientos.php">
             <div class="form-group row">
@@ -117,7 +119,7 @@ $Con->CloseConexion();
             </div>
           </form>
           <br><br>
-          <div class="row">
+          <div class="row" style="justified-content: center">
             <?php
             if (isset($_REQUEST["Filtro"]) && $_REQUEST["Filtro"] != null) {
               $Filtro = $_REQUEST["Filtro"];
