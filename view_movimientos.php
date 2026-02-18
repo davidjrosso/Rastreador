@@ -84,9 +84,11 @@ $Con->CloseConexion();
         <div class="col-2">
           <button id="btn-enlace-driver" class="btn btn-md btn-secondary" data-toggle="modal" data-target="#modal-enlace-drive">Enlace</button>
         </div>
-        <div class="col-4">
+        <div class="col-5">
           <center><button class="btn btn-secondary" onClick="location.href='view_newmovimientos.php'">Agregar Nuevo
               Movimiento</button></center>
+        </div>
+        <div class="col-2">
         </div>
         <div class="col-2">
           <button type="button" class="btn btn-outline-secondary"
