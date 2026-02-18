@@ -1250,6 +1250,112 @@ class CtrGeneral{
 		return $Table;
 	}
 
+	public function getPersonasxApellidoYNombre($ApellidoYNombre){
+		$Con = new Conexion();
+		$Con->OpenConexion();
+
+		$caracater = str_contains($ApellidoYNombre, ",");		
+		$query_filter = "";
+
+		if ($caracater) {
+			$consulta = preg_replace("~[ ]+~", " ", $ApellidoYNombre);
+			$elements = array_map("trim", explode(",", $consulta));
+			$apellidos = false;
+			$nombres = false;
+			if ($elements[0]) $apellidos = preg_split("~[ ]+~", $elements[0]);
+			if ($elements[1]) $nombres = preg_split("~[ ]+~", $elements[1]);
+
+			$cant_apellido = ($apellidos) ? count($apellidos) : 0;
+			$cant_nombres = ($nombres) ? count($nombres) : 0;
+			$query_apellido = "(";
+
+			if (!$apellidos) $apellidos = [];
+
+			foreach ($apellidos as $key => $value) {
+				$query_apellido .= "(TRIM(apellido) REGEXP '^$value')";
+				if ($key < $cant_apellido - 1) $query_apellido .= " or ";
+			}
+			$query_apellido .= ")";
+
+			$query_nombre = "(";
+
+			if (!$nombres) $nombres = [];
+
+			foreach ($nombres as $key => $value) {
+				$query_nombre .= "(TRIM(nombre) REGEXP '^$value')";
+				if ($key < $cant_nombres - 1) $query_nombre .= " or ";
+			}
+			$query_nombre .= ")";
+
+			if (!$cant_apellido) $query_apellido = "";
+
+			$query_filter .= $query_apellido;
+			if ($cant_nombres > 0) {
+				if ($cant_apellido) $query_filter .= " and ";
+				$query_filter .= $query_nombre; 
+			}
+
+			if ($cant_apellido || $cant_nombres) {
+				$query_filter = " and " . $query_filter;
+			}
+
+			if (!$cant_apellido && !$cant_nombres) $query_filter = "";
+
+		} else {
+			$query_filter = " and ((TRIM(apellido) REGEXP '^$ApellidoYNombre' or TRIM(apellido) REGEXP '[ ]+$ApellidoYNombre') 
+								  	 or (TRIM(nombre) REGEXP '^$ApellidoYNombre' or TRIM(nombre) REGEXP '[ ]+$ApellidoYNombre'))";
+		}
+
+
+		$Consulta = "select id_persona, 
+							UPPER(apellido) as apellido, 
+							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
+							documento, 
+							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
+					 from persona
+					 where estado = 1 
+						$query_filter
+					 order by apellido, nombre";
+		$MessageError = "Problemas al intentar mostrar Personas por Apellido";
+		$Table = "<table class='table'>
+					<thead>
+						<tr>
+							<th>Apellido</th>
+							<th>Nombre</th>
+							<th>Documento</th>
+							<th>Nro. Legajo</th>
+							<th colspan='3'></th>
+						</tr>
+					</thead>";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
+			$Table .= "<tr>
+							<td>" . $Ret["apellido"] . "</td>
+							<td>" . $Ret["nombre"] . "</td>
+							<td>" . $Ret["documento"] . "</td>
+							<td>" . $Ret["nro_legajo"] . "</td>
+							<td>
+								<a href = 'view_verpersonas.php?ID=" . $Ret["id_persona"] . "'>
+									<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a>
+							</td>
+							<td>
+								<a href = 'view_modpersonas.php?ID=" . $Ret["id_persona"] . "'>
+									<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a>
+							</td>
+							<td>
+								<a onClick = 'Verificar(" . $Ret["id_persona"] . ")'>
+									<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
+								</a>
+							</td>
+					   </tr>";
+		}
+		$Con->CloseConexion();
+		$Table .= "</table>";
+
+		return $Table;
+	}
+
+
 	public function getPersonasxDNI($DNI){
 		$buscDNI = trim(str_replace(array('.'),'',$DNI));
 		$Con = new Conexion();
