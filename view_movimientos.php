@@ -59,6 +59,12 @@ $Con->CloseConexion();
 </head>
 
 <body>
+  <div class='col-md-2' id='expandir' style='padding-left: 6px; position: fixed; z-index: 1000' hidden>
+    <a id='abrir' class='btn btn-secondary btn-sm' href='javascript:void(0)' onclick='mostrar()'>
+      <i class='fa fa-arrows-alt fa-lg' color='tomato'></i>
+    </a>
+  </div>
+
   <div class="row margin-right-cero">
     <?php
     $Element = new Elements();
@@ -119,7 +125,7 @@ $Con->CloseConexion();
             </div>
           </form>
           <br><br>
-          <div class="row" style="justified-content: center">
+          <div class="row">
             <?php
             if (isset($_REQUEST["Filtro"]) && $_REQUEST["Filtro"] != null) {
               $Filtro = $_REQUEST["Filtro"];
