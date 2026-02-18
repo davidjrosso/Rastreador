@@ -1436,9 +1436,9 @@ public function getMenuSeguridadUsuario($ID){
                 <li class="collapsed active" onClick = "location.href = \'para_que_sirve.pdf\'">
                   <a href="para_que_sirve.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Para qué sirve?</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'como_funciona.pdf\'">
+                <!--<li class="collapsed" onClick = "location.href = \'como_funciona.pdf\'">
                   <a href="como_funciona.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Cómo funciona?</a>
-                </li>
+                </li> -->
                 <li class="collapsed" onClick = "location.href = \'licencia.pdf\'">
                   <a href="licencia.pdf"><i class="fa fa-file-text fa-lg"></i> Licencia</a>
                 </li>
@@ -1452,9 +1452,9 @@ public function getMenuSeguridadUsuario($ID){
                       <li class="collapsed" onClick = "location.href = \'para_que_sirve.pdf\'">
                         <a href="para_que_sirve.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Para qué sirve?</a>
                       </li>
-                      <li class="collapsed active" onClick = "location.href = \'como_funciona.pdf\'">
+                      <!--<li class="collapsed active" onClick = "location.href = \'como_funciona.pdf\'">
                           <a href="como_funciona.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Cómo funciona?</a>
-                      </li>
+                      </li>-->
                       <li class="collapsed" onClick = "location.href = \'licencia.pdf\'">
                           <a href="licencia.pdf"><i class="fa fa-file-text fa-lg"></i> Licencia</a>
                       </li>
@@ -1468,9 +1468,9 @@ public function getMenuSeguridadUsuario($ID){
                         <li class="collapsed" onClick = "location.href = \'para_que_sirve.pdf\'">
                           <a href="para_que_sirve.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Para qué sirve?</a>
                         </li>
-                        <li class="collapsed" onClick = "location.href = \'como_funciona.pdf\'">
+                        <!--<li class="collapsed" onClick = "location.href = \'como_funciona.pdf\'">
                             <a href="como_funciona.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Cómo funciona?</a>
-                        </li>
+                        </li>-->
                         <li class="collapsed active" onClick = "location.href = \'licencia.pdf\'">
                             <a href="licencia.pdf"><i class="fa fa-file-text fa-lg"></i> Licencia</a>
                         </li>
@@ -1484,9 +1484,9 @@ public function getMenuSeguridadUsuario($ID){
                         <li onClick = "location.href = \'para_que_sirve.pdf\'">
                           <a href="para_que_sirve.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Para qué sirve?</a>
                         </li>
-                        <li class="collapsed" onClick = "location.href = \'como_funciona.pdf\'">
+                        <!--<li class="collapsed" onClick = "location.href = \'como_funciona.pdf\'">
                           <a href="como_funciona.pdf"><i class="fa fa-file-text fa-lg"></i> ¿Cómo funciona?</a>
-                        </li>
+                        </li>-->
                         <li class="collapsed" onClick = "location.href = \'licencia.pdf\'">
                           <a href="licencia.pdf"><i class="fa fa-file-text fa-lg"></i> Licencia</a>
                         </li>                
@@ -2913,7 +2913,7 @@ public function getMenuSeguridadUsuario($ID){
   {
     if ($TipoUsuario == 1) {
       $menu = "<div id='ContenidoMenu' class='col-md-3 menu-md-2'>
-                  <div class='nav-side-menu'>
+                <div class='nav-side-menu'>
                     <a id='cerrar' class='btn btn-secondary btn-sm' href='javascript:void(0)' onclick='ocultar()'>
                       <i class='fa fa-arrow-left fa-lg'></i>
                     </a>" . 
