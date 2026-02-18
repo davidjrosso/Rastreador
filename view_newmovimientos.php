@@ -9,15 +9,15 @@ if(!isset($_SESSION["Usuario"])){
     header("Location: Error_Session.php");
 }
 
-$Con = new Conexion();
-$Con->OpenConexion();
-$ID_Usuario = $_SESSION["Usuario"];
-$ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
-$MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
-$EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
-$Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
-$TipoUsuario = $Ret["ID_TipoUsuario"];
-$Con->CloseConexion();
+  $Con = new Conexion();
+  $Con->OpenConexion();
+  $ID_Usuario = $_SESSION["Usuario"];
+  $ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
+  $MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
+  $EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
+  $Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
+  $TipoUsuario = $Ret["ID_TipoUsuario"];
+  $Con->CloseConexion();
 ?>
 <!DOCTYPE html>
 <html>
@@ -37,6 +37,7 @@ $Con->CloseConexion();
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
+  <script src="js/Utils.js"></script>
   <!--<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script> -->  
   <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script> -->
   <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script> -->
@@ -358,20 +359,20 @@ $Con->CloseConexion();
       </div>
       <div class="col"></div>
     </div><br>
-    <div class="row">
-      <div class="col"></div>
-      <div class="col-10">
+    <div class="row" style="justify-content: center;">
+      <div class="col-10 row" style="justify-content: center;">
           <div class="row">
-              <center><button class = "btn btn-secondary btn-sm" onClick="location.href ='view_newmovimientos.php'">Agregar Nuevo Movimiento</button> <button class = "btn btn-secondary btn-sm" onClick="location.href='view_newpersonas.php'">Agregar Nueva Persona</button> <button class = "btn btn-secondary btn-sm" onClick="location.href='view_newmotivos.php'">Agregar Nuevo Motivo</button> <button class = "btn btn-secondary btn-sm" onClick="location.href='view_newresponsables.php'">Agregar Nuevo Responsable</button></center>
-          </div><br>
-          <div class="row">
-              <center><button class = "btn btn-secondary btn-sm" onClick="location.href='view_newcentros.php'">Agregar Nuevo Centro</button></center>
+              <center><button class = "btn btn-secondary btn-sm" onClick="location.href ='view_newmovimientos.php'">Agregar Nuevo Movimiento</button>
+                      <button class = "btn btn-secondary btn-sm" onClick="location.href='view_newpersonas.php'">Agregar Nueva Persona</button>
+                      <button class = "btn btn-secondary btn-sm" onClick="location.href='view_newmotivos.php'">Agregar Nuevo Motivo</button>
+                      <button class = "btn btn-secondary btn-sm" onClick="location.href='view_newresponsables.php'">Agregar Nuevo Responsable</button>
+                      <button class = "btn btn-secondary btn-sm" onClick="location.href='view_newcentros.php'">Agregar Nuevo Centro</button>
+              </center>
           </div>
       </div>
-      <div class="col"></div>
     </div>
     <br>
-     <div class = "row">
+     <div class = "row" style="justify-content: center;">
       <div class = "col-10">
           <!-- Carga -->
           <p class = "Titulos">Cargar Nuevo Movimiento</p>
@@ -466,7 +467,7 @@ $Con->CloseConexion();
               </div>
             </div>
             <div class="form-group row">
-              <div class="offset-md-2 col-md-10" id = "InputsGenerales">
+              <div class="col-md-12 row" style="justify-content: center;" id = "InputsGenerales">
                 <input type="hidden" name="ID_Persona" id = "ID_Persona" value = "0">
                 <input type="hidden" name="ID_Motivo_1" id = "ID_Motivo_1" value = "0">
                 <input type="hidden" name="ID_Motivo_2" id = "ID_Motivo_2" value = "0">
