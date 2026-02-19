@@ -701,7 +701,7 @@ export class Excel {
             return velem;
         });
 
-        for(let row = 1; row < count; row++) {
+        for(let row = 1; row < count + 2; row++) {
             if (row == 1) {
                 worksheet.getRow(row).border = {
                                                 top: {style:'thick', color: {argb:'000000'}},
@@ -719,7 +719,7 @@ export class Excel {
                                             };
                 continue;
             }
-            worksheet.getRow(row).values  = Object.values(listaDeMovimientos[row]).slice(1);
+            worksheet.getRow(row).values  = Object.values(listaDeMovimientos[row - 2]).slice(1);
             worksheet.getRow(row).font = {bgColor:{argb:'FFC000'}};
             worksheet.getRow(row).alignment = { vertical: 'middle', horizontal: 'center' };
             worksheet.getRow(row).style  = {bgColor:{argb:'FFC000'}};
