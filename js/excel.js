@@ -690,10 +690,10 @@ export class Excel {
 
         const vic = new ExcelJS.Workbook();
         let worksheet = vic.addWorksheet('rastreador', {properties:{tabColor: {argb: 'FFC0000'}}})
-
+        let tableCount = $("table").length;
         let values = [];
         let count = objectJsonTabla.movimientos_general.length;
-
+        let th = [];
         let listaDeMovimientos = objectJsonTabla.movimientos_general.map(function (velem, index, array) {
             listConfig.forEach(function (elemen, index, array) {
                 delete velem[elemen];
@@ -726,9 +726,16 @@ export class Excel {
             worksheet.getRow(row).height = 20;
         }
 
-        values = objectJsonTabla.header_movimientos_general.filter(function (e) {
-            return !listConfig.includes(e);
-        });
+        if (tableCount == 1) {
+            values = objectJsonTabla.header_movimientos_general.filter(function (e) {
+                return !listConfig.includes(e);
+            });
+        } else {
+            th = $("table:nth-child(1) tbody tr td:nth-child(1)");
+            th.each(function (e, val) {
+                if (!listConfig.includes(val.innerText)) values.push(val.innerText);
+            });
+        }
 
         values = values.map(function (e) {
             let val = {header: e, key: e, width: 30,  filterButton: true};
