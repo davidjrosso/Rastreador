@@ -1080,7 +1080,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
                                 </div>
                                 <div class="row">
                                   <div class="col"></div>
-                                  <div class="col-10" id = "ResultadosMotivos">
+                                  <div class="col-10" id = "ResultadosMotivos1">
                                     
                                   </div>
                                   <div class="col"></div>
@@ -1112,7 +1112,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
                                   <div class="col-8">
                                     <div class="input-group mb-3">
                                       <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos2" onKeyUp="buscarMotivosGeneral(2)" autocomplete="off">
-                                      <select id="select-motivo1" name="select-motivo1" oninput="buscarMotivosGeneral(2)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                                      <select id="select-motivo2" name="select-motivo2" oninput="buscarMotivosGeneral(2)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
                                         <option value="denominacion" selected>Denominacion</option>
                                         <option value="codigo">Codigo</option>
                                       </select>
@@ -1157,7 +1157,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
                                   <div class="col-8">
                                     <div class="input-group mb-3">
                                         <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos3" onKeyUp="buscarMotivosGeneral(3)" autocomplete="off">
-                                        <select id="select-motivo1" name="select-motivo1" oninput="buscarMotivosGeneral(3)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                                        <select id="select-motivo3" name="select-motivo3" oninput="buscarMotivosGeneral(3)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
                                           <option value="denominacion" selected>Denominacion</option>
                                           <option value="codigo">Codigo</option>
                                         </select>
@@ -1202,7 +1202,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
                                   <div class="col-8">
                                     <div class="input-group mb-3">
                                         <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos4" onKeyUp="buscarMotivosGeneral(4)" autocomplete="off">
-                                        <select id="select-motivo1" name="select-motivo1" oninput="buscarMotivosGeneral(4)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                                        <select id="select-motivo4" name="select-motivo4" oninput="buscarMotivosGeneral(4)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
                                           <option value="denominacion" selected>Denominacion</option>
                                           <option value="codigo">Codigo</option>
                                         </select>
@@ -1247,7 +1247,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
                                   <div class="col-8">
                                     <div class="input-group mb-3">
                                       <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos5" onKeyUp="buscarMotivosGeneral(5)" autocomplete="off">
-                                      <select id="select-motivo1" name="select-motivo1" oninput="buscarMotivosGeneral(5)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                                      <select id="select-motivo5" name="select-motivo5" oninput="buscarMotivosGeneral(5)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
                                         <option value="denominacion" selected>Denominacion</option>
                                         <option value="codigo">Codigo</option>
                                       </select>
