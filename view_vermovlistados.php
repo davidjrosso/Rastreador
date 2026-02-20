@@ -878,8 +878,7 @@ if (empty($_REQUEST["ID_Persona"])) {
               $ConsultarResponsable = "SELECT responsable 
                                         FROM responsable 
                                         WHERE id_resp in (" . implode(",", $ID_Responsable) . ") 
-                                          AND estado = 1
-                                        limit 1";
+                                          AND estado = 1";
               $EjecutarConsultarResponsable = mysqli_query($Con->Conexion,$ConsultarResponsable) or die("Problemas al consultar filtro Responsable");
               $filtros_resp = "";
               while ($RetConsultarResponsable = mysqli_fetch_assoc($EjecutarConsultarResponsable)) {
