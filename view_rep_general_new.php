@@ -87,6 +87,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
 
   <script src="js/FileSaver.js"></script>
+  <script src="js/Utils.js"></script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript"
     src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
@@ -102,39 +103,6 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
 
   <script>
     const { PDFDocument, StandardFonts, rgb } = PDFLib;
-
-    function mostrar() {
-
-      $("#expandir").removeAttr("style");
-      document.getElementById("expandir").hidden = true;
-      document.getElementById("ContenidoMenu").hidden = false;
-      $("#ContenerdorPrincipal").removeAttr("style");
-
-      var ContenidoMenu = document.getElementById("ContenidoMenu");
-      ContenidoMenu.setAttribute("class", "col-md-2");
-      document.getElementById("sidebar").style.width = "200px";
-
-      var ContenidoTabla = document.getElementById("ContenidoTabla");
-      ContenidoTabla.setAttribute("class", "col-md-10");
-
-      document.getElementById("abrir").style.display = "none";
-      document.getElementById("cerrar").style.display = "inline";
-      $("#BarraDeNavHTabla").removeAttr("style");
-    }
-
-    function ocultar() {
-      document.getElementById("expandir").hidden = false;
-      document.getElementById("ContenidoMenu").hidden = true;
-      $("#ContenerdorPrincipal").attr("style", "margin-left:5px;");
-      var ContenidoTabla = document.getElementById("ContenidoTabla");
-      ContenidoTabla.setAttribute("class", "col-md-12");
-
-      $("#expandir").attr("style", "padding-left:1px");
-      $("#abrir").attr("style", "display:inline;");
-      //document.getElementById("abrir").style.display = "inline";
-      document.getElementById("cerrar").style.display = "none";
-      $("#BarraDeNavHTabla").attr("style", "width: 95%; margin-left: 2%;");
-    }
 
     var map = null;
     var widthDispay = <?php echo (($width_dispay) ? $width_dispay : "0"); ?>;
@@ -1313,7 +1281,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
           <i class="fa fa-arrows-alt fa-lg" color="tomato"></i>
         </a>
       </div>
-      <div class="col-md-2" id="ContenidoMenu">
+      <div class="col-md-2" id="ContenidoMenu" style="max-height: 100vh;">
         <div class="nav-side-menu" id="sidebar">
           <a id="cerrar" class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="ocultar()">
             <i class="fa fa-arrow-left fa-lg"></i>
@@ -1915,15 +1883,20 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
               $filtrosSeleccionados["ID_OtraInstitucion"] = $ID_OtraInstitucion;
             }
 
-            if($ID_Responsable > 0){
-              $movimiento_query .= " and id_resp = $ID_Responsable";
-              $ConsultarResponsable = "select responsable 
-                                        from responsable 
-                                        where id_resp = " . $ID_Responsable." limit 1";
+            if(count($ID_Responsable) > 0) {
+              $movimiento_query  .= " and id_resp in (" . implode(",", $ID_Responsable) . ")";
+              $ConsultarResponsable = "SELECT responsable 
+                                        FROM responsable 
+                                        WHERE id_resp in (" . implode(",", $ID_Responsable) . ") 
+                                          AND estado = 1";
               $EjecutarConsultarResponsable = mysqli_query($Con->Conexion,$ConsultarResponsable) or die("Problemas al consultar filtro Responsable");
-              $RetConsultarResponsable = mysqli_fetch_assoc($EjecutarConsultarResponsable);   
-              $filtros[] = "Responsable: " . $RetConsultarResponsable['responsable'];
-              $filtrosSeleccionados["ID_Responsable"] = $ID_Responsable;
+              $filtros_resp = "";
+              while ($RetConsultarResponsable = mysqli_fetch_assoc($EjecutarConsultarResponsable)) {
+                  $filtros_resp .= "-" . $RetConsultarResponsable['responsable'];
+              };   
+
+              $filtros[] = "Responsable: " . $filtros_resp;
+              $filtrosSeleccionados["ID_Responsable"] = $filtros_resp;
             }
 
             if (count(array_filter($MotivosOpciones))) {

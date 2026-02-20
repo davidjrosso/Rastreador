@@ -60,6 +60,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
   <script>
     let cantBarrios = 1;
     let cantMotivos = 1;
+    let cantRespon = 1;
     let listaMotivos = new Map();
     let listaCategorias = new Map();
     let cantCategoria = 1;
@@ -658,6 +659,27 @@ $TipoUsuario = $account->get_id_tipo_usuario();
       }
     }
 
+    function agregarResponsable() {
+      if (cantRespon <= 3) {
+        cantRespon++;
+        let divContenedor = document.getElementById('responsables');
+        let divResponsable = document.getElementById("ID_Responsable");
+        let obj = divResponsable.cloneNode(true);
+        obj.setAttribute('name', 'ID_Responsable[]');
+        let label = document.createElement("label");
+        label.setAttribute('class','col-md-2 col-form-label LblForm');
+        label.innerText = 'Responsable '+ cantRespon +':';
+        let div = document.createElement("div");
+        div.setAttribute('class','col-md-10');
+        let divForm = document.createElement("div");
+        divForm.setAttribute('class','form-group row');
+        divForm.appendChild(label);
+        divForm.appendChild(div);
+        div.appendChild(obj);
+        divContenedor.appendChild(divForm);
+      }
+    }
+
   </script>
 </head>
 <body>
@@ -900,12 +922,17 @@ $TipoUsuario = $account->get_id_tipo_usuario();
 
                         <div class="form-group row">
                           <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable: </label>
-                          <div class="col-md-10">
+                          <div class="col-md-9">
                             <?php  
                             $Element = new Elements();
                             echo $Element->CBRepResponsable();
                             ?>
                           </div>
+                          <div class="col-md-1 div-button-center">
+                              <button type="button" class="btn btn-primary" style="align-self:center" onClick="agregarResponsable()" id="agregarResponsableID">+</button>
+                          </div>
+                        </div>
+                        <div id="responsables">              
                         </div>
                         <div class="form-group row">
                           <label for="inpMostrar" class="col-md-2 col-form-label LblForm">Mostrar Personas: </label>
