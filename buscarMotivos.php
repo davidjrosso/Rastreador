@@ -22,7 +22,7 @@ require('Controladores/Conexion.php');
 header('Content-Type: text/html; charset=utf-8');
 
 $consultaBusqueda = $_REQUEST['valorBusqueda'];
-
+$vs = isset($_REQUEST["vs"]) ? $_REQUEST["vs"] : null;
 $json_string = file_get_contents('php://input');
 $lista_motivo = json_decode($json_string, true);
 
@@ -39,11 +39,20 @@ if (isset($consultaBusqueda)) {
 	$Con = new Conexion();
 	$Con->OpenConexion();
 
+	if ($vs && $vs == "denominacion") {
 	$query = "SELECT * 
 			  FROM motivo 
 			  WHERE motivo LIKE '%$consultaBusqueda%' 
 			  	and estado = 1
 			  ORDER BY tipo_motivo ASC, orden DESC";
+
+	} else {
+			$query = "SELECT * 
+					  FROM motivo 
+					  WHERE codigo LIKE '%$consultaBusqueda%' 
+						and estado = 1
+					  ORDER BY tipo_motivo ASC, orden DESC";
+	}
 	$consulta = mysqli_query($Con->Conexion, $query);
 
 	$filas = mysqli_num_rows($consulta);
