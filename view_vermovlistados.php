@@ -31,6 +31,7 @@ header("Content-Type: text/html;charset=utf-8");
 /*     CONTROL DE USUARIOS                    */
 if(!isset($_SESSION["Usuario"])){
     header("Location: Error_Session.php");
+    exit();
 }
 
 $ID_Usuario = $_SESSION["Usuario"];
@@ -872,15 +873,21 @@ if (empty($_REQUEST["ID_Persona"])) {
               $filtrosSeleccionados["ID_OtraInstitucion"] = $ID_OtraInstitucion;
             }
 
-            if($ID_Responsable > 0){
-              $movimiento_query  .= " and id_resp = $ID_Responsable";
-              $ConsultarResponsable = "select responsable 
-                                        from responsable 
-                                        where id_resp = " . $ID_Responsable." limit 1";
+            if(count($ID_Responsable) > 0) {
+              $movimiento_query  .= " and id_resp in (" . implode(",", $ID_Responsable) . ")";
+              $ConsultarResponsable = "SELECT responsable 
+                                        FROM responsable 
+                                        WHERE id_resp in (" . implode(",", $ID_Responsable) . ") 
+                                          AND estado = 1
+                                        limit 1";
               $EjecutarConsultarResponsable = mysqli_query($Con->Conexion,$ConsultarResponsable) or die("Problemas al consultar filtro Responsable");
-              $RetConsultarResponsable = mysqli_fetch_assoc($EjecutarConsultarResponsable);   
-              $filtros[] = "Responsable: " . $RetConsultarResponsable['responsable'];
-              $filtrosSeleccionados["ID_Responsable"] = $ID_Responsable;
+              $filtros_resp = "";
+              while ($RetConsultarResponsable = mysqli_fetch_assoc($EjecutarConsultarResponsable)) {
+                  $filtros_resp .= "-" . $RetConsultarResponsable['responsable'];
+              };   
+
+              $filtros[] = "Responsable: " . $filtros_resp;
+              $filtrosSeleccionados["ID_Responsable"] = $filtros_resp;
             }
 
             if (count(array_filter($MotivosOpciones))) {
@@ -2143,8 +2150,9 @@ if (empty($_REQUEST["ID_Persona"])) {
                 echo $TableMov;
               }
 
-              if($ID_Motivo > 0){
-                $ConsultarFiltroMotivo = "select id_motivo, motivo from motivo where id_motivo = $ID_Motivo";
+              if($ID_Motivo > 0) {
+                $ConsultarFiltroMotivo = "select id_motivo, motivo 
+                                          from motivo where id_motivo = $ID_Motivo";
                 $ErrorConsultarFiltroMotivo = "No se pudo consultar el motivo del filtro ID_Motivo";
                 $RetConsFiltroMotivo = mysqli_query($Con->Conexion,$ConsultarFiltroMotivo) or die($ErrorConsultarFiltroMotivo);
                 $RetConsMotivo = mysqli_fetch_assoc($RetConsFiltroMotivo);
@@ -2154,8 +2162,10 @@ if (empty($_REQUEST["ID_Persona"])) {
                 $_SESSION["datosNav"]["Motivo"] = $filtrosSeleccionados["Motivo"];
               }
 
-              if($ID_Motivo2 > 0){                
-                $ConsultarFiltroMotivo2 = "select id_motivo, motivo from motivo where id_motivo = $ID_Motivo2";
+              if($ID_Motivo2 > 0) {                
+                $ConsultarFiltroMotivo2 = "SELECT id_motivo, motivo 
+                                           FROM motivo 
+                                           WHERE id_motivo = $ID_Motivo2";
                 $ErrorConsultarFiltroMotivo2 = "No se pudo consultar el motivo del filtro ID_Motivo2";
                 $RetConsFiltroMotivo2 = mysqli_query($Con->Conexion,$ConsultarFiltroMotivo2) or die($ErrorConsultarFiltroMotivo2);
                 $RetConsMotivo2 = mysqli_fetch_assoc($RetConsFiltroMotivo2);
@@ -2165,7 +2175,7 @@ if (empty($_REQUEST["ID_Persona"])) {
                 $_SESSION["datosNav"]["Motivo2"] = $filtrosSeleccionados["Motivo2"];
               }
 
-              if($ID_Motivo3 > 0){                
+              if($ID_Motivo3 > 0) {                
                 $ConsultarFiltroMotivo3 = "select id_motivo, motivo from motivo where id_motivo = $ID_Motivo3";
                 $ErrorConsultarFiltroMotivo3 = "No se pudo consultar el motivo del filtro ID_Motivo3";
                 $RetConsFiltroMotivo3 = mysqli_query($Con->Conexion,$ConsultarFiltroMotivo3) or die($ErrorConsultarFiltroMotivo3);
