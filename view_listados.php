@@ -6,8 +6,9 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 header("Content-Type: text/html;charset=utf-8");
 
 /*     CONTROL DE USUARIOS                    */
-if(!isset($_SESSION["Usuario"])){
+if (!isset($_SESSION["Usuario"])) {
     header("Location: Error_Session.php");
+    exit();
 }
 
 $ID_Usuario = $_SESSION["Usuario"];
@@ -28,6 +29,7 @@ $Element = new Elements();
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <script src="https://code.jquery.com/jquery-1.9.1.min.js" integrity="sha256-wS9gmOZBqsqWxgIVgA8Y9WcQOa7PgSIX+rPA0VL2rbQ=" crossorigin="anonymous"></script>
+  <script src="node_modules/@popperjs/core/dist/umd/popper.js"></script>
   <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
   <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -71,7 +73,7 @@ $Element = new Elements();
                   clear: "Borrar",
                   weekStart: 1,
               });
-              var date_input2=$('input[name="Fecha_Hasta"]'); //our date input has the name "date"
+              var date_input2 =$('input[name="Fecha_Hasta"]'); //our date input has the name "date"
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
               date_input2.datepicker({
                   format: 'dd/mm/yyyy',
@@ -157,6 +159,7 @@ $Element = new Elements();
       let xMotivo = document.getElementById('SearchMotivos').value;
       let bodyJson = Object.fromEntries(listaMotivos);
       let textoBusqueda = xMotivo;
+      let vs = $("#select-motivo")[0].value
       xmlhttp=new XMLHttpRequest();
       xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
@@ -164,7 +167,7 @@ $Element = new Elements();
           document.getElementById("ResultadosMotivos").innerHTML=contenidosRecibidos;
           }
       }
-      xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda=' + textoBusqueda, true);
+      xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda=' + textoBusqueda + "&vs=" + vs, true);
       xmlhttp.setRequestHeader("Content-Type", "application/json;");
       xmlhttp.send(JSON.stringify(bodyJson));
     }
@@ -370,7 +373,7 @@ $Element = new Elements();
       ID_Categoria.setAttribute('value',xID);
     }
 
-    function agregarBarrio(){
+    function agregarBarrio() {
       cantBarrios++;
       var divContenedor = document.getElementById('contenedorBarrios');
       var divBarrio = document.createElement("div");
@@ -862,13 +865,23 @@ $Element = new Elements();
                     <form>
                       <div class="row">
                         <div class="col"></div>
-                        <div class="col-8">
-                          <div class="input-group mb-3">
-                            <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos" onKeyUp="buscarMotivos()" autocomplete="off">
-                            <div class="input-group-append">
-                              <span class="input-group-text" id="basic-addon2">Buscar</span>
-                            </div>  
-                          </div>                    
+                        <div class="col-10">
+                            <div class="input-group mb-3">
+                              <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos" onKeyUp="buscarMotivos()" autocomplete="off">
+                              <select id="select-motivo" name="select-motivo" oninput="buscarMotivos()" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                                <option value="denominacion" selected>Denominacion</option>
+                                <option value="codigo">Codigo</option>
+                              </select>
+                              <div class="input-group-append">
+                                <span class="input-group-text" id="basic-addon2">Buscar</span>
+                              </div>  
+                            </div>
+                            <!--<div class="input-group mb-3">
+                                <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos" onKeyUp="buscarMotivos()" autocomplete="off">
+                                <div class="input-group-append">
+                                  <span class="input-group-text" id="basic-addon2">Buscar</span>
+                                </div>  
+                              </div> -->                    
                         </div>
                         <div class="col"></div>
                       </div>
