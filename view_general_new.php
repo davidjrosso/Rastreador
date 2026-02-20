@@ -257,6 +257,23 @@ $TipoUsuario = $account->get_id_tipo_usuario();
       xmlhttp.send(JSON.stringify(bodyJson));
     }
 
+    function buscarMotivosGeneral(id_Motivo){
+      let xMotivo = document.getElementById("SearchMotivos" + id_Motivo).value;
+      let bodyJson = Object.fromEntries(listaMotivos);
+      let textoBusqueda = xMotivo;
+      let vs = $("#select-motivo" + id_Motivo)[0].value;
+      xmlhttp=new XMLHttpRequest();
+      xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+          contenidosRecibidos = xmlhttp.responseText;
+          document.getElementById("ResultadosMotivos" + id_Motivo).innerHTML=contenidosRecibidos;
+        }
+      }
+      xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda=' + textoBusqueda + '&number=' + id_Motivo + "&vs=" + vs, true); // Método post y url invocada
+      xmlhttp.send(JSON.stringify(bodyJson));
+    }
+
+
     function buscarCategorias(){
       var xCategoria = document.getElementById('SearchCategorias').value;
       var textoBusqueda = xCategoria;
@@ -1049,7 +1066,11 @@ $TipoUsuario = $account->get_id_tipo_usuario();
                                   <div class="col"></div>
                                   <div class="col-8">
                                     <div class="input-group mb-3">
-                                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos" onKeyUp="buscarMotivos()" autocomplete="off">
+                                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos1" onKeyUp="buscarMotivosGeneral(1)" autocomplete="off">
+                                      <select id="select-motivo1" name="select-motivo1" oninput="buscarMotivosGeneral(1)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                                        <option value="denominacion" selected>Denominacion</option>
+                                        <option value="codigo">Codigo</option>
+                                      </select>
                                       <div class="input-group-append">
                                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                                       </div>  
@@ -1090,7 +1111,11 @@ $TipoUsuario = $account->get_id_tipo_usuario();
                                   <div class="col"></div>
                                   <div class="col-8">
                                     <div class="input-group mb-3">
-                                      <input class = "form-control" type="text" name="BuscarMotivos2" id = "SearchMotivos2" onKeyUp="buscarMotivos2()" autocomplete="off">
+                                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos2" onKeyUp="buscarMotivosGeneral(2)" autocomplete="off">
+                                      <select id="select-motivo1" name="select-motivo1" oninput="buscarMotivosGeneral(2)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                                        <option value="denominacion" selected>Denominacion</option>
+                                        <option value="codigo">Codigo</option>
+                                      </select>
                                       <div class="input-group-append">
                                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                                       </div>  
@@ -1131,10 +1156,14 @@ $TipoUsuario = $account->get_id_tipo_usuario();
                                   <div class="col"></div>
                                   <div class="col-8">
                                     <div class="input-group mb-3">
-                                      <input class = "form-control" type="text" name="BuscarMotivos3" id = "SearchMotivos3" onKeyUp="buscarMotivos3()" autocomplete="off">
-                                      <div class="input-group-append">
-                                        <span class="input-group-text" id="basic-addon2">Buscar</span>
-                                      </div>  
+                                        <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos3" onKeyUp="buscarMotivosGeneral(3)" autocomplete="off">
+                                        <select id="select-motivo1" name="select-motivo1" oninput="buscarMotivosGeneral(3)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                                          <option value="denominacion" selected>Denominacion</option>
+                                          <option value="codigo">Codigo</option>
+                                        </select>
+                                        <div class="input-group-append">
+                                          <span class="input-group-text" id="basic-addon2">Buscar</span>
+                                        </div>  
                                     </div>                    
                                   </div>
                                   <div class="col"></div>
@@ -1172,10 +1201,14 @@ $TipoUsuario = $account->get_id_tipo_usuario();
                                   <div class="col"></div>
                                   <div class="col-8">
                                     <div class="input-group mb-3">
-                                      <input class = "form-control" type="text" name="BuscarMotivos4" id = "SearchMotivos4" onKeyUp="buscarMotivos4(4)" autocomplete="off">
-                                      <div class="input-group-append">
-                                        <span class="input-group-text" id="basic-addon2">Buscar</span>
-                                      </div>  
+                                        <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos4" onKeyUp="buscarMotivosGeneral(4)" autocomplete="off">
+                                        <select id="select-motivo1" name="select-motivo1" oninput="buscarMotivosGeneral(4)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                                          <option value="denominacion" selected>Denominacion</option>
+                                          <option value="codigo">Codigo</option>
+                                        </select>
+                                        <div class="input-group-append">
+                                          <span class="input-group-text" id="basic-addon2">Buscar</span>
+                                        </div>  
                                     </div>                    
                                   </div>
                                   <div class="col"></div>
@@ -1213,7 +1246,11 @@ $TipoUsuario = $account->get_id_tipo_usuario();
                                   <div class="col"></div>
                                   <div class="col-8">
                                     <div class="input-group mb-3">
-                                      <input class = "form-control" type="text" name="BuscarMotivos5" id = "SearchMotivos5" onKeyUp="buscarMotivos4(5)" autocomplete="off">
+                                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos5" onKeyUp="buscarMotivosGeneral(5)" autocomplete="off">
+                                      <select id="select-motivo1" name="select-motivo1" oninput="buscarMotivosGeneral(5)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                                        <option value="denominacion" selected>Denominacion</option>
+                                        <option value="codigo">Codigo</option>
+                                      </select>
                                       <div class="input-group-append">
                                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                                       </div>  
