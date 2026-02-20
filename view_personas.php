@@ -131,10 +131,10 @@ $Con->CloseConexion();
               <label for="inputPassword" class="col-md-1 col-form-label LblForm">En: </label>
               <div class="col-md-3">
                 <select name = "ID_Filtro" class = "form-control">                    
-                    <option value = "ApellidoYNombre" selected>Apellido y Nombre</option>
+                    <option value = "ApellidoYNombre">Apellido y Nombre</option>
                     <option value = "Apellido">Apellido</option>
                     <option value = "Nombre">Nombre</option>
-                    <option value = "DNI">Documento</option>
+                    <option value = "DNI" selected>Documento</option>
                     <!-- <option value = "ID">Id</option> -->
                     <option value = "Legajo">Nro. Legajo</option>
                     <option value = "Carpeta">Nro. Carpeta</option>

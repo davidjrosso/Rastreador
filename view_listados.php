@@ -1132,8 +1132,8 @@ $Element = new Elements();
                     <h1>Configuración</h1>
                   </div>
                   <div class="modal-body">
-                    <div class="row">
-                      <div class="offset-4 col-2">
+                    <div class="row" style="justify-content: center">
+                      <div class="col-2">
                         <label for="formatConfig">Formato: </label>
                       </div>
                       <div class="col-4">
