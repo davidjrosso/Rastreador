@@ -555,7 +555,9 @@ if (empty($_REQUEST["ID_Persona"])) {
               $Mostrar = $_REQUEST["Mostrar"];
               $ID_CentroSalud = $_REQUEST["ID_CentroSalud"];
               $ID_OtraInstitucion = $_REQUEST["ID_OtraInstitucion"];
-              $ID_Responsable = $_REQUEST["ID_Responsable"];
+              $ID_Responsable = array_filter($_REQUEST["ID_Responsable"], function ($e, $val) {
+                return !empty($val);
+              }, ARRAY_FILTER_USE_BOTH);
 
               $motivos = array_filter($MotivosOpciones, 
                                   function ($x) {
