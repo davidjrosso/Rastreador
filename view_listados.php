@@ -817,7 +817,7 @@ $Element = new Elements();
               <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Selección de Persona</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle" style="margin-left: auto;">Selección de Persona</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
@@ -1088,7 +1088,7 @@ $Element = new Elements();
               <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Selección de Categoria</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle" style="margin-left: auto;">Selección de Categoria</h5>
                     <button type="button" class="close" id="close-categorias" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
