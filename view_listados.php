@@ -156,15 +156,15 @@ $Element = new Elements();
     }
 
     function buscarMotivos() {
-      let xMotivo = document.getElementById('SearchMotivos').value;
+      let xMotivo = document.getElementById('SearchMotivos1').value;
       let bodyJson = Object.fromEntries(listaMotivos);
       let textoBusqueda = xMotivo;
-      let vs = $("#select-motivo")[0].value
+      let vs = $("#select-motivo1")[0].value
       xmlhttp=new XMLHttpRequest();
       xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
           contenidosRecibidos = xmlhttp.responseText;
-          document.getElementById("ResultadosMotivos").innerHTML=contenidosRecibidos;
+          document.getElementById("ResultadosMotivos1").innerHTML=contenidosRecibidos;
           }
       }
       xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda=' + textoBusqueda + "&vs=" + vs, true);
@@ -224,6 +224,7 @@ $Element = new Elements();
       let xMotivo = document.getElementById("SearchMotivos" + id_Motivo).value;
       let bodyJson = Object.fromEntries(listaMotivos);
       let textoBusqueda = xMotivo;
+      let vs = $("#select-motivo" + id_Motivo)[0].value;
       xmlhttp=new XMLHttpRequest();
       xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
@@ -231,7 +232,7 @@ $Element = new Elements();
           document.getElementById("ResultadosMotivos" + id_Motivo).innerHTML=contenidosRecibidos;
         }
       }
-      xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda='+textoBusqueda + '&number=' + id_Motivo, true); // Método post y url invocada
+      xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda=' + textoBusqueda + '&number=' + id_Motivo + "&vs=" + vs, true); // Método post y url invocada
       xmlhttp.send(JSON.stringify(bodyJson));
     }
 
@@ -867,8 +868,8 @@ $Element = new Elements();
                         <div class="col"></div>
                         <div class="col-10">
                             <div class="input-group mb-3">
-                              <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos" onKeyUp="buscarMotivos()" autocomplete="off">
-                              <select id="select-motivo" name="select-motivo" oninput="buscarMotivos()" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                              <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos1" onKeyUp="buscarMotivosGeneral(1)" autocomplete="off">
+                              <select id="select-motivo1" name="select-motivo1" oninput="buscarMotivosGeneral(1)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
                                 <option value="denominacion" selected>Denominacion</option>
                                 <option value="codigo">Codigo</option>
                               </select>
@@ -887,7 +888,7 @@ $Element = new Elements();
                       </div>
                       <div class="row">
                         <div class="col"></div>
-                        <div class="col-10" id = "ResultadosMotivos">
+                        <div class="col-10" id = "ResultadosMotivos1">
                           
                         </div>
                         <div class="col"></div>
@@ -918,10 +919,14 @@ $Element = new Elements();
                         <div class="col"></div>
                         <div class="col-8">
                           <div class="input-group mb-3">
-                            <input class = "form-control" type="text" name="BuscarMotivos2" id = "SearchMotivos2" onKeyUp="buscarMotivos2()" autocomplete="off">
-                            <div class="input-group-append">
-                              <span class="input-group-text" id="basic-addon2">Buscar</span>
-                            </div>  
+                              <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos2" onKeyUp="buscarMotivosGeneral(2)" autocomplete="off">
+                              <select id="select-motivo2" name="select-motivo2" oninput="buscarMotivosGeneral(2)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                                <option value="denominacion" selected>Denominacion</option>
+                                <option value="codigo">Codigo</option>
+                              </select>
+                              <div class="input-group-append">
+                                <span class="input-group-text" id="basic-addon2">Buscar</span>
+                              </div>  
                           </div>                    
                         </div>
                         <div class="col"></div>
@@ -959,10 +964,14 @@ $Element = new Elements();
                         <div class="col"></div>
                         <div class="col-8">
                           <div class="input-group mb-3">
-                            <input class = "form-control" type="text" name="BuscarMotivos3" id = "SearchMotivos3" onKeyUp="buscarMotivos3()" autocomplete="off">
-                            <div class="input-group-append">
-                              <span class="input-group-text" id="basic-addon2">Buscar</span>
-                            </div>  
+                              <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos3" onKeyUp="buscarMotivosGeneral(3)" autocomplete="off">
+                              <select id="select-motivo3" name="select-motivo3" oninput="buscarMotivosGeneral(3)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                                <option value="denominacion" selected>Denominacion</option>
+                                <option value="codigo">Codigo</option>
+                              </select>
+                              <div class="input-group-append">
+                                <span class="input-group-text" id="basic-addon2">Buscar</span>
+                              </div>  
                           </div>                    
                         </div>
                         <div class="col"></div>
@@ -1000,10 +1009,14 @@ $Element = new Elements();
                         <div class="col"></div>
                         <div class="col-8">
                           <div class="input-group mb-3">
-                            <input class = "form-control" type="text" name="BuscarMotivos4" id = "SearchMotivos4" onKeyUp="buscarMotivosGeneral(4)" autocomplete="off">
-                            <div class="input-group-append">
-                              <span class="input-group-text" id="basic-addon2">Buscar</span>
-                            </div>  
+                              <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos4" onKeyUp="buscarMotivosGeneral(4)" autocomplete="off">
+                              <select id="select-motivo1" name="select-motivo4" oninput="buscarMotivosGeneral(4)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                                <option value="denominacion" selected>Denominacion</option>
+                                <option value="codigo">Codigo</option>
+                              </select>
+                              <div class="input-group-append">
+                                <span class="input-group-text" id="basic-addon2">Buscar</span>
+                              </div>  
                           </div>                    
                         </div>
                         <div class="col"></div>
@@ -1041,10 +1054,14 @@ $Element = new Elements();
                         <div class="col"></div>
                         <div class="col-8">
                           <div class="input-group mb-3">
-                            <input class = "form-control" type="text" name="BuscarMotivos5" id = "SearchMotivos5" onKeyUp="buscarMotivosGeneral(5)" autocomplete="off">
-                            <div class="input-group-append">
-                              <span class="input-group-text" id="basic-addon2">Buscar</span>
-                            </div>  
+                              <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos5" onKeyUp="buscarMotivosGeneral(5)" autocomplete="off">
+                              <select id="select-motivo1" name="select-motivo5" oninput="buscarMotivosGeneral(5)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                                <option value="denominacion" selected>Denominacion</option>
+                                <option value="codigo">Codigo</option>
+                              </select>
+                              <div class="input-group-append">
+                                <span class="input-group-text" id="basic-addon2">Buscar</span>
+                              </div>  
                           </div>                    
                         </div>
                         <div class="col"></div>
