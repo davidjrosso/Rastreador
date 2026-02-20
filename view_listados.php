@@ -43,8 +43,9 @@ $Element = new Elements();
   <script src="./dist/alerta.js"></script>
   <script src="./dist/control.js"></script>
   <script>
-    var cantBarrios = 1;
-    var cantMotivos = 1;
+    let cantBarrios = 1;
+    let cantMotivos = 1;
+    let cantResponsable = 1;
     let listaMotivos = new Map();
     let listaCategorias = new Map();
     let cantCategoria = 1;
@@ -413,6 +414,28 @@ $Element = new Elements();
       }
     }
 
+    function agregarResponsable() {
+      if (cantResponsable <= 3) {
+        cantResponsable++;
+        let divContenedor = document.getElementById('responsables');
+        let divResponsable = document.getElementById("ID_Responsable");
+        let obj = divResponsable.cloneNode(true);
+        obj.setAttribute('name', 'ID_Responsable[]');
+        let label = document.createElement("label");
+        label.setAttribute('class','col-md-2 col-form-label LblForm');
+        label.innerText = 'Responsable '+ cantResponsable +':';
+        let div = document.createElement("div");
+        div.setAttribute('class','col-md-10');
+        let divForm = document.createElement("div");
+        divForm.setAttribute('class','form-group row');
+        divForm.appendChild(label);
+        divForm.appendChild(div);
+        div.appendChild(obj);
+        divContenedor.appendChild(divForm);
+      }
+    }
+
+
     function cambiarConfig(){
       var ID_Config = document.getElementById('ID_Config');
       var formatConfig = document.getElementById('formatConfig');
@@ -625,7 +648,6 @@ $Element = new Elements();
                 <label for="ID_Barrio" class="col-md-2 col-form-label LblForm">Barrio: </label>
                 <div class="col-md-9">
                   <?php
-                  $Element = new Elements();
 
                   if (isset($datosNav["ID_Barrio"])) {
                     echo $Element->CBModBarrios($datosNav["ID_Barrio"]);
@@ -698,7 +720,6 @@ $Element = new Elements();
                 <label for="ID_Centro" class="col-md-2 col-form-label LblForm">Centro Salud: </label>
                 <div class="col-md-10">
                   <?php  
-                  $Element = new Elements();
 
                   if(isset($datosNav["ID_CentroSalud"])){
                     echo $Element->CBRepModCentros($datosNav["ID_CentroSalud"]);
@@ -725,7 +746,6 @@ $Element = new Elements();
                 <label for="ID_OtraInstitucion" class="col-md-2 col-form-label LblForm">Otras Instituciones: </label>
                 <div class="col-md-10">
                   <?php  
-                  $Element = new Elements();
                   
                   if(isset($datosNav["ID_OtraInstitucion"])){
                     echo $Element->CBRepModOtrasInstituciones($datosNav["ID_OtraInstitucion"]);
@@ -739,11 +759,10 @@ $Element = new Elements();
                 <label for="ID_Escuela" class="col-md-2 col-form-label LblForm">Escuela: </label>
                 <div class="col-md-10">
                   <?php  
-                  $Element = new Elements();
 
-                  if(isset($datosNav["ID_Escuela"])){
+                  if (isset($datosNav["ID_Escuela"])) {
                     echo $Element->CBModEscuelas($datosNav["ID_Escuela"]);
-                  }else{
+                  } else {
                     echo $Element->CBRepEscuelas();
                   }
                   ?>
@@ -751,9 +770,8 @@ $Element = new Elements();
               </div>
               <div class="form-group row">
                 <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable: </label>
-                <div class="col-md-10">
+                <div class="col-md-9">
                   <?php  
-                  $Element = new Elements();
 
                   if(isset($datosNav["ID_Responsable"])){
                     echo $Element->CBRepModResponsables($datosNav["ID_Responsable"]);
@@ -762,6 +780,12 @@ $Element = new Elements();
                   }
                   ?>
                 </div>
+                <div class="col-md-1 div-button-center">
+                    <button type="button" class="btn btn-primary" onClick="agregarResponsable()" id="agregarResponsableID">+</button>
+                </div>
+              </div>
+              <div id="responsables">
+
               </div>
               <div class="form-group row">
                 <label for="inpMostrar" class="col-md-2 col-form-label LblForm">Mostrar Personas: </label>
