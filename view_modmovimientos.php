@@ -259,27 +259,27 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
         ID_Motivo.setAttribute('value',xID);
       }
 
-      function seleccionMotivo_3(xMotivo,xID){
+      function seleccionMotivo_3(xMotivo, xID){
         var Motivo = document.getElementById("Motivo_3");
         var ID_Motivo = document.getElementById("ID_Motivo_3");
         Motivo.innerHTML = "";
-        Motivo.innerHTML = "<p>"+xMotivo+"</p>";
-        ID_Motivo.setAttribute('value',xID);
+        Motivo.innerHTML = "<p>" + xMotivo + "</p>";
+        ID_Motivo.setAttribute('value', xID);
       }
 
-      function seleccionMotivo(xMotivo,xID,xNumber){
-        if(xNumber > 1){
-          var Motivo = document.getElementById("Motivo_"+xNumber);
-          var ID_Motivo = document.getElementById("ID_Motivo_"+xNumber);
+      function seleccionMotivo(xMotivo, xID,xNumber){
+        if (xNumber > 1) {
+          var Motivo = document.getElementById("Motivo_" + xNumber);
+          var ID_Motivo = document.getElementById("ID_Motivo_" + xNumber);
           Motivo.innerHTML = "";
-          Motivo.innerHTML = "<p>"+xMotivo+"</p>";
-          ID_Motivo.setAttribute('value',xID);
-        } else{
+          Motivo.innerHTML = "<p>" + xMotivo + "</p>";
+          ID_Motivo.setAttribute('value', xID);
+        } else {
           var Motivo = document.getElementById("Motivo");
           var ID_Motivo = document.getElementById("ID_Motivo");
           Motivo.innerHTML = "";
-          Motivo.innerHTML = "<p>"+xMotivo+"</p>";
-          ID_Motivo.setAttribute('value',xID);
+          Motivo.innerHTML = "<p>" + xMotivo + "</p>";
+          ID_Motivo.setAttribute('value', xID);
         }
       }
   </script>
@@ -307,7 +307,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
           <?php  
             if(isset($_REQUEST["ID"])){
               $ID_Movimiento = $_REQUEST["ID"];
-
+              $motivos = [];
               $Con = new Conexion();
               $Con->OpenConexion();
 
@@ -330,7 +330,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
 
               $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
-
+              $motivos[$Ret["id_motivo"]] = $Ret["motivo"];
               $ID_Movimiento = $Ret["id_movimiento"];
               $id_motivo = $Ret["id_motivo"];
               $Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
@@ -361,11 +361,13 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               );
 
               $count_motivo = 2;
+
               while ($Ret = mysqli_fetch_assoc($EjecutarConsultarDatos)) {
                 if ($count_motivo == 2) $DtoMovimiento->setMotivo_2($Ret["id_motivo"]);
                 if ($count_motivo == 3) $DtoMovimiento->setMotivo_3($Ret["id_motivo"]);
                 if ($count_motivo == 4) $DtoMovimiento->setMotivo_4($Ret["id_motivo"]);
                 if ($count_motivo == 5) $DtoMovimiento->setMotivo_5($Ret["id_motivo"]);
+                $motivos[$Ret["id_motivo"]] = $Ret["motivo"];
                 $count_motivo++;
               }
 
@@ -840,5 +842,10 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   </div>
 </div>
 </div>
+<script>
+  <?php foreach ($motivos as $key => $val) {?>
+  listaMotivos.set('<?php echo  $val;?>', '<?php echo $key; ?>');
+  <?php } ?>
+</script>
 </body>
 </html>
