@@ -7,6 +7,7 @@ header("Content-Type: text/html;charset=utf-8");
 /*     CONTROL DE USUARIOS                    */
 if(!isset($_SESSION["Usuario"])){
     header("Location: Error_Session.php");
+    exit();
 }
 
   $Con = new Conexion();
@@ -47,8 +48,9 @@ if(!isset($_SESSION["Usuario"])){
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
   <script>
-      var cantResponsables = 1;
-      var cantMotivos = 3;
+      let cantResponsables = 1;
+      let cantMotivos = 3;
+      let listaMotivos = new Map();
 
        $(document).ready(function(){
               var date_input=$('input[name="Fecha"]'); //our date input has the name "date"
@@ -154,8 +156,10 @@ if(!isset($_SESSION["Usuario"])){
       }
 
       function buscarMotivosGeneral(id_Motivo){
-        var xMotivo = document.getElementById("SearchMotivos" + id_Motivo).value;
-        var textoBusqueda = xMotivo;
+        let xMotivo = document.getElementById("SearchMotivos" + id_Motivo).value;
+        let bodyJson = Object.fromEntries(listaMotivos);
+        let textoBusqueda = xMotivo;
+        let vs = $("#select-motivo" + id_Motivo)[0].value;
         xmlhttp=new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
           if (xmlhttp.readyState==4 && xmlhttp.status==200) {
@@ -163,10 +167,9 @@ if(!isset($_SESSION["Usuario"])){
             document.getElementById("ResultadosMotivos" + id_Motivo).innerHTML=contenidosRecibidos;
           }
         }
-        xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda='+textoBusqueda + '&number=' + id_Motivo, true); // Método post y url invocada
-        xmlhttp.send();
+        xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda=' + textoBusqueda + '&number=' + id_Motivo + "&vs=" + vs, true); // Método post y url invocada
+        xmlhttp.send(JSON.stringify(bodyJson));
       }
-
 
       function seleccionPersona(xNombre,xID){
         var Persona = document.getElementById("Persona");
@@ -175,6 +178,39 @@ if(!isset($_SESSION["Usuario"])){
         Persona.innerHTML = "<p>"+xNombre+" <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalPersona'><i class='fa fa-cog text-secondary'></i></button></p>";
         ID_Persona.setAttribute('value',xID);
       }
+
+      function seleccionMultipleMotivo() {
+        let motivoNumero = 1;
+        let idMotivo = null;
+        listaMotivos.forEach((value, key, map) => {
+            idMotivo = value;
+            if (motivoNumero <= 1) {
+              if (motivoNumero == 1) {
+                $("#Motivo_1").html("<p>" + key + "<button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
+                $("#ID_Motivo_1").val(idMotivo);
+              } else {
+                $("#Motivo_" + motivoNumero).html("<p>" + key + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
+                $("#ID_Motivo_" + motivoNumero).val(idMotivo);
+              }
+            } else {
+              agregarMotivo();
+              $("#Motivo_" + motivoNumero).html("<p>" + key + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
+              $("#ID_Motivo_" + motivoNumero).val(idMotivo);
+            }
+            motivoNumero++;
+        });
+        for (let index = motivoNumero; index <= 5; index++) {
+          if (index == 1) {
+            $("#Motivo_1").html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo'>Seleccione Motivo</button>");
+            $("#ID_Motivo_1").val(null);
+          } else {
+            $("#Motivo_" + index).html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo" + index + "'>Seleccione Motivo</button>");
+            $("#ID_Motivo_" + index).val(null);
+          }
+          
+        }
+      }
+
 
       function seleccionMotivo_1(xMotivo,xID){
         var Motivo = document.getElementById("Motivo_1");
@@ -342,6 +378,18 @@ if(!isset($_SESSION["Usuario"])){
         resetearValorDiv(div_btnPersona);   
         cantResponsables = 1; 
       }
+
+    function addMultipleMotivo(xMotivo, xID, element) {
+      if (!listaMotivos.has(xMotivo) && (listaMotivos.size <= 4)) {
+        listaMotivos.set(xMotivo, xID);
+        element.innerHTML = "&#10003";
+        element.style.width = "12ch";
+      } else if (listaMotivos.has(xMotivo)){
+        listaMotivos.delete(xMotivo);
+        element.innerHTML = "seleccionar";
+      }
+    }
+
 
   </script>
 </head>
@@ -536,7 +584,7 @@ if(!isset($_SESSION["Usuario"])){
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Selección de Motivo</h5>
+              <h5 class="modal-title" id="exampleModalLongTitle" style="margin-left: auto">Selección de Motivo</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -545,9 +593,13 @@ if(!isset($_SESSION["Usuario"])){
               <form>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-8">
+                  <div class="col-10">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos_1" onKeyUp="buscarMotivos_1()" autocomplete="off">
+                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos1" onKeyUp="buscarMotivosGeneral(1)" autocomplete="off">
+                      <select id="select-motivo1" name="select-motivo1" oninput="buscarMotivosGeneral(1)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                        <option value="denominacion" selected>Denominacion</option>
+                        <option value="codigo">Codigo</option>
+                      </select>
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -557,7 +609,7 @@ if(!isset($_SESSION["Usuario"])){
                 </div>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-10" id = "ResultadosMotivos_1">
+                  <div class="col-10" id = "ResultadosMotivos1">
                     
                   </div>
                   <div class="col"></div>
@@ -565,7 +617,8 @@ if(!isset($_SESSION["Usuario"])){
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>             
             </div>
           </div>
         </div>
@@ -576,7 +629,7 @@ if(!isset($_SESSION["Usuario"])){
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Selección de Motivo</h5>
+              <h5 class="modal-title" id="exampleModalLongTitle" style="margin-left: auto">Selección de Motivo</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -585,9 +638,13 @@ if(!isset($_SESSION["Usuario"])){
               <form>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-8">
+                  <div class="col-10">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos_2" onKeyUp="buscarMotivos_2()" autocomplete="off">
+                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos2" onKeyUp="buscarMotivosGeneral(2)" autocomplete="off">
+                      <select id="select-motivo2" name="select-motivo2" oninput="buscarMotivosGeneral(2)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                        <option value="denominacion" selected>Denominacion</option>
+                        <option value="codigo">Codigo</option>
+                      </select>
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -597,7 +654,7 @@ if(!isset($_SESSION["Usuario"])){
                 </div>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-10" id = "ResultadosMotivos_2">
+                  <div class="col-10" id = "ResultadosMotivos2">
                     
                   </div>
                   <div class="col"></div>
@@ -605,7 +662,8 @@ if(!isset($_SESSION["Usuario"])){
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>             
             </div>
           </div>
         </div>
@@ -616,7 +674,7 @@ if(!isset($_SESSION["Usuario"])){
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Selección de Motivo</h5>
+              <h5 class="modal-title" id="exampleModalLongTitle" style="margin-left: auto">Selección de Motivo</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -625,9 +683,13 @@ if(!isset($_SESSION["Usuario"])){
               <form>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-8">
+                  <div class="col-10">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos_3" onKeyUp="buscarMotivos_3()" autocomplete="off">
+                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos3" onKeyUp="buscarMotivosGeneral(3)" autocomplete="off">
+                      <select id="select-motivo3" name="select-motivo3" oninput="buscarMotivosGeneral(3)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                        <option value="denominacion" selected>Denominacion</option>
+                        <option value="codigo">Codigo</option>
+                      </select>
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -637,7 +699,7 @@ if(!isset($_SESSION["Usuario"])){
                 </div>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-10" id = "ResultadosMotivos_3">
+                  <div class="col-10" id = "ResultadosMotivos3">
                     
                   </div>
                   <div class="col"></div>
@@ -645,7 +707,8 @@ if(!isset($_SESSION["Usuario"])){
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>             
             </div>
           </div>
         </div>
@@ -656,7 +719,7 @@ if(!isset($_SESSION["Usuario"])){
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Selección de Motivo</h5>
+              <h5 class="modal-title" id="exampleModalLongTitle" style="margin-left: auto">Selección de Motivo</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -665,9 +728,13 @@ if(!isset($_SESSION["Usuario"])){
               <form>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-8">
+                  <div class="col-10">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos4" id = "SearchMotivos4" onKeyUp="buscarMotivosGeneral(4)" autocomplete="off">
+                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos4" onKeyUp="buscarMotivosGeneral(4)" autocomplete="off">
+                      <select id="select-motivo4" name="select-motivo4" oninput="buscarMotivosGeneral(4)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                        <option value="denominacion" selected>Denominacion</option>
+                        <option value="codigo">Codigo</option>
+                      </select>
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -685,7 +752,8 @@ if(!isset($_SESSION["Usuario"])){
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>             
             </div>
           </div>
         </div>
@@ -696,7 +764,7 @@ if(!isset($_SESSION["Usuario"])){
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Selección de Motivo</h5>
+              <h5 class="modal-title" id="exampleModalLongTitle" style="margin-left: auto">Selección de Motivo</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -705,9 +773,13 @@ if(!isset($_SESSION["Usuario"])){
               <form>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-8">
+                  <div class="col-10">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos5" id = "SearchMotivos5" onKeyUp="buscarMotivosGeneral(5)" autocomplete="off">
+                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos5" onKeyUp="buscarMotivosGeneral(5)" autocomplete="off">
+                      <select id="select-motivo5" name="select-motivo5" oninput="buscarMotivosGeneral(5)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                        <option value="denominacion" selected>Denominacion</option>
+                        <option value="codigo">Codigo</option>
+                      </select>
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -725,7 +797,8 @@ if(!isset($_SESSION["Usuario"])){
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>             
             </div>
           </div>
         </div>

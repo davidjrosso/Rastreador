@@ -51,6 +51,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
+  <script src="js/Utils.js"></script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="js/bootstrap-datepicker.min.js"></script> <!-- ESTO ES NECESARIO PARA QUE ANDE EN ESPAÑOL -->
@@ -58,8 +59,10 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   <script src="js/ValidarMovimiento.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script>
-        var cantMotivos = 3;
-       $(document).ready(function(){
+        let cantMotivos = 3;
+        let listaMotivos = new Map();
+
+        $(document).ready(function(){
               var date_input=$('input[name="Fecha"]'); //our date input has the name "date"
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
               date_input.datepicker({
@@ -174,8 +177,10 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
       }
 
       function buscarMotivosGeneral(id_Motivo){
-        var xMotivo = document.getElementById("SearchMotivos" + id_Motivo).value;
-        var textoBusqueda = xMotivo;
+        let xMotivo = document.getElementById("SearchMotivos" + id_Motivo).value;
+        let bodyJson = Object.fromEntries(listaMotivos);
+        let textoBusqueda = xMotivo;
+        let vs = $("#select-motivo" + id_Motivo)[0].value;
         xmlhttp=new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
           if (xmlhttp.readyState==4 && xmlhttp.status==200) {
@@ -183,8 +188,51 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
             document.getElementById("ResultadosMotivos" + id_Motivo).innerHTML=contenidosRecibidos;
           }
         }
-        xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda='+textoBusqueda + '&number=' + id_Motivo, true); // Método post y url invocada
-        xmlhttp.send();
+        xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda=' + textoBusqueda + '&number=' + id_Motivo + "&vs=" + vs, true); // Método post y url invocada
+        xmlhttp.send(JSON.stringify(bodyJson));
+      }
+
+      function seleccionMultipleMotivo() {
+        let motivoNumero = 1;
+        let idMotivo = null;
+        listaMotivos.forEach((value, key, map) => {
+            idMotivo = value;
+            if (motivoNumero <= 1) {
+              if (motivoNumero == 1) {
+                $("#Motivo_1").html("<p>" + key + "<button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
+                $("#ID_Motivo_1").val(idMotivo);
+              } else {
+                $("#Motivo_" + motivoNumero).html("<p>" + key + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
+                $("#ID_Motivo_" + motivoNumero).val(idMotivo);
+              }
+            } else {
+              agregarMotivo();
+              $("#Motivo_" + motivoNumero).html("<p>" + key + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
+              $("#ID_Motivo_" + motivoNumero).val(idMotivo);
+            }
+            motivoNumero++;
+        });
+        for (let index = motivoNumero; index <= 5; index++) {
+          if (index == 1) {
+            $("#Motivo_1").html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo'>Seleccione Motivo</button>");
+            $("#ID_Motivo_1").val(null);
+          } else {
+            $("#Motivo_" + index).html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo" + index + "'>Seleccione Motivo</button>");
+            $("#ID_Motivo_" + index).val(null);
+          }
+          
+        }
+      }
+
+      function addMultipleMotivo(xMotivo, xID, element) {
+        if (!listaMotivos.has(xMotivo) && (listaMotivos.size <= 4)) {
+          listaMotivos.set(xMotivo, xID);
+          element.innerHTML = "&#10003";
+          element.style.width = "12ch";
+        } else if (listaMotivos.has(xMotivo)){
+          listaMotivos.delete(xMotivo);
+          element.innerHTML = "seleccionar";
+        }
       }
 
       function seleccionPersona(xNombre,xID){
@@ -252,7 +300,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
       <div class="col"></div>
     </div><br>
     <br>
-     <div class = "row">
+     <div class = "row" style="justify-content: center">
       <div class = "col-10">
           <!-- Search -->
         <div class = "row">
@@ -323,7 +371,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
 
               $Con->CloseConexion();
               ?>
-            <div class = "col-10">
+            <div class = "col-11">
             <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/ModificarMovimiento.php" onSubmit = "return ValidarMovimiento();">
                 <!-- <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Id: </label>
@@ -577,9 +625,13 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               <form>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-8">
+                  <div class="col-10">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos_1" onKeyUp="buscarMotivos_1()">
+                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos1" onKeyUp="buscarMotivosGeneral(1)" autocomplete="off">
+                      <select id="select-motivo1" name="select-motivo1" oninput="buscarMotivosGeneral(1)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                        <option value="denominacion" selected>Denominacion</option>
+                        <option value="codigo">Codigo</option>
+                      </select>
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -589,7 +641,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                 </div>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-10" id = "ResultadosMotivos_1">
+                  <div class="col-10" id = "ResultadosMotivos1">
                     
                   </div>
                   <div class="col"></div>
@@ -597,6 +649,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               </form>
             </div>
             <div class="modal-footer">
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
             </div>
           </div>
@@ -617,9 +670,13 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               <form>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-8">
+                  <div class="col-10">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos_2" onKeyUp="buscarMotivos_2()">
+                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos2" onKeyUp="buscarMotivosGeneral(2)" autocomplete="off">
+                      <select id="select-motivo2" name="select-motivo2" oninput="buscarMotivosGeneral(2)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                        <option value="denominacion" selected>Denominacion</option>
+                        <option value="codigo">Codigo</option>
+                      </select>
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -629,7 +686,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                 </div>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-10" id = "ResultadosMotivos_2">
+                  <div class="col-10" id = "ResultadosMotivos2">
                     
                   </div>
                   <div class="col"></div>
@@ -637,6 +694,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               </form>
             </div>
             <div class="modal-footer">
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
             </div>
           </div>
@@ -657,9 +715,13 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               <form>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-8">
+                  <div class="col-10">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos_3" onKeyUp="buscarMotivos_3()">
+                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos3" onKeyUp="buscarMotivosGeneral(3)" autocomplete="off">
+                      <select id="select-motivo3" name="select-motivo3" oninput="buscarMotivosGeneral(3)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                        <option value="denominacion" selected>Denominacion</option>
+                        <option value="codigo">Codigo</option>
+                      </select>
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -669,7 +731,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                 </div>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-10" id = "ResultadosMotivos_3">
+                  <div class="col-10" id = "ResultadosMotivos3">
                     
                   </div>
                   <div class="col"></div>
@@ -677,6 +739,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               </form>
             </div>
             <div class="modal-footer">
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
             </div>
           </div>
@@ -697,9 +760,13 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               <form>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-8">
+                  <div class="col-10">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos4" id = "SearchMotivos4" onKeyUp="buscarMotivosGeneral(4)" autocomplete="off">
+                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos4" onKeyUp="buscarMotivosGeneral(4)" autocomplete="off">
+                      <select id="select-motivo4" name="select-motivo4" oninput="buscarMotivosGeneral(4)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                        <option value="denominacion" selected>Denominacion</option>
+                        <option value="codigo">Codigo</option>
+                      </select>
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -717,6 +784,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               </form>
             </div>
             <div class="modal-footer">
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
             </div>
           </div>
@@ -737,9 +805,13 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               <form>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-8">
+                  <div class="col-10">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos5" id = "SearchMotivos5" onKeyUp="buscarMotivosGeneral(5)" autocomplete="off">
+                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos5" onKeyUp="buscarMotivosGeneral(5)" autocomplete="off">
+                      <select id="select-motivo5" name="select-motivo5" oninput="buscarMotivosGeneral(5)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                        <option value="denominacion" selected>Denominacion</option>
+                        <option value="codigo">Codigo</option>
+                      </select>
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -757,6 +829,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               </form>
             </div>
             <div class="modal-footer">
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
             </div>
           </div>
