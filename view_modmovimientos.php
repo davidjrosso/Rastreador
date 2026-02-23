@@ -199,15 +199,15 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
             idMotivo = value;
             if (motivoNumero <= 1) {
               if (motivoNumero == 1) {
-                $("#Motivo_1").html("<p>" + key + "<button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
+                $("#Motivo_1").html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo_" + motivoNumero + "'>" + key + "</button>");
                 $("#ID_Motivo_1").val(idMotivo);
               } else {
-                $("#Motivo_" + motivoNumero).html("<p>" + key + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
+                $("#Motivo_" + motivoNumero).html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo_" + motivoNumero + "'>" + key + "</button>");
                 $("#ID_Motivo_" + motivoNumero).val(idMotivo);
               }
             } else {
               agregarMotivo();
-              $("#Motivo_" + motivoNumero).html("<p>" + key + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
+              $("#Motivo_" + motivoNumero).html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo_" + motivoNumero + "'>" + key + "</button>");
               $("#ID_Motivo_" + motivoNumero).val(idMotivo);
             }
             motivoNumero++;
@@ -217,7 +217,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
             $("#Motivo_1").html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo'>Seleccione Motivo</button>");
             $("#ID_Motivo_1").val(null);
           } else {
-            $("#Motivo_" + index).html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo" + index + "'>Seleccione Motivo</button>");
+            $("#Motivo_" + index).html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo_" + index + "'>Seleccione Motivo</button>");
             $("#ID_Motivo_" + index).val(null);
           }
           
