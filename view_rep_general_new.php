@@ -1556,7 +1556,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             $ID_CentroSalud = (isset($_REQUEST["ID_CentroSalud"])) ? $_REQUEST["ID_CentroSalud"] : null;
             $ID_OtraInstitucion = (isset($_REQUEST["ID_OtraInstitucion"])) ? $_REQUEST["ID_OtraInstitucion"] : null;
             $ID_Responsable = array_filter($_REQUEST["ID_Responsable"], function ($e, $val) {
-              return !empty($val);
+              return !empty($e);
             }, ARRAY_FILTER_USE_BOTH);
 
             $cmb_seleccion = (isset($_REQUEST["cmb_seleccion"])) ? $_REQUEST["cmb_seleccion"] : null;
