@@ -1613,7 +1613,8 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             if (count(array_filter($CategoriasOpciones))) {
                 $query_cod_categoria = "SELECT cod_categoria
                                         FROM categoria
-                                        WHERE id_categoria IN $listaDeCategorias";
+                                        WHERE id_categoria IN $listaDeCategorias
+                                          and estado = 1";
                 $codCategorias = mysqli_query(
                                   $Con->Conexion, $query_cod_categoria
                                   ) or die($MessageError);
@@ -1633,7 +1634,8 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             if (count(array_filter($motivos))) {
                 $query_cod_motivo = "SELECT cod_categoria
                                         FROM motivo
-                                        WHERE id_motivo IN $listaDeMotivos";
+                                        WHERE id_motivo IN $listaDeMotivos
+                                          and estado = 1";
                 $codMotivo = mysqli_query(
                                   $Con->Conexion, $query_cod_motivo
                                   ) or die($MessageError);
@@ -1722,9 +1724,10 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
 
             $motivo_query = "SELECT *
                               FROM motivo
-                              WHERE ";
+                              WHERE estado = 1 ";
             $categoria_query = "SELECT *
-                                FROM categoria ";
+                                FROM categoria
+                                WHERE estado = 1";
             $movimiento_query = "SELECT *
                                   FROM movimiento 
                                   WHERE fecha between '$Fecha_Inicio' and '$Fecha_Fin'
@@ -1857,11 +1860,12 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             }
 
             if (count(array_filter($CategoriasOpciones))) {
-              $categoria_query .= " WHERE id_categoria in $listaDeCategorias";
+              $categoria_query .= " AND (id_categoria in $listaDeCategorias";
               if (count(array_filter($MotivosOpciones))) {
-                $categoria_query .= " or cod_categoria in $listaCodMotivo";
-              }              
-              $motivo_query .= "cod_categoria in $listaCodCategorias";
+                $categoria_query .= " OR cod_categoria in $listaCodMotivo";
+              }
+              $categoria_query .= ")";
+              $motivo_query .= " AND (cod_categoria in $listaCodCategorias";
               $filtros[] = $filtro_categoria;
             }
 
@@ -1888,7 +1892,12 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             }
 
             if(count($ID_Responsable) > 0) {
-              $movimiento_query  .= " and id_resp in (" . implode(",", $ID_Responsable) . ")";
+              $list = implode(",", $ID_Responsable);
+              $movimiento_query  .= " and (id_resp in (" . $list . ")
+                                            or id_resp_2 in (" . $list . ")
+                                            or id_resp_3 in (" . $list . ")
+                                            or id_resp_4 in (" . $list . ")
+                                            )";
               $ConsultarResponsable = "SELECT responsable 
                                         FROM responsable 
                                         WHERE id_resp in (" . implode(",", $ID_Responsable) . ") 
@@ -1907,8 +1916,10 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
               $motivo_query = "(" . $motivo_query;
               if (count(array_filter($CategoriasOpciones))) {
                 $motivo_query .= " or ";
+              } else {
+                $motivo_query .= "AND (";
               }
-              $motivo_query .= " id_motivo in $listaDeMotivos)";
+              $motivo_query .= " id_motivo in $listaDeMotivos))";
               $filtros[] = $filtro_motivo;
             } else {
               $motivo_query = "motivo";

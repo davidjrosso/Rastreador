@@ -876,7 +876,12 @@ if (empty($_REQUEST["ID_Persona"])) {
             }
 
             if(count($ID_Responsable) > 0) {
-              $movimiento_query  .= " and id_resp in (" . implode(",", $ID_Responsable) . ")";
+              $list = implode(",", $ID_Responsable);
+              $movimiento_query  .= " and (id_resp in (" . $list . ")
+                                            or id_resp_2 in (" . $list . ")
+                                            or id_resp_3 in (" . $list . ")
+                                            or id_resp_4 in (" . $list . ")
+                                            )";
               $ConsultarResponsable = "SELECT responsable 
                                         FROM responsable 
                                         WHERE id_resp in (" . implode(",", $ID_Responsable) . ") 
