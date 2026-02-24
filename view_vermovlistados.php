@@ -1504,9 +1504,9 @@ if (empty($_REQUEST["ID_Persona"])) {
                                 <th rowspan='2' class='trLocalidad'>Localidad</th>
                                 <th rowspan='2' class='trObservaciones'>Observaciones</th>
                                 <th rowspan='2' class='trResponsable'>Responsable</th>
-                                <th rowspan='2' class='trResponsable'>Responsable2</th>
-                                <th rowspan='2' class='trResponsable'>Responsable3</th>
-                                <th rowspan='2' class='trResponsable'>Responsable4</th>
+                                <th rowspan='2' class='trResponsable'>Responsable</th>
+                                <th rowspan='2' class='trResponsable'>Responsable</th>
+                                <th rowspan='2' class='trResponsable'>Responsable</th>
                                 <th rowspan='2' class='trCentrosSalud'>Centro de salud</th>
                                 <th rowspan='2' class='trOtrasInstituciones'>Otras Instituciones</th>
                               </tr>";
