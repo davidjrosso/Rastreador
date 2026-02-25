@@ -1375,6 +1375,7 @@ if (empty($_REQUEST["ID_Persona"])) {
 
               $Rows = mysqli_num_rows($TomarMovimientosPersona);
 
+              $responsables = [];
               if($Rows == 0){
                 echo "<div class = 'col'></div>";
                 echo "<div class = 'col-6'>";
@@ -1410,9 +1411,6 @@ if (empty($_REQUEST["ID_Persona"])) {
                                 <th rowspan=2 class='trBarrio'>Barrio</th>
                                 <th rowspan=2 class='trLocalidad'>Localidad</th>
                                 <th rowspan=2 class='trObservaciones'>Observaciones</th>
-                                <th rowspan=2 class='trResponsable'>Responsable</th>
-                                <th rowspan=2 class='trResponsable'>Responsable</th>
-                                <th rowspan=2 class='trResponsable'>Responsable</th>
                                 <th rowspan=2 class='trResponsable'>Responsable</th>
                                 <th rowspan=2 class='trCentrosSalud'>Centro de salud</th>
                                 <th rowspan=2 class='trOtrasInstituciones'>Otras Instituciones</th>
@@ -1504,9 +1502,6 @@ if (empty($_REQUEST["ID_Persona"])) {
                                 <th rowspan='2' class='trLocalidad'>Localidad</th>
                                 <th rowspan='2' class='trObservaciones'>Observaciones</th>
                                 <th rowspan='2' class='trResponsable'>Responsable</th>
-                                <th rowspan='2' class='trResponsable'>Responsable</th>
-                                <th rowspan='2' class='trResponsable'>Responsable</th>
-                                <th rowspan='2' class='trResponsable'>Responsable</th>
                                 <th rowspan='2' class='trCentrosSalud'>Centro de salud</th>
                                 <th rowspan='2' class='trOtrasInstituciones'>Otras Instituciones</th>
                               </tr>";
@@ -1588,9 +1583,10 @@ if (empty($_REQUEST["ID_Persona"])) {
                     $Obra_Social = $RetTodos["obra_social"];
                     $Domicilio = $RetTodos["domicilio"];
                     $Barrio = $RetTodos["Barrio"];
-                    $responsable_2 = $RetTodos["responsable_2"];
-                    $responsable_3 = $RetTodos["responsable_3"];
-                    $responsable_4 = $RetTodos["responsable_4"];
+                    $responsables[0] = $RetTodos["responsable"];
+                    if (!empty($RetTodos["responsable_2"])) $responsables[1] = $RetTodos["responsable_2"];
+                    if (!empty($RetTodos["responsable_3"])) $responsables[2] = $RetTodos["responsable_3"];
+                    if (!empty($RetTodos["responsable_4"])) $responsables[3] = $RetTodos["responsable_4"];
                     $Localidad = $RetTodos["localidad"];
                     $con_movimiento = false;
                   } else {
@@ -1646,9 +1642,10 @@ if (empty($_REQUEST["ID_Persona"])) {
                     $Meses = $RetTodos["meses"];
                     $Obra_Social = $RetTodos["obra_social"];
                     $Domicilio = $RetTodos["domicilio"];
-                    $responsable_2 = $RetTodos["responsable_2"];
-                    $responsable_3 = $RetTodos["responsable_3"];
-                    $responsable_4 = $RetTodos["responsable_4"];
+                    $responsables[0] = $RetTodos["responsable"];
+                    if (!empty($RetTodos["responsable_2"])) $responsables[1] = $RetTodos["responsable_2"];
+                    if (!empty($RetTodos["responsable_3"])) $responsables[2] = $RetTodos["responsable_3"];
+                    if (!empty($RetTodos["responsable_4"])) $responsables[3] = $RetTodos["responsable_4"];
                     $Barrio = $RetTodos["Barrio"];
                     $Localidad = $RetTodos["localidad"];
                     /////////////////////////////////////////////////////////////
@@ -1797,19 +1794,7 @@ if (empty($_REQUEST["ID_Persona"])) {
                     $json_row["Observaciones"] = $DtoMovimiento->getObservaciones();
                     $TableMov .= "<tr class='trResponsable'>
                                     <td style = 'width: 30%;'>Responsable</td>
-                                    <td style = 'width: 70%;'>" . $DtoMovimiento->getResponsable() . "</td>
-                                  </tr>";
-                    $TableMov .= "<tr class='trResponsable'>
-                                    <td style = 'width: 30%;'>Responsable</td>
-                                    <td style = 'width: 70%;'>" . $responsable_2 . "</td>
-                                  </tr>";
-                    $TableMov .= "<tr class='trResponsable'>
-                                    <td style = 'width: 30%;'>Responsable</td>
-                                    <td style = 'width: 70%;'>" . $responsable_3 . "</td>
-                                  </tr>";
-                    $TableMov .= "<tr class='trResponsable'>
-                                    <td style = 'width: 30%;'>Responsable</td>
-                                    <td style = 'width: 70%;'>" . $responsable_4 . "</td>
+                                    <td style = 'width: 70%;'>" . implode("-", $responsables) . "</td>
                                   </tr>";
 
                     $json_row["Responsable"] = $DtoMovimiento->getResponsable();
@@ -1925,14 +1910,7 @@ if (empty($_REQUEST["ID_Persona"])) {
                                   </td>";
                     $TableMovPrint .= "<td class='trObservaciones' style = 'width: auto;'>" . $DtoMovimiento->getObservaciones() . "</td>";
                     $json_row["Observaciones"] = $DtoMovimiento->getObservaciones();
-                    $TableMov .= "<td class='trResponsable' style = 'width: auto;'>" . $DtoMovimiento->getResponsable() . "</td>";
-                    $TableMov .= "<td class='trResponsable' style = 'width: auto;'>" . $responsable_2 . "</td>";
-                    $TableMov .= "<td class='trResponsable' style = 'width: auto;'>" . $responsable_3 . "</td>";
-                    $TableMov .= "<td class='trResponsable' style = 'width: auto;'>" . $responsable_4 . "</td>";
-                    $TableMovPrint .= "<td class='trResponsable' style = 'width: auto;'>" . $DtoMovimiento->getResponsable() . "</td>";
-                    $TableMovPrint .= "<td class='trResponsable' style = 'width: auto;'>" . $responsable_2 . "</td>";
-                    $TableMovPrint .= "<td class='trResponsable' style = 'width: auto;'>" . $responsable_3 . "</td>";
-                    $TableMovPrint .= "<td class='trResponsable' style = 'width: auto;'>" . $responsable_4 . "</td>";
+                    $TableMov .= "<td class='trResponsable' style = 'width: auto;'>" . implode("-", $responsables) . "</td>";
 
                     $json_row["Responsable"] = $DtoMovimiento->getResponsable();
                     $TableMov .= "<td class='trCentrosSalud' style = 'width: auto;'>" . $DtoMovimiento->getCentroSalud() . "</td>";
@@ -2033,9 +2011,10 @@ if (empty($_REQUEST["ID_Persona"])) {
                   $Meses = $RetTodos["meses"];
                   $Obra_Social = $RetTodos["obra_social"];
                   $Domicilio = $RetTodos["domicilio"];
-                  $responsable_2 = $RetTodos["responsable_2"];
-                  $responsable_3 = $RetTodos["responsable_3"];
-                  $responsable_4 = $RetTodos["responsable_4"];
+                  $responsables[0] = $RetTodos["responsable"];
+                  if (!empty($RetTodos["responsable_2"])) $responsables[1] = $RetTodos["responsable_2"];
+                  if (!empty($RetTodos["responsable_3"])) $responsables[2] = $RetTodos["responsable_3"];
+                  if (!empty($RetTodos["responsable_4"])) $responsables[3] = $RetTodos["responsable_4"];
                   $Barrio = $RetTodos["Barrio"];
                   $Localidad = $RetTodos["localidad"];
                   /////////////////////////////////////////////////////////////
@@ -2110,9 +2089,10 @@ if (empty($_REQUEST["ID_Persona"])) {
                 $Meses = $RetMovimientos["meses"];
                 $Obra_Social = $RetMovimientos["obra_social"];
                 $Domicilio = $RetMovimientos["domicilio"];
-                $responsable_2 = $RetTodos["responsable_2"];
-                $responsable_3 = $RetTodos["responsable_3"];
-                $responsable_4 = $RetTodos["responsable_4"];
+                $responsables[0] = $RetTodos["responsable"];
+                if (!empty($RetTodos["responsable_2"])) $responsables[1] = $RetTodos["responsable_2"];
+                if (!empty($RetTodos["responsable_3"])) $responsables[2] = $RetTodos["responsable_3"];
+                if (!empty($RetTodos["responsable_4"])) $responsables[3] = $RetTodos["responsable_4"];
                 $Barrio = $RetMovimientos["Barrio"];
                 $Localidad = $RetMovimientos["localidad"];
                 /////////////////////////////////////////////////////////////
@@ -2262,10 +2242,7 @@ if (empty($_REQUEST["ID_Persona"])) {
                   $TableMov .= "<td class='trObservaciones' style = 'width: auto;'>" . $DtoMovimiento->getObservaciones() . "</td>";
                   $TableMovPrint .= "<td class='trObservaciones' style = 'width: auto;'>" . $DtoMovimiento->getObservaciones() . "</td>";
                   $json_row["observacion"] = $DtoMovimiento->getObservaciones();
-                  $TableMov .= "<td class='trResponsable' style = 'width: auto;'>" . $DtoMovimiento->getResponsable() . "</td>";
-                  $TableMov .= "<td class='trResponsable' style = 'width: auto;'>" . $responsable_2 . "</td>";
-                  $TableMov .= "<td class='trResponsable' style = 'width: auto;'>" . $responsable_3 . "</td>";
-                  $TableMov .= "<td class='trResponsable' style = 'width: auto;'>" . $responsable_4 . "</td>";
+                  $TableMov .= "<td class='trResponsable' style = 'width: auto;'>" . implode("-", $responsables) . "</td>";
 
                   $TableMovPrint .= "<td class='trResponsable' style = 'width: auto;'>" . $DtoMovimiento->getResponsable() . "</td>";
                   $json_row["Responsable"] = $DtoMovimiento->getResponsable();
