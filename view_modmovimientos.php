@@ -61,6 +61,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   <script>
         let cantMotivos = 3;
         let listaMotivos = new Map();
+        let cantResponsables = 1;
 
         $(document).ready(function(){
               var date_input=$('input[name="Fecha"]'); //our date input has the name "date"
@@ -118,6 +119,26 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               }
             }
           }
+
+      function agregarResponsable(){        
+        cantResponsables++;
+        if(cantResponsables < 5){
+          var divContenedor = document.getElementById('contenedorResponsables');
+          var divResponsables= document.createElement("div");
+          divResponsables.setAttribute('class','form-group row');
+          var labelResponsables= document.createElement("label");
+          labelResponsables.setAttribute('class','col-md-2 col-form-label LblForm');
+          labelResponsables.innerText = 'Responsable '+cantResponsables+':';
+          var divSelectResponsables= document.createElement("div");
+          divSelectResponsables.setAttribute('class','col-md-10');
+          var select = `<?php $Element = new Elements(); echo $Element->CBResponsables(); ?>`;
+          divSelectResponsables.innerHTML = select;      
+          divResponsables.appendChild(labelResponsables);
+          divResponsables.appendChild(divSelectResponsables);
+          divContenedor.appendChild(divResponsables);
+        }
+
+      }
 
 
        function buscarPersonas(){
@@ -339,10 +360,10 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               $Observaciones = $Ret["observaciones"];
               $Responsable = $Ret["responsable"];
               $ID_Persona = $Ret["id_persona"];
-              $ID_Responsable = $Ret["id_resp"];
-              $ID_Responsable_2 = $Ret["id_resp_2"];
-              $ID_Responsable_3 = $Ret["id_resp_3"];
-              $ID_Responsable_4 = $Ret["id_resp_4"];
+              $ID_Responsable[] = $Ret["id_resp"];
+              if (!empty($Ret["id_resp_2"])) $ID_Responsable[] = $Ret["id_resp_2"];
+              if (!empty($Ret["id_resp_3"])) $ID_Responsable[] = $Ret["id_resp_3"];
+              if (!empty($Ret["id_resp_4"])) $ID_Responsable[] = $Ret["id_resp_4"];
               $ID_Centro = $Ret["id_centro"];
               $Centro_Salud = (!empty($Ret["centro_salud"])) ? $Ret["centro_salud"] : null;
               $ID_OtraInstitucion = $Ret["ID_OtraInstitucion"];
@@ -466,55 +487,29 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                     <textarea class = "form-control" row = "3" name = "Observaciones" value = ""><?php echo $DtoMovimiento->getObservaciones(); ?></textarea>
                   </div>
                 </div>
+                <?php foreach($ID_Responsable as $key => $value) {?>
                 <div class="form-group row">
-                  <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable: </label>
+                  <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable <?php echo ($key) ? $key : "";?>: </label>
+                  <?php if (!$key) {?>
+                  <div class = "col-md-9">
+                    <?php } else { ?>
                   <div class = "col-md-10">
-                    <?php  
+                  <?php } ?>
+                    <?php
                     $Element = new Elements();
-                    echo $Element->CBModResponsables($ID_Responsable);
+                    echo $Element->CBModResponsables($value);
                     ?>
                   </div>
+                  <?php if (!$key) {?>
+                  <div class="col-md-1">
+                      <button type="button" class="btn btn-primary" onClick="agregarResponsable()" id="agregarResponsableID">+</button>
+                  </div>
+                  <?php }?>
                 </div>
-                <?php if($ID_Responsable_2 != null){ ?>
-                  <div class="form-group row">
-                    <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable 2: </label>
-                    <div class = "col-md-10">
-                      <?php  
-                      $Element = new Elements();
-                      echo $Element->CBModResponsables($ID_Responsable_2);
-                      ?>
-                    </div>
-                  </div>
-                <?php  
-                }
-                ?>
-                <?php if($ID_Responsable_3 != null){ ?>
-                  <div class="form-group row">
-                    <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable 3: </label>
-                    <div class = "col-md-10">
-                      <?php  
-                      $Element = new Elements();
-                      echo $Element->CBModResponsables($ID_Responsable_3);
-                      ?>
-                    </div>
-                  </div>
-                <?php  
-                }
-                ?>
-                <?php if($ID_Responsable_4 != null){ ?>
-                  <div class="form-group row">
-                    <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable 4: </label>
-                    <div class = "col-md-10">
-                      <?php  
-                      $Element = new Elements();
-                      echo $Element->CBModResponsables($ID_Responsable_4);
-                      ?>
-                    </div>
-                  </div>
-                <?php
-                }
-                ?>
-                <div class="form-group row">
+              <?php }?>
+              <div id="contenedorResponsables">              
+              </div>
+              <div class="form-group row">
                   <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Centro de Salud: </label>
                   <div class = "col-md-10">
                     <?php  
@@ -846,6 +841,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   <?php foreach ($motivos as $key => $val) {?>
   listaMotivos.set('<?php echo  $val;?>', '<?php echo $key; ?>');
   <?php } ?>
+  cantResponsables = <?php echo count($ID_Responsable);?>;
 </script>
 </body>
 </html>
