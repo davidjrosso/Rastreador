@@ -1583,6 +1583,7 @@ if (empty($_REQUEST["ID_Persona"])) {
                     $Obra_Social = $RetTodos["obra_social"];
                     $Domicilio = $RetTodos["domicilio"];
                     $Barrio = $RetTodos["Barrio"];
+                    $responsables = [];
                     $responsables[0] = $RetTodos["responsable"];
                     if (!empty($RetTodos["responsable_2"]) && $RetTodos["responsable_2"] != "Sin Datos") $responsables[1] = $RetTodos["responsable_2"];
                     if (!empty($RetTodos["responsable_3"]) && $RetTodos["responsable_3"] != "Sin Datos") $responsables[2] = $RetTodos["responsable_3"];
@@ -1642,6 +1643,7 @@ if (empty($_REQUEST["ID_Persona"])) {
                     $Meses = $RetTodos["meses"];
                     $Obra_Social = $RetTodos["obra_social"];
                     $Domicilio = $RetTodos["domicilio"];
+                    $responsables = [];
                     $responsables[0] = $RetTodos["responsable"];
                     if (!empty($RetTodos["responsable_2"]) && $RetTodos["responsable_2"] != "Sin Datos") $responsables[1] = $RetTodos["responsable_2"];
                     if (!empty($RetTodos["responsable_3"]) && $RetTodos["responsable_3"] != "Sin Datos") $responsables[2] = $RetTodos["responsable_3"];
@@ -2011,6 +2013,7 @@ if (empty($_REQUEST["ID_Persona"])) {
                   $Meses = $RetTodos["meses"];
                   $Obra_Social = $RetTodos["obra_social"];
                   $Domicilio = $RetTodos["domicilio"];
+                  $responsables = [];
                   $responsables[0] = $RetTodos["responsable"];
                   if (!empty($RetTodos["responsable_2"]) && $RetTodos["responsable_2"] != "Sin Datos") $responsables[1] = $RetTodos["responsable_2"];
                   if (!empty($RetTodos["responsable_3"]) && $RetTodos["responsable_3"] != "Sin Datos") $responsables[2] = $RetTodos["responsable_3"];
@@ -2089,6 +2092,7 @@ if (empty($_REQUEST["ID_Persona"])) {
                 $Meses = $RetMovimientos["meses"];
                 $Obra_Social = $RetMovimientos["obra_social"];
                 $Domicilio = $RetMovimientos["domicilio"];
+                $responsables = [];
                 $responsables[0] = $RetTodos["responsable"];
                 if (!empty($RetTodos["responsable_2"]) && $RetTodos["responsable_2"] != "Sin Datos") $responsables[1] = $RetTodos["responsable_2"];
                 if (!empty($RetTodos["responsable_3"]) && $RetTodos["responsable_3"] != "Sin Datos") $responsables[2] = $RetTodos["responsable_3"];
