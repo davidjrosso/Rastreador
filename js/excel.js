@@ -79,7 +79,7 @@ export class Excel {
             if (tableCount == 1) {
                 $("tbody tr").each(function (index) {
                     let rowlist = [];
-                    $(this).children().each(function (e) {
+                    $(this).children(":not([hidden])").each(function (e) {
                         if (!e.hidden) {
                             rowlist.push(
                                 $(this).text().trim()
