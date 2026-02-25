@@ -228,6 +228,9 @@ if (empty($_REQUEST["ID_Persona"])) {
         let listConfigResult = listConfigResultados();
         let reporte = null;
         if (objectJsonTabla["movimientos_general"] !== undefined) {
+          for (let index = 4; index > objectJsonTabla["cant_resp"]; index--) {
+            objectJsonTabla["header_movimientos_general"].splice(objectJsonTabla["header_movimientos_general"].indexOf("Responsable" + index), 1);
+          }
           reporte = new RerpoteMovimiento(
                                           objectJsonTabla["movimientos_general"],
                                           objectJsonTabla["header_movimientos_general"],
@@ -663,7 +666,7 @@ if (empty($_REQUEST["ID_Persona"])) {
 
               //$Con = new Conexion();
               //$Con->OpenConexion();
-              
+
               $filtMovimientoPorMotivo = " and (M.motivo_1 IN $listaDeMotivos
                                             or M.motivo_2 IN $listaDeMotivos
                                             or M.motivo_3 IN $listaDeMotivos
@@ -830,9 +833,9 @@ if (empty($_REQUEST["ID_Persona"])) {
 
             if($ID_Escuela > 0){                
               $persona_query .= " and ID_Escuela = $ID_Escuela";
-              $ConsultarEscuela = "select Escuela 
-                                    from escuelas 
-                                    where ID_Escuela = " . $ID_Escuela." limit 1";
+              $ConsultarEscuela = "SELECT Escuela 
+                                    FROM escuelas 
+                                    WHERE ID_Escuela = " . $ID_Escuela." limit 1";
               $EjecutarConsultarEscuela = mysqli_query($Con->Conexion,$ConsultarEscuela) or die("Problemas al consultar filtro Escuela");
               $RetConsultarEscuela = mysqli_fetch_assoc($EjecutarConsultarEscuela);  
               $filtros[] = "Escuela: " . $RetConsultarEscuela['Escuela'];
@@ -856,9 +859,9 @@ if (empty($_REQUEST["ID_Persona"])) {
 
             if($ID_CentroSalud > 0){
               $movimiento_query  .= " AND id_centro = $ID_CentroSalud";
-              $ConsultarCentroSalud = "select centro_salud 
-                                        from centros_salud 
-                                        where id_centro = " . $ID_CentroSalud." limit 1";
+              $ConsultarCentroSalud = "SELECT centro_salud 
+                                        FROM centros_salud 
+                                        WHERE id_centro = " . $ID_CentroSalud." limit 1";
               $EjecutarConsultarCentroSalud = mysqli_query($Con->Conexion,$ConsultarCentroSalud) or die("Problemas al consultar filtro Categoria");
               $RetConsultarCentroSalud = mysqli_fetch_assoc($EjecutarConsultarCentroSalud);                  
               $filtros[] = "Centro Salud: " . $RetConsultarCentroSalud['centro_salud'];
@@ -867,9 +870,9 @@ if (empty($_REQUEST["ID_Persona"])) {
 
             if($ID_OtraInstitucion > 0){
               $movimiento_query  .= " and ID_OtraInstitucion = $ID_OtraInstitucion";
-              $ConsultarOtraInstitucion = "select Nombre 
-                                            from otras_instituciones 
-                                            where ID_OtraInstitucion = " . $ID_OtraInstitucion." limit 1";
+              $ConsultarOtraInstitucion = "SELECT Nombre 
+                                            FROM otras_instituciones 
+                                            WHERE ID_OtraInstitucion = " . $ID_OtraInstitucion." limit 1";
               $EjecutarConsultarOtraInstitucion = mysqli_query($Con->Conexion,$ConsultarOtraInstitucion) or die("Problemas al consultar filtro Categoria");
               $RetConsultarOtraInstitucion = mysqli_fetch_assoc($EjecutarConsultarOtraInstitucion);   
               $filtros[] = "Otra Institucion: " . $RetConsultarOtraInstitucion['Nombre'];
@@ -1169,15 +1172,17 @@ if (empty($_REQUEST["ID_Persona"])) {
           <!-- Search -->
         <div class = "row">
           <?php
+            $jsonTable = array();
+            $jsonTable["cant_resp"] = 0;
             if (isset($_REQUEST["ID_Persona"]) && $_REQUEST["ID_Persona"] > 0) {
               $ID_Persona = $_REQUEST["ID_Persona"];
 
               //$Con = new Conexion();
               //$Con->OpenConexion();
 
-              $ConsultarDatos = "select * 
-                                 from persona 
-                                 where id_persona = $ID_Persona";
+              $ConsultarDatos = "SELECT * 
+                                 FROM persona 
+                                 WHERE id_persona = $ID_Persona";
               $MensajeErrorDatos = "No se pudo consultar los Datos de la Persona";
 
               $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
@@ -1189,7 +1194,10 @@ if (empty($_REQUEST["ID_Persona"])) {
               $_SESSION["datosNav"]["NombrePersona"] = $filtrosSeleccionados["NombrePersona"];
 
               $Persona = new Persona($ID_Persona);
+              /*
               $jsonTable = array();
+              $jsonTable["cant_resp"] = 0;
+              */
               $head_det_persona = [];
               $head_movimientos = [];
               $Table = "<table class='table'>
@@ -1586,17 +1594,21 @@ if (empty($_REQUEST["ID_Persona"])) {
                     $responsables = [];
                     $responsables[0] = $RetTodos["responsable"];
                     $json_row["Responsable"] = $RetTodos["responsable"];
+                    $json_row["cant_resp"] = 1; 
                     if (!empty($RetTodos["responsable_2"]) && $RetTodos["responsable_2"] != "Sin Datos") {
-                      $responsables[1] = $RetTodos["responsable_2"];
-                      $json_row["Responsable2"] = $RetTodos["responsable_2"];
+                      $responsables[] = $RetTodos["responsable_2"];
+                      $json_row["cant_resp"]++;
+                      $json_row["Responsable" + strval($json_row["cant_resp"])] = $RetTodos["responsable_2"];
                     }
                     if (!empty($RetTodos["responsable_3"]) && $RetTodos["responsable_3"] != "Sin Datos") {
-                      $responsables[2] = $RetTodos["responsable_3"];
-                      $json_row["Responsable3"] = $RetTodos["responsable_3"];
+                      $responsables[] = $RetTodos["responsable_3"];
+                      $json_row["cant_resp"]++;
+                      $json_row["Responsable" + strval($json_row["cant_resp"])] = $RetTodos["responsable_3"];
                     }
                     if (!empty($RetTodos["responsable_4"]) && $RetTodos["responsable_4"] != "Sin Datos") {
-                      $responsables[3] = $RetTodos["responsable_4"];
-                      $json_row["Responsable4"] = $RetTodos["responsable_4"];
+                      $responsables[] = $RetTodos["responsable_4"];
+                      $json_row["cant_resp"]++;
+                      $json_row["Responsable" + strval($json_row["cant_resp"])] = $RetTodos["responsable_4"];
                     }
                     $Localidad = $RetTodos["localidad"];
                     $con_movimiento = false;
@@ -1656,17 +1668,21 @@ if (empty($_REQUEST["ID_Persona"])) {
                     $responsables = [];
                     $responsables[0] = $RetTodos["responsable"];
                     $json_row["Responsable"] = $RetTodos["responsable"];
+                    $json_row["cant_resp"] = 1; 
                     if (!empty($RetTodos["responsable_2"]) && $RetTodos["responsable_2"] != "Sin Datos") {
-                      $responsables[1] = $RetTodos["responsable_2"];
-                      $json_row["Responsable2"] = $RetTodos["responsable_2"];
+                      $responsables[] = $RetTodos["responsable_2"];
+                      $json_row["cant_resp"]++;
+                      $json_row["Responsable" . strval($json_row["cant_resp"])] = $RetTodos["responsable_2"];
                     }
                     if (!empty($RetTodos["responsable_3"]) && $RetTodos["responsable_3"] != "Sin Datos") {
-                      $responsables[2] = $RetTodos["responsable_3"];
-                      $json_row["Responsable3"] = $RetTodos["responsable_3"];
+                      $responsables[] = $RetTodos["responsable_3"];
+                      $json_row["cant_resp"]++;
+                      $json_row["Responsable" . strval($json_row["cant_resp"])] = $RetTodos["responsable_3"];
                     }
                     if (!empty($RetTodos["responsable_4"]) && $RetTodos["responsable_4"] != "Sin Datos") {
-                      $responsables[3] = $RetTodos["responsable_4"];
-                      $json_row["Responsable4"] = $RetTodos["responsable_4"];
+                      $responsables[] = $RetTodos["responsable_4"];
+                      $json_row["cant_resp"]++;
+                      $json_row["Responsable" . strval($json_row["cant_resp"])] = $RetTodos["responsable_4"];
                     }
                     $Barrio = $RetTodos["Barrio"];
                     $Localidad = $RetTodos["localidad"];
@@ -1947,6 +1963,9 @@ if (empty($_REQUEST["ID_Persona"])) {
                   $imprimir = false;
                   //}
                   $jsonTable["movimientos_general"][] = $json_row;
+                  if (isset($json_row['cant_resp']) && $jsonTable['cant_resp'] < $json_row['cant_resp']) {
+                    $jsonTable['cant_resp'] = $json_row['cant_resp'];
+                  }
                   $json_row["height"] = 0;
               }
 
@@ -2036,17 +2055,21 @@ if (empty($_REQUEST["ID_Persona"])) {
                   $responsables = [];
                   $responsables[0] = $RetTodos["responsable"];
                   $json_row["Responsable"] = $RetTodos["responsable"];
+                  $json_row["cant_resp"] = 1; 
                   if (!empty($RetTodos["responsable_2"]) && $RetTodos["responsable_2"] != "Sin Datos") {
-                    $responsables[1] = $RetTodos["responsable_2"];
-                    $json_row["Responsable2"] = $RetTodos["responsable_2"];
+                    $responsables[] = $RetTodos["responsable_2"];
+                    $json_row["cant_resp"]++;
+                    $json_row["Responsable" . strval($json_row["cant_resp"])] = $RetTodos["responsable_2"];
                   }
                   if (!empty($RetTodos["responsable_3"]) && $RetTodos["responsable_3"] != "Sin Datos") {
-                    $responsables[2] = $RetTodos["responsable_3"];
-                    $json_row["Responsable3"] = $RetTodos["responsable_3"];
+                    $responsables[] = $RetTodos["responsable_3"];
+                    $json_row["cant_resp"]++;
+                    $json_row["Responsable" . strval($json_row["cant_resp"])] = $RetTodos["responsable_3"];
                   }
                   if (!empty($RetTodos["responsable_4"]) && $RetTodos["responsable_4"] != "Sin Datos") {
-                    $responsables[3] = $RetTodos["responsable_4"];
-                    $json_row["Responsable4"] = $RetTodos["responsable_4"];
+                    $responsables[] = $RetTodos["responsable_4"];
+                    $json_row["cant_resp"]++;
+                    $json_row["Responsable" . strval($json_row["cant_resp"])] = $RetTodos["responsable_4"];
                   }
                   $Barrio = $RetTodos["Barrio"];
                   $Localidad = $RetTodos["localidad"];
@@ -2125,17 +2148,21 @@ if (empty($_REQUEST["ID_Persona"])) {
                 $responsables = [];
                 $responsables[0] = $RetTodos["responsable"];
                 $json_row["Responsable"] = $RetTodos["responsable"];
+                $json_row["cant_resp"] = 1; 
                 if (!empty($RetTodos["responsable_2"]) && $RetTodos["responsable_2"] != "Sin Datos") {
-                  $responsables[1] = $RetTodos["responsable_2"];
-                  $json_row["Responsable2"] = $RetTodos["responsable_2"];
+                  $responsables[] = $RetTodos["responsable_2"];
+                  $json_row["cant_resp"]++;
+                  $json_row["Responsable" . strval($json_row["cant_resp"])] = $RetTodos["responsable_2"];
                 }
                 if (!empty($RetTodos["responsable_3"]) && $RetTodos["responsable_3"] != "Sin Datos") {
-                  $responsables[2] = $RetTodos["responsable_3"];
-                  $json_row["Responsable3"] = $RetTodos["responsable_3"];
+                  $responsables[] = $RetTodos["responsable_3"];
+                  $json_row["cant_resp"]++;
+                  $json_row["Responsable" . strval($json_row["cant_resp"])] = $RetTodos["responsable_3"];
                 }
                 if (!empty($RetTodos["responsable_4"]) && $RetTodos["responsable_4"] != "Sin Datos") {
-                  $responsables[3] = $RetTodos["responsable_4"];
-                  $json_row["Responsable4"] = $RetTodos["responsable_4"];
+                  $responsables[] = $RetTodos["responsable_4"];
+                  $json_row["cant_resp"]++;
+                  $json_row["Responsable" . strval($json_row["cant_resp"])] = $RetTodos["responsable_4"];
                 }
                 $Barrio = $RetMovimientos["Barrio"];
                 $Localidad = $RetMovimientos["localidad"];
@@ -2297,6 +2324,9 @@ if (empty($_REQUEST["ID_Persona"])) {
                   $TableMovPrint .= "<td class='trOtrasInstituciones' style = 'width: auto;'>" . $DtoMovimiento->getOtraInstitucion() . "</td>";
                   $json_row["otra_institucional"] = $DtoMovimiento->getOtraInstitucion();
                   $jsonTable["movimientos_general"][] = $json_row;
+                  if (isset($json_row['cant_resp']) && $jsonTable['cant_resp'] < $json_row['cant_resp']) {
+                    $jsonTable['cant_resp'] = $json_row['cant_resp'];
+                  }
                   $json_row["height"] = 0;
                 }
               }
@@ -2326,8 +2356,9 @@ if (empty($_REQUEST["ID_Persona"])) {
               }
 
               if($ID_Motivo > 0) {
-                $ConsultarFiltroMotivo = "select id_motivo, motivo 
-                                          from motivo where id_motivo = $ID_Motivo";
+                $ConsultarFiltroMotivo = "SELECT id_motivo, motivo 
+                                          FROM motivo 
+                                          WHERE id_motivo = $ID_Motivo";
                 $ErrorConsultarFiltroMotivo = "No se pudo consultar el motivo del filtro ID_Motivo";
                 $RetConsFiltroMotivo = mysqli_query($Con->Conexion,$ConsultarFiltroMotivo) or die($ErrorConsultarFiltroMotivo);
                 $RetConsMotivo = mysqli_fetch_assoc($RetConsFiltroMotivo);
