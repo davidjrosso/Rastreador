@@ -102,7 +102,7 @@ $Con->CloseConexion();
           <form method="post" action="Controladores/CtrBuscarMovimientos.php">
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Buscar: </label>
-              <div class="col-md-4">
+              <div class="col-md-5">
                 <input type="text" class="form-control" name="Search" id="inputPassword" width="100%"
                   autocomplete="off">
               </div>

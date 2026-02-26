@@ -79,10 +79,10 @@ $TipoUsuario = $account->get_id_tipo_usuario();
     </div><br>
     <div class="row">
       <div class = "col"></div>
-      <div class = "col-4">
+      <div class = "col-9">
           <center><button class = "btn btn-secondary" onClick = "location.href='view_newmotivos.php'">Agregar Nuevo Motivo</button></center>
       </div>
-      <div class="col-2">
+      <div class="col-1">
                 <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Inicio</button>
       </div>
       <div class = "col"></div>
