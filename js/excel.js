@@ -695,8 +695,15 @@ export class Excel {
         let count = objectJsonTabla.movimientos_general.length;
         let th = [];
         let listaDeMovimientos = objectJsonTabla.movimientos_general.map(function (velem, index, array) {
+            delete velem["height"];
+            delete velem["cant_resp"];
             listConfig.forEach(function (elemen, index, array) {
                 delete velem[elemen];
+                if (elemen == "Responsable") {
+                    delete velem["Responsable2"];
+                    delete velem["Responsable3"];
+                    delete velem["Responsable4"];
+                }
             });
             return velem;
         });

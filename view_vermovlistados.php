@@ -144,6 +144,10 @@ if (empty($_REQUEST["ID_Persona"])) {
               $("#excel_descarga").on("click", function (e) {
                 let vic = null;
                 let listConfigResult = listConfigResultados();
+                for (let index = 2; index < 5; index++) {
+                  objectJsonTabla["header_movimientos_general"].splice(objectJsonTabla["header_movimientos_general"].indexOf("Responsable" + index), 1);
+                }
+
                 vic = excel.excel_download(objectJsonTabla, listConfigResult);
                 vic.then(function (result) {
                   let url = null;
