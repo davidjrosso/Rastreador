@@ -141,7 +141,13 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
             }
           ?>
         </div>
-  </div>
+        <div class="row" style="justify-content: center;">
+          <div class="col-2">
+            <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Inicio</button>
+          </div>
+        </div>
+      <br>
+      </div>
 </div>
 </div>
 <?php  
