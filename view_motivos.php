@@ -29,6 +29,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
+  <script src="js/Utils.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -82,18 +83,18 @@ $TipoUsuario = $account->get_id_tipo_usuario();
           <center><button class = "btn btn-secondary" onClick = "location.href='view_newmotivos.php'">Agregar Nuevo Motivo</button></center>
       </div>
       <div class="col-2">
-                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Inicio</button>
       </div>
       <div class = "col"></div>
     </div>
     <br>
-     <div class = "row">
+     <div class = "row" style="justify-content: center;">
       <div class = "col-10">
            <!-- Carga -->
           <form method = "post" action = "Controladores/CtrBuscarMotivos.php">
-            <div class="form-group row">
+            <div class="form-group row" style="justify-content: center;">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Buscar: </label>
-              <div class="col-md-4">
+              <div class="col-md-5">
                 <input type="text" class="form-control" name = "Search" id="inputPassword" width="100%" autocomplete="off">
               </div>
               <label for="inputPassword" class="col-md-1 col-form-label LblForm">En: </label>
@@ -114,7 +115,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
           <br><br>
           <!-- Fin Carga -->
           <!-- Search -->
-        <div class = "row">
+        <div class = "row" style="justify-content: center;">
           <?php  
             if(isset($_REQUEST["Filtro"]) && $_REQUEST["Filtro"]!=null){
               $Filtro = $_REQUEST["Filtro"];
@@ -135,7 +136,14 @@ $TipoUsuario = $account->get_id_tipo_usuario();
             }
           ?>
         </div>
-  </div>
+        <div class="row" style="justify-content:center;">
+          <div class="col-2" style="justify-content:center;">
+            <button type="button" class="btn btn-outline-secondary" 
+                    onclick="location.href = 'view_inicio.php'">Inicio</button>
+          </div>
+        </div>
+        <br>
+    </div>
 </div>
 </div>
 <?php  
