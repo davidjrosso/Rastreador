@@ -727,6 +727,7 @@ export class Excel {
                 continue;
             }
             worksheet.getRow(row).values  = Object.values(listaDeMovimientos[row - 2]).slice(1);
+            worksheet.getRow(row).values.push(listaDeMovimientos[row - 2]["Responsable"]);
             worksheet.getRow(row).font = {bgColor:{argb:'FFC000'}};
             worksheet.getRow(row).alignment = { vertical: 'middle', horizontal: 'center' };
             worksheet.getRow(row).style  = {bgColor:{argb:'FFC000'}};

@@ -92,7 +92,7 @@ $Con->CloseConexion();
         </div>
         <div class="col-2">
           <button type="button" class="btn btn-outline-secondary"
-            onclick="location.href = 'view_inicio.php'">Volver</button>
+            onclick="location.href = 'view_inicio.php'">Inicio</button>
         </div>
         <div class="col"></div>
       </div>
@@ -169,6 +169,15 @@ $Con->CloseConexion();
               echo $DTGeneral->getMovimientos($TipoUsuario);
             }
             ?>
+          </div>
+          <div class="row" style="justify-content: center;">
+            <div class="col-3">
+              <button type="button" class="btn btn-outline-secondary"
+                      onclick="location.href = 'view_inicio.php'">Inicio</button>
+            </div>
+          </div>
+          <div class="row">
+            <br>
           </div>
         </div>
       </div>
