@@ -692,11 +692,16 @@ export class Excel {
         let worksheet = vic.addWorksheet('rastreador', {properties:{tabColor: {argb: 'FFC0000'}}})
         let tableCount = $("table").length;
         let values = [];
+        let value = null;
         let count = objectJsonTabla.movimientos_general.length;
         let th = [];
+        let cant_r = 0;
         let listaDeMovimientos = objectJsonTabla.movimientos_general.map(function (velem, index, array) {
-            delete velem["height"];
-            delete velem["cant_resp"];
+            cant_r = velem["cant_resp"];
+            for (let l = 2; l <= 4; l++) {
+                if (l <= cant_r) velem["Responsable"] += "-" + velem["Responsable" + l];
+                delete velem["Responsable" + l];
+            }
             listConfig.forEach(function (elemen, index, array) {
                 delete velem[elemen];
                 if (elemen == "Responsable") {
@@ -705,6 +710,8 @@ export class Excel {
                     delete velem["Responsable4"];
                 }
             });
+            delete velem["cant_resp"];
+            delete velem["height"];
             return velem;
         });
 
@@ -726,8 +733,9 @@ export class Excel {
                                             };
                 continue;
             }
-            worksheet.getRow(row).values  = Object.values(listaDeMovimientos[row - 2]).slice(1);
-            worksheet.getRow(row).values.push(listaDeMovimientos[row - 2]["Responsable"]);
+            value = Object.values(listaDeMovimientos[row - 2]).slice(1);
+            value.push(listaDeMovimientos[row - 2]["Responsable"]);
+            worksheet.getRow(row).values  = value;
             worksheet.getRow(row).font = {bgColor:{argb:'FFC000'}};
             worksheet.getRow(row).alignment = { vertical: 'middle', horizontal: 'center' };
             worksheet.getRow(row).style  = {bgColor:{argb:'FFC000'}};
