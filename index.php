@@ -1,6 +1,7 @@
 <?php
 //require_once $_SERVER['DOCUMENT_ROOT'] . 'vendor/autoload.php';
 header("Content-Type: text/html;charset=utf-8");
+ini_set('session.gc_maxlifetime', 7200);
 ?>
 <!DOCTYPE html>
 <html lang="es">
