@@ -76,7 +76,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
       </div>
       <div class="col"></div>
     </div><br>
-    <div class="row">
+    <div class="row" style="justify-content: center;">
       <div class = "col"></div>
       <div class = "col-9">
           <center><button class = "btn btn-secondary" onClick = "location.href='view_newresponsables.php'">Agregar Nuevo Responsable</button></center>

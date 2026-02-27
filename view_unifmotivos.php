@@ -35,6 +35,7 @@ $Con->CloseConexion();
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
+  <script src="js/Utils.js"></script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
@@ -103,7 +104,7 @@ $Con->CloseConexion();
       <div class="col"></div>
     </div><br>
     <br>
-     <div class = "row">
+     <div class = "row" style="justify-content: center;">
       <div class = "col-10">
           <p class = "TextoAdvertenciaUnificar">¡ADVERTENCIA! El segundo motivo seleccionado se unirá al primer motivo seleccionado. El segundo motivo se eliminará.</p>
           <br>
@@ -122,11 +123,11 @@ $Con->CloseConexion();
                   </div>
               </div>  
               <div class="form-group row">
-              <div class="offset-md-3 col-md-9">
+              <div class=" col-md-4">
                 <input type="hidden" name="ID_Motivo_1" id = "ID_Motivo_1" value = "0">
                 <input type="hidden" name="ID_Motivo_2" id = "ID_Motivo_2" value = "0">
                 <button type="submit" class="btn btn-outline-success">Aceptar</button>
-                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Inicio</button>
               </div>
             </div>
           </form>

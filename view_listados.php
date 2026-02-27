@@ -570,7 +570,7 @@ $Element = new Elements();
       <div class="col-md-7">
       </div>
       <div class="col-md-2">
-        <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
+        <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Inicio</button>
         <button class="btn btn-md btn-secondary" data-toggle="modal" data-target="#ModalConfig">Config</button>
       </div>
     </div>

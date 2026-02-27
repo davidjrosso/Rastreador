@@ -731,7 +731,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
             </button>
           </div>
           <div class="col-md-2">
-            <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
+            <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Inicio</button>
           </div>
     </div>
     <div class = "row" style="justify-content: center;">

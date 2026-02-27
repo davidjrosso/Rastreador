@@ -57,6 +57,7 @@ $Con->CloseConexion();
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
+  <script src="js/Utils.js"></script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
@@ -123,7 +124,7 @@ $Con->CloseConexion();
       <div class="col"></div>
     </div><br>
     <br>
-     <div class = "row">
+     <div class = "row" style="justify-content: center;">
       <div class = "col-10">
           <p class = "TextoAdvertenciaUnificar">¡ADVERTENCIA! La segunda Categoria seleccionada se unirá a la primer Categoria seleccionada. La segunda Categoria se eliminará.</p>
           <br>
@@ -140,12 +141,12 @@ $Con->CloseConexion();
                     <button id="categoria_2" type="button" class="btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#modal-categoria-2">Seleccione una Categoria</button>  
                   </div>
               </div>  
-              <div class="form-group row">
-              <div class="offset-md-3 col-md-9">
+              <div class="form-group row" style="justify-content: center;">
+              <div class=" col-md-4">
                 <input type="hidden" name="ID_Categoria_unif" id="ID_Categoria_unif" value="0">
                 <input type="hidden" name="ID_Categoria_del" id="ID_Categoria_del" value="0">
                 <button type="submit" class="btn btn-outline-success">Aceptar</button>
-                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Inicio</button>
               </div>
             </div>
           </form>
