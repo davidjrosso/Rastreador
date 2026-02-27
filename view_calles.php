@@ -35,6 +35,7 @@ $Con->CloseConexion();
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
+  <script src="js/Utils.js"></script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
@@ -85,24 +86,24 @@ $Con->CloseConexion();
       </div>
       <div class="col"></div>
     </div><br>
-    <div class="row">
+    <div class="row" style="justify-content: center;">
       <div class = "col"></div>
-      <div class = "col-4">
+      <div class = "col-10">
           <center><button class = "btn btn-secondary" onClick = "location.href='view_newcalles.php'">Agregar Nueva Calle</button></center>
       </div>
-      <div class="col-2">
-                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
+      <div class="col-1">
+                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Inicio</button>
       </div>
       <div class = "col"></div>
     </div>
     <br>
-     <div class = "row">
+     <div class = "row" style="justify-content: center;">
       <div class = "col-10">
            <!-- Carga -->
           <form method = "post" action = "Controladores/CtrBuscarCalles.php">
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Buscar: </label>
-              <div class="col-md-4">
+              <div class="col-md-5">
                 <input type="text" class="form-control" name = "Search" id="inputPassword" width="100%" autocomplete="off">
               </div>
               <label for="inputPassword" class="col-md-1 col-form-label LblForm">En: </label>
@@ -138,7 +139,13 @@ $Con->CloseConexion();
             }
           ?>
         </div>
-  </div>
+        <div class="row" style="justify-content: center;">
+          <div class="col-2">
+        <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Inicio</button>
+          </div>
+      </div>
+      <br>
+    </div>
 </div>
 </div>
 <?php  
