@@ -132,7 +132,7 @@ $Con->CloseConexion();
       <div class="col"></div>
     </div><br>
     <br>
-     <div class = "row">
+     <div class = "row" style="justify-content: center;">
       <div class = "col-10">
           <p class = "TextoAdvertenciaUnificar">¡ADVERTENCIA! Todos los datos y movimientos de la segunda persona seleccionada se unirán a la primera persona seleccionada. La segunda persona se eliminará.</p>
           <br>
@@ -151,8 +151,8 @@ $Con->CloseConexion();
                     <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalPersona_2">Seleccione una Persona</button> 
                   </div>
               </div>  
-              <div class="form-group row">
-              <div class="offset-md-3 col-md-9">
+              <div class="form-group row" style="justify-content: center;">
+              <div class=" col-md-3">
                 <input type="hidden" name="ID_Persona_1" id = "ID_Persona_1" value = "0">
                 <input type="hidden" name="ID_Persona_2" id = "ID_Persona_2" value = "0">
                 <button type="button" class="btn btn-outline-success" onclick="return VerificarUnificacion();">Aceptar</button>
