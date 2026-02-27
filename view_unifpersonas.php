@@ -156,7 +156,7 @@ $Con->CloseConexion();
                 <input type="hidden" name="ID_Persona_1" id = "ID_Persona_1" value = "0">
                 <input type="hidden" name="ID_Persona_2" id = "ID_Persona_2" value = "0">
                 <button type="button" class="btn btn-outline-success" onclick="return VerificarUnificacion();">Aceptar</button>
-                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Inicio</button>
 
               </div>
              

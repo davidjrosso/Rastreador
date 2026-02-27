@@ -128,7 +128,7 @@ $Con->CloseConexion();
                 <input type="hidden" name="ID_Responsable_unif" id="ID_Responsable_unif" value="0">
                 <input type="hidden" name="ID_Responsable_del" id="ID_Responsable_del" value="0">
                 <button type="submit" class="btn btn-outline-success">Aceptar</button>
-                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Inicio</button>
               </div>
             </div>
           </form>
