@@ -16,7 +16,9 @@ if(!isset($_SESSION["Usuario"])){
 $Con = new Conexion();
 $Con->OpenConexion();
 $ID_Usuario = $_SESSION["Usuario"];
-$ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
+$ConsultarTipoUsuario = "SELECT ID_TipoUsuario 
+                         FROM accounts
+                         WHERE accountid = $ID_Usuario";
 $MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
 $EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
 $Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
@@ -37,6 +39,7 @@ $Con->CloseConexion();
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
+  <script src="js/Utils.js"></script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
@@ -69,6 +72,11 @@ $Con->CloseConexion();
 
 </head>
 <body>
+<div class="col-md-2" id="expandir" style="padding-left: 6px; position: fixed; z-index: 1000" hidden>
+  <a id="abrir" class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="mostrar()">
+    <i class="fa fa-arrows-alt fa-lg" color="tomato"></i>
+  </a>
+</div>
 <div class = "row margin-right-cero">
   <?php
   $Element = new Elements();
@@ -83,7 +91,7 @@ $Con->CloseConexion();
       <div class="col"></div>
     </div><br>
     <br>
-     <div class = "row">
+     <div class = "row" style="justify-content: center;">
       <div class = "col-10">
           <!-- Search -->
         <div class = "row">
