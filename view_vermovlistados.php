@@ -38,6 +38,10 @@ $ID_Usuario = $_SESSION["Usuario"];
 $usuario = new Account(account_id: $ID_Usuario);
 $TipoUsuario = $usuario->get_id_tipo_usuario();
 
+$http_referer = (!empty($_SERVER["HTTP_REFERER"])) ? $_SERVER["HTTP_REFERER"] : null;
+
+$redirect = preg_match("~view_listados~", $http_referer);
+
 $_SESSION["reporte_listado"] = true;
 $_SESSION["reporte_grafico"] = false;
 $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
@@ -1146,7 +1150,7 @@ if (empty($_REQUEST["ID_Persona"])) {
                     data-target="#configModal">
                 Columnas
             </button>
-            <button type = "button" class = "btn btn-danger" onClick = "<?php echo (isset($_SESSION["retorno"]) && empty($_REQUEST["ID_Persona"])) ? "location.href = 'view_listados.php'" : "sendToRepL()" ;?>">
+            <button type = "button" class = "btn btn-danger" onClick = "<?php echo (isset($_SESSION["retorno"]) && ($redirect ||  (!$redirect && empty($_REQUEST['ID_Persona'])))) ? "location.href = 'view_listados.php'" : "sendToRepL()" ;?>">
                 Atrás
             </button>
             <button id="rep_grafico" type = "button" class = "btn btn-secondary">

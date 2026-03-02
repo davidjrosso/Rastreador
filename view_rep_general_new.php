@@ -38,6 +38,10 @@ if (!isset($_SESSION["Usuario"])) {
   exit();
 }
 
+$http_referer = (!empty($_SERVER["HTTP_REFERER"])) ? $_SERVER["HTTP_REFERER"] : null;
+
+$redirect = preg_match("~view_general_new~", $http_referer);
+
 $ID_Usuario = $_SESSION["Usuario"];
 
 $usuario = new Account(account_id: $ID_Usuario);
@@ -2045,7 +2049,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
           </div>
           <div class="col-5">
             <button type="button" class="btn btn-danger" style="margin-left: 14%;"
-                    onclick="<?php echo (isset($_SESSION["retorno"]) && empty($_REQUEST["ID_Persona"]))? "location.href = 'view_general_new.php'" : "senToRepL()";?>">
+                    onclick="<?php echo (isset($_SESSION["retorno"]) && $redirect)? "location.href = 'view_general_new.php'" : "senToRepL()";?>">
                 Atrás
             </button>
             <!--<button type="button" class="btn btn-secondary" onclick="enviarImprimir()">**Imprimir</button>-->
