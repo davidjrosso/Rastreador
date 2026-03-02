@@ -1204,6 +1204,22 @@ public function update_calle()
 	$con->CloseConexion();
 }
 
+public function update_contacto()
+{
+	$con = new Conexion();
+	$con->OpenConexion();
+	$consulta = "update persona 
+				 set telefono = " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono() . "'" : "null") . ", 
+					 mail = " . ((!is_null($this->getMail())) ? "'" . $this->getMail() . "'" : "null") . "
+				 where id_persona = " . $this->getID_Persona();
+	$mensaje_error_consultar = "No se pudo actualizar la Persona ";
+	if (!$Ret = mysqli_query($con->Conexion, $consulta)) {
+		throw new Exception($mensaje_error_consultar . $consulta, 2);
+	}
+	$con->CloseConexion();
+}
+
+
 public function update_nro()
 {
 	$Con = new Conexion();
