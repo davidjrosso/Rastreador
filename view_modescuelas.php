@@ -36,6 +36,7 @@ $Con->CloseConexion();
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
+  <script src="js/Utils.js"></script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
@@ -70,6 +71,11 @@ $Con->CloseConexion();
 
 </head>
 <body>
+<div class="col-md-2" id="expandir" style="padding-left: 6px; position: fixed; z-index: 1000" hidden>
+  <a id="abrir" class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="mostrar()">
+    <i class="fa fa-arrows-alt fa-lg" color="tomato"></i>
+  </a>
+</div>
 <div class = "row margin-right-cero">
 <?php
   $Element = new Elements();
@@ -79,12 +85,12 @@ $Con->CloseConexion();
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
-        <p>Movimientos</p>
+        <p>Escuela</p>
       </div>
       <div class="col"></div>
     </div><br>
     <br>
-     <div class = "row">
+     <div class = "row" style="justify-content: center;">
       <div class = "col-10">
           <!-- Search -->
         <div class = "row">
@@ -138,7 +144,7 @@ $Con->CloseConexion();
                 $Mail = "";
               }
 
-              $InstEscuela = new Escuela($ID_Escuela,$Codigo,$Escuela,$CUE,$Localidad,$Departamento,$Directora,$Telefono,$Mail,$ID_Nivel,$Estado);
+              $InstEscuela = new Escuela($Con, $ID_Escuela,$Codigo,$Escuela,$CUE,$Localidad,$Departamento,$Directora,$Telefono,$Mail,$ID_Nivel,$Estado);
 
               ?>
             <div class = "col-10">
@@ -207,8 +213,8 @@ $Con->CloseConexion();
                     ?>
                   </div>
                 </div>
-                <div class="form-group row">
-                  <div class="offset-md-2 col-md-10">
+                <div class="form-group row" style="justify-content: center;">
+                  <div class=" col-md-4">
                     <button type="submit" class="btn btn-outline-success">Guardar</button>
                     <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_escuelas.php'">Atras</button>
 
