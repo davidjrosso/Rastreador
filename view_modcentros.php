@@ -27,6 +27,8 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+
+  <script src="js/Utils.js"></script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
@@ -87,6 +89,11 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
 
 </head>
 <body>
+<div class="col-md-2" id="expandir" style="padding-left: 6px; position: fixed; z-index: 1000" hidden>
+  <a id="abrir" class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="mostrar()">
+    <i class="fa fa-arrows-alt fa-lg" color="tomato"></i>
+  </a>
+</div>
 <div class = "row margin-right-cero">
 <?php
   $Element = new Elements();
@@ -101,7 +108,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
       <div class="col"></div>
     </div><br>
     <br>
-     <div class = "row">
+     <div class = "row" style="justify-content: center;">
       <div class = "col-10">
           <!-- Search -->
         <div class = "row">
@@ -192,8 +199,8 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                 ?>
                 <div id="contenedor-archivos">
                 </div> -->
-                <div class="form-group row">
-                  <div class="offset-md-2 col-md-10">
+                <div class="form-group row" style="justify-content: center;">
+                  <div class=" col-md-4">
                     <button type="submit" class="btn btn-outline-success">Guardar</button>
                     <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_centros.php'">Atras</button>
                   </div>
