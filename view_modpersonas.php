@@ -361,7 +361,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                           $opcion_x = ($Persona->getSexo() == 'x') ? true : false;
 
                           ?>
-                          <div class="col-10">
+                          <div class="col-11">
                             <form id="form-mod-persona" method="post" onsubmit="return ValidarPersona()" action="Controladores/ModificarPersona.php">
                               <input type="hidden" name="ID" value="<?php echo $Persona->getID_Persona(); ?>">
                               <div class="form-group row">

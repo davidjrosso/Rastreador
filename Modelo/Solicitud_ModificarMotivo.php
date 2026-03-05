@@ -1,6 +1,7 @@
 <?php 
 class Solicitud_ModificarMotivo{
 //DECLARACION DE VARIABLES
+private $coneccion_base;
 private $ID;
 private $Fecha;
 private $Motivo;
@@ -86,18 +87,69 @@ public function getID_Motivo(){
 }
 
 //METODO CONSTRUCTOR
-public function __construct($xID,$xFecha,$xMotivo,$xCodigo,$xCod_Categoria,$xNum_Motivo,$xEstado,$xID_Usuario,$xID_Motivo){
-    $this->ID = $xID;
-    $this->Fecha = $xFecha;
-    $this->Motivo = $xMotivo;
-    $this->Codigo = $xCodigo;
-    $this->Cod_Categoria = $xCod_Categoria;
-    $this->Num_Motivo = $xNum_Motivo;
-    $this->Estado = $xEstado;
-    $this->ID_Usuario = $xID_Usuario;
-    $this->ID_Motivo = $xID_Motivo;
-}
+    public function __construct(
+                                $coneccion_base = null,
+                                $xID = null,
+                                $xFecha = null,
+                                $xMotivo = null,
+                                $xCodigo = null,
+                                $xCod_Categoria = null,
+                                $xNum_Motivo = null,
+                                $xEstado = null,
+                                $xID_Usuario = null,
+                                $xID_Motivo = null
+    ) {
+        $this->coneccion_base = $coneccion_base;
 
+        if (!$xID) {
+            $this->Fecha = $xFecha;
+            $this->Motivo = $xMotivo;
+            $this->Codigo = $xCodigo;
+            $this->Cod_Categoria = $xCod_Categoria;
+            $this->Num_Motivo = $xNum_Motivo;
+            $this->Estado = $xEstado;
+            $this->ID_Usuario = $xID_Usuario;
+            $this->ID_Motivo = $xID_Motivo;
+        } else {
+                $consultar = "select *
+                            from solicitudes_modificarmotivos 
+                            where ID = " . $xID . " 
+                                and estado = 1";
+                $ejecutar_consultar = mysqli_query(
+                    $this->coneccion_base->Conexion,
+                    $consultar) or die("Problemas al consultar filtro archivos");
+                $ret = mysqli_fetch_assoc($ejecutar_consultar);
+                if (!is_null($ret)) {
+                    $row_id = $ret["ID"];
+                    $row_fecha= $ret["Fecha"];
+                    $row_estado = $ret["Estado"];
+                    $row_Motivo = $ret["Motivo"];
+                    $row_id_usuario = $ret["ID_Usuario"];
+                    $row_Codigo = $ret["Codigo"];
+                    $row_Cod_Categoria = $ret["Cod_Categoria"];
+                    $row_Num_Motivo = $ret["Num_Motivo"];
+                    
+                    $this->estado = $row_estado;
+                    $this->ID = $row_id;
+                    $this->Motivo = $row_Motivo;
+                    $this->Codigo = $row_Codigo;
+                    $this->Cod_Categoria = $row_Cod_Categoria;
+                    $this->Num_Motivo = $row_Num_Motivo;
+                    $this->Fecha = $row_fecha;
+                    $this->ID_Usuario = $row_id_usuario;
+                }
 
+        }
+    }
+
+    public function delete() 
+    {
+		$ConsultaSolicitud = "update solicitudes_modificarmotivos 
+                              set estado = 0
+                              where ID = " . $this->ID;
+		if(!$Ret = mysqli_query($this->coneccion_base->Conexion,$ConsultaSolicitud)){
+			throw new Exception("Problemas en la consulta. ", 3);			
+		}
+    }
 }
 ?>

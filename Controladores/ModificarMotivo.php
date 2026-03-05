@@ -1,6 +1,8 @@
 <?php 
 session_start();
 require_once 'Conexion.php';
+require_once($_SERVER["DOCUMENT_ROOT"] . "\Modelo\Solicitud_ModificarMotivo.php");
+
 /*
  *
  * This file is part of Rastreador3.
@@ -39,20 +41,22 @@ try {
 		throw new Exception("Problemas al consultar registros iguales. Consulta: ".$ConsultarRegistrosIguales, 0);		
 	}
 	$Resultado = mysqli_num_rows($RetIguales);
-	if($Resultado > 0){
+	if ($Resultado > 0) {
 		mysqli_free_result($RetIguales);
 		$Con->CloseConexion();
 		$Mensaje = "Ya existe un motivo con ese Dato ingrese otro valor";
 		header('Location: ../view_modmotivos.php?ID='.$ID_Motivo.'&MensajeError='.$Mensaje);
-	}else{
+	} else {
 		$ConsultarDatosViejos = "select * from motivo where id_motivo = $ID_Motivo and estado = 1";
 		$ErrorDatosViejos = "No se pudieron consultar los datos";
-		if(!$RetDatosViejos = mysqli_query($Con->Conexion,$ConsultarDatosViejos)){
+		if (!$RetDatosViejos = mysqli_query($Con->Conexion,$ConsultarDatosViejos)) {
 			throw new Exception("Error al intentar registrar. Consulta: ".$ConsultarDatosViejos, 1);
 		}		
+		$modificacion = new Solicitud_ModificarMotivo(coneccion_base: $Con, xID: $ID_Solicitud);
+
 		$TomarDatosViejos = mysqli_fetch_assoc($RetDatosViejos);
-		$MotivoViejo = $TomarDatosViejos["Motivo"];
-		$Cod_Viejo = $TomarDatosViejos["Codigo"];		
+		$MotivoViejo = $TomarDatosViejos["motivo"];
+		$Cod_Viejo = $TomarDatosViejos["codigo"];		
 
 		// $ConsultarCod_Categoria = "select cod_categoria from categoria where id_categoria = $ID_Categoria";
 		// if(!$RetCod = mysqli_query($Con->Conexion,$ConsultarCod_Categoria)){
@@ -61,15 +65,16 @@ try {
 		// $TomarCod = mysqli_fetch_assoc($RetCod);
 		// $Cod_Categoria = $TomarCod["cod_categoria"];
 
-		$Consulta = "update motivo set motivo = '$Motivo', codigo = '$Codigo' where id_motivo = $ID_Motivo and estado = 1";
+		$Consulta = "update motivo 
+					 set motivo = '" . $modificacion->getMotivo() . "',
+					  	 codigo = '" . $modificacion->getCodigo() . "', 
+						 cod_categoria = '" . $modificacion->getCod_Categoria() . "'
+						 where id_motivo = $ID_Motivo
+					   and estado = 1";
 		if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
 			throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 2);			
 		}
-		
-		$ConsultaSolicitud = "update solicitudes_modificarmotivos set estado = 0 where ID = $ID_Solicitud";
-		if(!$Ret = mysqli_query($Con->Conexion,$ConsultaSolicitud)){
-			throw new Exception("Problemas en la consulta. Consulta: ".$ConsultaSolicitud, 3);			
-		}
+		$modificacion->delete();		
 
 		$Detalles = "El usuario con ID: $ID_Usuario ha modificado un Motivo. Datos: Dato Anterior: $MotivoViejo , Dato Nuevo: $Motivo - Dato Anterior: $Cod_Viejo , Dato Nuevo: $Codigo";
 		$ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";

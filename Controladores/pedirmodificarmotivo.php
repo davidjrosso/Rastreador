@@ -43,7 +43,18 @@ if($ID_Categoria > 0){
 	$TomarCod = mysqli_fetch_assoc($RetCod);
 	$Cod_Categoria = $TomarCod["cod_categoria"];
 
-	$Solicitud = new Solicitud_ModificarMotivo(0,$Fecha,$Motivo,$Codigo,$Cod_Categoria,$Num_Motivo,$Estado,$ID_Usuario,$ID_Motivo);
+	$Solicitud = new Solicitud_ModificarMotivo(
+								coneccion_base: $Con, 
+										   xID: 0,
+										 xFecha: $Fecha,
+										 xMotivo: $Motivo,
+										 xCodigo: $Codigo,
+										 xCod_Categoria: $Cod_Categoria,
+										 xNum_Motivo: $Num_Motivo,
+										 xEstado: $Estado,
+										 xID_Usuario: $ID_Usuario,
+										 xID_Motivo: $ID_Motivo
+										);
 	$Insert_Solicitud = "insert into solicitudes_modificarmotivos(Fecha,Motivo,Codigo,Cod_Categoria,Num_Motivo,Estado,ID_Usuario,ID_Motivo) values('{$Solicitud->getFecha()}','{$Solicitud->getMotivo()}','{$Solicitud->getCodigo()}','{$Solicitud->getCod_Categoria()}',{$Solicitud->getNum_Motivo()},{$Solicitud->getEstado()},{$Solicitud->getID_Usuario()},{$Solicitud->getID_Motivo()})";
 	$MensajeError = "No se pudo enviar la solicitud";
 
