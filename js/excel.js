@@ -524,39 +524,39 @@ export class Excel {
                                                     <canvas id='charts'>
                                                     </canvas>
                                                 </div>
-                                                <div id='form'>
+                                                <div class='col' id='form'>
                                                     <form id='root'>
                                                         <div class='row'>
                                                             <div class='column'>
-                                                                <div class='form-group'>
-                                                                    <label>Titulo</label>
-                                                                    <input type='text' id='titulo' name='titulo' value='grafico' data-validation='titulo'>
+                                                                <div class='form-group row'>
+                                                                    <label class='col-4 col-form-label LblForm'>Titulo</label>
+                                                                    <input class='col-8 form-control' style='' type='text' id='titulo' name='titulo' value='grafico' data-validation='titulo'>
                                                                 </div>
                                                             </div>
                                                         </div>
 
                                                         <div class='row'>
                                                             <div class='column'>
-                                                                <div class='form-group'>
-                                                                    <label>Subtitulo</label>
-                                                                    <input type='text' id='subtitulo' name='subtitulo' value='grafico' data-validation='subtitulo'>
+                                                                <div class='form-group row'>
+                                                                    <label class='col-4 col-form-label LblForm'>Subtitulo</label>
+                                                                    <input class='col-8 form-control' type='text' id='subtitulo' name='subtitulo' value='grafico' data-validation='subtitulo'>
                                                                 </div>
                                                             </div>
                                                         </div>
 
                                                         <div class='row'>
                                                             <div class='column'>
-                                                                <div class='form-group'>
-                                                                    <label>Etiqueta de Eje</label>
-                                                                    <input id='etiqueta' type='text' name='etiqueta' value='Etiqueta'>
+                                                                <div class='form-group row'>
+                                                                    <label class='col-4 col-form-label LblForm'>Etiqueta de Eje</label>
+                                                                    <input class='col-8 form-control' id='etiqueta' type='text' name='etiqueta' value='Etiqueta'>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class='row'>
                                                             <div class='column'>
-                                                                <div class='form-group'>
-                                                                    <label>Eje</label>
-                                                                    <select id='eje' name='eje'>
+                                                                <div class='form-group row'>
+                                                                    <label class='col-4 col-form-label LblForm'>Eje</label>
+                                                                    <select class='col-8 form-control' id='eje' name='eje'>
                                                                     <option value="0">X</option>
                                                                     <option value="1">Y</option>
                                                                     </select>
@@ -565,36 +565,36 @@ export class Excel {
                                                         </div>
                                                         <div class='row'>
                                                             <div class='column'>
-                                                                <div class='form-group'>
-                                                                    <label>Ancho de imagen</label>
-                                                                    <input type='number' id='width' value='200' name='width' data-validation='width'>
+                                                                <div class='form-group row'>
+                                                                    <label class='col-4 col-form-label LblForm'>Ancho de imagen</label>
+                                                                    <input class='col-8 form-control' type='number' id='width' value='200' name='width' data-validation='width'>
                                                                 </div>
                                                             </div>
                                                         </div>
 
                                                         <div class='row'>
                                                             <div class='column'>
-                                                                <div class='form-group'>
-                                                                    <label>Alto de imagen</label>
-                                                                    <input type='number' id='height' value='200' name='height' data-validation='height'>
+                                                                <div class='form-group row'>
+                                                                    <label class='col-4 col-form-label LblForm'>Alto de imagen</label>
+                                                                    <input class='col-8 form-control' type='number' id='height' value='200' name='height' data-validation='height'>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         
                                                         <div class='row'>
                                                             <div class='column'>
-                                                                <div class='form-group'>
-                                                                    <label>Color</label>
-                                                                    <input id='color' value="#009688" data-validation='color'/>
+                                                                <div class='form-group row'>
+                                                                    <label class='col-4 col-form-label LblForm'>Color</label>
+                                                                    <input class='col-8 form-control' id='color' value="#009688" data-validation='color'/>
                                                                 </div>
                                                             </div>
                                                         </div>
 
                                                         <div class='row'>
                                                             <div class='column'>
-                                                                <div class='form-group'>
-                                                                    <label>Datos</label>
-                                                                    <select id='datos' name='datos'>
+                                                                <div class='form-group row'>
+                                                                    <label class='col-4 col-form-label LblForm'>Datos</label>
+                                                                    <select class='col-8 form-control' id='datos' name='datos'>
                                                                     <option value="-1">Seleccionar Dato</option>
                                                                     </select>
                                                                 </div>
@@ -603,9 +603,9 @@ export class Excel {
 
                                                         <div class='row'>
                                                             <div class='column'>
-                                                                <div class='form-group'>
-                                                                    <label>Color Dato</label>
-                                                                    <input id='color-datos' value="#009688" data-validation='color-datos'/>
+                                                                <div class='form-group row'>
+                                                                    <label class='col-4 col-form-label LblForm'>Color Dato</label>
+                                                                    <input class='col-8 form-control' id='color-datos' value="#009688" data-validation='color-datos'/>
                                                                 </div>
                                                             </div>
                                                         </div>
