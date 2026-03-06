@@ -2405,7 +2405,7 @@ public function getMenuSeguridadUsuario($ID){
   public function CBRepCentros(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' id='ID_Centro' name = 'ID_CentroSalud'>";
+    $Select = "<select class='btn btn-lg btn-primary btn-block' id='ID_Centro' name = 'ID_CentroSalud'>";
     $Select .= "<option value = '0'>-Todos-</option>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from centros_salud where estado = 1 order by centro_salud")or die("Problemas al mostrar Centros de Salud");
     while ($Ret = mysqli_fetch_array($Consulta)) {
