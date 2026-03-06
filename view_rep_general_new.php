@@ -1658,8 +1658,12 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             }
 
 
-            $consultaGeneralPermisos = "CREATE TEMPORARY TABLE GIN " ;
-            $consultaUsuarioPermisos = "CREATE TEMPORARY TABLE INN ";
+            $consultaGeneralPermisos = "CREATE TEMPORARY TABLE GIN 
+                                         (id_motivo INT(10),
+                                          INDEX ind_mot USING BTREE (id_motivo))" ;
+            $consultaUsuarioPermisos = "CREATE TEMPORARY TABLE INN
+                                         (id_motivo INT(10),
+                                          INDEX ind_mot USING BTREE (id_motivo))";
         
             $motivosVisiblesParaUsuario =  "SELECT MT.id_motivo
                                             FROM motivo MT,
