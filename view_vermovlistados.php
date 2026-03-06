@@ -725,12 +725,15 @@ if (empty($_REQUEST["ID_Persona"])) {
                               FROM persona 
                               WHERE estado = 1";
 
-            $motivo_query = "SELECT *
+            $motivo_query = "SELECT id_motivo, motivo, codigo, cod_categoria
                               FROM motivo
                               WHERE ";
-            $categoria_query = "SELECT *
+            $categoria_query = "SELECT id_categoria, cod_categoria, categoria,
+                                       ID_Forma, color, tipo_categoria
                                 FROM categoria ";
-            $movimiento_query = "SELECT *
+            $movimiento_query = "SELECT id_movimiento, fecha, id_persona, observaciones,
+                                        id_resp. id_resp_2, id_resp_3, id_resp_4, id_centro,
+                                        id_otrainstitucion
                                   FROM movimiento 
                                   WHERE fecha between '$Fecha_Inicio' and '$Fecha_Fin'
                                     AND estado = 1";
@@ -1216,10 +1219,10 @@ if (empty($_REQUEST["ID_Persona"])) {
                           <thead>
                             <tr>
                               <th></th>
-                              <th>Detalles de la Persona</th>
+                              <th>Datos Personales</th>
                             </tr>
                           </thead>";
-              $tablePrint = "<table class='table'><thead><tr><th></th><th>Detalles de la Persona</th></tr></thead>";
+              $tablePrint = "<table class='table'><thead><tr><th></th><th>Datos Personales</th></tr></thead>";
               $Table .= "<tr>
                             <td>Id</td>
                             <td>" . $Persona->getID_Persona() . "</td>
