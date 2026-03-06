@@ -40,7 +40,7 @@ if (!isset($_SESSION["Usuario"])) {
 
 $http_referer = (!empty($_SERVER["HTTP_REFERER"])) ? $_SERVER["HTTP_REFERER"] : null;
 
-$redirect = preg_match("~view_general_new~", $http_referer);
+$redirect = preg_match("~[view_general_new|view_vermovlistados]~", $http_referer);
 
 $ID_Usuario = $_SESSION["Usuario"];
 
