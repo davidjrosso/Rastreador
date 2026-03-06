@@ -22,6 +22,7 @@ session_start();
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Controladores/Elements.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Controladores/CtrGeneral.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Persona.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Calle.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/DtoMovimiento.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Motivo.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Categoria.php");
@@ -493,7 +494,8 @@ if (empty($_REQUEST["ID_Persona"])) {
               $Edad_Hasta = $_REQUEST["Edad_Hasta"];
               $Meses_Desde = $_REQUEST["Meses_Desde"];
               $Meses_Hasta = $_REQUEST["Meses_Hasta"];
-              $Domicilio = $_REQUEST["Domicilio"];
+              $calle = (isset($_REQUEST["Calle"])) ? $_REQUEST["Calle"] : null;
+              $nro = (isset($_REQUEST["NumeroDeCalle"])) ? $_REQUEST["NumeroDeCalle"] : null;
               $Manzana = $_REQUEST["Manzana"];
               $Lote = $_REQUEST["Lote"];
               $Familia = $_REQUEST["Familia"];
@@ -665,8 +667,7 @@ if (empty($_REQUEST["ID_Persona"])) {
           	  $Consulta = "SELECT M.id_movimiento, M.fecha, M.id_persona, MONTH(M.fecha) as 'Mes',
                                   YEAR(M.fecha) as 'Anio', B.Barrio, P.manzana, P.documento, P.obra_social,
                                   P.localidad, P.edad, P.meses, P.lote, P.familia, UPPER(P.apellido) as apellido, P.fecha_nac,
-                                  P.nombre, P.fecha_nac, P.domicilio, M.motivo_1, M.motivo_2, M.motivo_3,
-                                  M.motivo_4,M.motivo_5, MT.motivo, R.responsable, R2.responsable as responsable_2, R3.responsable as responsable_3,
+                                  P.nombre, P.fecha_nac, P.domicilio, MT.motivo, R.responsable, R2.responsable as responsable_2, R3.responsable as responsable_3,
                                   R4.responsable as responsable_4, M.observaciones, CS.centro_salud,
                                   I.Nombre as 'NombreInst', MST.id_motivo, MST.nro_motivo";
 
@@ -678,12 +679,6 @@ if (empty($_REQUEST["ID_Persona"])) {
 
               //$Con = new Conexion();
               //$Con->OpenConexion();
-
-              $filtMovimientoPorMotivo = " and (M.motivo_1 IN $listaDeMotivos
-                                            or M.motivo_2 IN $listaDeMotivos
-                                            or M.motivo_3 IN $listaDeMotivos
-                                            or M.motivo_4 IN $listaDeMotivos
-                                            or M.motivo_5 IN $listaDeMotivos )";
 
               if($ID_Persona > 0){
                 $ConsultarPersona = "select apellido, nombre
@@ -732,7 +727,7 @@ if (empty($_REQUEST["ID_Persona"])) {
                                        ID_Forma, color, tipo_categoria
                                 FROM categoria ";
             $movimiento_query = "SELECT id_movimiento, fecha, id_persona, observaciones,
-                                        id_resp. id_resp_2, id_resp_3, id_resp_4, id_centro,
+                                        id_resp, id_resp_2, id_resp_3, id_resp_4, id_centro,
                                         id_otrainstitucion
                                   FROM movimiento 
                                   WHERE fecha between '$Fecha_Inicio' and '$Fecha_Fin'
@@ -762,10 +757,16 @@ if (empty($_REQUEST["ID_Persona"])) {
               }
             }
 
-            if($Domicilio != null && $Domicilio != ""){
-              $persona_query .= " and domicilio like '%$Domicilio%'";
-              $filtros[] = "Domicilio: " . $Domicilio;
-              $filtrosSeleccionados["Domicilio"] = $Domicilio;
+            if($calle){
+              $persona_query .= " and calle = $calle";
+              $calle_name = new Calle(id_calle: $calle);
+              $dir = "Domicilio: " . $calle_name->get_calle_nombre();
+              if ($nro) {
+                $persona_query .= " and nro = $nro";
+                $dir .= " " . $nro;
+              }
+              $filtros[] = $dir;
+              $filtrosSeleccionados["Domicilio"] = $dir;
             }
 
             if($Manzana != null && $Manzana != ""){
