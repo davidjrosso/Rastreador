@@ -1115,3 +1115,11 @@ input[type="radio"] {
 #ID_Centro > option:not(a[selected]) {
   font-size: 1rem;
 }
+
+#contenedor-calle button {
+  font-size: 1rem;
+  background-color: white !important;
+  color: #6c757d !important;
+  border-color: #ced4da;
+  font-weight: 400;
+}

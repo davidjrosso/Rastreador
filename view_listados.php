@@ -700,10 +700,10 @@ $Element = new Elements();
               </div>
               <div id="contenedorBarrios">              
               </div> 
-              <div class="form-group row" style="margin-bottom: 0.6rem;">
+              <div id="contenedor-calle" class="form-group row" style="margin-bottom: 0.6rem;">
                 <label for="BotonModalDireccion_1" class="col-md-2 col-form-label LblForm">Domicilio/Familia: </label>
                 <div class="col-md-8 flex-sm-boton">
-                    <button type = "button" id="BotonModalDireccion_1" class = "btn btn-lg btn-primary btn-block" style="padding-top: 4px;padding-bottom: 4px;" data-toggle="modal" data-target="#ModalCalle">Seleccione una Calle</button>
+                    <button type = "button" id="BotonModalDireccion_1" class = "btn btn-lg btn-primary btn-block form-control" style="padding-top: 4px;padding-bottom: 4px;" data-toggle="modal" data-target="#ModalCalle">Seleccione una Calle</button>
                 </div>
                 <div class="col-md-2 form-boton-widht">
                   <input type="number" class="form-control" style="margin-top: 1px;" name = "NumeroDeCalle" id="NumeroDeCalle" placeholder="Número" min="1" autocomplete="off">
@@ -929,7 +929,6 @@ $Element = new Elements();
               </div>
             </div>
             <!-- Modal de Carga de Calle-->
-
             <!-- Modal SELECCION MOTIVO -->
             <div class="modal fade bd-example-modal-lg" id="ModalMotivo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
