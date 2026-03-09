@@ -1184,7 +1184,7 @@ if (empty($_REQUEST["ID_Persona"])) {
       <div class="col-md-3"></div>
     </div>
      <div class = "row" <?php echo ($_REQUEST["ID_Config"] == "grid") ? "style='justify-content: center;'" : ""; ?>>
-      <div class = "col-10">
+      <div class = "col-12">
           <!-- Search -->
         <div class = "row">
           <?php
@@ -1216,175 +1216,216 @@ if (empty($_REQUEST["ID_Persona"])) {
               */
               $head_det_persona = [];
               $head_movimientos = [];
-              $Table = "<table class='table'>
-                          <thead>
-                            <tr>
-                              <th></th>
-                              <th>Datos Personales</th>
-                            </tr>
-                          </thead>";
+              $Table = "<div class='row' style='justify-content: center; margin-top: 1.7rem; margin-bottom: 1.7rem;'>
+                          <div class='col-11 row border' >
+                            <div class='col-12 margin-bottom'>
+                              <div class='col-11' style='margin-bottom: 1rem;'>
+                                <div class='col-9 border-bottom div--text-title' style='text-align: center; margin: auto;'>
+                                  <h5 style='font-size: 1.09rem; margin: 0px'>Datos Personales</h5>
+                                </div>
+                              </div>
+                              <div class='col-1'> </div>
+                            </div>
+                            ";
               $tablePrint = "<table class='table'><thead><tr><th></th><th>Datos Personales</th></tr></thead>";
-              $Table .= "<tr>
-                            <td>Id</td>
-                            <td>" . $Persona->getID_Persona() . "</td>
-                          </tr>";
+              $Table .= "<div class='col-2 row div-space-text'>
+                            <div class='col-5 text-secondary '>
+                              <span class='border-bottom'>Id</span>
+                            </div>
+                            <div class='col-7 data-form'>" . $Persona->getID_Persona() . "</div>
+                          </div>";
               $tablePrint .= "<tr><td>Id</td><td>" . $Persona->getID_Persona() . "</td></tr>";
               $jsonTable["det_persona"]["id"] = $Persona->getID_Persona();
               $head_det_persona[] = "id";
-              $Table .= "<tr>
-                            <td>Apellido</td>
-                            <td>" . $Persona->getApellido() . "</td>
-                         </tr>";
+              $Table .= "<div class='col-5 row div-space-text'>
+                            <div class='col-3 text-secondary '>
+                              <span class='border-bottom'>Apellido</span>
+                            </div>
+                            <div class='col-9 data-form'>" . $Persona->getApellido() . "</div>
+                         </div>";
               $tablePrint .= "<tr><td>Apellido</td><td>" . $Persona->getApellido() . "</td></tr>";
               $jsonTable["det_persona"]["apellido"] = $Persona->getApellido();
               $head_det_persona[] = "apellido";
-              $Table .= "<tr>
-                            <td>Nombre</td>
-                            <td>" . $Persona->getNombre() . "</td>
-                         </tr>";
+              $Table .= "<div class='col-5 row div-space-text'>
+                            <div class='col-3 text-secondary '><span class='border-bottom'>Nombre</div>
+                            <div class='col-9 data-form'>" . $Persona->getNombre() . "</div>
+                         </div>";
               $tablePrint .= "<tr><td>Nombre</td><td>" . $Persona->getNombre() . "</td></tr>";
               $jsonTable["det_persona"]["nombre"] = $Persona->getNombre();
               $head_det_persona[] = "nombre";
-              $Table .= "<tr>
-                          <td>Documento</td>
-                          <td>" . $Persona->getDNI() . "</td>
-                         </tr>";
+              $Table .= "<div class='col-4 row div-space-text'>
+                          <div class='col-5 text-secondary '><span class='border-bottom'>Documento</div>
+                          <div class='col-7 data-form'>" . $Persona->getDNI() . "</div>
+                         </div>";
               $tablePrint .= "<tr><td>Documento</td><td>" . $Persona->getDNI() . "</td></tr>";
               $jsonTable["det_persona"]["documento"] = $Persona->getDNI();
               $head_det_persona[] = "documento";
-              $Table .= "<tr>
-                            <td>Fecha de Nacimiento</td>
-                            <td>" . $Persona->getFecha_Nacimiento() . "</td>
-                         </tr>";
+              $Table .= "<div class='col-5 row div-space-text'>
+                            <div class='col-7 text-secondary '><span class='border-bottom'>Fecha de Nacimiento</div>
+                            <div class='col-5 data-form'>" . $Persona->getFecha_Nacimiento() . "</div>
+                         </div>";
               $tablePrint .= "<tr>
-                                <td>Fecha de Nacimiento</td>
-                                <td>" . $Persona->getFecha_Nacimiento() . "</td>
+                                <div >Fecha de Nacimiento</div>
+                                <div>" . $Persona->getFecha_Nacimiento() . "</div>
                               </tr>";
               $jsonTable["det_persona"]["fecha_nacimiento"] = $Persona->getFecha_Nacimiento();
               $head_det_persona[] = "fecha_nacimiento";
               if ($Persona->getEdad() == 2020) {
-                $Table .= "<tr>
-                              <td>Edad</td>
-                              <td>No se cargo fecha de nacimiento</td>
-                            </tr>";
+                $Table .= "<div class='col-2 row div-space-text'>
+                              <div class='col-7 text-secondary '>
+                                <span class='border-bottom'>Edad</span>
+                              </div>
+                              <div class='col-5 data-form'>No se cargo fecha de nacimiento</div>
+                            </div>";
                 $tablePrint .= "<tr><td>Edad</td><td>No se cargo fecha de nacimiento</td></tr>";
                 $jsonTable["det_persona"]["Años"] = "sin datos";
                 $head_det_persona[] = "Años";
               }else{
-                $Table .= "<tr>
-                              <td>Edad</td>
-                              <td>" . $Persona->getEdad() . "</td>
-                            </tr>";
+                $Table .= "<div class='col-2 row div-space-text'>
+                              <div class='col-7 text-secondary'>
+                                <span class='border-bottom'>Edad</span>
+                              </div>
+                              <div class='col-5 data-form'>" . $Persona->getEdad() . "</div>
+                            </div>";
                 $tablePrint .= "<tr><td>Edad</td><td>" . $Persona->getEdad() . "</td></tr>";
                 $jsonTable["det_persona"]["Años"] = $Persona->getEdad();
                 $head_det_persona[] = "Años";
               }
-              $Table .= "<tr>
-                            <td>Meses</td>
-                            <td>" . $Persona->getMeses() . "</td>
-                          </tr>";              
+              $Table .= "<div class='col-2 row div-space-text'>
+                            <div class='col-7 text-secondary '>
+                              <span class='border-bottom'>Meses</span>
+                            </div>
+                            <div class='col-5 data-form'>" . $Persona->getMeses() . "</div>
+                          </div>";              
               $tablePrint .= "<tr><td>Meses</td><td>" . $Persona->getMeses() . "</td></tr>";
               $jsonTable["det_persona"]["Meses"] = $Persona->getMeses();
               $head_det_persona[] = "Meses";
-              $Table .= "<tr>
-                            <td>Localidad</td>
-                            <td>" . $Persona->getLocalidad() . "</td>
-                          </tr>";
+              $Table .= "<div class='col-4 row div-space-text'>
+                            <div class='col-5 text-secondary '>
+                              <span class='border-bottom'>Localidad</span>
+                            </div>
+                            <div class='col-7 data-form'>" . $Persona->getLocalidad() . "</div>
+                          </div>";
               $tablePrint .= "<tr><td>Localidad</td><td>" . $Persona->getLocalidad() . "</td></tr>";
               $jsonTable["det_persona"]["Localidad"] = $Persona->getLocalidad();
               $head_det_persona[] = "Localidad";
-              $Table .= "<tr>
-                            <td>Barrio</td>
-                            <td>" . $Persona->getBarrio() . "</td>
-                          </tr>";      
+              $Table .= "<div class='col-4 row div-space-text'>
+                            <div class='col-3 '>Barrio</div>
+                            <div class='col-9 data-form'>" . $Persona->getBarrio() . "</div>
+                          </div>";      
               $tablePrint .= "<tr><td>Barrio</td><td>" . $Persona->getBarrio() . "</td></tr>";      
               $jsonTable["det_persona"]["Barrio"] = $Persona->getBarrio();
               $head_det_persona[] = "Barrio";
-              $Table .= "<tr>
-                            <td>Domicilio</td>
-                            <td>" . $Persona->getDomicilio() . "</td>
-                          </tr>";
+              $Table .= "<div class='col-5 row div-space-text'>
+                            <div class='col-3 text-secondary '>
+                              <span class='border-bottom'>Domicilio</span>
+                            </div>
+                            <div class='col-9 data-form'>" . $Persona->getDomicilio() . "</div>
+                          </div>";
               $tablePrint .= "<tr><td>Domicilio</td><td>" . $Persona->getDomicilio() . "</td></tr>";
               $jsonTable["det_persona"]["Domicilio"] = $Persona->getDomicilio();
               $head_det_persona[] = "Domicilio";
-              $Table .= "<tr>
-                            <td>Manzana</td>
-                            <td>" . $Persona->getManzana() . "</td>
-                         </tr>";
+              $Table .= "<div class='col-4 row div-space-text'>
+                            <div class='col-5 text-secondary '>
+                              <span class='border-bottom'>Manzana</span>
+                            </div>
+                            <div class='col-7 data-form'>" . $Persona->getManzana() . "</div>
+                         </div>";
               $tablePrint .= "<tr><td>Manzana</td><td>" . $Persona->getManzana() . "</td></tr>";
               $jsonTable["det_persona"]["manzana"] = $Persona->getManzana();
               $head_det_persona[] = "manzana";
-              $Table .= "<tr>
-                            <td>Lote</td>
-                            <td>" . $Persona->getLote() . "</td>
-                         </tr>";
+              $Table .= "<div class='col-2 row div-space-text'>
+                            <div class='col-7 text-secondary '>
+                              <span class='border-bottom'>Lote</span>
+                            </div>
+                            <div class='col-5 data-form'>" . $Persona->getLote() . "</div>
+                         </div>";
               $tablePrint .= "<tr><td>Lote</td><td>" . $Persona->getLote() . "</td></tr>";
               $jsonTable["det_persona"]["lote"] = $Persona->getLote();
               $head_det_persona[] = "lote";
-              $Table .= "<tr>
-                            <td>Sub-lote</td>
-                            <td>" . $Persona->getFamilia() . "</td>
-                         </tr>";
+              $Table .= "<div class='col-4 row div-space-text'>
+                            <div class='col-5 text-secondary '>
+                              <span class='border-bottom'>Sub-lote</span>
+                            </div>
+                            <div class='col-7 data-form'>" . $Persona->getFamilia() . "</div>
+                         </div>";
               $tablePrint .= "<tr><td>Sub-lote</td><td>" . $Persona->getFamilia() . "</td></tr>";
               $jsonTable["det_persona"]["sub_lote"] = $Persona->getFamilia();
               $head_det_persona[] = "sub_lote";
-              $Table .= "<tr>
-                            <td>Telefono</td>
-                            <td>" . $Persona->getTelefono() . "</td>
-                         </tr>";
+              $Table .= "<div class='col-4 row div-space-text'>
+                            <div class='col-5 text-secondary '>
+                              <span class='border-bottom'>Telefono</span>
+                            </div>
+                            <div class='col-7 data-form'>" . $Persona->getTelefono() . "</div>
+                         </div>";
               $tablePrint .= "<tr><td>Telefono</td><td>" . $Persona->getTelefono() . "</td></tr>";
               $jsonTable["det_persona"]["telefono"] = $Persona->getTelefono();
               $head_det_persona[] = "telefono";
-              $Table .= "<tr>
-                            <td>E-Mail</td>
-                            <td>" . $Persona->getMail() . "</td>
-                         </tr>";
+              $Table .= "<div class='col-5 row div-space-text'>
+                            <div class='col-3 text-secondary '>
+                              <span class='border-bottom'>E-Mail</span>
+                            </div>
+                            <div class='col-9 data-form'>" . $Persona->getMail() . "</div>
+                         </div>";
               $tablePrint .= "<tr><td>E-Mail</td><td>" . $Persona->getMail() . "</td></tr>";
               $jsonTable["det_persona"]["mail"] = $Persona->getMail();
               $head_det_persona[] = "mail";
-              $Table .= "<tr>
-                            <td>Obra Social</td>
-                            <td>" . $Persona->getObra_Social() . "</td>
-                         </tr>";
+              $Table .= "<div class='col-5 row div-space-text'>
+                            <div class='col-4 text-secondary '>
+                              <span class='border-bottom'>Obra Social</span>
+                            </div>
+                            <div class='col-7 data-form'>" . $Persona->getObra_Social() . "</div>
+                         </div>";
               $tablePrint .= "<tr><td>Obra Social</td><td>" . $Persona->getObra_Social() . "</td></tr>";
               $jsonTable["det_persona"]["Obra Social"] = $Persona->getObra_Social();
               $head_det_persona[] = "Obra Social";
-              $Table .= "<tr>
-                            <td>Escuela</td>
-                            <td>" . $Persona->getEscuela() . "</td>
-                         </tr>";
+              $Table .= "<div class='col-5 row div-space-text'>
+                            <div class='col-5 text-secondary '>
+                              <span class='border-bottom'>Escuela</span>
+                            </div>
+                            <div class='col-7 data-form'>" . $Persona->getEscuela() . "</div>
+                         </div>";
               $tablePrint .= "<tr><td>Escuela</td><td>" . $Persona->getEscuela() . "</td></tr>";
               $jsonTable["det_persona"]["escuela"] = $Persona->getEscuela();
               $head_det_persona[] = "escuela";
-              $Table .= "<tr>
-                            <td>Nro. Legajo</td>
-                            <td>" . $Persona->getNro_legajo() . "</td>
-                         </tr>";
+              $Table .= "<div class='col-4 row div-space-text'>
+                            <div class='col-5 text-secondary '>
+                              <span class='border-bottom'>Nro. Legajo</span>
+                            </div>
+                            <div class='col-7 data-form'>" . $Persona->getNro_legajo() . "</div>
+                         </div>";
               $tablePrint .= "<tr><td>Nro. Legajo</td><td>" . $Persona->getNro_legajo() . "</td></tr>";
               $jsonTable["det_persona"]["nro_legajo"] = $Persona->getNro_Legajo();
               $head_det_persona[] = "nro_legajo";
-              $Table .= "<tr>
-                            <td>Nro. Carpeta</td>
-                            <td>" . $Persona->getNro_Carpeta() . "</td>
-                         </tr>";
+              $Table .= "<div class='col-4 row div-space-text'>
+                            <div class='col-5 text-secondary '>
+                              <span class='border-bottom'>Nro. Carpeta</span>
+                            </div>
+                            <div class='col-7 data-form'>" . $Persona->getNro_Carpeta() . "</div>
+                         </div>";
               $tablePrint .= "<tr><td>Nro. Carpeta</td><td>" . $Persona->getNro_Carpeta() . "</td></tr>";
               $jsonTable["det_persona"]["nro_carpeta"] = $Persona->getNro_Carpeta();
               $head_det_persona[] = "nro_carpeta";
-              $Table .= "<tr>
-                            <td>Observación</td>
-                            <td>" . $Persona->getObservaciones() . "</td>
-                         </tr>";
+              $Table .= "<div class='col-12 row div-space-text'>
+                            <div class='col-3 text-secondary '>
+                              <span class='border-bottom'>Observación</span>
+                            </div>
+                            <div class='col-9 data-form'>" . $Persona->getObservaciones() . "</div>
+                         </div>";
               $tablePrint .= "<tr><td>Observación</td><td>" . $Persona->getObservaciones() ."</td></tr>";
               $jsonTable["det_persona"]["observacion"] = $Persona->getObservaciones();
               $head_det_persona[] = "observacion";
-              $Table .= "<tr>
-                            <td>Cambio de Domicilio</td>
-                            <td>" . $Persona->getCambio_Domicilio() . "</td>
-                         </tr>";
+              $Table .= "<div class='col-12 row div-space-text'>
+                            <div class='col-3 text-secondary '>
+                              <span class='border-bottom'>Cambio de Domicilio</span>
+                            </div>
+                            <div class='col-9 data-form'>" . $Persona->getCambio_Domicilio() . "</div>
+                         </div>";
               $tablePrint .= "<tr><td>Cambio de Domicilio</td><td>" . $Persona->getCambio_Domicilio() . "</td></tr>";
               $jsonTable["det_persona"]["cmb_domicilio"] = $Persona->getCambio_Domicilio();
               $head_det_persona[] = "cmb_domicilio";
-              $Table .= "</table>";
+              $Table .= " </div>
+                         </div>";
               $tablePrint .= "</table>";
               $jsonTable["head_det_persona"] = $head_det_persona;
 

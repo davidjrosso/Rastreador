@@ -1123,3 +1123,20 @@ input[type="radio"] {
   border-color: #ced4da;
   font-weight: 400;
 }
+
+.div--text-title {
+  height: 2rem;
+  text-align: center;
+  margin: auto;
+  align-content: center
+}
+
+.div-space-text {
+  height: 2.3rem;
+  align-content: center
+}
+
+.data-form {
+  border-radius: 8%;
+  background-color: #c6c6c622;
+}
