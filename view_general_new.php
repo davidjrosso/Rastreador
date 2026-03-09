@@ -697,6 +697,38 @@ $TipoUsuario = $account->get_id_tipo_usuario();
       }
     }
 
+    function buscarCalles(){
+      var xNombre = document.getElementById('SearchCalle').value;
+      var textoBusqueda = xNombre;
+      xmlhttp=new XMLHttpRequest();
+      xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+          contenidosRecibidos = xmlhttp.responseText;
+          document.getElementById("ResultadosCalles").innerHTML=contenidosRecibidos;
+          }
+      }
+      xmlhttp.open('POST', 'buscarCalle.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
+      xmlhttp.send();
+    }
+
+    function seleccionCalle(xNombre, xID) {
+      let BotonModalPersona = document.getElementById("BotonModalDireccion_1");
+      let calle = document.getElementById("Calle");
+      nombreCalle = xNombre;
+      BotonModalPersona.innerHTML = "";
+      BotonModalPersona.innerHTML = xNombre;
+      calle.setAttribute('value',xID);
+      let nro = $("#NumeroDeCalle").val();
+      if (nro && map) {
+        $("#mapa-sig").prop('disabled', false);
+        map.addPersonMapAddress(
+                                xNombre,
+                                nro,
+                                xID
+                              );
+      }
+    }
+
   </script>
 </head>
 <body>
@@ -827,10 +859,13 @@ $TipoUsuario = $account->get_id_tipo_usuario();
                         </div>
                         <div id="contenedorBarrios">              
                         </div>
-                        <div class="form-group row">
-                          <label for="Domicilio" class="col-md-2 col-form-label LblForm">Domicilio/Familia: </label>
-                          <div class="col-md-10">
-                            <input type="text" class="form-control" name = "Domicilio" id="Domicilio" autocomplete="off">
+                        <div class="form-group row" style="margin-bottom: 0.6rem;">
+                          <label for="BotonModalDireccion_1" class="col-md-2 col-form-label LblForm">Domicilio/Familia: </label>
+                          <div class="col-md-8 flex-sm-boton">
+                              <button type = "button" id="BotonModalDireccion_1" class = "btn btn-lg btn-primary btn-block" style="padding-top: 4px;padding-bottom: 4px;" data-toggle="modal" data-target="#ModalCalle">Seleccione una Calle</button>
+                          </div>
+                          <div class="col-md-2 form-boton-widht">
+                            <input type="number" class="form-control" style="margin-top: 1px;" name = "NumeroDeCalle" id="NumeroDeCalle" placeholder="Número" min="1" autocomplete="off">
                           </div>
                         </div>
                         <!-- ################################################################################ -->
@@ -965,6 +1000,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
                             <div class="offset-md-3 col-md-10" id = "InputsGenerales">
                                 <input type="hidden" name="ID_Motivo" id = "ID_Motivo" value = "0">
                                 <input type="hidden" name="ID_Categoria" id = "ID_Categoria" value = "0">
+                                <input type="hidden" name="Calle" id="Calle" value="0">
                                 <input type="hidden" name="width-display" id = "width-display" value = "0">
                                 <button type="submit" class="btn btn-outline-success">Aceptar</button>
                                 <button type="button" class="btn btn-outline-secondary" onClick="resetearForm()">Cancel</button>
@@ -1050,6 +1086,46 @@ $TipoUsuario = $account->get_id_tipo_usuario();
                         </div>
                       </div>
                       <!-- FIN MODAL SELECCION PERSONAS -->
+                    <!-- Modal de Carga de Calle-->
+                      <div class="modal fade bd-example-modal-lg" id="ModalCalle" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Seleccione una Calle</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <form>
+                                  <div class="row">
+                                    <div class="col"></div>
+                                    <div class="col-8">
+                                      <div class="input-group mb-3">
+                                        <input class = "form-control" type="text" name="BuscarCalle" id = "SearchCalle" onKeyUp="buscarCalles()" autocomplete="off" placeholder="Ingrese el nombre de calle">
+                                        <div class="input-group-append">
+                                          <span class="input-group-text" id="basic-addon2">Buscar</span>
+                                        </div>	
+                                      </div>		        				
+                                    </div>
+                                    <div class="col"></div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col"></div>
+                                    <div class="col-10" id = "ResultadosCalles">
+                                      
+                                    </div>
+                                    <div class="col"></div>
+                                  </div>
+                                </form>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">OK</button>			        
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+                      <!-- Modal de Carga de Calle-->
                       <!-- Modal SELECCION MOTIVO -->
                       <div class="modal fade bd-example-modal-lg" id="ModalMotivo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
