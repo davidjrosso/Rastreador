@@ -82,8 +82,11 @@ class HomeController
         }
     }
 
-    public function login() 
+    public function login($mensaje = null) 
     {
+        $mensaje_error = $mensaje;
+        $mensaje_succes = null;
+
         if (isset($_SESSION["Usuario"])) {
             header("Location: /");
         } else {
