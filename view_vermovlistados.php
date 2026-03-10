@@ -1217,9 +1217,9 @@ if (empty($_REQUEST["ID_Persona"])) {
               $head_det_persona = [];
               $head_movimientos = [];
               $Table = "<div class='row' style='justify-content: center; margin-top: 1.7rem; margin-bottom: 1.7rem;'>
-                          <div class='col-11 row border' >
-                            <div class='col-12 margin-bottom'>
-                              <div class='col-11' style='margin-bottom: 1rem;'>
+                          <div class='col-11 row border p-0' style='margin-bottom: 1rem;'>
+                            <div class='col-12 margin-bottom head-dat' style='margin-bottom: 0.5rem; padding-bottom: 0.5rem'>
+                              <div class='col-11'>
                                 <div class='col-9 border-bottom div--text-title' style='text-align: center; margin: auto;'>
                                   <h5 style='font-size: 1.09rem; margin: 0px'>Datos Personales</h5>
                                 </div>

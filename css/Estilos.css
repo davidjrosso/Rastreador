@@ -1140,3 +1140,9 @@ input[type="radio"] {
   border-radius: 8%;
   background-color: #c6c6c622;
 }
+
+.head-dat {
+  background-color: #545b62;
+  color: white;
+  border-radius: 2%;
+}
