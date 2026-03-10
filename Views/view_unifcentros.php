@@ -164,17 +164,9 @@
   </div>
 </div>
 </div>
-<?php  
-if (isset($_REQUEST['Mensaje'])) {
-  echo "<script type='text/javascript'>
-  swal('".$_REQUEST['Mensaje']."','','success');
-</script>";
-}
-if (isset($_REQUEST['MensajeError'])) {
-  echo "<script type='text/javascript'>
-  swal('".$_REQUEST['MensajeError']."','','warning');
-</script>";
-}
-?>
+<script>
+  let mensajeSuccess = <?php echo (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "''"; ?>;
+  let mensajeError = <?php echo (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "''";?>;
+</script>
 </body>
 </html>

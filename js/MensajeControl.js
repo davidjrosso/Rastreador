@@ -716,6 +716,32 @@ export function seleccionCentro(id, xCentro, xID) {
     ID_Centro.setAttribute('value', xID);
 }
 
+export function buscarEscuelas(id){
+    let xEscuela = document.getElementById('SearchEscuelas_' + id).value;
+    let textoBusqueda = xEscuela;
+    let xmlhttp = null;
+    let contenidosRecibidos = null;
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        contenidosRecibidos = xmlhttp.responseText;
+        document.getElementById("ResultadosEscuelas_" + id ).innerHTML = contenidosRecibidos;
+        }
+    }
+    xmlhttp.open('POST', '/unif_escuela_lista', true); // Método post y url invocada
+    xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xmlhttp.send('valorBusqueda=' + textoBusqueda + "&ID=" + id);
+}
+
+export function seleccionEscuela(id, xEscuela, xID){
+    let Escuela = document.getElementById("Escuela_" + id);
+    let ID_Escuela = document.getElementById("ID_Escuela_" + id);
+    Escuela.innerHTML = "";
+    Escuela.innerHTML = "<p>"+xEscuela+"</p>";
+    ID_Escuela.setAttribute('value',xID);
+}
+
+
 export function buscarPersonas(id){
     let xNombre = null;
     let xmlhttp = null;

@@ -35,7 +35,11 @@ class EscuelaController
     {
         header('Content-Type: text/html; charset=utf-8');
         if (!isset($_SESSION["Usuario"])) {
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
             include("./Views/Error_Session.php");
+
         } else {
             include("./Views/view_escuelas.php");
         }
@@ -46,6 +50,10 @@ class EscuelaController
     {
         header('Content-Type: text/html; charset=utf-8');
         if (!isset($_SESSION["Usuario"])) {
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+
             include("./Views/Error_Session.php");
         } else {
             include("./Views/view_modescuelas.php");
@@ -59,6 +67,10 @@ class EscuelaController
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+
             include("./Views/view_verescuelas.php");
         }
         exit();
@@ -200,6 +212,11 @@ class EscuelaController
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+
+            $Element = new Elements();
             include("./Views/view_unifescuelas.php");
         }
         exit();
@@ -244,6 +261,71 @@ class EscuelaController
             header('Location: /home?MensajeError=' . $MensajeError);
         }
         
+    }
+
+    public function unif_escuela_lista()
+    {
+        header('Content-Type: text/html; charset=utf-8');
+
+        $consultaBusqueda = $_REQUEST['valorBusqueda'];
+        $id = $_REQUEST["ID"];
+        //Filtro anti-XSS
+        $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
+        $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
+        $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consultaBusqueda);
+
+        $mensaje = "";
+
+        if (isset($consultaBusqueda)) {
+
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            $consulta = mysqli_query($Con->Conexion, "SELECT E.ID_Escuela, E.Codigo, E.Escuela, N.Nivel, E.Localidad FROM escuelas E, nivel_escuelas N WHERE E.ID_Nivel = N.ID_Nivel and E.Escuela LIKE '%$consultaBusqueda%' and E.Estado = 1");
+
+            $filas = mysqli_num_rows($consulta);
+
+            if ($filas === 0) {
+                $mensaje = "<p>No hay ningún registro con ese dato</p>";
+            } else {
+
+                $mensaje .= '<table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        <th scope="col">Codigo</th>			      
+                        <th scope="col">Escuela</th>
+                        <th scope="col">Nivel</th>			      
+                        <th scope="col">Localidad</th>			      
+                        <th scope="col">Accion</th>	
+                        </tr>
+                    </thead>
+                    <tbody>';
+
+                while($resultados = mysqli_fetch_array($consulta)) {
+                    $ID_Escuela = $resultados["ID_Escuela"];			
+                    $Codigo = $resultados['Codigo'];
+                    $Escuela = $resultados['Escuela'];
+                    $Nivel = $resultados['Nivel'];
+                    $Localidad = $resultados['Localidad'];							
+
+                    $mensaje .= '
+                        <tr>
+                        <th scope="row">' . $Codigo . '</th>
+                        <th scope="row">' . $Escuela . '</th>
+                        <th scope="row">' . $Nivel . '</th>
+                        <th scope="row">' . $Localidad . '</th>			      	
+                        <td><button type = "button" class = "btn btn-outline-success" onClick="seleccionEscuela(' . $id . ',\'' . $Escuela . '\',' . $ID_Escuela . ')" data-dismiss="modal">seleccionar</button></td>
+                        </tr>';
+                };//Fin while $resultados
+
+                $mensaje .= '</tbody>
+                    </table>';
+
+            }; //Fin else $filas
+            $Con->CloseConexion();
+
+        };//Fin isset $consultaBusqueda
+        echo $mensaje;
     }
 
     public function sol_unif_escuela_control()
