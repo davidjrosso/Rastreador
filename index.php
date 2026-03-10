@@ -63,6 +63,7 @@ try {
 	$routes[] = Route::get('home_succes', '/home\?Mensaje={mensaje}', [HomeController::class, 'index']);
 	$routes[] = Route::get('home_error', '/home\?MensajeError={mensaje}', [HomeController::class, 'index']);
 	$routes[] = Route::get('login', '/login', [HomeController::class, 'login']);
+	$routes[] = Route::get('login_error', '/login?MensajeError={mesanje}', [HomeController::class, 'login']);
 	$routes[] = Route::post('login_control', '/login_control', [HomeController::class, 'login_control']);
 	$routes[] = Route::get('logout', '/logout', [HomeController::class, 'logout_control']);
 	$routes[] = Route::get('personas_listado', '/personas', [PersonaController::class, 'listado_personas']);
