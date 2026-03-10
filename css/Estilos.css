@@ -1137,8 +1137,11 @@ input[type="radio"] {
 }
 
 .data-form {
-  border-radius: 8%;
+  border-radius: 5%;
   background-color: #c6c6c622;
+  border-color: #e2dddd;
+  border-width: 0.1px;
+  border-style: solid;
 }
 
 .head-dat {
