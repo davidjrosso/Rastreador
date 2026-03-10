@@ -194,6 +194,7 @@ try {
 	$routes[] = Route::get('escuelas', '/escuela/editar\?ID={id}', [EscuelaController::class, 'mod_escuela']);
 	$routes[] = Route::get('unif_escuelas', '/escuela/unificar', [EscuelaController::class, 'unif_escuelas']);
 	$routes[] = Route::post('sol_unif_escuela_control', '/pedir_unificar_escuelas', [EscuelaController::class, 'sol_unif_escuela_control']);
+	$routes[] = Route::post('unif_escuela_lista', '/unif_escuela_lista', [EscuelaController::class, 'unif_escuela_lista']);
 	$routes[] = Route::post('unif_escuela_control', '/unificar_escuelas', [EscuelaController::class, 'unif_escuela_control']);
 	$routes[] = Route::get('delete_escuela_control', '/delete_escuela\?ID={id}', [EscuelaController::class, 'del_escuela_control']);
 	$routes[] = Route::get('new_escuela', '/escuela/nueva', [EscuelaController::class, 'new_escuela']);
