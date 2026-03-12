@@ -1235,15 +1235,6 @@ if (empty($_REQUEST["ID_Persona"])) {
                             </div>
                             ";
               $tablePrint = "<table class='table'><thead><tr><th></th><th>Datos Personales</th></tr></thead>";
-              $Table .= "<div class='col-2 row div-space-text'>
-                            <div class='col-5 text-secondary '>
-                              <span class='border-bottom'>Id</span>
-                            </div>
-                            <div class='col-7 data-form'>" . $Persona->getID_Persona() . "</div>
-                          </div>";
-              $tablePrint .= "<tr><td>Id</td><td>" . $Persona->getID_Persona() . "</td></tr>";
-              $jsonTable["det_persona"]["id"] = $Persona->getID_Persona();
-              $head_det_persona[] = "id";
               $Table .= "<div class='col-5 row div-space-text'>
                             <div class='col-3 text-secondary '>
                               <span class='border-bottom'>Apellido</span>
