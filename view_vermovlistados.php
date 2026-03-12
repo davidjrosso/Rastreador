@@ -321,6 +321,13 @@ if (empty($_REQUEST["ID_Persona"])) {
               }
           }
 
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = "width-display";
+          input.value = window.screen.availWidth;
+          form.appendChild(input);
+
+          
           document.body.appendChild(form);
           form.submit(); 
       }      
