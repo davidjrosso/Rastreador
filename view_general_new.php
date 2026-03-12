@@ -849,7 +849,6 @@ $TipoUsuario = $account->get_id_tipo_usuario();
                           <label for="ID_Barrio" class="col-md-2 col-form-label LblForm">Barrio: </label>
                           <div class="col-md-9">
                             <?php
-                            $Element = new Elements();
                             echo $Element->CBRepBarrios();
                             ?>
                           </div>
@@ -860,7 +859,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
                         <div id="contenedorBarrios">              
                         </div>
                         <div id="contenedor-calle" class="form-group row" style="margin-bottom: 0.6rem;">
-                          <label for="BotonModalDireccion_1" class="col-md-2 col-form-label LblForm">Domicilio/Familia: </label>
+                          <label for="BotonModalDireccion_1" class="col-md-2 col-form-label LblForm"><span style="display: inline-block;">Domicilio</span>/Familia: </label>
                           <div class="col-md-8 flex-sm-boton">
                               <button type = "button" id="BotonModalDireccion_1" class = "btn btn-lg btn-primary btn-block form-control" style="padding-top: 4px;padding-bottom: 4px;" data-toggle="modal" data-target="#ModalCalle">Seleccione una Calle</button>
                           </div>
