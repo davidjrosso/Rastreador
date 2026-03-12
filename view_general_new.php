@@ -312,7 +312,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
     }
 
     function addMultipleCategoria(xCategoria, xID, element) {
-      if (!listaCategorias.has(xCategoria) && (listaCategorias.size <= 4)) {
+      if (!listaCategorias.has(xCategoria) && (listaCategorias.size <= 7)) {
         listaCategorias.set(xCategoria, xID);
         element.innerHTML = "&#10003";
         element.style.width = "12ch";
@@ -1090,7 +1090,7 @@ $TipoUsuario = $account->get_id_tipo_usuario();
                           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                             <div class="modal-content">
                               <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLongTitle">Seleccione una Calle</h5>
+                                <h5 class="modal-title" id="exampleModalLongTitle" style="margin-left: auto;">Seleccione una Calle</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                   <span aria-hidden="true">&times;</span>
                                 </button>

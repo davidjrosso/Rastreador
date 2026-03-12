@@ -290,7 +290,7 @@ $Element = new Elements();
     }
 
     function addMultipleCategoria(xCategoria, xID, element) {
-      if (!listaCategorias.has(xCategoria) && (listaCategorias.size <= 4)) {
+      if (!listaCategorias.has(xCategoria) && (listaCategorias.size <= 7)) {
         listaCategorias.set(xCategoria, xID);
         element.innerHTML = "&#10003";
         element.style.width = "12ch";
