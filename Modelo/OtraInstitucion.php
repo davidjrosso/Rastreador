@@ -6,7 +6,45 @@ class OtraInstitucion{
     private $Telefono;
     private $Mail;
     private $Estado;
+    private $coneccion;
 
+    //METODO CONSTRUCTOR
+    public function __construct(
+                                $xConeccion = null,
+                                $xID_OtraInstitucion = null,
+                                $xNombre = null,
+                                $xTelefono = null,
+                                $xMail = null,
+                                $xEstado = null
+    ) {
+        $this->coneccion = $xConeccion;
+        if ($xID_OtraInstitucion) {
+            $consulta = "select * 
+                        from otras_instituciones 
+                        where ID_OtraInstitucion = $xID_OtraInstitucion 
+                        and estado = 1";
+            $mensaje_error = "Hubo un problema al consultar los registros";
+            $ret = mysqli_query(
+                        $this->coneccion->Conexion,
+                        $consulta
+            ) or die(
+                $mensaje_error
+            );
+            $row = mysqli_fetch_assoc($ret);
+            $this->ID_OtraInstitucion = (!isset($xID_OtraInstitucion)) ? $row['ID_OtraInstitucion'] : $xID_OtraInstitucion;
+            $this->Nombre = (!isset($xNombre)) ? $row['Nombre'] : $xNombre;
+            $this->Telefono = (!isset($xTelefono)) ? $row['Telefono'] : $xTelefono;
+            $this->Mail = (!isset($xMail)) ? $row['Mail'] : $xMail;
+            $this->Estado = (!isset($xEstado)) ? $row['Estado'] : $xID_OtraInstitucion;
+        } else {
+            $this->ID_OtraInstitucion = $xID_OtraInstitucion;
+            $this->Nombre = $xNombre;
+            $this->Telefono = $xTelefono;
+            $this->Mail = $xMail;
+            $this->Estado = $xEstado;
+        }
+    }
+    
     public static function get_id_by_name($coneccion, $name)
     {
         $consulta = "select * 
@@ -77,19 +115,40 @@ class OtraInstitucion{
         return $this->Estado;
     }
 
-    //METODO CONSTRUCTOR
-    public function __construct(
-                                $xID_OtraInstitucion,
-                                $xNombre,
-                                $xTelefono,
-                                $xMail,
-                                $xEstado
-    ){
-        $this->ID_OtraInstitucion = $xID_OtraInstitucion;
-        $this->Nombre = $xNombre;
-        $this->Telefono = $xTelefono;
-        $this->Mail = $xMail;
-        $this->Estado = $xEstado;
-    }
+    public function save()
+    {
+        $consulta = "INSERT INTO otras_instituciones (
+                                        Nombre, 
+                                        Telefono, 
+                                        Mail, 
+                                        Estado 
+                    )
+                    VALUES ( " . ((!is_null($this->getNombre())) ? "'" . $this->getNombre() . "'" : "null") . ", 
+                            " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono() . "'" : "null") . ", 
+                            " . ((!is_null($this->getMail())) ? "'" . $this->getTelefono() . "'" : "null") . ", 
+                            " . ((!is_null($this->getEstado())) ? $this->getEstado() : "null") . " 
+                    )";
+                    $MensajeErrorConsultar = "No se pudo insertar la institucion";
+                    $ret = mysqli_query($this->coneccion->Conexion, $consulta);
+                    if (!$ret) {
+                        throw new Exception($MensajeErrorConsultar . $consulta, 2);
+                    }
+                    $this->ID_OtraInstitucion = mysqli_insert_id($this->coneccion->Conexion);
 
+    }
+    
+    public function update()
+    {
+        $Consulta = "update otras_instituciones 
+                    set Nombre = " . ((!is_null($this->getNombre())) ? "'" . $this->getNombre() . "'" : "null") . ", 
+                        Telefono = " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono() . "'" : "null") . ", 
+                        Mail = " . ((!is_null($this->getMail())) ? "'" . $this->getMail() . "'" : "null") . ", 
+                        Estado = " . ((!is_null($this->getEstado())) ? $this->getEstado() : "null") . " 
+                    where ID_OtraInstitucion = " . $this->getID_OtraInstitucion();
+                    $MensajeErrorConsultar = "No se pudo actualizar la otra institucion";
+                    if (!$Ret = mysqli_query($this->coneccion->Conexion, $Consulta)) {
+                        throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+                    }
+        
+    }
 }

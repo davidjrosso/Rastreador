@@ -18,18 +18,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/OtraInstitucion.php");
-
-
-header("Content-Type: text/html;charset=utf-8");
-
-$ID_Usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $usuario->get_id_tipo_usuario();
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -48,6 +36,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="./dist/control.js"></script>
   <script>
        $(document).ready(function(){
               var date_input=$('input[name="date"]'); //our date input has the name "date"
@@ -72,14 +61,15 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
         Precio.setAttribute("value",parseFloat(Total).toFixed(2));
         //Terminar esta parte cuando termine lo demas.
        }
-
-  </script>
+      let mensajeError = '<?php echo $mensaje_error;?>';
+      let mensajeSuccess = '<?php echo $mensaje_success;?>';
+      control
+</script>
 
 </head>
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_OTRAS_INSTITUCIONES);
   ?>
   <div class = "col-md-9">
@@ -102,32 +92,10 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               $Con = new Conexion();
               $Con->OpenConexion();
 
-              $ConsultarDatos = "select * from otras_instituciones where ID_OtraInstitucion = $ID_OtraInstitucion";
-              $MensajeErrorDatos = "No se pudo consultar los Datos de la Institución";
-
-              $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
-
-              $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
-
-              $ID_OtraInstitucion = $Ret["ID_OtraInstitucion"];
-              $Nombre = $Ret["Nombre"];                            
-              $Telefono = $Ret["Telefono"];
-              $Mail = $Ret["Mail"];              
-              $Estado = $Ret["Estado"];
-
-              if($Nombre == 'null'){
-                $Nombre = "";
-              }
-
-              if($Telefono == 'null'){
-                $Telefono = "";
-              }
-
-              if($Mail == 'null'){
-                $Mail = "";
-              }
-
-              $InstInstitucion = new OtraInstitucion($ID_OtraInstitucion,$Nombre,$Telefono,$Mail,$Estado);
+              $InstInstitucion = new OtraInstitucion(
+                                                     xConeccion: $Con,
+                                                     xID_OtraInstitucion: $ID_OtraInstitucion
+                                                    );
 
               ?>
             <div class = "col-10">
@@ -181,17 +149,5 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   </div>
 </div>
 </div>
-<?php  
-if(isset($_REQUEST['Mensaje'])){
-  echo "<script type='text/javascript'>
-  swal('".$_REQUEST['Mensaje']."','','success');
-</script>";
-}
-if(isset($_REQUEST['MensajeError'])){
-  echo "<script type='text/javascript'>
-  swal('".$_REQUEST['MensajeError']."','','warning');
-</script>";
-}
-?>
 </body>
 </html>

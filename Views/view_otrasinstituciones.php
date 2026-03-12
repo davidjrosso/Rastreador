@@ -22,13 +22,6 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 
-header("Content-Type: text/html;charset=utf-8");
-
-
-$ID_Usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $usuario->get_id_tipo_usuario();
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -46,6 +39,8 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="./dist/control.js"></script>
+
   <script>
        $(document).ready(function(){
               var date_input=$('input[name="date"]'); //our date input has the name "date"
@@ -57,29 +52,13 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   autoclose: true,
               });
           });
-
-       function Verificar(xID){
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer eliminar esta institución?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'delete_otra_institucion?ID=' + xID;
-                }
-              });
-        }
-
+      let mensajeError = '<?php echo $mensaje_error;?>';
+      let mensajeSuccess = '<?php echo $mensaje_success;?>';
   </script>
-
 </head>
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_OTRAS_INSTITUCIONES);
   ?>
   <div class = "col-md-9">
@@ -93,7 +72,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
     <div class="row">
       <div class = "col"></div>
       <div class = "col-4">
-          <center><button class = "btn btn-secondary" onClick = "location.href='view_newotrasinstituciones.php'">Agregar Nueva Institución</button></center>
+          <center><button class = "btn btn-secondary" onClick = "location.href='/otrainstitucion/nueva'">Agregar Nueva Institución</button></center>
       </div>
       <div class="col-2">
                 <button type="button" class="btn btn-outline-secondary" onclick="location.href = '/'">Volver</button>
@@ -133,7 +112,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
             if(isset($_REQUEST["Filtro"]) && $_REQUEST["Filtro"]!=null){
               $Filtro = $_REQUEST["Filtro"];
               $ID_Filtro = $_REQUEST["ID_Filtro"];
-              $DTGeneral = new CtrGeneral();
 
               switch ($ID_Filtro) {
                 case 'ID': echo $DTGeneral->getOtrasInstitucionesxID($Filtro);break;
@@ -143,7 +121,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                 default: echo $DTGeneral->getOtrasInstitucionesxID($Filtro);break;
               }
             }else{
-              $DTGeneral = new CtrGeneral();
               echo $DTGeneral->getOtrasInstituciones();
             }
           ?>
@@ -151,17 +128,5 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   </div>
 </div>
 </div>
-<?php  
-if(isset($_REQUEST['Mensaje'])){
-  echo "<script type='text/javascript'>
-  swal('".$_REQUEST['Mensaje']."','','success');
-</script>";
-}
-if(isset($_REQUEST['MensajeError'])){
-  echo "<script type='text/javascript'>
-  swal('".$_REQUEST['MensajeError']."','','warning');
-</script>";
-}
-?>
 </body>
 </html>

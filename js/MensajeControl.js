@@ -454,6 +454,22 @@ export function VerificarEliminarNotificacion(xID_Notificacion) {
         });
 }
 
+export function VerificarEliminarOtraInstitucion(xID){
+        swal({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer eliminar esta institución?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+            window.location.href = 'delete_otra_institucion?ID=' + xID;
+        }
+        });
+}
+
+
 export function VerificarModificarUsuario(xID_Solcitud) {
         swal.fire({
         title: "¿Está seguro?",

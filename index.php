@@ -202,12 +202,16 @@ try {
 	$routes[] = Route::get('new_escuela_control', '/insertar_escuela', [EscuelaController::class, 'new_escuela_control']);
 	$routes[] = Route::post('mod_escuela_control', '/modificar_escuela', [EscuelaController::class, 'mod_escuela_control']);
 	$routes[] = Route::get('listado_otras_instituciones', '/otrasinstituciones', [OtraInstitucionController::class, 'listado_otras_instituciones']);
+	$routes[] = Route::get('listado_otras_instituciones', '/otrasinstituciones', [OtraInstitucionController::class, 'listado_otras_instituciones']);
+	$routes[] = Route::get('new_otra_institucion_success', '/otrainstitucion/nueva\?Mensaje={mensaje}', [OtraInstitucionController::class, 'mod_otra_institucion']);
+	$routes[] = Route::get('new_otra_institucion_error', '/otrainstitucion/nueva\?MensajeError={mensaje_error}', [OtraInstitucionController::class, 'mod_otra_institucion']);
 	$routes[] = Route::get('mod_otra_institucion', '/otrainstitucion/editar\?ID={id}', [OtraInstitucionController::class, 'mod_otra_institucion']);
-	$routes[] = Route::get('mod_otra_institucion_control', 'modificar_otra_institucion', [OtraInstitucionController::class, 'mod_otra_institucion_control']);
+	$routes[] = Route::get('mod_otra_institucion_mensaje', '/otrainstitucion/editar\?ID={id}/Mensaje={mensaje}', [OtraInstitucionController::class, 'new_otra_institucion']);
+	$routes[] = Route::post('mod_otra_institucion_control', '/modificar_otra_institucion', [OtraInstitucionController::class, 'mod_otra_institucion_control']);
 	$routes[] = Route::get('unif_otra_institucion', '/otrainstitucion/unificar', [OtraInstitucionController::class, 'unif_otra_institucion']);
 	$routes[] = Route::get('unif_otra_institucion_control', '/unificar_otra_institucion', [OtraInstitucionController::class, 'unif_otra_institucion_control']);
 	$routes[] = Route::get('del_otra_institucion_control', '/delete_otra_institucion\?ID={id}', [OtraInstitucionController::class, 'del_otra_institucion_control']);
-	$routes[] = Route::get('new_otra_institucion', '/view_newotrasinstituciones.php', [OtraInstitucionController::class, 'new_otra_institucion']);
+	$routes[] = Route::get('new_otra_institucion', '/otrainstitucion/nueva', [OtraInstitucionController::class, 'new_otra_institucion']);
 	$routes[] = Route::get('new_otra_institucion_control', '/insertar_otra_institucion\?ID={id}', [OtraInstitucionController::class, 'new_otra_institucion_control']);
 	$routes[] = Route::post('error_session', '/error_session.php', [HomeController::class, 'error_session']);
 	$routes[] = Route::get('not_found', '/not_found', [HomeController::class, 'not_found']);

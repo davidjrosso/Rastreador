@@ -17,28 +17,6 @@
  * along with Rastreador3; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
-session_start(); 
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-
-header("Content-Type: text/html;charset=utf-8");
-
-/*     CONTROL DE USUARIOS                    */
-if (!isset($_SESSION["Usuario"])) {
-    header("Location: Error_Session.php");
-}
-
-$Con = new Conexion();
-$Con->OpenConexion();
-$ID_Usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $usuario->get_id_tipo_usuario();
-$Con->CloseConexion();
-
-$mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
-$mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 
 ?>
 <!DOCTYPE html>
@@ -46,6 +24,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 <head>
   <title>Rastreador III</title>
   <meta charset="utf-8">
+  <base href="/">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -88,26 +67,16 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
   </script>
   -->
   <script type="text/javascript">
-
 			$(document).ready(function() {
 				let mensajeError = '<?php echo $mensaje_error;?>';
 				let mensajeSuccess = '<?php echo $mensaje_success;?>';
-
-			  controlMensaje($mensaje_success, $mensaje_error);
 			});
-      var getImport = document.quearySelector('link [rel = import]');
-      var getContent = getImport.import.querySelector('body');
-
-      var ContenidoPagina = document.getElementById("ContenidoPagina");
-
-      ContenidoPagina.appendChild(document.importNode(getContent, true));
   </script>
 
 </head>
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_OTRAS_INSTITUCIONES);
   ?>
   <div class = "col-md-9">
