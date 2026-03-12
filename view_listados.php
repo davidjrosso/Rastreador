@@ -352,7 +352,7 @@ $Element = new Elements();
           }
           categoriaNumero++;
       });
-      for (let index = categoriaNumero; index <= 5; index++) {
+      for (let index = categoriaNumero; index <= 8; index++) {
         if (index == 1) {
           $("#Categoria").html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalCategoria'>Seleccione Categoría</button>");
           $("#ID_Categoria").val(null);
