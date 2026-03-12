@@ -701,7 +701,7 @@ $Element = new Elements();
               <div id="contenedorBarrios">              
               </div> 
               <div id="contenedor-calle" class="form-group row" style="margin-bottom: 0.6rem;">
-                <label for="BotonModalDireccion_1" class="col-md-2 col-form-label LblForm">Domicilio/Familia: </label>
+                <label for="BotonModalDireccion_1" style="overflow-wrap: break-word" class="col-md-2 col-form-label LblForm"><span style="display: inline-block;">Domicilio</span>/<span>Familia:</span> </label>
                 <div class="col-md-8 flex-sm-boton">
                     <button type = "button" id="BotonModalDireccion_1" class = "btn btn-lg btn-primary btn-block form-control" style="padding-top: 4px;padding-bottom: 4px;" data-toggle="modal" data-target="#ModalCalle">Seleccione una Calle</button>
                 </div>
