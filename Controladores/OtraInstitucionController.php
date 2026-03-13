@@ -23,6 +23,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Parametria.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Accion.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/OtraInstitucion.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Movimiento.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_Unificacion.php");
 
 
@@ -35,80 +37,60 @@ class OtraInstitucionController
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
+            $mensaje_success = $mensaje;
+            $mensaje_error = "";            
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+
             include("./Views/view_otrasinstituciones.php");
         }
         exit();
     }
 
-    public function mod_otra_institucion($id_otra_institucion)
+    public function mod_otra_institucion($id = null, $mensaje = null)
     {
         header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
+            $mensaje_success = $mensaje;
+            $mensaje_error = "";            
+
+            $Element = new Elements();
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+
             include("./Views/view_modotrasinstituciones.php");
         }
         exit();
     }
 
-    public function sol_del_control($id_otra_institucion)
-    {
-        $ID_Usuario = $_SESSION["Usuario"];
-
-        $ID_otra_institucion= $_REQUEST["ID"];
-        $Fecha = date("Y-m-d");
-        $Estado = 1;
-
-        $Con = new Conexion();
-        $Con->OpenConexion();
-
-        $Consultarotra_institucion = "select id_otra_institucion, otra_institucion, cod_otra_institucion from otra_institucion where id_otra_institucion = $ID_otra_institucion";
-
-        if (!$Retotra_institucion = mysqli_query($Con->Conexion,$Consultarotra_institucion)) {
-            throw new Exception("Problemas al consultar datos de otra_institucion. Consulta: ".$Consultarotra_institucion, 1);			
-        }
-        $Tomarotra_institucion = mysqli_fetch_assoc($Retotra_institucion);
-        $otra_institucion = $Tomarotra_institucion['otra_institucion'];
-        $Cod_otra_institucion = $Tomarotra_institucion["cod_otra_institucion"];
-
-        $Solicitud = new Solicitud_Eliminarotra_institucion(0,$Fecha,$otra_institucion,$Cod_otra_institucion,$Estado,$ID_Usuario,$ID_otra_institucion);
-        $Insert_Solicitud = "insert into solicitudes_eliminarotra_institucions(Fecha,otra_institucion,Cod_otra_institucion,Estado,ID_Usuario,ID_otra_institucion) values('{$Solicitud->getFecha()}','{$Solicitud->getotra_institucion()}','{$Solicitud->getCod_otra_institucion()}',{$Solicitud->getEstado()},{$Solicitud->getID_Usuario()},{$Solicitud->getID_otra_institucion()})";
-        $MensajeError = "No se pudo enviar la solicitud";
-
-        mysqli_query($Con->Conexion,$Insert_Solicitud) or die($MensajeError." - ".$Insert_Solicitud);
-
-        $Con->CloseConexion();
-        $Mensaje = "La solicitud de eliminación se envió a los administradores para ser confirmada.";
-        header('Location: /otra_institucions?Mensaje='.$Mensaje);
-    }
     public function del_otra_institucion_control($id_otra_institucion)
     {
         $ID_Usuario = $_SESSION["Usuario"];
 
-        $ID_otra_institucion = $_REQUEST["ID"];
+        $id = $id_otra_institucion;
 
-        $Fecha = date("Y-m-d");
+        $fecha = date("Y-m-d");
         $ID_TipoAccion = 3;
-        $Detalles = "El usuario con ID: $ID_Usuario ha dado de baja una otra_institucion. Datos: otra_institucion: $ID_otra_institucion";
+        $detalles = "El usuario con ID: $ID_Usuario ha dado de baja una otra_institucion. Datos: otra_institucion: $id";
 
         try {
             $Con = new Conexion();
             $Con->OpenConexion();
 
-            $Consulta = "update otra_institucion set estado = 0 where id_otra_institucion = $ID_otra_institucion";
-            if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
-                throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 0);		
-            }
-            $ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
-            if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
-                throw new Exception("Error al intentar registrar Accion. Consulta: " . $ConsultaAccion, 1);
-            }
+            $otra_institucion = new OtraInstitucion(xConeccion: $Con, xID_OtraInstitucion: $id);
+            $otra_institucion->delete();
 
-            $ConsultaSolicitud = "update solicitudes_eliminarotra_institucions set estado = 0 where ID_otra_institucion = $ID_otra_institucion";
-            if(!$Ret = mysqli_query($Con->Conexion,$ConsultaSolicitud)){
-                throw new Exception("Problemas en la consulta. Consulta: " . $ConsultaSolicitud, 3);			
-            }
-
+            $accion = new Accion(
+                                 xaccountid: $ID_Usuario,
+                                 xFecha: $fecha, 
+                                 xDetalles: $detalles);
+            $accion->save();
             $Con->CloseConexion();
             $Mensaje = "La otra_institucion fue eliminada Correctamente";
             header('Location: /home?Mensaje=' . $Mensaje);
@@ -117,175 +99,38 @@ class OtraInstitucionController
         }
     }
 
-    public function sol_mod_control(
-                                    $id_otra_institucion = null,
-                                    $mensaje = null,
-                                    $mensaje_error = null
-    ){
-        $ID_Usuario = $_SESSION["Usuario"];
-
-        $ID_Motivo = $_REQUEST["ID"];
-        $Motivo = $_REQUEST["Motivo"];
-        $Codigo = strtoupper($_REQUEST["Codigo"]);
-        $ID_otra_institucion = $_REQUEST["ID_otra_institucion"];
-        $Num_Motivo = 0;
-
-        $Fecha = date("Y-m-d");
-        $Estado = 1;
-
-        if ($ID_otra_institucion > 0) {
-            $Con = new Conexion();
-            $Con->OpenConexion();
-
-            $otra_institucion = new otra_institucion(
-                                       xConecction: $Con,
-                                       xID_otra_institucion: $ID_otra_institucion
-                                      );
-            $Cod_otra_institucion = $otra_institucion->getCod_otra_institucion();
-
-            $Solicitud = new Solicitud_ModificarMotivo(
-                                                  0,
-                                                    $Fecha,
-                                                   $Motivo,
-                                                   $Codigo,
-                                                   $Cod_otra_institucion,
-                                                   $Num_Motivo,
-                                                   $Estado,
-                                                   $ID_Usuario,
-                                                   $ID_Motivo
-                                                      );
-            $Insert_Solicitud = "insert into solicitudes_modificarmotivos(Fecha,Motivo,Codigo,Cod_otra_institucion,Num_Motivo,Estado,ID_Usuario,ID_Motivo) values('{$Solicitud->getFecha()}','{$Solicitud->getMotivo()}','{$Solicitud->getCodigo()}','{$Solicitud->getCod_otra_institucion()}',{$Solicitud->getNum_Motivo()},{$Solicitud->getEstado()},{$Solicitud->getID_Usuario()},{$Solicitud->getID_Motivo()})";
-            $MensajeError = "No se pudo enviar la solicitud";
-
-            mysqli_query($Con->Conexion,$Insert_Solicitud) or die($MensajeError);
-
-            $Con->CloseConexion();
-            $Mensaje = "La solicitud de modificación se envió a los administradores para ser confirmada.";
-            header('Location: /motivos?Mensaje=' . $Mensaje);
-        } else {
-            $MensajeError = "Debe seleccionar una otra_institucion";
-            header('Location: /motivo/editar?ID=' . $ID_Motivo . '&MensajeError=' . $MensajeError);
-        }
-        exit();
-    }
-
     public function mod_otra_institucion_control()
     {
         $ID_Usuario = $_SESSION["Usuario"];
-        $ID_otra_institucion = $_REQUEST["ID_otra_institucion"];
-        $ID_Solicitud = $_REQUEST["ID"];
-        $Codigo = strtoupper($_REQUEST["Codigo"]);
-        $otra_institucion = $_REQUEST["otra_institucion"];
-        $ID_Forma = $_REQUEST["ID_Forma"];
-        $NuevoColor = base64_decode($_REQUEST["CodigoColor"]);
+        $id = $_REQUEST["ID"];
+        $nombre = strtoupper($_REQUEST["Nombre"]);
+        $mail = $_REQUEST["Mail"];
+        $Telefono  = $_REQUEST["Telefono"];
 
-        $Fecha = date("Y-m-d");
+        $fecha = date("Y-m-d");
         $ID_TipoAccion = 2;
 
         try {
             $Con = new Conexion();
             $Con->OpenConexion();
 
-            $ConsultarDatosViejos = "select * from otra_institucion where id_otra_institucion = $ID_otra_institucion and estado = 1";
-            $ErrorDatosViejos = "No se pudieron consultar los datos";
-            if(!$RetDatosViejos = mysqli_query($Con->Conexion,$ConsultarDatosViejos)){
-                throw new Exception("Error al intentar registrar. Consulta: ".$ConsultarDatosViejos, 1);
-            }
-            $TomarDatosViejos = mysqli_fetch_assoc($RetDatosViejos);
-            $Cod_otra_institucionViejo = $TomarDatosViejos["cod_otra_institucion"];
-            $otra_institucionViejo = $TomarDatosViejos["otra_institucion"];
-            $ID_FormaViejo = $TomarDatosViejos["ID_Forma"];
-            $ColorViejo = $TomarDatosViejos["color"];
+            $otra_institucion = new OtraInstitucion(xConeccion: $Con, xID_OtraInstitucion: $id);
+            if ($nombre) $otra_institucion->setNombre($nombre);
+            if ($mail) $otra_institucion->setMail($mail);
+            if ($Telefono) $otra_institucion->setTelefono($Telefono);
+            if ($nombre || $mail || $Telefono) $otra_institucion->update();
 
-            $Consulta = "update motivos 
-                        set cod_otra_institucion = '$Codigo' 
-                        where cod_otra_institucion = '$Cod_otra_institucionViejo' 
-                        and estado = 1";
+            $detalles = "El usuario con ID: $ID_Usuario ha modificado la otra_institucion: $id. Datos: Dato Anterior: $nombre , Dato Nuevo: $nombre - Dato Anterior: $mail , Dato Nuevo: $mail - Dato Anterior: $Telefono , Dato Nuevo: $Telefono";
+            $accion = new Accion(
+                                 xaccountid: $ID_Usuario,
+                                 xFecha: $fecha, 
+                                 xDetalles: $detalles);
+            $accion->save();
 
-            $CodigoColorEsc = mysqli_real_escape_string($Con->Conexion, $NuevoColor);
-            $Consulta = "update otra_institucion 
-                        set cod_otra_institucion = '$Codigo', 
-                            otra_institucion = '$otra_institucion', 
-                            ID_Forma = $ID_Forma, 
-                            color = '$CodigoColorEsc' 
-                        where id_otra_institucion = $ID_otra_institucion 
-                        and estado = 1";
-            
-            if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
-                throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 2);		
-            }
-
-            $Detalles = "El usuario con ID: $ID_Usuario ha modificado la otra_institucion: $ID_otra_institucion. Datos: Dato Anterior: $Cod_otra_institucionViejo , Dato Nuevo: $Codigo - Dato Anterior: $otra_institucionViejo , Dato Nuevo: $otra_institucion - Dato Anterior: $ID_FormaViejo , Dato Nuevo: $ID_Forma - Dato Anterior: $ColorViejo , Dato Nuevo: $NuevoColor con id solicitud : $ID_Solicitud";
-            $ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
-            if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
-                throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 3);
-            }
-
-            $ConsultaPermisos = "select tip.ID_TipoUsuario, IF(slp.ID_TipoUsuario IS NULL, 'si', 'no') as disable
-                                from (SELECT * FROM solicitudes_permisos WHERE ID = {$ID_Solicitud} and estado = 1) slp right join Tipo_Usuarios tip ON slp.ID_TipoUsuario = tip.ID_TipoUsuario";
-            $MessageError = "Problemas al consultar Solicitudes Permisos";
-            if(!$Resultados = mysqli_query($Con->Conexion,$ConsultaPermisos)){
-                throw new Exception("No se pudo insertar el conjunto de permisos. Consulta: ".$ConsultaPermisos, 2);
-            }
-            while ($RetPermisos = mysqli_fetch_array($Resultados)) {
-                $GrupoUsuarios = $RetPermisos["ID_TipoUsuario"];
-
-                $ConsultaPermisosotra_institucion = "select *
-                                            from otra_institucions_roles
-                                            where id_otra_institucion = {$ID_otra_institucion}
-                                                and id_tipousuario = {$GrupoUsuarios} 
-                                                and estado = 1";
-
-                $MessageError = "Problemas al consultar otra_institucions Permisos";
-                if(!$ResultadosPermisosotra_institucions = mysqli_query($Con->Conexion,$ConsultaPermisosotra_institucion)){
-                    throw new Exception("No se pudo consultar conjunto de permisos sobre la otra_institucion. Consulta: ".$ConsultaPermisosotra_institucion, 2);
-                }
-
-                if(mysqli_num_rows($ResultadosPermisosotra_institucions) == 0){
-                    if( $RetPermisos["disable"] == "no"){
-                        $Insert_Permiso = "insert into otra_institucions_roles(id_otra_institucion, fecha, ID_TipoUsuario, estado) values('{$ID_otra_institucion}', '{$Fecha}','{$GrupoUsuarios}', 1)";
-                        if(!$RetID = mysqli_query($Con->Conexion,$Insert_Permiso)){
-                            throw new Exception("No se pudo actualizar el permisos. Consulta: ".$Insert_Permiso, 2);
-                        }
-                        $updatePermisos = "update solicitudes_permisos
-                                        set estado = 0
-                                        where ID = {$ID_Solicitud}
-                                            and ID_TipoUsuario = {$GrupoUsuarios} 
-                                            and estado = 1";
-                        $MensajeError = "No se pudo dar de baja el permiso otra_institucion {$ID_otra_institucion} rol {$GrupoUsuarios}";
-                        $ResultadosUpdate = mysqli_query($Con->Conexion,$updatePermisos) or die($MessageError);
-                    }
-                } else {
-                    if( $RetPermisos["disable"] == "si"){
-                        $updatePermisos = "update otra_institucions_roles
-                                        set estado = 0
-                                        where id_otra_institucion = {$ID_otra_institucion}
-                                        and ID_TipoUsuario = {$GrupoUsuarios} 
-                                        and estado = 1";
-                        $MensajeError = "No se pudo dar de baja el permiso otra_institucion {$ID_otra_institucion} rol {$GrupoUsuarios}";
-                        if(!$RetID = mysqli_query($Con->Conexion,$updatePermisos)){
-                            throw new Exception($MensajeError . ". Consulta: ".$updatePermisos, 2);
-                        }
-                    } else {
-                        $updatePermisos = "update solicitudes_permisos
-                                        set estado = 0
-                                        where ID = {$ID_Solicitud}
-                                        and ID_TipoUsuario = {$GrupoUsuarios} 
-                                        and estado = 1";
-                        $MensajeError = "No se pudo dar de baja el permiso otra_institucion {$ID_otra_institucion} rol {$GrupoUsuarios}";
-                        $ResultadosUpdate = mysqli_query($Con->Conexion,$updatePermisos) or die($MessageError);
-                    }
-                }
-            }
-
-            $ConsultaSolicitud = "update solicitudes_modificarotra_institucions set estado = 0 where Codigo = '$Codigo' and estado = 1";
-            if(!$Ret = mysqli_query($Con->Conexion,$ConsultaSolicitud)){
-                throw new Exception("Problemas en la consulta. Consulta: ".$ConsultaSolicitud, 3);			
-            }
-
+            $mensaje = "La otra_institucion se modifico Correctamente";
             $Con->CloseConexion();
-            $Mensaje = "La otra_institucion se modifico Correctamente";
-            header('Location: /home.php?ID=' . $ID_otra_institucion . '&Mensaje=' . $Mensaje);
+            header("Content-Type: text/html;charset=utf-8");
+            header('Location: /otrainstitucion/editar?ID=' . $id . '&Mensaje=' . $mensaje);
         } catch (Exception $e) {
             echo "Error: ".$e->getMessage();
         }
@@ -308,7 +153,7 @@ class OtraInstitucionController
         $ID_Institucion_1 = $_REQUEST["ID_Institucion_1"];
         $ID_Institucion_2 = $_REQUEST["ID_Institucion_2"];
 
-        if($ID_Institucion_1 > 0 && $ID_Institucion_2 > 0){
+        if ($ID_Institucion_1 > 0 && $ID_Institucion_2 > 0) {
             $Con = new Conexion();
             $Con->OpenConexion();
 
@@ -337,4 +182,65 @@ class OtraInstitucionController
         }
         exit();
     }
+
+    public function new_otra_institucion($mensaje = null, $mensaje_error = null)
+    {
+        if (!isset($_SESSION["Usuario"])) {
+
+            include("./Views/Error_Session.php");
+        } else {
+            header("Content-Type: text/html;charset=utf-8");
+            $mensaje_success = $mensaje;
+
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+
+            include("./Views/view_newotrasinstituciones.php");
+        }
+        exit();
+        
+    }
+    public function new_otra_institucion_control()
+    {
+        $id_usuario = $_SESSION['Usuario'];
+        $name = (!empty($_REQUEST['Nombre'])) ? ucfirst($_REQUEST['Nombre']) : null;
+        $telefono = (!empty($_REQUEST['Telefono'])) ? $_REQUEST['Telefono'] : null;
+        $mail = (!empty($_REQUEST['Mail'])) ? $_REQUEST['Mail'] : null;
+        $estado = 1;
+        $fecha = date('Y-m-d');
+
+        try {
+            $con = new Conexion();
+            $con->OpenConexion();
+            if (OtraInstitucion::get_id_by_name(coneccion: $con, name: $name)) {
+                $con->CloseConexion();
+                $mensaje = "Ya existe una Institución con ese Nombre";
+                header('Location: /otrainstitucion/nueva?MensajeError=' . $mensaje);
+            } else {
+                $otra_institucion = new OtraInstitucion(
+                                                        xConeccion: $con,
+                                                        xNombre: $name,
+                                                        xTelefono: $telefono,
+                                                        xMail: $mail,
+                                                        xEstado: $estado);
+                $otra_institucion->save();
+                $detalle = "el usuario $id_usuario a registrado una institucion. datos : name - $name  telefono - $telefono  mail : $mail .";
+                $accion = new Accion(
+                                     xDetalles: $detalle,
+                                     xFecha: $fecha,
+                                     xaccountid: $id_usuario);
+                $accion->save();
+                $mensaje = "La Institución se registro Correctamente";
+                header('Location: ../otrainstitucion/nueva?Mensaje=' . $mensaje);
+            }
+        } catch (Exception $e) {
+            $con->CloseConexion();
+            echo $e->getCode();
+        }
+    }
+
+
 }

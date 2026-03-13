@@ -59,7 +59,7 @@ class OtraInstitucion{
             $mensaje_error
         );
         $row = mysqli_fetch_assoc($ret);
-        $id = (empty($row["ID_OtraInstitucion"])) ? 1 : $row["ID_OtraInstitucion"];
+        $id = (empty($row["ID_OtraInstitucion"])) ? 0 : $row["ID_OtraInstitucion"];
         return $id;
     }
 
@@ -151,4 +151,17 @@ class OtraInstitucion{
                     }
         
     }
+
+    public function delete()
+    {
+        $Consulta = "update otras_instituciones 
+                    set Estado = 0 
+                    where ID_OtraInstitucion = " . $this->getID_OtraInstitucion();
+                    $MensajeErrorConsultar = "No se pudo delete  otra institucion";
+                    if (!$Ret = mysqli_query($this->coneccion->Conexion, $Consulta)) {
+                        throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+                    }
+        
+    }
+
 }

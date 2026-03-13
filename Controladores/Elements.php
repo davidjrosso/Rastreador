@@ -2920,7 +2920,7 @@ public function getMenuSeguridadUsuario($ID){
   public function menuDeNavegacion($TipoUsuario, $ID_Usuario, $pagina) 
   {
     if ($TipoUsuario == 1) {
-      $menu = "<div class='col-md-3'>
+      $menu = "<div class='col-md-2'>
                   <div class='nav-side-menu'>" . 
                     self::CBSessionNombreUsuario($ID_Usuario) . 
                     "<div class='brand'>General</div>

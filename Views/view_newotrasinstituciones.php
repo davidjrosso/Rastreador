@@ -66,12 +66,6 @@
 
   </script>
   -->
-  <script type="text/javascript">
-			$(document).ready(function() {
-				let mensajeError = '<?php echo $mensaje_error;?>';
-				let mensajeSuccess = '<?php echo $mensaje_success;?>';
-			});
-  </script>
 
 </head>
 <body>
@@ -79,7 +73,7 @@
 <?php
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_OTRAS_INSTITUCIONES);
   ?>
-  <div class = "col-md-9">
+  <div class = "col-md-10">
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
@@ -90,18 +84,18 @@
     <div class="row">
       <div class="col"></div>
       <div class="col-10">
-          <div class="row">
-              <center><button class = "btn btn-secondary btn-sm" onClick="location.href ='view_newmovimientos.php'">Agregar Nuevo Movimiento</button></center>
+          <div class="row" style="justify-content: center;">
+              <center><button class = "btn btn-secondary btn-sm" onClick="location.href ='/movimiento/nuevo'">Agregar Nuevo Movimiento</button></center>
           </div>
       </div>
       <div class="col"></div>
     </div>
     <br>
-     <div class = "row">
+     <div class = "row" style="justify-content: center;">
       <div class = "col-10">
           <!-- Carga -->
           <p class = "Titulos">Cargar Nueva Institución</p>
-          <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/InsertOtraInstitucion.php">
+          <form method = "post" onKeydown="return event.key != 'Enter';" action = "/insertar_otra_institucion">
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nombre *: </label>
               <div class="col-md-10">
@@ -109,13 +103,13 @@
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Telefono: </label>
+              <label for="Telefono" class="col-md-2 col-form-label LblForm">Telefono: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Telefono" id="Telefono" autocomplete="off">
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">E-Mail: </label>
+              <label for="Mail" class="col-md-2 col-form-label LblForm">E-Mail: </label>
               <div class="col-md-10">
                 <input type="text" class="form-control" name = "Mail" id="Mail" autocomplete="off">
               </div>
@@ -134,8 +128,12 @@
               </div>
           </div>
           <!-- Fin Carga -->
+      </div>
+    </div>
+  <script type="text/javascript">
+				let mensajeError = '<?php echo $mensaje_error;?>';
+				let mensajeSuccess = '<?php echo $mensaje_success;?>';
+</script>
   </div>
-</div>
-</div>
 </body>
 </html>
