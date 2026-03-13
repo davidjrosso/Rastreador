@@ -569,6 +569,24 @@ if (empty($_REQUEST["ID_Persona"])) {
               } else {
                 $ID_Categoria5 = 0;
               }
+              if (isset($_REQUEST["ID_Categoria6"])) {
+                $ID_Categoria6 = $_REQUEST["ID_Categoria6"];
+                $CategoriasOpciones["ID_Categoria6"] = $ID_Categoria6;
+              } else {
+                $ID_Categoria6 = 0;
+              }
+              if (isset($_REQUEST["ID_Categoria7"])) {
+                $ID_Categoria7 = $_REQUEST["ID_Categoria7"];
+                $CategoriasOpciones["ID_Categoria7"] = $ID_Categoria7;
+              } else {
+                $ID_Categoria7 = 0;
+              }
+              if (isset($_REQUEST["ID_Categoria8"])) {
+                $ID_Categoria8 = $_REQUEST["ID_Categoria8"];
+                $CategoriasOpciones["ID_Categoria8"] = $ID_Categoria8;
+              } else {
+                $ID_Categoria8 = 0;
+              }
 
               $ID_Escuela = $_REQUEST["ID_Escuela"];
               if (isset($_REQUEST["Trabajo"])) {
