@@ -1619,7 +1619,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
                                          );
 
             $filtro_categoria = array_reduce($categorias,
-                                       function ($categorias, $valor){
+                                       function ($categoria, $valor){
                                                     $con = new Conexion();
                                                     $con->OpenConexion();
                                                     $ret_categoria = new Categoria(
@@ -1627,7 +1627,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
                                                                                    xConecction: $con
                                                                                 );
                                                     $con->CloseConexion();
-                                                    return $categorias . " - " . $ret_categoria->getCategoria();
+                                                    return $categoria . " - " . $ret_categoria->getCategoria();
                                                  },
                                         "Categorias: "
                                          );
