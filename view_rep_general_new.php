@@ -1580,7 +1580,8 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             $Mostrar = (isset($_REQUEST["Mostrar"])) ? $_REQUEST["Mostrar"] : 0;
             $ID_CentroSalud = (isset($_REQUEST["ID_CentroSalud"])) ? $_REQUEST["ID_CentroSalud"] : null;
             $ID_OtraInstitucion = (isset($_REQUEST["ID_OtraInstitucion"])) ? $_REQUEST["ID_OtraInstitucion"] : null;
-            $ID_Responsable = array_filter($_REQUEST["ID_Responsable"], function ($e, $val) {
+            $list_res = (!empty($_REQUEST["ID_Responsable"])) ? $_REQUEST["ID_Responsable"] : [];
+            $ID_Responsable = array_filter($list_res, function ($e, $val) {
               return !empty($e);
             }, ARRAY_FILTER_USE_BOTH);
 
