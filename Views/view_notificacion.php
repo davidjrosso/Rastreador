@@ -1,19 +1,4 @@
 <?php 
-session_start(); 
-require_once($_SERVER['DOCUMENT_ROOT'] . "/Controladores/Elements.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Account.php");
-header("Content-Type: text/html;charset=utf-8");
-
-/*     CONTROL DE USUARIOS                    */
-if(!isset($_SESSION["Usuario"])){
-    header("Location: Error_Session.php");
-}
-
-$id_usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $id_usuario);
-$tipo_usuario = $usuario->get_id_tipo_usuario();
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -70,7 +55,6 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion(
                                   TipoUsuario: $tipo_usuario, 
                                   ID_Usuario: $id_usuario, 
@@ -88,7 +72,7 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
     <br>
      <div class = "row">
       <div class = "col-10">
-          <form method = "post" action = "Controladores/CtrBuscarNotificacion.php">
+          <form method = "get" action = "/lista_notificacion_control">
             <div class="form-group row" style="justify-content: center">
               <label for="valor_filtro" class="col-md-1 col-form-label LblForm">Buscar: </label>
               <div class="col-md-3">
@@ -103,17 +87,14 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
               <div class="col-md-3">
               </div>
               <div class="col-md-3">
-                <button type="button" class="btn btn-outline-secondary" onclick="location.href = '/'">Volver</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="location.href = '/home'">Volver</button>
               </div>
             </div>
           </form>
           <br><br>
         <div class = "row">
           <?php 
-            $dt_general = new CtrGeneral();
             if(!empty($_REQUEST["ID_Filtro"])){
-              $valor = $_REQUEST["Filtro"];
-              $id_filtro = $_REQUEST["ID_Filtro"];
               echo $dt_general->get_lista_notificaciones( $id_filtro );
             } else {
               echo $dt_general->get_lista_notificaciones();
@@ -123,13 +104,6 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
   </div>
 </div>
 </div>
-<?php  
-if(isset($_REQUEST['Mensaje'])){
-  echo "<script type='text/javascript'>
-    swal('".$_REQUEST['Mensaje']."','','success');
-</script>";
-}
-?>
 <?php
 /*
  *

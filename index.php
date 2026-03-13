@@ -28,6 +28,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/ReporteListadoControlle
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CategoriaController.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/EscuelaController.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CentroSaludController.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/NotificacionController.php");
+
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CalleController.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/BarrioController.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/OtraInstitucionController.php");
@@ -212,7 +214,12 @@ try {
 	$routes[] = Route::get('unif_otra_institucion_control', '/unificar_otra_institucion', [OtraInstitucionController::class, 'unif_otra_institucion_control']);
 	$routes[] = Route::get('del_otra_institucion_control', '/delete_otra_institucion\?ID={id}', [OtraInstitucionController::class, 'del_otra_institucion_control']);
 	$routes[] = Route::get('new_otra_institucion', '/otrainstitucion/nueva', [OtraInstitucionController::class, 'new_otra_institucion']);
-	$routes[] = Route::get('new_otra_institucion_control', '/insertar_otra_institucion\?ID={id}', [OtraInstitucionController::class, 'new_otra_institucion_control']);
+	$routes[] = Route::get('new_otra_institucion_success', '/otrainstitucion/nueva\?Mensaje={mensaje}', [OtraInstitucionController::class, 'new_otra_institucion']);
+	$routes[] = Route::get('new_otra_institucion_error', '/otrainstitucion/nueva\?MensajeError={mensaje_error}', [OtraInstitucionController::class, 'new_otra_institucion']);
+	$routes[] = Route::get('notificacion', '/notificacion', [NotificacionController::class, 'listado_notificacion']);
+	$routes[] = Route::get('listado_notificacion_control', '/lista_notificacion_control\?ID_Filtro={id_filtro}', [NotificacionController::class, 'listado_notificacion_control']);
+	$routes[] = Route::get('notificacion_filtro', '/notificacion\?ID_Filtro={id_filtro}', [NotificacionController::class, 'listado_notificacion']);
+	$routes[] = Route::get('new_otra_institucion_control', '/insertar_otra_institucion', [OtraInstitucionController::class, 'new_otra_institucion_control']);
 	$routes[] = Route::post('error_session', '/error_session.php', [HomeController::class, 'error_session']);
 	$routes[] = Route::get('not_found', '/not_found', [HomeController::class, 'not_found']);
 	$routes[] = Route::get('not_allowed', '/not_allowed', [HomeController::class, 'metodo_no_aceptado']);
