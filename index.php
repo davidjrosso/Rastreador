@@ -20,6 +20,7 @@
 
 session_start();
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/SolicitudController.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/PersonaController.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/HomeController.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/MovimientoController.php");
@@ -219,6 +220,13 @@ try {
 	$routes[] = Route::get('notificacion', '/notificacion', [NotificacionController::class, 'listado_notificacion']);
 	$routes[] = Route::get('listado_notificacion_control', '/lista_notificacion_control\?ID_Filtro={id_filtro}', [NotificacionController::class, 'listado_notificacion_control']);
 	$routes[] = Route::get('notificacion_filtro', '/notificacion\?ID_Filtro={id_filtro}', [NotificacionController::class, 'listado_notificacion']);
+	$routes[] = Route::get('solicitud', '/solicitud', [SolicitudController::class, 'listado_solicitud']);
+	$routes[] = Route::get('listado_notificacion_control', '/lista_notificacion_control\?ID_Filtro={id_filtro}', [NotificacionController::class, 'listado_notificacion_control']);
+	$routes[] = Route::get('notificacion_filtro', '/notificacion\?ID_Filtro={id_filtro}', [NotificacionController::class, 'listado_notificacion']);
+	$routes[] = Route::get('solicitud', '/solicitud', [SolicitudController::class, 'listado_solicitud']);
+	$routes[] = Route::get('solicitud_filtr', '/solicitud\?filtro={filtro}/ID_Filtro={id_filtro}', [SolicitudController::class, 'listado_solicitud']);
+	$routes[] = Route::get('listado_solicitud_control', '/listado_solicitud_control\?filtro={filtro}/ID_Filtro={id_filtro}', [SolicitudController::class, 'listado_solicitud_control']);
+
 	$routes[] = Route::get('new_otra_institucion_control', '/insertar_otra_institucion', [OtraInstitucionController::class, 'new_otra_institucion_control']);
 	$routes[] = Route::post('error_session', '/error_session.php', [HomeController::class, 'error_session']);
 	$routes[] = Route::get('not_found', '/not_found', [HomeController::class, 'not_found']);
