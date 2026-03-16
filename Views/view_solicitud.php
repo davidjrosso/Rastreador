@@ -1,19 +1,4 @@
 <?php
-session_start();
-require_once "Controladores/Elements.php";
-require_once "Controladores/CtrGeneral.php";
-require_once "Modelo/Account.php";
-header("Content-Type: text/html;charset=utf-8");
-
-/*     CONTROL DE USUARIOS                    */
-if (!isset($_SESSION["Usuario"])) {
-  header("Location: Error_Session.php");
-}
-
-$id_usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $id_usuario);
-$tipo_usuario = $usuario->get_id_tipo_usuario();
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -358,70 +343,44 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
         });
     }
   </script>
-  <style>
-    #solicitudes-categoria {
-      display: table;
-    }
-
-    #solicitudes-motivo {
-      display: table;
-    }
-
-    #solicitudes-unificacion {
-      display: table !important;
-    }
-
-    #solicitud-usuario {
-      display: table;
-    }
-  </style>
 </head>
 
 <body>
-  <div class="row">
+  <div class="row" style="margin-right: 0px;">
     <?php
-    $Element = new Elements();
     echo $Element->menuDeNavegacion(
       TipoUsuario: $tipo_usuario,
       ID_Usuario: $id_usuario,
       pagina: $Element::PAGINA_AUDITORIA_SOLICITUD
     );
-    $dt_general = new CtrGeneral();
     ?>
-    <div class="col-md-9">
-      <div class="row">
+    <div class="col-md-10">
+      <div class="row" >
         <div class="col"></div>
         <div class="col-10 Titulo">
           <p>Solicitudes</p>
         </div>
         <div class="col"></div>
-      </div><br>
+      </div>
+      <br>
       <div class="row">
         <div class="col-4"></div>
         <div class="col-4">
         </div>
         <div class="col-2">
           <button type="button" class="btn btn-outline-secondary"
-            onclick="location.href = '/'">Volver</button>
+            onclick="location.href = '/home'">Volver</button>
         </div>
         <div class="col-1"></div>
       </div>
       <br>
-      <div class="row">
+      <div class="row" style="justify-content: center;">
         <div class="col-11">
-          <form method="post" action="Controladores/CtrBuscarSolicitud.php">
+          <form method="get" action="/listado_solicitud_control">
             <div class="form-group row">
               <label for="valor_filtro" class="col-md-2 col-form-label LblForm">Buscar: </label>
               <div class="col-md-4">
-                <input type="text" class="form-control" name="Search" id="valor_filtro" width="100%" autocomplete="off">
-                <select name="Search" id="unificacion_tipo" class="form-control" style="display:none;">
-                  <option value="0" selected>Todo</option>
-                  <option value="1">Motivo</option>
-                  <option value="2">Persona</option>
-                  <option value="3">Centro Salud</option>
-                  <option value="4">Escuela</option>
-                  <option value="5">Barrios</option>
-                </select>
+                <input type="text" class="form-control" name="filtro" id="valor_filtro" width="100%" autocomplete="off">
               </div>
               <label for="ID_Filtro" class="col-md-1 col-form-label LblForm">En: </label>
               <div class="col-md-3">
@@ -490,6 +449,7 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
           </div>
         </div>
       </div>
+      <br>
     </div>
     <?php
     if (isset($_REQUEST['Mensaje'])) {

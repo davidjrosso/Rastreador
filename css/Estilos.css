@@ -878,3 +878,19 @@ select[class~="form-control"] {
 .modal-excel {
   overflow: scroll;
 }
+
+#solicitudes-categoria {
+  display: table;
+}
+
+#solicitudes-motivo {
+  display: table;
+}
+
+#solicitudes-unificacion {
+  display: table !important;
+}
+
+#solicitud-usuario {
+  display: table;
+}
