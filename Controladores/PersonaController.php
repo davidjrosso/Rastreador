@@ -2,6 +2,7 @@
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Parametria.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/SolicitudUnificar.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Calle.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Accion.php");
 
@@ -366,7 +367,7 @@ class PersonaController
         exit();    
     } 
 
-    public function mod_persona_control($id, $mensaje = null, $report = null)
+    public function mod_persona_control($id = null, $mensaje = null, $report = null)
     {
         header("Content-Type: text/html;charset=utf-8");
 
@@ -643,29 +644,21 @@ class PersonaController
             $con = new Conexion();
             $con->OpenConexion();
             
-            if (($ID_Solicitud != null && $ID_Solicitud != "" )) {
-                
+            if (!empty($ID_Solicitud)) {
+
+                $persona_2 = new Persona(ID_Persona: $ID_Persona_2);
+
                 $consulta = "update movimiento 
-                set id_persona = $ID_Persona_1 
-                where id_persona = $ID_Persona_2";
+                             set id_persona = $ID_Persona_1 
+                             where id_persona = $ID_Persona_2";
                 
                 mysqli_query($con->Conexion,$consulta) or die("Problemas en la consulta");
                 
-                $ConsultaBajaPersona = "update persona 
-                                        set estado = 0 
-                                        where id_persona = $ID_Persona_2";
+                $persona_2->delete();
 
-                $MensajeErrorBajaPersona = "No se pudo dar de baja la persona";
+                $unificar = new Solicitud_Unificacion(coneccion: $con, xID_Solicitud: $ID_Solicitud);
+                $unificar->delete();
 
-                mysqli_query($con->Conexion,$ConsultaBajaPersona) or die($MensajeErrorBajaPersona);
-
-                $ConsultaSolicitud = "update solicitudes_unificacion
-                                    set Estado = 0 
-                                    where ID_Solicitud_Unificacion = $ID_Solicitud";
-
-                if(!$Ret = mysqli_query($con->Conexion,$ConsultaSolicitud)){
-                    throw new Exception("Problemas en la consulta. Consulta: " . $ConsultaSolicitud, 3);			
-                }
                 $con->CloseConexion();
                 $Mensaje = "Los datos se unificaron Correctamente";
                 header('Location: /home?Mensaje='.$Mensaje);
@@ -675,12 +668,8 @@ class PersonaController
                              WHERE id_persona = $ID_Persona_2";
                 mysqli_query($con->Conexion,$consulta) or die("Problemas en la consulta");
 
-                $ConsultaBajaPersona = "update persona 
-                                        set estado = 0 
-                                        where id_persona = $ID_Persona_2";
-
-                $MensajeErrorBajaPersona = "No se pudo dar de baja la persona";
-                mysqli_query($con->Conexion,$ConsultaBajaPersona) or die($MensajeErrorBajaPersona);
+                $persona_2 = new Persona(ID_Persona: $ID_Persona_2);
+                $persona_2->delete();
                 $Mensaje = "Los datos se unificaron Correctamente";
                 header('Location: /home?Mensaje=' . $Mensaje);
             }

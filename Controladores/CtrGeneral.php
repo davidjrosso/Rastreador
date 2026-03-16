@@ -8,11 +8,13 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/CentroSalud.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Motivo.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Responsable.php");
 
-class CtrGeneral{
+class CtrGeneral
+{
 	//Instanciando la Conexion
 
 	////////////////////////////////////////////////-MOVIMIENTOS-///////////////////////////////////////////////////
-	public function getMovimientos($TipoUsuario){
+	public function getMovimientos($TipoUsuario)
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 
@@ -141,7 +143,8 @@ class CtrGeneral{
 		return $Table;
 	}
 
-	public function getMovimientosxID($ID, $TipoUsuario){
+	public function getMovimientosxID($ID, $TipoUsuario)
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$consultaGeneral = "CREATE TEMPORARY TABLE GIN " ;
