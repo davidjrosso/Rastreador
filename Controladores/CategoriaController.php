@@ -322,21 +322,20 @@ class CategoriaController
         $Con = new Conexion();
         $Con->OpenConexion();
 
-        $ConsultarCategoria = "select id_categoria, categoria, cod_categoria from categoria where id_categoria = $ID_Categoria";
+        $categoria = new Categoria(xConecction: $Con, xID_Categoria: $ID_Categoria);
 
-        if (!$RetCategoria = mysqli_query($Con->Conexion,$ConsultarCategoria)) {
-            throw new Exception("Problemas al consultar datos de categoria. Consulta: ".$ConsultarCategoria, 1);			
-        }
-        $TomarCategoria = mysqli_fetch_assoc($RetCategoria);
-        $Categoria = $TomarCategoria['categoria'];
-        $Cod_Categoria = $TomarCategoria["cod_categoria"];
+        $Categoria = $categoria->getCategoria();
+        $Cod_Categoria = $categoria->getCod_Categoria();
 
-        $Solicitud = new Solicitud_EliminarCategoria(0,$Fecha,$Categoria,$Cod_Categoria,$Estado,$ID_Usuario,$ID_Categoria);
-        $Insert_Solicitud = "insert into solicitudes_eliminarcategorias(Fecha,Categoria,Cod_Categoria,Estado,ID_Usuario,ID_Categoria) values('{$Solicitud->getFecha()}','{$Solicitud->getCategoria()}','{$Solicitud->getCod_Categoria()}',{$Solicitud->getEstado()},{$Solicitud->getID_Usuario()},{$Solicitud->getID_Categoria()})";
-        $MensajeError = "No se pudo enviar la solicitud";
-
-        mysqli_query($Con->Conexion,$Insert_Solicitud) or die($MensajeError." - ".$Insert_Solicitud);
-
+        $Solicitud = new Solicitud_EliminarCategoria(
+                                                     xFecha: $Fecha,
+                                                     xCategoria: $Categoria,
+                                                     xCod_Categoria: $Cod_Categoria,
+                                                     xEstado: $Estado,
+                                                     xID_Usuario: $ID_Usuario,
+                                                     xID_Categoria: $ID_Categoria
+                                                     );
+        $Solicitud->save();
         $Con->CloseConexion();
         $Mensaje = "La solicitud de eliminación se envió a los administradores para ser confirmada.";
         header('Location: /categorias?Mensaje='.$Mensaje);
@@ -355,15 +354,12 @@ class CategoriaController
             $Con = new Conexion();
             $Con->OpenConexion();
 
-            $Consulta = "update categoria set estado = 0 where id_categoria = $ID_Categoria";
-            if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
-                throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 0);		
-            }
-            $ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
-            if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
-                throw new Exception("Error al intentar registrar Accion. Consulta: " . $ConsultaAccion, 1);
-            }
-
+            $categoria = new Categoria(xID_Categoria: $ID_Categoria, xConecction: $Con);
+            $categoria->delete();
+            $accion = new Accion(xaccountid: $ID_Usuario, xFecha: $Fecha, xDetalles: $Detalles, xID_TipoAccion: $ID_TipoAccion);
+            $accion->save();
+            $sl = new Solicitud_EliminarCategoria(xID_Categoria: $$ID_Categoria);
+            $sl->delete();
             $ConsultaSolicitud = "update solicitudes_eliminarcategorias set estado = 0 where ID_categoria = $ID_Categoria";
             if(!$Ret = mysqli_query($Con->Conexion,$ConsultaSolicitud)){
                 throw new Exception("Problemas en la consulta. Consulta: " . $ConsultaSolicitud, 3);			

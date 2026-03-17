@@ -361,16 +361,11 @@ class CentroSaludController
                 mysqli_query($Con->Conexion, $CambiarCentros) or die($MensajeErrorCambiarCentros);
             }
 
-            $ConsultaBajaCentro = "update centros_salud set estado = 0 where id_centro = $ID_Centro_2";
-            $MensajeErrorBajaCentro = "No se pudo dar de baja el Centro de Salud";
+            $centro_salud_2 = new CentroSalud(coneccion_base: $Con, id_centro: $ID_Centro_2);
+            $centro_salud_2->delete();
 
-            mysqli_query($Con->Conexion,$ConsultaBajaCentro) or die($MensajeErrorBajaCentro);
-            
-            $ConsultaSolicitud = "update solicitudes_unificacion set Estado = 0 where ID_Solicitud_Unificacion = $ID_Solicitud";
-            if (!$Ret = mysqli_query($Con->Conexion,$ConsultaSolicitud)) {
-                throw new Exception("Problemas en la consulta. Consulta: " . $ConsultaSolicitud, 3);			
-            }
-
+            $sl = new Solicitud_Unificacion(coneccion: $Con, xID_Solicitud: $ID_Solicitud);
+            $sl->delete();
             $Con->CloseConexion();
             $Mensaje = "Los datos se unificaron Correctamente";
             header('Location: /home?Mensaje=' . $Mensaje);
