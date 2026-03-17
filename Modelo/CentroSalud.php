@@ -127,6 +127,17 @@ class CentroSalud implements JsonSerializable
 		];
 	}
 
+	public function delete()
+	{
+		$consulta = "delete centros_salud
+					 where id_centro = " . $this->get_id_centro();
+		$mensaje_error = "No se pudo modificar el centro de salud";
+		$ret = mysqli_query($this->coneccion_base->Conexion, $consulta);
+		if (!$ret) {
+			throw new Exception($mensaje_error . $consulta, 2);
+		}
+	}
+
 	public function udpate(){
 		$consulta = "update centros_salud
 					 set centro_salud = " . (($this->get_centro_salud()) ? "'" . $this->get_centro_salud() . "'" : "null") . ", 

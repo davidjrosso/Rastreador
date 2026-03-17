@@ -150,6 +150,14 @@ class Solicitud_ModificarCategoria
         return $this->ID_Categoria;
     }
 
+    function delete()
+    {
+        $consulta = "delete solicitudes_modificarcategorias
+                     where ID = " . $this->getID();
+        $MensajeError = "No se pudo del la solicitud";
+        mysqli_query($this->coneccion_base->Conexion,$consulta) or die($MensajeError);
+    }
+
     public function save()
     {
         $consulta = "INSERT INTO solicitudes_modificarcategorias(
