@@ -114,23 +114,30 @@ class OtraInstitucionController
             $Con = new Conexion();
             $Con->OpenConexion();
 
-            $otra_institucion = new OtraInstitucion(xConeccion: $Con, xID_OtraInstitucion: $id);
-            if ($nombre) $otra_institucion->setNombre($nombre);
-            if ($mail) $otra_institucion->setMail($mail);
-            if ($Telefono) $otra_institucion->setTelefono($Telefono);
-            if ($nombre || $mail || $Telefono) $otra_institucion->update();
+            if (OtraInstitucion::get_id_by_name($Con, $nombre)) {
+                $Con->CloseConexion();
+                $Mensaje = "Ya existe una Institución con ese Nombre";
+                header('Location: /otrainstitucion/editar?ID=' . $id . '&MensajeError=' . $Mensaje);
+            } else {
+                $otra_institucion = new OtraInstitucion(xConeccion: $Con, xID_OtraInstitucion: $id);
+                if ($nombre) $otra_institucion->setNombre($nombre);
+                if ($mail) $otra_institucion->setMail($mail);
+                if ($Telefono) $otra_institucion->setTelefono($Telefono);
+                if ($nombre || $mail || $Telefono) $otra_institucion->update();
 
-            $detalles = "El usuario con ID: $ID_Usuario ha modificado la otra_institucion: $id. Datos: Dato Anterior: $nombre , Dato Nuevo: $nombre - Dato Anterior: $mail , Dato Nuevo: $mail - Dato Anterior: $Telefono , Dato Nuevo: $Telefono";
-            $accion = new Accion(
-                                 xaccountid: $ID_Usuario,
-                                 xFecha: $fecha, 
-                                 xDetalles: $detalles);
-            $accion->save();
+                $detalles = "El usuario con ID: $ID_Usuario ha modificado la otra_institucion: $id. Datos: Dato Anterior: $nombre , Dato Nuevo: $nombre - Dato Anterior: $mail , Dato Nuevo: $mail - Dato Anterior: $Telefono , Dato Nuevo: $Telefono";
+                $accion = new Accion(
+                                    xaccountid: $ID_Usuario,
+                                    xFecha: $fecha, 
+                                    xDetalles: $detalles);
+                $accion->save();
 
-            $mensaje = "La otra_institucion se modifico Correctamente";
-            $Con->CloseConexion();
-            header("Content-Type: text/html;charset=utf-8");
-            header('Location: /otrainstitucion/editar?ID=' . $id . '&Mensaje=' . $mensaje);
+                $mensaje = "La otra_institucion se modifico Correctamente";
+                $Con->CloseConexion();
+                header("Content-Type: text/html;charset=utf-8");
+                header('Location: /otrainstitucion/editar?ID=' . $id . '&Mensaje=' . $mensaje);
+                    
+            }
         } catch (Exception $e) {
             echo "Error: ".$e->getMessage();
         }
@@ -143,6 +150,14 @@ class OtraInstitucionController
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
+            $mensaje_success = $mensaje;
+            $mensaje_error = "";            
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+
             include("./Views/view_unifotrasinstituciones.php");
         }
         exit();
@@ -242,5 +257,93 @@ class OtraInstitucionController
         }
     }
 
+    public function listado_otras_instituciones_control($valor = null, $id = null)
+    {
+        $consultaBusqueda = $_REQUEST['valorBusqueda'];
+        $id = $_REQUEST["ID"];
+        //Filtro anti-XSS
+        $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
+        $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
+        $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consultaBusqueda);
+
+        //Variable vacía (para evitar los E_NOTICE)
+        $mensaje = "";
+
+
+        //Comprueba si $consultaBusqueda está seteado
+        if (isset($consultaBusqueda)) {
+
+            $Con = new Conexion();
+            $Con->OpenConexion();
+            //Selecciona todo de la tabla mmv001 
+            //donde el nombre sea igual a $consultaBusqueda, 
+            //o el apellido sea igual a $consultaBusqueda, 
+            //o $consultaBusqueda sea igual a nombre + (espacio) + apellido
+
+            $consulta = mysqli_query($Con->Conexion, "SELECT ID_OtraInstitucion, Nombre, Telefono, Mail FROM otras_instituciones WHERE Nombre LIKE '%$consultaBusqueda%' and Estado = 1");
+
+
+            //Obtiene la cantidad de filas que hay en la consulta
+            $filas = mysqli_num_rows($consulta);
+
+            //Si no existe ninguna fila que sea igual a $consultaBusqueda, entonces mostramos el siguiente mensaje
+            if ($filas === 0) {
+                $mensaje = "<p>No hay ningún registro con ese dato</p>";
+            } else {
+                //Si existe alguna fila que sea igual a $consultaBusqueda, entonces mostramos el siguiente mensaje
+                //echo 'Resultados para <strong>'.$consultaBusqueda.'</strong>';
+
+                $mensaje .= '<table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        <th scope="col">ID</th>			      
+                        <th scope="col">Nombre</th>			      			     
+                        <th scope="col">Telefono</th>			      			     
+                        <th scope="col">Mail</th>			      			     
+                        <th scope="col">Accion</th>	
+                        </tr>
+                    </thead>
+                    <tbody>';
+
+                //La variable $resultado contiene el array que se genera en la consulta, así que obtenemos los datos y los mostramos en un bucle
+                while($resultados = mysqli_fetch_array($consulta)) {
+                    if ( $resultados["ID_OtraInstitucion"] > 1) {
+                        $ID_Institucion = $resultados["ID_OtraInstitucion"];			
+                        $Nombre = $resultados['Nombre'];										
+                        $Telefono = $resultados['Telefono'];										
+                        $Mail = $resultados['Mail'];
+                        
+                        if ($Telefono == 'null') {
+                            $Telefono = '';
+                        }
+
+                        if($Mail == 'null'){
+                            $Mail = '';
+                        }
+
+                        //Output
+                        $mensaje .= '
+                            <tr>
+                            <td scope="row">'.$ID_Institucion.'</td>
+                            <td scope="row">'.$Nombre.'</td>			      			      
+                            <td scope="row">'.$Telefono.'</td>			      			      
+                            <td scope="row">'.$Mail.'</td>			      			      
+                            <td><button type = "button" class = "btn btn-outline-success" onClick="seleccionInstitucion(' . $id . ',\'' . $Nombre . '\',' . $ID_Institucion . ')" data-dismiss="modal">seleccionar</button></td>
+                            </tr>';
+                    }
+
+
+
+
+                }//Fin while $resultados
+
+                $mensaje .= '</tbody>
+                    </table>';
+
+            } //Fin else $filas
+            $Con->CloseConexion();
+            echo $mensaje;
+        };        
+    }
 
 }

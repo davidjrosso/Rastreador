@@ -18,15 +18,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-
-header("Content-Type: text/html;charset=utf-8");
-
-$ID_Usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $usuario->get_id_tipo_usuario();
 
 ?>
 <!DOCTYPE html>
@@ -48,56 +39,34 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   <script src="js/ValidarUnifPersonas.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script>
-       function buscarInstituciones_1(){
-          var xInstitucion = document.getElementById('SearchInstituciones_1').value;
-          var textoBusqueda = xInstitucion;
+       function buscarInstituciones(id){
+          let xInstitucion = document.getElementById('SearchInstituciones_' + id).value;
+          let textoBusqueda = xInstitucion;
           xmlhttp=new XMLHttpRequest();
           xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState==4 && xmlhttp.status==200) {
               contenidosRecibidos = xmlhttp.responseText;
-              document.getElementById("ResultadosInstituciones_1").innerHTML=contenidosRecibidos;
+              document.getElementById("ResultadosInstituciones_" + id).innerHTML=contenidosRecibidos;
               }
           }
-          xmlhttp.open('POST', 'buscarInstituciones_1.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
+          xmlhttp.open('POST', '/listado_otras_instituciones_control?valorBusqueda=' + textoBusqueda + "&ID=" + id, true); // Método post y url invocada
           xmlhttp.send();
         }
 
-        function buscarInstituciones_2(){
-          var xInstitucion = document.getElementById('SearchInstituciones_2').value;
-          var textoBusqueda = xInstitucion;
-          xmlhttp=new XMLHttpRequest();
-          xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-              contenidosRecibidos = xmlhttp.responseText;
-              document.getElementById("ResultadosInstituciones_2").innerHTML=contenidosRecibidos;
-              }
-          }
-          xmlhttp.open('POST', 'buscarInstituciones_2.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
-          xmlhttp.send();
-        }
-
-        function seleccionInstitucion_1(xInstitucion,xID){
-          var Institucion = document.getElementById("Institucion_1");
-          var ID_Institucion = document.getElementById("ID_Institucion_1");
+        function seleccionInstitucion(id, xInstitucion, xID){
+          let Institucion = document.getElementById("Institucion_" + id);
+          let ID_Institucion = document.getElementById("ID_Institucion_" + id);
           Institucion.innerHTML = "";
           Institucion.innerHTML = "<p>"+xInstitucion+"</p>";
           ID_Institucion.setAttribute('value',xID);
         }
 
-        function seleccionInstitucion_2(xInstitucion,xID){
-          var Institucion = document.getElementById("Institucion_2");
-          var ID_Institucion = document.getElementById("ID_Institucion_2");
-          Institucion.innerHTML = "";
-          Institucion.innerHTML = "<p>"+xInstitucion+"</p>";
-          ID_Institucion.setAttribute('value',xID);
-        }
   </script>
 
 </head>
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_UNIFICACION_OTRA_INSTITUCION);
   ?>
   <div class = "col-md-9">
@@ -154,7 +123,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   <div class="col"></div>
                   <div class="col-8">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarInstituciones" id = "SearchInstituciones_1" onKeyUp="buscarInstituciones_1()" autocomplete="off">
+                      <input class = "form-control" type="text" name="BuscarInstituciones" id = "SearchInstituciones_1" onKeyUp="buscarInstituciones(1)" autocomplete="off">
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -194,7 +163,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   <div class="col"></div>
                   <div class="col-8">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarInstituciones" id = "SearchInstituciones_2" onKeyUp="buscarInstituciones_2()" autocomplete="off">
+                      <input class = "form-control" type="text" name="BuscarInstituciones" id = "SearchInstituciones_2" onKeyUp="buscarInstituciones(2)" autocomplete="off">
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  

@@ -114,7 +114,7 @@ class EscuelaController
         try {
             $Con = new Conexion();
             $Con->OpenConexion();
-
+            $escuela = new Escuela(coneccion_base: $Con, xEscuela: $ID_Escuela);
             $Consulta = "update escuelas set Estado = 0 where ID_Escuela = $ID_Escuela";
             if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
                 throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 0);		
@@ -149,7 +149,19 @@ class EscuelaController
 
         $Con = new Conexion();
         $Con->OpenConexion();
-        $Escuela_Nueva = new Escuela($Con, $ID_Escuela,$Codigo,$Escuela,$CUE,$Localidad,$Departamento,$Directora,$Telefono,$Mail,$ID_Nivel,$Estado);
+        $Escuela_Nueva = new Escuela(
+                                     $Con,
+                                     $ID_Escuela,
+                                     $Codigo,
+                                     $Escuela,
+                                     $CUE,
+                                     $Localidad,
+                                     $Departamento,
+                                     $Directora,
+                                     $Telefono,
+                                     $Mail,
+                                     $ID_Nivel,
+                                     $Estado);
 
         $Fecha = date("Y-m-d");
         $ID_TipoAccion = 2;
@@ -243,15 +255,8 @@ class EscuelaController
                 mysqli_query($Con->Conexion, $CambiarEscuelas) or die($MensajeErrorCambiarEscuelas);
             }
 
-            $ConsultaBajaEscuela = "update escuelas set estado = 0 where ID_Escuela = $ID_Escuela_2";
-            $MensajeErrorBajaEscuela = "No se pudo dar de baja la Escuela";
-
-            mysqli_query($Con->Conexion,$ConsultaBajaEscuela) or die($MensajeErrorBajaEscuela);
-
-            $ConsultaSolicitud = "update solicitudes_unificacion set Estado = 0 where ID_Solicitud_Unificacion = $ID_Solicitud";
-            if(!$Ret = mysqli_query($Con->Conexion,$ConsultaSolicitud)){
-                throw new Exception("Problemas en la consulta. Consulta: " . $ConsultaSolicitud, 3);			
-            }
+            $escuela_2 = new Escuela(coneccion_base: $Con, xID_Escuela: $ID_Escuela_2);
+            $escuela_2->delete();
 
             $Con->CloseConexion();
             $Mensaje = "Los datos se unificaron Correctamente";
