@@ -1591,7 +1591,7 @@ class CtrGeneral
 		$Table = "<table class='table'><thead><tr><th>Centro de Salud</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["centro_salud"]."</td><td><a href = '/centrosalud/editar?ID=".$Ret["id_centros"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'VerificarEliminarCentro(".$Ret["id_centro"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["centro_salud"]."</td><td><a href = '/centrosalud/editar?ID=".$Ret["id_centro"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'VerificarEliminarCentro(".$Ret["id_centro"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -1610,7 +1610,7 @@ class CtrGeneral
 		$Table = "<table class='table'><thead><tr><th>Escuela</th><th>Localidad</th><th>Nivel</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["Escuela"]."</td><td>".$Ret["Localidad"]."</td><td>".$Ret["Nivel"]."</td><td><a href = '/escuela/editar?ID=".$Ret["ID_Escuela"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["ID_Escuela"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["Escuela"]."</td><td>".$Ret["Localidad"]."</td><td>".$Ret["Nivel"]."</td><td><a href = '/escuela/editar?ID=".$Ret["ID_Escuela"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'VerificarDeleteEscuela(".$Ret["ID_Escuela"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -1627,7 +1627,7 @@ class CtrGeneral
 		$Table = "<table class='table'><thead><tr><th>Escuela</th><th>Localidad</th><th>Nivel</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["Escuela"]."</td><td>".$Ret["Localidad"]."</td><td>".$Ret["Nivel"]."</td><td><a href = '/escuela/editar?ID=".$Ret["ID_Escuela"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["ID_Escuela"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["Escuela"]."</td><td>".$Ret["Localidad"]."</td><td>".$Ret["Nivel"]."</td><td><a href = '/escuela/editar?ID=".$Ret["ID_Escuela"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'VerificarDeleteEscuela(".$Ret["ID_Escuela"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -1644,7 +1644,7 @@ class CtrGeneral
 		$Table = "<table class='table'><thead><tr><th>Escuela</th><th>Localidad</th><th>Nivel</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["Escuela"]."</td><td>".$Ret["Localidad"]."</td><td>".$Ret["Nivel"]."</td><td><a href = '/escuela/editar?ID=".$Ret["ID_Escuela"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["ID_Escuela"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["Escuela"]."</td><td>".$Ret["Localidad"]."</td><td>".$Ret["Nivel"]."</td><td><a href = '/escuela/editar?ID=".$Ret["ID_Escuela"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'VerificarDeleteEscuela(".$Ret["ID_Escuela"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";

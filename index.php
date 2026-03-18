@@ -207,7 +207,7 @@ try {
 	$routes[] = Route::get('new_escuela_control', '/insertar_escuela', [EscuelaController::class, 'new_escuela_control']);
 	$routes[] = Route::post('mod_escuela_control', '/modificar_escuela', [EscuelaController::class, 'mod_escuela_control']);
 	$routes[] = Route::get('listado_otras_instituciones', '/otrasinstituciones', [OtraInstitucionController::class, 'listado_otras_instituciones']);
-	$routes[] = Route::get('listado_otras_instituciones', '/otrasinstituciones', [OtraInstitucionController::class, 'listado_otras_instituciones']);
+	$routes[] = Route::post('listado_otras_instituciones_filtro', '/otrasinstituciones', [OtraInstitucionController::class, 'listado_otras_instituciones']);
 	$routes[] = Route::get('new_otra_institucion_success', '/otrainstitucion/nueva\?Mensaje={mensaje}', [OtraInstitucionController::class, 'mod_otra_institucion']);
 	$routes[] = Route::get('new_otra_institucion_error', '/otrainstitucion/nueva\?MensajeError={mensaje_error}', [OtraInstitucionController::class, 'mod_otra_institucion']);
 	$routes[] = Route::get('mod_otra_institucion', '/otrainstitucion/editar\?ID={id}', [OtraInstitucionController::class, 'mod_otra_institucion']);
@@ -227,6 +227,7 @@ try {
 	$routes[] = Route::get('listado_notificacion_control', '/lista_notificacion_control\?ID_Filtro={id_filtro}', [NotificacionController::class, 'listado_notificacion_control']);
 	$routes[] = Route::get('notificacion_filtro', '/notificacion\?ID_Filtro={id_filtro}', [NotificacionController::class, 'listado_notificacion']);
 	$routes[] = Route::get('solicitud', '/solicitud', [SolicitudController::class, 'listado_solicitud']);
+	$routes[] = Route::post('solicitud', '/solicitud', [SolicitudController::class, 'listado_solicitud']);
 	$routes[] = Route::get('solicitud_filtr', '/solicitud\?filtro={filtro}/ID_Filtro={id_filtro}', [SolicitudController::class, 'listado_solicitud']);
 	$routes[] = Route::get('listado_solicitud_control', '/listado_solicitud_control\?filtro={filtro}/ID_Filtro={id_filtro}', [SolicitudController::class, 'listado_solicitud_control']);
 	$routes[] = Route::get('auditoria', '/auditoria', [AccionController::class, 'listado_auditoria']);

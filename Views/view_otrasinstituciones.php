@@ -18,10 +18,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -84,7 +80,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
      <div class = "row">
       <div class = "col-10">
            <!-- Carga -->
-          <form method = "post" action = "Controladores/CtrBuscarOtrasInstituciones.php">
+          <form method = "post" action = "otrasinstituciones">
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Buscar: </label>
               <div class="col-md-4">
@@ -109,8 +105,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
           <!-- Search -->
         <div class = "row">
           <?php  
-            if (isset($_REQUEST["Filtro"])) {
-              $Filtro = $_REQUEST["Filtro"];
+            if (isset($_REQUEST["Search"])) {
+              $Filtro = $_REQUEST["Search"];
               $ID_Filtro = $_REQUEST["ID_Filtro"];
 
               switch ($ID_Filtro) {
