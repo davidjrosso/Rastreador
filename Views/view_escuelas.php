@@ -26,6 +26,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="../dist/control.js"></script>
   <script>
        $(document).ready(function(){
               var date_input=$('input[name="date"]'); //our date input has the name "date"
@@ -38,20 +39,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               });
           });
 
-       function Verificar(xID){
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer eliminar esta escuela?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((willDelete) => {
-                if (willDelete) {
-                  window.location.href = 'delete_escuela?ID='+xID;
-                }
-              });
-        }
 
   </script>
 
@@ -59,7 +46,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_ESCUELA);
   ?>
   <div class = "col-md-9">
@@ -73,7 +59,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
     <div class="row">
       <div class = "col"></div>
       <div class = "col-4">
-          <center><button class = "btn btn-secondary" onClick = "location.href='view_newescuelas.php'">Agregar Nueva Escuela</button></center>
+          <center><button class = "btn btn-secondary" onClick = "location.href='/escuela/nueva'">Agregar Nueva Escuela</button></center>
       </div>
       <div class="col-2">
                 <button type="button" class="btn btn-outline-secondary" onclick="location.href = '/'">Volver</button>
@@ -84,7 +70,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
      <div class = "row">
       <div class = "col-10">
            <!-- Carga -->
-          <form method = "post" action = "Controladores/CtrBuscarEscuelas.php">
+          <form method = "post" action = "/escuelas">
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Buscar: </label>
               <div class="col-md-4">
@@ -107,10 +93,9 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
           <!-- Search -->
         <div class = "row">
           <?php  
-            if(isset($_REQUEST["Filtro"]) && $_REQUEST["Filtro"]!=null){
-              $Filtro = $_REQUEST["Filtro"];
+            if(isset($_REQUEST["Search"])){
+              $Filtro = $_REQUEST["Search"];
               $ID_Filtro = $_REQUEST["ID_Filtro"];
-              $DTGeneral = new CtrGeneral();
 
               switch ($ID_Filtro) {
                 case 'ID': echo $DTGeneral->getEscuelasxID($Filtro);break;
@@ -118,7 +103,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                 default: echo $DTGeneral->getEscuelasxID($Filtro);break;
               }
             }else{
-              $DTGeneral = new CtrGeneral();
               echo $DTGeneral->getEscuelas();
             }
           ?>

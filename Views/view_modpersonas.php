@@ -248,7 +248,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
           <!-- Search -->
           <div class="row">
             <?php
-            if (isset($_REQUEST["ID"]) && $_REQUEST["ID"] != null) {
+            if (isset($_REQUEST["ID"])) {
               $ID = $_REQUEST["ID"];
 
               $Con = new Conexion();

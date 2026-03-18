@@ -600,7 +600,7 @@ export function CancelarEliminacionCategoria(xID) {
         })
         .then((willDelete) => {
         if (willDelete) {
-            window.location.href = 'Controladores/DeletePeticionEliminacionCategoria.php?ID=' + xID;
+            window.location.href = '/delete_eliminar_categoria?ID=' + xID;
         }
         });
 }

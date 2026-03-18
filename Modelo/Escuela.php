@@ -205,4 +205,13 @@ class Escuela
 	{
 		return $this->Estado;
 	}
+
+	public function delete()
+	{
+		$query = "delete escuelas
+				  where ID_Escuela = " . $this->getID_Escuela();
+		$ejecutar_consultar = mysqli_query(
+			$this->coneccion_base->Conexion, 
+			$query) or die("Problemas en query Escuelas");
+	}
 }

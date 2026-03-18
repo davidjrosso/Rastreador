@@ -35,12 +35,15 @@ class EscuelaController
     {
         header('Content-Type: text/html; charset=utf-8');
         if (!isset($_SESSION["Usuario"])) {
+           include("./Views/Error_Session.php");
+
+        } else {
             $ID_Usuario = $_SESSION["Usuario"];
             $usuario = new Account(account_id: $ID_Usuario);
             $TipoUsuario = $usuario->get_id_tipo_usuario();
-            include("./Views/Error_Session.php");
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
 
-        } else {
             include("./Views/view_escuelas.php");
         }
         exit();
@@ -50,12 +53,13 @@ class EscuelaController
     {
         header('Content-Type: text/html; charset=utf-8');
         if (!isset($_SESSION["Usuario"])) {
+
+            include("./Views/Error_Session.php");
+        } else {
             $ID_Usuario = $_SESSION["Usuario"];
             $usuario = new Account(account_id: $ID_Usuario);
             $TipoUsuario = $usuario->get_id_tipo_usuario();
 
-            include("./Views/Error_Session.php");
-        } else {
             include("./Views/view_modescuelas.php");
         }
         exit();
@@ -360,4 +364,5 @@ class EscuelaController
             header('Location: /escuelas?MensajeError=' . $MensajeError);
         }
     }
+
 }

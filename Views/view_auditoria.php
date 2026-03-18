@@ -1,19 +1,4 @@
 <?php
-session_start();
-require_once($_SERVER['DOCUMENT_ROOT'] . "/Controladores/Elements.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Account.php");
-header("Content-Type: text/html;charset=utf-8");
-
-/*     CONTROL DE USUARIOS                    */
-if (!isset($_SESSION["Usuario"])) {
-  header("Location: Error_Session.php");
-}
-
-$id_usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $id_usuario);
-$tipo_usuario = $usuario->get_id_tipo_usuario();
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -100,7 +85,6 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
 <body>
   <div class="row">
     <?php
-    $Element = new Elements();
     echo $Element->menuDeNavegacion(
       TipoUsuario: $tipo_usuario,
       ID_Usuario: $id_usuario,
@@ -154,7 +138,6 @@ $tipo_usuario = $usuario->get_id_tipo_usuario();
           <br><br>
           <div class="row">
             <?php
-            $dt_general = new CtrGeneral();
             if (isset($_REQUEST["Filtro"]) && !empty($_REQUEST["ID_Filtro"])) {
               $valor = $_REQUEST["Filtro"];
               $id_filtro = $_REQUEST["ID_Filtro"];

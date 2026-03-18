@@ -109,7 +109,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
           <!-- Search -->
         <div class = "row">
           <?php  
-            if(isset($_REQUEST["Filtro"]) && $_REQUEST["Filtro"]!=null){
+            if (isset($_REQUEST["Filtro"])) {
               $Filtro = $_REQUEST["Filtro"];
               $ID_Filtro = $_REQUEST["ID_Filtro"];
 
@@ -120,7 +120,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
                 case 'Mail': echo $DTGeneral->getOtrasInstitucionesxMail($Filtro);break;
                 default: echo $DTGeneral->getOtrasInstitucionesxID($Filtro);break;
               }
-            }else{
+            } else {
               echo $DTGeneral->getOtrasInstituciones();
             }
           ?>

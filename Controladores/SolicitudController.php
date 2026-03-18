@@ -56,4 +56,272 @@ class SolicitudController
         header("Location: /solicitud?filtro=" . $filtro_nombre . "&ID_Filtro=" . $filtro_id);
         exit();
     }
+
+    public function del_new_categoria()
+    {
+        $ID_Usuario = $_SESSION["Usuario"];
+
+        $ID_Peticion = $_REQUEST["ID"];
+
+        $Fecha = date("Y-m-d");
+        $ID_TipoAccion = 3;
+        $Detalles = "El usuario con ID: $ID_Usuario ha dado de baja una Peticion. Datos: Peticion: $ID_Peticion";
+
+        try {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            $cat = new Solicitud_CrearCategoria(xID: $ID_Peticion);
+            $cat->delete();
+            $accion = new Accion(xaccountid: $ID_Usuario,
+                                 xFecha: $Fecha,
+                                 xDetalles: $Detalles, 
+                                 xID_TipoAccion: $ID_TipoAccion);
+            $accion->save();
+            $Con->CloseConexion();
+            $Mensaje = "La solicitud fue eliminada Correctamente";
+            header('Location: ../home?Mensaje=' . $Mensaje);
+        } catch (Exception $e) {
+            echo "Error: ".$e->getMessage();
+        }
+    }
+
+    public function del_new_m()
+    {
+        $ID_Usuario = $_SESSION["Usuario"];
+
+        $ID_Peticion = $_REQUEST["ID"];
+
+        $Fecha = date("Y-m-d");
+        $ID_TipoAccion = 3;
+        $Detalles = "El usuario con ID: $ID_Usuario ha dado de baja una Peticion. Datos: Peticion: $ID_Peticion";
+
+        try {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            $cat = new Solicitud_CrearM(xID: $ID_Peticion);
+            $cat->delete();
+            $accion = new Accion(xaccountid: $ID_Usuario,
+                                 xFecha: $Fecha,
+                                 xDetalles: $Detalles, 
+                                 xID_TipoAccion: $ID_TipoAccion);
+            $accion->save();
+            $Con->CloseConexion();
+            $Mensaje = "La solicitud fue eliminada Correctamente";
+            header('Location: ../home?Mensaje=' . $Mensaje);
+        } catch (Exception $e) {
+            echo "Error: ".$e->getMessage();
+        }
+    }
+
+    public function del_su_categoria()
+    {
+        $ID_Usuario = $_SESSION["Usuario"];
+
+        $ID_Peticion = $_REQUEST["ID"];
+
+        $Fecha = date("Y-m-d");
+        $ID_TipoAccion = 3;
+        $Detalles = "El usuario con ID: $ID_Usuario ha dado de baja una Peticion. Datos: Peticion: $ID_Peticion";
+
+        try {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            $cat = new Solicitud_EliminarCategoria(xID: $ID_Peticion);
+            $cat->delete();
+            $accion = new Accion(xaccountid: $ID_Usuario,
+                                 xFecha: $Fecha,
+                                 xDetalles: $Detalles, 
+                                 xID_TipoAccion: $ID_TipoAccion);
+            $accion->save();
+            $Con->CloseConexion();
+            $Mensaje = "La solicitud fue eliminada Correctamente";
+            header('Location: ../home?Mensaje=' . $Mensaje);
+        } catch (Exception $e) {
+            echo "Error: ".$e->getMessage();
+        }
+    }
+
+    public function del_mod_categoria()
+    {
+        $ID_Usuario = $_SESSION["Usuario"];
+
+        $ID_Peticion = $_REQUEST["ID"];
+
+        $Fecha = date("Y-m-d");
+        $ID_TipoAccion = 3;
+        $Detalles = "El usuario con ID: $ID_Usuario ha dado de baja una Peticion. Datos: Peticion: $ID_Peticion";
+
+        try {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            $cat = new Solicitud_ModificarCategoria(xID: $ID_Peticion);
+            $cat->delete();
+            $accion = new Accion(xaccountid: $ID_Usuario,
+                                 xFecha: $Fecha,
+                                 xDetalles: $Detalles, 
+                                 xID_TipoAccion: $ID_TipoAccion);
+            $accion->save();
+            $Con->CloseConexion();
+            $Mensaje = "La solicitud fue eliminada Correctamente";
+            header('Location: ../home?Mensaje=' . $Mensaje);
+        } catch (Exception $e) {
+            echo "Error: ".$e->getMessage();
+        }
+    }
+
+    public function del_mod_motivo()
+    {
+        $ID_Usuario = $_SESSION["Usuario"];
+
+        $ID_Peticion = $_REQUEST["ID"];
+
+        $Fecha = date("Y-m-d");
+        $ID_TipoAccion = 3;
+        $Detalles = "El usuario con ID: $ID_Usuario ha dado de baja una Peticion. Datos: Peticion: $ID_Peticion";
+
+        try {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            $cat = new Solicitud_ModificarMotivo(xID: $ID_Peticion);
+            $cat->delete();
+            $accion = new Accion(xaccountid: $ID_Usuario,
+                                 xFecha: $Fecha,
+                                 xDetalles: $Detalles, 
+                                 xID_TipoAccion: $ID_TipoAccion);
+            $accion->save();
+            $Con->CloseConexion();
+            $Mensaje = "La solicitud fue eliminada Correctamente";
+            header('Location: ../home?Mensaje=' . $Mensaje);
+        } catch (Exception $e) {
+            echo "Error: ".$e->getMessage();
+        }
+    }
+
+    public function del_su_m()
+    {
+        $ID_Usuario = $_SESSION["Usuario"];
+
+        $ID_Peticion = $_REQUEST["ID"];
+
+        $Fecha = date("Y-m-d");
+        $ID_TipoAccion = 3;
+        $Detalles = "El usuario con ID: $ID_Usuario ha dado de baja una Peticion. Datos: Peticion: $ID_Peticion";
+
+        try {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            $cat = new Solicitud_EliminarM(xID: $ID_Peticion);
+            $cat->delete();
+            $accion = new Accion(xaccountid: $ID_Usuario,
+                                 xFecha: $Fecha,
+                                 xDetalles: $Detalles, 
+                                 xID_TipoAccion: $ID_TipoAccion);
+            $accion->save();
+            $Con->CloseConexion();
+            $Mensaje = "La solicitud fue eliminada Correctamente";
+            header('Location: ../home?Mensaje=' . $Mensaje);
+        } catch (Exception $e) {
+            echo "Error: ".$e->getMessage();
+        }
+    }    
+
+    public function delete_modificacion()
+    {
+        $id_usuario = $_SESSION["Usuario"];
+
+        $id_solicitud = $_REQUEST["ID"];
+
+        $fecha = date("Y-m-d");
+        $id_tipo_accion = 3;
+        $detalles = "El usuario con ID: $id_usuario ha dado de baja una Peticion. Datos: Peticion: $id_solicitud";
+
+        try {
+            $con = new Conexion();
+            $con->OpenConexion();
+
+            $solicitud = new SolicitudModificacion(
+                                                    coneccion_base: $con,
+                                                    id_solicitud: $id_solicitud
+                                                );
+            $solicitud->delete();
+
+            $accion = new Accion(
+                xaccountid: $id_usuario,
+                xFecha: $fecha,
+                xDetalles: $detalles,
+                xID_TipoAccion: $id_tipo_accion
+            );
+            $accion->save();
+
+            $con->CloseConexion();
+            $Mensaje = "La solicitud fue eliminada Correctamente";
+            header('Location: ../view_inicio.php?Mensaje=' . $Mensaje);
+        } catch (Exception $e) {
+            echo "Error: ".$e->getMessage();
+        }
+    }
+
+    public function delete_mod_usuario()
+    {
+        $ID_Usuario = $_SESSION["Usuario"];
+
+        $ID_Peticion = $_REQUEST["ID"];
+
+        $Fecha = date("Y-m-d");
+        $ID_TipoAccion = 2;
+        $Detalles = "El usuario con ID: $ID_Usuario ha dado de baja una Peticion. Datos: Peticion: $ID_Peticion";
+
+        try {
+            $solicitud = new Solicitud_Usuario(
+                id_solicitud: $ID_Peticion
+            );
+            $solicitud->delete();
+            $accion = new Accion(
+                xaccountid: $ID_Usuario,
+                xFecha: $Fecha,
+                xDetalles: $Detalles,
+                xID_TipoAccion: $ID_TipoAccion
+            );
+            $accion->save();
+            $Mensaje = "La solicitud fue eliminada Correctamente";
+            header('Location: ../view_solicitud.php?Mensaje='.$Mensaje);
+        } catch (Exception $e) {
+            echo "Error: ".$e->getMessage();
+        }
+    }
+
+    public function del_unif()
+    {
+        $ID_Usuario = $_SESSION["Usuario"];
+
+        $ID_Peticion = $_REQUEST["ID"];
+
+        $Fecha = date("Y-m-d");
+        $ID_TipoAccion = 3;
+        $Detalles = "El usuario con ID: $ID_Usuario ha dado de baja una Peticion. Datos: Peticion: $ID_Peticion";
+
+        try {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            $cat = new Solicitud_Unificacion(coneccion: $Con, xID_Solicitud: $ID_Peticion);
+            $cat->delete();
+            $accion = new Accion(xaccountid: $ID_Usuario,
+                                 xFecha: $Fecha,
+                                 xDetalles: $Detalles, 
+                                 xID_TipoAccion: $ID_TipoAccion);
+            $accion->save();
+            $Con->CloseConexion();
+            $Mensaje = "La solicitud fue eliminada Correctamente";
+            header('Location: ../home?Mensaje=' . $Mensaje);
+        } catch (Exception $e) {
+            echo "Error: ".$e->getMessage();
+        }
+    }
 }
