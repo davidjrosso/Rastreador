@@ -651,6 +651,22 @@ export function mensajeDeProcesamiento(mensaje) {
     swal.fire(mensaje, '', 'success');
 }
 
+export function VerificarDeleteEscuela(xID){
+        swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer eliminar esta escuela?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                window.location.href = 'delete_escuela?ID=' + xID;
+            }
+        });
+}
+
+
 export function CargarEscuelas(xValor){
     let ID_Nivel = xValor;
     let xMLHTTP = new XMLHttpRequest();

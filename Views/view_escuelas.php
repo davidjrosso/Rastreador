@@ -1,15 +1,5 @@
 <?php 
 
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-
-header("Content-Type: text/html;charset=utf-8");
-
-$ID_Usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $usuario->get_id_tipo_usuario();
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -38,6 +28,8 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   autoclose: true,
               });
           });
+      let mensajeError = '<?php echo $mensaje_error;?>';
+      let mensajeSuccess = '<?php echo $mensaje_success;?>';
 
 
   </script>
@@ -110,18 +102,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   </div>
 </div>
 </div>
-<?php  
-if(isset($_REQUEST['Mensaje'])){
-  echo "<script type='text/javascript'>
-  swal('".$_REQUEST['Mensaje']."','','success');
-</script>";
-}
-if(isset($_REQUEST['MensajeError'])){
-  echo "<script type='text/javascript'>
-  swal('".$_REQUEST['MensajeError']."','','warning');
-</script>";
-}
-?>
 <?php
 /*
  *

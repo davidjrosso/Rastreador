@@ -43,6 +43,8 @@ class EscuelaController
             $TipoUsuario = $usuario->get_id_tipo_usuario();
             $Element = new Elements();
             $DTGeneral = new CtrGeneral();
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 
             include("./Views/view_escuelas.php");
         }
