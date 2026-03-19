@@ -12,7 +12,7 @@ class Solicitud_EliminarCategoria
     private $Estado;
     private $ID_Usuario;
     private $ID_Categoria;
-
+    private $coneccion;
     public static function get_categorias()
     {
         $con = new Conexion();
@@ -106,15 +106,76 @@ class Solicitud_EliminarCategoria
 
 
     //METODO CONSTRUCTOR
-    public function __construct($xID,$xFecha,$xCategoria,$xCod_Categoria,$xEstado,$xID_Usuario,$xID_Categoria)
-    {
-        $this->ID = $xID;
-        $this->Fecha = $xFecha;
-        $this->Categoria = $xCategoria;
-        $this->Cod_Categoria = $xCod_Categoria;
-        $this->Estado = $xEstado;
-        $this->ID_Usuario = $xID_Usuario;
-        $this->ID_Categoria = $xID_Categoria;
+    public function __construct(
+                                $xID = null,
+                                $xFecha = null,
+                                $xCategoria = null,
+                                $xCod_Categoria = null,
+                                $xEstado = null,
+                                $xID_Usuario = null,
+                                $xID_Categoria = null,
+                                $xConeccion = null
+                                ) {
+        $this->coneccion = $xConeccion;
+        if (empty($xID)) {
+            $this->ID = $xID;
+            $this->Fecha = $xFecha;
+            $this->Categoria = $xCategoria;
+            $this->Cod_Categoria = $xCod_Categoria;
+            $this->Estado = $xEstado;
+            $this->ID_Usuario = $xID_Usuario;
+            $this->ID_Categoria = $xID_Categoria;
+        } else {
+			$consulta = "SELECT *
+						 FROM solicitudes_eliminarcategorias 
+						 WHERE ID = " . $xID . " 
+						   AND Estado = 1";
+			$ejec = mysqli_query(
+				$this->coneccion->Conexion,
+				$consulta) or die("Problemas al consultar filtro solicitudes_modificarcategorias");
+			$ret = mysqli_fetch_assoc($ejec);
+
+            $this->ID = $xID;
+            $this->Fecha = $ret["Fecha"];
+            $this->Cod_Categoria = $ret["Cod_Categoria"];
+            $this->Categoria = $ret["Categoria"];
+            $this->Estado = $ret["Estado"];
+            $this->ID_Usuario = $ret["ID_Usuario"];
+            $this->ID_Categoria = $ret["ID_Categoria"];
+               
+        }
     }
 
+    public function save()
+    {
+        $consulta = "INSERT INTO solicitudes_eliminarcategorias(
+                                                                 Fecha,
+                                                                 Cod_Categoria,
+                                                                 Categoria,
+                                                                 ID_Forma,
+                                                                 Estado,
+                                                                 ID_Usuario,
+                                                                 ID_Categoria
+                                                                 ) values (
+                                                                      '" . (($this->getFecha()) ? $this->getFecha() : "null") . "',
+                                                                       " . (($this->getCod_Categoria()) ? "'" . $this->getCod_Categoria() . "'" : "null") . ",
+                                                                       " . (($this->getCategoria()) ? "'" . $this->getCategoria() . "'" : "null") . ",
+                                                                       " . (($this->getEstado()) ? $this->getEstado() :  "null")  . ",
+                                                                       " . (($this->getID_Usuario()) ? $this->getID_Usuario() :  "null")  . ",
+                                                                       " . (($this->getID_Categoria()) ? $this->getID_Categoria() :  "null")  . "
+                                                                )";
+        $MensajeError = "No se pudo enviar la solicitud";
+        mysqli_query($this->coneccion->Conexion, $consulta) or die($MensajeError);
+		$this->ID = mysqli_insert_id($this->coneccion->Conexion);
+
+    }
+
+    function delete()
+    {
+        $consulta = "delete solicitudes_eliminarcategorias
+                     where ID = " . $this->getID();
+        $MensajeError = "No se pudo del la solicitud";
+        mysqli_query($this->coneccion->Conexion, $consulta) or die($MensajeError);
+
+    }
 }

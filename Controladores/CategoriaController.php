@@ -373,58 +373,55 @@ class CategoriaController
         }
     }
 
-    public function sol_mod_control(
-                                    $id_categoria = null,
-                                    $mensaje = null,
-                                    $mensaje_error = null
-    ){
+    public function sol_mod_control()
+    {
         $ID_Usuario = $_SESSION["Usuario"];
-
-        $ID_Motivo = $_REQUEST["ID"];
-        $Motivo = $_REQUEST["Motivo"];
+        $Grupo_Usuarios = $_REQUEST["Tipo_Usuario"];
+        $ID_Categoria = $_REQUEST["ID"];
         $Codigo = strtoupper($_REQUEST["Codigo"]);
-        $ID_Categoria = $_REQUEST["ID_Categoria"];
-        $Num_Motivo = 0;
+        $Categoria = $_REQUEST["Categoria"];
+        $ID_Forma = $_REQUEST["ID_Forma"];
+        $NuevoColor = $_REQUEST["CodigoColor"];
 
         $Fecha = date("Y-m-d");
         $Estado = 1;
 
         if ($ID_Categoria > 0) {
-            $Con = new Conexion();
-            $Con->OpenConexion();
+            $con = new Conexion();
+            $con->OpenConexion();
 
-            $categoria = new Categoria(
-                                       xConecction: $Con,
-                                       xID_Categoria: $ID_Categoria
-                                      );
-            $Cod_Categoria = $categoria->getCod_Categoria();
+            $solicitud = new Solicitud_ModificarCategoria(
+                                                        coneccion_base: $con,
+                                                        xFecha: $Fecha,
+                                                        xCodigo: $Codigo,
+                                                        xCategoria: $Categoria,
+                                                        xID_Forma: $ID_Forma,
+                                                        xNuevoColor: $NuevoColor,
+                                                        xEstado: $Estado,
+                                                        xID_Usuario: $ID_Usuario,
+                                                        xID_Categoria: $ID_Categoria
+                                                        );
+            $solicitud->save();
+            $id_solicitud = $solicitud->getID();
+            foreach ($Grupo_Usuarios as $key => $value) {
+                $solicitud_permiso = new SolicitudPermiso(
+                                                        coneccion_base: $con,
+                                                        id: $id_solicitud,
+                                                        id_tipo_usuario: $value,
+                                                        fecha: $Fecha
+                                                        );
+                $solicitud_permiso->save();
+            }
 
-            $Solicitud = new Solicitud_ModificarMotivo(
-                                                  0,
-                                                    $Fecha,
-                                                   $Motivo,
-                                                   $Codigo,
-                                                   $Cod_Categoria,
-                                                   $Num_Motivo,
-                                                   $Estado,
-                                                   $ID_Usuario,
-                                                   $ID_Motivo
-                                                      );
-            $Insert_Solicitud = "insert into solicitudes_modificarmotivos(Fecha,Motivo,Codigo,Cod_Categoria,Num_Motivo,Estado,ID_Usuario,ID_Motivo) values('{$Solicitud->getFecha()}','{$Solicitud->getMotivo()}','{$Solicitud->getCodigo()}','{$Solicitud->getCod_Categoria()}',{$Solicitud->getNum_Motivo()},{$Solicitud->getEstado()},{$Solicitud->getID_Usuario()},{$Solicitud->getID_Motivo()})";
-            $MensajeError = "No se pudo enviar la solicitud";
-
-            mysqli_query($Con->Conexion,$Insert_Solicitud) or die($MensajeError);
-
-            $Con->CloseConexion();
+            $con->CloseConexion();
             $Mensaje = "La solicitud de modificación se envió a los administradores para ser confirmada.";
-            header('Location: /motivos?Mensaje=' . $Mensaje);
+            header('Location: /categorias?Mensaje=' . $Mensaje);
         } else {
             $MensajeError = "Debe seleccionar una Categoria";
-            header('Location: /motivo/editar?ID=' . $ID_Motivo . '&MensajeError=' . $MensajeError);
+            header('Location: /categoria/editar?ID=' . $ID_Categoria . '&MensajeError=' . $MensajeError);
         }
-        exit();
     }
-
+    
     public function mod_categoria_control()
     {
         $ID_Usuario = $_SESSION["Usuario"];

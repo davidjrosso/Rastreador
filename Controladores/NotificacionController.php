@@ -41,4 +41,34 @@ class NotificacionController
         $ID_Filtro = $_REQUEST["ID_Filtro"];
         header("Location: ../notificacion?ID_Filtro=" . $id_filtro);
     }
+
+    public function delete_notificacion_control()
+    {
+        $ID = $_REQUEST["ID"];
+
+        $ID_Usuario = $_SESSION["Usuario"];
+        $Fecha = date("Y-m-d");
+        $ID_TipoAccion = 3;
+        $Detalles = "El usuario con ID: $ID_Usuario ha dado de baja una Notificacion. Datos: Notificacion: $ID";
+
+        try {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            $Consulta = "update notificaciones set estado = 0 where ID_Notificacion = $ID";
+            if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
+                throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 0);		
+            }
+            $ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
+            if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
+                throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 1);
+            }
+            $Con->CloseConexion();
+            $Mensaje = "La notificación fue eliminada correctamente";
+            header('Location: ../view_inicio.php?Mensaje='.$Mensaje);
+        } catch (Exception $e) {
+            echo "Error: ".$e->getMessage();
+        }
+        
+    }
 }
