@@ -227,7 +227,7 @@ try {
 	$routes[] = Route::get('listado_notificacion_control', '/lista_notificacion_control\?ID_Filtro={id_filtro}', [NotificacionController::class, 'listado_notificacion_control']);
 	$routes[] = Route::get('notificacion_filtro', '/notificacion\?ID_Filtro={id_filtro}', [NotificacionController::class, 'listado_notificacion']);
 	$routes[] = Route::get('solicitud', '/solicitud', [SolicitudController::class, 'listado_solicitud']);
-	$routes[] = Route::post('solicitud', '/solicitud', [SolicitudController::class, 'listado_solicitud']);
+	$routes[] = Route::post('solicitud_filtro', '/solicitud', [SolicitudController::class, 'listado_solicitud']);
 	$routes[] = Route::get('solicitud_filtr', '/solicitud\?filtro={filtro}/ID_Filtro={id_filtro}', [SolicitudController::class, 'listado_solicitud']);
 	$routes[] = Route::get('listado_solicitud_control', '/listado_solicitud_control\?filtro={filtro}/ID_Filtro={id_filtro}', [SolicitudController::class, 'listado_solicitud_control']);
 	$routes[] = Route::get('auditoria', '/auditoria', [AccionController::class, 'listado_auditoria']);
