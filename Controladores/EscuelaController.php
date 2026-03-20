@@ -51,6 +51,25 @@ class EscuelaController
         exit();
     }
 
+     public function new_escuela()
+    {
+        header('Content-Type: text/html; charset=utf-8');
+        if (!isset($_SESSION["Usuario"])) {
+
+            include("./Views/Error_Session.php");
+        } else {
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
+            include("./Views/view_newescuelas.php");
+        }
+        exit();
+    }   
     public function mod_escuela($id_escuela)
     {
         header('Content-Type: text/html; charset=utf-8');
@@ -61,6 +80,10 @@ class EscuelaController
             $ID_Usuario = $_SESSION["Usuario"];
             $usuario = new Account(account_id: $ID_Usuario);
             $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 
             include("./Views/view_modescuelas.php");
         }
@@ -111,7 +134,7 @@ class EscuelaController
             $Mail = 'null';
         }
 
-        $Fecha = date("Y-m-d");
+        $fecha = date("Y-m-d");
         $ID_TipoAccion = 1;
         $Detalles = "El usuario con ID: $ID_Usuario ha registrado una nueva Escuela. Datos: Codigo: $Codigo - Escuela: $Escuela - CUE: $CUE - Localidad: $Localidad - Departamento: $Departamento - Directora: $Directora - Telefono: $Telefono - Mail: $Mail - Nivel: $ID_Nivel";
 
@@ -119,31 +142,38 @@ class EscuelaController
         $Con->OpenConexion();
 
         try {
-            $ConsultarResponsablesIguales = "select * from escuelas where Escuela = '$Escuela' and Estado = 1";
-            if(!$Ret = mysqli_query($Con->Conexion,$ConsultarResponsablesIguales)){
-                throw new Exception("Error al consultar registros. Consulta: ".$ConsultarResponsablesIguales, 0);		
-            }
-            $Resultado = mysqli_num_rows($Ret);
-            if($Resultado > 0){
+            if (Escuela::exist_name($Escuela, $Con)) { 
                 $Con->CloseConexion();
                 $Mensaje = "Ya existe una Escuela con ese Nombre";
-                header('Location: ../view_newescuelas.php?MensajeError='.$Mensaje);
-            }else{
-                $InstEscuela = new Escuela(0,$Codigo,$Escuela,$CUE,$Localidad,$Departamento,$Directora,$Telefono,$Mail,$ID_Nivel,$Estado);
-                $Consulta = "insert into escuelas(Codigo,Escuela,CUE,Localidad,Departamento,Directora,Telefono,Mail,ID_Nivel,Estado) values('{$InstEscuela->getCodigo()}','{$InstEscuela->getEscuela()}','{$InstEscuela->getCUE()}','{$InstEscuela->getLocalidad()}','{$InstEscuela->getDepartamento()}','{$InstEscuela->getDirectora()}','{$InstEscuela->getTelefono()}','{$InstEscuela->getMail()}',{$InstEscuela->getID_Nivel()},{$InstEscuela->getEstado()})";
-                if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
-                    throw new Exception("Error al intentar registrar. Consulta: ".$Consulta, 1);
-                }	
-                $ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
-                if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
-                    throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 2);
-                }
+                header('Location: /escuela/nueva?MensajeError=' . $Mensaje);
+            } else {
+                $Escuela_Nueva = new Escuela(
+                                            coneccion_base: $Con,
+                                            xCodigo: $Codigo,
+                                            xEscuela: $Escuela,
+                                            xCUE: $CUE,
+                                            xLocalidad: $Localidad,
+                                            xDepartamento: $Departamento,
+                                            xDirectora: $Directora,
+                                            xTelefono: $Telefono,
+                                            xMail: $Mail,
+                                            xID_Nivel: $ID_Nivel,
+                                            xEstado: $Estado);
+                $Escuela_Nueva->save();
+                $accion = new Accion(
+                                    xaccountid: $ID_Usuario,
+                                    xDetalles: $Detalles,
+                                    xFecha: $fecha,
+                                    xID_TipoAccion: $ID_TipoAccion
+                                    );
+                $accion->save();
+
                 $Con->CloseConexion();
                 $Mensaje = "La Escuela se registro Correctamente";
-                header('Location: ../view_newescuelas.php?Mensaje='.$Mensaje);
+                header('Location: /escuela/nueva?Mensaje=' . $Mensaje);
             }
         } catch (Exception $e) {
-            echo "Error: ".$e->getMessage();
+            echo "Error: " . $e->getMessage();
         }        
     }
     public function datos_escuela($id_escuela)
@@ -155,6 +185,10 @@ class EscuelaController
             $ID_Usuario = $_SESSION["Usuario"];
             $usuario = new Account(account_id: $ID_Usuario);
             $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 
             include("./Views/view_verescuelas.php");
         }
@@ -312,8 +346,11 @@ class EscuelaController
             $ID_Usuario = $_SESSION["Usuario"];
             $usuario = new Account(account_id: $ID_Usuario);
             $TipoUsuario = $usuario->get_id_tipo_usuario();
-
             $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
             include("./Views/view_unifescuelas.php");
         }
         exit();

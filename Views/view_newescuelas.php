@@ -1,29 +1,11 @@
 <?php 
-session_start(); 
-require_once "Controladores/Elements.php";
-require_once "Controladores/CtrGeneral.php";
-header("Content-Type: text/html;charset=utf-8");
-
-/*     CONTROL DE USUARIOS                    */
-if(!isset($_SESSION["Usuario"])){
-    header("Location: Error_Session.php");
-}
-
-$Con = new Conexion();
-$Con->OpenConexion();
-$ID_Usuario = $_SESSION["Usuario"];
-$ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
-$MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
-$EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
-$Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
-$TipoUsuario = $Ret["ID_TipoUsuario"];
-$Con->CloseConexion();
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <title>Rastreador III</title>
   <meta charset="utf-8">
+  <base href="/">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -42,6 +24,7 @@ $Con->CloseConexion();
   <script src="js/ValidarResponsable.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script src="js/ValidarEscuela.js"></script>
+  <script src="./dist/"></script>
   <!--
   <script>
        $(document).ready(function(){
@@ -83,7 +66,6 @@ $Con->CloseConexion();
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_ESCUELA);
   ?>
   <div class = "col-md-9">
@@ -161,7 +143,6 @@ $Con->CloseConexion();
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nivel *: </label>
               <div class="col-md-10">
                 <?php 
-                  $Element = new Elements();
                   echo $Element->CBNivelEscuelas();
                 ?>
               </div>
@@ -183,18 +164,6 @@ $Con->CloseConexion();
   </div>
 </div>
 </div>
-<?php  
-if(isset($_REQUEST['Mensaje'])){
-  echo "<script type='text/javascript'>
-  swal('".$_REQUEST['Mensaje']."','','success');
-</script>";
-}
-if(isset($_REQUEST['MensajeError'])){
-  echo "<script type='text/javascript'>
-  swal('".$_REQUEST['MensajeError']."','','warning');
-</script>";
-}
-?>
 <?php
 /*
  *
