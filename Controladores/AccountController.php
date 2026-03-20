@@ -36,6 +36,15 @@ class AccountController
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
+            $id_usuario = $_SESSION["Usuario"];
+            $account = new Account(account_id: $id_usuario);
+            $tipo_usuario = $account->get_id_tipo_usuario();
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
             include("./Views/view_usuarios.php");
         }
         exit();
@@ -116,6 +125,24 @@ class AccountController
         exit();
     }
 
+    public function new_account()
+    {
+        if (!isset($_SESSION["Usuario"])) {
+            include("./Views/Error_Session.php");
+        } else {
+            $id_usuario = $_SESSION["Usuario"];
+            $account = new Account(account_id: $id_usuario);
+            $tipo_usuario = $account->get_id_tipo_usuario();
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
+            include("./Views/view_newusuarios.php");
+        }
+         
+    }
     public function mod_account_control()
     {
         $ID_Usuario = $_SESSION["Usuario"];
@@ -191,7 +218,7 @@ class AccountController
                 $user->set_password($password);
                 $user->update();
                 $Mensaje = "El Usuario fue modificado Correctamente";
-                header("Location: ../view_solicitud.php?Mensaje=" . $Mensaje);
+                header("Location: /solicitud?Mensaje=" . $Mensaje);
 
             }
         } catch (Exception $e) {
@@ -199,4 +226,51 @@ class AccountController
         }
         exit();
     }
-}
+
+    public function new_account_control()
+    {
+        $lastname = ucfirst($_REQUEST["lastname"]);
+        $firstname = ucwords($_REQUEST["firstname"]);
+        $initials = strtoupper($_REQUEST["initials"]);
+        $username = $_REQUEST["username"];
+        $userpass = $_REQUEST["userpass"];
+        $email = $_REQUEST["email"];
+        $estado = 1;
+        $ID_TipoUsuario = $_REQUEST["ID_TipoUsuario"];
+
+        try {
+            $has8characters = (mb_strlen($userpass) >= 8);
+            $hasAlpha = preg_match('~[a-zA-Z]+~', $userpass);
+            $hasNum = preg_match('~[0-9]+~', $userpass);
+            $hasNonAlphaNum = preg_match('~[\!\@#$%\?&\*\(\)_\-\+=]+~', $userpass);
+
+            if (!($has8characters && $hasAlpha && $hasNum && !$hasNonAlphaNum)) {
+                $mensaje = "La contraseña debe contener 8 caracteres, alfabeticos y numericos";
+                header('Location: ../view_newusuarios.php?MensajeError=' . $mensaje);
+            }
+
+            $resultado = Account::exist_user($username);
+            if ($resultado > 0) {
+                $mensaje = "Ya existe un usuario con ese Nombre";
+                header('Location: ../view_newusuarios.php?MensajeError=' . $mensaje);
+            } else {
+                $usuario = new Account(
+                            first_name: $firstname,
+                            last_name: $lastname,
+                            initials: $initials,
+                            user_name: $username,
+                            password: $userpass,
+                                email: $email,
+                                estado: $estado,
+                    id_tipo_usuario: $ID_TipoUsuario
+                    );
+                $usuario->save();
+                $mensaje = "El Usuario fue registrado Correctamente";
+                header('Location: ../view_newusuarios.php?Mensaje=' . $mensaje);
+            }
+        } catch (Exception $e) {
+            echo "Error: ".$e->getMessage();
+        }
+    }
+
+    }
