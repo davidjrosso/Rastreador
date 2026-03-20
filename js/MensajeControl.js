@@ -666,6 +666,37 @@ export function VerificarDeleteEscuela(xID){
         });
 }
 
+export function VerificarDeleteUsuario(xID){
+    swal.fire({
+        title: "¿Está seguro?",
+        text: "Una vez eliminado el usuario ya no podra acceder al sistema",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+        window.location.href = 'Controladores/DeleteUsuario.php?ID='+xID;
+        }
+    });
+}
+
+export function VerificarDeleteMovimiento(xID) {
+      swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer eliminar este movimiento?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+        .then((willDelete) => {
+          if (willDelete) {
+            window.location.href = 'Controladores/DeleteMovimiento.php?ID=' + xID;
+          } else {
+          }
+        });
+    }
+
 
 export function CargarEscuelas(xValor){
     let ID_Nivel = xValor;

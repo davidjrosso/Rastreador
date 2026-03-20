@@ -6,6 +6,7 @@
 <head>
   <title>Rastreador III</title>
   <meta charset="utf-8">
+  <base href="/">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
@@ -22,6 +23,7 @@
     integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
     crossorigin="anonymous"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script href="../dist/control.js"
   <script>
     $(document).ready(function () {
       var date_input = $('input[name="date"]'); //our date input has the name "date"
@@ -61,22 +63,6 @@
 
     });
 
-    function Verificar(xID) {
-      swal({
-        title: "¿Está seguro?",
-        text: "¿Seguro de querer eliminar este movimiento?",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      })
-        .then((willDelete) => {
-          if (willDelete) {
-            window.location.href = 'Controladores/DeleteMovimiento.php?ID=' + xID;
-            //alert('SI');
-          } else {
-          }
-        });
-    }
 
   </script>
 
@@ -110,7 +96,7 @@
       <br>
       <div class="row">
         <div class="col-10">
-          <form method="post" action="Controladores/CtrBuscarAuditoria.php">
+          <form method="post" action="/auditoria">
             <div class="form-group row">
               <label for="valor_filtro" class="col-md-2 col-form-label LblForm">Buscar: </label>
               <div class="col-md-4">
@@ -138,8 +124,8 @@
           <br><br>
           <div class="row">
             <?php
-            if (isset($_REQUEST["Filtro"]) && !empty($_REQUEST["ID_Filtro"])) {
-              $valor = $_REQUEST["Filtro"];
+            if (isset($_REQUEST["Search"])) {
+              $valor = $_REQUEST["Search"];
               $id_filtro = $_REQUEST["ID_Filtro"];
               echo $dt_general->get_acciones(filtro: $id_filtro, value: $valor);
             } else {
