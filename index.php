@@ -157,10 +157,12 @@ try {
 	$routes[] = Route::get('unif_centro_salud', '/centrosalud/unificar', [CentroSaludController::class, 'unif_centro_salud']);
 	$routes[] = Route::get('sol_unif_centro_salud_control', '/pedirunificarcentros_salud', [CentroSaludController::class, 'sol_unif_centro_salud_control']);
 	$routes[] = Route::get('accounts', '/usuarios', [AccountController::class, 'listado_accounts']);
+	$routes[] = Route::post('accounts_filtro', '/usuarios', [AccountController::class, 'listado_accounts']);
 	$routes[] = Route::get('mod_account', '/usuario/editar\?account_id={id}', [AccountController::class, 'mod_account']);
 	$routes[] = Route::get('mod_account_success', '/usuario/editar\?account_id={id}/Mensaje={mensaje}', [AccountController::class, 'mod_account']);
 	$routes[] = Route::get('mod_account_error', '/usuario/editar\?account_id={id}/MensajeError={mensaje}', [AccountController::class, 'mod_account']);
-	$routes[] = Route::post('new_account', '/usuario/nuevo', [AccountController::class, 'new_account']);
+	$routes[] = Route::get('new_account', '/usuario/nuevo', [AccountController::class, 'new_account']);
+	$routes[] = Route::post('new_account_control', '/new_account', [AccountController::class, 'new_account_control']);
 	$routes[] = Route::get('accounts_user', '/cuenta\?account_id={id}', [AccountController::class, 'dato_account_user']);
 	$routes[] = Route::get('accounts_mensaje', '/cuenta\?account_id={id}/Mensaje={mensaje}', [AccountController::class, 'dato_account_user']);
 	$routes[] = Route::get('accounts_mensaje_error', '/cuenta\?account_id={id}/MensajeError={mensaje}', [AccountController::class, 'dato_account_user']);

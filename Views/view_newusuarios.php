@@ -1,29 +1,11 @@
 <?php 
-session_start(); 
-require_once "Controladores/Elements.php";
-require_once "Controladores/CtrGeneral.php";
-header("Content-Type: text/html;charset=utf-8");
-
-/*     CONTROL DE USUARIOS                    */
-if(!isset($_SESSION["Usuario"])){
-    header("Location: Error_Session.php");
-}
-
-$Con = new Conexion();
-$Con->OpenConexion();
-$ID_Usuario = $_SESSION["Usuario"];
-$ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
-$MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
-$EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
-$Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
-$TipoUsuario = $Ret["ID_TipoUsuario"];
-$Con->CloseConexion();
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <title>Rastreador III</title>
   <meta charset="utf-8">
+  <base href="/">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -92,8 +74,7 @@ $Con->CloseConexion();
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
-  echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_USUARIO);
+  echo $Element->menuDeNavegacion($tipo_usuario, $id_usuario, $Element::PAGINA_USUARIO);
   ?>
   <div class = "col-md-9">
     <div class="row">
@@ -108,7 +89,7 @@ $Con->CloseConexion();
       <div class = "col-10">
           <!-- Carga -->
           <p class = "Titulos">Cargar Nuevo Usuario</p>
-          <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/InsertUsuario.php" onSubmit = "return ValidarUsuario();">
+          <form method = "post" onKeydown="return event.key != 'Enter';" action = "/new_account" onSubmit = "return ValidarUsuario();">
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Apellido*: </label>
               <div class="col-md-10">
@@ -152,7 +133,7 @@ $Con->CloseConexion();
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Permiso: </label>
               <div class="col-md-10">
-                <?php $Element = new Elements();
+                <?php
                 echo $Element->CBTipoUsuarios();?>
               </div>
             </div>
@@ -173,20 +154,7 @@ $Con->CloseConexion();
   </div>
 </div>
 </div>
-<?php  
-if(isset($_REQUEST['Mensaje'])){
-  $Mensaje = $_REQUEST['Mensaje'];
-  echo "<script type='text/javascript'>
-  swal('".$Mensaje."','','success');
-</script>";
-}
-if(isset($_REQUEST['MensajeError'])){
-  $MensajeError = $_REQUEST['MensajeError'];
-  echo "<script type='text/javascript'>
-  swal('".$MensajeError."','','warning');
-</script>";
-}
-?>
+
 <?php
 /*
  *
