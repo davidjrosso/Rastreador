@@ -682,23 +682,42 @@ export function VerificarDeleteUsuario(xID){
 }
 
 export function VerificarDeleteMovimiento(xID) {
-      swal.fire({
+    swal.fire({
         title: "¿Está seguro?",
         text: "¿Seguro de querer eliminar este movimiento?",
         icon: "warning",
         buttons: true,
         dangerMode: true,
-      })
-        .then((willDelete) => {
-          if (willDelete) {
-            window.location.href = 'Controladores/DeleteMovimiento.php?ID=' + xID;
-          } else {
-          }
-        });
-    }
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+        window.location.href = 'Controladores/DeleteMovimiento.php?ID=' + xID;
+        } else {
+        }
+    });
+}
+
+export function VerificarUnificacionDireccion() {
+    let Form_1= document.getElementById("form_1");
+    swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer unificar estas direcciones?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((result) => {
+        if (result) {
+            Form_1.submit();
+            return true;
+        } else {
+            return false;
+        }
+    });
+}
 
 
-export function CargarEscuelas(xValor){
+export function CargarEscuelas(xValor) {
     let ID_Nivel = xValor;
     let xMLHTTP = new XMLHttpRequest();
 
@@ -711,7 +730,7 @@ export function CargarEscuelas(xValor){
     xMLHTTP.send();
 }
 
-export function buscarCalles(){
+export function buscarCalles() {
     let xNombre = document.getElementById('SearchCalle').value;
     let textoBusqueda = xNombre;
     let xmlhttp = null;
@@ -831,6 +850,37 @@ export function buscarPersonas(id){
     xmlhttp.open('POST', 'buscar_personas', true);
     xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xmlhttp.send(url);
+}
+
+export function buscarDireccionModal(){
+    let xDireccion = document.getElementById('SearchDireccion').value;
+    let textoBusqueda = xDireccion;
+    let contenidosRecibidos = null;
+    let xmlhttp = null;
+
+    if (textoBusqueda) {
+        xmlhttp=new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+        contenidosRecibidos = xmlhttp.responseText;
+        document.getElementById("ResultadosPersonas_1").innerHTML=contenidosRecibidos;
+        document.getElementById("ResultadosDirecciones").innerHTML=contenidosRecibidos;
+        }
+    }
+    xmlhttp.open('POST', '/buscar_unif_direcciones?valorBusqueda=' + textoBusqueda, true); // Método post y url invocada
+    xmlhttp.send();
+    }
+}
+
+export function actualizarContenido(){
+    let BotonModalPersona = document.getElementById("BotonModalPersona_1");
+    let SearchDireccionValue = document.getElementById("SearchDireccion").value;
+    
+    if(SearchDireccionValue != ""){
+    BotonModalPersona.innerText = SearchDireccionValue;
+    } else {
+    BotonModalPersona.innerText = "Buscar Dirección";
+    }
 }
 
 export function buscarMotivos(id){

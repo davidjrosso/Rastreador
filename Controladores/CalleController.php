@@ -210,7 +210,15 @@ class CalleController
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
-            include("./Views/view_unifdirecciones.php");
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
+           include("./Views/view_unifdirecciones.php");
         }
         exit();
     }
@@ -222,43 +230,30 @@ class CalleController
 
         $ArrPersonas = explode(",", $ArrPersonas);
 
-        if ($ArrPersonas[0] === '0') {
+
+        if (empty($ArrPersonas[0])) {
             $MensajeError = "Debe seleccionar los datos a modificar";
-            header('Location: /calles?MensajeError='.$MensajeError);
+            header('Location: /persona/unif?MensajeError=' . $MensajeError);
         } else {
             $Con = new Conexion();
             $Con->OpenConexion();
 
             foreach ($ArrPersonas as $value) {
-                $ConsultarDireccion = "select domicilio from persona where id_persona = $value";
-                $MensajeErrorConsultar = "No se pudo consultar la direccion de la persona";
-
-                $EjecutarConsultarDireccion = mysqli_query($Con->Conexion,$ConsultarDireccion) or die($MensajeErrorConsultar);
-                $RetConsultarDireccion = mysqli_fetch_assoc($EjecutarConsultarDireccion);
-                $DomActual = $RetConsultarDireccion["domicilio"];
+                $persona = new Persona(ID_Persona: $value);
+                $DomActual = $persona->getDomicilio();
 
                 //$DomActual = preg_replace('/[0-9]+/','', $DomActual);
                 $LongString = strlen($DomActual); 
                 $StringDelimitado = chunk_split($DomActual,$LongString - 4,"-");
                 $PartesDireccion = explode("-", $StringDelimitado);
                 $DomActual = $PartesDireccion[0];
-                
-                if ($DomActual == "") {
-                    $ModificarDireccion = "update persona set domicilio = '$Calle' where id_persona = $value";
-                } else {
-                    $ModificarDireccion = "update persona set domicilio = REPLACE(domicilio,'$DomActual','$Calle ') where id_persona = $value";	
-                }		
-                
-                $MensajeErrorModificar = "No se pudieron modificar las direcciones solicitadas";
-                
-                mysqli_query($Con->Conexion,$ModificarDireccion) or die($MensajeErrorModificar);
+                $persona->setDomicilio($Calle);
             }
 
             $Con->CloseConexion();
             $Mensaje = "Las direcciones se modificaron Correctamente";
-            header('Location: /calles?Mensaje=' . $Mensaje);
-            exit();
-        }
+            header('Location: /persona/unif?Mensaje=' . $Mensaje);
+        }        
     }
 
     public function buscar_unif_direcciones($valor)
@@ -285,8 +280,13 @@ class CalleController
             //donde el nombre sea igual a $consultaBusqueda, 
             //o el apellido sea igual a $consultaBusqueda, 
             //o $consultaBusqueda sea igual a nombre + (espacio) + apellido
+            $query = "SELECT id_persona, apellido, nombre, CONCAT(c.calle_nombre, ' ', s.nro) as direccion
+                      FROM persona s INNER JOIN calle c ON (s.calle = c.id_calle)
+                      WHERE calle_nombre LIKE '%$consultaBusqueda%' 
+                        and s.estado = 1 
+                        order by apellido ASC, nombre ASC, calle_nombre ASC";
 
-            $consulta = mysqli_query($Con->Conexion, "SELECT id_persona, apellido, nombre, domicilio FROM persona WHERE domicilio LIKE '%$consultaBusqueda%' and estado = 1 order by apellido ASC, nombre ASC, domicilio ASC");
+            $consulta = mysqli_query($Con->Conexion, $query);
 
 
             //Obtiene la cantidad de filas que hay en la consulta
@@ -313,14 +313,14 @@ class CalleController
                 while($resultados = mysqli_fetch_array($consulta)) {
                     $ID_Persona = $resultados["id_persona"];
                     $NombrePersona = $resultados["apellido"].", ".$resultados["nombre"];
-                    $Domicilio = $resultados["domicilio"];
+                    $Domicilio = $resultados["direccion"];
 
                     //Output
                     $mensaje .= '
                         <tr>
                         <th scope="row">' . $NombrePersona . '</th>
                         <th scope="row">' . $Domicilio . '</th>
-                        <td><button type = "button" class = "btn btn-outline-success" onClick="seleccionDireccion(\''.$ID_Persona.'\',this)">seleccionar</button></td>
+                        <td><button type = "button" class = "btn btn-outline-success" onClick="seleccionDireccion(\'' . $ID_Persona . '\',this)">seleccionar</button></td>
                         </tr>';
 
                 };//Fin while $resultados

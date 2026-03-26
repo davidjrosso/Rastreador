@@ -18,15 +18,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-
-header("Content-Type: text/html;charset=utf-8");
-
-$ID_Usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $usuario->get_id_tipo_usuario();
 
 ?>
 <!DOCTYPE html>
@@ -47,41 +38,16 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="js/ValidarUnifPersonas.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="./dist/control.js"></script>
   <script>
         var Personas = [];
-
-        function buscarDireccionModal(){
-          let xDireccion = document.getElementById('SearchDireccion').value;
-          let textoBusqueda = xDireccion;
-          if (textoBusqueda) {
-            xmlhttp=new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function() {
-              if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-                contenidosRecibidos = xmlhttp.responseText;
-                document.getElementById("ResultadosPersonas_1").innerHTML=contenidosRecibidos;
-                document.getElementById("ResultadosDirecciones").innerHTML=contenidosRecibidos;
-                }
-            }
-            xmlhttp.open('POST', '/buscar_unif_direcciones?valorBusqueda=' + textoBusqueda, true); // Método post y url invocada
-            xmlhttp.send();
-          }
-        }
-
-        function actualizarContenido(){
-          var BotonModalPersona = document.getElementById("BotonModalPersona_1");
-          var SearchDireccionValue = document.getElementById("SearchDireccion").value;
-          
-          if(SearchDireccionValue != ""){
-            BotonModalPersona.innerText = SearchDireccionValue;
-          } else {
-            BotonModalPersona.innerText = "Buscar Dirección";
-          }
-        }
+        let mensajeError = '<?php echo $mensaje_error;?>';
+        let mensajeSuccess = '<?php echo $mensaje_success;?>';
 
         function actualizarContenidoNuevaDireccion(){
-          var BotonModalPersona = document.getElementById("BotonModalNuevaDireccion_1");
-          var SearchDireccionValue = document.getElementById("DireccionNueva_1").value;
-          var Calle = document.getElementById("Calle");
+          let BotonModalPersona = document.getElementById("BotonModalNuevaDireccion_1");
+          let SearchDireccionValue = document.getElementById("DireccionNueva_1").value;
+          let Calle = document.getElementById("Calle");
           if (SearchDireccionValue == "") {
             BotonModalPersona.innerText = "Nueva Dirección";
             Calle.value = "";
@@ -92,42 +58,23 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
         }
 
         function seleccionDireccion(xID_Persona,xBoton){
-          var ResultadoPersonas = document.getElementById("ResultadosPersonas_1");
-          var ResultadoDirecciones = document.getElementById("ResultadosDirecciones");
-          var Table_1 = ResultadoPersonas.childNodes[0];
-          var Table_2 = ResultadoDirecciones.childNodes[0];
-          var IndexFilaTabla = xBoton.parentElement.parentElement.rowIndex;
-          var Boton_1 = Table_1.rows[IndexFilaTabla].cells[2].childNodes[0];
-          var Boton_2 = Table_2.rows[IndexFilaTabla].cells[2].childNodes[0];
+          let ResultadoPersonas = document.getElementById("ResultadosPersonas_1");
+          let ResultadoDirecciones = document.getElementById("ResultadosDirecciones");
+          let Table_1 = ResultadoPersonas.childNodes[0];
+          let Table_2 = ResultadoDirecciones.childNodes[0];
+          let IndexFilaTabla = xBoton.parentElement.parentElement.rowIndex;
+          let Boton_1 = Table_1.rows[IndexFilaTabla].cells[2].childNodes[0];
+          let Boton_2 = Table_2.rows[IndexFilaTabla].cells[2].childNodes[0];
           Personas.push(xID_Persona);
-          var ArrPersonas = document.getElementById("ArrPersonas");
+          let ArrPersonas = document.getElementById("ArrPersonas");
           ArrPersonas.value = Personas;
           Boton_1.setAttribute('class','btn btn-danger disabled');
           Boton_2.setAttribute('class','btn btn-danger disabled');
         }
 
-        function VerificarUnificacion(){
-              var Form_1= document.getElementById("form_1");
-              swal({
-                title: "¿Está seguro?",
-                text: "¿Seguro de querer unificar estas direcciones?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-              })
-              .then((result) => {
-                if (result) {
-                  Form_1.submit();
-                  return true;
-                } else {
-                  return false;
-                }
-              });
-        }
-
         function buscarCalle(){
-          var xNombre = document.getElementById('DireccionNueva_1').value;
-          var textoBusqueda = xNombre;
+          let xNombre = document.getElementById('DireccionNueva_1').value;
+          let textoBusqueda = xNombre;
           xmlhttp=new XMLHttpRequest();
           xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState==4 && xmlhttp.status==200) {
@@ -140,8 +87,8 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
         }
 
         function seleccionCalle(xNombre,xID){
-          var BotonModalPersona = document.getElementById("BotonModalNuevaDireccion_1");
-          var Calle = document.getElementById("Calle");
+          let BotonModalPersona = document.getElementById("BotonModalNuevaDireccion_1");
+          let Calle = document.getElementById("Calle");
           BotonModalPersona.innerHTML = "";
           BotonModalPersona.innerHTML = xNombre;
           Calle.setAttribute('value',xNombre);
@@ -153,7 +100,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_UNIFICACION_CALLE);
   ?>
   <div class = "col-md-9">
@@ -176,7 +122,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Cambiar: </label>
               <div class="col-md-8">
                 <?php 
-                  $Element = new Elements();
                   echo $Element->CBCalles();
                 ?>
               </div>
@@ -201,8 +146,8 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               <div class="col-md-2"></div>
               <div class="col-md-4">
                 <!--<button type="submit" class="btn btn-primary btn-block">Ok</button>-->
-                <button type="button" class="btn btn-outline-success" onclick="return VerificarUnificacion()">Aceptar</button>
-                <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Volver</button>
+                <button type="button" class="btn btn-outline-success" onclick="return VerificarUnificacionDireccion()">Aceptar</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="location.href = '/home'">Volver</button>
               </div>
             </div>
             <div class="form-group row">
@@ -214,86 +159,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
           </form>
           <br><br>
           <!-- Fin Carga -->
-          <!-- Modal SELECCION MOTIVO -->
-      <div class="modal fade bd-example-modal-lg" id="ModalCentro_1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Selección de Centro</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form>
-                <div class="row">
-                  <div class="col"></div>
-                  <div class="col-8">
-                    <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarCentros" id = "SearchCentros_1" onKeyUp="buscarCentros_1()" autocomplete="off">
-                      <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2">Buscar</span>
-                      </div>
-                    </div>                    
-                  </div>
-                  <div class="col"></div>
-                </div>
-                <div class="row">
-                  <div class="col"></div>
-                  <div class="col-10" id = "ResultadosCentros_1">
-                    
-                  </div>
-                  <div class="col"></div>
-                </div>                
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- FIN MODAL SELECCION MOTIVO -->
-      <!-- Modal SELECCION MOTIVO -->
-      <div class="modal fade bd-example-modal-lg" id="ModalCentro_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Selección de Centro</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form>
-                <div class="row">
-                  <div class="col"></div>
-                  <div class="col-8">
-                    <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarCentros" id = "SearchCentros_2" onKeyUp="buscarCentros_2()" autocomplete="off">
-                      <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2">Buscar</span>
-                      </div>  
-                    </div>                    
-                  </div>
-                  <div class="col"></div>
-                </div>
-                <div class="row">
-                  <div class="col"></div>
-                  <div class="col-10" id = "ResultadosCentros_2">
-                    
-                  </div>
-                  <div class="col"></div>
-                </div>                
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- FIN MODAL SELECCION MOTIVO -->
 
       <!-- Modal SELECCION PERSONAS -->
       <div class="modal fade bd-example-modal-lg" id="ModalPersona_1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -382,17 +247,5 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   </div>
 </div>
 </div>
-<?php  
-if(isset($_REQUEST["Mensaje"])){
-  echo "<script type='text/javascript'>
-  swal('".$_REQUEST["Mensaje"]."','','success');
-</script>";
-}
-if(isset($_REQUEST["MensajeError"])){
-  echo "<script type='text/javascript'>
-  swal('".$_REQUEST["MensajeError"]."','','warning');
-</script>";
-}
-?>
 </body>
 </html>
