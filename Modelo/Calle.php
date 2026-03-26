@@ -99,6 +99,48 @@ class Calle {
 		return $calle;
 	}
 
+	public static function existe_calle_especif($calle, $coneccion)
+	{
+		$existe_calle = false;
+		if ($calle) {
+			$consulta = "select *
+						 from calle
+						 where upper(calle_nombre) = upper('$calle')
+						   and estado = 1
+						 order by calle_nombre asc;";
+			$query_object = mysqli_query(
+								  $coneccion->Conexion, 
+								  $consulta
+								  	   ) or die("Error al consultar datos");
+			if (mysqli_num_rows($query_object) > 0) {
+				$existe_calle = true;
+			};
+		}
+		return $existe_calle;		
+	}
+
+	public static function existe_calle_con_id($calle, $id_calle, $coneccion)
+	{
+		$existe_calle = false;
+		if ($calle) {
+			$consulta = "select *
+						 from calle
+						 where upper(calle_nombre) = upper('$calle')
+						   and id_calle != $id_calle
+						   and estado = 1
+						 order by calle_nombre asc;";
+			$query_object = mysqli_query(
+								  $coneccion->Conexion, 
+								  $consulta
+								  	   ) or die("Error al consultar datos");
+			if (mysqli_num_rows($query_object) > 0) {
+				$existe_calle = true;
+			};
+		}
+		return $existe_calle;		
+	}
+	
+
 	public static function existe_id_calle($id_calle=null, $connection=null)
 	{
 		if ($id_calle) {
@@ -448,10 +490,52 @@ class Calle {
 						calle_open = " . ((!is_null($this->get_calle_open())) ? "'" . $this->get_calle_open() . "'" : "null") . ",
 						geocoder = " . ((!is_null($this->get_geocoder())) ? "'" . $this->get_geocoder() . "'" : "null") . "
 					where id_calle = " . $this->get_id_calle();
-					$MensajeErrorConsultar = "No se pudo actualizar la Calle";
+		$MensajeErrorConsultar = "No se pudo actualizar la Calle";
 		if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
 			throw new Exception($MensajeErrorConsultar . $Consulta, 2);
 		}
 		$Con->CloseConexion();
 	}
+
+	public function delete(){
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "update calle 
+					set 
+						estado = " . ((!is_null($this->get_estado())) ? "'" . $this->get_estado() . "'" : "null") . "
+					where id_calle = " . $this->get_id_calle();
+		$MensajeErrorConsultar = "No se pudo actualizar la Calle";
+		if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+			throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+		}
+		$Con->CloseConexion();
+	}
+
+
+	public function save()
+	{
+		$con = new Conexion();
+		$con->OpenConexion();
+		$query = "insert into calle (
+									 codigo_calle,
+									 calle_nombre,
+									 calle_abreviado,
+									 estado,
+									 calle_open,
+									 geocoder
+				) values (
+				  	" . ((!empty($this->get_codigo_calle())) ? $this->get_codigo_calle() : "null") . ",
+					" . ((!empty($this->get_calle_nombre())) ? $this->get_calle_nombre() : "null") . ",
+					" . ((!empty($this->get_calle_abreviado() ? $this->get_calle_abreviado() : "null"))) . ",
+					" . (!empty($this->get_estado()) ? $this->get_estado() : "null") . ",
+					" . (!empty($this->get_calle_open()) ? $this->get_calle_open() : "null") . ",
+					" . ((!empty($this->get_geocoder())) ? $this->get_geocoder() : "null" ) . "
+				)";
+		$mensaje_error = "No se pudo actualizar la Calle";
+		if (!$ret = mysqli_query($con->Conexion, $query)) {
+			throw new Exception($mensaje_error  . $query, 2);
+		}
+		$con->CloseConexion();
+	}
+
 }

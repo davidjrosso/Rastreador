@@ -142,19 +142,22 @@ class CalleController
             $Con = new Conexion();
             $Con->OpenConexion();
 
-            $Consulta = "update calle set estado = 0 where ID_Calle = $ID_Calle";
-            if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
-                throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 0);		
-            }
-            $ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
-            if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
-                throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 1);
-            }
+            $calle = new Calle(id_calle: $ID_Calle);
+            $calle->delete();
+
+            $accion = new Accion(
+                xaccountid: $ID_Usuario,
+                xFecha : $Fecha,
+                xDetalles: $Detalles,
+                xID_TipoAccion: $ID_TipoAccion	 
+            );
+            $accion->save();
+ 
             $Con->CloseConexion();
             $Mensaje = "La Calle fue eliminada Correctamente";
             header('Location: /calles?Mensaje=' . $Mensaje);
         } catch (Exception $e) {
-            echo "Error: ".$e->getMessage();
+            echo "Error: " . $e->getMessage();
         }
     }
 
@@ -172,35 +175,25 @@ class CalleController
         $Con->OpenConexion();
 
         try {
-            $ConsultarRegistrosIguales = "select * from calle where calle_nombre = '$Calle' and ID_Calle != $ID_Calle and estado = 1";
-            if (!$Ret = mysqli_query($Con->Conexion,$ConsultarRegistrosIguales)) {
-                throw new Exception("Error al consultar registros. Consulta: " . $ConsultarRegistrosIguales, 0);		
-            }
-            $Resultado = mysqli_num_rows($Ret);
-            if ($Resultado > 0) {
+            if (Calle::existe_calle_con_id($Calle, $ID_Calle, $Con)) {
                 $Con->CloseConexion();
                 $Mensaje = "Ya existe una Calle con ese Nombre";
                 header('Location: /calles?ID='. $ID_Calle . '&MensajeError=' . $Mensaje);
             } else {
-                $ConsultarDatosViejos = "select * from calle where ID_calle = $ID_Calle and estado = 1";
-                $ErrorDatosViejos = "No se pudieron consultar los datos";
-                if(!$RetDatosViejos = mysqli_query($Con->Conexion,$ConsultarDatosViejos)){
-                    throw new Exception("Error al intentar registrar. Consulta: ".$ConsultarDatosViejos, 1);
-                }		
-                $TomarDatosViejos = mysqli_fetch_assoc($RetDatosViejos);
-                $CalleViejo = $TomarDatosViejos["Calle"];
-                
+                $calle_obj = new Calle(id_calle: $ID_Calle);
+                $calle_obj->save();
 
-                $Consulta = "update calle set calle_nombre = '$Calle' where ID_Calle = $ID_Calle and estado = 1";
-                if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
-                    throw new Exception("Error al intentar registrar. Consulta: ".$ConsultarRegistrosIguales, 2);
-                }
+                $CalleViejo = $calle_obj->get_calle_nombre();
 
                 $Detalles = "El usuario con ID: $ID_Usuario ha modificado un Calle. Datos: Dato Anterior: $CalleViejo , Dato Nuevo: $Calle";
-                $ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
-                if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
-                    throw new Exception("Error al intentar registrar Accion. Consulta: " . $ConsultaAccion, 3);
-                }
+                $accion = new Accion(
+                    xaccountid: $ID_Usuario,
+                    xFecha : $Fecha,
+                    xDetalles: $Detalles,
+                    xID_TipoAccion: $ID_TipoAccion	 
+                );
+                $accion->save();
+ 
                 $Con->CloseConexion();
                 $Mensaje = "La Calle se modificó Correctamente";
                 header('Location: /calle/editar?ID=' . $ID_Calle . '&Mensaje=' . $Mensaje);
@@ -340,5 +333,49 @@ class CalleController
 
         };
         echo $mensaje;
+    }
+
+    public function new_calle_control()
+    {
+        $ID_Usuario = $_SESSION["Usuario"];
+
+        $Calle = ucwords($_REQUEST["Calle"]);
+        $Estado = 1;
+
+        $Fecha = date("Y-m-d");
+        $ID_TipoAccion = 1;
+        $Detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Calle. Datos: $Calle";
+
+        $Con = new Conexion();
+        $Con->OpenConexion();
+
+        try {
+            if (Calle::existe_calle_especif($Calle, $Con) > 0) {
+                $Con->CloseConexion();
+                $Mensaje = "Ya existe una Calle con ese Nombre";
+                header('Location: /calle/nueva?MensajeError=' . $Mensaje);
+            } else {
+                $calle_obj = new Calle(
+                                       calle_nombre: $Calle,
+                                       calle_open: $Calle,
+                                       estado: $Estado 
+                                       );
+
+                $calle_obj->save();
+
+                $accion = new Accion(
+                    xaccountid: $ID_Usuario,
+                    xFecha : $Fecha,
+                    xDetalles: $Detalles,
+                    xID_TipoAccion: $ID_TipoAccion	 
+                );
+                $accion->save();
+                
+                $Mensaje = "La Calle se registro Correctamente";
+                header('Location: /calle/nueva?Mensaje=' . $Mensaje);
+            }
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }        
     }
 }
