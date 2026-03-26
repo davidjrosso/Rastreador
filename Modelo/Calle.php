@@ -524,12 +524,12 @@ class Calle {
 									 calle_open,
 									 geocoder
 				) values (
-				  	" . ((!empty($this->get_codigo_calle())) ? $this->get_codigo_calle() : "null") . ",
-					" . ((!empty($this->get_calle_nombre())) ? $this->get_calle_nombre() : "null") . ",
-					" . ((!empty($this->get_calle_abreviado() ? $this->get_calle_abreviado() : "null"))) . ",
-					" . (!empty($this->get_estado()) ? $this->get_estado() : "null") . ",
-					" . (!empty($this->get_calle_open()) ? $this->get_calle_open() : "null") . ",
-					" . ((!empty($this->get_geocoder())) ? $this->get_geocoder() : "null" ) . "
+				  	" . ((!empty($this->get_codigo_calle())) ? "'" . $this->get_codigo_calle() . "" : "null") . ",
+					" . ((!empty($this->get_calle_nombre())) ? "'" . $this->get_calle_nombre() . "'" : "null") . ",
+					" . ((!empty($this->get_calle_abreviado() ? "'" . $this->get_calle_abreviado() . "'" : "null"))) . ",
+					" . (!empty($this->get_estado()) ? "'" . $this->get_estado() . "'" : "null") . ",
+					" . (!empty($this->get_calle_open()) ? "'" . $this->get_calle_open() . "'" : "null") . ",
+					" . ((!empty($this->get_geocoder())) ? "'" . $this->get_geocoder() . "'" : "null" ) . "
 				)";
 		$mensaje_error = "No se pudo actualizar la Calle";
 		if (!$ret = mysqli_query($con->Conexion, $query)) {

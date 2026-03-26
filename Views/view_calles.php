@@ -18,16 +18,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-
-header("Content-Type: text/html;charset=utf-8");
-
-
-$ID_Usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $usuario->get_id_tipo_usuario();
 
 ?>
 <!DOCTYPE html>
@@ -58,7 +48,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               });
           });
 
-       function Verificar(xID){
+       function VerificarDeleteCalle(xID){
               swal({
                 title: "¿Está seguro?",
                 text: "¿Seguro de querer eliminar esta Calle?",
@@ -80,7 +70,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_CALLE);
   ?>
   <div class = "col-md-9">
@@ -94,10 +83,10 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
     <div class="row">
       <div class = "col"></div>
       <div class = "col-4">
-          <center><button class = "btn btn-secondary" onClick = "location.href='view_newcalles.php'">Agregar Nueva Calle</button></center>
+          <center><button class = "btn btn-secondary" onClick = "location.href='/calle/nueva'">Agregar Nueva Calle</button></center>
       </div>
       <div class="col-2">
-                <button type="button" class="btn btn-outline-secondary" onclick="location.href = '/'">Volver</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="location.href = '/home'">Volver</button>
       </div>
       <div class = "col"></div>
     </div>
@@ -105,7 +94,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
      <div class = "row">
       <div class = "col-10">
            <!-- Carga -->
-          <form method = "post" action = "Controladores/CtrBuscarCalles.php">
+          <form method = "post" action = "/calles">
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Buscar: </label>
               <div class="col-md-4">
@@ -128,7 +117,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
           <!-- Search -->
         <div class = "row">
           <?php  
-            if(isset($_REQUEST["Filtro"]) && $_REQUEST["Filtro"]!=null){
+            if (isset($_REQUEST["Filtro"])) {
               $Filtro = $_REQUEST["Filtro"];
               $ID_Filtro = $_REQUEST["ID_Filtro"];
               $DTGeneral = new CtrGeneral();
@@ -138,8 +127,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                 case 'Calle': echo $DTGeneral->getCallesxCalle_nombre($Filtro);break;
                 default: echo $DTGeneral->getCallesxID($Filtro);break;
               }
-            }else{
-              $DTGeneral = new CtrGeneral();
+            } else {
               echo $DTGeneral->getCalles();
             }
           ?>
@@ -147,17 +135,5 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   </div>
 </div>
 </div>
-<?php  
-if(isset($_REQUEST['Mensaje'])){
-  echo "<script type='text/javascript'>
-  swal('".$_REQUEST['Mensaje']."','','success');
-</script>";
-}
-if(isset($_REQUEST['MensajeError'])){
-  echo "<script type='text/javascript'>
-  swal('".$_REQUEST['MensajeError']."','','warning');
-</script>";
-}
-?>
 </body>
 </html>

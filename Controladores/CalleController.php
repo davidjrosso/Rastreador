@@ -38,7 +38,34 @@ class CalleController
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
             include("./Views/view_calles.php");
+        }
+        exit();
+    }
+
+    public function new_calle($mensaje = null)
+    {
+        header('Content-Type: text/html; charset=utf-8');
+        if (!isset($_SESSION["Usuario"])) {
+            include("./Views/Error_Session.php");
+        } else {
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
+            include("./Views/view_newcalles.php");
         }
         exit();
     }
@@ -337,6 +364,8 @@ class CalleController
 
     public function new_calle_control()
     {
+        header('Content-Type: text/html; charset=utf-8');
+
         $ID_Usuario = $_SESSION["Usuario"];
 
         $Calle = ucwords($_REQUEST["Calle"]);

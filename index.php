@@ -191,7 +191,9 @@ try {
 	$routes[] = Route::post('mod_calle_control', '/modificar_calle', [CalleController::class, 'mod_calle_control']);
 	$routes[] = Route::get('del_calle_control', '/delete_calle\?ID={id}', [CalleController::class, 'del_calle_control']);
 	$routes[] = Route::get('new_calle', '/calle/nueva', [CalleController::class, 'new_calle']);
-	$routes[] = Route::post('new_calle_control', '/insertar_calle.php', [CalleController::class, 'new_calle_control']);
+	$routes[] = Route::get('new_calle_succes', '/calle/nueva\?Mensaje={mensaje}', [CalleController::class, 'new_calle']);
+	$routes[] = Route::get('new_calle_error', '/calle/nueva\?MensajeError={mensaje}', [CalleController::class, 'new_calle']);
+	$routes[] = Route::post('new_calle_control', '/new_calle_control', [CalleController::class, 'new_calle_control']);
 	$routes[] = Route::get('unif_calle', '/calle/unificar', [CalleController::class, 'unif_calle']);
 	$routes[] = Route::post('unif_calle_control', '/unificar_direcciones', [CalleController::class, 'unif_calle_control']);
 	$routes[] = Route::post('buscar_unif_direcciones', '/buscar_unif_direcciones\?valorBusqueda={valor}', [CalleController::class, 'buscar_unif_direcciones']);
