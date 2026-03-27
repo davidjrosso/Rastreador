@@ -88,6 +88,7 @@ try {
 	$routes[] = Route::get('personas_unificar', '/personas/unificar', [PersonaController::class, 'unif_persona']);
 	$routes[] = Route::post('personas_unif_control', 'unificarpersonas', [PersonaController::class, 'unif_persona_control']);
 	$routes[] = Route::get('movimientos_listado', '/movimientos', [MovimientoController::class, 'listado_movimiento']);
+	$routes[] = Route::post('movimientos_listado_filtro', '/movimientos', [MovimientoController::class, 'listado_movimiento']);
 	$routes[] = Route::get('movimientos_listado_filtro', '/movimientos\?Filtro={filtro}/ID_Filtro={id}', [MovimientoController::class, 'listado_movimiento']);
 	$routes[] = Route::get('movimientos_listado_succes', '/movimientos\?Mensaje={mensaje}', [MovimientoController::class, 'listado_movimiento']);
 	$routes[] = Route::get('movimientos_listado_error', '/movimientos\?MensajeError={mensaje}', [MovimientoController::class, 'listado_movimiento']);
