@@ -58,7 +58,7 @@
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/DeleteCalle.php?ID='+xID;
+                  window.location.href = '/delete_calle?ID='+xID;
                 } else {        
                 }
               });
@@ -117,10 +117,7 @@
           <!-- Search -->
         <div class = "row">
           <?php  
-            if (isset($_REQUEST["Filtro"])) {
-              $Filtro = $_REQUEST["Filtro"];
-              $ID_Filtro = $_REQUEST["ID_Filtro"];
-              $DTGeneral = new CtrGeneral();
+            if (isset($Filtro)) {
 
               switch ($ID_Filtro) {
                 case 'ID': echo $DTGeneral->getCallesxID($Filtro);break;

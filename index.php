@@ -185,6 +185,7 @@ try {
 	$routes[] = Route::post('new_barrio_control', 	'/insertar_barrio', [BarrioController::class, 'crear_barrio_control']);
 	$routes[] = Route::post('buscar_barrio', 	'/buscar_barrio', [BarrioController::class, 'buscar_barrio']);
 	$routes[] = Route::get('listado_calles', '/calles', [CalleController::class, 'listado_calles']);
+	$routes[] = Route::post('listado_calles', '/calles', [CalleController::class, 'listado_calles']);
 	$routes[] = Route::get('listado_calles_succes', '/calles\?Mensaje={mensaje}', [CalleController::class, 'listado_calles']);
 	$routes[] = Route::post('buscar_calle', '/buscar_calle', [CalleController::class, 'buscar_calle']);
 	$routes[] = Route::get('mod_calle', '/calle/editar\?ID={id}', [CalleController::class, 'mod_calle']);

@@ -129,6 +129,23 @@ export function VerificarDeletePersona(xID){
         });
 }
 
+export function VerificarDeleteCalle(xID){
+        swal.fire({
+            title: "¿Está seguro?",
+            text: "¿Seguro de querer eliminar esta Calle?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                window.location.href = '/delete_calle?ID='+xID;
+            } else {        
+            }
+        });
+}
+
+
 function ShowModalError(){
     var modal = document.getElementById("ErrorDocumento");
     modal.style.display = "block";

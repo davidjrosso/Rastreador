@@ -39,6 +39,9 @@ class CalleController
             include("./Views/Error_Session.php");
         } else {
             $ID_Usuario = $_SESSION["Usuario"];
+            $Filtro = $_REQUEST["Search"];
+            $ID_Filtro = $_REQUEST["ID_Filtro"];
+
             $usuario = new Account(account_id: $ID_Usuario);
             $TipoUsuario = $usuario->get_id_tipo_usuario();
             $Element = new Elements();
@@ -76,6 +79,14 @@ class CalleController
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
             include("./Views/view_modcalles.php");
         }
         exit();
