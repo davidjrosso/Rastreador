@@ -237,7 +237,7 @@
           <!-- Search -->
         <div class = "row">
           <?php  
-            if(isset($_REQUEST["ID"]) && $_REQUEST["ID"]!=null){
+            if(isset($_REQUEST["ID"])){
               $ID_Movimiento = $_REQUEST["ID"];
 
               $Con = new Conexion();

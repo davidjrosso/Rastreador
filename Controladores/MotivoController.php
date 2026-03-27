@@ -4,7 +4,6 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Parametria.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Calle.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Categoria.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Calle.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_Unificacion.php");
 
 
@@ -144,7 +143,8 @@ class MotivoController
         exit();
     }
 
-    public function mod_persona_control()
+
+    function mod_motivo_control()
     {
         $ID_Usuario = $_SESSION["Usuario"];
 
@@ -174,7 +174,7 @@ class MotivoController
                 $ConsultarDatosViejos = "select * from motivo where id_motivo = $ID_Motivo and estado = 1";
                 $ErrorDatosViejos = "No se pudieron consultar los datos";
                 if (!$RetDatosViejos = mysqli_query($Con->Conexion,$ConsultarDatosViejos)) {
-                    throw new Exception("Error al intentar registrar. Consulta: " . $ConsultarDatosViejos, 1);
+                    throw new Exception("Error al intentar registrar. Consulta: ".$ConsultarDatosViejos, 1);
                 }		
                 $TomarDatosViejos = mysqli_fetch_assoc($RetDatosViejos);
                 $MotivoViejo = $TomarDatosViejos["Motivo"];
@@ -188,28 +188,27 @@ class MotivoController
                 // $Cod_Categoria = $TomarCod["cod_categoria"];
 
                 $Consulta = "update motivo set motivo = '$Motivo', codigo = '$Codigo' where id_motivo = $ID_Motivo and estado = 1";
-                if (!$Ret = mysqli_query($Con->Conexion,$Consulta)) {
+                if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
                     throw new Exception("Problemas en la consulta. Consulta: " . $Consulta, 2);			
                 }
                 
                 $ConsultaSolicitud = "update solicitudes_modificarmotivos set estado = 0 where ID = $ID_Solicitud";
-                if (!$Ret = mysqli_query($Con->Conexion,$ConsultaSolicitud)) {
-                    throw new Exception("Problemas en la consulta. Consulta: ".$ConsultaSolicitud, 3);			
+                if(!$Ret = mysqli_query($Con->Conexion, $ConsultaSolicitud)){
+                    throw new Exception("Problemas en la consulta. Consulta: " . $ConsultaSolicitud, 3);			
                 }
 
                 $Detalles = "El usuario con ID: $ID_Usuario ha modificado un Motivo. Datos: Dato Anterior: $MotivoViejo , Dato Nuevo: $Motivo - Dato Anterior: $Cod_Viejo , Dato Nuevo: $Codigo";
                 $ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
-                if (!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)) {
+                if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
                     throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 4);
                 }	
                 $Con->CloseConexion();
                 $Mensaje = "El Motivo se modifico Correctamente";
-                header('Location: /home?ID=' . $ID_Motivo . '&Mensaje='.$Mensaje);
+                header('Location: /home?ID=' . $ID_Motivo . '&Mensaje=' . $Mensaje);
             }
         } catch (Exception $e) {
-            echo "Error: ".$e->getMessage();
+            echo "Error: " . $e->getMessage();
         }
-        exit();
     }
 
     public function sol_unif_control()
@@ -252,6 +251,58 @@ class MotivoController
         exit();
     }
 
+    public function new_motivo_control()
+    {
+        $ID_Usuario = $_SESSION["Usuario"];
+
+        $Motivo = $_REQUEST["Motivo"];
+        $Codigo = $_REQUEST["Codigo"];
+        $ID = $_REQUEST["ID"];
+        $Cod_Categoria = $_REQUEST["Cod_Categoria"];
+        $Estado = 1;
+
+        $Fecha = date("Y-m-d");
+        $ID_TipoAccion = 1;
+        $Detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Motivo. Datos: Motivo: $Motivo - Categoría : $Cod_Categoria";
+
+        try	 {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+           if (Motivo::existe_motivo_by_name($Con, $Motivo) > 0) {
+                $Con->CloseConexion();
+                $Mensaje = "Ya hay un Motivo con los datos ingresados";
+                header('Location: /home?MensajeError=' . $Mensaje);
+            } else {
+                $motivo = new Motivo(coneccion_base: $Con,
+                                motivo: $Motivo,
+                                codigo: $Codigo,
+                                cod_categoria: $Cod_Categoria,
+                                estado: $Estado
+                                    );
+                $motivo->save();
+
+                $accion = new Accion(
+                    xaccountid: $ID_Usuario,
+                    xFecha : $Fecha,
+                    xDetalles: $Detalles,
+                    xID_TipoAccion: $ID_TipoAccion	 
+                );
+                $accion->save();
+
+                $rev = new Solicitud_CrearMotivos();
+                $rev->delete();
+
+                $Mensaje = "El Motivo se registro Correctamente";
+                $Con->CloseConexion();
+                header('Location: /home?Mensaje=' . $Mensaje);
+            }
+
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+    
     public function unif_motivo_control()
     {
         $ID_Solicitud = $_REQUEST["ID_Solicitud"];

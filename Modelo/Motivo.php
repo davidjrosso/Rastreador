@@ -15,6 +15,7 @@ class Motivo implements JsonSerializable
 	public function __construct(
 			$coneccion_base=null,
 			$id_motivo=null,
+			$codigo=null,
 			$motivo=null,
 			$cod_categoria=null,
 			$num_motivo=null,
@@ -59,6 +60,25 @@ class Motivo implements JsonSerializable
 			}
 		}
 	}
+
+    public static function existe_motivo_by_name($coneccion, $motivo){
+
+		$consulta = "select * 
+					 from motivo 
+					 where motivo = '$motivo' 
+					   and estado = 1";
+		$mensaje_error = "Hubo un problema al consultar los registros";
+		$ret = mysqli_query(
+					$coneccion->Conexion,
+					$consulta
+		) or die(
+			$mensaje_error
+		);
+		$row = mysqli_fetch_assoc($ret);
+        $result = !empty($row["id_motivo"]);
+		return $result;
+    }
+
 
 	public static function is_exist($coneccion, $id_motivo)
 	{

@@ -1812,7 +1812,7 @@ class CtrGeneral
 								</a>
 							</td>
 							<td>
-								<a onClick='Verificar(".$Ret["ID_calle"].")'>
+								<a onClick='VerificarDeleteCalle(".$Ret["ID_calle"].")'>
 									<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 								</a>
 							</td>
@@ -1831,9 +1831,9 @@ class CtrGeneral
 		$Consulta = "select ID_calle, calle_nombre from calle where ID_Calle = $ID and estado = 1 order by calle_nombre";
 		$MessageError = "Problemas al intentar mostrar Calle por ID";
 		$Table = "<table class='table'><thead><tr><th>Calle</th><th colspan='2'></th></tr></thead>";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$Con->ResultSet = mysqli_query($Con->Conexion, $Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["calle_nombre"]."</td><td><a href = '/calle/editar?ID=".$Ret["ID_Calle"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='Verificar(".$Ret["ID_Calle"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>" . $Ret["calle_nombre"] . "</td><td><a href = '/calle/editar?ID=" . $Ret["ID_Calle"] . "'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='VerificarDeleteCalle(" . $Ret["ID_Calle"] . ")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -1855,7 +1855,7 @@ class CtrGeneral
 		$Table = "<table class='table'><thead><tr><th>Calles</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["calle_nombre"]."</td><td><a href = '/calle/editar?ID=".$Ret["ID_calle"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='Verificar(".$Ret["ID_calle"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["calle_nombre"]."</td><td><a href = '/calle/editar?ID=".$Ret["ID_calle"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='VerificarDeleteCalle(".$Ret["ID_calle"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
