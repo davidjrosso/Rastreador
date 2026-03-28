@@ -18,8 +18,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-header("Content-Type: text/html;charset=utf-8");
-
 $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
 $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 
@@ -44,9 +42,6 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 
 		<script>
 			$(document).ready(function() {
-				let mensajeError = '<?php echo $mensaje_error;?>';
-				let mensajeSuccess = '<?php echo $mensaje_success;?>';
-
 				$("#spanMostrar").on("click", function(){
 					var elementInput= $("#login-pass");
 					var elementIcon= $("#iconMostrar");
@@ -61,7 +56,6 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 					}
 				});
 
-				controlMensaje(mensajeSuccess, mensajeError);
 			});
 		</script>
 	</head>

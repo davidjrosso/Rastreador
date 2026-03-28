@@ -84,12 +84,17 @@ class HomeController
 
     public function login($mensaje = null) 
     {
+        header("Content-Type: text/html;charset=utf-8");
+
         $mensaje_error = $mensaje;
         $mensaje_succes = null;
 
         if (isset($_SESSION["Usuario"])) {
-            header("Location: /");
+            header("Location: /home");
         } else {
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
             include("./Views/view_login.php");
         }
         exit();
