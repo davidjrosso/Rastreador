@@ -8,7 +8,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_Unificacion.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_EliminarMotivo.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_ModificarMotivo.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Motivo.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_CrearMotivos.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_CrearMotivo.php");
 
 
 class MotivoController 
