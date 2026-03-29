@@ -70,6 +70,9 @@ try {
 	$routes[] = Route::get('login_error', '/login\?MensajeError={mesanje}', [HomeController::class, 'login']);
 	$routes[] = Route::post('login_control', '/login_control', [HomeController::class, 'login_control']);
 	$routes[] = Route::get('logout', '/logout', [HomeController::class, 'logout_control']);
+	$routes[] = Route::get('password_peticion', '/password_peticion', [HomeController::class, 'password_peticion']);
+	$routes[] = Route::get('password_mod', '/modificar_password', [HomeController::class, 'modificar_password']);
+
 	$routes[] = Route::get('personas_listado', '/personas', [PersonaController::class, 'listado_personas']);
 	$routes[] = Route::get('personas_listado_success', '/personas\?Mensaje={mensaje}', [PersonaController::class, 'listado_personas']);
 	$routes[] = Route::get('personas_listado_filtrado', '/personas\?Filtro={filtro}/ID_Filtro={id_filtro}', [PersonaController::class, 'listado_personas']);

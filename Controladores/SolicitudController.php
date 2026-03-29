@@ -100,7 +100,7 @@ class SolicitudController
             $Con = new Conexion();
             $Con->OpenConexion();
 
-            $cat = new Solicitud_CrearM(xID: $ID_Peticion);
+            $cat = new Solicitud_CrearMotivo(xID: $ID_Peticion);
             $cat->delete();
             $accion = new Accion(xaccountid: $ID_Usuario,
                                  xFecha: $Fecha,
@@ -216,7 +216,7 @@ class SolicitudController
             $Con = new Conexion();
             $Con->OpenConexion();
 
-            $cat = new Solicitud_EliminarM(xID: $ID_Peticion);
+            $cat = new Solicitud_EliminarMotivo(xID: $ID_Peticion);
             $cat->delete();
             $accion = new Accion(xaccountid: $ID_Usuario,
                                  xFecha: $Fecha,
@@ -322,6 +322,38 @@ class SolicitudController
             header('Location: ../home?Mensaje=' . $Mensaje);
         } catch (Exception $e) {
             echo "Error: ".$e->getMessage();
+        }
+    }
+
+    public function del_notificacion()
+    {
+        $ID = $_REQUEST["ID"];
+
+        $ID_Usuario = $_SESSION["Usuario"];
+        $Fecha = date("Y-m-d");
+        $ID_TipoAccion = 3;
+        $Detalles = "El usuario con ID: $ID_Usuario ha dado de baja una Notificacion. Datos: Notificacion: $ID";
+
+        try {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            $rev = new Notificacion(coneccion_base: $Con, id_notificacion: $ID);
+            $rev->delete();
+
+            $accion = new Accion(
+                xaccountid: $ID_Usuario,
+                xFecha : $Fecha,
+                xDetalles: $Detalles,
+                xID_TipoAccion: $ID_TipoAccion	 
+            );
+            $accion->save();
+
+            $Con->CloseConexion();
+            $Mensaje = "La notificación fue eliminada correctamente";
+            header('Location: /home?Mensaje=' . $Mensaje);
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
         }
     }
 }

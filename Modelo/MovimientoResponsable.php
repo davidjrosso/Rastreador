@@ -75,6 +75,12 @@ class MovimientoResponsable
 	}
 
 	// METODOS GET
+
+	public function get_id_movimiento_responsable()
+	{
+		return $this->id_movimiento_responsable;
+	}
+
 	public function get_id_movimiento()
 	{
 		return $this->id_movimiento;
@@ -122,7 +128,7 @@ class MovimientoResponsable
 	{
 		$consulta = "update movimiento_responsable
                             set estado = 0
-					 where id_movimiento_responsable = " . $this->get_id_responsable();
+					 where id_movimiento_responsable = " . $this->id_responsable;
 		if (!$RetAccion = mysqli_query($this->connection->Conexion,$consulta)) {
 			throw new Exception("Error al intentar borrar el movimiento_motivo. Consulta: ". $consulta, 3);
 		}

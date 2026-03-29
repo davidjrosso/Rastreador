@@ -257,4 +257,16 @@ class Motivo implements JsonSerializable
 		}
 		$this->id_motivo = mysqli_insert_id($this->coneccion_base->Conexion);
 	}
+
+	public function delete(){
+		$consulta = "update motivo
+					 set  estado = 0
+					 where id_motivo = " . $this->get_id_motivo();
+		$mensaje_error = "No se pudo modificar el motivo";
+		$ret = mysqli_query($this->coneccion_base->Conexion, $consulta);
+		if (!$ret) {
+			throw new Exception($mensaje_error . $consulta, 2);
+		}
+	}
+
 }

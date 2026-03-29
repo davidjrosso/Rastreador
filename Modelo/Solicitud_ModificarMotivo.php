@@ -133,6 +133,33 @@ class Solicitud_ModificarMotivo
 
     }
 
+    public function save()
+    {
+        $consulta = "insert into solicitudes_modificarmotivos(
+                                                            Fecha
+                                                            Codigo, 
+                                                            Motivo,
+                                                            Cod_Categoria, 
+                                                            Num_Motivo, 
+                                                            Estado, 
+                                                            ID_Usuario, 
+                                                            ID_Motivo
+                                                           ) values (
+                                                                      '" . (($this->getFecha()) ? "'" . $this->getFecha() . "'" : "null") . ",
+                                                                       " . (($this->getCodigo()) ? "'" . $this->getCodigo() . "'" : "null") . ",
+                                                                       " . (($this->getMotivo()) ? "'" . $this->getMotivo() . "'" : "null") . ",
+                                                                       " . (($this->getCod_Categoria()) ? "'" . $this->getCod_Categoria() . "'" : "null") .  ",
+                                                                       " . (($this->getNum_Motivo()) ?  "'" . $this->getNum_Motivo() . "'" : "null") . ",
+                                                                       " . (($this->getEstado()) ? $this->getEstado() :  "null")  . ",
+                                                                       " . (($this->getID_Usuario()) ? $this->getID_Usuario() :  "null")  . ",
+                                                                       " . (($this->getID_Motivo()) ? $this->getID_Motivo() : "null") . "
+                                                                       )";
+        $MensajeError = "No se pudo enviar la solicitud";
+        mysqli_query($this->coneccion->Conexion, $consulta) or die($MensajeError);
+		$this->ID = mysqli_insert_id($this->coneccion->Conexion);
+    }
+    
+
     public function delete()
     {
         $query = "delete solicitudes_modificarmotivos

@@ -6,6 +6,10 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Calle.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Categoria.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_Unificacion.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_EliminarMotivo.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_ModificarMotivo.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Motivo.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_CrearMotivos.php");
+
 
 class MotivoController 
 {
@@ -68,17 +72,17 @@ class MotivoController
             $Con = new Conexion();
             $Con->OpenConexion();
 
-            $Consulta = "update motivo set estado = 0 where id_motivo = $ID_Motivo";
-            if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
-                throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 0);		
-            }
+            $rev = new Motivo(coneccion_base: $Con, id_motivo: $ID_Motivo );
+            $rev->delete();
 
-
-            $ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
-            if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
-                throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 1);
-            }	
-
+            $accion = new Accion(
+                xaccountid: $ID_Usuario,
+                xFecha : $Fecha,
+                xDetalles: $Detalles,
+                xID_TipoAccion: $ID_TipoAccion	 
+            );
+            $accion->save();
+        
             $ConsultaSolicitud = "update solicitudes_eliminarmotivos set estado = 0 where ID_Motivo = $ID_Motivo";
             if(!$Ret = mysqli_query($Con->Conexion,$ConsultaSolicitud)){
                 throw new Exception("Problemas en la consulta. Consulta: ".$ConsultaSolicitud, 3);			
@@ -118,20 +122,17 @@ class MotivoController
             $Cod_Categoria = $categoria->getCod_Categoria();
 
             $Solicitud = new Solicitud_ModificarMotivo(
-                                                  0,
-                                                    $Fecha,
-                                                   $Motivo,
-                                                   $Codigo,
-                                                   $Cod_Categoria,
-                                                   $Num_Motivo,
-                                                   $Estado,
-                                                   $ID_Usuario,
-                                                   $ID_Motivo
-                                                      );
-            $Insert_Solicitud = "insert into solicitudes_modificarmotivos(Fecha,Motivo,Codigo,Cod_Categoria,Num_Motivo,Estado,ID_Usuario,ID_Motivo) values('{$Solicitud->getFecha()}','{$Solicitud->getMotivo()}','{$Solicitud->getCodigo()}','{$Solicitud->getCod_Categoria()}',{$Solicitud->getNum_Motivo()},{$Solicitud->getEstado()},{$Solicitud->getID_Usuario()},{$Solicitud->getID_Motivo()})";
-            $MensajeError = "No se pudo enviar la solicitud";
-
-            mysqli_query($Con->Conexion,$Insert_Solicitud) or die($MensajeError);
+                                                    xFecha: $Fecha,
+                                                   xMotivo: $Motivo,
+                                                   xCodigo: $Codigo,
+                                                   xCod_Categoria: $Cod_Categoria,
+                                                   xNum_Motivo: $Num_Motivo,
+                                                   xEstado: $Estado,
+                                                   xID_Usuario: $ID_Usuario,
+                                                   xID_Motivo: $ID_Motivo,
+                                                    xConeccion: $Con
+                                                   );
+            $Solicitud->save();
 
             $Con->CloseConexion();
             $Mensaje = "La solicitud de modificación se envió a los administradores para ser confirmada.";
@@ -224,11 +225,15 @@ class MotivoController
             $Con = new Conexion();
             $Con->OpenConexion();
 
-            $Solicitud = new Solicitud_Unificacion(0,$Fecha,$ID_Registro_1,$ID_Registro_2,$ID_Usuario,$Estado,$TipoUnif);
-            $Insert_Solicitud = "insert into solicitudes_unificacion(Fecha,ID_Registro_1,ID_Registro_2,ID_Usuario,Estado,ID_TipoUnif) values('{$Solicitud->getFecha()}',{$Solicitud->getID_Registro_1()},{$Solicitud->getID_Registro_2()},{$Solicitud->getID_Usuario()},{$Solicitud->getEstado()},{$Solicitud->getTipoUnif()})";
-            $MensajeError = "No se pudo enviar la solicitud";
-
-            mysqli_query($Con->Conexion,$Insert_Solicitud) or die($MensajeError);
+            $Solicitud = new Solicitud_Unificacion(
+                                                    xFecha: $Fecha, 
+                                                    xID_Registro_1: $ID_Registro_1, 
+                                                    xID_Registro_2: $ID_Registro_2, 
+                                                    xID_Usuario: $ID_Usuario, 
+                                                    xEstado: $Estado, 
+                                                    xTipoUnif: $TipoUnif,
+                                                    coneccion: $Con);
+            $Solicitud->save();
 
             $Con->CloseConexion();
             $Mensaje = "La solicitud de unificación se envió a los administradores para ser confirmada.";
@@ -290,7 +295,7 @@ class MotivoController
                 );
                 $accion->save();
 
-                $rev = new Solicitud_CrearMotivos();
+                $rev = new Solicitud_CrearMotivo(xID: $ID, xConeccion: $Con);
                 $rev->delete();
 
                 $Mensaje = "El Motivo se registro Correctamente";
@@ -361,7 +366,7 @@ class MotivoController
             header('Location: /home?Mensaje=' . $Mensaje);
         } else {
             $MensajeError = "Debe seleccionar Primer Motivo y Segundo Motivo";
-            header('Location: /homep?MensajeError=' . $MensajeError);
+            header('Location: /home?MensajeError=' . $MensajeError);
         }
 
     }
@@ -446,14 +451,9 @@ class MotivoController
         $Con = new Conexion();
         $Con->OpenConexion();
 
-        $ConsultarMotivo = "select id_motivo, motivo, cod_categoria from motivo where id_motivo = $ID_Motivo";
-
-        if(!$RetMotivo = mysqli_query($Con->Conexion,$ConsultarMotivo)){
-            throw new Exception("Problemas al consultar datos de motivo. Consulta: ".$ConsultarMotivo, 1);			
-        }
-        $TomarMotivo = mysqli_fetch_assoc($RetMotivo);
-        $Motivo = $TomarMotivo['motivo'];
-        $Cod_Categoria = $TomarMotivo["cod_categoria"];
+        $motivo = new Motivo(id_motivo: $ID_Motivo, coneccion_base: $Con);
+        $Motivo = $motivo->get_motivo();
+        $Cod_Categoria = $motivo->get_cod_categoria();
         $Num_Motivo = 0;
 
         $Solicitud = new Solicitud_EliminarMotivo(
@@ -464,14 +464,10 @@ class MotivoController
                                                   xEstado: $Estado,
                                                   xID_Usuario: $ID_Usuario,
                                                   xID_Motivo: $ID_Motivo);
-        $Insert_Solicitud = "insert into solicitudes_eliminarmotivos(Fecha,Motivo,Cod_Categoria,Num_Motivo,Estado,ID_Usuario,ID_Motivo) values('{$Solicitud->getFecha()}','{$Solicitud->getMotivo()}','{$Solicitud->getCod_Categoria()}',{$Solicitud->getNum_Motivo()},{$Solicitud->getEstado()},{$Solicitud->getID_Usuario()},{$Solicitud->getID_Motivo()})";
-        $MensajeError = "No se pudo enviar la solicitud";
-
-        mysqli_query($Con->Conexion,$Insert_Solicitud) or die($MensajeError);
-
+        $Solicitud->save();
         $Con->CloseConexion();
         $Mensaje = "La solicitud de eliminación se envió a los administradores para ser confirmada.";
-        header('Location: ../view_motivos.php?Mensaje='.$Mensaje);
+        header('Location: /motivo/unificar?Mensaje=' . $Mensaje);
     }
 
     public function buscar_motivos()
@@ -482,4 +478,50 @@ class MotivoController
         header("Location: /motivos?Filtro=" . $Filtro . "&ID_Filtro=" . $ID_Filtro);
 
     }
+
+    public function req_new_motivo_control()
+    {
+        $ID_Usuario = $_SESSION["Usuario"];
+
+        $Motivo = $_REQUEST["Motivo"];
+        $Codigo = strtoupper($_REQUEST["Codigo"]);
+        $ID_Categoria = $_REQUEST["ID_Categoria"];
+        $Num_Motivo = 0;
+
+        $Fecha = date("Y-m-d");
+        $Estado = 1;
+
+        if($ID_Categoria > 0){
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            $ConsultarCod_Categoria = "select cod_categoria from categoria where id_categoria = $ID_Categoria";
+            if(!$RetCod = mysqli_query($Con->Conexion,$ConsultarCod_Categoria)){
+                throw new Exception("Problemas al consultar cod_categoria. Consulta: ".$ConsultarCod_Categoria, 1);			
+            }
+            $TomarCod = mysqli_fetch_assoc($RetCod);
+            $Cod_Categoria = $TomarCod["cod_categoria"];
+
+            $Insert_Solicitud = "insert into solicitudes_crearmotivos(Fecha,Motivo,Codigo,Cod_Categoria,Num_Motivo,Estado,ID_Usuario) 
+                                values('{$Fecha}','{$Motivo}','{$Codigo}','{$Cod_Categoria}',{$Num_Motivo},{$Estado},{$ID_Usuario})";
+            $MensajeError = "No se pudo enviar la solicitud";
+            mysqli_query($Con->Conexion,$Insert_Solicitud) or die($MensajeError);
+
+            $DetalleNot = "Se ha creado un nuevo motivo: ".$Motivo." , codigo: ".$Codigo."";
+            $Expira = date("Y-m-d", strtotime($Fecha." + 30 days"));
+
+            $ConsultaNot = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('".$DetalleNot."','".$Fecha."', '".$Expira."',1)";
+            if(!$RetNot = mysqli_query($Con->Conexion,$ConsultaNot)){
+                throw new Exception("Error al intentar registrar Notificacion. Consulta: ".$ConsultaNot, 3);
+            }
+
+            $Con->CloseConexion();
+            $Mensaje = "La solicitud de creación de motivo se envió a los administradores para ser confirmada.";
+            header('Location: /motivos?Mensaje=' . $Mensaje);
+        }else{
+            $MensajeError = "Debe seleccionar una Categoria";
+            header('Location: /motivo/editar?MensajeError=' . $MensajeError);
+        }        
+    }
+
 }

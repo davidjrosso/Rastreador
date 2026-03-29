@@ -80,38 +80,53 @@ class ResponsableController
 
     public function del_responsable_control($id_responsable)
     {
-        $ID_Usuario = $_SESSION["Usuario"];
 
-        $ID_responsable = $_REQUEST["ID"];
+        $id_usuario = $_SESSION["Usuario"];
 
-        $Fecha = date("Y-m-d");
-        $ID_TipoAccion = 3;
-        $Detalles = "El usuario con ID: $ID_Usuario ha dado de baja una responsable. Datos: responsable: $ID_responsable";
+        $id_solicitud = $_REQUEST["ID"];
+
+        $fecha = date("Y-m-d");
+        $id_tipo_accion = 3;
 
         try {
-            $Con = new Conexion();
-            $Con->OpenConexion();
-
-            $Consulta = "update responsable set estado = 0 where id_responsable = $ID_responsable";
-            if (!$Ret = mysqli_query($Con->Conexion,$Consulta)) {
-                throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 0);		
+            $con = new Conexion();
+            $con->OpenConexion();
+            $solicitud = new SolicitudModificacion(
+                                                    coneccion_base: $con,
+                                                    id_solicitud: $id_solicitud
+                                                );
+            $id_responsable = $solicitud->get_id_registro();
+            $existe_responsable = Responsable::existe_id_responsable(
+                                                                    coneccion_base: $con,
+                                                                    id_responsable: $id_responsable
+                                                                    );
+            if ($existe_responsable) {
+                $detalles = "El usuario con ID: $id_usuario ha dado de baja un Responsable. Datos: Responsable: $id_responsable";
+                $responsable = new Responsable(
+                                            coneccion_base: $con,
+                                            id_responsable: $id_responsable
+                                            );
+                $responsable->delete();
+                $solicitud->delete();
+                $accion = new Accion(
+                                    xaccountid: $id_usuario,
+                                    xFecha: $fecha,
+                                    xDetalles:$detalles,
+                                    xID_TipoAccion: $id_tipo_accion
+                                    );
+                $accion->save();
+                $con->CloseConexion();
+                $Mensaje = "El responsable fue eliminado Correctamente";
+                header('Location: /home?Mensaje=' . $Mensaje);
+            } else {
+                $Mensaje = "El responsable no existe o ya fue eliminado.";
+                $solicitud->delete();
+                header('Location: /home?MensajeError=' . $Mensaje);
             }
-            $ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
-            if (!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)) {
-                throw new Exception("Error al intentar registrar Accion. Consulta: " . $ConsultaAccion, 1);
-            }
-
-            $ConsultaSolicitud = "update solicitudes_eliminarresponsables set estado = 0 where ID_responsable = $ID_responsable";
-            if (!$Ret = mysqli_query($Con->Conexion,$ConsultaSolicitud)) {
-                throw new Exception("Problemas en la consulta. Consulta: " . $ConsultaSolicitud, 3);			
-            }
-
-            $Con->CloseConexion();
-            $Mensaje = "La responsable fue eliminada Correctamente";
-            header('Location: /home?Mensaje=' . $Mensaje);
         } catch (Exception $e) {
-            echo "Error: ".$e->getMessage();
+            echo "Error: " . $e->getMessage();
         }
+
     }
 
     public function sol_mod_control(
@@ -174,124 +189,53 @@ class ResponsableController
 
     public function mod_responsable_control()
     {
-        $ID_Usuario = $_SESSION["Usuario"];
-        $ID_responsable = $_REQUEST["ID_responsable"];
-        $ID_Solicitud = $_REQUEST["ID"];
-        $Codigo = strtoupper($_REQUEST["Codigo"]);
-        $responsable = $_REQUEST["responsable"];
-        $ID_Forma = $_REQUEST["ID_Forma"];
-        $NuevoColor = base64_decode($_REQUEST["CodigoColor"]);
+        $id_usuario = $_SESSION["Usuario"];
 
-        $Fecha = date("Y-m-d");
-        $ID_TipoAccion = 2;
+        $id_solicitud = $_REQUEST["ID"];
+        $responsable = ucfirst($_REQUEST["Responsable"]);
+
+        $fecha = date("Y-m-d");
+        $id_tipo_accion = 2;
+
+        $con = new Conexion();
+        $con->OpenConexion();
 
         try {
-            $Con = new Conexion();
-            $Con->OpenConexion();
+            if($id_solicitud > 0){
+                $solicitud = new SolicitudModificacion(
+                                                        coneccion_base: $con,
+                                                        id_solicitud: $id_solicitud
+                );
+                $id_responsable = $solicitud->get_id_registro();
+                $solicitud->delete();
+                $ResponsableDatosViejos = new Responsable(
+                                                        coneccion_base: $con,
+                                                        id_responsable: $id_responsable
 
-            $ConsultarDatosViejos = "select * from responsable where id_responsable = $ID_responsable and estado = 1";
-            $ErrorDatosViejos = "No se pudieron consultar los datos";
-            if(!$RetDatosViejos = mysqli_query($Con->Conexion,$ConsultarDatosViejos)){
-                throw new Exception("Error al intentar registrar. Consulta: ".$ConsultarDatosViejos, 1);
+                                                    );		
+                $ResponsableViejo = $ResponsableDatosViejos->get_responsable();
+
+                $ResponsableDatosViejos->set_responsable($responsable);
+                $ResponsableDatosViejos->update();
+
+                $detalles = "El usuario con ID: $id_usuario ha modificado un Responsable. Datos: Dato Anterior: $ResponsableViejo , Dato Nuevo: $responsable";
+
+                $accion = new Accion(
+                    xaccountid: $id_usuario,
+                    xFecha : $fecha,
+                    xDetalles: $detalles,
+                    xID_TipoAccion: $id_tipo_accion	 
+                );		
+
+                $accion->save();
+
+                $mensaje = "El Responsable se modificó Correctamente";
+                header('Location: /home?&Mensaje=' . $mensaje);
             }
-            $TomarDatosViejos = mysqli_fetch_assoc($RetDatosViejos);
-            $Cod_responsableViejo = $TomarDatosViejos["cod_responsable"];
-            $responsableViejo = $TomarDatosViejos["responsable"];
-            $ID_FormaViejo = $TomarDatosViejos["ID_Forma"];
-            $ColorViejo = $TomarDatosViejos["color"];
-
-            $Consulta = "update motivos 
-                        set cod_responsable = '$Codigo' 
-                        where cod_responsable = '$Cod_responsableViejo' 
-                        and estado = 1";
-
-            $CodigoColorEsc = mysqli_real_escape_string($Con->Conexion, $NuevoColor);
-            $Consulta = "update responsable 
-                        set cod_responsable = '$Codigo', 
-                            responsable = '$responsable', 
-                            ID_Forma = $ID_Forma, 
-                            color = '$CodigoColorEsc' 
-                        where id_responsable = $ID_responsable 
-                        and estado = 1";
-            
-            if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
-                throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 2);		
-            }
-
-            $Detalles = "El usuario con ID: $ID_Usuario ha modificado la responsable: $ID_responsable. Datos: Dato Anterior: $Cod_responsableViejo , Dato Nuevo: $Codigo - Dato Anterior: $responsableViejo , Dato Nuevo: $responsable - Dato Anterior: $ID_FormaViejo , Dato Nuevo: $ID_Forma - Dato Anterior: $ColorViejo , Dato Nuevo: $NuevoColor con id solicitud : $ID_Solicitud";
-            $ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
-            if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
-                throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 3);
-            }
-
-            $ConsultaPermisos = "select tip.ID_TipoUsuario, IF(slp.ID_TipoUsuario IS NULL, 'si', 'no') as disable
-                                from (SELECT * FROM solicitudes_permisos WHERE ID = {$ID_Solicitud} and estado = 1) slp right join Tipo_Usuarios tip ON slp.ID_TipoUsuario = tip.ID_TipoUsuario";
-            $MessageError = "Problemas al consultar Solicitudes Permisos";
-            if(!$Resultados = mysqli_query($Con->Conexion,$ConsultaPermisos)){
-                throw new Exception("No se pudo insertar el conjunto de permisos. Consulta: ".$ConsultaPermisos, 2);
-            }
-            while ($RetPermisos = mysqli_fetch_array($Resultados)) {
-                $GrupoUsuarios = $RetPermisos["ID_TipoUsuario"];
-
-                $ConsultaPermisosresponsable = "select *
-                                            from responsables_roles
-                                            where id_responsable = {$ID_responsable}
-                                                and id_tipousuario = {$GrupoUsuarios} 
-                                                and estado = 1";
-
-                $MessageError = "Problemas al consultar responsables Permisos";
-                if(!$ResultadosPermisosresponsables = mysqli_query($Con->Conexion,$ConsultaPermisosresponsable)){
-                    throw new Exception("No se pudo consultar conjunto de permisos sobre la responsable. Consulta: ".$ConsultaPermisosresponsable, 2);
-                }
-
-                if(mysqli_num_rows($ResultadosPermisosresponsables) == 0){
-                    if( $RetPermisos["disable"] == "no"){
-                        $Insert_Permiso = "insert into responsables_roles(id_responsable, fecha, ID_TipoUsuario, estado) values('{$ID_responsable}', '{$Fecha}','{$GrupoUsuarios}', 1)";
-                        if(!$RetID = mysqli_query($Con->Conexion,$Insert_Permiso)){
-                            throw new Exception("No se pudo actualizar el permisos. Consulta: ".$Insert_Permiso, 2);
-                        }
-                        $updatePermisos = "update solicitudes_permisos
-                                        set estado = 0
-                                        where ID = {$ID_Solicitud}
-                                            and ID_TipoUsuario = {$GrupoUsuarios} 
-                                            and estado = 1";
-                        $MensajeError = "No se pudo dar de baja el permiso responsable {$ID_responsable} rol {$GrupoUsuarios}";
-                        $ResultadosUpdate = mysqli_query($Con->Conexion,$updatePermisos) or die($MessageError);
-                    }
-                } else {
-                    if( $RetPermisos["disable"] == "si"){
-                        $updatePermisos = "update responsables_roles
-                                        set estado = 0
-                                        where id_responsable = {$ID_responsable}
-                                        and ID_TipoUsuario = {$GrupoUsuarios} 
-                                        and estado = 1";
-                        $MensajeError = "No se pudo dar de baja el permiso responsable {$ID_responsable} rol {$GrupoUsuarios}";
-                        if(!$RetID = mysqli_query($Con->Conexion,$updatePermisos)){
-                            throw new Exception($MensajeError . ". Consulta: ".$updatePermisos, 2);
-                        }
-                    } else {
-                        $updatePermisos = "update solicitudes_permisos
-                                        set estado = 0
-                                        where ID = {$ID_Solicitud}
-                                        and ID_TipoUsuario = {$GrupoUsuarios} 
-                                        and estado = 1";
-                        $MensajeError = "No se pudo dar de baja el permiso responsable {$ID_responsable} rol {$GrupoUsuarios}";
-                        $ResultadosUpdate = mysqli_query($Con->Conexion,$updatePermisos) or die($MessageError);
-                    }
-                }
-            }
-
-            $ConsultaSolicitud = "update solicitudes_modificarresponsables set estado = 0 where Codigo = '$Codigo' and estado = 1";
-            if(!$Ret = mysqli_query($Con->Conexion,$ConsultaSolicitud)){
-                throw new Exception("Problemas en la consulta. Consulta: ".$ConsultaSolicitud, 3);			
-            }
-
-            $Con->CloseConexion();
-            $Mensaje = "La responsable se modifico Correctamente";
-            header('Location: /home.php?ID=' . $ID_responsable . '&Mensaje=' . $Mensaje);
         } catch (Exception $e) {
             echo "Error: ".$e->getMessage();
         }
+
         exit();
     }
 
@@ -312,12 +256,12 @@ class ResponsableController
                 $con = new Conexion();
                 $con->OpenConexion();
 
-                $existe_responsable_unif = Responsable::exist_responsable(
-                                                            connection: $con,
+                $existe_responsable_unif = Responsable::existe_id_responsable(
+                                                            coneccion_base: $con,
                                                             id_responsable: $id_responsable_unif
                                                         );
-                $existe_responsable_del = Responsable::exist_responsable(
-                                                            connection: $con,
+                $existe_responsable_del = Responsable::existe_id_responsable(
+                                                           coneccion_base: $con,
                                                             id_responsable: $id_responsable_del
                                                         );
 
@@ -460,6 +404,49 @@ class ResponsableController
             echo "Error: " . $e->getMessage();
         }
         exit();
+    }
+
+    public function new_responsable_control()
+    {
+        $ID_Usuario = $_SESSION["Usuario"];
+
+        $Responsable = ucfirst($_REQUEST["Responsable"]);
+        $Estado = 1;
+
+        $Fecha = date("Y-m-d");
+        $ID_TipoAccion = 1;
+        $Detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Responsable. Datos: $Responsable";
+
+        $Con = new Conexion();
+        $Con->OpenConexion();
+
+        try {
+            $responsable_obj = new Responsable(responsable: $Responsable, coneccion_base: $Con);
+            $ConsultarResponsablesIguales = "select * from responsable where responsable = '$Responsable' and estado = 1";
+            if(!$Ret = mysqli_query($Con->Conexion,$ConsultarResponsablesIguales)){
+                throw new Exception("Error al consultar registros. Consulta: ".$ConsultarResponsablesIguales, 0);		
+            }
+            $Resultado = mysqli_num_rows($Ret);
+            if(Responsable::get_id_responsable_by_name(coneccion_base: $Con, responsable: $Responsable) > 0){
+                $Con->CloseConexion();
+                $Mensaje = "Ya existe un Responsable con ese Nombre";
+                header('Location: ../view_newresponsables.php?MensajeError='.$Mensaje);
+            }else{
+                $Consulta = "insert into responsable(responsable,estado) values('$Responsable',$Estado)";
+                if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
+                    throw new Exception("Error al intentar registrar. Consulta: ".$Consulta, 1);
+                }	
+                $ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
+                if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
+                    throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 2);
+                }
+                $Con->CloseConexion();
+                $Mensaje = "El Responsable se registro Correctamente";
+                header('Location: ../view_newresponsables.php?Mensaje='.$Mensaje);
+            }
+        } catch (Exception $e) {
+            echo "Error: ".$e->getMessage();
+        }        
     }
 
     public function buscar_responsable($valor, $id)

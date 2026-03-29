@@ -18,8 +18,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-$mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
-$mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 
 ?>
 <!DOCTYPE html>
@@ -84,7 +82,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 					</div>
 					<button class="btn btn-primary btn-large btn-block Hander" style="margin-bottom: 12px;" type = "submit">Entrar</button>				
 					</form>
-					<a href="view_recuperar_password.php" class="recovery-email">¿Olvidaste tu contraseña?</a>
+					<a href="/password_peticion" class="recovery-email">¿Olvidaste tu contraseña?</a>
 				</div>
 			</div>
 		</div>
