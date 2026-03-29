@@ -5,7 +5,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Calle.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Categoria.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_Unificacion.php");
-
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_EliminarMotivo.php");
 
 class MotivoController 
 {
@@ -433,6 +433,45 @@ class MotivoController
         };
 
         echo $mensaje;
+    }
+
+    public function req_del_motivo_control()
+    {
+        $ID_Usuario = $_SESSION["Usuario"];
+
+        $ID_Motivo = $_REQUEST["ID"];
+        $Fecha = date("Y-m-d");
+        $Estado = 1;
+
+        $Con = new Conexion();
+        $Con->OpenConexion();
+
+        $ConsultarMotivo = "select id_motivo, motivo, cod_categoria from motivo where id_motivo = $ID_Motivo";
+
+        if(!$RetMotivo = mysqli_query($Con->Conexion,$ConsultarMotivo)){
+            throw new Exception("Problemas al consultar datos de motivo. Consulta: ".$ConsultarMotivo, 1);			
+        }
+        $TomarMotivo = mysqli_fetch_assoc($RetMotivo);
+        $Motivo = $TomarMotivo['motivo'];
+        $Cod_Categoria = $TomarMotivo["cod_categoria"];
+        $Num_Motivo = 0;
+
+        $Solicitud = new Solicitud_EliminarMotivo(
+                                                  xFecha: $Fecha,
+                                                  xMotivo: $Motivo,
+                                                  xCod_Categoria: $Cod_Categoria,
+                                                  xNum_Motivo: $Num_Motivo,
+                                                  xEstado: $Estado,
+                                                  xID_Usuario: $ID_Usuario,
+                                                  xID_Motivo: $ID_Motivo);
+        $Insert_Solicitud = "insert into solicitudes_eliminarmotivos(Fecha,Motivo,Cod_Categoria,Num_Motivo,Estado,ID_Usuario,ID_Motivo) values('{$Solicitud->getFecha()}','{$Solicitud->getMotivo()}','{$Solicitud->getCod_Categoria()}',{$Solicitud->getNum_Motivo()},{$Solicitud->getEstado()},{$Solicitud->getID_Usuario()},{$Solicitud->getID_Motivo()})";
+        $MensajeError = "No se pudo enviar la solicitud";
+
+        mysqli_query($Con->Conexion,$Insert_Solicitud) or die($MensajeError);
+
+        $Con->CloseConexion();
+        $Mensaje = "La solicitud de eliminación se envió a los administradores para ser confirmada.";
+        header('Location: ../view_motivos.php?Mensaje='.$Mensaje);
     }
 
     public function buscar_motivos()

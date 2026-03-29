@@ -77,7 +77,16 @@ public function getID_Motivo(){
 }
 
 //METODO CONSTRUCTOR
-public function __construct($xID,$xFecha,$xMotivo,$xCod_Categoria,$xNum_Motivo,$xEstado,$xID_Usuario,$xID_Motivo){
+public function __construct(
+                            $xID=null,
+                            $xFecha=null,
+                            $xMotivo=null,
+                            $xCod_Categoria=null,
+                            $xNum_Motivo=null,
+                            $xEstado=null,
+                            $xID_Usuario=null,
+                            $xID_Motivo=null
+) {
     $this->ID = $xID;
     $this->Fecha = $xFecha;
     $this->Motivo = $xMotivo;

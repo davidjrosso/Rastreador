@@ -258,11 +258,15 @@ class BarrioController
             $Con = new Conexion();
             $Con->OpenConexion();
 
-            $Solicitud = new Solicitud_Unificacion(0,$Fecha,$ID_Registro_1,$ID_Registro_2,$ID_Usuario,$Estado,$TipoUnif);
-            $Insert_Solicitud = "insert into solicitudes_unificacion(Fecha,ID_Registro_1,ID_Registro_2,ID_Usuario,Estado,ID_TipoUnif) values('{$Solicitud->getFecha()}',{$Solicitud->getID_Registro_1()},{$Solicitud->getID_Registro_2()},{$Solicitud->getID_Usuario()},{$Solicitud->getEstado()},{$Solicitud->getTipoUnif()})";
-            $MensajeError = "No se pudo enviar la solicitud";
-
-            mysqli_query($Con->Conexion,$Insert_Solicitud) or die($MensajeError);
+            $Solicitud = new Solicitud_Unificacion(
+                                                    xFecha: $Fecha,
+                                                    xID_Registro_1: $ID_Registro_1,
+                                                    xID_Registro_2: $ID_Registro_2,
+                                                    xID_Usuario: $ID_Usuario,
+                                                    xEstado: $Estado,
+                                                    xTipoUnif: $TipoUnif,
+                                                    coneccion: $Con);
+            $Solicitud->save();
 
             $Con->CloseConexion();
             $Mensaje = "La solicitud de unificación se envió a los administradores para ser confirmada.";
