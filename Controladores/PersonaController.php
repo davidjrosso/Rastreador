@@ -730,4 +730,5 @@ class PersonaController
             echo "Error: " . $e->getMessage();
         }
     }
+
 }

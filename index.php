@@ -142,6 +142,7 @@ try {
 	$routes[] = Route::post('sol_unif_motivo_control', 'pedirunificarmotivos', [MotivoController::class, 'sol_unif_control']);
 	$routes[] = Route::post('unif_motivo_control', 'unificarmotivos', [MotivoController::class, 'unif_motivo_control']);
 	$routes[] = Route::get('listado_responsables', '/responsables', [ResponsableController::class, 'listado_responsables']);
+	$routes[] = Route::post('listado_responsables_filtro', '/responsables', [ResponsableController::class, 'listado_responsables']);
 	$routes[] = Route::get('mod_responsable', '/responsable/editar\?ID={id}', [ResponsableController::class, 'mod_responsable']);
 	$routes[] = Route::get('sol_del_responsable', '/pedireliminarresponsable\?ID={id}', [ResponsableController::class, 'sol_del_responsable']);
 	$routes[] = Route::get('unif_responsable', '/responsable/unificar', [ResponsableController::class, 'unif_responsable']);
@@ -173,6 +174,7 @@ try {
 	$routes[] = Route::post('mod_account_control', '/modificar_usuario', [AccountController::class, 'mod_account_control']);
 	$routes[] = Route::get('del_account_control', '/delete_usuario\?ID={id}', [AccountController::class, 'del_account_control']);
 	$routes[] = Route::get('listado_barrios', '/barrios', [BarrioController::class, 'listado_barrios']);
+	$routes[] = Route::post('listado_barrios_filtro', '/barrios', [BarrioController::class, 'listado_barrios']);
 	$routes[] = Route::get('listado_barrios_succes', '/barrios\?Mensaje={mensaje}', [BarrioController::class, 'listado_barrios']);
 	$routes[] = Route::get('listado_barrios_error', '/barrios\?MensajeError={mensaje}', [BarrioController::class, 'listado_barrios']);
 	$routes[] = Route::get('mod_barrio', '/barrio/editar\?ID={id}', [BarrioController::class, 'mod_barrio']);
