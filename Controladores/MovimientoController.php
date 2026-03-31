@@ -306,15 +306,14 @@ class MovimientoController
             $accion->save();
 
         } catch (Exception $e) {
-            echo "Error: ".$e->getMessage();
+            echo "Error: " . $e->getMessage();
         }
 
         $Con->CloseConexion();
 
         $Mensaje = "El Movimiento se ha cargado correctamente";
 
-        header('Location: ../view_newmovimientos.php?Mensaje='.$Mensaje);
-       
+        header('Location: /movimiento/nuevo?Mensaje=' . $Mensaje);
     }
 
     public function del_movimiento_control($id_movimiento)
@@ -331,10 +330,9 @@ class MovimientoController
             $Con = new Conexion();
             $Con->OpenConexion();
 
-            $Consulta = "update movimiento set estado = 0 where id_movimiento = $ID_Movimiento";
-            if (!$Ret = mysqli_query($Con->Conexion,$Consulta)) {
-                throw new Exception("Problemas en la consulta", 0);		
-            }	
+            $mov = new Movimiento(coneccion_base: $Con, xID_Movimiento: $ID_Movimiento);
+            $mov->delete();
+
             $ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
             if (!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)) {
                 throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 1);
@@ -345,7 +343,7 @@ class MovimientoController
                             where id_movimiento = $ID_Movimiento";
             $ErrorDatos = "No se pudieron consultar los datos :";
             if (!$RetDatos = mysqli_query($Con->Conexion,$ConsultarDatos)) {
-                throw new Exception($ErrorDatos.$ConsultarDatos, 1);
+                throw new Exception($ErrorDatos . $ConsultarDatos, 1);
             }
 
             $TomarDatos = mysqli_fetch_assoc($RetDatos);
@@ -355,13 +353,11 @@ class MovimientoController
             $DNI = $TomarDatos["documento"];
 
             // CREANDO NOTIFICACION PARA EL USUARIO
-            $DetalleNot = 'Se elimino el movimiento vinculado a : '.$Apellido. ', '.$Nombre. (($Fecha == null)?'':' fecha: '. $Fecha);
-            $Expira = date("Y-m-d", strtotime($Fecha . " + 15 days"));
+            $detalle_not = 'Se elimino el movimiento vinculado a : ' . $Apellido . ', ' . $Nombre . (($Fecha == null)?'':' fecha: '. $Fecha);
+            $expira = date("Y-m-d", strtotime($Fecha . " + 15 days"));
 
-            $ConsultaNot = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$DetalleNot','$Fecha', '$Expira',1)";
-            if (!$RetNot = mysqli_query($Con->Conexion,$ConsultaNot)) {
-                throw new Exception("Error al intentar registrar Notificacion. Consulta: ".$ConsultaNot, 3);
-            }
+            $rev = new Notificacion(coneccion_base: $Con, detalle: $detalle_not , fecha: $expira);
+            $rev->save();
 
             $Con->CloseConexion();
             $Mensaje = "El movimiento se elimino Correctamente";
@@ -517,11 +513,9 @@ class MovimientoController
         $detalle_not = 'Se modifico el movimiento vinculado a : '. $apellido . ', '. $nombre . ' fecha: '. $fecha_previa;
         $expira = date("Y-m-d", strtotime($fecha_accion . " + 15 days"));
 
-        $consulta_not = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$detalle_not','$Fecha', '$expira',1)";
-        if(!$RetNot = mysqli_query($con->Conexion,$consulta_not)){
-            throw new Exception("Error al intentar registrar Notificacion. Consulta: " . $consulta_not, 3);
-        }
-
+        $rev = new Notificacion(coneccion_base: $con, detalle: $detalle_not , fecha: $expira);
+        $rev->save();
+        
         $con->CloseConexion();
 
         $Mensaje = "El Movimiento se modifico correctamente";

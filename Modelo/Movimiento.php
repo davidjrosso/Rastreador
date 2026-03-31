@@ -378,4 +378,18 @@ class Movimiento implements JsonSerializable
 		}
 		$this->ID_Movimiento = mysqli_insert_id($this->coneccion_base->Conexion);
 	}
+
+	public function delete()
+	{
+		$consulta = "update movimiento
+					 set 	 estado = 0
+					 where id_movimiento = " . $this->getID_Movimiento();
+		$mensaje_error = "No se pudo modificar el movimiento";
+		$ret = mysqli_query($this->coneccion_base->Conexion, $consulta);
+		if (!$ret) {
+			throw new Exception($mensaje_error . $consulta, 2);
+		}
+
+	}
+
 }
