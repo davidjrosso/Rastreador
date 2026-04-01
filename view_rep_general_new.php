@@ -1279,7 +1279,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
 </head>
 
 <body>
-  <div id="ContenerdorPrincipal" class="row">
+  <div id="ContenerdorPrincipal" class="row" style="overflow-y: hidden">
     <?php
     if ($TipoUsuario == 1) {
       ?>
