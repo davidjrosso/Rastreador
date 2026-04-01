@@ -1459,7 +1459,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
       </div>
     <?php } ?>
 
-    <div class="col-md-10" id="ContenidoTabla">
+    <div class="col-md-10" id="ContenidoTabla" style="max-height: 100vh;">
       <div class="row">
         <div class="col"></div>
         <div class="col-10 Titulo">
