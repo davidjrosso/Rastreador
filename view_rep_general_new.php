@@ -2874,48 +2874,45 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
                             if (!empty($RetTodos)
                                 && ($RetTodos["Mes"] == $value["mes"])
                                 && ($RetTodos["Anio"] == $value["anio"])) {
-                                    $motivo = in_array($RetTodos["id_motivo"], array_values($MotivosOpciones));
-                                    if (($CantOpMotivos == 0) || $motivo) {
-                                          $nroMotivosEnFecha += 1;
-                                          $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
-                                          $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center; " . $value["div_hidden"] . "'>
-                                                        <a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $RetTodos["id_movimiento"] . "\",\"Ventana" . $RetTodos["id_movimiento"] . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
-                                                          <span style='font-size: 30px; color: " . $RetTodos["color"] . ";'>" .
-                                                            $RetTodos["Forma_Categoria"] . "
-                                                            <center>
-                                                              <span class='nombreCategoria'>" .
-                                                                $RetTodos["codigo"] . "
-                                                              </span>
-                                                            </center>
-                                                          </span>
-                                                        </a>
-                                                      </div>";
-                                          $marginLeft = (strlen($RetTodos["codigo"]) >= $nro_col_disponible) ? "margin-left:10px" : "margin-left:2px";
+                                  $nroMotivosEnFecha += 1;
+                                  $tagsMotivos .= ($nroMotivosEnFecha == 7) ? "<div>" : "";
+                                  $tagsTD .= "<div class = 'col-md-2' style = 'padding: 0; text-align: center; " . $value["div_hidden"] . "'>
+                                                <a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $RetTodos["id_movimiento"] . "\",\"Ventana" . $RetTodos["id_movimiento"] . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>
+                                                  <span style='font-size: 30px; color: " . $RetTodos["color"] . ";'>" .
+                                                    $RetTodos["Forma_Categoria"] . "
+                                                    <center>
+                                                      <span class='nombreCategoria'>" .
+                                                        $RetTodos["codigo"] . "
+                                                      </span>
+                                                    </center>
+                                                  </span>
+                                                </a>
+                                              </div>";
+                                  $marginLeft = (strlen($RetTodos["codigo"]) >= $nro_col_disponible) ? "margin-left:10px" : "margin-left:2px";
 
-                                          $jsonTable[$clave]["$Mes/$Anio"][] = [
-                                                                                $RetTodos["Forma_Categoria"],
-                                                                                $RetTodos["codigo"],
-                                                                                $RetTodos["color"]
-                                                                                ];
-                                          $forma_motivo = $RetTodos["Forma_Categoria"];
-                                          if (strlen($forma_motivo) > 1) {
-                                              $forma_motivo = substr($forma_motivo, 2);
-                                              $forma_motivo = substr($forma_motivo, 0, -1);
-                                          }
-                                          $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
-                                                                                                          $RetTodos["color"],
-                                                                                                          $RetTodos["tipo_categoria"],
-                                                                                                          $RetTodos["fecha"]
-                                                                                                          ];
-                                          $lista_animacion[] = [
-                                            $RetTodos["id_persona"],
-                                            $RetTodos["lat"],
-                                            $RetTodos["lon"],
-                                            $forma_motivo,
-                                            $RetTodos["color"],
-                                            $RetTodos["fecha"]
-                                          ];
+                                  $jsonTable[$clave]["$Mes/$Anio"][] = [
+                                                                        $RetTodos["Forma_Categoria"],
+                                                                        $RetTodos["codigo"],
+                                                                        $RetTodos["color"]
+                                                                        ];
+                                  $forma_motivo = $RetTodos["Forma_Categoria"];
+                                  if (strlen($forma_motivo) > 1) {
+                                      $forma_motivo = substr($forma_motivo, 2);
+                                      $forma_motivo = substr($forma_motivo, 0, -1);
                                   }
+                                  $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
+                                                                                                  $RetTodos["color"],
+                                                                                                  $RetTodos["tipo_categoria"],
+                                                                                                  $RetTodos["fecha"]
+                                                                                                  ];
+                                  $lista_animacion[] = [
+                                    $RetTodos["id_persona"],
+                                    $RetTodos["lat"],
+                                    $RetTodos["lon"],
+                                    $forma_motivo,
+                                    $RetTodos["color"],
+                                    $RetTodos["fecha"]
+                                  ];
                                   $count++;
                                   $RetTodos = mysqli_fetch_assoc($tomar_movimientos);
                             } else {
