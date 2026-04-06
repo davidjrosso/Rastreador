@@ -100,7 +100,7 @@ class PersonaDomicilio
 	public function save(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$consulta = "INSERT INTO persona (
+		$consulta = "INSERT INTO personas_domicilios (
 										id_persona,
 										id_domicilio,
 										estado 
@@ -124,9 +124,9 @@ class PersonaDomicilio
 		$Con = new Conexion();
 		$Con->OpenConexion();
 
-		$query = "update persona
+		$query = "update personas_domicilios
 				  set estado = 0
-				  where id_persona = " . $this->getID_Persona();
+				  where id_persona_domicilio = " . $this->get_id_persona_domicilio();
 		$MensajeErrorConsultar = "No se pudo insertar la Persona";
 		$ret = mysqli_query($Con->Conexion, $query);
 		if (!$ret) {
