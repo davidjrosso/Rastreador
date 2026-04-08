@@ -607,7 +607,7 @@ class DriveController {
                                                                                         $dni
                                                                                         );
                     if (!is_null($id_persona) && is_numeric($id_persona)) {
-                        $persona = new Persona(ID_Persona: $id_persona);
+                        $persona = new Persona(coneccion: $con, ID_Persona: $id_persona);
                         if ($is_calle_con_barrio && is_numeric($id_barrio)) {
                             $modificacion = $persona->setCalleNroConBarrio(
                                                                         domicilio: $direccion, 
@@ -695,7 +695,7 @@ class DriveController {
                         }
                     } else {
                         if (!empty($dni) && !Persona::is_registered($dni)) {
-                            $persona = new Persona(
+                            $persona = new Persona(coneccion: $con,
                                 xApellido : $apellido,
                                 xNombre : $nombre,
                                 xBarrio :  $id_barrio,
@@ -813,7 +813,7 @@ class DriveController {
                                                                                             );
 
                         if (!is_null($id_persona) && is_numeric($id_persona)) {
-                            $persona = new Persona(ID_Persona: $id_persona);
+                            $persona = new Persona(coneccion: $con, ID_Persona: $id_persona);
                             $georeferencia = $persona->getGeoreferencia();
                             if ($is_calle_con_barrio && is_numeric($id_barrio)) {
                                 $modificacion = $persona->setCalleNroConBarrio(
@@ -924,7 +924,7 @@ class DriveController {
 
                     $Fecha_Nacimiento = (empty($Fecha_Nacimiento)) ? null : $Fecha_Nacimiento;
                     if (!Persona::is_registered($dni)) {
-                        $persona = new Persona(
+                        $persona = new Persona(coneccion: $con,
                             xApellido : $apellido,
                             xNombre : $nombre,
                             xBarrio :  $id_barrio,
@@ -1023,7 +1023,7 @@ class DriveController {
                             continue;
                         }
 
-                        $persona = new Persona(ID_Persona: $id_persona);
+                        $persona = new Persona(coneccion: $con, ID_Persona: $id_persona);
                         if ($consulta_osm) {
                             $georeferencia = $persona->getGeoreferencia();
                             if ($is_calle_con_barrio && is_numeric($id_barrio)) {

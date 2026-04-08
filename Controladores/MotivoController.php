@@ -83,6 +83,9 @@ class MotivoController
             );
             $accion->save();
         
+            $rev = new Solicitud_EliminarMotivo(xID: $ID_Motivo);
+            $rev->delete();
+
             $ConsultaSolicitud = "update solicitudes_eliminarmotivos set estado = 0 where ID_Motivo = $ID_Motivo";
             if(!$Ret = mysqli_query($Con->Conexion,$ConsultaSolicitud)){
                 throw new Exception("Problemas en la consulta. Consulta: ".$ConsultaSolicitud, 3);			
@@ -91,7 +94,7 @@ class MotivoController
             $Mensaje = "El motivo se elimino Correctamente";
             header('Location: /home?Mensaje=' . $Mensaje);
         } catch (Exception $e) {
-            echo "Error: ".$e->getMessage();
+            echo "Error: " . $e->getMessage();
         }
     }
 
@@ -172,15 +175,10 @@ class MotivoController
                 $Mensaje = "Ya existe un motivo con ese Dato ingrese otro valor";
                 header('Location: /motivos?ID=' . $ID_Motivo . '&MensajeError=' . $Mensaje);
             } else {
-                $ConsultarDatosViejos = "select * from motivo where id_motivo = $ID_Motivo and estado = 1";
-                $ErrorDatosViejos = "No se pudieron consultar los datos";
-                if (!$RetDatosViejos = mysqli_query($Con->Conexion,$ConsultarDatosViejos)) {
-                    throw new Exception("Error al intentar registrar. Consulta: ".$ConsultarDatosViejos, 1);
-                }		
-                $TomarDatosViejos = mysqli_fetch_assoc($RetDatosViejos);
-                $MotivoViejo = $TomarDatosViejos["Motivo"];
-                $Cod_Viejo = $TomarDatosViejos["Codigo"];		
-
+                $rev = new Motivo(coneccion_base: $Con, id_motivo: $ID_Motivo);
+                $MotivoViejo = $rev->get_motivo();
+                $Cod_Viejo = $rev->get_cod_categoria();
+                
                 // $ConsultarCod_Categoria = "select cod_categoria from categoria where id_categoria = $ID_Categoria";
                 // if(!$RetCod = mysqli_query($Con->Conexion,$ConsultarCod_Categoria)){
                 // 	throw new Exception("Problemas al consultar cod_categoria. Consulta: ".$ConsultarCod_Categoria, 1);			
@@ -188,22 +186,22 @@ class MotivoController
                 // $TomarCod = mysqli_fetch_assoc($RetCod);
                 // $Cod_Categoria = $TomarCod["cod_categoria"];
 
-                $Consulta = "update motivo set motivo = '$Motivo', codigo = '$Codigo' where id_motivo = $ID_Motivo and estado = 1";
-                if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
-                    throw new Exception("Problemas en la consulta. Consulta: " . $Consulta, 2);			
-                }
-                
-                $ConsultaSolicitud = "update solicitudes_modificarmotivos set estado = 0 where ID = $ID_Solicitud";
-                if(!$Ret = mysqli_query($Con->Conexion, $ConsultaSolicitud)){
-                    throw new Exception("Problemas en la consulta. Consulta: " . $ConsultaSolicitud, 3);			
-                }
+                $rev->set_motivo($Motivo);
+                $rev->set_codigo($Codigo);
+                $rev->update();
 
+                $rev = new Solicitud_ModificarMotivo(xID: $ID_Solicitud, xConeccion: $Con);
+                $rev->delete();
+                
                 $Detalles = "El usuario con ID: $ID_Usuario ha modificado un Motivo. Datos: Dato Anterior: $MotivoViejo , Dato Nuevo: $Motivo - Dato Anterior: $Cod_Viejo , Dato Nuevo: $Codigo";
-                $ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
-                if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
-                    throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 4);
-                }	
-                $Con->CloseConexion();
+                $accion = new Accion(
+                    xaccountid: $ID_Usuario,
+                    xFecha : $Fecha,
+                    xDetalles: $Detalles,
+                    xID_TipoAccion: $ID_TipoAccion	 
+                );
+                $accion->save();
+ 
                 $Mensaje = "El Motivo se modifico Correctamente";
                 header('Location: /home?ID=' . $ID_Motivo . '&Mensaje=' . $Mensaje);
             }
@@ -351,10 +349,8 @@ class MotivoController
                 mysqli_query($Con->Conexion, $CambiarMotivos_3) or die($MensajeErrorCambiarMotivos_3);
             }
 
-            $ConsultaBajaMotivo = "update motivo set estado = 0 where id_motivo = $ID_Motivo_2";
-            $MensajeErrorBajaMotivo = "No se pudo dar de baja el Motivo";
-
-            mysqli_query($Con->Conexion,$ConsultaBajaMotivo) or die($MensajeErrorBajaMotivo);
+            $rev = new Motivo(coneccion_base: $Con, id_motivo: $ID_Motivo_2);
+            $rev->delete();
 
             $ConsultaSolicitud = "update solicitudes_unificacion set Estado = 0 where ID_Solicitud_Unificacion = $ID_Solicitud";
             if(!$Ret = mysqli_query($Con->Conexion,$ConsultaSolicitud)){

@@ -236,7 +236,7 @@
                 if (!$id_persona) {
                     continue;
                 } else {
-                    $persona = new Persona(ID_Persona: $id_persona);
+                    $persona = new Persona(coneccion: $con, ID_Persona: $id_persona);
                     $georeferencia = $persona->getGeoreferencia();
                     if (!$georeferencia) {
                         $modificacion = $persona->setCalleNro($direccion);

@@ -167,7 +167,7 @@ $Con->CloseConexion();
               $Meses = $Ret["meses"];
               $Trabajo = $Ret["Trabajo"];
 
-              $Persona = new Persona($ID_Persona);
+              $Persona = new Persona(coneccion: $Con, ID_Persona: $ID_Persona);
 
               $ConsultarEscuela = "select Escuela from escuelas where ID_Escuela = $ID_Escuela";
               $MensajeErrorConsultarEscuela = "No se pudo consultar la Escuela";

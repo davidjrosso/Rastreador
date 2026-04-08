@@ -140,8 +140,8 @@ class Motivo implements JsonSerializable
 		$this->motivo = $motivo;
 	}
 
-	public function set_cod_categoria($xID_Persona){
-		$this->ID_Persona = $xID_Persona;
+	public function set_cod_categoria($cod_categoria){
+		$this->cod_categoria = $cod_categoria;
 	}
 
 	public function set_tipo_motivo($tipo_motivo){
@@ -152,8 +152,8 @@ class Motivo implements JsonSerializable
 		$this->orden = $orden;
 	}
 
-	public function set_num_estado($num_estado){
-		$this->num_estado = $num_estado;
+	public function set_num_estado($num_motivo){
+		$this->num_motivo = $num_motivo;
 	}
 
 	public function set_estado($estado){
@@ -213,7 +213,7 @@ class Motivo implements JsonSerializable
 		];
 	}
 
-	public function udpate(){
+	public function update(){
 		$consulta = "update motivo
 					 set motivo = " . (($this->get_motivo()) ? $this->get_motivo() : "null") . ",
 						 codigo = " . (($this->get_codigo()) ? $this->get_codigo() : "null") . ", 
@@ -267,6 +267,11 @@ class Motivo implements JsonSerializable
 		if (!$ret) {
 			throw new Exception($mensaje_error . $consulta, 2);
 		}
+	}
+
+	public function set_codigo($codigo)
+	{
+		$this->codigo = $codigo;
 	}
 
 }

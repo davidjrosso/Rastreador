@@ -183,10 +183,8 @@ class OtraInstitucionController
                 mysqli_query($Con->Conexion, $CambiarInstituciones) or die($MensajeErrorCambiarInstituciones);
             }
 
-            $ConsultaBajaInstitucion = "update otras_instituciones set Estado = 0 where ID_OtraInstitucion = $ID_Institucion_2";
-            $MensajeErrorBajaInstitucion = "No se pudo dar de baja la Institución";
-
-            mysqli_query($Con->Conexion,$ConsultaBajaInstitucion) or die($MensajeErrorBajaInstitucion);
+            $otra_institucion = new OtraInstitucion(xConeccion: $Con, xID_OtraInstitucion: $ID_Institucion_2);
+            $otra_institucion->delete();
 
             $Con->CloseConexion();
             $Mensaje = "Los datos se unificaron Correctamente";

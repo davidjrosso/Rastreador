@@ -2062,8 +2062,8 @@ class CtrGeneral
 												);
 						break;
 					case 2: 
-						$registro_1 = new Persona(ID_Persona: $ID_Registro_1);
-						$registro_2 = new Persona(ID_Persona: $ID_Registro_2);
+						$registro_1 = new Persona(coneccion: $Con, ID_Persona: $ID_Registro_1);
+						$registro_2 = new Persona(coneccion: $Con, ID_Persona: $ID_Registro_2);
 						break;
 					case 3: 
 						$registro_1 = new CentroSalud(

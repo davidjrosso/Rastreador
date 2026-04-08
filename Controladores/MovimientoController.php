@@ -333,10 +333,13 @@ class MovimientoController
             $mov = new Movimiento(coneccion_base: $Con, xID_Movimiento: $ID_Movimiento);
             $mov->delete();
 
-            $ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
-            if (!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)) {
-                throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 1);
-            }	
+            $accion = new Accion(
+                xaccountid: $ID_Usuario,
+                xFecha : $Fecha,
+                xDetalles: $Detalles,
+                xID_TipoAccion: $ID_TipoAccion	 
+            );
+            $accion->save();
 
             $ConsultarDatos = "select * 
                             from persona p inner join movimiento q on (p.id_persona = q.id_persona)
@@ -363,7 +366,7 @@ class MovimientoController
             $Mensaje = "El movimiento se elimino Correctamente";
             header('Location: /movimientos?Mensaje=' . $Mensaje);
         } catch (Exception $e) {
-            echo "Error: ".$e->getMessage();
+            echo "Error: " . $e->getMessage();
         }
     }
 
@@ -425,7 +428,7 @@ class MovimientoController
         $con->OpenConexion();
 
         if (Persona::is_exist($con, $ID_Persona)) {
-            $persona = new Persona($ID_Persona);
+            $persona = new Persona($con, $ID_Persona);
         }
 
         if (Movimiento::is_exist($con, $ID_Movimiento)) {
@@ -435,7 +438,7 @@ class MovimientoController
             );
             $fecha_previa = $movimiento_sin_modificar->getFecha();
             $id_persona_previa = $movimiento_sin_modificar->getID_Persona();
-            $persona = new Persona(ID_Persona: $id_persona_previa);
+            $persona = new Persona(coneccion: $con, ID_Persona: $id_persona_previa);
 
             $movimiento = new Movimiento(
                 coneccion_base: $con, 

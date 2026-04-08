@@ -174,7 +174,7 @@
 				);
 				$accion->save();
 				if (!Persona::is_registered($dni)) {
-					$persona = new Persona(
+					$persona = new Persona(coneccion: $con,
 						xApellido : $apellido,
 						xNombre : $nombre,
 						xBarrio :  $id_barrio,
@@ -196,7 +196,7 @@
 					if (is_null($id_persona)) {
 						continue;
 					}
-					$persona = new Persona(ID_Persona: $id_persona);
+					$persona = new Persona(coneccion: $con, ID_Persona: $id_persona);
 					$persona->setBarrio($id_barrio);
 					$persona->setNro($direccion);
 					$persona->setDomicilio($direccion);

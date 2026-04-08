@@ -277,15 +277,11 @@ class CalleController
             $Con->OpenConexion();
 
             foreach ($ArrPersonas as $value) {
-                $persona = new Persona(ID_Persona: $value);
-                $DomActual = $persona->getDomicilio();
-
-                //$DomActual = preg_replace('/[0-9]+/','', $DomActual);
-                $LongString = strlen($DomActual); 
-                $StringDelimitado = chunk_split($DomActual,$LongString - 4,"-");
-                $PartesDireccion = explode("-", $StringDelimitado);
-                $DomActual = $PartesDireccion[0];
-                $persona->setDomicilio($Calle);
+                $persona = new PersonaDomicilio(connection: $Con, id_persona: $value);
+                $id_domicilio = $persona->get_id_domicilio();
+                $domicilio = new Domicilio(coneccion: $Con, id_domicilio: $id_domicilio);
+                $domicilio->setCalle($Calle );
+                $domicilio->update();
             }
 
             $Con->CloseConexion();

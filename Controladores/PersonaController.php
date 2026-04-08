@@ -239,8 +239,8 @@ class PersonaController
         }
         $nro_calle = null;
         if(isset($_REQUEST["NumeroDeCalle"])){
-        $nro_calle = $_REQUEST["NumeroDeCalle"];
-        $Domicilio .= " ". $nro_calle;
+            $nro_calle = $_REQUEST["NumeroDeCalle"];
+            $Domicilio .= " ". $nro_calle;
         }
 
         $georeferencia_point = null;
@@ -528,6 +528,7 @@ class PersonaController
             }
 
             $Registros = mysqli_num_rows($RetIguales);
+
             if ($Registros > 0 && !empty($DNI)) {
                 mysqli_free_result($RetIguales);
                 $Con->CloseConexion();
@@ -581,20 +582,25 @@ class PersonaController
                 $Detalles .= mysqli_real_escape_string($Con->Conexion, json_encode($Persona_Viejo));
                 $Detalles .= " Datos anteriores : " .  mysqli_real_escape_string($Con->Conexion, json_encode($Persona));
 
-                $ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
-
-                if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
-                    throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 3);
-                }
-
+                $accion = new Accion(
+                    xaccountid: $ID_Usuario,
+                    xFecha : $Fecha,
+                    xDetalles: $Detalles,
+                    xID_TipoAccion: $ID_TipoAccion	 
+                );
+                $accion->save();
+                    
                 // CREANDO NOTIFICACION PARA EL USUARIO		
-                $DetalleNot = 'Se modifico la persona Nombre: '.$Persona->getApellido(). ', '.$Persona->getNombre(). (($Persona->getDNI() == null)?'':' dni: '. $Persona->getDNI());
+                $Detalles = 'Se modifico la persona Nombre: ' . $Persona->getApellido() . ', ' . $Persona->getNombre(). (($Persona->getDNI() == null)?'':' dni: '. $Persona->getDNI());
                 $Expira = date("Y-m-d", strtotime($Fecha." + 15 days"));
 
-                $ConsultaNot = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$DetalleNot','$Fecha', '$Expira',1)";
-                if(!$RetNot = mysqli_query($Con->Conexion,$ConsultaNot)){
-                    throw new Exception("Error al intentar registrar Notificacion. Consulta: ".$ConsultaNot, 3);
-                }
+                $rev = new Notificacion(
+                                        coneccion_base: $Con, 
+                                        detalle: $Detalles , 
+                                        fecha: $Expira
+                                        );
+                $rev->save();            
+
 
                 $Con->CloseConexion();
                 $Mensaje = "La Persona fue modificada Correctamente";
@@ -694,34 +700,22 @@ class PersonaController
             $Con = new Conexion();
             $Con->OpenConexion();
 
-            $Consulta = "update persona set estado = 0 where id_persona = $ID_Persona";
-            if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
-                throw new Exception("Problemas en la Consulta. Consulta: ".$Consulta, 0);		
-            }
-            $ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
-            if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
-                throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 1);
-            }
+            $persona = new Persona(ID_Persona: $ID_Persona);
+            $persona->delete();
 
-            $ConsultarDatos = "select * from persona where id_persona = $ID_Persona";
-            $ErrorDatos = "No se pudieron consultar los datos : ";
-            if(!$RetDatos = mysqli_query($Con->Conexion,$ConsultarDatos)){
-                throw new Exception($ErrorDatos.$ConsultarDatos, 1);
-            }
+            $acc = new Accion(xFecha: $Fecha, xDetalles: $Detalles, xaccountid: $ID_Usuario, xID_TipoAccion: $ID_TipoAccion);
+            $acc->save();
 
-            $TomarDatos = mysqli_fetch_assoc($RetDatos);
-            $Apellido = $TomarDatos["apellido"];
-            $Nombre = $TomarDatos["nombre"];
-            $DNI = $TomarDatos["documento"];
+            $Apellido = $persona->getApellido();
+            $Nombre = $persona->getNombre();
+            $DNI = $persona->getDNI();
             
             // CREANDO NOTIFICACION PARA EL USUARIO		
-            $DetalleNot = 'Se elimino la persona Nombre: '.$Apellido. ', '.$Nombre. (($DNI == null)?'':' dni: '. $DNI);
-            $Expira = date("Y-m-d", strtotime($Fecha." + 15 days"));
-            
-            $ConsultaNot = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$DetalleNot','$Fecha', '$Expira',1)";
-            if(!$RetNot = mysqli_query($Con->Conexion,$ConsultaNot)){
-                throw new Exception("Error al intentar registrar Notificacion. Consulta: ".$ConsultaNot, 3);
-            }
+            $Detalles = 'Se elimino la persona Nombre: ' . $Apellido. ', '. $Nombre . (($DNI == null)? '' : ' dni: ' . $DNI);
+            $Expira = date("Y-m-d", strtotime($Fecha . " + 15 days"));
+
+            $rev = new Notificacion(coneccion_base: $Con, detalle: $Detalles, fecha: $Expira);
+            $rev->save();            
 
             $Con->CloseConexion();
             $Mensaje = "La persona se elimino Correctamente";

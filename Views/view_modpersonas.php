@@ -291,7 +291,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
               $ID_Escuela = $Ret["ID_Escuela"];
               $Trabajo = $Ret["Trabajo"];
 
-              $Persona = new Persona($ID_Persona);
+              $Persona = new Persona(coneccion: $Con, ID_Persona: $ID_Persona);
               $Con->CloseConexion();
 
               ?>
