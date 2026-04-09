@@ -21,7 +21,7 @@ class PersonaDomicilio
 			$this->id_persona = $id_persona;
 			$this->id_domicilio = $id_domicilio;
 			$this->estado = $estado;
-		} else {
+		} else if (!$id_persona_domicilio){
 			$Con = new Conexion();
 			$Con->OpenConexion();
 			$ConsultarPersona = "select *
@@ -42,7 +42,29 @@ class PersonaDomicilio
 			$this->id_domicilio = (!empty($id_domicilio)) ? $id_domicilio : $query_id_domicilio;
 			$this->estado = (!empty($estado)) ? $estado : $query_estado;			
 			$Con->CloseConexion();
+		} else if (!$id_persona){
+			$Con = new Conexion();
+			$Con->OpenConexion();
+			$ConsultarPersona = "select *
+								 from personas_domicilios 
+								 where id_persona = " . $id_persona . " 
+								   and estado = 1";
+			$EjecutarConsultarPersona = mysqli_query(
+				$Con->Conexion,
+				$ConsultarPersona) or die("Problemas al consultar filtro Persona");
+			$ret = mysqli_fetch_assoc($EjecutarConsultarPersona);
+	
+			$query_id_persona = $ret["id_persona"];
+			$query_id_persona_domicilio = $ret["id_persona_domicilio"];
+			$query_estado = $ret["estado"] ;
+			$query_id_domicilio = $ret["id_domicilio"];
+			$this->id_persona_domicilio = (!empty($id_persona_domicilio)) ? $id_persona_domicilio : $query_id_persona_domicilio;
+			$this->id_persona = (!empty($id_persona)) ? $id_persona : $query_id_persona;
+			$this->id_domicilio = (!empty($id_domicilio)) ? $id_domicilio : $query_id_domicilio;
+			$this->estado = (!empty($estado)) ? $estado : $query_estado;			
+			$Con->CloseConexion();
 		}
+
 	}
 
 

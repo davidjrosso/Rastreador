@@ -130,45 +130,17 @@ class MovimientoController
 
         $Arr_ID_Responsable = $_REQUEST["ID_Responsable"];
 
-        $ID_Responsable_2 = (isset($Arr_ID_Responsable[1])) ? $Arr_ID_Responsable[1] : 64;
-        $ID_Responsable_3 = (isset($Arr_ID_Responsable[2])) ? $Arr_ID_Responsable[2] : 64;
-        $ID_Responsable_4 = (isset($Arr_ID_Responsable[3])) ? $Arr_ID_Responsable[3] : 64;
-
         $ID_Persona = $_REQUEST["ID_Persona"];
-        $ID_Motivo_1 = $_REQUEST["ID_Motivo_1"];
-        $ID_Motivo_2 = $_REQUEST["ID_Motivo_2"];
-        $ID_Motivo_3 = $_REQUEST["ID_Motivo_3"];
-        $ID_Motivo_4 = (isset($_REQUEST["ID_Motivo_4"])) ? $_REQUEST["ID_Motivo_4"]:0;
-        $ID_Motivo_5 = (isset($_REQUEST["ID_Motivo_5"])) ? $_REQUEST["ID_Motivo_5"]:0;
+        $ID_Motivo[] = (!empty($_REQUEST["ID_Motivo_1"])) ? $_REQUEST["ID_Motivo_1"] : 1;
+        $ID_Motivo[] = (!empty($_REQUEST["ID_Motivo_1"])) ? $_REQUEST["ID_Motivo_2"] : 1;
+        $ID_Motivo[] = (!empty($_REQUEST["ID_Motivo_1"])) ? $_REQUEST["ID_Motivo_3"] : 1;
+        $ID_Motivo[] = (!empty($_REQUEST["ID_Motivo_4"])) ? $_REQUEST["ID_Motivo_4"] : 1;
+        $ID_Motivo[] = (!empty($_REQUEST["ID_Motivo_5"])) ? $_REQUEST["ID_Motivo_5"] : 1;
         $Observaciones = $_REQUEST["Observaciones"];
-        $ID_Responsable = $Arr_ID_Responsable[0];
         $ID_Centro = (isset($_REQUEST["ID_Centro"])) ? $_REQUEST["ID_Centro"]:0;
         $ID_OtraInstitucion = (isset($_REQUEST["ID_OtraInstitucion"])) ? $_REQUEST["ID_OtraInstitucion"]:0;
         $Estado = 1;
 
-        if($ID_Motivo_1 == 0){
-            $ID_Motivo_1 = 1;
-        }
-        if($ID_Motivo_2 == 0){
-            $ID_Motivo_2 = 1;
-        }
-        if($ID_Motivo_3 == 0){
-            $ID_Motivo_3 = 1;
-        }
-
-        if($ID_Motivo_4 == 0){
-            $ID_Motivo_4 = 1;
-        }
-        if($ID_Motivo_5 == 0){
-            $ID_Motivo_5 = 1;
-        }
-
-
-        if(empty($ID_Responsable[0])){
-            $ID_Responsable = 64;
-        }else{
-            $_SESSION["UltResponsable"] = $ID_Responsable[0];
-        }
 
         if(empty($ID_Centro)){
             $ID_Centro = 7;
@@ -193,16 +165,7 @@ class MovimientoController
                                     xFecha: $Fecha,
                             Fecha_Creacion: $Fecha_Accion,
                             xID_Persona: $ID_Persona,
-                            xID_Motivo_1: $ID_Motivo_1,
-                            xID_Motivo_2: $ID_Motivo_2,
-                            xID_Motivo_3: $ID_Motivo_3,
-                            xID_Motivo_4: $ID_Motivo_4,
-                            xID_Motivo_5: $ID_Motivo_5,
                             xObservaciones: $Observaciones,
-                        xID_Responsable: $ID_Responsable,
-                        xID_Responsable_2: $ID_Responsable_2,
-                        xID_Responsable_3: $ID_Responsable_3,
-                        xID_Responsable_4: $ID_Responsable_4,
                                 xID_Centro: $ID_Centro,
                     xID_OtraInstitucion: $ID_OtraInstitucion,
                                 xEstado: $Estado
@@ -210,92 +173,43 @@ class MovimientoController
             $movimiento->save();
             $id_movimiento = $movimiento->getID_Movimiento();
 
-            if ($ID_Motivo_1 > 1) {
+            $mensaje_motivo = "";
+            foreach($ID_Motivo as $id) {
                 $motivo = MovimientoMotivo::exist_movimiento_motivo(
                     connection: $Con,
                     movimiento: $id_movimiento,
-                    motivo: $ID_Motivo_1
+                    motivo: $id
                 );
+                $mensaje_motivo .= "- $id";
                 if (!$motivo) {
                     $movimiento_motivo = new MovimientoMotivo(
                                                                 connection: $Con,
                                                             id_movimiento: $id_movimiento,
-                                                                id_motivo: $ID_Motivo_1,
+                                                                id_motivo: $id,
                                                                     estado: 1
                     );
                     $movimiento_motivo->save();
                 }
+                 
             }
 
-            if ($ID_Motivo_2 > 1) {
-                $motivo = MovimientoMotivo::exist_movimiento_motivo(
+            foreach ($Arr_ID_Responsable as $id_res) {
+                $res = MovimientoResponsable::exist_movimiento_responsable(
                     connection: $Con,
                     movimiento: $id_movimiento,
-                    motivo: $ID_Motivo_2
+                    id_responsable: $id_res
                 );
-                if (!$motivo) {
-                    $movimiento_motivo = new MovimientoMotivo(
-                                                                connection: $Con,
-                                                            id_movimiento: $id_movimiento,
-                                                                id_motivo: $ID_Motivo_2,
-                                                                    estado: 1
-                    );
-                    $movimiento_motivo->save();
+                if (!$res) {
+                    $mov = new MovimientoResponsable(
+                                                     connection: $Con,
+                                                     id_movimiento: $id_movimiento,
+                                                     id_responsable: $id_res
+                                                     );
+                    $mov->save();
                 }
-            }
 
-            if ($ID_Motivo_3 > 1) {
-                $motivo = MovimientoMotivo::exist_movimiento_motivo(
-                    connection: $Con,
-                    movimiento: $id_movimiento,
-                    motivo: $ID_Motivo_3
-                );
-                if (!$motivo) {
-                    $movimiento_motivo = new MovimientoMotivo(
-                                                                connection: $Con,
-                                                            id_movimiento: $id_movimiento,
-                                                                id_motivo: $ID_Motivo_3,
-                                                                    estado: 1
-                    );
-                    $movimiento_motivo->save();
-                }
             }
-
-            if ($ID_Motivo_4 > 1) {
-                $motivo = MovimientoMotivo::exist_movimiento_motivo(
-                    connection: $Con,
-                    movimiento: $id_movimiento,
-                    motivo: $ID_Motivo_4
-                );
-                if (!$motivo) {
-                    $movimiento_motivo = new MovimientoMotivo(
-                                                                connection: $Con,
-                                                            id_movimiento: $id_movimiento,
-                                                                id_motivo: $ID_Motivo_4,
-                                                                    estado: 1
-                    );
-                    $movimiento_motivo->save();
-                }
-            }
-
-            if ($ID_Motivo_5 > 1) {
-                $motivo = MovimientoMotivo::exist_movimiento_motivo(
-                    connection: $Con,
-                    movimiento: $id_movimiento,
-                    motivo: $ID_Motivo_5
-                );
-                if (!$motivo) {
-                    $movimiento_motivo = new MovimientoMotivo(
-                                                                connection: $Con,
-                                                            id_movimiento: $id_movimiento,
-                                                                id_motivo: $ID_Motivo_5,
-                                                                    estado: 1
-                    );
-                    $movimiento_motivo->save();
-                }
-            }
-
-            $detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Movimiento. Datos: Fecha: $Fecha_Accion - Persona: $ID_Persona - Motivo 1: $ID_Motivo_1 - Motivo 2: $ID_Motivo_2 - Motivo 3: $ID_Motivo_3 - Observaciones: $Observaciones - Responsable: $ID_Responsable - Centro Salud: $ID_Centro - Otra Institución: $ID_OtraInstitucion";
+            $detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Movimiento. Datos: Fecha: $Fecha_Accion - Persona: $ID_Persona - motivo $mensaje_motivo - Observaciones: $Observaciones - Responsable: " . $Arr_ID_Responsable[0] . " - Centro Salud: $ID_Centro - Otra Institución: $ID_OtraInstitucion";
 
             $accion = new Accion(
                 xaccountid: $ID_Usuario,
@@ -380,41 +294,19 @@ class MovimientoController
         $Fecha = implode("-", array_reverse(explode("/",$_REQUEST["Fecha"])));
         $Fecha_Creacion = null;
         $ID_Persona = $_REQUEST["ID_Persona"];
-        $ID_Motivo_1 = $_REQUEST["ID_Motivo_1"];
-        $ID_Motivo_2 = (!empty($_REQUEST["ID_Motivo_2"]) ? $_REQUEST["ID_Motivo_2"] : null);
-        $ID_Motivo_3 = (!empty($_REQUEST["ID_Motivo_3"]) ? $_REQUEST["ID_Motivo_3"] : null);
-        $ID_Motivo_4 = (!empty($_REQUEST["ID_Motivo_4"]) ? $_REQUEST["ID_Motivo_4"] : null);
-        $ID_Motivo_5 = (!empty($_REQUEST["ID_Motivo_5"]) ? $_REQUEST["ID_Motivo_5"] : null);
-        $lista_motivos = array($ID_Motivo_1);
+        $lista_motivos[] = (!empty($_REQUEST["ID_Motivo_1"]) ? $_REQUEST["ID_Motivo_1"] : 1);
+        $lista_motivos[] = (!empty($_REQUEST["ID_Motivo_2"]) ? $_REQUEST["ID_Motivo_2"] : 1);
+        $lista_motivos[] = (!empty($_REQUEST["ID_Motivo_3"]) ? $_REQUEST["ID_Motivo_3"] : 1);
+        $lista_motivos[] = (!empty($_REQUEST["ID_Motivo_4"]) ? $_REQUEST["ID_Motivo_4"] : 1);
+        $lista_motivos[] = (!empty($_REQUEST["ID_Motivo_5"]) ? $_REQUEST["ID_Motivo_5"] : 1);
         $Observaciones = $_REQUEST["Observaciones"];
-        $ID_Responsable = $Arr_ID_Responsable[0];
         $ID_Centro = $_REQUEST["ID_Centro"];
         $ID_OtraInstitucion = $_REQUEST["ID_OtraInstitucion"];
         $Estado = 1;
-        $ID_Responsable_2 = (isset($Arr_ID_Responsable[1])) ? $Arr_ID_Responsable[1] : 'null';
-        $ID_Responsable_3 = (isset($Arr_ID_Responsable[2])) ? $Arr_ID_Responsable[2] : 'null';
-        $ID_Responsable_4 = (isset($Arr_ID_Responsable[3])) ? $Arr_ID_Responsable[3] : 'null';
-
-        if($ID_Motivo_2 == null){
-            $ID_Motivo_2 = 1; 
-        } else {
-            $lista_motivos[] = $ID_Motivo_2;
-        }
-        if($ID_Motivo_3 == null){
-            $ID_Motivo_3 = 1;
-        } else {
-            $lista_motivos[] = $ID_Motivo_3;
-        }
-        if($ID_Motivo_4 == null){
-            $ID_Motivo_4 = 1;
-        } else {
-            $lista_motivos[] = $ID_Motivo_4;
-        }
-        if($ID_Motivo_5 == null){
-            $ID_Motivo_5 = 1;
-        } else {
-            $lista_motivos[] = $ID_Motivo_5;
-        }
+        if (!empty($Arr_ID_Responsable[1])) $lista_res[] = $Arr_ID_Responsable[1];
+        if (!empty($Arr_ID_Responsable[2])) $lista_res[] = $Arr_ID_Responsable[2];
+        if (!empty($Arr_ID_Responsable[3])) $lista_res[] = $Arr_ID_Responsable[3];
+        if (!empty($Arr_ID_Responsable[0])) $lista_res[] = $Arr_ID_Responsable[0];
 
         if(empty($ID_Responsable[0])){
             $ID_Responsable = 'null';
@@ -445,16 +337,7 @@ class MovimientoController
                 xFecha: $Fecha,
                 Fecha_Creacion: $Fecha_Creacion,
                 xID_Persona: $ID_Persona,
-                xID_Motivo_1: $ID_Motivo_1,
-                xID_Motivo_2: $ID_Motivo_2,
-                xID_Motivo_3: $ID_Motivo_3,
-                xID_Motivo_4: $ID_Motivo_4,
-                xID_Motivo_5: $ID_Motivo_5,
                 xObservaciones: $Observaciones,
-                xID_Responsable: $ID_Responsable,
-                xID_Responsable_2: $ID_Responsable_2,
-                xID_Responsable_3: $ID_Responsable_3,
-                xID_Responsable_4: $ID_Responsable_4,
                 xID_Centro: $ID_Centro,
                 xID_OtraInstitucion: $ID_OtraInstitucion,
                 xEstado: $Estado
@@ -494,7 +377,42 @@ class MovimientoController
                     $movimiento_motivo->save();
                 }
             }
+
+            $consulta = "SELECT * 
+                        FROM movimiento_responsable
+                        WHERE id_movimiento = $ID_Movimiento
+                        AND estado = 1";
+            $rs = mysqli_query($con->Conexion,$consulta) or die("Problemas al consultar las acciones.");
+
+            while ($ret = mysqli_fetch_assoc($rs)) {
+                if (!in_array($ret["id_responsable"], $lista_res)) {
+                    $mov = new MovimientoResponsable(
+                                                     connection: $con,
+                                                     id_movimiento: $ID_Movimiento,
+                                                     id_responsable: $ret["id_responsable"]
+                                                     );
+                   $mov->delete();
+                }
+            }
+
+            foreach ($lista_res as $value) {
+                $exist = MovimientoResponsable::exist_movimiento_responsable(
+                    connection: $con,
+                    movimiento: $ID_Movimiento,
+                    id_responsable: $value
+                );
+                if (!$exist) {
+                    $mov = new MovimientoResponsable(
+                                                     connection: $con,
+                                                     id_movimiento: $ID_Movimiento,
+                                                     id_responsable: $ret["id_responsable"]
+                                                     );
+
+                    $mov->save();
+                }
+            }
             
+
             $fecha_accion = date("Y-m-d");
             $ID_TipoAccion = 2;
             $detalles = "El usuario con ID: $ID_Usuario ha modificado un Movimiento. Datos: id_movimiento: " . $movimiento->getID_Movimiento();

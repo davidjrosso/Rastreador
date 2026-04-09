@@ -11,13 +11,34 @@ class MovimientoResponsable
 
 	public function __construct(
         $connection = null,
+		$id_movimiento_responsable = null,
 		$id_movimiento = null,
 		$id_responsable = null,
 		$estado = null
 	) {
 		$this->connection = $connection;
 
-		if ($id_movimiento && $id_responsable) {
+		if ($id_movimiento_responsable) {
+			$consulta = "SELECT * 
+						 FROM movimiento_responsable
+						 WHERE id_movimiento_responsable = $id_movimiento_responsable
+						   AND estado = 1";
+			$rs = mysqli_query(
+							$this->connection->Conexion,
+							$consulta
+							  );
+			if (mysqli_num_rows($rs) < 1) {
+				$this->id_movimiento = $id_movimiento;
+				$this->id_responsable = $id_responsable;
+				$this->estado = (!empty($estado))? $estado : 1;
+			} else {
+				$result = mysqli_fetch_assoc($rs);
+				$this->id_movimiento_responsable = $result["id_movimiento_responsable"];
+				$this->id_movimiento = $id_movimiento;
+				$this->id_responsable = $id_responsable;
+				$this->estado = (!empty($result["estado"]))? $result["estado"] : 1;
+			}
+		} else if ($id_movimiento && $id_responsable) {
 			$consulta = "SELECT * 
 						 FROM movimiento_responsable
 						 WHERE id_movimiento = $id_movimiento
@@ -33,7 +54,7 @@ class MovimientoResponsable
 				$this->estado = (!empty($estado))? $estado : 1;
 			} else {
 				$result = mysqli_fetch_assoc($rs);
-				$this->id_movimiento_motivo = $result["id_movimiento_motivo"];
+				$this->id_movimiento_responsable = $result["id_movimiento_responsable"];
 				$this->id_movimiento = $id_movimiento;
 				$this->id_responsable = $id_responsable;
 				$this->estado = (!empty($result["estado"]))? $result["estado"] : 1;
@@ -45,7 +66,7 @@ class MovimientoResponsable
 		}
 	}
 
-    public static function exist_movimiento_motivo($connection, $movimiento, $id_responsable )
+    public static function exist_movimiento_responsable($connection, $movimiento, $id_responsable )
 	{
 		$consulta = "select * 
 					from movimiento_responsable
@@ -109,7 +130,7 @@ class MovimientoResponsable
 		if (!$RetAccion = mysqli_query($this->connection->Conexion,$consulta)) {
 			throw new Exception("Error al intentar insertar el movimiento_motivo. Consulta: ". $consulta, 3);
 		}
-		$this->id_movimiento_motivo = mysqli_insert_id($this->connection->Conexion);
+		$this->id_movimiento_responsable = mysqli_insert_id($this->connection->Conexion);
 	}
 
     public function update() 
@@ -128,7 +149,7 @@ class MovimientoResponsable
 	{
 		$consulta = "update movimiento_responsable
                             set estado = 0
-					 where id_movimiento_responsable = " . $this->id_responsable;
+					 where id_movimiento_responsable = " . $this->id_movimiento_responsable;
 		if (!$RetAccion = mysqli_query($this->connection->Conexion,$consulta)) {
 			throw new Exception("Error al intentar borrar el movimiento_motivo. Consulta: ". $consulta, 3);
 		}

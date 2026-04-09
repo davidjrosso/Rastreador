@@ -6,16 +6,7 @@ class Movimiento implements JsonSerializable
 	private $Fecha;
 	private $Fecha_Creacion;
 	private $ID_Persona;
-	private $ID_Motivo_1;
-	private $ID_Motivo_2;
-	private $ID_Motivo_3;
-	private $ID_Motivo_4;
-	private $ID_Motivo_5;
 	private $Observaciones;
-	private $ID_Responsable;
-	private $ID_Responsable_2;
-	private $ID_Responsable_3;
-	private $ID_Responsable_4;
 	private $ID_Centro;
 	private $ID_OtraInstitucion;
 	private $Estado;
@@ -27,16 +18,7 @@ class Movimiento implements JsonSerializable
 			$xFecha=null,
 			$Fecha_Creacion=null,
 			$xID_Persona=null,
-			$xID_Motivo_1=null,
-			$xID_Motivo_2=null,
-			$xID_Motivo_3=null,
-			$xID_Motivo_4=null,
-			$xID_Motivo_5=null,
 			$xObservaciones=null,
-			$xID_Responsable=null,
-			$xID_Responsable_2=null,
-			$xID_Responsable_3=null,
-			$xID_Responsable_4=null,
 			$xID_Centro=null,
 			$xID_OtraInstitucion=null,
 			$xEstado=null
@@ -47,16 +29,7 @@ class Movimiento implements JsonSerializable
 			$this->ID_Movimiento = $xID_Movimiento;
 			$this->Fecha = (($xFecha) ? $xFecha : $fecha_actual);
 			$this->ID_Persona = $xID_Persona;
-			$this->ID_Motivo_1 = $xID_Motivo_1;
-			$this->ID_Motivo_2 = $xID_Motivo_2;
-			$this->ID_Motivo_3 = $xID_Motivo_3;
-			$this->ID_Motivo_4 = $xID_Motivo_4;
-			$this->ID_Motivo_5 = $xID_Motivo_5;
 			$this->Observaciones = $xObservaciones;
-			$this->ID_Responsable = $xID_Responsable;
-			$this->ID_Responsable_2 = $xID_Responsable_2;
-			$this->ID_Responsable_3 = $xID_Responsable_3;
-			$this->ID_Responsable_4 = $xID_Responsable_4;
 			$this->ID_Centro = $xID_Centro;
 			$this->ID_OtraInstitucion = $xID_OtraInstitucion;
 			$this->Estado = $xEstado;
@@ -74,38 +47,20 @@ class Movimiento implements JsonSerializable
 				$mov_id_movimiento = $ret["id_movimiento"];
 				$mov_fecha = $ret["fecha"];
 				$mov_id_persona = $ret["id_persona"];
-				$mov_motivo_1 = $ret["motivo_1"];
-				$mov_motivo_2 = $ret["motivo_2"];
-				$mov_motivo_3 = $ret["motivo_3"];
-				$mov_motivo_4 = $ret["motivo_4"];
-				$mov_motivo_5 = $ret["motivo_5"];
 				$mov_observaciones = $ret["observaciones"];
-				$mov_id_resp = $ret["id_resp"];
-				$mov_id_resp_2 = $ret["id_resp_2"];
-				$mov_id_resp_3 = $ret["id_resp_3"];
-				$mov_id_resp_4 = $ret["id_resp_4"];
 				$mov_id_centro = $ret["id_centro"];
 				$mov_id_otrainstitucion = $ret["id_otrainstitucion"];
 				$mov_estado = $ret["estado"];
 				$mov_fecha_creacion = $ret["fecha_creacion"];
 
 				$this->ID_Movimiento = $mov_id_movimiento;
-				$this->motivo_1 = $mov_motivo_1;
-				$this->motivo_2 = $mov_motivo_2;
-				$this->motivo_3 = $mov_motivo_3;
-				$this->motivo_4 = $mov_motivo_4;
-				$this->motivo_5 = $mov_motivo_5;
 				$this->Fecha = (($mov_fecha) ? $mov_fecha : null);
 				$this->Observaciones = (($mov_observaciones) ? $xObservaciones : null);
-				$this->ID_Responsable = (($mov_id_resp) ? $mov_id_resp : null);
-				$this->ID_Responsable_2 = (($mov_id_resp_2) ? $mov_id_resp_2  : null);
-				$this->ID_Responsable_3 = (($mov_id_resp_3) ? $mov_id_resp_3 : null);
-				$this->ID_Responsable_4 = (($mov_id_resp_4) ? $mov_id_resp_4 : null);
-				$this->mov_id_centro = (($mov_id_centro) ? $mov_id_centro : null);
-				$this->mov_id_otrainstitucion = (($mov_id_otrainstitucion) ?  $mov_id_otrainstitucion : null);
+				$this->ID_Centro = (($mov_id_centro) ? $mov_id_centro : null);
+				$this->ID_OtraInstitucion = (($mov_id_otrainstitucion) ?  $mov_id_otrainstitucion : null);
 				$this->Fecha_Creacion = (($mov_fecha_creacion) ? $mov_fecha_creacion : null);
 				$this->ID_Persona = (($mov_id_persona) ? $mov_id_persona : null);
-				$this->estado = (($mov_estado) ? $mov_estado : null);
+				$this->Estado = (($mov_estado) ? $mov_estado : null);
 			}
 		}
 	}
@@ -163,36 +118,8 @@ class Movimiento implements JsonSerializable
 		$this->ID_Persona = $xID_Persona;
 	}
 
-	public function setID_Motivo_1($xID_Motivo_1){
-		$this->ID_Motivo_1 = $xID_Motivo_1;
-	}
-
-	public function setID_Motivo_2($xID_Motivo_2){
-		$this->ID_Motivo_2 = $xID_Motivo_2;
-	}
-
-	public function setID_Motivo_3($xID_Motivo_3){
-		$this->ID_Motivo_3 = $xID_Motivo_3;
-	}
-
 	public function setObservaciones($xObservaciones){
 		$this->Observaciones = $xObservaciones;
-	}
-
-	public function setID_Responsable($xID_Responsable){
-		$this->ID_Responsable = $xID_Responsable;
-	}
-
-	public function setID_Responsable_2($xID_Responsable_2){
-		$this->ID_Responsable_2 = $xID_Responsable_2;
-	}
-
-	public function setID_Responsable_3($xID_Responsable_3){
-		$this->ID_Responsable_3 = $xID_Responsable_3;
-	}
-
-	public function setID_Responsable_4($xID_Responsable_4){
-		$this->ID_Responsable_4 = $xID_Responsable_4;
 	}
 
 	public function setID_Centro($xID_Centro){
@@ -228,44 +155,8 @@ class Movimiento implements JsonSerializable
 		return $this->ID_Persona;
 	}
 
-	public function getID_Motivo_1(){
-		return $this->ID_Motivo_1;
-	}
-
-	public function getID_Motivo_2(){
-		return $this->ID_Motivo_2;
-	}
-
-	public function getID_Motivo_3(){
-		return $this->ID_Motivo_3;
-	}
-
-	public function getID_Motivo_4(){
-		return $this->ID_Motivo_4;
-	}
-
-	public function getID_Motivo_5(){
-		return $this->ID_Motivo_5;
-	}
-
 	public function getObservaciones(){
 		return $this->Observaciones;
-	}
-
-	public function getID_Responsable(){
-		return $this->ID_Responsable;
-	}
-
-	public function getID_Responsable_2(){
-		return $this->ID_Responsable_2;
-	}
-
-	public function getID_Responsable_3(){
-		return $this->ID_Responsable_3;
-	}
-
-	public function getID_Responsable_4(){
-		return $this->ID_Responsable_4;
 	}
 
 	public function getID_Centro(){
@@ -289,16 +180,7 @@ class Movimiento implements JsonSerializable
 		return [
 			'id_persona' => $this->ID_Persona,
 			'estado' => $this->Estado,
-			'motivo_1' => $this->ID_Motivo_1,
-			'motivo_2' => $this->ID_Motivo_2,
-			'motivo_3' => $this->ID_Motivo_3,
-			'motivo_4' => $this->ID_Motivo_4,
-			'motivo_5' => $this->ID_Motivo_5,
 			'observaciones' => $this->Observaciones,
-			'id_resp' => $this->ID_Responsable,
-			'id_resp_2' => $this->ID_Responsable_2,
-			'id_resp_3' => $this->ID_Responsable_3,
-			'id_resp_4' => $this->ID_Responsable_4,
 			'id_centro' => $this->ID_Centro,
 			'id_otrainstitucion' => $this->ID_OtraInstitucion,
 			'id_movimiento' => $this->ID_Movimiento,
@@ -314,16 +196,7 @@ class Movimiento implements JsonSerializable
 					 set fecha = " . (($this->getFecha()) ? "'" . $this->getFecha() . "'" : "null") .",
 					 	 fecha_creacion = " . (($fecha_format) ? "'" . $fecha_format . "'" : "null") . ",
 						 id_persona = " . (($this->getID_Persona()) ? $this->getID_Persona() : "null") . ", 
-						 motivo_1 = " . (($this->getID_Motivo_1()) ? $this->getID_Motivo_1() : "null") . ",
-						 motivo_2 = " . (($this->getID_Motivo_2()) ? $this->getID_Motivo_2() : "null") .",
-						 motivo_3 = " . (($this->getID_Motivo_3()) ? $this->getID_Motivo_3() : "null") . ",
-						 motivo_4 = " . (($this->getID_Motivo_4()) ? $this->getID_Motivo_4() : "null") . ",
-						 motivo_5 = " . (($this->getID_Motivo_5()) ? $this->getID_Motivo_5() : "null") . ",
 						 observaciones = " . (($this->getObservaciones()) ? "'" . $this->getObservaciones() . "'" : "null") . ",
-						 id_resp = " . (($this->getID_Responsable()) ? $this->getID_Responsable() : "null") . ",
-						 id_resp_2 = " . (($this->getID_Responsable_2()) ? $this->getID_Responsable_2() : "null") . ",
-						 id_resp_3 = " . (($this->getID_Responsable_3()) ? $this->getID_Responsable_3() : "null") . ",
-						 id_resp_4 = " . (($this->getID_Responsable_4()) ? $this->getID_Responsable_4() : "null") . ",
 						 id_centro = " . (($this->getID_Centro()) ? $this->getID_Centro() : "null") . ",
 						 id_otrainstitucion = " . (($this->getID_OtraInstitucion()) ? $this->getID_OtraInstitucion() : "null") . ",
 						 estado = " . (($this->getEstado()) ? $this->getEstado() : "1") . "
@@ -340,16 +213,7 @@ class Movimiento implements JsonSerializable
 											fecha,
 											id_persona,
 											fecha_creacion,
-											motivo_1,
-											motivo_2,
-											motivo_3,
-											motivo_4,
-											motivo_5,
 											observaciones,
-											id_resp,
-											id_resp_2,
-											id_resp_3,
-											id_resp_4,
 											id_centro,
 											id_otrainstitucion,
 											estado) 
@@ -357,16 +221,7 @@ class Movimiento implements JsonSerializable
 						" . (($this->getFecha()) ? "'" . $this->getFecha() . "'" : "null") . ",
 						" . (($this->getID_Persona()) ? $this->getID_Persona() : "null") . ",
 						" . (($this->getFecha_Creacion()) ? "'" . $this->getFecha_Creacion() . "'" : "null") . ",
-						" . (($this->getID_Motivo_1()) ? $this->getID_Motivo_1() : "null") . ",
-						" . (($this->getID_Motivo_2()) ? $this->getID_Motivo_2() : "null") . ",
-						" . (($this->getID_Motivo_3()) ? $this->getID_Motivo_3() : "null") . ",
-						" . (($this->getID_Motivo_4()) ? $this->getID_Motivo_4() : "null") . ",
-						" . (($this->getID_Motivo_5()) ? $this->getID_Motivo_5() : "null") . ",
 						" . (($this->getObservaciones()) ? "'" . $this->getObservaciones() . "'" : "null") .",
-						" . (($this->getID_Responsable()) ? $this->getID_Responsable() : "null") .",
-						" . (($this->getID_Responsable_2()) ? $this->getID_Responsable_2() : "null") .",
-						" . (($this->getID_Responsable_3()) ? $this->getID_Responsable_3() : "null") .",
-						" . (($this->getID_Responsable_4()) ? $this->getID_Responsable_4() : "null") .",
 						" . (($this->getID_Centro()) ? $this->getID_Centro() : "null") .",
 						" . (($this->getID_OtraInstitucion()) ? $this->getID_OtraInstitucion() : "null") .",
 						" . (($this->getEstado()) ? $this->getEstado() : "null") ."
