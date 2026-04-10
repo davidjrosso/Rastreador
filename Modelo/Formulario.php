@@ -155,7 +155,7 @@ class Formulario implements JsonSerializable
 
 	public function jsonSerialize() 
 	{
-		$persona = new Persona(ID_Persona: $this->persona);
+		$persona = new Persona(coneccion: $this->coneccion_base, ID_Persona: $this->persona);
 		return [
 			'id_formulario' => $this->id_formulario,
 			'email' => $this->email,

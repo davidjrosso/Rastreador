@@ -236,6 +236,24 @@ class Persona implements JsonSerializable {
 		return $is_multiple;
 	}
 
+	public static function is_registered_with_id($coneccion, $documento, $id_persona)
+	{
+		$ConsRegistrosIguales = "select id_persona 
+								from personas 
+								where documento like '%" . $documento. "%' 
+								  and id_persona <> $id_persona
+								and estado = 1";
+		$MensajeErrorRegistrosIguales = "Hubo un problema al consultar los registros para validar";
+		$ret = mysqli_query($coneccion->Conexion,
+			$ConsRegistrosIguales
+		) or die(
+			$MensajeErrorRegistrosIguales . " Consulta: " . $ConsRegistrosIguales
+		);
+		$is_multiple = (mysqli_num_rows($ret) >= 1);
+		return $is_multiple;
+	}
+
+
 	public static function get_id_persona_by_dni($coneccion, $documento)
 	{
 		$consulta = "select id_persona 

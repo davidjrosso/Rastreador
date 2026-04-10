@@ -71,7 +71,7 @@ class PersonaController
                                     "SELECT id_persona, UPPER(apellido) AS apellido, 
                                                     CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
                                                     documento, nro_carpeta, domicilio
-                                            FROM persona 
+                                            FROM personas 
                                             WHERE documento LIKE '%$consultaBusqueda%' 
                                                 and estado = 1 
                                             order by upper(apellido) ASC, upper(nombre) ASC, upper(documento) ASC"
@@ -82,7 +82,7 @@ class PersonaController
                                     "SELECT id_persona, UPPER(apellido) AS apellido, 
                                                     CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
                                                     documento, nro_carpeta, domicilio
-                                            FROM persona 
+                                            FROM personas 
                                             WHERE nro_legajo LIKE '%$consultaBusqueda%' 
                                                 AND estado = 1 
                                             ORDER BY upper(apellido) ASC, upper(nombre) ASC, upper(documento) ASC"
@@ -94,7 +94,7 @@ class PersonaController
                                 "SELECT id_persona, UPPER(apellido) AS apellido, 
                                                 CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
                                                 documento, nro_carpeta, domicilio 
-                                        FROM persona 
+                                        FROM personas 
                                         WHERE (apellido LIKE '%$consultaBusqueda%' or nombre LIKE '%$consultaBusqueda%') and estado = 1 order by upper(apellido) ASC, upper(nombre) ASC, upper(documento) ASC"
                                         );
             }
@@ -309,43 +309,65 @@ class PersonaController
         $Detalles = "El usuario con ID: $ID_Usuario ha registrado una nueva Persona. Datos: Apellido: $Apellido - Nombre: $Nombre - Documento: $DNI - Nro Legajo: $Nro_Legajo - Edad: $Edad - Meses: $Meses - Fecha de Nacimiento: $Fecha_Nacimiento - Telefono: $Telefono - E-Mail: $Mail - Nro Carpeta: $Nro_Carpeta - Obra Social: $Obra_Social - Domicilio: $Domicilio - Barrio: $ID_Barrio - Escuela: $ID_Escuela - Localidad: $Localidad - Circunscripcion: $Circunscripcion - Seccion: $Seccion - Manzana: $Manzana - Lote: $Lote - Familia: $Familia - Observaciones: $Observaciones - Cambio Domicilio: $Cambio_Domicilio";
 
         try {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+            
             if (Persona::is_registered($DNI)) {
                 $Mensaje = "Ya existe un Usuario con el mismo Apellido y Nombre que el que esta intentando crear. Por favor ingrese un DNI para identificar a la persona.";
                 header('Location: /persona/nueva?MensajeError=' . $Mensaje);
             } else {
                 $Persona = new Persona(
+                    coneccion: $Con,
                     xApellido : $Apellido,
+                    xDNI : $DNI,
+                    xEdad : $Edad,
+                    xEstado : $Estado,
+                    xFecha_Nacimiento: $Fecha_Nacimiento,
+                    xID_Escuela : $ID_Escuela,
+                    xMeses : $Meses,
+                    xNombre : $Nombre,
+                    xObservaciones : $Observaciones,
+                    xObra_Social: $Obra_Social,
+                );
+
+                $Persona->save();
+                $hist = new HistoriaClinica(coneccion: $Con, 
+                        ID_Persona: $Persona->getID_Persona(),
+                        xNro_Carpeta: $Nro_Carpeta,
+                        xNro_Legajo : $Nro_Legajo,
+                );
+                $hist->save();
+
+                $contac = new Contacto(coneccion: $Con,
+                    id_persona: $Persona->getID_Persona(),
+                    xMail : $Mail,
+                    xTelefono : $Telefono,
+                    xTrabajo : $Trabajo
+                );
+                $contac->save();
+
+
+                $domicilio = new Domicilio(coneccion: $Con,
                     xBarrio : $ID_Barrio,
                     xCambio_Domicilio : $Cambio_Domicilio,
                     xCalle: $id_nombre_calle,
                     xCircunscripcion : $Circunscripcion,
-                    xDNI : $DNI,
-                    xDomicilio : $Domicilio,
-                    xEdad : $Edad,
-                    xEstado : $Estado,
                     xFamilia : $Familia,
-                    xFecha_Nacimiento: $Fecha_Nacimiento,
-                    xID_Escuela : $ID_Escuela,
-                    xLote : $Lote,
-                    xLocalidad : $Localidad,
-                    xMail : $Mail,
-                    xManzana : $Manzana,
-                    xMeses : $Meses,
-                    xNombre : $Nombre,
                     xNro: $nro_calle,
-                    xNro_Carpeta: $Nro_Carpeta,
-                    xNro_Legajo : $Nro_Legajo,
-                    xObservaciones : $Observaciones,
-                    xObra_Social: $Obra_Social,
                     xSeccion : $Seccion,
-                    xTelefono : $Telefono,
-                    xTrabajo : $Trabajo
-                );
-                $Persona->setDomicilio();
+                
+                );                
+                $domicilio->setDomicilio();
                 if (!empty($georeferencia_point)) {
-                    $Persona->setGeoreferencia($georeferencia_point);
+                    $domicilio->setGeoreferencia($georeferencia_point);
                 }
-                $Persona->save();
+                $domicilio->save();
+
+                $rev = new PersonaDomicilio(connection: $Con,
+                        id_persona: $Persona->getID_Persona(),
+                        id_domicilio: $domicilio->get_id_domicilio()               
+                );
+                $rev->save();                
 
                 if ($Persona->getEdad() == 0) {
                     $Persona->update_edad_meses();
@@ -484,99 +506,74 @@ class PersonaController
             $ID_Barrio = 37;
         }
 
-        $Persona = new Persona(
-                            ID_Persona : $ID_Persona,
-                            xApellido : $Apellido,
-                            xNombre : $Nombre,
-                            xDNI : $DNI,
-                            xNro_Legajo : $Nro_Legajo,
-                            xEdad : $Edad,
-                            xMeses : $Meses,
-                            xFecha_Nacimiento: $Fecha_Nacimiento,
-                            xNro_Carpeta: $Nro_Carpeta,
-                            xObra_Social: $Obra_Social,
-                            xDomicilio : $Domicilio,
-                            xBarrio : $ID_Barrio,
-                            xLocalidad : $Localidad,
-                            xCircunscripcion : $Circunscripcion,
-                            xSeccion : $Seccion,
-                            xManzana : $Manzana,
-                            xLote : $Lote,
-                            xFamilia : $Familia,
-                            xObservaciones : $Observaciones,
-                            xCambio_Domicilio : $Cambio_Domicilio,
-                            xTelefono : $Telefono,
-                            xMail : $Mail,
-                            xID_Escuela : $ID_Escuela,
-                            xEstado : $Estado,
-                            xTrabajo : $Trabajo,
-                            xCalle : $calle,
-                            xNro : $nro_calle,
-                            xGeoreferencia: $georeferencia_point
-        );
-
+        $id_centro_salud = 7;
+        
         $Fecha = date("Y-m-d");
         $ID_TipoAccion = 2;
         try {
             $Con = new Conexion();
             $Con->OpenConexion();
 
-            $ConsultarRegistrosIguales = "select * from persona where documento = '{$DNI}' and id_persona != $ID_Persona and estado = 1";
-            $RetIguales = mysqli_query($Con->Conexion,$ConsultarRegistrosIguales);
-            if (!$RetIguales) {
-                throw new Exception("Problemas al intentar Consultar Registros Iguales", 0);		
-            }
+            $Persona = new Persona(coneccion: $Con,
+                                ID_Persona : $ID_Persona
+            );
 
-            $Registros = mysqli_num_rows($RetIguales);
+            $hist = new HistoriaClinica(coneccion: $Con ,
+                ID_Persona: $ID_Persona,
+                id_centro_salud: $id_centro_salud
+                );
 
-            if ($Registros > 0 && !empty($DNI)) {
-                mysqli_free_result($RetIguales);
+            $contact = new Contacto(coneccion: $Con, id_persona: $ID_Persona);
+
+            $domicilio_obj = new PersonaDomicilio(connection: $Con, id_persona: $ID_Persona);
+
+            $domicilio = new Domicilio(coneccion: $Con);
+            if (Persona::is_registered_with_id($Con, $DNI, $ID_Persona) && !empty($DNI)) {
                 $Con->CloseConexion();
                 $Mensaje = "Ya existe una Persona con ese Apellido y Nombre por Favor Introduzca Otros Datos";
-                header('Location: /persona/editar?ID='.$ID_Persona.'&MensajeError='.$Mensaje);
+                header('Location: /persona/editar?ID=' . $ID_Persona . '&MensajeError=' . $Mensaje);
             } else {
-                $ConsultarDatosViejos = "select * from persona where id_persona = $ID_Persona and estado = 1";
-                $ErrorDatosViejos = "No se pudieron consultar los datos";
-                if (!$RetDatosViejos = mysqli_query($Con->Conexion,$ConsultarDatosViejos)) {
-                    throw new Exception("Error al intentar registrar. Consulta: ".$ConsultarDatosViejos, 1);
-                }
 
                 $Persona_Viejo = new Persona($ID_Persona);
                 $Persona_Viejo->setApellido($Persona->getApellido());
-                $Persona_Viejo->setBarrio($Persona->getId_Barrio());
-                $Persona_Viejo->setCamio_Domicilio($Persona->getCambio_Domicilio());
-                $Persona_Viejo->setCircunscripcion($Persona->getCircunscripcion());
+                $domicilio->setBarrio($Persona->getId_Barrio());
+                $domicilio->setCamio_Domicilio($Persona->getCambio_Domicilio());
+                $domicilio->setCircunscripcion($Persona->getCircunscripcion());
                 $Persona_Viejo->setDNI($Persona->getDNI());
                 $Persona_Viejo->setEdad($Persona->getEdad());
                 $Persona_Viejo->setNombre($Persona->getNombre());
-                $Persona_Viejo->setNro_Legajo($Persona->getNro_Legajo());
-                $Persona_Viejo->setFamilia($Persona->getFamilia());
+                $hist->setNro_Legajo($Persona->getNro_Legajo());
+                $domicilio->setFamilia($Persona->getFamilia());
                 $Persona_Viejo->setFecha_Nacimiento($Persona->getFecha_Nacimiento());
                 $Persona_Viejo->setID_Escuela($Persona->getID_Escuela());
-                $Persona_Viejo->setLocalidad($Persona->getLocalidad());
-                $Persona_Viejo->setLote($Persona->getLote());
-                $Persona_Viejo->setMail($Persona->getMail());
-                $Persona_Viejo->setManzana($Persona->getManzana());
+                $domicilio->setLocalidad($Persona->getLocalidad());
+                $domicilio->setLote($Persona->getLote());
+                $contact->setMail($Persona->getMail());
+                $domicilio->setManzana($Persona->getManzana());
                 $Persona_Viejo->setMeses($Persona->getMeses());
-                $Persona_Viejo->setNro_Carpeta($Persona->getNro_Carpeta());
+                $hist->setNro_Carpeta($Persona->getNro_Carpeta());
                 $Persona_Viejo->setObra_Social($Persona->getObra_Social());
                 $Persona_Viejo->setObservaciones($Persona->getObservaciones());
-                $Persona_Viejo->setSeccion($Persona->getSeccion());
-                $Persona_Viejo->setTrabajo($Persona->getTrabajo());
-                $Persona_Viejo->setTelefono($Persona->getTelefono());
-                $Persona_Viejo->setNro($Persona->getNro());
-                $Persona_Viejo->setCalle($Persona->getId_Calle());
+                $domicilio->setSeccion($Persona->getSeccion());
+                $contact->setTrabajo($Persona->getTrabajo());
+                $contact->setTelefono($Persona->getTelefono());
+                $domicilio->setNro($Persona->getNro());
+                $domicilio->setCalle($Persona->getId_Calle());
 
-                if ($Persona->getId_Calle() && $Persona->getNro()){
-                    $Persona_Viejo->setDomicilio();	
-                } else {
-                    $Persona_Viejo->setDomicilio($Persona->getDomicilio());
+                if ($domicilio->getId_Calle() && $domicilio->getNro()){
+                    $domicilio->setDomicilio();	
                 }
 
                 if ($georeferencia_point) {
-                    $Persona_Viejo->setGeoreferencia(xGeoreferencia: $georeferencia_point);
+                    $domicilio->setGeoreferencia(xGeoreferencia: $georeferencia_point);
                 }
                 $Persona_Viejo->update();
+                $hist->update();                
+                $contact->update();
+                $domicilio->save();                                 
+
+                $domicilio_obj->set_id_domicilio($domicilio->get_id_domicilio());
+                $domicilio_obj->update();
 
                 $Detalles = "El usuario con ID: $ID_Usuario ha modificado una Persona. Datos modificados : ";
                 $Detalles .= mysqli_real_escape_string($Con->Conexion, json_encode($Persona_Viejo));
@@ -615,7 +612,7 @@ class PersonaController
             }
 
         } catch (Exception $e) {
-            echo "Error: ".$e->getMessage();
+            echo "Error: " . $e->getMessage();
         }
         exit();
     }
@@ -652,7 +649,7 @@ class PersonaController
             
             if (!empty($ID_Solicitud)) {
 
-                $persona_2 = new Persona(ID_Persona: $ID_Persona_2);
+                $persona_2 = new Persona(coneccion: $con, ID_Persona: $ID_Persona_2);
 
                 $consulta = "update movimiento 
                              set id_persona = $ID_Persona_1 
@@ -667,14 +664,14 @@ class PersonaController
 
                 $con->CloseConexion();
                 $Mensaje = "Los datos se unificaron Correctamente";
-                header('Location: /home?Mensaje='.$Mensaje);
+                header('Location: /home?Mensaje=' . $Mensaje);
             } else {
                 $consulta = "UPDATE movimiento 
                              SET id_persona = $ID_Persona_1 
                              WHERE id_persona = $ID_Persona_2";
                 mysqli_query($con->Conexion,$consulta) or die("Problemas en la consulta");
 
-                $persona_2 = new Persona(ID_Persona: $ID_Persona_2);
+                $persona_2 = new Persona(coneccion: $con, ID_Persona: $ID_Persona_2);
                 $persona_2->delete();
                 $Mensaje = "Los datos se unificaron Correctamente";
                 header('Location: /home?Mensaje=' . $Mensaje);
@@ -700,7 +697,7 @@ class PersonaController
             $Con = new Conexion();
             $Con->OpenConexion();
 
-            $persona = new Persona(ID_Persona: $ID_Persona);
+            $persona = new Persona(coneccion: $Con, ID_Persona: $ID_Persona);
             $persona->delete();
 
             $acc = new Accion(xFecha: $Fecha, xDetalles: $Detalles, xaccountid: $ID_Usuario, xID_TipoAccion: $ID_TipoAccion);
@@ -719,7 +716,7 @@ class PersonaController
 
             $Con->CloseConexion();
             $Mensaje = "La persona se elimino Correctamente";
-            header('Location: ../personas?Mensaje='.$Mensaje);
+            header('Location: ../personas?Mensaje=' . $Mensaje);
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
         }

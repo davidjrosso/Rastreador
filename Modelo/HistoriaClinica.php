@@ -24,21 +24,37 @@ class HistoriaClinica implements JsonSerializable
     ) {
         $this->coneccion = $coneccion;
         if (!$id_historia_clinica) {
-            $this->ID_Persona = $ID_Persona;
-            $this->id_historia_clinica = $id_historia_clinica;
-            $this->estado = $xEstado;
-            $this->id_centro_salud = $id_centro_salud;
-            $this->Nro_Carpeta = $xNro_Carpeta;
-			$this->Nro_Legajo = $xNro_Legajo;
-		} else {
-			$Con = new Conexion();
-			$Con->OpenConexion();
+			$ConsultarPersona = "select *
+								 from historia_clinica 
+								 where id_persona = " . $ID_Persona . " 
+                                   and id_centro_salud = $id_centro_salud
+                                     and estado = 1";
+			$EjecutarConsultarPersona = mysqli_query(
+				$this->coneccion->Conexion,
+				$ConsultarPersona) or die("Problemas al consultar filtro Persona");
+			$ret = mysqli_fetch_assoc($EjecutarConsultarPersona);
+
+			$id_persona = $ret["id_persona"];
+            $query_id_historia_clinica = $ret["id_historia_clinica"];
+            $nro_Carpeta = $ret["nro_carpeta"];
+			$nro_Legajo = $ret["nro_legajo"];
+            $query_id_centro_salud = $ret["id_centro_salud"];
+            $estado = $ret["estado"];
+
+			$this->ID_Persona = (!empty($ID_Persona)) ? $ID_Persona : $id_persona;
+            $this->id_historia_clinica = (!empty($id_historia_clinica)) ? $id_historia_clinica : $query_id_historia_clinica;
+            $this->Nro_Legajo = ($xNro_Legajo) ? $xNro_Legajo : $nro_Legajo;
+			$this->Nro_Carpeta = ($xNro_Carpeta) ? $xNro_Carpeta : $nro_Carpeta;
+            $this->id_centro_salud = (!empty($id_centro_salud)) ? $id_centro_salud : $query_id_centro_salud;
+            $this->estado = ($xEstado) ? $xEstado : $estado;
+
+        } else {
 			$ConsultarPersona = "select *
 								 from historia_clinica 
 								 where id_historia_clinica = " . $id_historia_clinica . " 
 								   and estado = 1";
 			$EjecutarConsultarPersona = mysqli_query(
-				$Con->Conexion,
+				$this->coneccion->Conexion,
 				$ConsultarPersona) or die("Problemas al consultar filtro Persona");
 			$ret = mysqli_fetch_assoc($EjecutarConsultarPersona);
 	
@@ -54,11 +70,11 @@ class HistoriaClinica implements JsonSerializable
 			$this->Nro_Carpeta = ($xNro_Carpeta) ? $xNro_Carpeta : $nro_Carpeta;
             $this->id_centro_salud = (!empty($id_centro_salud)) ? $id_centro_salud : $query_id_centro_salud;
             $this->estado = ($xEstado) ? $xEstado : $estado;
-			$Con->CloseConexion();
 		}
 	}
 
 
+    
     //METODOS SET
     public function setID_Persona($xID_Persona)
     {
