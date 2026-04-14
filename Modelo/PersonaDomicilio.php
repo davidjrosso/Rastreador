@@ -22,14 +22,12 @@ class PersonaDomicilio
 			$this->id_domicilio = $id_domicilio;
 			$this->estado = $estado;
 		} else if (!$id_persona_domicilio){
-			$Con = new Conexion();
-			$Con->OpenConexion();
 			$ConsultarPersona = "select *
 								 from personas_domicilios 
 								 where id_persona_domicilio = " . $id_persona_domicilio . " 
 								   and estado = 1";
 			$EjecutarConsultarPersona = mysqli_query(
-				$Con->Conexion,
+				$connection->Conexion,
 				$ConsultarPersona) or die("Problemas al consultar filtro Persona");
 			$ret = mysqli_fetch_assoc($EjecutarConsultarPersona);
 	
@@ -41,16 +39,13 @@ class PersonaDomicilio
 			$this->id_persona = (!empty($id_persona)) ? $id_persona : $query_id_persona;
 			$this->id_domicilio = (!empty($id_domicilio)) ? $id_domicilio : $query_id_domicilio;
 			$this->estado = (!empty($estado)) ? $estado : $query_estado;			
-			$Con->CloseConexion();
 		} else if (!$id_persona){
-			$Con = new Conexion();
-			$Con->OpenConexion();
 			$ConsultarPersona = "select *
 								 from personas_domicilios 
 								 where id_persona = " . $id_persona . " 
 								   and estado = 1";
 			$EjecutarConsultarPersona = mysqli_query(
-				$Con->Conexion,
+				$connection->Conexion,
 				$ConsultarPersona) or die("Problemas al consultar filtro Persona");
 			$ret = mysqli_fetch_assoc($EjecutarConsultarPersona);
 	
@@ -62,9 +57,45 @@ class PersonaDomicilio
 			$this->id_persona = (!empty($id_persona)) ? $id_persona : $query_id_persona;
 			$this->id_domicilio = (!empty($id_domicilio)) ? $id_domicilio : $query_id_domicilio;
 			$this->estado = (!empty($estado)) ? $estado : $query_estado;			
-			$Con->CloseConexion();
 		}
 
+	}
+
+
+	public static function exist($coneccion, $id_persona, $id_domicilio)
+	{
+		$id = 0;
+		$ConsRegistrosIguales = "select id_persona 
+								from personas_domicilios  
+								where id_persona = $id_persona
+								  and id_domicilio = $id_domicilio
+								  and estado = 1";
+		$MensajeErrorRegistrosIguales = "Hubo un problema al consultar los registros para validar";
+		$ret = mysqli_query($coneccion->Conexion,
+			$ConsRegistrosIguales
+		);
+
+		$result = mysqli_fetch_array($ret);
+
+		$id = (!empty($result["id_persona_domicilio"])) ? $result["id_persona_domicilio"] : 0;
+		return $id;
+	}
+
+	public static function tiene_domicilio($coneccion, $id_persona)
+	{
+		$has = 0;
+		$ConsRegistrosIguales = "select id_persona 
+								from personas_domicilios  
+								where id_persona = $id_persona
+								  and estado = 1";
+		$MensajeErrorRegistrosIguales = "Hubo un problema al consultar los registros para validar";
+		$ret = mysqli_query($coneccion->Conexion,
+			$ConsRegistrosIguales
+		);
+
+		$has = mysqli_num_rows($ret);
+
+		return $has;
 	}
 
 

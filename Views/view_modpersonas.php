@@ -231,7 +231,6 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 <body>
   <div class="row">
     <?php
-    $Element = new Elements();
     echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_PERSONA);
     ?>
     <div class="col-md-9">
@@ -248,52 +247,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
           <!-- Search -->
           <div class="row">
             <?php
-            if (isset($_REQUEST["ID"])) {
-              $ID = $_REQUEST["ID"];
-
-              $Con = new Conexion();
-              $Con->OpenConexion();
-
-              $ConsultarDatos = "select p.*, 
-                                        ST_X(p.georeferencia) as lat, 
-                                        ST_Y(p.georeferencia) as lon
-                                 from persona p
-                                 where id_persona = $ID";
-              $MensajeErrorDatos = "No se pudo consultar los Datos de la Persona";
-
-              $EjecutarConsultarDatos = mysqli_query($Con->Conexion, $ConsultarDatos) or die($MensajeErrorDatos);
-
-              $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
-
-              $ID_Persona = $Ret["id_persona"];
-              $Apellido = $Ret["apellido"];
-              $Nombre = $Ret["nombre"];
-              $DNI = $Ret["documento"];
-              $Nro_Legajo = $Ret["nro_legajo"];
-              $Edad = $Ret["edad"];
-              $Meses = $Ret["meses"];
-              $Fecha_Nacimiento = implode("/", array_reverse(explode("-", $Ret["fecha_nac"])));
-              $Nro_Carpeta = $Ret["nro_carpeta"];
-              $Obra_Social = $Ret["obra_social"];
-              $Domicilio = $Ret["domicilio"];
-              $Barrio = $Ret["ID_Barrio"];
-              $Localidad = $Ret["localidad"];
-              $Circunscripcion = $Ret["circunscripcion"];
-              $Seccion = $Ret["seccion"];
-              $Manzana = $Ret["manzana"];
-              $Lote = $Ret["lote"];
-              $Familia = $Ret["familia"];
-              $Observaciones = $Ret["observacion"];
-              $Cambio_Domicilio = $Ret["cambio_domicilio"];
-              $Telefono = $Ret["telefono"];
-              $Mail = $Ret["mail"];
-              $Estado = $Ret["estado"];
-              $ID_Escuela = $Ret["ID_Escuela"];
-              $Trabajo = $Ret["Trabajo"];
-
-              $Persona = new Persona(coneccion: $Con, ID_Persona: $ID_Persona);
-              $Con->CloseConexion();
-
+            if ($exist) {
               ?>
               <div class="col-10">
                 <form id="form-mod-persona" method="post" onKeydown="return event.key != 'Enter';" action="modificar_persona">
@@ -351,31 +305,31 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                     <label for="nro_carpeta" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
                     <div class="col-md-10">
                       <input type="text" class="form-control" name="Nro_Carpeta" id="nro_carpeta" autocomplete="off"
-                        value="<?php echo $Persona->getNro_Carpeta(); ?>">
+                        value="<?php echo ($historia_clinica) ? $historia_clinica->getNro_Carpeta() : ""; ?>">
                     </div>
                   </div>
                   <div class="form-group row">
                     <label for="Nro_Legajo" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
                     <div class="col-md-10">
-                      <input type="text" class="form-control" name="Nro_Legajo" id="Nro_Legajo" autocomplete="off" <?php if ($Nro_Legajo != "null") {
-                        echo "value = '" . $Persona->getNro_Legajo() . "'";
+                      <input type="text" class="form-control" name="Nro_Legajo" id="Nro_Legajo" autocomplete="off" <?php if ($Nro_Legajo) {
+                        echo "value = '" . (($historia_clinica) ? $historia_clinica->getNro_Legajo() : "") . "'";
                       }
-                      ; ?>>
+                       ?>>
                     </div>
                   </div>
                   <div class="form-group row">
                     <label for="localidad" class="col-md-2 col-form-label LblForm">Localidad: </label>
                     <div class="col-md-10">
                       <input type="text" class="form-control" name="Localidad" id="localidad" autocomplete="off"
-                        value="<?php echo $Persona->getLocalidad(); ?>">
+                        value="<?php echo ($domicilio) ? $domicilio->getLocalidad() : ""; ?>">
                     </div>
                   </div>
                   <div class="form-group row">
                     <label for="ID_Barrio" class="col-md-2 col-form-label LblForm">Barrio: </label>
                     <div class="col-md-10">
                       <?php
-                      $Element = new Elements();
-                      echo $Element->CBModBarrios($Persona->getId_Barrio());
+                        $id_b = ($domicilio) ? $domicilio->getId_Barrio() : null;
+                        echo $Element->CBModBarrios($id_b);
                       ?>
                     </div>
                   </div>
@@ -383,10 +337,10 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                     <label for="NumeroDeCalle" class="col-md-2 col-form-label LblForm">Domicilio: </label>
                     <div class="col-md-6">
                       <?php
-                      if (!empty($Persona->getId_Calle())) {
-                        echo $Element->CBCallesNombre($Persona->getId_Calle());
+                      if ($domicilio && !empty($domicilio->getId_Calle())) {
+                        echo $Element->CBCallesNombre($domicilio->getId_Calle());
                       } else {
-                        echo $Element->CBCallesNombre($Persona->getCalle());
+                        echo $Element->CBCallesNombre($domicilio->getCalle());
                       }
                       ?>
 
@@ -394,11 +348,11 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                     <div class="col-md-2">
                       <input type="number" class="form-control" name="NumeroDeCalle" id="NumeroDeCalle" placeholder="Nro"
                         min="1" autocomplete="off" <?php
-                        $NroCalle = $Persona->getNro();
-                        if ($NroCalle !== null) {
+                        $NroCalle = ($domicilio) ? $domicilio->getNro() : null;
+                        if ($NroCalle) {
                           echo "value = '$NroCalle'";
                         } else {
-                          echo "value =" . (($Persona->getNroCalle()) ? $Persona->getNroCalle() : "");
+                          echo "value =" . (($domicilio->getNroCalle()) ? $domicilio->getNroCalle() : "");
                         } ?>>
                     </div>
                     <div class="col-md-2">
@@ -411,7 +365,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                     <label for="manzana" class="col-md-2 col-form-label LblForm">Manzana: </label>
                     <div class="col-md-10">
                       <input type="text" class="form-control" name="Manzana" id="manzana" autocomplete="off" <?php if ($Manzana != "null") {
-                        echo "value = '" . $Persona->getManzana() . "'";
+                        echo "value = '" . (($domicilio) ? $domicilio->getManzana() : "") . "'";
                       }
                       ; ?>>
                     </div>
@@ -420,28 +374,28 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                     <label for="lote" class="col-md-2 col-form-label LblForm">Lote: </label>
                     <div class="col-md-10">
                       <input type="text" class="form-control" name="Lote" id="lote" autocomplete="off"
-                        value="<?php echo $Persona->getLote(); ?>">
+                        value="<?php echo ($domicilio) ? $domicilio->getLote() : ""; ?>">
                     </div>
                   </div>
                   <div class="form-group row">
                     <label for="familia" class="col-md-2 col-form-label LblForm">Sub-lote: </label>
                     <div class="col-md-10">
                       <input type="text" class="form-control" name="Familia" id="familia" autocomplete="off"
-                        value="<?php echo $Persona->getFamilia(); ?>">
+                        value="<?php echo ($domicilio) ? $domicilio->getFamilia() : ""; ?>">
                     </div>
                   </div>
                   <div class="form-group row">
                     <label for="telefono" class="col-md-2 col-form-label LblForm">Telefono: </label>
                     <div class="col-md-10">
                       <input type="text" class="form-control" name="Telefono" id="telefono" autocomplete="off"
-                        value="<?php echo $Persona->getTelefono(); ?>">
+                        value="<?php echo ($contacto) ? $contacto->getTelefono() : ""; ?>">
                     </div>
                   </div>
                   <div class="form-group row">
                     <label for="mail" class="col-md-2 col-form-label LblForm">Mail: </label>
                     <div class="col-md-10">
                       <input type="text" class="form-control" name="Mail" id="mail" autocomplete="off"
-                        value="<?php echo $Persona->getMail(); ?>">
+                        value="<?php echo ($contacto) ? $contacto->getMail() : ""; ?>">
                     </div>
                   </div>
                   <div class="form-group row">
@@ -463,7 +417,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                     <label for="trabajo" class="col-md-2 col-form-label LblForm">Lugar de Trabajo: </label>
                     <div class="col-md-10">
                       <input type="text" class="form-control" name="Trabajo" id="trabajo" autocomplete="off"
-                        value="<?php echo $Persona->getTrabajo(); ?>">
+                        value="<?php echo ($contacto) ? $contacto->getTrabajo() : ""; ?>">
                     </div>
                   </div>
                   <div class="form-group row">
@@ -478,7 +432,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                     </label>
                     <div class="col-md-10">
                       <textarea class="form-control" row="3" name="Cambio_Domicilio" id="cambio-domicilio"
-                        value="<?php echo $Persona->getCambio_Domicilio(); ?>"><?php echo $Persona->getCambio_Domicilio(); ?></textarea>
+                        value="<?php echo ($domicilio) ? $domicilio->getCambio_Domicilio() : ""; ?>"></textarea>
                     </div>
                   </div>
                   <input type="hidden" id="lat" name="lat" value="">
@@ -564,7 +518,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                     Calle
                   </td>
                   <td  id="calle-georeferencia">
-                    <?php echo $Persona->getNombre_Calle();?>
+                    <?php echo ($domicilio) ? $domicilio->getNombre_Calle() : "";?>
                   </td>
                   <td id="calle-buttom" style="background-color: transparent; border: none; display: none;">
                       <div>
@@ -577,7 +531,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                     Nro
                   </td>
                   <td id="nro-georeferencia">
-                    <?php echo $Persona->getNro();?>
+                    <?php echo ($domicilio) ? $domicilio->getNro() : "";?>
                   </td>
                   <td id="nro-buttom" style="background-color: transparent; border: none; display: none;">
                       <div>
@@ -590,7 +544,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                     Barrio
                   </td>
                   <td id="barrio-georeferencia">
-                    <?php echo $Persona->getBarrio();?>
+                    <?php echo ($domicilio) ? $domicilio->getBarrio() : "";?>
                   </td>
                   <td id="barrio-buttom" style="background-color: transparent; border: none; display: none;">
                       <div>
@@ -617,8 +571,10 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
     </div>
   </div>
   <script>
-    objectJsonPersona.lat = <?php echo (!empty($Persona->getLatitud())) ? $Persona->getLatitud() : "null" ; ?>;
-    objectJsonPersona.lon = <?php echo (!empty($Persona->getLonguitud())) ? $Persona->getLonguitud() : "null"; ?>;
+    if ($exist) {
+      objectJsonPersona.lat = <?php echo (!empty($domicilio->getLatitud())) ? $domicilio->getLatitud() : "null" ; ?>;
+      objectJsonPersona.lon = <?php echo (!empty($domicilio->getLonguitud())) ? $domicilio->getLonguitud() : "null"; ?>;
+    }
   </script>
 </body>
 

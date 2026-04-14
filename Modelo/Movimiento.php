@@ -36,7 +36,7 @@ class Movimiento implements JsonSerializable
 			$this->Fecha_Creacion = (($Fecha_Creacion) ? $Fecha_Creacion : $fecha_actual);
 		} else {
 			$consultar_usuario = "select *
-									from movimiento 
+									from movimientos 
 									where id_movimiento = " . $xID_Movimiento . " 
 									and estado = 1";
 			$ejecutar_consultar_persona = mysqli_query(
@@ -68,7 +68,7 @@ class Movimiento implements JsonSerializable
 	public static function is_exist($coneccion, $id_movimiento)
 	{
 		$consulta = "select * 
-					 from movimiento 
+					 from movimientos 
 					 where id_movimiento = $id_movimiento 
 					   and estado = 1";
 		$mensaje_error = "Hubo un problema al consultar los registros para validar";
@@ -89,7 +89,7 @@ class Movimiento implements JsonSerializable
 													 )
 	{
 		$consulta = "select * 
-					 from movimiento 
+					 from movimientos 
 					 where fecha = '$fecha'
 					   and id_persona = $id_persona
 					   and estado = 1";
@@ -192,7 +192,7 @@ class Movimiento implements JsonSerializable
 	public function udpate(){
 		$fecha = $this->getFecha_Creacion();
 		$fecha_format = (($fecha) ? $fecha->format("Y-m-d") : "null");
-		$consulta = "update movimiento
+		$consulta = "update movimientos 
 					 set fecha = " . (($this->getFecha()) ? "'" . $this->getFecha() . "'" : "null") .",
 					 	 fecha_creacion = " . (($fecha_format) ? "'" . $fecha_format . "'" : "null") . ",
 						 id_persona = " . (($this->getID_Persona()) ? $this->getID_Persona() : "null") . ", 
@@ -209,7 +209,7 @@ class Movimiento implements JsonSerializable
 	}
 
 	public function save(){
-		$consulta = "insert into movimiento(
+		$consulta = "insert into movimientos (
 											fecha,
 											id_persona,
 											fecha_creacion,
@@ -236,7 +236,7 @@ class Movimiento implements JsonSerializable
 
 	public function delete()
 	{
-		$consulta = "update movimiento
+		$consulta = "update movimientos 
 					 set 	 estado = 0
 					 where id_movimiento = " . $this->getID_Movimiento();
 		$mensaje_error = "No se pudo modificar el movimiento";

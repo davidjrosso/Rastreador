@@ -244,17 +244,19 @@
               $Con->OpenConexion();
 
               $ConsultarDatos = "select M.id_movimiento, M.fecha, M.id_centro, P.id_persona, P.apellido, 
-                                        P.nombre, M.observaciones, R.id_resp, M.id_resp_2, M.id_resp_3, M.id_resp_4,
-                                        R.responsable, C.centro_salud, I.ID_OtraInstitucion, I.Nombre, MT.id_motivo,
-                                        MT.motivo
-                                 from movimiento M 
+                                        P.nombre, M.observaciones, group_concat(distinct R.id_resp separator '|')
+                                        R.responsable, C.centro_salud, I.ID_OtraInstitucion, I.Nombre, group_concat(distinct MT.id_motivo separator '|')
+                                from movimiento M 
                                       INNER JOIN movimiento_motivo MEMT ON (M.id_movimiento = MEMT.id_movimiento)
                                       INNER JOIN motivo MT ON (MEMT.id_motivo = MT.id_motivo)
                                       INNER JOIN persona P ON (M.id_persona = P.id_persona)
-                                      INNER JOIN responsable R ON (M.id_resp = R.id_resp) 
+                                      INNER JOIN movimiento_responsable RN ON (M.id_movimiento = RN.id_movimiento)
+                                      INNER JOIN responsable R ON (RN.id_responsable = R.id_responsable)
                                       LEFT JOIN centros_salud C ON (M.id_centro = C.id_centro)
                                       LEFT JOIN otras_instituciones I ON (M.id_otrainstitucion = I.ID_OtraInstitucion )
-                                 where M.id_movimiento = $ID_Movimiento";
+                                 where M.id_movimiento = $ID_Movimiento
+                                 group by M.id_movimiento, M.fecha, M.id_centro, P.id_persona, P.apellido, 
+                                        P.nombre, M.observaciones, C.centro_salud, I.ID_OtraInstitucion";
 
               $MensajeErrorDatos = "No se pudo consultar los Datos del Movimiento";
 
@@ -354,7 +356,7 @@
                   </div>
                 </div>
                 <?php  
-                  if($DtoMovimiento->getMotivo_4() != "" && $DtoMovimiento->getMotivo_4() != 1){
+                  if($DtoMovimiento->getMotivo_4() && $DtoMovimiento->getMotivo_4() != 1){
                 ?>
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 4: </label>
@@ -368,7 +370,7 @@
                 }
                 ?>
                 <?php
-                  if($DtoMovimiento->getMotivo_5() != "" && $DtoMovimiento->getMotivo_5() != 1){
+                  if($DtoMovimiento->getMotivo_5() && $DtoMovimiento->getMotivo_5() != 1){
                 ?>
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 5: </label>
@@ -397,7 +399,7 @@
                     ?>
                   </div>
                 </div>
-                <?php if($ID_Responsable_2 != null){ ?>
+                <?php if($ID_Responsable_2){ ?>
                   <div class="form-group row">
                     <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable 2: </label>
                     <div class = "col-md-10">

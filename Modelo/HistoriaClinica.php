@@ -25,7 +25,7 @@ class HistoriaClinica implements JsonSerializable
         $this->coneccion = $coneccion;
         if (!$id_historia_clinica) {
 			$ConsultarPersona = "select *
-								 from historia_clinica 
+								 from historias_clinicas 
 								 where id_persona = " . $ID_Persona . " 
                                    and id_centro_salud = $id_centro_salud
                                      and estado = 1";
@@ -50,7 +50,7 @@ class HistoriaClinica implements JsonSerializable
 
         } else {
 			$ConsultarPersona = "select *
-								 from historia_clinica 
+								 from historias_clinicas 
 								 where id_historia_clinica = " . $id_historia_clinica . " 
 								   and estado = 1";
 			$EjecutarConsultarPersona = mysqli_query(
@@ -73,6 +73,17 @@ class HistoriaClinica implements JsonSerializable
 		}
 	}
 
+    public static function exist($coneccion, $id_persona) {
+        $ConsultarPersona = "select *
+                                from historias_clinicas 
+                                where id_persona = " . $id_persona . " 
+                                and estado = 1";
+        $EjecutarConsultarPersona = mysqli_query(
+            $coneccion->Conexion,
+            $ConsultarPersona) or die("Problemas al consultar filtro Persona");
+        $row = mysqli_num_rows($EjecutarConsultarPersona);        
+        return $row;
+    }
 
     
     //METODOS SET
@@ -152,7 +163,7 @@ class HistoriaClinica implements JsonSerializable
     {
         $Con = new Conexion();
         $Con->OpenConexion();
-        $Consulta = "update historia_clinica 
+        $Consulta = "update historias_clinicas 
                     set nro_carpeta = " . ((!is_null($this->getNro_Carpeta())) ? "'" . intval($this->getNro_Carpeta()) . "'" : "null") . " 
                     where id_historia_clinica = " . $this->get_id_historia_clinica();
                     $MensajeErrorConsultar = "No se pudo actualizar la Persona";
@@ -166,7 +177,7 @@ class HistoriaClinica implements JsonSerializable
     {
         $Con = new Conexion();
         $Con->OpenConexion();
-        $Consulta = "update historia_clinica 
+        $Consulta = "update historias_clinicas 
                      set  nro_legajo = " . ((!is_null($this->getNro_Legajo())) ? "'" . $this->getNro_Legajo() . "'" : "null") . ", 
                         nro_carpeta = " . ((!is_null($this->getNro_Carpeta())) ? "'" . $this->getNro_Carpeta() . "'" : "null") . ", 
                         id_centro_salud = " . ((!is_null($this->get_id_centro_salud())) ? $this->get_id_centro_salud() : "null") . "
@@ -182,7 +193,7 @@ class HistoriaClinica implements JsonSerializable
     {
         $Con = new Conexion();
         $Con->OpenConexion();
-        $consulta = "INSERT INTO historia_clinica (
+        $consulta = "INSERT INTO historias_clinicas (
                                         nro_legajo,
                                         nro_carpeta, 
                                         estado,
@@ -207,7 +218,7 @@ class HistoriaClinica implements JsonSerializable
 		$Con = new Conexion();
 		$Con->OpenConexion();
 
-		$query = "update historia_clinica
+		$query = "update historias_clinicas
 				  set estado = 0
 				  where id_historia_clinica = " . $this->get_id_historia_clinica();
 		$MensajeErrorConsultar = "No se pudo insertar la hc";

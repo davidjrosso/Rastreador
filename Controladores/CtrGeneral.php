@@ -55,21 +55,12 @@ class CtrGeneral
 							UPPER(P.apellido) AS apellido,
 							P.nombre,
 							R.responsable
-							from movimiento M,
-								persona P,
-								responsable R
-							where M.id_persona = P.id_persona
-								and M.id_resp = R.id_resp
-								and ((M.motivo_1 IN (SELECT * FROM INN) 
-								   OR M.motivo_1 IN (SELECT * FROM GIN))
-								  OR (M.motivo_2 IN (SELECT * FROM INN) 
-								   OR M.motivo_2 IN (SELECT * FROM GIN))
-								  OR (M.motivo_3 IN (SELECT * FROM INN) 
-								   OR M.motivo_3 IN (SELECT * FROM GIN))
-								  OR (M.motivo_4 IN (SELECT * FROM INN) 
-								   OR M.motivo_4 IN (SELECT * FROM GIN))
-								  OR (M.motivo_5 IN (SELECT * FROM INN) 
-								   OR M.motivo_5 IN (SELECT * FROM GIN)))
+							from personas P
+								 inner join movimientos M on (P.id_persona = M.id_persona)
+								 left join movimientos_responsables RN on (M.id_movimiento = RN.id_movimiento)
+								 left join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
+								 inner join responsables R on (RN.id_responable = R.id_responsable)
+							where MT.id_motivo IN (SELECT * FROM INN) 
 								and M.estado = 1
 								and P.estado = 1
 							order by M.fecha_creacion desc;";
@@ -81,7 +72,7 @@ class CtrGeneral
 									P.apellido, 
 									P.nombre, 
 									R.responsable
-									from movimiento M, 
+									from movimientos M, 
 										persona P, 
 										responsable R
 									where M.id_persona = P.id_persona 
@@ -179,27 +170,17 @@ class CtrGeneral
 									   ) or die($MessageError);
 
 		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
-					 from movimiento M,
-					 	  persona P,
-						  responsable R,
-						  categoria C,
-						  categorias_roles CS,
-						  motivo MT
-					 where M.id_persona = P.id_persona
-					   and M.id_resp = R.id_resp 
-					   and M.id_movimiento = $ID
-					   and CS.id_categoria = C.id_categoria
-					   and C.cod_categoria = MT.cod_categoria
-								and ((M.motivo_1 IN (SELECT * FROM INN) 
-								   OR M.motivo_1 IN (SELECT * FROM GIN))
-								  OR (M.motivo_2 IN (SELECT * FROM INN) 
-								   OR M.motivo_2 IN (SELECT * FROM GIN))
-								  OR (M.motivo_3 IN (SELECT * FROM INN) 
-								   OR M.motivo_3 IN (SELECT * FROM GIN))
-								  OR (M.motivo_4 IN (SELECT * FROM INN) 
-								   OR M.motivo_4 IN (SELECT * FROM GIN))
-								  OR (M.motivo_5 IN (SELECT * FROM INN) 
-								   OR M.motivo_5 IN (SELECT * FROM GIN)))
+					 from movimientos M
+					 	  inner join personas P on (M.id_persona = P.id_persona)
+						  inner join movimientos_responsables RN on (M.id_responsable = RN.id_repsonsable)
+						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
+						  left join responsables R on (RN.id_responsable = R.id_responsable)
+						  inner join motivo MS on (MT.id_motivo = MS.id_motivo)
+
+						  inner join categoria C on (MS.cod_categoria = C.cod_categoria)
+						  inner join categorias_roles CS (C.id_categoria = CS.id_categoria)
+					 where M.id_movimiento = $ID
+					   and MT.id_motivo IN (SELECT * FROM INN) 
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
@@ -255,32 +236,22 @@ class CtrGeneral
 									   ) or die($MessageError);
 
 		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
-					 from movimiento M, 
-					 	  persona P, 
-						  responsable R,
-						  categoria C,
-						  categorias_roles CS,
-						  motivo MT
-					 where M.id_persona = P.id_persona 
-					   and M.id_resp = R.id_resp 
-					   and M.fecha = '$Fecha'
-					   and CS.id_categoria = C.id_categoria
-					   and C.cod_categoria = MT.cod_categoria
-								and ((M.motivo_1 IN (SELECT * FROM INN) 
-								   OR M.motivo_1 IN (SELECT * FROM GIN))
-								  OR (M.motivo_2 IN (SELECT * FROM INN) 
-								   OR M.motivo_2 IN (SELECT * FROM GIN))
-								  OR (M.motivo_3 IN (SELECT * FROM INN) 
-								   OR M.motivo_3 IN (SELECT * FROM GIN))
-								  OR (M.motivo_4 IN (SELECT * FROM INN) 
-								   OR M.motivo_4 IN (SELECT * FROM GIN))
-								  OR (M.motivo_5 IN (SELECT * FROM INN) 
-								   OR M.motivo_5 IN (SELECT * FROM GIN)))
+					 from movimientos M
+					 	  inner join personas P on (M.id_persona = P.id_persona)
+						  inner join movimientos_responsables RN on (M.id_responsable = RN.id_repsonsable)
+						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
+						  left join responsables R on (RN.id_responsable = R.id_responsable)
+						  inner join motivo MS on (MT.id_motivo = MS.id_motivo)
+
+						  inner join categoria C on (MS.cod_categoria = C.cod_categoria)
+						  inner join categorias_roles CS (C.id_categoria = CS.id_categoria)
+					 where M.fecha = '$Fecha'
+					   and MT.id_motivo IN (SELECT * FROM INN) 
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1
 					   and P.estado = 1
 					   and CS.estado = 1 
-					group by M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable
+					group by M.id_movimiento, M.fecha, M.fecha_creacion, P.apellido, P.nombre, R.responsable
 					order M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
@@ -330,27 +301,21 @@ class CtrGeneral
 									   ) or die($MessageError);
 
 		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
-					 from movimiento M, 
-					 	  persona P, 
-						  responsable R,
-						  categoria C,
-						  categorias_roles CS,
-						  motivo MT
+					 from movimientos M
+					 	  inner join personas P on (M.id_persona = P.id_persona)
+						  inner join movimientos_responsables RN on (M.id_responsable = RN.id_repsonsable)
+						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
+						  left join responsables R on (RN.id_responsable = R.id_responsable)
+						  inner join motivo MS on (MT.id_motivo = MS.id_motivo)
+
+						  inner join categoria C on (MS.cod_categoria = C.cod_categoria)
+						  inner join categorias_roles CS (C.id_categoria = CS.id_categoria)
 					 where M.id_persona = P.id_persona 
 					   and M.id_resp = R.id_resp 
 					   and P.apellido like '%$Apellido%'
 					   and CS.id_categoria = C.id_categoria
 					   and C.cod_categoria = MT.cod_categoria
-								and ((M.motivo_1 IN (SELECT * FROM INN) 
-								   OR M.motivo_1 IN (SELECT * FROM GIN))
-								  OR (M.motivo_2 IN (SELECT * FROM INN) 
-								   OR M.motivo_2 IN (SELECT * FROM GIN))
-								  OR (M.motivo_3 IN (SELECT * FROM INN) 
-								   OR M.motivo_3 IN (SELECT * FROM GIN))
-								  OR (M.motivo_4 IN (SELECT * FROM INN) 
-								   OR M.motivo_4 IN (SELECT * FROM GIN))
-								  OR (M.motivo_5 IN (SELECT * FROM INN) 
-								   OR M.motivo_5 IN (SELECT * FROM GIN)))
+					   and MT.id_motivo IN (SELECT * FROM INN) 
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
@@ -405,27 +370,17 @@ class CtrGeneral
 									   ) or die($MessageError);
 
 		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
-					 from movimiento M, 
-						  persona P, 
-						  responsable R,
-						  categoria C,
-						  categorias_roles CS,
-						  motivo MT
-					  where M.id_persona = P.id_persona 
-						and M.id_resp = R.id_resp 
-						and P.nombre like '%$Nombre%'
-					    and CS.id_categoria = C.id_categoria
-						and C.cod_categoria = MT.cod_categoria
-								and ((M.motivo_1 IN (SELECT * FROM INN) 
-								   OR M.motivo_1 IN (SELECT * FROM GIN))
-								  OR (M.motivo_2 IN (SELECT * FROM INN) 
-								   OR M.motivo_2 IN (SELECT * FROM GIN))
-								  OR (M.motivo_3 IN (SELECT * FROM INN) 
-								   OR M.motivo_3 IN (SELECT * FROM GIN))
-								  OR (M.motivo_4 IN (SELECT * FROM INN) 
-								   OR M.motivo_4 IN (SELECT * FROM GIN))
-								  OR (M.motivo_5 IN (SELECT * FROM INN) 
-								   OR M.motivo_5 IN (SELECT * FROM GIN)))
+					 from movimientos M
+					 	  inner join personas P on (M.id_persona = P.id_persona)
+						  inner join movimientos_responsables RN on (M.id_responsable = RN.id_repsonsable)
+						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
+						  left join responsables R on (RN.id_responsable = R.id_responsable)
+						  inner join motivo MS on (MT.id_motivo = MS.id_motivo)
+
+						  inner join categoria C on (MS.cod_categoria = C.cod_categoria)
+						  inner join categorias_roles CS (C.id_categoria = CS.id_categoria)
+					 where P.nombre like '%$Nombre%'
+					    and MT.id_motivo IN (SELECT * FROM INN) 
 					    and CS.id_tipousuario = $TipoUsuario
 						and M.estado = 1 
 						and P.estado = 1
@@ -509,27 +464,17 @@ class CtrGeneral
 									   ) or die($MessageError);
 
 		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
-					 from movimiento M,
-					 	  persona P,
-						  responsable R,
-						  categoria C,
-						  categorias_roles CS,
-						  motivo MT
-					 where M.id_persona = P.id_persona 
-					   and M.id_resp = R.id_resp 
-					   and P.documento like '%$Documento%'
-					   and CS.id_categoria = C.id_categoria
-					   and C.cod_categoria = MT.cod_categoria
-					   and ((M.motivo_1 IN (SELECT * FROM INN)
-							OR M.motivo_1 IN (SELECT * FROM GIN))
-							OR (M.motivo_2 IN (SELECT * FROM INN)
-							OR M.motivo_2 IN (SELECT * FROM GIN))
-							OR (M.motivo_3 IN (SELECT * FROM INN)
-							OR M.motivo_3 IN (SELECT * FROM GIN))
-							OR (M.motivo_4 IN (SELECT * FROM INN)
-							OR M.motivo_4 IN (SELECT * FROM GIN))
-							OR (M.motivo_5 IN (SELECT * FROM INN)
-							OR M.motivo_5 IN (SELECT * FROM GIN)))
+					 from movimientos M
+					 	  inner join personas P on (M.id_persona = P.id_persona)
+						  inner join movimientos_responsables RN on (M.id_responsable = RN.id_repsonsable)
+						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
+						  left join responsables R on (RN.id_responsable = R.id_responsable)
+						  inner join motivo MS on (MT.id_motivo = MS.id_motivo)
+
+						  inner join categoria C on (MS.cod_categoria = C.cod_categoria)
+						  inner join categorias_roles CS (C.id_categoria = CS.id_categoria)
+					 where P.documento like '%$Documento%'
+					   and MT.id_motivo IN (SELECT * FROM INN) 
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
@@ -613,30 +558,17 @@ class CtrGeneral
 									   ) or die($MessageError);
 
 		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
-					 from movimiento M, 
-					 	  persona P, 
-						  responsable R,
-						  categoria C,
-						  categorias_roles CS,
-						  motivo MT
-					 where M.id_persona = P.id_persona
-					   and (M.id_resp = R.id_resp 
-					   	 or M.id_resp_2 = R.id_resp 
-						 or M.id_resp_3 = R.id_resp 
-						 or M.id_resp_4 = R.id_resp) 
-					   and R.responsable like '%$Responsable%'
-					   and CS.id_categoria = C.id_categoria
-					   and C.cod_categoria = MT.cod_categoria
-								and ((M.motivo_1 IN (SELECT * FROM INN) 
-								   OR M.motivo_1 IN (SELECT * FROM GIN))
-								  OR (M.motivo_2 IN (SELECT * FROM INN) 
-								   OR M.motivo_2 IN (SELECT * FROM GIN))
-								  OR (M.motivo_3 IN (SELECT * FROM INN) 
-								   OR M.motivo_3 IN (SELECT * FROM GIN))
-								  OR (M.motivo_4 IN (SELECT * FROM INN) 
-								   OR M.motivo_4 IN (SELECT * FROM GIN))
-								  OR (M.motivo_5 IN (SELECT * FROM INN) 
-								   OR M.motivo_5 IN (SELECT * FROM GIN)))
+					 from movimientos M
+					 	  inner join personas P on (M.id_persona = P.id_persona)
+						  inner join movimientos_responsables RN on (M.id_responsable = RN.id_repsonsable)
+						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
+						  left join responsables R on (RN.id_responsable = R.id_responsable)
+						  inner join motivo MS on (MT.id_motivo = MS.id_motivo)
+
+						  inner join categoria C on (MS.cod_categoria = C.cod_categoria)
+						  inner join categorias_roles CS (C.id_categoria = CS.id_categoria)
+					 where R.responsable like '%$Responsable%'
+					   and MT.id_motivo IN (SELECT * FROM INN) 
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
@@ -690,37 +622,34 @@ class CtrGeneral
 									   ) or die($MessageError);
 
 		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
-					 from movimiento M, 
-					 	  persona P, 
-						  responsable R,
-						  categoria C,
-						  categorias_roles CS,
-						  motivo MT
-					 where M.id_persona = P.id_persona 
-					   and (M.id_resp = R.id_resp 
-						 or M.id_resp_2 = R.id_resp 
-						 or M.id_resp_3 = R.id_resp 
-						 or M.id_resp_4 = R.id_resp) 
-					   and P.nro_legajo = '$Legajo'
-					   and CS.id_categoria = C.id_categoria
-					   and C.cod_categoria = MT.cod_categoria
-								and ((M.motivo_1 IN (SELECT * FROM INN) 
-								   OR M.motivo_1 IN (SELECT * FROM GIN))
-								  OR (M.motivo_2 IN (SELECT * FROM INN) 
-								   OR M.motivo_2 IN (SELECT * FROM GIN))
-								  OR (M.motivo_3 IN (SELECT * FROM INN) 
-								   OR M.motivo_3 IN (SELECT * FROM GIN))
-								  OR (M.motivo_4 IN (SELECT * FROM INN) 
-								   OR M.motivo_4 IN (SELECT * FROM GIN))
-								  OR (M.motivo_5 IN (SELECT * FROM INN) 
-								   OR M.motivo_5 IN (SELECT * FROM GIN)))
+					 from movimientos M
+					 	  inner join personas P on (M.id_persona = P.id_persona)
+						  inner join historias_clinicas HC on (P.id_persona = HC.id_persona)
+						  inner join movimientos_responsables RN on (M.id_responsable = RN.id_repsonsable)
+						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
+						  left join responsables R on (RN.id_responsable = R.id_responsable)
+						  inner join motivo MS on (MT.id_motivo = MS.id_motivo)
+
+						  inner join categoria C on (MS.cod_categoria = C.cod_categoria)
+						  inner join categorias_roles CS (C.id_categoria = CS.id_categoria)
+					 where HC.nro_legajo = '$Legajo'
+					   and MT.id_motivo IN (SELECT * FROM INN) 
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
 					   and CS.estado = 1  
+					   and HC.estado = 1
 					 order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
+		$Table = "<table class='table'>
+					<thead>
+						<tr>
+							<th style='width:15%'>Fecha Carga</th>
+							<th>Apellido</th><th>Nombre</th>
+							<th>Resp.</th>
+							<th colspan='3'></th>
+						</tr>
+					</thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
@@ -767,30 +696,18 @@ class CtrGeneral
 									   ) or die($MessageError);
 
 		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
-					 from movimiento M, 
-					 	  persona P, 
-						  responsable R,
-						  categoria C,
-						  categorias_roles CS,
-						  motivo MT,
-					 where M.id_persona = P.id_persona 
-					   and (M.id_resp = R.id_resp 
-					   	 or M.id_resp_2 = R.id_resp 
-						 or M.id_resp_3 = R.id_resp 
-						 or M.id_resp_4 = R.id_resp) 
-					   and P.nro_carpeta = '$Carpeta'
-					   and CS.id_categoria = C.id_categoria
-					   and C.cod_categoria = MT.cod_categoria
-								and ((M.motivo_1 IN (SELECT * FROM INN) 
-								   OR M.motivo_1 IN (SELECT * FROM GIN))
-								  OR (M.motivo_2 IN (SELECT * FROM INN) 
-								   OR M.motivo_2 IN (SELECT * FROM GIN))
-								  OR (M.motivo_3 IN (SELECT * FROM INN) 
-								   OR M.motivo_3 IN (SELECT * FROM GIN))
-								  OR (M.motivo_4 IN (SELECT * FROM INN) 
-								   OR M.motivo_4 IN (SELECT * FROM GIN))
-								  OR (M.motivo_5 IN (SELECT * FROM INN) 
-								   OR M.motivo_5 IN (SELECT * FROM GIN)))
+					 from movimientos M
+					 	  inner join personas P on (M.id_persona = P.id_persona)
+						  inner join historias_clinicas HC on (P.id_persona = HC.id_persona)
+						  inner join movimientos_responsables RN on (M.id_responsable = RN.id_repsonsable)
+						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
+						  left join responsables R on (RN.id_responsable = R.id_responsable)
+						  inner join motivo MS on (MT.id_motivo = MS.id_motivo)
+
+						  inner join categoria C on (MS.cod_categoria = C.cod_categoria)
+						  inner join categorias_roles CS (C.id_categoria = CS.id_categoria)
+					 where HC.nro_carpeta = '$Carpeta'
+					   and MT.id_motivo IN (SELECT * FROM INN) 
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
@@ -882,9 +799,9 @@ class CtrGeneral
 									   ) or die($MessageError);
 
 		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
-					 from movimiento M, 
-					 	  persona P, 
-						  responsable R,
+					 from movimientos M, 
+					 	  personas P, 
+						  responsables R,
 						  categoria C,
 						  categorias_roles CS,
 						  motivo MT
@@ -1008,7 +925,7 @@ class CtrGeneral
 					 CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
 					 documento, 
 					 IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
-					 from persona 
+					 from personas 
 					 where estado = 1 
 					 order by apellido, nombre";
 		$MessageError = "Problemas al intentar mostrar Personas";
@@ -1033,7 +950,7 @@ class CtrGeneral
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
 							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
-					 from persona
+					 from personas
 					 where id_persona = $ID 
 					   and estado = 1 
 					 order by apellido, nombre";
@@ -1057,7 +974,7 @@ class CtrGeneral
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
 							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
-					 from persona
+					 from personas
 					 where apellido like '%$Apellido%' 
 					   and estado = 1 
 					 order by apellido, nombre";
@@ -1081,7 +998,7 @@ class CtrGeneral
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
 							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
-					 from persona
+					 from personas
 					 where nombre like '%$Nombre%'
 					   and estado = 1 
 					 order by apellido, nombre";
@@ -1106,7 +1023,7 @@ class CtrGeneral
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
 							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
-					 from persona 
+					 from personas 
 					 where documento like '%$buscDNI%' 
 					   and estado = 1 
 					 order by apellido, nombre";
@@ -1130,7 +1047,7 @@ class CtrGeneral
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
 							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
-					 from persona 
+					 from personas 
 					 where nro_legajo like '%$Legajo%' 
 					   and estado = 1 
 					 order by apellido, nombre";
@@ -1154,7 +1071,7 @@ class CtrGeneral
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
 							documento,
 							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
-					 from persona 
+					 from personas 
 					 where nro_carpeta = '$Carpeta' 
 					   and estado = 1 order by apellido, nombre";
 		$MessageError = "Problemas al intentar mostrar Personas por Carpeta";
@@ -1178,7 +1095,7 @@ class CtrGeneral
 					 		CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 					 		documento, 
 					 		IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo,domicilio 
-					 FROM persona 
+					 FROM personas 
 					 WHERE domicilio LIKE '%$Domicilio%' 
 					   AND estado = 1 
 					 ORDER BY apellido, nombre";
@@ -1435,7 +1352,7 @@ class CtrGeneral
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "SELECT id_resp, responsable 
-					 FROM responsable 
+					 FROM responsables 
 					 WHERE estado = 1 
 					   AND id_resp <> 64
 					 ORDER BY id_resp";
@@ -1477,7 +1394,7 @@ class CtrGeneral
 	public function getResponsablesxID($ID){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_resp, responsable from responsable where id_resp = $ID and estado = 1 order by id_resp";
+		$Consulta = "select id_resp, responsable from responsables where id_resp = $ID and estado = 1 order by id_resp";
 		$MessageError = "Problemas al intentar mostrar Responsables por ID";
 		$Table = "<table class='table'>
 					<thead>
@@ -1515,7 +1432,7 @@ class CtrGeneral
 	public function getResponsablesxResponsable($Responsable){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_resp, responsable from responsable where responsable like '%$Responsable%' and estado = 1 order by id_resp";
+		$Consulta = "select id_resp, responsable from responsables where responsable like '%$Responsable%' and estado = 1 order by id_resp";
 		$MessageError = "Problemas al intentar mostrar Responsables por Responsable";
 		$Table = "<table class='table'><thead><tr><th>Responsable</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -2370,13 +2287,13 @@ class CtrGeneral
 					break;
 					case 2: 
 						$ConsultarMotivo_1 = "select apellido, nombre 
-											  from persona 
+											  from personas 
 											  where id_persona = $ID_Registro_1 
 											  	and estado = 1 
 											  limit 1";
 						$MensajeErrorMotivo_1 = "No se pudo consultar la persona 1";
 						$ConsultarMotivo_2 = "select apellido, nombre 
-											  from persona 
+											  from personas 
 											  where id_persona = $ID_Registro_2 
 												and estado = 1 
 											  limit 1";

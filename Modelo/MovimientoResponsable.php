@@ -20,7 +20,7 @@ class MovimientoResponsable
 
 		if ($id_movimiento_responsable) {
 			$consulta = "SELECT * 
-						 FROM movimiento_responsable
+						 FROM movimientos_responsables
 						 WHERE id_movimiento_responsable = $id_movimiento_responsable
 						   AND estado = 1";
 			$rs = mysqli_query(
@@ -40,7 +40,7 @@ class MovimientoResponsable
 			}
 		} else if ($id_movimiento && $id_responsable) {
 			$consulta = "SELECT * 
-						 FROM movimiento_responsable
+						 FROM movimientos_responsables
 						 WHERE id_movimiento = $id_movimiento
 						   AND id_responsable = $id_responsable
 						   AND estado = 1";
@@ -69,7 +69,7 @@ class MovimientoResponsable
     public static function exist_movimiento_responsable($connection, $movimiento, $id_responsable )
 	{
 		$consulta = "select * 
-					from movimiento_responsable
+					from movimientos_responsables
 					where id_movimiento = $movimiento
                       and id_responsable = $id_responsable
 					  and estado = 1";
@@ -119,7 +119,7 @@ class MovimientoResponsable
 
 	public function save() 
 	{
-		$consulta = "insert into movimiento_responsable(
+		$consulta = "insert into movimientos_responsables(
 												   id_movimiento, 
 												   id_responsable,
 												   estado
@@ -135,7 +135,7 @@ class MovimientoResponsable
 
     public function update() 
 	{
-		$consulta = "update movimiento_responsable
+		$consulta = "update movimientos_responsables
                             set estado = " . $this->estado . ",
 								id_movimiento = " . $this->id_movimiento . ",
 								id_responsable = " . $this->id_responsable . "
@@ -147,7 +147,7 @@ class MovimientoResponsable
 
 	public function delete() 
 	{
-		$consulta = "update movimiento_responsable
+		$consulta = "update movimientos_responsables
                             set estado = 0
 					 where id_movimiento_responsable = " . $this->id_movimiento_responsable;
 		if (!$RetAccion = mysqli_query($this->connection->Conexion,$consulta)) {

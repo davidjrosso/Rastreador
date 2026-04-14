@@ -38,17 +38,45 @@ class Domicilio implements JsonSerializable {
 	){
         $this->coneccion = $coneccion;
         if (!$id_domicilio ) {
-			$this->Barrio = $xBarrio;
-			$this->id_calle = $xCalle;
-			$this->Cambio_Domicilio = $xCambio_Domicilio;
-			$this->Circunscripcion = $xCircunscripcion;
-			$this->Estado = $xEstado;
-			$this->Familia = $xFamilia;
-			$this->Localidad = $xLocalidad;
-			$this->Lote = $xLote;
-			$this->Manzana = $xManzana;
-			$this->numero = $xNro;
-			$this->Seccion = $xSeccion;
+
+			$ConsultarPersona = "select *,
+										ST_X(georeferencia) as lat,
+										ST_Y(georeferencia) as lon
+								 from domicilios 
+								 where id_calle = " . $id_domicilio  . " 
+								 and numero = $xNro 
+								 and estado = 1";
+			$EjecutarConsultarPersona = mysqli_query(
+				$this->coneccion->Conexion,
+				$ConsultarPersona) or die("Problemas al consultar filtro Persona");
+			$ret = mysqli_fetch_assoc($EjecutarConsultarPersona);
+			
+			$barrio = $ret["ID_Barrio"];
+			$localidad = $ret["localidad"];
+			$circunscripcion = $ret["circunscripcion"];
+            $seccion = $ret["seccion"];
+			$manzana = $ret["manzana"];
+			$lote = $ret["lote"];
+			$familia = $ret["familia"];
+			$cambio_Domicilio = $ret["cambio_domicilio"];
+			$estado = $ret["estado"];
+			$calle = $ret["id_calle"];
+			$nro = $ret["numero"];
+			$georefencia = (isset($ret["georeferencia"])) ? "POINT(" . $ret["lat"] . "," . $ret["lon"] . ")" : null;
+			$this->Barrio = ($xBarrio) ? $xBarrio : $barrio;
+			$this->Localidad = ($xLocalidad) ? $xLocalidad : $localidad;
+			$this->Circunscripcion = ($xCircunscripcion) ? $xCircunscripcion : $circunscripcion;
+            $this->id_domicilio = $id_domicilio ;
+            $this->Seccion = ($xSeccion) ? $xSeccion : $seccion;
+			$this->Manzana = ($xManzana) ? : $manzana;
+			$this->Lote = ($xLote) ? $xLote : $lote;
+			$this->Familia = ($xFamilia) ? $xFamilia : $familia;
+			$this->Cambio_Domicilio = ($xCambio_Domicilio) ? $xCambio_Domicilio : $cambio_Domicilio;
+			$this->Estado = ($xEstado) ? $xEstado : $estado;
+			$this->Georeferencia = ($xGeoreferencia) ? $xGeoreferencia : $georefencia;
+			$this->numero = ($xNro) ? $xNro : $nro;
+			$this->id_calle = ($xCalle) ? $xCalle : $calle;
+
 		} else {
 			$Con = new Conexion();
 			$Con->OpenConexion();
@@ -823,23 +851,20 @@ public static function is_exist($coneccion, $id_domicilio )
 	return $is_multiple;
 }
 
-public static function is_registered($id_calle, $numero)
+public static function is_registered($coneccion, $id_calle, $numero)
 {
-	$Con = new Conexion();
-	$Con->OpenConexion();
 	$ConsRegistrosIguales = "select id_domicilio  
 							 from domicilios 
 							 where id_calle = $id_calle
                                  and numero = $numero
                                  and estado = 1";
 	$MensajeErrorRegistrosIguales = "Hubo un problema al consultar los registros para validar";
-	$ret = mysqli_query($Con->Conexion,
+	$ret = mysqli_query($coneccion->Conexion,
 		$ConsRegistrosIguales
 	) or die(
 		$MensajeErrorRegistrosIguales . " Consulta: " . $ConsRegistrosIguales
 	);
 	$exist = (mysqli_num_rows($ret) >= 1);
-	$Con->CloseConexion();
 	return $exist;
 }
 

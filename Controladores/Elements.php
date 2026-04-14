@@ -1972,7 +1972,7 @@ public function getMenuSeguridadUsuario($ID){
     $Select = "<select class='form-control' id='ID_Responsable' name = 'ID_Responsable[]'>";
     $Select .= "<option selected = 'true' disabled = 'disabled'>-Seleccione un Responsable-</option>";
     $Responsables = "select * 
-                     from responsable 
+                     from responsables 
                      where estado = 1 
                      order by responsable";
     $Consulta = mysqli_query($Con3->Conexion,$Responsables)or die("Problemas al mostrar Responsables");
@@ -1988,7 +1988,7 @@ public function getMenuSeguridadUsuario($ID){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Responsable[]'>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from responsable where estado = 1 order by responsable")or die("Problemas al mostrar Responsables");
+    $Consulta = mysqli_query($Con3->Conexion,"select * from responsables where estado = 1 order by responsable")or die("Problemas al mostrar Responsables");
     while ($Ret = mysqli_fetch_array($Consulta)) {
       if($Ret['id_resp'] == $xID_Responsable){
         $Select .= "<option value = '".$Ret['id_resp']."' selected>".$Ret['responsable']."</option>";
@@ -2391,7 +2391,7 @@ public function getMenuSeguridadUsuario($ID){
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Responsable'>";
     $Select .= "<option value = '0'>-Todos-</option>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from responsable where estado = 1 order by responsable")or die("Problemas al mostrar Categoría");
+    $Consulta = mysqli_query($Con3->Conexion,"select * from responsables where estado = 1 order by responsable")or die("Problemas al mostrar Categoría");
     while ($Ret = mysqli_fetch_array($Consulta)) {
       $Select .= "<option value = '".$Ret['id_resp']."'>".$Ret['responsable']."</option>";
     }
@@ -2449,7 +2449,7 @@ public function getMenuSeguridadUsuario($ID){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name ='ID_Responsable' id ='ID_Responsable'>";    
-    $Consulta = mysqli_query($Con3->Conexion,"select * from responsable where estado = 1 order by responsable")or die("Problemas al mostrar Responsables");
+    $Consulta = mysqli_query($Con3->Conexion,"select * from responsables where estado = 1 order by responsable")or die("Problemas al mostrar Responsables");
     while ($Ret = mysqli_fetch_array($Consulta)) {      
       if($Ret['id_resp'] == $xID_Responsable){
         $Select .= "<option value = '".$Ret['id_resp']."' selected>".$Ret['responsable']."</option>";

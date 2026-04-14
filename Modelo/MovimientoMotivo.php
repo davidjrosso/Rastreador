@@ -19,7 +19,7 @@ class MovimientoMotivo
 
 		if ($id_movimiento && $id_motivo) {
 			$consulta = "SELECT * 
-						 FROM movimiento_motivo
+						 FROM movimientos_motivos
 						 WHERE id_movimiento = $id_movimiento
 						   AND id_motivo = $id_motivo 
 						   AND estado = 1";
@@ -48,7 +48,7 @@ class MovimientoMotivo
     public static function exist_movimiento_motivo($connection, $movimiento, $motivo)
 	{
 		$consulta = "select * 
-					from movimiento_motivo
+					from movimientos_motivos
 					where id_movimiento = $movimiento
                       and id_motivo = $motivo 
 					  and estado = 1";
@@ -92,7 +92,7 @@ class MovimientoMotivo
 
 	public function save() 
 	{
-		$consulta = "insert into movimiento_motivo(
+		$consulta = "insert into movimientos_motivos(
 												   id_movimiento, 
 												   id_motivo, 
 												   estado
@@ -108,7 +108,7 @@ class MovimientoMotivo
 
     public function update() 
 	{
-		$consulta = "update movimiento_motivo
+		$consulta = "update movimientos_motivos
                             set estado = " . $this->estado . ",
 								id_movimiento = " . $this->id_movimiento . ",
 								id_motivo = " . $this->id_motivo . "
@@ -120,7 +120,7 @@ class MovimientoMotivo
 
 	public function delete() 
 	{
-		$consulta = "update movimiento_motivo
+		$consulta = "update movimientos_motivos
                             set estado = 0
                             where id_movimiento_motivo = " . $this->id_movimiento_motivo;
 		if (!$RetAccion = mysqli_query($this->connection->Conexion,$consulta)) {

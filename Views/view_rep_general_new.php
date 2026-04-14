@@ -1797,7 +1797,7 @@
               if (($countPostfield - 3) == 1) {
                 if (!(empty($RetConsultarPersona["domicilio"]) && (empty($RetConsultarPersona["calle"]) || empty($RetConsultarPersona["nro"])))) {
                   $domicilio = $RetConsultarPersona["domicilio"];
-                  $persona = new Persona(ID_Persona: $ID_Persona);
+                  $persona = new Persona(coneccion: $Con, ID_Persona: $ID_Persona);
                   $domicilioPersona = "";
                   if ($persona->getCalle() && $persona->getNroCalle()) {
                     $domicilioPersona = "domicilio like '%" . $persona->getCalle() . "%" . $persona->getNroCalle() . "%' or ";

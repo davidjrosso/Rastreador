@@ -868,7 +868,7 @@
 
               $_SESSION["datosNav"]["NombrePersona"] = $filtrosSeleccionados["NombrePersona"];
 
-              $Persona = new Persona($ID_Persona);
+              $Persona = new Persona($Con, $ID_Persona);
               $jsonTable = array();
               $head_det_persona = [];
               $head_movimientos = [];

@@ -190,6 +190,33 @@ class PersonaController
             $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
             $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 
+            $exist = false;
+
+            if (isset($_REQUEST["ID"])) {
+              $ID = $_REQUEST["ID"];
+
+              $Con = new Conexion();
+              $Con->OpenConexion();
+
+              $historia_clinica = null;
+              $contacto = null;
+              $domicilio = null;
+
+              if ($exist = Persona::is_exist(coneccion: $Con, id_persona: $ID)) {
+                $Persona = new Persona(coneccion: $Con, ID_Persona: $ID);
+                if (HistoriaClinica::exist(coneccion: $Con, id_persona: $ID)) {
+                    $historia_clinica = new HistoriaClinica(coneccion: $Con, ID_Persona: $ID);
+                }
+                if (Contacto::tiene_contacto(coneccion: $Con, id_persona: $ID)) {
+                    $contacto = new Contacto(coneccion: $Con, id_persona: $ID);
+                }
+                if (PersonaDomicilio::tiene_domicilio(coneccion: $Con, id_persona: $ID)) {
+                    $domicilio_obj = new PersonaDomicilio(connection: $Con, id_persona: $ID);
+                    $domicilio = new Domicilio(coneccion: $Con, id_domicilio: $domicilio_obj->get_id_domicilio());
+                }
+              }
+              $Con->CloseConexion();
+            }
             include("./Views/view_newpersonas.php");
         }
         exit();    
@@ -449,20 +476,12 @@ class PersonaController
         $Nro_Carpeta = $_REQUEST["Nro_Carpeta"];
         $Obra_Social = $_REQUEST["Obra_Social"];
         $calle = null;
-        $Domicilio = "";
         if (isset($_REQUEST["Calle"])) {
             $calle = ucwords($_REQUEST["Calle"]);
-            $nombre_calle = new Calle(id_calle : $calle);
-            $Domicilio = $nombre_calle->get_calle_open();
         }
 
         if (isset($_REQUEST["NumeroDeCalle"])) {
-        $nro_calle = $_REQUEST["NumeroDeCalle"];
-        if (!empty($Domicilio)) {
-            $Domicilio .= " ". $nro_calle;
-        } else {
-            $Domicilio = null;
-        }
+            $nro_calle = $_REQUEST["NumeroDeCalle"];
         }
         $ID_Barrio = $_REQUEST["ID_Barrio"];
         $Localidad = ucwords($_REQUEST["Localidad"]);
@@ -525,9 +544,51 @@ class PersonaController
 
             $contact = new Contacto(coneccion: $Con, id_persona: $ID_Persona);
 
-            $domicilio_obj = new PersonaDomicilio(connection: $Con, id_persona: $ID_Persona);
+            if (!Domicilio::is_registered(coneccion: $Con, id_calle: $calle, numero: $nro_calle)) {                                      
+                $domicilio = new Domicilio(coneccion: $Con, 
+                                        xCalle: $calle,
+                                        xNro: $nro_calle,
+                                        xCircunscripcion: $Circunscripcion,
+                                        xFamilia: $Familia,
+                                        xLocalidad: $Localidad,
+                                        xLote: $Lote,
+                                        xManzana: $Manzana,
+                                        xSeccion: $Seccion,
+                                        xBarrio: $ID_Barrio,
+                                        );
 
-            $domicilio = new Domicilio(coneccion: $Con);
+                if ($domicilio->getId_Calle() && $domicilio->getNro()){
+                    $domicilio->setDomicilio();	
+                }
+                if ($georeferencia_point) {
+                    $domicilio->setGeoreferencia(xGeoreferencia: $georeferencia_point);
+                }
+
+                $domicilio->save();                        
+            } else {
+                $domicilio = new Domicilio(coneccion: $Con, xCalle: $calle, xNro: $nro_calle);
+            }
+
+            $id_persona_domicilio = PersonaDomicilio::exist(coneccion: $Con, 
+                                        id_persona: $ID_Persona, 
+                                        id_domicilio: $domicilio->get_id_domicilio());
+            if (!$id_persona_domicilio) {
+
+                if (PersonaDomicilio::tiene_domicilio(coneccion:$Con, id_persona: $ID_Persona)) {
+                    $domicilio_obj = new PersonaDomicilio(connection: $Con, 
+                                                        id_persona: $ID_Persona);
+                    $domicilio_obj->delete();
+                }
+                $domicilio_obj = new PersonaDomicilio(connection: $Con, 
+                                                      id_persona: $ID_Persona,
+                                                      id_domicilio: $domicilio->get_id_domicilio());
+                $domicilio_obj->save();
+            } else {
+                $domicilio_obj = new PersonaDomicilio(connection: $Con, 
+                                                      id_persona_domicilio: $id_persona_domicilio);
+            }
+
+
             if (Persona::is_registered_with_id($Con, $DNI, $ID_Persona) && !empty($DNI)) {
                 $Con->CloseConexion();
                 $Mensaje = "Ya existe una Persona con ese Apellido y Nombre por Favor Introduzca Otros Datos";
@@ -535,45 +596,29 @@ class PersonaController
             } else {
 
                 $Persona_Viejo = new Persona($ID_Persona);
-                $Persona_Viejo->setApellido($Persona->getApellido());
-                $domicilio->setBarrio($Persona->getId_Barrio());
-                $domicilio->setCamio_Domicilio($Persona->getCambio_Domicilio());
-                $domicilio->setCircunscripcion($Persona->getCircunscripcion());
-                $Persona_Viejo->setDNI($Persona->getDNI());
-                $Persona_Viejo->setEdad($Persona->getEdad());
-                $Persona_Viejo->setNombre($Persona->getNombre());
-                $hist->setNro_Legajo($Persona->getNro_Legajo());
-                $domicilio->setFamilia($Persona->getFamilia());
-                $Persona_Viejo->setFecha_Nacimiento($Persona->getFecha_Nacimiento());
-                $Persona_Viejo->setID_Escuela($Persona->getID_Escuela());
-                $domicilio->setLocalidad($Persona->getLocalidad());
-                $domicilio->setLote($Persona->getLote());
-                $contact->setMail($Persona->getMail());
-                $domicilio->setManzana($Persona->getManzana());
-                $Persona_Viejo->setMeses($Persona->getMeses());
-                $hist->setNro_Carpeta($Persona->getNro_Carpeta());
-                $Persona_Viejo->setObra_Social($Persona->getObra_Social());
-                $Persona_Viejo->setObservaciones($Persona->getObservaciones());
-                $domicilio->setSeccion($Persona->getSeccion());
-                $contact->setTrabajo($Persona->getTrabajo());
-                $contact->setTelefono($Persona->getTelefono());
-                $domicilio->setNro($Persona->getNro());
-                $domicilio->setCalle($Persona->getId_Calle());
+                $Persona_Viejo->setApellido($Apellido);
+                $domicilio->setBarrio($ID_Barrio);
+                $domicilio->setCamio_Domicilio($Cambio_Domicilio);
+                $Persona_Viejo->setDNI($DNI);
+                $Persona_Viejo->setEdad($Edad);
+                $Persona_Viejo->setNombre($Nombre);
+                $hist->setNro_Legajo($Nro_Legajo);
+                $Persona_Viejo->setFecha_Nacimiento($Fecha_Nacimiento);
+                $Persona_Viejo->setID_Escuela($ID_Escuela);
+                $domicilio->setLocalidad($Localidad);
+                $contact->setMail($Mail);
+                $domicilio->setManzana($Manzana);
+                $Persona_Viejo->setMeses($Meses);
+                $hist->setNro_Carpeta($Nro_Carpeta);
+                $Persona_Viejo->setObra_Social($Obra_Social);
+                $Persona_Viejo->setObservaciones($Observaciones);
+                $contact->setTrabajo($Trabajo);
+                $contact->setTelefono($Telefono);
+                $domicilio->setCalle($calle);
 
-                if ($domicilio->getId_Calle() && $domicilio->getNro()){
-                    $domicilio->setDomicilio();	
-                }
-
-                if ($georeferencia_point) {
-                    $domicilio->setGeoreferencia(xGeoreferencia: $georeferencia_point);
-                }
                 $Persona_Viejo->update();
                 $hist->update();                
                 $contact->update();
-                $domicilio->save();                                 
-
-                $domicilio_obj->set_id_domicilio($domicilio->get_id_domicilio());
-                $domicilio_obj->update();
 
                 $Detalles = "El usuario con ID: $ID_Usuario ha modificado una Persona. Datos modificados : ";
                 $Detalles .= mysqli_real_escape_string($Con->Conexion, json_encode($Persona_Viejo));
