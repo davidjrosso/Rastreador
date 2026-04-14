@@ -924,8 +924,8 @@ class CtrGeneral
 					 UPPER(apellido) as apellido, 
 					 CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
 					 documento, 
-					 IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
-					 from personas 
+					 IF(h.nro_legajo = 'null', '', nro_legajo) as nro_legajo 
+					  from personas p inner join historias_clinicas h on (p.id_persona = h.id_persona) 
 					 where estado = 1 
 					 order by apellido, nombre";
 		$MessageError = "Problemas al intentar mostrar Personas";
@@ -949,8 +949,8 @@ class CtrGeneral
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
-							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
-					 from personas
+							IF(h.nro_legajo = 'null', '', nro_legajo) as nro_legajo
+					  from personas p inner join historias_clinicas h on (p.id_persona = h.id_persona)
 					 where id_persona = $ID 
 					   and estado = 1 
 					 order by apellido, nombre";
@@ -966,15 +966,16 @@ class CtrGeneral
 		return $Table;
 	}
 
-	public function getPersonasxApellido($Apellido){
+	public function getPersonasxApellido($Apellido)
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select id_persona, 
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
-							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
-					 from personas
+							IF(h.nro_legajo = 'null', '', nro_legajo) as nro_legajo
+					  from personas p inner join historias_clinicas h on (p.id_persona = h.id_persona)
 					 where apellido like '%$Apellido%' 
 					   and estado = 1 
 					 order by apellido, nombre";
@@ -997,8 +998,8 @@ class CtrGeneral
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
-							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
-					 from personas
+							IF(h.nro_legajo = 'null', '', nro_legajo) as nro_legajo
+					  from personas p inner join historias_clinicas h on (p.id_persona = h.id_persona)
 					 where nombre like '%$Nombre%'
 					   and estado = 1 
 					 order by apellido, nombre";
@@ -1022,8 +1023,8 @@ class CtrGeneral
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
-							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
-					 from personas 
+							IF(h.nro_legajo = 'null', '', nro_legajo) as nro_legajo 
+					 from personas p inner join historias_clinicas h on (p.id_persona = h.id_persona)
 					 where documento like '%$buscDNI%' 
 					   and estado = 1 
 					 order by apellido, nombre";
@@ -1046,8 +1047,8 @@ class CtrGeneral
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
-							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
-					 from personas 
+							IF(h.nro_legajo = 'null', '', nro_legajo) as nro_legajo 
+					  from personas p inner join historias_clinicas h on (p.id_persona = h.id_persona) 
 					 where nro_legajo like '%$Legajo%' 
 					   and estado = 1 
 					 order by apellido, nombre";
@@ -1070,8 +1071,8 @@ class CtrGeneral
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
 							documento,
-							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
-					 from personas 
+							IF(h.nro_legajo = 'null', '', nro_legajo) as nro_legajo 
+					  from personas p inner join historias_clinicas h on (p.id_persona = h.id_persona) 
 					 where nro_carpeta = '$Carpeta' 
 					   and estado = 1 order by apellido, nombre";
 		$MessageError = "Problemas al intentar mostrar Personas por Carpeta";
@@ -1094,8 +1095,8 @@ class CtrGeneral
 					 		UPPER(apellido) as apellido, 
 					 		CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 					 		documento, 
-					 		IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo,domicilio 
-					 FROM personas 
+					 		IF(h.nro_legajo = 'null', '', nro_legajo) as nro_legajo,domicilio 
+					  from personas p inner join historias_clinicas h on (p.id_persona = h.id_persona) 
 					 WHERE domicilio LIKE '%$Domicilio%' 
 					   AND estado = 1 
 					 ORDER BY apellido, nombre";
