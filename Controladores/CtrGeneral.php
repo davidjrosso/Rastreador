@@ -924,9 +924,10 @@ class CtrGeneral
 					 UPPER(apellido) as apellido, 
 					 CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
 					 documento, 
-					 IF(h.nro_legajo = 'null', '', nro_legajo) as nro_legajo 
-					  from personas p inner join historias_clinicas h on (p.id_persona = h.id_persona) 
-					 where estado = 1 
+					 IF(h.nro_legajo = 'null', '', nro_legajo) as nro_legajo, 
+					 p.estado
+					 from personas p inner join historias_clinicas h on (p.id_persona = h.id_persona) 
+					 where p.estado = 1 
 					 order by apellido, nombre";
 		$MessageError = "Problemas al intentar mostrar Personas";
 		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
@@ -949,10 +950,11 @@ class CtrGeneral
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
-							IF(h.nro_legajo = 'null', '', nro_legajo) as nro_legajo
+							IF(h.nro_legajo = 'null', '', nro_legajo) as nro_legajo,
+							p.estado
 					  from personas p inner join historias_clinicas h on (p.id_persona = h.id_persona)
-					 where id_persona = $ID 
-					   and estado = 1 
+					 where p.id_persona = $ID 
+					   and p.estado = 1 
 					 order by apellido, nombre";
 		$MessageError = "Problemas al intentar mostrar Personas por ID";
 		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
@@ -974,10 +976,11 @@ class CtrGeneral
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
-							IF(h.nro_legajo = 'null', '', nro_legajo) as nro_legajo
+							IF(h.nro_legajo = 'null', '', nro_legajo) as nro_legajo,
+							p.estado
 					  from personas p inner join historias_clinicas h on (p.id_persona = h.id_persona)
-					 where apellido like '%$Apellido%' 
-					   and estado = 1 
+					 where p.apellido like '%$Apellido%' 
+					   and p.estado = 1 
 					 order by apellido, nombre";
 		$MessageError = "Problemas al intentar mostrar Personas por Apellido";
 		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
@@ -998,10 +1001,11 @@ class CtrGeneral
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
-							IF(h.nro_legajo = 'null', '', nro_legajo) as nro_legajo
+							IF(h.nro_legajo = 'null', '', nro_legajo) as nro_legajo,
+							p.estado
 					  from personas p inner join historias_clinicas h on (p.id_persona = h.id_persona)
-					 where nombre like '%$Nombre%'
-					   and estado = 1 
+					 where p.nombre like '%$Nombre%'
+					   and p.estado = 1 
 					 order by apellido, nombre";
 		$MessageError = "Problemas al intentar mostrar Personas por Nombre";
 		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
@@ -1021,12 +1025,13 @@ class CtrGeneral
 		$Con->OpenConexion();
 		$Consulta = "select p.id_persona, 
 							UPPER(apellido) as apellido, 
-							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
+							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
+							p.estado, 
 							documento, 
 							IF(h.nro_legajo = 'null', '', nro_legajo) as nro_legajo 
 					 from personas p inner join historias_clinicas h on (p.id_persona = h.id_persona)
-					 where documento like '%$buscDNI%' 
-					   and estado = 1 
+					 where p.documento like '%$buscDNI%' 
+					   and p.estado = 1 
 					 order by apellido, nombre";
 		$MessageError = "Problemas al intentar mostrar Personas por Documento";
 		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
@@ -1046,11 +1051,12 @@ class CtrGeneral
 		$Consulta = "select p.id_persona, 
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
+							p.estado, 
 							documento, 
 							IF(h.nro_legajo = 'null', '', nro_legajo) as nro_legajo 
 					  from personas p inner join historias_clinicas h on (p.id_persona = h.id_persona) 
-					 where nro_legajo like '%$Legajo%' 
-					   and estado = 1 
+					 where h.nro_legajo like '%$Legajo%' 
+					   and p.estado = 1 
 					 order by apellido, nombre";
 		$MessageError = "Problemas al intentar mostrar Personas por Legajo";
 		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th></th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
@@ -1070,11 +1076,12 @@ class CtrGeneral
 		$Consulta = "select p.id_persona, 
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
+							p.estado, 
 							documento,
 							IF(h.nro_legajo = 'null', '', nro_legajo) as nro_legajo 
 					  from personas p inner join historias_clinicas h on (p.id_persona = h.id_persona) 
-					 where nro_carpeta = '$Carpeta' 
-					   and estado = 1 order by apellido, nombre";
+					 where h.nro_carpeta = '$Carpeta' 
+					   and p.estado = 1 order by apellido, nombre";
 		$MessageError = "Problemas al intentar mostrar Personas por Carpeta";
 		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th></th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -1094,11 +1101,12 @@ class CtrGeneral
 		$Consulta = "select p.id_persona, 
 					 		UPPER(apellido) as apellido, 
 					 		CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
-					 		documento, 
+							p.estado, 
+							documento, 
 					 		IF(h.nro_legajo = 'null', '', nro_legajo) as nro_legajo,domicilio 
 					  from personas p inner join historias_clinicas h on (p.id_persona = h.id_persona) 
-					 WHERE domicilio LIKE '%$Domicilio%' 
-					   AND estado = 1 
+					 WHERE p.domicilio LIKE '%$Domicilio%' 
+					   AND p.estado = 1 
 					 ORDER BY apellido, nombre";
 		$MessageError = "Problemas al intentar mostrar Personas por Domicilio";
 		$Table = "<table class='table'><thead><tr><th>Id</th><th>Apellido</th><th>Nombre</th><th>Documento</th></th><th>Nro. Legajo</th></tr></thead>";
