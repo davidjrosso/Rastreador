@@ -920,7 +920,7 @@ class CtrGeneral
 	public function getPersonas(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, 
+		$Consulta = "select p.id_persona, 
 					 UPPER(apellido) as apellido, 
 					 CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
 					 documento, 
@@ -945,7 +945,7 @@ class CtrGeneral
 	public function getPersonasxID($ID){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, 
+		$Consulta = "select p.id_persona, 
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
@@ -970,7 +970,7 @@ class CtrGeneral
 	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, 
+		$Consulta = "select p.id_persona, 
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
@@ -994,7 +994,7 @@ class CtrGeneral
 	public function getPersonasxNombre($Nombre){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, 
+		$Consulta = "select p.id_persona, 
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
@@ -1019,7 +1019,7 @@ class CtrGeneral
 		$buscDNI = trim(str_replace(array('.'),'',$DNI));
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, 
+		$Consulta = "select p.id_persona, 
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
@@ -1043,7 +1043,7 @@ class CtrGeneral
 	public function getPersonasxLegajo($Legajo){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, 
+		$Consulta = "select p.id_persona, 
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
@@ -1067,7 +1067,7 @@ class CtrGeneral
 	public function getPersonasxCarpeta($Carpeta){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, 
+		$Consulta = "select p.id_persona, 
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
 							documento,
@@ -1091,7 +1091,7 @@ class CtrGeneral
 	public function getPersonasxDomicilio($Domicilio){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_persona, 
+		$Consulta = "select p.id_persona, 
 					 		UPPER(apellido) as apellido, 
 					 		CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 					 		documento, 
