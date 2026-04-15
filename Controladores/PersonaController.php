@@ -163,6 +163,53 @@ class PersonaController
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
+
+            $ID_Usuario = $_SESSION["Usuario"];
+            $account = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $account->get_id_tipo_usuario();
+            $Element = new Elements();
+
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
+
+            if (isset($_REQUEST["ID"])) {
+              $ID = $_REQUEST["ID"];
+
+              $Con = new Conexion();
+              $Con->OpenConexion();
+
+              $historia_clinica = null;
+              $contacto = null;
+              $domicilio = null;
+              $Escuela = null;
+
+              if ($exist = Persona::is_exist(coneccion: $Con, id_persona: $ID)) {
+                $Persona = new Persona(coneccion: $Con, ID_Persona: $ID);
+                $escuela_obj = new Escuela(coneccion_base: $Con, xID_Escuela: $Persona->getID_Escuela());
+                $Escuela = $escuela_obj->getEscuela();
+
+                if (HistoriaClinica::exist(coneccion: $Con, id_persona: $ID)) {
+                    $historia_clinica = new HistoriaClinica(coneccion: $Con, ID_Persona: $ID, id_centro_salud: 7);
+                }
+                if (Contacto::tiene_contacto(coneccion: $Con, id_persona: $ID)) {
+                    $contacto = new Contacto(coneccion: $Con, id_persona: $ID);
+                }
+                if (PersonaDomicilio::tiene_domicilio(coneccion: $Con, id_persona: $ID)) {
+                    $domicilio_obj = new PersonaDomicilio(connection: $Con, id_persona: $ID);
+                    $domicilio = new Domicilio(coneccion: $Con, id_domicilio: $domicilio_obj->get_id_domicilio());
+                    $barrio = new Barrio(
+                                        coneccion: $Con,
+                                        id_barrio: $domicilio->getId_Barrio() 
+                                        );
+                    $RetBarrio = $barrio->get_barrio();
+
+
+                }
+              }
+              $Con->CloseConexion();
+            }
+
             include("./Views/view_verpersonas.php");
         }
         exit();

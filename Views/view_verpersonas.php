@@ -1,21 +1,5 @@
 <?php 
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Elements.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/CtrGeneral.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Conexion.php';
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Persona.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Barrio.php';
-header("Content-Type: text/html;charset=utf-8");
-
-
-$Con = new Conexion();
-$Con->OpenConexion();
-$ID_Usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $usuario->get_id_tipo_usuario();
-
-$Con->CloseConexion();
 ?>
 <!DOCTYPE html>
 <html>
@@ -63,7 +47,6 @@ $Con->CloseConexion();
 <body>
 <div class = "row">
   <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_PERSONA);
   ?>
   <div class = "col-md-9">
@@ -80,102 +63,8 @@ $Con->CloseConexion();
           <!-- Search -->
         <div class = "row">
           <?php  
-            if(isset($_REQUEST["ID"]) && $_REQUEST["ID"]!=null){
-              $xID_Persona = $_REQUEST["ID"];
-
-              $Con = new Conexion();
-              $Con->OpenConexion();
-
-              //////////////////////////////// CALCULAR EDAD EN CASO DE QUE NO SEA LA CORRECTA /////////////////////////////////////////////////////
-              $ConsultarDatosEdad = "select edad, fecha_nac from persona where id_persona = $xID_Persona and estado = 1 limit 1";
-              $MensajeErrorDatosEdad = "No se pudo consultar los Datos de la Persona";
-
-              $EjecutarConsultarDatosEdad = mysqli_query($Con->Conexion,$ConsultarDatosEdad) or die($MensajeErrorDatosEdad);              
-
-              $RetEdad = mysqli_fetch_assoc($EjecutarConsultarDatosEdad);            
-
-    
-              if(!is_null($RetEdad["fecha_nac"]) && $RetEdad["fecha_nac"] !== "null" && !empty($RetEdad["fecha_nac"])){
-              	  $Fecha_Nac = $RetEdad["fecha_nac"];
-                  $Fecha_Nacimiento_Registrada = new DateTime($Fecha_Nac);
-                  $Hoy = new DateTime();
-                  $Edad = $Hoy->diff($Fecha_Nacimiento_Registrada);           
-                  $Edad_Actual = $RetEdad["edad"];                 
-                  if($Edad->y !== $Edad_Actual){                  
-                    $Nueva_Edad = $Edad->y;
-                    $ActualizarEdad = "update persona set edad = $Nueva_Edad where id_persona = $xID_Persona and estado = 1";
-                    $MensajeErrorActualizarEdad = "No se pudo actualizar la edad";
-                    mysqli_query($Con->Conexion,$ActualizarEdad) or die($MensajeErrorActualizarEdad);          
-                  }
-              	  $Nueva_Edad_Meses = $Edad->m;                  	
-              	  $ActualizarEdad_Meses = "update persona set meses = $Nueva_Edad_Meses where id_persona = $xID_Persona and estado = 1";
-              	  $MensajeErrorActualizarEdadMeses = "No se pudo actualizar los meses de edad";
-              	  mysqli_query($Con->Conexion,$ActualizarEdad_Meses) or die($MensajeErrorActualizarEdadMeses);      
-                  
-              }             
-              ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-              $ConsultarDatos = "select id_persona, UPPER(apellido) AS apellido, nombre, documento, 
-                                        edad, fecha_nac, nro_carpeta, nro_legajo,
-                                        obra_social, domicilio, localidad, circunscripcion,
-                                        seccion, manzana, lote, familia, mail, observacion,
-                                        cambio_domicilio, estado, ID_Escuela, meses, Trabajo,
-                                        ID_Barrio, telefono
-                                 from persona where id_persona = $xID_Persona and estado = 1 limit 1";
-              $MensajeErrorDatos = "No se pudo consultar los Datos de la Persona";
-
-              $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);              
-
-              $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
-              $ID_Barrio = $Ret["ID_Barrio"];
-
-              $barrio = new Barrio(
-                                   coneccion: $Con,
-                                   id_barrio: $ID_Barrio
-                                  );
-              $RetBarrio = $barrio->get_barrio();
-              
-              $ID_Persona = $Ret["id_persona"];
-              $Apellido = $Ret["apellido"];
-              $Nombre = $Ret["nombre"];
-              $DNI = $Ret["documento"];
-              
-              $Edad = $Ret["edad"];
-              if(is_null($Ret["fecha_nac"]) || $Ret["fecha_nac"] == "null"){
-              	$Fecha_Nacimiento = "No se cargo fecha de nacimiento";
-              }else{
-              	$Fecha_Nacimiento = implode("/", array_reverse(explode("-",$Ret["fecha_nac"])));  	
-              }
-                      
-              $Nro_Carpeta = $Ret["nro_carpeta"];
-              $Nro_Legajo = $Ret["nro_legajo"];
-              $Obra_Social = $Ret["obra_social"];
-              $Domicilio = $Ret["domicilio"];
-              $Barrio = $RetBarrio;
-              $Localidad = $Ret["localidad"];
-              $Circunscripcion = $Ret["circunscripcion"];
-              $Seccion = $Ret["seccion"];
-              $Manzana = $Ret["manzana"];
-              $Lote = $Ret["lote"];
-              $Familia = $Ret["familia"];
-              $Observacion = $Ret["observacion"];
-              $Cambio_Domicilio = $Ret["cambio_domicilio"];
-              $Telefono = $Ret["telefono"];
-              $Mail = $Ret["mail"];
-              $Estado = $Ret["estado"];
-              $ID_Escuela = $Ret["ID_Escuela"];
-              $Meses = $Ret["meses"];
-              $Trabajo = $Ret["Trabajo"];
-
-              $Persona = new Persona(coneccion: $Con, ID_Persona: $ID_Persona);
-
-              $ConsultarEscuela = "select Escuela from escuelas where ID_Escuela = $ID_Escuela";
-              $MensajeErrorConsultarEscuela = "No se pudo consultar la Escuela";
-
-              $EjecutarConsultarEscuela = mysqli_query($Con->Conexion,$ConsultarEscuela) or die($MensajeErrorConsultarEscuela);
-              $RetEscuela = mysqli_fetch_assoc($EjecutarConsultarEscuela);
-              $Escuela = $RetEscuela["Escuela"];
-
+            if (isset($_REQUEST["ID"])) {
+ 
               $Table = "<table class='table'><thead><tr><th></th><th>Detalles de la Persona</th></tr></thead>";
 
               // $Table .= "<tr><td>Id</td><td>".$Persona->getID_Persona()."</td></tr>";
@@ -188,32 +77,29 @@ $Con->CloseConexion();
               }else{
               	$Table .= "<tr><td>Años</td><td>".$Persona->getEdad()."</td></tr>";
               }              
-              $Table .= "<tr><td>Meses</td><td>".(($Meses!="null")? $Persona->getMeses():"")."</td></tr>";            
-              $Table .= "<tr><td>Nro. Carpeta</td><td>".(($Nro_Carpeta!="null")?$Persona->getNro_Carpeta():"")."</td></tr>";               
-              $Table .= "<tr><td>Nro. Legajo</td><td>".(($Nro_Legajo!="null")? $Persona->getNro_Legajo():"")."</td></tr>";             
-              $Table .= "<tr><td>Localidad</td><td>".$Persona->getLocalidad()."</td></tr>";
-              $Table .= "<tr><td>Barrio</td><td>".$Persona->getBarrio()."</td></tr>";  
-              $Table .= "<tr><td>Domicilio</td><td>".$Persona->getDomicilio()."</td></tr>";              
-              $Table .= "<tr><td>Manzana</td><td>".(($Manzana!="null")? $Persona->getManzana():"")."</td></tr>";
-              $Table .= "<tr><td>Lote</td><td>".(($Lote!="null")? $Persona->getLote():"")."</td></tr>";
-              $Table .= "<tr><td>Sub-lote</td><td>".$Persona->getFamilia()."</td></tr>";
-              $Table .= "<tr><td>Telefono</td><td>".$Persona->getTelefono()."</td></tr>";
-              $Table .= "<tr><td>Mail</td><td>".$Persona->getMail()."</td></tr>";                            
+              $Table .= "<tr><td>Meses</td><td>". $Persona->getMeses() ."</td></tr>";            
+              $Table .= "<tr><td>Nro. Carpeta</td><td>".(($historia_clinica) ? $historia_clinica->getNro_Carpeta():"")."</td></tr>";               
+              $Table .= "<tr><td>Nro. Legajo</td><td>".(($historia_clinica)? $historia_clinica->getNro_Legajo():"")."</td></tr>";             
+              $Table .= "<tr><td>Localidad</td><td>".$domicilio->getLocalidad()."</td></tr>";
+              $Table .= "<tr><td>Barrio</td><td>".$domicilio->getBarrio()."</td></tr>";  
+              $Table .= "<tr><td>Domicilio</td><td>".$domicilio->getDomicilio()."</td></tr>";              
+              $Table .= "<tr><td>Manzana</td><td>".(($domicilio)? $domicilio->getManzana():"")."</td></tr>";
+              $Table .= "<tr><td>Lote</td><td>".(($domicilio)? $domicilio->getLote():"")."</td></tr>";
+              $Table .= "<tr><td>Sub-lote</td><td>".$domicilio->getFamilia()."</td></tr>";
+              $Table .= "<tr><td>Telefono</td><td>".$contacto->getTelefono()."</td></tr>";
+              $Table .= "<tr><td>Mail</td><td>".$contacto->getMail()."</td></tr>";                            
               $Table .= "<tr><td>Obra Social</td><td>".$Persona->getObra_Social()."</td></tr>";              
               $Table .= "<tr><td>Escuela</td><td>".$Escuela."</td></tr>";
-              $Table .= "<tr><td>Lugar de Trabajo</td><td>".$Persona->getTrabajo()."</td></tr>";                            
+              $Table .= "<tr><td>Lugar de Trabajo</td><td>".$contacto->getTrabajo()."</td></tr>";                            
               $Table .= "<tr><td>Observación</td><td>".$Persona->getObservaciones()."</td></tr>";
-              $Table .= "<tr><td>Cambio de Domicilio</td><td>".$Persona->getCambio_Domicilio()."</td></tr>";
+              $Table .= "<tr><td>Cambio de Domicilio</td><td>".$domicilio->getCambio_Domicilio()."</td></tr>";
 
 
               $Table .= "</table>";
 
               echo $Table;
 
-              $Con->CloseConexion();
-              
-
-            }else{
+            } else {
               $Mensaje = "No se pudo consultar los Datos porque no se pudo obtener el ID de la Persona";
               echo $Mensaje;
             }
