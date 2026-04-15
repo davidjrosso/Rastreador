@@ -5,7 +5,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_Unificacion.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Calle.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Accion.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/HistoriaClinicaphp");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/HistoriaClinica.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/PersonaDomicilio.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Contacto.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Domicilio.php");
@@ -186,6 +186,7 @@ class PersonaController
             $ID_Usuario = $_SESSION["Usuario"];
             $account = new Account(account_id: $ID_Usuario);
             $TipoUsuario = $account->get_id_tipo_usuario();
+            $Element = new Elements();
 
             $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
             $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
@@ -203,7 +204,7 @@ class PersonaController
               if ($exist = Persona::is_exist(coneccion: $Con, id_persona: $ID)) {
                 $Persona = new Persona(coneccion: $Con, ID_Persona: $ID);
                 if (HistoriaClinica::exist(coneccion: $Con, id_persona: $ID)) {
-                    $historia_clinica = new HistoriaClinica(coneccion: $Con, ID_Persona: $ID);
+                    $historia_clinica = new HistoriaClinica(coneccion: $Con, ID_Persona: $ID, id_centro_salud: 7);
                 }
                 if (Contacto::tiene_contacto(coneccion: $Con, id_persona: $ID)) {
                     $contacto = new Contacto(coneccion: $Con, id_persona: $ID);

@@ -17,31 +17,6 @@
  * along with Rastreador3; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
-
-if(session_status() !== PHP_SESSION_ACTIVE) session_start();
-
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
-
-header("Content-Type: text/html;charset=utf-8");
-
-$http_referer = (!empty($_SERVER["HTTP_REFERER"])) ? $_SERVER["HTTP_REFERER"] : null;
-
-if (!preg_match("~view_personas~", $http_referer)) {
-  $_SESSION["from_reporte_grafico"] = true;
-} else {
-  $_SESSION["from_reporte_grafico"] = false;
-}
-
-$ID_Usuario = $_SESSION["Usuario"];
-$account = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $account->get_id_tipo_usuario();
-
-$mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
-$mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -278,7 +253,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                       de Nacimiento: </label>
                     <div class="col-md-10">
                       <input type="text" class="form-control" name="Fecha_Nacimiento" id="Fecha_Nacimiento"
-                        autocomplete="off" <?php if ($Fecha_Nacimiento != "null") {
+                        autocomplete="off" <?php if ($Persona->getFecha_Nacimiento()) {
                           echo "value = '" . $Persona->getFecha_Nacimiento() . "'";
                         }
                         ; ?>>
@@ -311,8 +286,8 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                   <div class="form-group row">
                     <label for="Nro_Legajo" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
                     <div class="col-md-10">
-                      <input type="text" class="form-control" name="Nro_Legajo" id="Nro_Legajo" autocomplete="off" <?php if ($Nro_Legajo) {
-                        echo "value = '" . (($historia_clinica) ? $historia_clinica->getNro_Legajo() : "") . "'";
+                      <input type="text" class="form-control" name="Nro_Legajo" id="Nro_Legajo" autocomplete="off" <?php if ($historia_clinica && $historia_clinica->getNro_Legajo()) {
+                        echo "value = '" . $historia_clinica->getNro_Legajo() . "'";
                       }
                        ?>>
                     </div>
@@ -340,7 +315,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                       if ($domicilio && !empty($domicilio->getId_Calle())) {
                         echo $Element->CBCallesNombre($domicilio->getId_Calle());
                       } else {
-                        echo $Element->CBCallesNombre($domicilio->getCalle());
+                        echo $Element->CBCallesNombre();
                       }
                       ?>
 
@@ -351,8 +326,6 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                         $NroCalle = ($domicilio) ? $domicilio->getNro() : null;
                         if ($NroCalle) {
                           echo "value = '$NroCalle'";
-                        } else {
-                          echo "value =" . (($domicilio->getNroCalle()) ? $domicilio->getNroCalle() : "");
                         } ?>>
                     </div>
                     <div class="col-md-2">
@@ -364,9 +337,8 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                   <div class="form-group row">
                     <label for="manzana" class="col-md-2 col-form-label LblForm">Manzana: </label>
                     <div class="col-md-10">
-                      <input type="text" class="form-control" name="Manzana" id="manzana" autocomplete="off" <?php if ($Manzana != "null") {
+                      <input type="text" class="form-control" name="Manzana" id="manzana" autocomplete="off" <?php 
                         echo "value = '" . (($domicilio) ? $domicilio->getManzana() : "") . "'";
-                      }
                       ; ?>>
                     </div>
                   </div>
@@ -571,10 +543,10 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
     </div>
   </div>
   <script>
-    if ($exist) {
+<?php    if ($domicilio) { ?>
       objectJsonPersona.lat = <?php echo (!empty($domicilio->getLatitud())) ? $domicilio->getLatitud() : "null" ; ?>;
       objectJsonPersona.lon = <?php echo (!empty($domicilio->getLonguitud())) ? $domicilio->getLonguitud() : "null"; ?>;
-    }
+<?php    } ?>
   </script>
 </body>
 

@@ -2540,9 +2540,9 @@ public function getMenuSeguridadUsuario($ID){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='ID_Escuela' name = 'ID_Escuela'>";
-    if($xID_Nivel == 0){
+    if ($xID_Nivel == 0) {
       $Select .= "<option selected = 'true' disabled = 'disabled' value = '0'>- Debe seleccionar primero un Nivel Escolar -</option>";  
-    }else{
+    } else {
       $Select .= "<option selected = 'true' disabled = 'disabled' value = '0'>- Seleccione una Escuela -</option>";
     }    
 
@@ -2569,7 +2569,7 @@ public function getMenuSeguridadUsuario($ID){
     $Consulta = mysqli_query($Con3->Conexion, $query) or die("Problemas al mostrar Escuelas");
     while ($Ret = mysqli_fetch_array($Consulta)) {
       if ($Ret['id_escuela'] == $xID_Escuela) {
-        $Select .= "<option value = '" . $Ret['id_escuela'] . "' selected>".$Ret['escuela']."</option>";
+        $Select .= "<option value = '" . $Ret['id_escuela'] . "' selected>" . $Ret['escuela'] . "</option>";
       } else {
         $Select .= "<option value = '" . $Ret['id_escuela'] . "'>" . $Ret['escuela'] . "</option>";
       }      
@@ -2664,7 +2664,7 @@ public function getMenuSeguridadUsuario($ID){
     return $Select;
   }
 
-  public function CBCallesNombre($Nombre){
+  public function CBCallesNombre($Nombre = null){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $NombreCalle = rtrim($Nombre);
