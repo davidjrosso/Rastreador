@@ -45,10 +45,10 @@ class PersonaDomicilio
 				$ConsultarPersona) or die("Problemas al consultar filtro Persona");
 			$ret = mysqli_fetch_assoc($EjecutarConsultarPersona);
 	
-			$query_id_persona = $ret["id_persona"];
-			$query_id_persona_domicilio = $ret["id_persona_domicilio"];
-			$query_estado = $ret["estado"] ;
-			$query_id_domicilio = $ret["id_domicilio"];
+			$query_id_persona = (isset($ret["id_persona"])) ? $ret["id_persona"] : null;
+			$query_id_persona_domicilio = isset($ret["id_persona_domicilio"]) ? $ret["id_persona_domicilio"] : null;
+			$query_estado = (isset($ret["estado"])) ? $ret["estado"]  : null;
+			$query_id_domicilio = (isset($ret["id_domicilio"])) ? $ret["id_domicilio"] : null;
 			$this->id_persona_domicilio = (!empty($id_persona_domicilio)) ? $id_persona_domicilio : $query_id_persona_domicilio;
 			$this->id_persona = (!empty($id_persona)) ? $id_persona : $query_id_persona;
 			$this->id_domicilio = (!empty($id_domicilio)) ? $id_domicilio : $query_id_domicilio;

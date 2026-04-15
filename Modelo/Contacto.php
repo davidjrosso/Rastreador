@@ -23,21 +23,13 @@ class Contacto implements JsonSerializable {
 		$xTrabajo = null
 	) {
         $this->coneccion = $coneccion;
-        if (!$id_contacto) {
-			$this->Estado = (isset($xEstado)) ? $xEstado: 1;
-			$this->Mail = $xMail;
-            $this->id_persona = $id_persona;
-            $this->Telefono = $xTelefono;
-			$this->Trabajo = $xTrabajo;
-		} else {
-			$Con = new Conexion();
-			$Con->OpenConexion();
+        if (!$id_contacto && $id_persona) {
 			$ConsultarPersona = "select *
                                  from contactos
-								 where id_contacto = " . $id_contacto . " 
+								 where id_persona = " . $id_persona . " 
 								   and estado = 1";
 			$EjecutarConsultarPersona = mysqli_query(
-				$Con->Conexion,
+				$this->coneccion->Conexion,
 				$ConsultarPersona) or die("Problemas al consultar filtro Persona");
 			$ret = mysqli_fetch_assoc($EjecutarConsultarPersona);
 	
@@ -46,14 +38,36 @@ class Contacto implements JsonSerializable {
 			$mail = $ret["mail"];
             $query_id_persona = $ret["id_persona"];
             $estado = $ret["estado"];
-			$trabajo = $ret["Trabajo"];
+			$trabajo = $ret["trabajo"];
 			$this->id_contacto = $id_contacto;
 			$this->Telefono = ($xTelefono) ? $xTelefono : $telefono;
 			$this->Mail = ($xMail) ? $xMail : $mail;
             $this->id_persona = (!empty($id_persona)) ? $id_persona : $query_id_persona;
             $this->Estado = ($xEstado) ? $xEstado : $estado;
 			$this->Trabajo = ($xTrabajo) ? $xTrabajo : $trabajo;
-			$Con->CloseConexion();
+
+		} else {
+			$ConsultarPersona = "select *
+                                 from contactos
+								 where id_contacto = " . $id_contacto . " 
+								   and estado = 1";
+			$EjecutarConsultarPersona = mysqli_query(
+				$this->coneccion->Conexion,
+				$ConsultarPersona) or die("Problemas al consultar filtro Persona");
+			$ret = mysqli_fetch_assoc($EjecutarConsultarPersona);
+	
+			$id_contacto = $ret["id_contacto"];
+			$telefono = $ret["telefono"];
+			$mail = $ret["mail"];
+            $query_id_persona = $ret["id_persona"];
+            $estado = $ret["estado"];
+			$trabajo = $ret["trabajo"];
+			$this->id_contacto = $id_contacto;
+			$this->Telefono = ($xTelefono) ? $xTelefono : $telefono;
+			$this->Mail = ($xMail) ? $xMail : $mail;
+            $this->id_persona = (!empty($id_persona)) ? $id_persona : $query_id_persona;
+            $this->Estado = ($xEstado) ? $xEstado : $estado;
+			$this->Trabajo = ($xTrabajo) ? $xTrabajo : $trabajo;
 		}
 	}
 
@@ -142,18 +156,15 @@ class Contacto implements JsonSerializable {
 
     public function update()
     {
-        $Con = new Conexion();
-        $Con->OpenConexion();
         $Consulta = "update contactos
                     set telefono = " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono() . "'" : "null") . ", 
                         mail = " . ((!is_null($this->getMail())) ? "'" . $this->getMail() . "'" : "null") . ", 
-                        Trabajo = " . ((!is_null($this->getTrabajo())) ? "'" . $this->getTrabajo() . "'" : "null") . ",
+                        trabajo = " . ((!is_null($this->getTrabajo())) ? "'" . $this->getTrabajo() . "'" : "null") . "
                         where id_contacto = " . $this->get_id_contacto();
                     $MensajeErrorConsultar = "No se pudo actualizar la Persona";
-                    if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+                    if (!$Ret = mysqli_query($this->coneccion->Conexion, $Consulta)) {
                         throw new Exception($MensajeErrorConsultar . $Consulta, 2);
                     }
-                    $Con->CloseConexion();
     }
 
     public function save(){
@@ -162,7 +173,7 @@ class Contacto implements JsonSerializable {
         $consulta = "INSERT INTO contactos(
                                         telefono, 
                                         mail, 
-                                        Trabajo, 
+                                        trabajo, 
                                         estado 
                     )
                     VALUES ( " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono() . "'" : "null") . ", 

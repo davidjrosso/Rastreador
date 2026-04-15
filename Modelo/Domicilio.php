@@ -51,17 +51,17 @@ class Domicilio implements JsonSerializable {
 				$ConsultarPersona) or die("Problemas al consultar filtro Persona");
 			$ret = mysqli_fetch_assoc($EjecutarConsultarPersona);
 			
-			$barrio = $ret["ID_Barrio"];
-			$localidad = $ret["localidad"];
-			$circunscripcion = $ret["circunscripcion"];
-            $seccion = $ret["seccion"];
-			$manzana = $ret["manzana"];
-			$lote = $ret["lote"];
-			$familia = $ret["familia"];
-			$cambio_Domicilio = $ret["cambio_domicilio"];
-			$estado = $ret["estado"];
-			$calle = $ret["id_calle"];
-			$nro = $ret["numero"];
+			$barrio = (isset($ret["id_barrio"])) ? $ret["id_barrio"] : null;
+			$localidad = (isset($ret["localidad"])) ? $ret["localidad"] : null;
+			$circunscripcion = (isset($ret["circunscripcion"])) ? $ret["circunscripcion"] : null;
+            $seccion = (isset($ret["seccion"])) ? $ret["seccion"] : null;
+			$manzana = (isset($ret["manzana"])) ? $ret["manzana"] : null;
+			$lote = (isset($ret["lote"])) ? $ret["lote"] : null;
+			$familia = (isset($ret["familia"])) ? $ret["familia"] : null;
+			$cambio_Domicilio = (isset($ret["cambio_domicilio"])) ? $ret["cambio_domicilio"] : null;
+			$estado = (isset($ret["estado"])) ? $ret["estado"] : null;
+			$calle = (isset($ret["id_calle"])) ? $ret["id_calle"] : null;
+			$nro = (isset($ret["numero"])) ? $ret["numero"] : null;
 			$georefencia = (isset($ret["georeferencia"])) ? "POINT(" . $ret["lat"] . "," . $ret["lon"] . ")" : null;
 			$this->Barrio = ($xBarrio) ? $xBarrio : $barrio;
 			$this->Localidad = ($xLocalidad) ? $xLocalidad : $localidad;
@@ -950,9 +950,9 @@ public function update()
 {
 	$Con = new Conexion();
 	$Con->OpenConexion();
-	$Consulta = "update persona 
+	$Consulta = "update domicilios 
 				 set 
-					 ID_Barrio = " . ((!is_null($this->getId_Barrio())) ? "'" . $this->getId_Barrio() . "'" : "null") . ", 
+					 id_barrio = " . ((!is_null($this->getId_Barrio())) ? "'" . $this->getId_Barrio() . "'" : "null") . ", 
 					 localidad = " . ((!is_null($this->getLocalidad())) ? "'" . $this->getLocalidad() . "'" : "null") . ", 
 					 circunscripcion = " . ((!is_null($this->getCircunscripcion())) ? "'" . $this->getCircunscripcion() . "'" : "null") . ", 
 					 seccion = " . ((!is_null($this->getSeccion())) ? "'" . $this->getSeccion() . "'" : "null") . ", 
@@ -974,8 +974,8 @@ public function update()
 public function save(){
 	$Con = new Conexion();
 	$Con->OpenConexion();
-	$consulta = "INSERT INTO persona (
-									  ID_Barrio, 
+	$consulta = "INSERT INTO domicilios (
+									  id_barrio, 
 									  localidad, 
 									  circunscripcion, 
 									  seccion,

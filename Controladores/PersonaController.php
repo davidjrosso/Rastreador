@@ -9,7 +9,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/HistoriaClinica.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/PersonaDomicilio.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Contacto.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Domicilio.php");
-
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Notificacion.php");
 
 
 class PersonaController 
@@ -611,7 +611,17 @@ class PersonaController
                 id_centro_salud: $id_centro_salud
                 );
 
-            $contact = new Contacto(coneccion: $Con, id_persona: $ID_Persona);
+            if (Contacto::tiene_contacto(coneccion: $Con, id_persona: $ID_Persona)) {
+                $contact = new Contacto(coneccion: $Con, id_persona: $ID_Persona);
+            } else {
+                $contac = new Contacto(coneccion: $Con,
+                    id_persona: $Persona->getID_Persona(),
+                    xMail : $Mail,
+                    xTelefono : $Telefono,
+                    xTrabajo : $Trabajo
+                );
+                $contac->save();
+            }    
 
             if (!Domicilio::is_registered(coneccion: $Con, id_calle: $calle, numero: $nro_calle)) {                                      
                 $domicilio = new Domicilio(coneccion: $Con, 
@@ -636,6 +646,7 @@ class PersonaController
                 $domicilio->save();                        
             } else {
                 $domicilio = new Domicilio(coneccion: $Con, xCalle: $calle, xNro: $nro_calle);
+                $domicilio->save();
             }
 
             $id_persona_domicilio = PersonaDomicilio::exist(coneccion: $Con, 
@@ -664,7 +675,7 @@ class PersonaController
                 header('Location: /persona/editar?ID=' . $ID_Persona . '&MensajeError=' . $Mensaje);
             } else {
 
-                $Persona_Viejo = new Persona($ID_Persona);
+                $Persona_Viejo = new Persona($Con, $ID_Persona);
                 $Persona_Viejo->setApellido($Apellido);
                 $domicilio->setBarrio($ID_Barrio);
                 $domicilio->setCamio_Domicilio($Cambio_Domicilio);

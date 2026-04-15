@@ -305,7 +305,7 @@ class Persona implements JsonSerializable {
 						obra_social = " . ((!is_null($this->getObra_Social())) ? "'" . $this->getObra_Social() . "'" : "null") . ", 
 						observacion = " . ((!is_null($this->getObservaciones())) ? "'" . $this->getObservaciones() . "'" : "null") . ", 
 						ID_Escuela = " . ((!is_null($this->getID_Escuela())) ? "'" . $this->getID_Escuela() . "'" : "null") . ", 
-						meses = " . ((!is_null($this->getMeses())) ? "'" . $this->getMeses() . "'" : "null") . ", 
+						meses = " . ((!is_null($this->getMeses())) ? "'" . $this->getMeses() . "'" : "null") . " 
 					where id_persona = " . $this->getID_Persona();
 					$MensajeErrorConsultar = "No se pudo actualizar la Persona";
 					if (!$Ret = mysqli_query($this->coneccion->Conexion, $Consulta)) {
