@@ -86,11 +86,11 @@
               $Table .= "<tr><td>Manzana</td><td>".(($domicilio)? $domicilio->getManzana():"")."</td></tr>";
               $Table .= "<tr><td>Lote</td><td>".(($domicilio)? $domicilio->getLote():"")."</td></tr>";
               $Table .= "<tr><td>Sub-lote</td><td>".$domicilio->getFamilia()."</td></tr>";
-              $Table .= "<tr><td>Telefono</td><td>".$contacto->getTelefono()."</td></tr>";
-              $Table .= "<tr><td>Mail</td><td>".$contacto->getMail()."</td></tr>";                            
+              $Table .= "<tr><td>Telefono</td><td>". (($contacto) ? $contacto->getTelefono() : "") ."</td></tr>";
+              $Table .= "<tr><td>Mail</td><td>". (($contacto) ? $contacto->getMail() : "") ."</td></tr>";                            
               $Table .= "<tr><td>Obra Social</td><td>".$Persona->getObra_Social()."</td></tr>";              
               $Table .= "<tr><td>Escuela</td><td>".$Escuela."</td></tr>";
-              $Table .= "<tr><td>Lugar de Trabajo</td><td>".$contacto->getTrabajo()."</td></tr>";                            
+              $Table .= "<tr><td>Lugar de Trabajo</td><td>". (($contacto) ? $contacto->getTrabajo() : "") ."</td></tr>";                            
               $Table .= "<tr><td>Observación</td><td>".$Persona->getObservaciones()."</td></tr>";
               $Table .= "<tr><td>Cambio de Domicilio</td><td>".$domicilio->getCambio_Domicilio()."</td></tr>";
 
