@@ -82,7 +82,7 @@
               $Table .= "<tr><td>Nro. Legajo</td><td>".(($historia_clinica)? $historia_clinica->getNro_Legajo():"")."</td></tr>";             
               $Table .= "<tr><td>Localidad</td><td>".$domicilio->getLocalidad()."</td></tr>";
               $Table .= "<tr><td>Barrio</td><td>".$domicilio->getBarrio()."</td></tr>";  
-              $Table .= "<tr><td>Domicilio</td><td>".$domicilio->getDomicilio()."</td></tr>";              
+              $Table .= "<tr><td>Domicilio</td><td>". "</td></tr>";              
               $Table .= "<tr><td>Manzana</td><td>".(($domicilio)? $domicilio->getManzana():"")."</td></tr>";
               $Table .= "<tr><td>Lote</td><td>".(($domicilio)? $domicilio->getLote():"")."</td></tr>";
               $Table .= "<tr><td>Sub-lote</td><td>".$domicilio->getFamilia()."</td></tr>";
