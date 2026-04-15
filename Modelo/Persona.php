@@ -48,9 +48,7 @@ class Persona implements JsonSerializable {
 		} else {
 			$Con = new Conexion();
 			$Con->OpenConexion();
-			$ConsultarPersona = "select *,
-										ST_X(georeferencia) as lat,
-										ST_Y(georeferencia) as lon
+			$ConsultarPersona = "select *
 								 from personas 
 								 where ID_Persona = " . $ID_Persona . " 
 								   and estado = 1";
