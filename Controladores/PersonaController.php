@@ -169,28 +169,21 @@ class PersonaController
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
-            include("./Views/view_modpersonas.php");
-        }
-        exit();
-    }
+            if(session_status() !== PHP_SESSION_ACTIVE) session_start();
+            $http_referer = (!empty($_SERVER["HTTP_REFERER"])) ? $_SERVER["HTTP_REFERER"] : null;
 
-    function crear_persona()
-    {
-        header("Content-Type: text/html;charset=utf-8");
-        if (!isset($_SESSION["Usuario"])) {
-            include("./Views/Error_Session.php");
-        } else {
+            if (!preg_match("~view_personas~", $http_referer)) {
+            $_SESSION["from_reporte_grafico"] = true;
+            } else {
+            $_SESSION["from_reporte_grafico"] = false;
+            }
 
-            $id_usuario = $_SESSION["Usuario"];
-            $account = new Account(account_id: $id_usuario);
-            $tipo_usuario = $account->get_id_tipo_usuario();
-            $Element = new Elements();
-            $DTGeneral = new CtrGeneral();
+            $ID_Usuario = $_SESSION["Usuario"];
+            $account = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $account->get_id_tipo_usuario();
 
             $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
             $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
-
-            $exist = false;
 
             if (isset($_REQUEST["ID"])) {
               $ID = $_REQUEST["ID"];
@@ -217,6 +210,28 @@ class PersonaController
               }
               $Con->CloseConexion();
             }
+
+            include("./Views/view_modpersonas.php");
+        }
+        exit();
+    }
+
+    function crear_persona()
+    {
+        header("Content-Type: text/html;charset=utf-8");
+        if (!isset($_SESSION["Usuario"])) {
+            include("./Views/Error_Session.php");
+        } else {
+
+            $id_usuario = $_SESSION["Usuario"];
+            $account = new Account(account_id: $id_usuario);
+            $tipo_usuario = $account->get_id_tipo_usuario();
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
             include("./Views/view_newpersonas.php");
         }
         exit();    
