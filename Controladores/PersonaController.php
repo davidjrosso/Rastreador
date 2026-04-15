@@ -5,6 +5,11 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_Unificacion.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Calle.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Accion.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/HistoriaClinicaphp");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/PersonaDomicilio.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Contacto.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Domicilio.php");
+
 
 
 class PersonaController 
