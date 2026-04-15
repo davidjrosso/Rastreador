@@ -34,12 +34,12 @@ class HistoriaClinica implements JsonSerializable
 				$ConsultarPersona) or die("Problemas al consultar filtro Persona");
 			$ret = mysqli_fetch_assoc($EjecutarConsultarPersona);
 
-			$id_persona = $ret["id_persona"];
-            $query_id_historia_clinica = $ret["id_historia_clinica"];
-            $nro_Carpeta = $ret["nro_carpeta"];
-			$nro_Legajo = $ret["nro_legajo"];
-            $query_id_centro_salud = $ret["id_centro_salud"];
-            $estado = $ret["estado"];
+			$id_persona = (isset($ret["id_persona"])) ? $ret["id_persona"] : null;
+            $query_id_historia_clinica = (isset($ret["id_historia_clinica"])) ? $ret["id_historia_clinica"] : null;
+            $nro_Carpeta = (isset($ret["nro_carpeta"])) ? $ret["nro_carpeta"] : null;
+			$nro_Legajo = (isset($ret["nro_legajo"])) ? $ret["nro_legajo"] : null;
+            $query_id_centro_salud = (isset($ret["id_centro_salud"])) ? $ret["id_centro_salud"] : null;
+            $estado = (isset($ret["estado"])) ? $ret["estado"] : null;
 
 			$this->ID_Persona = (!empty($ID_Persona)) ? $ID_Persona : $id_persona;
             $this->id_historia_clinica = (!empty($id_historia_clinica)) ? $id_historia_clinica : $query_id_historia_clinica;
