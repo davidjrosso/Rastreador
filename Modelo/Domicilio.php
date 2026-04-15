@@ -43,7 +43,7 @@ class Domicilio implements JsonSerializable {
 										ST_X(georeferencia) as lat,
 										ST_Y(georeferencia) as lon
 								 from domicilios 
-								 where id_calle = " . $id_domicilio  . " 
+								 where id_calle = " . $xCalle . " 
 								 and numero = $xNro 
 								 and estado = 1";
 			$EjecutarConsultarPersona = mysqli_query(
