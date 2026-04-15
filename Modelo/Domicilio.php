@@ -54,7 +54,8 @@ class Domicilio implements JsonSerializable {
 			$barrio = (isset($ret["id_barrio"])) ? $ret["id_barrio"] : null;
 			$localidad = (isset($ret["localidad"])) ? $ret["localidad"] : null;
 			$circunscripcion = (isset($ret["circunscripcion"])) ? $ret["circunscripcion"] : null;
-            $seccion = (isset($ret["seccion"])) ? $ret["seccion"] : null;
+			$query_id_domicilio = (isset($ret["id_domicilio"])) ? $ret["id_domicilio"] : null;
+			$seccion = (isset($ret["seccion"])) ? $ret["seccion"] : null;
 			$manzana = (isset($ret["manzana"])) ? $ret["manzana"] : null;
 			$lote = (isset($ret["lote"])) ? $ret["lote"] : null;
 			$familia = (isset($ret["familia"])) ? $ret["familia"] : null;
@@ -66,7 +67,7 @@ class Domicilio implements JsonSerializable {
 			$this->Barrio = ($xBarrio) ? $xBarrio : $barrio;
 			$this->Localidad = ($xLocalidad) ? $xLocalidad : $localidad;
 			$this->Circunscripcion = ($xCircunscripcion) ? $xCircunscripcion : $circunscripcion;
-            $this->id_domicilio = $id_domicilio ;
+            $this->id_domicilio = ($id_domicilio) ?  $id_domicilio : $query_id_domicilio ;
             $this->Seccion = ($xSeccion) ? $xSeccion : $seccion;
 			$this->Manzana = ($xManzana) ? : $manzana;
 			$this->Lote = ($xLote) ? $xLote : $lote;

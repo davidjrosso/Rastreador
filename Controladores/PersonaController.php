@@ -612,7 +612,7 @@ class PersonaController
                 );
 
             if (Contacto::tiene_contacto(coneccion: $Con, id_persona: $ID_Persona)) {
-                $contact = new Contacto(coneccion: $Con, id_persona: $ID_Persona);
+                $contac = new Contacto(coneccion: $Con, id_persona: $ID_Persona);
             } else {
                 $contac = new Contacto(coneccion: $Con,
                     id_persona: $Persona->getID_Persona(),
@@ -646,7 +646,7 @@ class PersonaController
                 $domicilio->save();                        
             } else {
                 $domicilio = new Domicilio(coneccion: $Con, xCalle: $calle, xNro: $nro_calle);
-                $domicilio->save();
+
             }
 
             $id_persona_domicilio = PersonaDomicilio::exist(coneccion: $Con, 
@@ -687,6 +687,8 @@ class PersonaController
                 $Persona_Viejo->setID_Escuela($ID_Escuela);
                 $domicilio->setLocalidad($Localidad);
                 $contac->setMail($Mail);
+                $domicilio->setLote($Lote);
+                $domicilio->setFamilia($Familia);
                 $domicilio->setManzana($Manzana);
                 $Persona_Viejo->setMeses($Meses);
                 $hist->setNro_Carpeta($Nro_Carpeta);
@@ -699,6 +701,7 @@ class PersonaController
                 $Persona_Viejo->update();
                 $hist->update();                
                 $contac->update();
+                $domicilio->update();
 
                 $Detalles = "El usuario con ID: $ID_Usuario ha modificado una Persona. Datos modificados : ";
                 $Detalles .= mysqli_real_escape_string($Con->Conexion, json_encode($Persona_Viejo));
