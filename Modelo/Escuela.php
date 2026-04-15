@@ -56,17 +56,17 @@ class Escuela
 				$consultar_usuario) or die("Problemas al consultar filtro Escuelas");
 			$ret = mysqli_fetch_assoc($ejecutar_consultar);
 			if (!is_null($ret)) {
-				$row_codigo = $ret['Codigo'];
-				$row_escuela = $ret['Escuela'];
-				$row_cue = $ret['CUE'];
-				$row_localidad = $ret['Localidad'];
-				$row_departamento = $ret['Departamento'];
-				$row_directora = $ret['Directora'];
-				$row_telefono = $ret['Telefono'];
-				$row_mail = $ret['Mail'];
-				$row_observacion = $ret['Observaciones'];
-				$row_nivel = $ret['ID_Nivel'];
-				$row_estado = $ret['Estado'];
+				$row_codigo = $ret['codigo'];
+				$row_escuela = $ret['escuela'];
+				$row_cue = $ret['cue'];
+				$row_localidad = $ret['localidad'];
+				$row_departamento = $ret['departamento'];
+				$row_directora = $ret['directora'];
+				$row_telefono = $ret['telefono'];
+				$row_mail = $ret['mail'];
+				$row_observacion = $ret['observaciones'];
+				$row_nivel = $ret['id_nivel'];
+				$row_estado = $ret['estado'];
 
 				$this->ID_Escuela = $xID_Escuela;
 				$this->Codigo = $row_codigo;

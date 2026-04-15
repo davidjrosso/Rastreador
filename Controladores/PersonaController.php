@@ -686,19 +686,19 @@ class PersonaController
                 $Persona_Viejo->setFecha_Nacimiento($Fecha_Nacimiento);
                 $Persona_Viejo->setID_Escuela($ID_Escuela);
                 $domicilio->setLocalidad($Localidad);
-                $contact->setMail($Mail);
+                $contac->setMail($Mail);
                 $domicilio->setManzana($Manzana);
                 $Persona_Viejo->setMeses($Meses);
                 $hist->setNro_Carpeta($Nro_Carpeta);
                 $Persona_Viejo->setObra_Social($Obra_Social);
                 $Persona_Viejo->setObservaciones($Observaciones);
-                $contact->setTrabajo($Trabajo);
-                $contact->setTelefono($Telefono);
+                $contac->setTrabajo($Trabajo);
+                $contac->setTelefono($Telefono);
                 $domicilio->setCalle($calle);
 
                 $Persona_Viejo->update();
                 $hist->update();                
-                $contact->update();
+                $contac->update();
 
                 $Detalles = "El usuario con ID: $ID_Usuario ha modificado una Persona. Datos modificados : ";
                 $Detalles .= mysqli_real_escape_string($Con->Conexion, json_encode($Persona_Viejo));
