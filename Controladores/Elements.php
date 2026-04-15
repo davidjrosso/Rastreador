@@ -2501,9 +2501,12 @@ public function getMenuSeguridadUsuario($ID){
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='ID_Nivel' name = 'ID_Nivel' onChange='CargarEscuelas(this.value)'>";
     $Select .= "<option selected = 'true' disabled = 'disabled' value = '0'>- Seleccione un Nivel Escolar -</option>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from nivel_escuelas order by ID_Nivel")or die("Problemas al mostrar el Nivel de Escuelas");
+    $query = "select * 
+              from nivel_escuelas 
+              order by id_nivel";
+    $Consulta = mysqli_query($Con3->Conexion, $query)or die("Problemas al mostrar el Nivel de Escuelas");
     while ($Ret = mysqli_fetch_array($Consulta)) {
-      $Select .= "<option value = '".$Ret['ID_Nivel']."'>".$Ret['Nivel']."</option>";
+      $Select .= "<option value = '" . $Ret['id_nivel'] . "'>" . $Ret['nivel'] . "</option>";
     }
     $Select .= "</select>";
     $Con3->CloseConexion();
@@ -2515,12 +2518,16 @@ public function getMenuSeguridadUsuario($ID){
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='ID_Nivel' name = 'ID_Nivel'>";
     $Select .= "<option selected = 'true' disabled = 'disabled' value = '0'>- Seleccione un Nivel Escolar -</option>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from nivel_escuelas order by ID_Nivel")or die("Problemas al mostrar el Nivel de Escuelas");
+    $query = "select * 
+              from nivel_escuelas 
+              order by id_nivel";
+
+    $Consulta = mysqli_query($Con3->Conexion, $query)or die("Problemas al mostrar el Nivel de Escuelas");
     while ($Ret = mysqli_fetch_array($Consulta)) {
       if($Ret["ID_Nivel"] == $xNivel){
-        $Select .= "<option value = '".$Ret['ID_Nivel']."' selected>".$Ret['Nivel']."</option>";
+        $Select .= "<option value = '" . $Ret['id_nivel'] . "' selected>" . $Ret['nivel']."</option>";
       }else{
-        $Select .= "<option value = '".$Ret['ID_Nivel']."'>".$Ret['Nivel']."</option>";
+        $Select .= "<option value = '" . $Ret['id_nivel'] . "'>" . $Ret['nivel'] . "</option>";
       }      
     }
     $Select .= "</select>";
