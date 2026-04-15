@@ -17,11 +17,7 @@ class PersonaDomicilio
 		$estado = null
 	) {
 		$this->connection = $connection;
-		if (!$id_persona_domicilio) {
-			$this->id_persona = $id_persona;
-			$this->id_domicilio = $id_domicilio;
-			$this->estado = $estado;
-		} else if (!$id_persona_domicilio){
+		if ($id_persona_domicilio){
 			$ConsultarPersona = "select *
 								 from personas_domicilios 
 								 where id_persona_domicilio = " . $id_persona_domicilio . " 
@@ -39,7 +35,7 @@ class PersonaDomicilio
 			$this->id_persona = (!empty($id_persona)) ? $id_persona : $query_id_persona;
 			$this->id_domicilio = (!empty($id_domicilio)) ? $id_domicilio : $query_id_domicilio;
 			$this->estado = (!empty($estado)) ? $estado : $query_estado;			
-		} else if (!$id_persona){
+		} else if ($id_persona){
 			$ConsultarPersona = "select *
 								 from personas_domicilios 
 								 where id_persona = " . $id_persona . " 
