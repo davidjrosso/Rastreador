@@ -183,7 +183,7 @@ class PersonaController
               $contacto = null;
               $domicilio = null;
               $Escuela = null;
-
+              $calle = null;
               if ($exist = Persona::is_exist(coneccion: $Con, id_persona: $ID)) {
                 $Persona = new Persona(coneccion: $Con, ID_Persona: $ID);
                 $escuela_obj = new Escuela(coneccion_base: $Con, xID_Escuela: $Persona->getID_Escuela());
@@ -204,7 +204,8 @@ class PersonaController
                                         );
                     $RetBarrio = $barrio->get_barrio();
 
-
+                    $calle_obj = new Calle(id_calle: $domicilio->getId_Calle());
+                    $calle = $calle_obj->get_calle_nombre() . " " . $domicilio->getNro();
                 }
               }
               $Con->CloseConexion();
