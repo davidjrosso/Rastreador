@@ -2524,7 +2524,7 @@ public function getMenuSeguridadUsuario($ID){
 
     $Consulta = mysqli_query($Con3->Conexion, $query)or die("Problemas al mostrar el Nivel de Escuelas");
     while ($Ret = mysqli_fetch_array($Consulta)) {
-      if($Ret["ID_Nivel"] == $xNivel){
+      if($Ret["id_nivel"] == $xNivel){
         $Select .= "<option value = '" . $Ret['id_nivel'] . "' selected>" . $Ret['nivel']."</option>";
       }else{
         $Select .= "<option value = '" . $Ret['id_nivel'] . "'>" . $Ret['nivel'] . "</option>";
@@ -2545,10 +2545,14 @@ public function getMenuSeguridadUsuario($ID){
     }else{
       $Select .= "<option selected = 'true' disabled = 'disabled' value = '0'>- Seleccione una Escuela -</option>";
     }    
-    $SQLQuery = "select * from escuelas where ID_Nivel = {$xID_Nivel} order by Escuela";
+
+    $SQLQuery = "select * 
+                 from escuelas 
+                 where id_nivel = {$xID_Nivel} 
+                 order by escuela";
     $Consulta = mysqli_query($Con3->Conexion,$SQLQuery)or die("Problemas al mostrar Escuelas".$SQLQuery);
     while ($Ret = mysqli_fetch_array($Consulta)) {
-      $Select .= "<option value = '".$Ret['ID_Escuela']."'>".$Ret['Escuela']."</option>";
+      $Select .= "<option value = '" . $Ret['id_escuela']."'>" . $Ret['escuela'] . "</option>";
     }
     $Select .= "</select>";
     $Con3->CloseConexion();
@@ -2559,12 +2563,15 @@ public function getMenuSeguridadUsuario($ID){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' name = 'ID_Escuela' id = 'ID_Escuela'>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from escuelas order by Escuela")or die("Problemas al mostrar Escuelas");
+    $query = "select * 
+              from escuelas 
+              order by escuela";
+    $Consulta = mysqli_query($Con3->Conexion, $query) or die("Problemas al mostrar Escuelas");
     while ($Ret = mysqli_fetch_array($Consulta)) {
-      if($Ret['ID_Escuela'] == $xID_Escuela){
-        $Select .= "<option value = '".$Ret['ID_Escuela']."' selected>".$Ret['Escuela']."</option>";
-      }else{
-        $Select .= "<option value = '".$Ret['ID_Escuela']."'>".$Ret['Escuela']."</option>";
+      if ($Ret['id_escuela'] == $xID_Escuela) {
+        $Select .= "<option value = '" . $Ret['id_escuela'] . "' selected>".$Ret['escuela']."</option>";
+      } else {
+        $Select .= "<option value = '" . $Ret['id_escuela'] . "'>" . $Ret['escuela'] . "</option>";
       }      
     }
     $Select .= "</select>";
