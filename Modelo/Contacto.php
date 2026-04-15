@@ -56,12 +56,12 @@ class Contacto implements JsonSerializable {
 				$ConsultarPersona) or die("Problemas al consultar filtro Persona");
 			$ret = mysqli_fetch_assoc($EjecutarConsultarPersona);
 	
-			$id_contacto = $ret["id_contacto"];
-			$telefono = $ret["telefono"];
-			$mail = $ret["mail"];
-            $query_id_persona = $ret["id_persona"];
-            $estado = $ret["estado"];
-			$trabajo = $ret["trabajo"];
+			$id_contacto = (isset($ret["id_contacto"])) ? $ret["id_contacto"] : null;
+			$telefono = (isset($ret["telefono"])) ? $ret["telefono"] : null;
+			$mail = (isset($ret["mail"])) ? $ret["mail"] : null;
+            $query_id_persona = (isset($ret["id_persona"])) ? $ret["id_persona"] : null;
+            $estado = (isset($ret["estado"])) ? $ret["estado"] : null;
+			$trabajo = (isset($ret["trabajo"])) ? $ret["trabajo"] : null;
 			$this->id_contacto = $id_contacto;
 			$this->Telefono = ($xTelefono) ? $xTelefono : $telefono;
 			$this->Mail = ($xMail) ? $xMail : $mail;
