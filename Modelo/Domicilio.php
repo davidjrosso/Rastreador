@@ -720,7 +720,7 @@ public function igual_domicilio($domicilio){
 	$con->OpenConexion();
 	$igual = true;
 	$consulta = "select calle_open, id_calle
-				 from calle
+				 from calles
 				 where lower(calle_nombre) like CONCAT(
 				 									'%',
 				 									REGEXP_REPLACE( 
@@ -776,7 +776,7 @@ public function igual_calle($domicilio){
 	$con->OpenConexion();
 	$igual = true;
 	$consulta = "select calle_open, id_calle
-				 from calle
+				 from calles
 				 where lower(calle_nombre) like CONCAT(
 				 									'%',
 				 									REGEXP_REPLACE( 

@@ -1719,7 +1719,7 @@ class CtrGeneral
 	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select ID_calle, calle_nombre from calle where estado = 1 order by calle_nombre";
+		$Consulta = "select ID_calle, calle_nombre from calles where estado = 1 order by calle_nombre";
 		$MessageError = "Problemas al intentar mostrar Calles";
 		$Table = "<table class='table'>
 					<thead>
@@ -1754,7 +1754,7 @@ class CtrGeneral
 	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select ID_calle, calle_nombre from calle where ID_Calle = $ID and estado = 1 order by calle_nombre";
+		$Consulta = "select ID_calle, calle_nombre from calles where ID_Calle = $ID and estado = 1 order by calle_nombre";
 		$MessageError = "Problemas al intentar mostrar Calle por ID";
 		$Table = "<table class='table'><thead><tr><th>Calle</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion, $Consulta) or die($MessageError);
@@ -1772,7 +1772,7 @@ class CtrGeneral
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "select ID_calle, calle_nombre 
-					 from calle 
+					 from calles
 					 where calle_nombre like '%$xCalle_nombre%' 
 					   and estado = 1 
 					 order by calle_nombre";

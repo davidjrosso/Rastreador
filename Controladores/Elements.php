@@ -2654,7 +2654,7 @@ public function getMenuSeguridadUsuario($ID){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='ID_Cale' name = 'Calle'>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from calle where estado = 1 order by calle_nombre ASC")or die("Problemas al mostrar Personas");
+    $Consulta = mysqli_query($Con3->Conexion,"select * from calles where estado = 1 order by calle_nombre ASC")or die("Problemas al mostrar Personas");
     $Select .= "<option value = '0' disabled = 'disabled' selected = 'true'>- Seleccione una Calle -</option>";
     while ($Ret = mysqli_fetch_array($Consulta)) {
       $Select .= "<option value = '".$Ret['calle_nombre']."'>".$Ret['calle_nombre']."</option>";
@@ -2672,7 +2672,7 @@ public function getMenuSeguridadUsuario($ID){
 
     if (!is_numeric($Nombre)) {
       $ConsultaNombre = "select *
-                         from calle 
+                         from calles
                          where estado = 1
                          and UPPER(calle_nombre) like UPPER('%$NombreCalle%')
                          order by calle_nombre ASC";               
@@ -2680,7 +2680,7 @@ public function getMenuSeguridadUsuario($ID){
       $ConsultaResult = mysqli_query($Con3->Conexion,$ConsultaNombre)or die("Problemas al mostrar Personas");
     } else {
       $ConsultaNombre = "select *
-                         from calle 
+                         from calles
                          where estado = 1
                          and id_calle = $NombreCalle
                          order by calle_nombre ASC";               
@@ -2697,7 +2697,7 @@ public function getMenuSeguridadUsuario($ID){
         $Select .= "<option value = '0' disabled = 'disabled' selected = 'true'>- Seleccione una Calle -</option>";
     }
     $Consulta = "select *
-                 from calle 
+                 from calles
                  where estado = 1
                  order by calle_nombre ASC";
     $ConsultaResult = mysqli_query($Con3->Conexion,$Consulta)or die("Problemas al mostrar Personas");

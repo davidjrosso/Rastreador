@@ -31,7 +31,7 @@ class Calle {
 			$Con = new Conexion();
 			$Con->OpenConexion();
 			$consultar = "select *
-						from calle 
+						from calles 
 						where id_calle = $id_calle
 							and estado = 1
 						order by calle_nombre ASC";
@@ -70,7 +70,7 @@ class Calle {
 		$con->OpenConexion();
 		if ($xDomicilio) {
 			$consulta = "select *
-						 from calle
+						 from calles
 						 where lower(calle_nombre) like CONCAT(
 																'%',
 																REGEXP_REPLACE( 
@@ -104,7 +104,7 @@ class Calle {
 		$existe_calle = false;
 		if ($calle) {
 			$consulta = "select *
-						 from calle
+						 from calles
 						 where upper(calle_nombre) = upper('$calle')
 						   and estado = 1
 						 order by calle_nombre asc;";
@@ -124,7 +124,7 @@ class Calle {
 		$existe_calle = false;
 		if ($calle) {
 			$consulta = "select *
-						 from calle
+						 from calles
 						 where upper(calle_nombre) = upper('$calle')
 						   and id_calle != $id_calle
 						   and estado = 1
@@ -145,7 +145,7 @@ class Calle {
 	{
 		if ($id_calle) {
 			$consulta = "select *
-						 from calle
+						 from calles
 						 where id_calle = $id_calle
 						   and estado = 1
 						 order by calle_nombre asc;";
@@ -170,7 +170,7 @@ class Calle {
 		$calle = null;
 		if ($calle && $id_bario && $nro_calle) {
 			$consulta = "SELECT *
-						 FROM calle c INNER JOIN calles_barrios cs ON (c.id_calle = cs.id_calle)
+						 FROM calles c INNER JOIN calles_barrios cs ON (c.id_calle = cs.id_calle)
 						 WHERE lower(calle_nombre) LIKE CONCAT(
 																'%',
 																REGEXP_REPLACE( 
@@ -234,7 +234,7 @@ class Calle {
 
 		if ($domicilio && $id_bario && $nro_calle) {
 			$consulta = "SELECT *
-						 FROM calle c INNER JOIN calles_barrios cs ON (c.id_calle = cs.id_calle)
+						 FROM calles c INNER JOIN calles_barrios cs ON (c.id_calle = cs.id_calle)
 						 WHERE lower(calle_nombre) LIKE CONCAT(
 																'%',
 																REGEXP_REPLACE( 
@@ -263,7 +263,7 @@ class Calle {
 			};
 		} else if ($domicilio && $id_bario && !$nro_calle) {
 			$consulta = "SELECT *
-						 FROM calle c INNER JOIN calles_barrios cs ON (c.id_calle = cs.id_calle)
+						 FROM calles c INNER JOIN calles_barrios cs ON (c.id_calle = cs.id_calle)
 						 WHERE lower(calle_nombre) LIKE CONCAT(
 																'%',
 																REGEXP_REPLACE( 
@@ -300,7 +300,7 @@ class Calle {
 		$con->OpenConexion();
 		if ($xDomicilio) {
 			$consulta = "select *
-						 from calle
+						 from calles
 						 where lower(calle_nombre) like CONCAT(
 																'%',
 																REGEXP_REPLACE( 
@@ -361,7 +361,7 @@ class Calle {
 
 		if ($domicilio && $id_bario && $nro_calle) {
 			$consulta = "SELECT *
-						 FROM calle c INNER JOIN calles_barrios cs ON (c.id_calle = cs.id_calle)
+						 FROM calles c INNER JOIN calles_barrios cs ON (c.id_calle = cs.id_calle)
 						 WHERE lower(calle_nombre) LIKE CONCAT(
 																'%',
 																REGEXP_REPLACE( 
@@ -390,7 +390,7 @@ class Calle {
 			};
 		} else if ($domicilio && $id_bario && !$nro_calle) {
 			$consulta = "SELECT *
-						 FROM calle c INNER JOIN calles_barrios cs ON (c.id_calle = cs.id_calle)
+						 FROM calles c INNER JOIN calles_barrios cs ON (c.id_calle = cs.id_calle)
 						 WHERE lower(calle_nombre) LIKE CONCAT(
 																'%',
 																REGEXP_REPLACE( 
@@ -481,7 +481,7 @@ class Calle {
 	public function update(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "update calle 
+		$Consulta = "update calles 
 					set calle_nombre = " . ((!is_null($this->get_calle_nombre())) ? "'" . $this->get_calle_nombre() . "'" : "null") . ", 
 						codigo_calle = " . ((!is_null($this->get_codigo_calle())) ? "'" . $this->get_codigo_calle() . "'" : "null") . ", 
 						id_calle = " . ((!is_null($this->get_id_calle())) ? "'" . $this->get_id_calle() . "'" : "null") . ", 
@@ -500,7 +500,7 @@ class Calle {
 	public function delete(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "update calle 
+		$Consulta = "update calles 
 					set 
 						estado = " . ((!is_null($this->get_estado())) ? "'" . $this->get_estado() . "'" : "null") . "
 					where id_calle = " . $this->get_id_calle();
@@ -516,7 +516,7 @@ class Calle {
 	{
 		$con = new Conexion();
 		$con->OpenConexion();
-		$query = "insert into calle (
+		$query = "insert into calles (
 									 codigo_calle,
 									 calle_nombre,
 									 calle_abreviado,

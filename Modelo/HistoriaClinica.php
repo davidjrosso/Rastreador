@@ -80,7 +80,7 @@ class HistoriaClinica implements JsonSerializable
                                 and estado = 1";
         $EjecutarConsultarPersona = mysqli_query(
             $coneccion->Conexion,
-            $ConsultarPersona) or die("Problemas al consultar filtro Persona");
+            $ConsultarPersona) or die("Problemas al consultar filtro hc Persona");
         $row = mysqli_num_rows($EjecutarConsultarPersona);        
         return $row;
     }
