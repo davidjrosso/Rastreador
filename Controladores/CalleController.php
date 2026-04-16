@@ -112,7 +112,7 @@ class CalleController
             $Con->OpenConexion();
 
             $consultaCalles = "SELECT id_calle, codigo_calle, calle_nombre
-                            FROM calle	
+                            FROM calles	
                             WHERE estado = 1
                                 and ((LOWER(calle_nombre) REGEXP '[a-z]* ".$consultaBusqueda."[a-z]*')
                                     or (LOWER(calle_nombre) REGEXP '^".$consultaBusqueda."[a-z]*'))
@@ -315,7 +315,7 @@ class CalleController
             //o el apellido sea igual a $consultaBusqueda, 
             //o $consultaBusqueda sea igual a nombre + (espacio) + apellido
             $query = "SELECT id_persona, apellido, nombre, CONCAT(c.calle_nombre, ' ', s.nro) as direccion
-                      FROM persona s INNER JOIN calle c ON (s.calle = c.id_calle)
+                      FROM persona s INNER JOIN calles c ON (s.calle = c.id_calle)
                       WHERE calle_nombre LIKE '%$consultaBusqueda%' 
                         and s.estado = 1 
                         order by apellido ASC, nombre ASC, calle_nombre ASC";
