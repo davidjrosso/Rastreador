@@ -953,7 +953,7 @@ public function update()
 	$Con->OpenConexion();
 	$Consulta = "update domicilios 
 				 set 
-					 id_barrio = " . ((!is_null($this->getId_Barrio())) ? "'" . $this->getId_Barrio() . "'" : "null") . ", 
+					 ID_Barrio = " . ((!is_null($this->getId_Barrio())) ? "'" . $this->getId_Barrio() . "'" : "null") . ", 
 					 localidad = " . ((!is_null($this->getLocalidad())) ? "'" . $this->getLocalidad() . "'" : "null") . ", 
 					 circunscripcion = " . ((!is_null($this->getCircunscripcion())) ? "'" . $this->getCircunscripcion() . "'" : "null") . ", 
 					 seccion = " . ((!is_null($this->getSeccion())) ? "'" . $this->getSeccion() . "'" : "null") . ", 
@@ -976,7 +976,7 @@ public function save(){
 	$Con = new Conexion();
 	$Con->OpenConexion();
 	$consulta = "INSERT INTO domicilios (
-									  id_barrio, 
+									  ID_Barrio, 
 									  localidad, 
 									  circunscripcion, 
 									  seccion,
