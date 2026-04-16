@@ -47,12 +47,12 @@
     var objectJsonPersona = {};
     var isSave = false;
     let fullscreen = false;
+    let mensajeError = '<?php echo $mensaje_error;?>';
+    let mensajeSuccess = '<?php echo $mensaje_success;?>';
 
     $(document).ready(function () {
       let date_input = $('input[name="Fecha_Nacimiento"]'); //our date input has the name "date"
       let container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
-      let mensajeError = '<?php echo $mensaje_error;?>';
-      let mensajeSuccess = '<?php echo $mensaje_success;?>';
 
       controlMensaje(mensajeSuccess, mensajeError);
       date_input.datepicker({

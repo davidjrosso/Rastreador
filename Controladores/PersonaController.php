@@ -680,7 +680,10 @@ class PersonaController
 
             if (Persona::is_registered_with_id(coneccion: $Con, documento: $DNI, id_persona: $ID_Persona) && !empty($DNI)) {
                 $Con->CloseConexion();
+                $status_process = 2;
                 $Mensaje = "Ya existe una Persona con ese Apellido y Nombre por Favor Introduzca Otros Datos";
+                header('status_process:' . $status_process);
+                header('message:' . $Mensaje);
                 header('Location: /persona/editar?ID=' . $ID_Persona . '&MensajeError=' . $Mensaje);
             } else {
 
@@ -744,7 +747,9 @@ class PersonaController
                 } else {
                     $reporte = "false";
                 }
-
+                $status_process = 1;
+                header('status_process:' . $status_process);
+                header('message:' . $Mensaje);
                 header('Location: /persona/editar?ID=' . $ID_Persona . '&Mensaje=' . $Mensaje . "&reporte=" . $reporte);		
             }
 
