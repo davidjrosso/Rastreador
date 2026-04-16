@@ -615,7 +615,7 @@ class PersonaController
                 $contac = new Contacto(coneccion: $Con, id_persona: $ID_Persona);
             } else {
                 $contac = new Contacto(coneccion: $Con,
-                    id_persona: $Persona->getID_Persona(),
+                    id_persona: $ID_Persona,
                     xMail : $Mail,
                     xTelefono : $Telefono,
                     xTrabajo : $Trabajo
