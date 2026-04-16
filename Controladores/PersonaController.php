@@ -489,6 +489,8 @@ class PersonaController
     {
         header("Content-Type: text/html;charset=utf-8");
 
+        mysqli_report(MYSQLI_REPORT_ERROR);        
+
         $ID_Usuario = $_SESSION["Usuario"];
 
         $from_reporte_grafico = (!empty($_SESSION["from_reporte_grafico"])) ? true : false;
