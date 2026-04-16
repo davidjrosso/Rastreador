@@ -669,13 +669,13 @@ class PersonaController
             }
 
 
-            if (Persona::is_registered_with_id($Con, $DNI, $ID_Persona) && !empty($DNI)) {
+            if (Persona::is_registered_with_id(coneccion: $Con, documento: $DNI, id_persona: $ID_Persona) && !empty($DNI)) {
                 $Con->CloseConexion();
                 $Mensaje = "Ya existe una Persona con ese Apellido y Nombre por Favor Introduzca Otros Datos";
                 header('Location: /persona/editar?ID=' . $ID_Persona . '&MensajeError=' . $Mensaje);
             } else {
 
-                $Persona_Viejo = new Persona($Con, $ID_Persona);
+                $Persona_Viejo = new Persona(coneccion: $Con, ID_Persona: $ID_Persona);
                 $Persona_Viejo->setApellido($Apellido);
                 $domicilio->setBarrio($ID_Barrio);
                 $domicilio->setCamio_Domicilio($Cambio_Domicilio);

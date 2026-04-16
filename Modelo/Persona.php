@@ -184,9 +184,9 @@ class Persona implements JsonSerializable {
 
 	public function getEscuela()
 	{
-		$ConsultarEscuela = "select Escuela 
+		$ConsultarEscuela = "select escuela 
 							from escuelas 
-							where ID_Escuela = {$this->ID_Escuela}";
+							where id_escuela = {$this->ID_Escuela}";
 		$MensajeErrorConsultarEscuela = "No se pudo consultar la Escuela";
 		$EjecutarConsultarEscuela = mysqli_query(
 			$this->coneccion->Conexion,
