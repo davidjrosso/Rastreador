@@ -77,10 +77,10 @@ class PersonaController
                                                     CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
                                                     documento, nro_carpeta, concat(calle_nombre, ' ', numero) domicilio
                                             FROM personas p 
-                                                inner join historias_clinicas hc on (p.id_persona = hc.id_persona)
-                                                inner join personas_domicilios rn on (p.id_persona = rn.id_persona)
-                                                inner join domicilios r on (rn.id_domicilio = r.id_domicilio)
-                                                inner join calles c on (c.id_calle = r.id_calle)
+                                                left join historias_clinicas hc on (p.id_persona = hc.id_persona)
+                                                left join personas_domicilios rn on (p.id_persona = rn.id_persona)
+                                                left join domicilios r on (rn.id_domicilio = r.id_domicilio)
+                                                left join calles c on (c.id_calle = r.id_calle)
                                             WHERE documento LIKE '%$consultaBusqueda%' 
                                                 and p.estado = 1 
                                             order by upper(apellido) ASC, upper(nombre) ASC, upper(documento) ASC"
@@ -92,9 +92,9 @@ class PersonaController
                                                     CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
                                                     documento, nro_carpeta, concat(calle_nombre, ' ', numero) domicilio
                                             FROM personas p inner join historias_clinicas hc on (p.id_persona = hc.id_persona)  
-                                               inner join personas_domicilios rn on (p.id_persona = rn.id_persona)
-                                                inner join domicilios r on (rn.id_domicilio = r.id_domicilio)
-                                                inner join calles c on (c.id_calle = r.id_calle)
+                                               left join personas_domicilios rn on (p.id_persona = rn.id_persona)
+                                                left join domicilios r on (rn.id_domicilio = r.id_domicilio)
+                                                left join calles c on (c.id_calle = r.id_calle)
                                              WHERE nro_legajo LIKE '%$consultaBusqueda%' 
                                                 AND p.estado = 1 
                                             ORDER BY upper(apellido) ASC, upper(nombre) ASC, upper(documento) ASC"
@@ -106,10 +106,10 @@ class PersonaController
                                 "SELECT p.id_persona, UPPER(apellido) AS apellido, 
                                                 CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
                                                 documento, nro_carpeta, concat(calle_nombre, ' ', numero) domicilio
-                                        FROM personas inner join historias_clinicas hc on (p.id_persona = hc.id_persona) 
-                                               inner join personas_domicilios rn on (p.id_persona = rn.id_persona)
-                                                inner join domicilios r on (rn.id_domicilio = r.id_domicilio)
-                                                inner join calles c on (c.id_calle = r.id_calle)
+                                        FROM personas left join historias_clinicas hc on (p.id_persona = hc.id_persona) 
+                                               left join personas_domicilios rn on (p.id_persona = rn.id_persona)
+                                                left join domicilios r on (rn.id_domicilio = r.id_domicilio)
+                                                left join calles c on (c.id_calle = r.id_calle)
                                          WHERE (apellido LIKE '%$consultaBusqueda%' or nombre LIKE '%$consultaBusqueda%') and p.estado = 1 order by upper(apellido) ASC, upper(nombre) ASC, upper(documento) ASC"
                                         );
             }
