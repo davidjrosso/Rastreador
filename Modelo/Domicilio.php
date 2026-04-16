@@ -139,7 +139,7 @@ public function setDomicilio($xDomicilio = null)
 		$domicilio = str_replace(array('á','é','í','ó','ú','ñ'), array('a','e','i','o','u','n'), $domicilio);
 	} else if ($domicilio) {
 		$consulta = "select calle_open, id_calle
-					 from calle
+					 from calles
 					 where lower(calle_nombre) like CONCAT(
 															'%',
 															REGEXP_REPLACE( 
@@ -343,7 +343,7 @@ public function setCalleNro($xDomicilio = null)
 		$domicilio = str_replace(array('á','é','í','ó','ú','ñ'), array('a','e','i','o','u','n'), $domicilio);
 	} else if ($domicilio) {
 		$consulta = "select calle_open, id_calle
-					 from calle
+					 from calles
 					 where lower(calle_nombre) like CONCAT(
 															'%',
 															REGEXP_REPLACE( 
@@ -453,7 +453,7 @@ public function setCalleNroConBarrio(
 		if (!empty($id_barrio)) $barrio_query = "AND id_barrio = $id_barrio";
 
 		$consulta = "SELECT c.calle_open, c.id_calle
-					 FROM calle  c INNER JOIN calles_barrios cs ON (c.id_calle = cs.id_calle)
+					 FROM calles  c INNER JOIN calles_barrios cs ON (c.id_calle = cs.id_calle)
 					 WHERE lower(calle_nombre) LIKE CONCAT(
 															'%',
 															REGEXP_REPLACE( 
@@ -585,7 +585,7 @@ public function getNombre_Calle(){
 	$calle_open = null;
 	if (!empty($this->getId_Calle())) {
 		$consulta_calle = "select *
-						   from calle 
+						   from calles 
 						   where id_calle = " . $this->getId_Calle() . " 
 							 and estado = 1";
 		$result = mysqli_query($con->Conexion, $consulta_calle);
@@ -905,7 +905,7 @@ public function update_familia()
 	$Con = new Conexion();
 	$Con->OpenConexion();
 	$Consulta = "update domicilios 
-				 set familia = " . ((!is_null($this->getFamilia())) ? "'" . intval($this->getFamilia()) . "'" : "null") . " 
+				 set familia = " . ((!is_null($this->getFamilia())) ? intval($this->getFamilia()) : "null") . " 
 				 where id_domicilio  = " . $this->get_id_domicilio();
 				 $MensajeErrorConsultar = "No se pudo actualizar la Persona ";
 				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
