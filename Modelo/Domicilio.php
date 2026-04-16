@@ -905,7 +905,7 @@ public function update_familia()
 	$Con = new Conexion();
 	$Con->OpenConexion();
 	$Consulta = "update domicilios 
-				 set familia = " . ((!is_null($this->getFamilia())) ? "'" . intval($this->getFamilia()) "'" : "null") . " 
+				 set familia = " . ((!is_null($this->getFamilia())) ? "'" . intval($this->getFamilia()) . "'" : "null") . " 
 				 where id_domicilio  = " . $this->get_id_domicilio();
 				 $MensajeErrorConsultar = "No se pudo actualizar la Persona ";
 				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
