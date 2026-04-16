@@ -609,7 +609,9 @@ class PersonaController
             );
 
             if (HistoriaClinica::exist(coneccion: $Con, id_persona: $ID_Persona)) {
-                $hist = new HistoriaClinica(coneccion: $Con, ID_Persona: $ID_Persona) ;
+                $hist = new HistoriaClinica(coneccion: $Con,
+                                            ID_Persona: $ID_Persona, 
+                                            id_centro_salud: $id_centro_salud) ;
             } else {
                 $hist = new HistoriaClinica(coneccion: $Con ,
                 ID_Persona: $ID_Persona,
