@@ -905,7 +905,7 @@ public function update_familia()
 	$Con = new Conexion();
 	$Con->OpenConexion();
 	$Consulta = "update domicilios 
-				 set familia = " . ((!is_null($this->getFamilia())) ? intval($this->getFamilia()) : "null") . " 
+				 set familia = " . ((!is_null($this->getFamilia())) ? "'" . intval($this->getFamilia()) "'" : "null") . " 
 				 where id_domicilio  = " . $this->get_id_domicilio();
 				 $MensajeErrorConsultar = "No se pudo actualizar la Persona ";
 				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
@@ -937,7 +937,7 @@ public function update_direccion()
 				 set georeferencia = " . ((!is_null($this->getGeoreferencia())) ? $this->getGeoreferencia() : "null") . ", 
 					 calle = " . ((!is_null($this->getId_Calle())) ? $this->getId_Calle() : "null") . ", 
 					 numero = " . ((!is_null($this->getNro())) ? $this->getNro() : "null") . ", 
-					 familia = " . ((!is_null($this->getFamilia())) ? intval($this->getFamilia()) : "null") . ",
+					 familia = " . ((!is_null($this->getFamilia())) ? "'" . intval($this->getFamilia()) . "'" : "null") . ",
 					 ID_Barrio = " . ((!is_null($this->getId_Barrio())) ? $this->getId_Barrio() : "null") . "
 				 where id_domicilio  = " . $this->get_id_domicilio();
 	$mensaje_error_consulta = "No se pudo actualizar la Persona";
@@ -959,7 +959,7 @@ public function update()
 					 seccion = " . ((!is_null($this->getSeccion())) ? "'" . $this->getSeccion() . "'" : "null") . ", 
 					 manzana = " . ((!is_null($this->getManzana())) ? "'" . $this->getManzana() . "'" : "null") . ", 
 					 lote = " . ((!is_null($this->getLote())) ? $this->getLote() : "null") . ", 
-					 familia = " . ((!is_null($this->getFamilia())) ? $this->getFamilia() : "null") . ", 
+					 familia = " . ((!is_null($this->getFamilia())) ? "'" . $this->getFamilia() . "'" : "null") . ", 
 					 cambio_domicilio = " . ((!is_null($this->getCambio_Domicilio())) ? "'" . $this->getCambio_Domicilio() . "'" : "null") . ", 
 					 georeferencia = " . ((!is_null($this->getGeoreferencia())) ? $this->getGeoreferencia() : "null") . ", 
 					 id_calle = " . ((!is_null($this->getId_Calle())) ? $this->getId_Calle() : "null") . ", 
@@ -995,7 +995,7 @@ public function save(){
 						 " . ((!is_null($this->getSeccion())) ? $this->getSeccion() : "null") . ", 
 						 " . ((!is_null($this->getManzana())) ? "'" . $this->getManzana() . "'" : "null") . ", 
 						 " . ((!is_null($this->getLote())) ? $this->getLote() : "null") . ", 
-						 " . ((!is_null($this->getFamilia())) ? $this->getFamilia() : "null") . ", 
+						 " . ((!is_null($this->getFamilia())) ? "'" . $this->getFamilia() . "'" : "null") . ", 
 						 " . ((!is_null($this->getCambio_Domicilio())) ? "'" . $this->getCambio_Domicilio() . "'" : "null") . ", 
 						 " . ((!is_null($this->getGeoreferencia())) ? $this->getGeoreferencia() : "null") . ",
 						 " . ((!empty($this->getId_Calle())) ? $this->getId_Calle() : "null") . ",
