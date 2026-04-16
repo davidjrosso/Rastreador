@@ -321,7 +321,7 @@ class Persona implements JsonSerializable {
 		$Meses = (isset($this->Meses)) ? $this->Meses : null;
 		$Fecha_Nacimiento = $this->Fecha_Nacimiento;
 		if ($Fecha_Nacimiento != 'null' && !empty($Fecha_Nacimiento)) {
-			if (substr_count("-", $Fecha_Nacimiento)) {
+			if (substr_count($Fecha_Nacimiento, "-")) {
 				list($ano, $mes, $dia) = explode("-", $Fecha_Nacimiento);
 			} else {
 				list($ano, $mes, $dia) = explode("/", $Fecha_Nacimiento);
