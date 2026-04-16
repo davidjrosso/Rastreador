@@ -43,11 +43,11 @@ class HomeController
             $value = new Parametria(coneccion_base: $con, codigo: "UPDATE_FECHA_PERSONA");
             $fecha_update = new DateTime($value->get_valor());
             if ($fecha_actual > $fecha_update) {
-                $consultar_datos_personas = "UPDATE persona p
+                $consultar_datos_personas = "UPDATE personas p
                                              SET edad = IF(fecha_nac >= CURDATE() , 0, TIMESTAMPDIFF(YEAR, fecha_nac, CURDATE())),
                                                  meses = IF(fecha_nac >= CURDATE(), 0, MOD(TIMESTAMPDIFF(MONTH, fecha_nac, CURDATE()), 12))
                                              WHERE id_persona in (select id_persona
-                                                                  from persona 
+                                                                  from personas 
                                                                   where fecha_nac is not null
                                                                     and fecha_nac <> 'null'
                                                                     and fecha_nac <> ''
