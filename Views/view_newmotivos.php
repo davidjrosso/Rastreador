@@ -1,29 +1,11 @@
 <?php 
-session_start(); 
-require_once "Controladores/Elements.php";
-require_once "Controladores/CtrGeneral.php";
-header("Content-Type: text/html;charset=utf-8");
-
-/*     CONTROL DE USUARIOS                    */
-if(!isset($_SESSION["Usuario"])){
-    header("Location: Error_Session.php");
-}
-
-$Con = new Conexion();
-$Con->OpenConexion();
-$ID_Usuario = $_SESSION["Usuario"];
-$ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
-$MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
-$EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
-$Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
-$TipoUsuario = $Ret["ID_TipoUsuario"];
-$Con->CloseConexion();
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <title>Rastreador III</title>
   <meta charset="utf-8">
+  <base href="/">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -41,6 +23,7 @@ $Con->CloseConexion();
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="js/ValidarMotivo.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="../dist/control.js"></script>
   <!--
   <script>
        $(document).ready(function(){
@@ -70,41 +53,12 @@ $Con->CloseConexion();
   </script>
 -->
   <script type="text/javascript">
-      var getImport = document.quearySelector ('link [rel = import]'); 
-      var getContent = getImport.import.querySelector('body');
-
-      var ContenidoPagina = document.getElementById("ContenidoPagina");
-
-      ContenidoPagina.appendChild(document.importNode(getContent, true));
-
-      function Verificar(){
-        var Form_1= document.getElementById("form_1");
-        swal({
-          title: "¿Está seguro?",
-          text: "¿Seguro de querer crear este motivo?",
-          icon: "warning",
-          buttons: true,
-          dangerMode: true,
-        })
-        .then((result) => {
-
-          if (result) {
-                Form_1.submit();
-                return true;
-              } else {
-                return false;
-              }
-
-        });
-      }
-
   </script>
 
 </head>
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_MOTIVO);
   ?>
   <div class = "col-md-9">
@@ -119,7 +73,7 @@ $Con->CloseConexion();
       <div class="col"></div>
       <div class="col-10">
           <div class="row">
-              <center><button class = "btn btn-secondary btn-sm" onClick="location.href ='view_newmovimientos.php'">Agregar Nuevo Movimiento</button></center>
+              <center><button class = "btn btn-secondary btn-sm" onClick="location.href ='movimiento/nuevo'">Agregar Nuevo Movimiento</button></center>
           </div>
       </div>
       <div class="col"></div>
@@ -129,7 +83,7 @@ $Con->CloseConexion();
       <div class = "col-10">
           <!-- Carga -->
           <p class = "Titulos">Cargar Nuevo Motivo</p>
-          <form method = "post" onKeydown="return event.key != 'Enter';" id="form_1" action = "Controladores/pedircrearmotivo.php" onSubmit = "return ValidarMotivo();">
+          <form method = "post" onKeydown="return event.key != 'Enter';" id="form_1" action = "/pedir_new_motivo" onSubmit = "return ValidarMotivo();">
             <div class="form-group row">
               <label for="Motivo" class="col-md-2 col-form-label LblForm">Denominación</label>
               <div class="col-md-10">
@@ -146,15 +100,14 @@ $Con->CloseConexion();
               <label for="ID_Categoria" class="col-md-2 col-form-label LblForm">Categoría</label>
               <div class="col-md-10">
                 <?php  
-                $Element = new Elements();
                 echo $Element->CBCategoria();
                 ?>
               </div>
             </div>
             <div class="form-group row">
               <div class="offset-md-2 col-md-10">
-                <button type="button" class="btn btn-outline-success" onClick ="return Verificar()">Guardar</button>
-                <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_motivos.php'">Atras</button>
+                <button type="button" class="btn btn-outline-success" onClick ="return VerificarCrearMotivo()">Guardar</button>
+                <button type = "button" class = "btn btn-danger" onClick = "location.href = '/home'">Atras</button>
               </div>
             </div>
           </form>

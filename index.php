@@ -62,6 +62,8 @@ try {
 	$url = "https://" . $host_url;
 	$url_request = str_replace("&", "/", $url_request);
 
+	mysqli_report(MYSQLI_REPORT_ERROR);        
+
 	$routes[] = Route::get('home', '/', [HomeController::class, 'index']);
 	$routes[] = Route::get('home_url', '/home', [HomeController::class, 'index']);
 	$routes[] = Route::get('home_succes', '/home\?Mensaje={mensaje}', [HomeController::class, 'index']);
@@ -131,6 +133,10 @@ try {
 	$routes[] = Route::get('motivos_listado_error', '/motivos\?MensajeError={mensaje}', [MotivoController::class, 'listado_motivos']);
 	$routes[] = Route::post('buscar_motivos_control', '/buscar_motivos', [MotivoController::class, 'buscar_motivos']);
 	$routes[] = Route::get('mod_motivo', '/motivo/editar\?ID={id}', [MotivoController::class, 'mod_motivo']);
+	$routes[] = Route::get('new_motivos_error', '/motivo/nevo\?Mensaje={mensaje}', [MotivoController::class, 'new_motivos']);
+	$routes[] = Route::get('new_motivos_success', '/motivo/nuevo\?MensajeError={mensaje}', [MotivoController::class, 'new_motivos']);
+	$routes[] = Route::get('new_motivo', '/motivo/nuevo', [MotivoController::class, 'new_motivos']);
+	$routes[] = Route::get('sol_new_motivo', '/pedir_new_motivo', [MotivoController::class, 'req_new_motivo_control']);
 	$routes[] = Route::get('mod_motivo_succes', '/motivos\?Mensaje={mensaje}', [MotivoController::class, 'listado_motivos']);
 	$routes[] = Route::get('mod_motivo_error', '/motivo/editar\?ID={id}/MensajeError={mensaje}', [MotivoController::class, 'mod_motivo']);
 	$routes[] = Route::post('buscar_motivos_filtro', '/buscar_motivos_filtro', [MotivoController::class, 'buscar_motivos_filtro']);
