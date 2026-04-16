@@ -194,12 +194,14 @@ class HistoriaClinica implements JsonSerializable
         $Con = new Conexion();
         $Con->OpenConexion();
         $consulta = "INSERT INTO historias_clinicas (
+                                        id_persona,
                                         nro_legajo,
                                         nro_carpeta, 
                                         estado,
                                         id_centro_salud 
                     )
-                    VALUES ( ". ((!is_null($this->getNro_Legajo())) ? "'" . $this->getNro_Legajo() . "'" : "null") . ", 
+                    VALUES ( " . $this->getID_Persona() . " ,
+                            ". ((!is_null($this->getNro_Legajo())) ? "'" . $this->getNro_Legajo() . "'" : "null") . ", 
                             " . ((!is_null($this->getNro_Carpeta())) ? "'" . $this->getNro_Carpeta() . "'" : "null") . ", 
                             1,
                             " . ((!is_null($this->get_id_centro_salud())) ? $this->get_id_centro_salud() : "null") . "                            
