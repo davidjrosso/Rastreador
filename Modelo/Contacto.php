@@ -130,7 +130,7 @@ class Contacto implements JsonSerializable {
         return $this->Mail;
     }
 
-    public function get_id_persona($id_persona)
+    public function get_id_persona()
     {
         return $this->id_persona;
     }
@@ -171,12 +171,14 @@ class Contacto implements JsonSerializable {
         $Con = new Conexion();
         $Con->OpenConexion();
         $consulta = "INSERT INTO contactos(
+                                        id_persona,
                                         telefono, 
                                         mail, 
                                         trabajo, 
                                         estado 
                     )
-                    VALUES ( " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono() . "'" : "null") . ", 
+                    VALUES (" . $this->get_id_persona() . " ,
+                            " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono() . "'" : "null") . ", 
                             " . ((!is_null($this->getMail())) ? "'" . $this->getMail() . "'" : "null") . ", 
                             " . ((!is_null($this->getTrabajo())) ? "'" . $this->getTrabajo() . "'" : "null") . ",
                             1
