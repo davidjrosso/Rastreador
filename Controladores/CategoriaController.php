@@ -333,7 +333,8 @@ class CategoriaController
                                                      xCod_Categoria: $Cod_Categoria,
                                                      xEstado: $Estado,
                                                      xID_Usuario: $ID_Usuario,
-                                                     xID_Categoria: $ID_Categoria
+                                                     xID_Categoria: $ID_Categoria ,
+                                                     xConeccion: $Con 
                                                      );
         $Solicitud->save();
         $Con->CloseConexion();

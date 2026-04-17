@@ -152,12 +152,12 @@ class Solicitud_EliminarCategoria
                                                                  Fecha,
                                                                  Cod_Categoria,
                                                                  Categoria,
-                                                                 ID_Forma,
+                                                                 
                                                                  Estado,
                                                                  ID_Usuario,
                                                                  ID_Categoria
                                                                  ) values (
-                                                                      '" . (($this->getFecha()) ? $this->getFecha() : "null") . "',
+                                                                      " . (($this->getFecha()) ? "'" . $this->getFecha() . "'" : "null") . ",
                                                                        " . (($this->getCod_Categoria()) ? "'" . $this->getCod_Categoria() . "'" : "null") . ",
                                                                        " . (($this->getCategoria()) ? "'" . $this->getCategoria() . "'" : "null") . ",
                                                                        " . (($this->getEstado()) ? $this->getEstado() :  "null")  . ",
