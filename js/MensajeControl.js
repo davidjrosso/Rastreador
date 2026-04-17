@@ -624,7 +624,7 @@ export function CancelarCrearCategoria(xID) {
         })
         .then((willDelete) => {
         if (willDelete) {
-            window.location.href = 'Controladores/DeletePeticionCrearCategoria.php?ID=' + xID;
+            window.location.href = 'deletepedirnewcategoria?ID=' + xID;
         }
         });
 }
