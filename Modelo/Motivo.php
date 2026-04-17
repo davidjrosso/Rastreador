@@ -26,6 +26,7 @@ class Motivo implements JsonSerializable
 		$this->coneccion_base = $coneccion_base;
 		if (!$id_motivo) {
 			$this->id_motivo = $id_motivo;
+			$this->codigo = $codigo;
 			$this->motivo = $motivo;
 			$this->cod_categoria = $cod_categoria;
 			$this->num_motivo = $num_motivo;
@@ -43,6 +44,7 @@ class Motivo implements JsonSerializable
 			$ret = mysqli_fetch_assoc($ejecutar_consultar);
 			if (!is_null($ret)) {
 				$row_id_motivo = $ret["id_motivo"];
+				$row_codigo = $ret["codigo"];
 				$row_motivo = $ret["motivo"];
 				$row_cod_categoria = $ret["cod_categoria"];
 				$row_num_motivo = $ret["num_motivo"];
@@ -51,6 +53,7 @@ class Motivo implements JsonSerializable
 				$row_estado = $ret["estado"];
 
 				$this->id_motivo = $row_id_motivo;
+				$this->codigo = $row_codigo ;
 				$this->motivo = $row_motivo;
 				$this->cod_categoria = $row_cod_categoria;
 				$this->num_motivo = $row_num_motivo;
