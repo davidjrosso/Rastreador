@@ -54,7 +54,6 @@ class Categoria {
 				
 				$this->Categoria = $row_categoria;
 				$this->ID_Categoria = $row_id_categoria;
-				$this->archivo = $row_id_categoria;
 				$this->Estado = ($row_estado) ? $row_estado : 0;
 				$this->Cod_Categoria = $row_cod_categoria;
 				$this->ID_Forma = $row_id_forma;

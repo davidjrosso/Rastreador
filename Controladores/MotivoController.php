@@ -295,15 +295,15 @@ class MotivoController
         try	 {
             $Con = new Conexion();
             $Con->OpenConexion();
-
+        
+            $ctg = new Categoria(xID_Categoria: $Cod_Categoria, xConecction: $Con);
            if (Motivo::existe_motivo_by_name($Con, $Motivo) > 0) {
-                $Con->CloseConexion();
                 $Mensaje["mensaje_error"] = "Ya hay un Motivo con los datos ingresados";
             } else {
                 $motivo = new Motivo(coneccion_base: $Con,
                                 motivo: $Motivo,
                                 codigo: $Codigo,
-                                cod_categoria: $Cod_Categoria,
+                                cod_categoria: $ctg->getCod_Categoria(),
                                 estado: $Estado
                                     );
                 $motivo->save();
@@ -317,9 +317,9 @@ class MotivoController
                 $accion->save();
 
                 $Mensaje["mensaje"] = "El Motivo se registro Correctamente";
-                $Con->CloseConexion();
 
             }
+            $Con->CloseConexion();
             echo json_encode($Mensaje);
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();

@@ -2283,7 +2283,7 @@ public function getMenuSeguridadUsuario($ID){
     $Select .= "<option selected = 'true' disabled = 'disabled' value = '0'>-Seleccione una Categoría-</option>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from categoria where estado = 1 order by categoria")or die("Problemas al mostrar Categoría");
     while ($Ret = mysqli_fetch_array($Consulta)) {
-      $Select .= "<option value = '".$Ret['id_categoria']."'>".$Ret['categoria']."</option>";
+      $Select .= "<option value = '" . $Ret['id_categoria']."'>".$Ret['categoria']."</option>";
     }
     $Select .= "</select>";
     $Con3->CloseConexion();
