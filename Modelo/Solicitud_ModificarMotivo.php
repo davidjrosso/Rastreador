@@ -101,8 +101,7 @@ class Solicitud_ModificarMotivo
     ) {
 
         $this->coneccion = $xConeccion;
-        if (!empty($xID)) {
-            $this->ID = $xID;
+        if (empty($xID)) {
             $this->Fecha = $xFecha;
             $this->Motivo = $xMotivo;
             $this->Codigo = $xCodigo;
@@ -136,7 +135,7 @@ class Solicitud_ModificarMotivo
     public function save()
     {
         $consulta = "insert into solicitudes_modificarmotivos(
-                                                            Fecha
+                                                            Fecha,
                                                             Codigo, 
                                                             Motivo,
                                                             Cod_Categoria, 
@@ -145,7 +144,7 @@ class Solicitud_ModificarMotivo
                                                             ID_Usuario, 
                                                             ID_Motivo
                                                            ) values (
-                                                                      '" . (($this->getFecha()) ? "'" . $this->getFecha() . "'" : "null") . ",
+                                                                      " . (($this->getFecha()) ? "'" . $this->getFecha() . "'" : "null") . ",
                                                                        " . (($this->getCodigo()) ? "'" . $this->getCodigo() . "'" : "null") . ",
                                                                        " . (($this->getMotivo()) ? "'" . $this->getMotivo() . "'" : "null") . ",
                                                                        " . (($this->getCod_Categoria()) ? "'" . $this->getCod_Categoria() . "'" : "null") .  ",

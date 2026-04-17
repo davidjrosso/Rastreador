@@ -133,12 +133,13 @@ try {
 	$routes[] = Route::get('motivos_listado_error', '/motivos\?MensajeError={mensaje}', [MotivoController::class, 'listado_motivos']);
 	$routes[] = Route::post('buscar_motivos_control', '/buscar_motivos', [MotivoController::class, 'buscar_motivos']);
 	$routes[] = Route::get('mod_motivo', '/motivo/editar\?ID={id}', [MotivoController::class, 'mod_motivo']);
-	$routes[] = Route::get('new_motivos_error', '/motivo/nevo\?Mensaje={mensaje}', [MotivoController::class, 'new_motivos']);
+	$routes[] = Route::get('new_motivos_error', '/motivo/nuevo\?Mensaje={mensaje}', [MotivoController::class, 'new_motivos']);
 	$routes[] = Route::get('new_motivos_success', '/motivo/nuevo\?MensajeError={mensaje}', [MotivoController::class, 'new_motivos']);
 	$routes[] = Route::get('new_motivo', '/motivo/nuevo', [MotivoController::class, 'new_motivos']);
 	$routes[] = Route::get('sol_new_motivo', '/pedir_new_motivo', [MotivoController::class, 'req_new_motivo_control']);
 	$routes[] = Route::get('mod_motivo_succes', '/motivos\?Mensaje={mensaje}', [MotivoController::class, 'listado_motivos']);
 	$routes[] = Route::get('mod_motivo_error', '/motivo/editar\?ID={id}/MensajeError={mensaje}', [MotivoController::class, 'mod_motivo']);
+	$routes[] = Route::post('new_motivo_control', '/new_motivo_control', [MotivoController::class, 'new_motivo_ctrl']);
 	$routes[] = Route::post('buscar_motivos_filtro', '/buscar_motivos_filtro', [MotivoController::class, 'buscar_motivos_filtro']);
 	$routes[] = Route::post('sol_mod_motivo', 'pedirmodificarmotivo', [MotivoController::class, 'sol_mod_control']);
 	$routes[] = Route::post('mod_motivo_control', 'modificarmotivo', [MotivoController::class, 'mod_motivo_control']);

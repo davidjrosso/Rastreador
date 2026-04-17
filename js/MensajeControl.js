@@ -303,6 +303,42 @@ export function VerificarUnificacion(
         });
 }
 
+export function VerificarCrearMt() {
+
+    let xMotivo=$("#Motivo").prop("value");
+    let xCodigo=$("#Codigo").prop("value"); 
+    let xCategoria = $("#ID_Categoria").val() ;
+
+    swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer crear este motivo?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+            let url = 'new_motivo_control';
+            let datos = '&Motivo=' + xMotivo + '&Codigo=' + xCodigo  +  '&Cod_Categoria=' + xCategoria ;
+            let request = $.ajax({
+                type:"POST",
+                url : url,
+                async: true,
+                contentType: 'application/x-www-form-urlencoded',
+                data: datos,
+                success : function (data, status, requestHttp) {
+                    if (requestHttp.responseJSON.mensaje) {
+                        controlMensaje(requestHttp.responseJSON.mensaje, null);
+                    } else if (requestHttp.responseJSON.mensaje_error) {
+                        controlMensaje(null, requestHttp.responseJSON.mensaje_error);
+                    }
+                }
+            });
+
+    }
+    });
+}
+
 export function VerificarCrearMotivo(
                                 xID,
                                 xFecha,
@@ -320,8 +356,24 @@ export function VerificarCrearMotivo(
     })
     .then((willDelete) => {
         if (willDelete) {
-        window.location.href = 'Controladores/InsertMotivo.php?ID=' + xID + '&Fecha=' + xFecha + '&Motivo=' + xMotivo + '&Codigo=' + xCodigo + '&Num_Motivo=' + xNum_Motivo + '&Cod_Categoria=' + xCategoria;
-        }
+            let url = 'new_motivo_control';
+            let datos = 'ID=' + xID + '&Fecha=' + xFecha + '&Motivo=' + xMotivo + '&Codigo=' + xCodigo + '&Num_Motivo=' + xNum_Motivo + '&Cod_Categoria=' + xCategoria
+            let request = $.ajax({
+                type:"POST",
+                url : url,
+                async: true,
+                contentType: 'application/x-www-form-urlencoded',
+                data: datos,
+                success : function (data, status, requestHttp) {
+                    if (requestHttp.responseJSON.mensaje) {
+                        controlMensaje(requestHttp.responseJSON.mensaje, null);
+                    } else if (requestHttp.responseJSON.mensaje_error) {
+                        controlMensaje(null, requestHttp.responseJSON.mensaje_error);
+                    }
+                }
+            });
+
+    }
     });
 }
 

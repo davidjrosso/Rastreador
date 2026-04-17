@@ -100,7 +100,7 @@ class PersonaController
                                             ORDER BY upper(apellido) ASC, upper(nombre) ASC, upper(documento) ASC"
                                             );
                 }
-            }else{
+            } else {
                 $consulta = mysqli_query(
                                 $Con->Conexion, 
                                 "SELECT p.id_persona, UPPER(apellido) AS apellido, 

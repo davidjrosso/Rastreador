@@ -278,6 +278,53 @@ class MotivoController
         }
         exit();
     }
+    public function new_motivo_ctrl()
+    {
+        header('content-type: application/json');
+        $ID_Usuario = $_SESSION["Usuario"];
+
+        $Motivo = $_REQUEST["Motivo"];
+        $Codigo = $_REQUEST["Codigo"];
+        $Cod_Categoria = $_REQUEST["Cod_Categoria"];
+        $Estado = 1;
+
+        $Fecha = date("Y-m-d");
+        $ID_TipoAccion = 1;
+        $Detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Motivo. Datos: Motivo: $Motivo - Categoría : $Cod_Categoria";
+
+        try	 {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+           if (Motivo::existe_motivo_by_name($Con, $Motivo) > 0) {
+                $Con->CloseConexion();
+                $Mensaje["mensaje_error"] = "Ya hay un Motivo con los datos ingresados";
+            } else {
+                $motivo = new Motivo(coneccion_base: $Con,
+                                motivo: $Motivo,
+                                codigo: $Codigo,
+                                cod_categoria: $Cod_Categoria,
+                                estado: $Estado
+                                    );
+                $motivo->save();
+
+                $accion = new Accion(
+                    xaccountid: $ID_Usuario,
+                    xFecha : $Fecha,
+                    xDetalles: $Detalles,
+                    xID_TipoAccion: $ID_TipoAccion	 
+                );
+                $accion->save();
+
+                $Mensaje["mensaje"] = "El Motivo se registro Correctamente";
+                $Con->CloseConexion();
+
+            }
+            echo json_encode($Mensaje);
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
 
     public function new_motivo_control()
     {
