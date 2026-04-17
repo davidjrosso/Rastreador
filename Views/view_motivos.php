@@ -57,7 +57,7 @@
               })
               .then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'Controladores/pedireliminarmotivo.php?ID=' + xID;
+                  window.location.href = 'pedireliminarmotivo?ID=' + xID;
                 }
               });
         }

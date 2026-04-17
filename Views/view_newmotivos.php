@@ -107,7 +107,7 @@
             <div class="form-group row">
               <div class="offset-md-2 col-md-10">
                 <button type="button" class="btn btn-outline-success" onClick ="return VerificarCrearMt()">Guardar</button>
-                <button type = "button" class = "btn btn-danger" onClick = "location.href = '/home'">Atras</button>
+                <button type = "button" class = "btn btn-danger" onClick = "location.href = '/motivos'">Atras</button>
               </div>
             </div>
           </form>
