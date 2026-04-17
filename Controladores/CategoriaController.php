@@ -277,18 +277,18 @@ class CategoriaController
                 }
                 list($r, $g, $b) = sscanf($Color, "#%02x%02x%02x");
                 $color_icono = substr($Color, 1);
-                $file_path = "../images/icons/motivos/" . $forma_categoria . "_" . $color_icono . ".png";
-                $file_path_common = "../images/icons/motivos/" . $forma_categoria . ".png";
+                $file_path = "/images/icons/motivos/" . $forma_categoria . "_" . $color_icono . ".png";
+                $file_path_common = "/images/icons/motivos/" . $forma_categoria . ".png";
 
                 if (!file_exists($file_path)) {
-                    $imagen = imagecreatefrompng($file_path_common);
+                    $imagen = imagecreatefrompng($_SERVER["DOCUMENT_ROOT"] . $file_path_common);
                     $is_filter = imagefilter($imagen, IMG_FILTER_COLORIZE, $r, $g, $b);
                     $negro = imagecolorallocate($imagen, 0, 0, 0);
                     imagecolortransparent($imagen, $negro);
                     if (!$is_filter) {
                         throw new Exception("Error al intentar filtrar el color del icono.", 2);
                     }
-                    $fd = imagepng($imagen, $file_path);
+                    $fd = imagepng($imagen, $_SERVER["DOCUMENT_ROOT"] . $file_path);
                     imagedestroy($imagen);
                 }
 
