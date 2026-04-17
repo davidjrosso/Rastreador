@@ -17,7 +17,7 @@
  * along with Rastreador3; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
-
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_CrearCategoria.php");
 
 class SolicitudController 
 {
@@ -71,7 +71,7 @@ class SolicitudController
             $Con = new Conexion();
             $Con->OpenConexion();
 
-            $cat = new Solicitud_CrearCategoria(xID: $ID_Peticion);
+            $cat = new Solicitud_CrearCategoria(coneccion_base: $Con , xID: $ID_Peticion);
             $cat->delete();
             $accion = new Accion(xaccountid: $ID_Usuario,
                                  xFecha: $Fecha,

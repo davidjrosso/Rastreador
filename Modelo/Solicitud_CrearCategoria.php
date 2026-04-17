@@ -138,7 +138,8 @@ class Solicitud_CrearCategoria
 
     function delete()
     {
-        $consulta = "delete solicitudes_crearcategorias
+        $consulta = "update solicitudes_crearcategorias
+                     set Estado = 0
                      where ID = " . $this->getID();
         $MensajeError = "No se pudo del la solicitud";
         mysqli_query($this->coneccion_base->Conexion,$consulta) or die($MensajeError);
