@@ -218,10 +218,9 @@ class Motivo implements JsonSerializable
 
 	public function update(){
 		$consulta = "update motivo
-					 set motivo = " . (($this->get_motivo()) ? $this->get_motivo() : "null") . ",
-						 codigo = " . (($this->get_codigo()) ? $this->get_codigo() : "null") . ", 
-						 cod_categoria = " . (($this->get_cod_categoria()) ? $this->get_cod_categoria() : "null") . ",
-						 num_motivo = " . (($this->get_num_motivo()) ? $this->get_num_motivo() : "null") .",
+					 set motivo = " . (($this->get_motivo()) ? "'" . $this->get_motivo() . "'" : "null") . ",
+						 codigo = " . (($this->get_codigo()) ? "'" . $this->get_codigo() . "'" : "null") . ", 
+						 cod_categoria = " . (($this->get_cod_categoria()) ? "'" . $this->get_cod_categoria() . "'" : "null") . ",
 						 tipo_motivo = " . (($this->get_tipo_motivo()) ? $this->get_tipo_motivo() : "null") .",
 						 orden = " . (($this->get_orden()) ? $this->get_orden() : "null") .",
 						 estado = " . (($this->get_estado()) ? $this->get_estado() : "null") . "
