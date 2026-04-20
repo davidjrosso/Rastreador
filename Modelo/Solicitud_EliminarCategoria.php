@@ -34,7 +34,7 @@ class Solicitud_EliminarCategoria
 
     public static function get_id_categoria_sl($coneccion, $id)
     {
-
+        $id_categoria = 0;        
         $consulta = "SELECT *
 						 FROM solicitudes_eliminarcategorias 
 						 WHERE ID_Categoria = " . $id . " 
