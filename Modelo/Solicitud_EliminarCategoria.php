@@ -32,6 +32,19 @@ class Solicitud_EliminarCategoria
         return $lista_acciones;
     }
 
+    public static function get_id_categoria_sl($coneccion, $id)
+    {
+
+        $consulta = "SELECT *
+						 FROM solicitudes_eliminarcategorias 
+						 WHERE ID_Categoria = " . $id . " 
+						   AND Estado = 1";
+        $rs = mysqli_query($coneccion->Conexion,$consulta) or die("Problemas al consultar las acciones.");
+        $ret = mysqli_fetch_assoc($rs);
+        if (!$ret) $id_categoria = $ret["ID_Categoria"];
+        return $id_categoria;
+    }
+
     //METODOS SET
     public function setID($xID)
     {
