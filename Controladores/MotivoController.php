@@ -178,9 +178,6 @@ class MotivoController
         $ID_Usuario = $_SESSION["Usuario"];
 
         $ID_Solicitud = $_REQUEST["ID"];
-        $ID_Motivo = $_REQUEST["ID_Motivo"];
-        $Motivo = $_REQUEST["Motivo"];
-        $Codigo = $_REQUEST["Codigo"];
 
         $Fecha = date("Y-m-d");
         $ID_TipoAccion = 2;
@@ -188,6 +185,12 @@ class MotivoController
         try {
             $Con = new Conexion();
             $Con->OpenConexion();
+
+            $sl = new Solicitud_ModificarMotivo(xConeccion: $Con, xID: $ID_Solicitud );
+
+            $Motivo = $sl->getMotivo();
+            $ID_Motivo = $sl->getID_Motivo();
+            
             $ConsultarRegistrosIguales = "select * from motivo where motivo = '$Motivo' and id_motivo != $ID_Motivo and estado = 1";
 
             if (!$RetIguales = mysqli_query($Con->Conexion,$ConsultarRegistrosIguales)) {
@@ -211,12 +214,13 @@ class MotivoController
                 // $TomarCod = mysqli_fetch_assoc($RetCod);
                 // $Cod_Categoria = $TomarCod["cod_categoria"];
 
+                $Codigo = $sl->getCodigo();
+
                 $rev->set_motivo($Motivo);
                 $rev->set_codigo($Codigo);
                 $rev->update();
 
-                $rev = new Solicitud_ModificarMotivo(xID: $ID_Solicitud, xConeccion: $Con);
-                $rev->delete();
+                $sl->delete();
                 
                 $Detalles = "El usuario con ID: $ID_Usuario ha modificado un Motivo. Datos: Dato Anterior: $MotivoViejo , Dato Nuevo: $Motivo - Dato Anterior: $Cod_Viejo , Dato Nuevo: $Codigo";
                 $accion = new Accion(
@@ -228,7 +232,7 @@ class MotivoController
                 $accion->save();
  
                 $Mensaje = "El Motivo se modifico Correctamente";
-                header('Location: /home?ID=' . $ID_Motivo . '&Mensaje=' . $Mensaje);
+                header('Location: /home?Mensaje=' . $Mensaje);
             }
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();

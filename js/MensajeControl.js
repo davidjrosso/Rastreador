@@ -394,7 +394,7 @@ export function VerificarModificarMotivo(
         })
         .then((willDelete) => {
         if (willDelete) {
-            window.location.href = 'Controladores/ModificarMotivo.php?ID=' + xID + '&Fecha=' + xFecha + '&Motivo=' + xMotivo + '&Codigo=' + xCodigo + '&Num_Motivo=' + xNum_Motivo + '&ID_Motivo=' + xID_Motivo;                
+            window.location.href = 'modificarmotivo?ID=' + xID;
         }
         });
 }

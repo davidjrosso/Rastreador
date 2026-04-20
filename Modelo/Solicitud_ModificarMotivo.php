@@ -113,7 +113,7 @@ class Solicitud_ModificarMotivo
         } else {
             $query = "SELECT *
                       FROM solicitudes_modificarmotivos
-                      WHERE ID = " . $this->getID();
+                      WHERE ID = " . $xID;
             if(!$RetCod = mysqli_query($this->coneccion->Conexion, $query)){
                 throw new Exception("Problemas al consultar cod_categoria. Consulta: " . $query, 1);			
             }
@@ -161,7 +161,8 @@ class Solicitud_ModificarMotivo
 
     public function delete()
     {
-        $query = "delete solicitudes_modificarmotivos
+        $query = "update solicitudes_modificarmotivos
+                  set Estado = 0
                   where ID = " . $this->getID();
 
         if(!$RetCod = mysqli_query($this->coneccion->Conexion, $query)){
