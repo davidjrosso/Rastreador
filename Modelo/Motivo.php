@@ -143,6 +143,11 @@ class Motivo implements JsonSerializable
 		$this->motivo = $motivo;
 	}
 
+	public function set_codigo($codigo){
+		$this->codigo = $codigo;
+	}
+
+
 	public function set_cod_categoria($cod_categoria){
 		$this->cod_categoria = $cod_categoria;
 	}
@@ -177,7 +182,7 @@ class Motivo implements JsonSerializable
 	}
 
 	public function get_codigo(){
-		return $this->motivo;
+		return $this->codigo;
 	}
 
 	public function get_cod_categoria(){
