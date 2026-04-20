@@ -360,12 +360,8 @@ class CategoriaController
             $accion = new Accion(xaccountid: $ID_Usuario, xFecha: $Fecha, xDetalles: $Detalles, xID_TipoAccion: $ID_TipoAccion);
             $accion->save();
             $id_sl = Solicitud_EliminarCategoria::get_id_categoria_sl(coneccion: $Con, id: $_REQUEST["ID"]);            
-            $sl = new Solicitud_EliminarCategoria(xConeccion:$Con  , xID_Categoria: $ID_Categoria);
+            $sl = new Solicitud_EliminarCategoria(xConeccion:$Con  , xID: $id_sl);
             $sl->delete();
-            $ConsultaSolicitud = "update solicitudes_eliminarcategorias set estado = 0 where ID_categoria = $ID_Categoria";
-            if(!$Ret = mysqli_query($Con->Conexion,$ConsultaSolicitud)){
-                throw new Exception("Problemas en la consulta. Consulta: " . $ConsultaSolicitud, 3);			
-            }
 
             $Con->CloseConexion();
             $Mensaje = "La categoria fue eliminada Correctamente";
