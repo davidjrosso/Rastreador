@@ -502,7 +502,7 @@ export function VerificarEliminarCategoria(xID_Categoria) {
         })
         .then((willDelete) => {
         if (willDelete) {
-            window.location.href = 'Controladores/DeleteCategoria.php?ID=' + xID_Categoria;
+            window.location.href = 'delete_categoria?ID=' + xID_Categoria;
         }
         });
 }
