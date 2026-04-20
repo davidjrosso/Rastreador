@@ -275,10 +275,4 @@ class Motivo implements JsonSerializable
 			throw new Exception($mensaje_error . $consulta, 2);
 		}
 	}
-
-	public function set_codigo($codigo)
-	{
-		$this->codigo = $codigo;
-	}
-
 }
