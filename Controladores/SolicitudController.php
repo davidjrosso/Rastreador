@@ -129,7 +129,7 @@ class SolicitudController
             $Con = new Conexion();
             $Con->OpenConexion();
 
-            $cat = new Solicitud_EliminarCategoria(xID: $ID_Peticion);
+            $cat = new Solicitud_EliminarCategoria(xConeccion: $Con, xID: $ID_Peticion);
             $cat->delete();
             $accion = new Accion(xaccountid: $ID_Usuario,
                                  xFecha: $Fecha,
