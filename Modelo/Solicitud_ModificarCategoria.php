@@ -47,14 +47,14 @@ class Solicitud_ModificarCategoria
 			$ret = mysqli_fetch_assoc($ejec);
 
             $this->ID = $xID;
-            $this->Fecha = $ret["Fecha"];
-            $this->Codigo = $ret["Codigo"];
-            $this->Categoria = $ret["Categoria"];
-            $this->ID_Forma = $ret["ID_Forma"];
-            $this->NuevoColor = $ret["NuevoColor"];
-            $this->Estado = $ret["Estado"];
-            $this->ID_Usuario = $ret["ID_Usuario"];
-            $this->ID_Categoria = $ret["ID_Categoria"];
+            $this->Fecha = ($xFecha) ? $xFecha : $ret["Fecha"];
+            $this->Codigo = ($xCodigo) ? $xCodigo : $ret["Codigo"];
+            $this->Categoria = ($xCategoria) ? $xCategoria : $ret["Categoria"];
+            $this->ID_Forma = ($xID_Forma) ? $xID_Forma : $ret["ID_Forma"];
+            $this->NuevoColor = ($xNuevoColor) ? $xNuevoColor : $ret["NuevoColor"];
+            $this->Estado = ($xEstado) ? $xEstado: $ret["Estado"];
+            $this->ID_Usuario = ($xID_Usuario) ? $xID_Usuario : $ret["ID_Usuario"];
+            $this->ID_Categoria = ($xID_Categoria) ? $xID_Categoria : $ret["ID_Categoria"];
         }
     }
 
