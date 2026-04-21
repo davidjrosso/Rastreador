@@ -25,7 +25,7 @@ class Responsable implements JsonSerializable
 		} else {
 			$consultar = "select *
 						  from responsables 
-						  where id_resp = " . $id_responsable . " 
+						  where id_responsable = " . $id_responsable . " 
 							and estado = 1";
 			$ejecutar_consultar = mysqli_query(
 				$this->coneccion_base->Conexion, 
@@ -48,7 +48,7 @@ class Responsable implements JsonSerializable
 
 	public static function is_registered($coneccion_base, $nombre)
 	{
-		$consulta = "select id_resp 
+		$consulta = "select id_responsable 
 					 from responsables 
 					 where responsable like '%" . $nombre. "%' 
 					   and estado = 1";
@@ -68,10 +68,10 @@ class Responsable implements JsonSerializable
 																  $id_responsable 
 																  )
 	{
-		$consulta = "select id_resp 
+		$consulta = "select id_responsable 
 					 from responsables 
 					 where responsable like '%" . $nombre. "%'
-					   and id_resp != $id_responsable
+					   and id_responsable != $id_responsable
 					   and estado = 1";
 		$mensaje_error = "Hubo un problema al consultar los registros para validar";
 		$ret = mysqli_query($coneccion_base->Conexion,
@@ -85,7 +85,7 @@ class Responsable implements JsonSerializable
 
 	public static function get_id_responsable_by_name($coneccion_base, $responsable)
 	{
-		$consulta = "select id_resp 
+		$consulta = "select id_responsable 
 					 from responsables 
 					 where lower(responsable) like lower('%" . $responsable. "%') 
 					   and estado = 1";
@@ -102,9 +102,9 @@ class Responsable implements JsonSerializable
 
 	public static function existe_id_responsable($coneccion_base, $id_responsable)
 	{
-		$consulta = "select id_resp 
+		$consulta = "select id_responsable 
 					 from responsables 
-					 where id_resp = $id_responsable
+					 where id_responsable = $id_responsable
 					   and estado = 1";
 		$mensaje_error = "Hubo un problema al consultar los registros para validar";
 		$ret = mysqli_query($coneccion_base->Conexion,
@@ -176,7 +176,7 @@ class Responsable implements JsonSerializable
 	{
 		$consulta = "update responsables 
 					 set estado = 0
-					 where id_resp = " . $this->get_id_responsable();
+					 where id_responsable = " . $this->get_id_responsable();
 		$mensaje_error = "No se pudo actualizar la Responsable";
 		$ret = mysqli_query($this->coneccion_base->Conexion, $consulta);
 		if (!$ret) {
@@ -191,7 +191,7 @@ class Responsable implements JsonSerializable
 					set responsable = " . ((!is_null($this->get_responsable())) ? "'" . $this->get_responsable() . "'" : "null") . ", 
 						accountid = " . ((!is_null($this->get_account_id())) ? "'" . $this->get_account_id() . "'" : "null") . ", 
 						estado = " . ((!is_null($this->get_estado())) ? $this->get_estado() : "null") . "
-					where id_resp = " . $this->get_id_responsable();
+					where id_responsable = " . $this->get_id_responsable();
 		$mensaje_error = "No se pudo actualizar la Responsable";
 		$ret = mysqli_query($this->coneccion_base->Conexion, $consulta);
 		if (!$ret) {
