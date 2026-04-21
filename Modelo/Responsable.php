@@ -35,7 +35,7 @@ class Responsable implements JsonSerializable
 				$resp_id_responsable = $ret["id_resp"];
 				$resp_responsable = $ret["responsable"];
 				$resp_estado = $ret["estado"];
-				$resp_account_id = $ret["accountid"];
+				$resp_account_id = $ret["id_account"];
 	
 				$this->id_responsable = $resp_id_responsable;
 				$this->responsable = $resp_responsable;
@@ -189,7 +189,7 @@ class Responsable implements JsonSerializable
 	{
 		$consulta = "update responsables 
 					set responsable = " . ((!is_null($this->get_responsable())) ? "'" . $this->get_responsable() . "'" : "null") . ", 
-						accountid = " . ((!is_null($this->get_account_id())) ? "'" . $this->get_account_id() . "'" : "null") . ", 
+						id_account = " . ((!is_null($this->get_account_id())) ? "'" . $this->get_account_id() . "'" : "null") . ", 
 						estado = " . ((!is_null($this->get_estado())) ? $this->get_estado() : "null") . "
 					where id_responsable = " . $this->get_id_responsable();
 		$mensaje_error = "No se pudo actualizar la Responsable";
@@ -203,7 +203,7 @@ class Responsable implements JsonSerializable
 	{
 		$consulta = "INSERT INTO responsables ( 
 										responsable, 
-										accountid, 
+										id_account, 
 										estado
 					)
 					VALUES ( " . ((!is_null($this->get_responsable())) ? "'" . $this->get_responsable() . "'" : "null") . ", 
