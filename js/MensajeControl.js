@@ -702,7 +702,7 @@ export function CancelarEliminacionCategoria(xID) {
         })
         .then((willDelete) => {
         if (willDelete) {
-            window.location.href = '/delete_eliminar_categoria?ID=' + xID;
+            window.location.href = '/deletepedirdelcategoria?ID=' + xID;
         }
         });
 }
