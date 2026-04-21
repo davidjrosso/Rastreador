@@ -27,6 +27,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Categoria.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/CategoriaRol.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Accion.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_ModificarCategoria.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/SolicitudPermiso.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_Unificacion.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_EliminarCategoria.php");
 
@@ -67,6 +69,16 @@ class CategoriaController
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
+
             include("./Views/view_modcategorias.php");
         }
         exit();
@@ -376,7 +388,8 @@ class CategoriaController
         $ID_Usuario = $_SESSION["Usuario"];
         $Grupo_Usuarios = $_REQUEST["Tipo_Usuario"];
         $ID_Categoria = $_REQUEST["ID"];
-        $Codigo = strtoupper($_REQUEST["Codigo"]);
+        $Codigo = null;
+        if (isset($_REQUEST["Codigo"])) $Codigo = strtoupper($_REQUEST["Codigo"]);
         $Categoria = $_REQUEST["Categoria"];
         $ID_Forma = $_REQUEST["ID_Forma"];
         $NuevoColor = $_REQUEST["CodigoColor"];
@@ -423,12 +436,8 @@ class CategoriaController
     public function mod_categoria_control()
     {
         $ID_Usuario = $_SESSION["Usuario"];
-        $ID_Categoria = $_REQUEST["ID_Categoria"];
+
         $ID_Solicitud = $_REQUEST["ID"];
-        $Codigo = strtoupper($_REQUEST["Codigo"]);
-        $Categoria = $_REQUEST["Categoria"];
-        $ID_Forma = $_REQUEST["ID_Forma"];
-        $NuevoColor = base64_decode($_REQUEST["CodigoColor"]);
 
         $Fecha = date("Y-m-d");
         $ID_TipoAccion = 2;
@@ -437,34 +446,39 @@ class CategoriaController
             $Con = new Conexion();
             $Con->OpenConexion();
 
+
+            $sl = new Solicitud_ModificarCategoria(coneccion_base: $Con , xID: $ID_Solicitud );
+            $ID_Categoria = $sl->getID_Categoria();
             $ConsultarDatosViejos = "select * from categoria where id_categoria = $ID_Categoria and estado = 1";
             $ErrorDatosViejos = "No se pudieron consultar los datos";
             if(!$RetDatosViejos = mysqli_query($Con->Conexion,$ConsultarDatosViejos)){
                 throw new Exception("Error al intentar registrar. Consulta: ".$ConsultarDatosViejos, 1);
             }
+
             $TomarDatosViejos = mysqli_fetch_assoc($RetDatosViejos);
             $Cod_CategoriaViejo = $TomarDatosViejos["cod_categoria"];
             $CategoriaViejo = $TomarDatosViejos["categoria"];
             $ID_FormaViejo = $TomarDatosViejos["ID_Forma"];
             $ColorViejo = $TomarDatosViejos["color"];
 
+            $Codigo = $sl->getCodigo();
             $Consulta = "update motivos 
                         set cod_categoria = '$Codigo' 
                         where cod_categoria = '$Cod_CategoriaViejo' 
                         and estado = 1";
 
+
+            $ID_Forma = $sl->getID_Forma();            
+            $Categoria = $sl->getCategoria();
+            $NuevoColor = $sl->getNuevoColor();
             $CodigoColorEsc = mysqli_real_escape_string($Con->Conexion, $NuevoColor);
-            $Consulta = "update categoria 
-                        set cod_categoria = '$Codigo', 
-                            categoria = '$Categoria', 
-                            ID_Forma = $ID_Forma, 
-                            color = '$CodigoColorEsc' 
-                        where id_categoria = $ID_Categoria 
-                        and estado = 1";
-            
-            if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
-                throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 2);		
-            }
+
+            $ct = new Categoria(xConecction: $Con , xID_Categoria: $ID_Categoria);
+            $ct->setColor($CodigoColorEsc);
+            $ct->setCod_Categoria($Codigo);
+            $ct->setID_Forma($ID_Forma);
+            $ct->setCategoria($Categoria);
+            $ct->update();
 
             $Detalles = "El usuario con ID: $ID_Usuario ha modificado la Categoria: $ID_Categoria. Datos: Dato Anterior: $Cod_CategoriaViejo , Dato Nuevo: $Codigo - Dato Anterior: $CategoriaViejo , Dato Nuevo: $Categoria - Dato Anterior: $ID_FormaViejo , Dato Nuevo: $ID_Forma - Dato Anterior: $ColorViejo , Dato Nuevo: $NuevoColor con id solicitud : $ID_Solicitud";
             $ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
@@ -536,7 +550,7 @@ class CategoriaController
 
             $Con->CloseConexion();
             $Mensaje = "La categoria se modifico Correctamente";
-            header('Location: /home.php?ID=' . $ID_Categoria . '&Mensaje=' . $Mensaje);
+            header('Location: /home?Mensaje=' . $Mensaje);
         } catch (Exception $e) {
             echo "Error: ".$e->getMessage();
         }

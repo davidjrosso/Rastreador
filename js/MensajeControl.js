@@ -472,10 +472,43 @@ export function VerificarModificarCategoria(xID,xFecha,xCodigo,xCategoria,xID_Fo
         })
         .then((willDelete) => {
         if (willDelete) {
-            window.location.href = 'Controladores/ModificarCategoria.php?ID=' + xID + '&Fecha=' + xFecha + '&Codigo=' + xCodigo + '&Categoria=' + xCategoria + '&ID_Forma=' + xID_Forma + '&ID_Categoria=' + xID_Categoria + '&CodigoColor='+NuevoColorBase;
+            window.location.href = '/modificarcategoria?ID=' + xID;
         }
         });
 }
+
+export function solModificarCategoria(xID,xFecha,xCodigo,xCategoria,xID_Forma,xNuevoColor,xID_Categoria) {
+        var NuevoColorBase = btoa(xNuevoColor);
+
+        swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer solicitar modificar esta categoría?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (option) {
+                let datos = 'ID=' + xID + '&Fecha=' + xFecha + '&Codigo=' + xCodigo + '&Categoria=' + xCategoria + '&ID_Forma=' + xID_Forma + '&ID_Categoria=' + xID + '&Color='+ColorBase;
+                let addres = '/pedirmodificarcategoria';
+                let request = $.ajax({
+                    type:"POST",
+                    url : addres,
+                    async: false,
+                    contentType: 'application/x-www-form-urlencoded',
+                    data: datos,
+                    success : function (data, status, requestHttp) {
+                        if (requestHttp.responseJSON.mensaje) {
+                            controlMensaje(requestHttp.responseJSON.mensaje, null);
+                        } else if (requestHttp.responseJSON.mensaje_error) {
+                            controlMensaje(null, requestHttp.responseJSON.mensaje_error);
+                        }
+                    }
+                });
+            }
+        });
+}
+
 
 export function VerificarEliminarMotivo(xID_Motivo) {
         swal.fire({

@@ -17,17 +17,6 @@
  * along with Rastreador3; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
-
-
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-header("Content-Type: text/html;charset=utf-8");
-
-$ID_Usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $usuario->get_id_tipo_usuario();
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -105,7 +94,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_CATEGORIA);
   ?>
   <div class = "col-md-9">
@@ -122,7 +110,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
           <!-- Search -->
         <div class = "row">
           <?php  
-            if(isset($_REQUEST["ID"]) && $_REQUEST["ID"]!=null){
+            if(isset($_REQUEST["ID"])){
               $ID_Categoria = $_REQUEST["ID"];
 
               $Con = new Conexion();
@@ -145,7 +133,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               $Permisos = (isset($RetPermisos["id_tipousuario"]))?$RetPermisos["id_tipousuario"]:null;
               ?>
             <div class = "col-10">
-            <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/pedirmodificarcategoria.php">
+            <form method = "post" onKeydown="return event.key != 'Enter';" action = "pedirmodificarcategoria">
                 <!-- <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Id: </label>
                   <div class="col-md-10">

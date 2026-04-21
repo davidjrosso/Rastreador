@@ -118,6 +118,8 @@ try {
 	$routes[] = Route::get('sol_del_control', 'pedireliminarcategoria\?ID={id}', [CategoriaController::class, 'sol_del_control']);
 	$routes[] = Route::get('del_categoria', '/delete_categoria\?ID={id}', [CategoriaController::class, 'del_categoria_control']);
 	$routes[] = Route::get('categoria', '/categoria/unificar', [CategoriaController::class, 'unif_categoria']);
+	$routes[] = Route::post('sol_md_categoria_control', 'pedirmodificarcategoria', [CategoriaController::class, 'sol_mod_control']);
+	$routes[] = Route::get('md_categoria_control', 'modificarcategoria\?ID={id}', [CategoriaController::class, 'mod_categoria_control']);
 	$routes[] = Route::get('crear_categoria', '/categoria/nueva', [CategoriaController::class, 'crear_categoria']);
 	$routes[] = Route::get('crear_categoria_error', '/categoria/nueva\?MensajeError={mensaje}', [CategoriaController::class, 'crear_categoria']);
 	$routes[] = Route::get('crear_categoria_success', '/categoria/nueva\?Mensaje={mensaje}', [CategoriaController::class, 'crear_categoria']);
