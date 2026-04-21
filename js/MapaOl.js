@@ -30,6 +30,7 @@ export class MapaOl {
     #listaFeatures=[];
     #windowsOpened=[];
     #handler;
+    #id_request = 0;
 
     constructor(
       target,
@@ -74,7 +75,7 @@ export class MapaOl {
             controls : [],
             target: this.#target,
             view: new View({
-              maxZoom: 18,
+              maxZoom: 19,
               projection: 'EPSG:4326',
               center: this.#center,
               zoom: this.#zoom,
@@ -94,10 +95,13 @@ export class MapaOl {
       let addres = "../Controladores/georeferenciadomiciliopersona.php?calle=" + calleId + "&nro=" + nro;
       let barrio = null;
       let barrioResp = null;
-      let request = $.ajax({
+      let id_request = null;
+      this.#id_request++;
+      id_request = this.#id_request;
+      $.ajax({
         url : addres,
         success : function (data, status, requestHttp) {
-            if (requestHttp.responseJSON) {
+            if (requestHttp.responseJSON && id_request == this.#id_request) {
               let lon = requestHttp.responseJSON.lon;
               let lat = requestHttp.responseJSON.lat;
               let imagen = './images/icons/location.png';
@@ -109,18 +113,19 @@ export class MapaOl {
                           );
               this.#mapa.getView().setCenter([lon, lat]);
               barrioResp = requestHttp.responseJSON.barrio;
-              barrio = (barrioResp) ? barrioResp : "no disponible";
-              $("#calle-georeferencia").text(calleNombre);
-              $("#nro-georeferencia").text(nro);
+              barrio = (barrioResp) ? barrioResp.trim() : "no disponible";
+              $("#input-calle").val(calleNombre);
+              $("#input-nro").val(nro);
               $("#barrio-georeferencia").text(barrio);
               $("#desplegable").show();
               $("#lat").val(lat);
               $("#lon").val(lon);
+              this.#id_request = 0;
             }
         }.bind(this),
         error: function (data, status, requestHttp) {
-          $("#calle-georeferencia").text("no disponible");
-          $("#nro-georeferencia").text("no disponible");
+          $("#input-calle").val("no disponible");
+          $("#input-nro").val("no disponible");
           $("#barrio-georeferencia").text("no disponible");
           $("#desplegable").show();
         }
@@ -132,18 +137,18 @@ export class MapaOl {
       let numero = response.address.house_number;
       let barrio = response.address.neighbourhood;
       calle = (calle) ? calle.trim() : "no disponible";
-      numero = (numero) ? numero.trim() : "no disponible";
+      numero = (numero) ? numero.trim() : "0";
       barrio = (barrio) ? barrio.trim() : "no disponible";
 
-      $("#calle-georeferencia").text(calle);
-      $("#nro-georeferencia").text(numero);
+      $("#input-calle").val(calle);
+      $("#input-nro").val(numero);
       $("#barrio-georeferencia").text(barrio);
       $("#desplegable").show();
     }
 
     errorSearchAddress(response) {
-      $("#calle-georeferencia").text("no disponible");
-      $("#nro-georeferencia").text("no disponible");
+      $("#input-calle").val("no disponible");
+      $("#input-nro").val("0");
       $("#barrio-georeferencia").text("no disponible");
       $("#desplegable").show();
     }
@@ -197,25 +202,12 @@ export class MapaOl {
 
     removIcon() {
         let vectorLayer = null;
-        let icon = null;
-        let list = null;
         vectorLayer = this.#mapa.getLayers();
-
-        if (vectorLayer.item(4)) {
-          list = vectorLayer.item(4).getSource().getFeatures();
-          icon = list.at(-1);
-          if (icon && icon.values_.descripcion == "icono") {
-            //vectorLayer.item(4).getSource().removeFeature(icon);
-            this.#mapa.removeLayer(vectorLayer.item(4));
+        vectorLayer.forEach((layer) => {
+          if (layer.values_.descripcion == "iconoLayer") {
+            this.#mapa.removeLayer(layer);
           }
-        } else {
-          list = vectorLayer.item(2).getSource().getFeatures();
-          icon = list.at(-1);
-          if (icon && icon.values_.descripcion == "icono") {
-            //vectorLayer.item(2).getSource().removeFeature(icon);
-            this.#mapa.removeLayer(vectorLayer.item(2));
-          }
-        }
+        });
     }
 
     addIcon(lon, lat, id_persona, imagen) {
@@ -223,53 +215,45 @@ export class MapaOl {
         let pos = [parseFloat(lat), parseFloat(lon)];
         let point = new Point(pos);
         let vectorLayer = null;
-        let icon = null;
-        let list = null;
         vectorLayer = this.#mapa.getLayers();
 
-        if (vectorLayer.item(4)) {
-          list = vectorLayer.item(4).getSource().getFeatures();
-          icon = list.at(-1);
-        } else if (vectorLayer.item(2)){
-          list = vectorLayer.item(2).getSource().getFeatures();
-          icon = list.at(-1);
-        }
-
-        if (icon && icon.values_.tipo == "icono") {
-           icon.setGeometry(point);
-           icon.set('description', id_persona);
-        } else {
-          let iconFeature = new Feature({
-            geometry: point,
-            description: id_persona,
-            tipo: "icono"
-          });
-
-          if (vectorLayer.item(4)) {
-            this.#mapa.removeLayer(vectorLayer.item(4));
+        vectorLayer.forEach((layer) => {
+          if (layer.values_.descripcion == "iconoLayer") {
+            this.#mapa.removeLayer(layer);
           }
+        });
 
-          iconFeatures.push(iconFeature);
-          let vectorSource = new olSource.Vector({
-            features: iconFeatures
-          });
-          let iconStyle = new Style({
-            image: new Icon(/** @type {olx.style.IconOptions} */ ({
-              anchor: [200, 500],
-              anchorXUnits: 'pixels',
-              anchorYUnits: 'pixels',
-              scale: 0.07,
-              opacity: 0.85,
-              src: imagen
-            }))
-          });
-    
-          vectorLayer = new VectorLayer({
-            source: vectorSource,
-            style: iconStyle
-          });
-          this.#mapa.addLayer(vectorLayer);
+        let iconFeature = new Feature({
+          geometry: point,
+          description: id_persona,
+          tipo: "icono"
+        });
+
+        if (vectorLayer.item(4)) {
+          this.#mapa.removeLayer(vectorLayer.item(4));
         }
+
+        iconFeatures.push(iconFeature);
+        let vectorSource = new olSource.Vector({
+          features: iconFeatures
+        });
+        let iconStyle = new Style({
+          image: new Icon(/** @type {olx.style.IconOptions} */ ({
+            anchor: [200, 600],
+            anchorXUnits: 'pixels',
+            anchorYUnits: 'pixels',
+            scale: 0.07,
+            opacity: 0.85,
+            src: imagen
+          }))
+        });
+
+        vectorLayer = new VectorLayer({
+          source: vectorSource,
+          style: iconStyle,
+          descripcion: "iconoLayer"
+        });
+        this.#mapa.addLayer(vectorLayer);
         
         this.#mapa.getView().setCenter(pos);
     }
@@ -486,4 +470,68 @@ export class MapaOl {
       )
       return value;
     }
+
+    queryDatosError(response) {
+        $("#input-calle").val("Error");
+        $("#input-nro").val("0");
+        $("#control-barrio").text("Error");
+    }
+
+    queryDatosSuccess(id_request, response, textStatus, jqXHR) {
+        let index = null;
+        let nroCalle = $("#input-nro").val();
+        if (response.id_calle 
+            && this.#id_request == id_request
+            && nroCalle == response.nro
+          ) {
+            this.addPersonMapAddress($(
+                                        "#input-calle").val(),
+                                        response.nro, 
+                                        response.id_calle
+                                        );
+        }
+    }
+
+    queryDatosDomicilio() {
+        let nro = parseInt($("#input-nro").val());
+        let check_calle = ($("#input-calle").val() != "no disponible") ? 1 : 0;
+        let check_barrio = ($("#control-barrio").text() != "no disponible") ? 1 : 0;
+        let request = null;
+        let query = "?";
+        let id_request = null;
+        this.#id_request++;
+        id_request = this.#id_request;
+
+        if (!isNaN(nro)) {
+            if (check_calle) {
+                query += "calle=" + $("#input-calle").val().trim();
+            }
+        
+            if (nro > 0) {
+                query += (check_calle) ? "&" : "";
+                query += "nro=" + $("#input-nro").val();
+            }
+        
+            if (check_barrio) {
+                query += (check_calle || nro > 0) ? "&" : "";
+                query += "barrio=" + $("#barrio-georeferencia").text().trim();
+            }
+        
+            request = $.ajax({
+                type: "POST",
+                cache: false,
+                url: "/Controladores/UbicacionesInformacion.php" + query,
+                async: true,
+                processData: false,
+                contentType: false,
+                success: this.queryDatosSuccess.bind(this, id_request),
+                error: this.queryDatosError
+            });
+        
+            $("#control-calle").css("display", "none");
+            $("#control-nro").css("display", "none");
+            $("#control-barrio").css("display", "none");
+        }
+    }
+    
 }
