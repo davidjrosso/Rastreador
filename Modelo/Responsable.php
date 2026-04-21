@@ -24,7 +24,7 @@ class Responsable implements JsonSerializable
 			$this->responsable = $responsable;
 		} else {
 			$consultar = "select *
-						  from responsable 
+						  from responsables 
 						  where id_resp = " . $id_responsable . " 
 							and estado = 1";
 			$ejecutar_consultar = mysqli_query(
@@ -40,7 +40,7 @@ class Responsable implements JsonSerializable
 				$this->id_responsable = $resp_id_responsable;
 				$this->responsable = $resp_responsable;
 				$this->estado = $resp_estado;
-				$this->movimiento = $resp_account_id;
+				$this->account_id = $resp_account_id;
 			}
 		}
 	}
@@ -49,7 +49,7 @@ class Responsable implements JsonSerializable
 	public static function is_registered($coneccion_base, $nombre)
 	{
 		$consulta = "select id_resp 
-					 from responsable 
+					 from responsables 
 					 where responsable like '%" . $nombre. "%' 
 					   and estado = 1";
 		$mensaje_error = "Hubo un problema al consultar los registros para validar";
@@ -69,7 +69,7 @@ class Responsable implements JsonSerializable
 																  )
 	{
 		$consulta = "select id_resp 
-					 from responsable 
+					 from responsables 
 					 where responsable like '%" . $nombre. "%'
 					   and id_resp != $id_responsable
 					   and estado = 1";
@@ -86,7 +86,7 @@ class Responsable implements JsonSerializable
 	public static function get_id_responsable_by_name($coneccion_base, $responsable)
 	{
 		$consulta = "select id_resp 
-					 from responsable 
+					 from responsables 
 					 where lower(responsable) like lower('%" . $responsable. "%') 
 					   and estado = 1";
 		$mensaje_error = "Hubo un problema al consultar los registros";
@@ -103,7 +103,7 @@ class Responsable implements JsonSerializable
 	public static function existe_id_responsable($coneccion_base, $id_responsable)
 	{
 		$consulta = "select id_resp 
-					 from responsable 
+					 from responsables 
 					 where id_resp = $id_responsable
 					   and estado = 1";
 		$mensaje_error = "Hubo un problema al consultar los registros para validar";
@@ -174,7 +174,7 @@ class Responsable implements JsonSerializable
 
 	public function delete()
 	{
-		$consulta = "update responsable 
+		$consulta = "update responsables 
 					 set estado = 0
 					 where id_resp = " . $this->get_id_responsable();
 		$mensaje_error = "No se pudo actualizar la Responsable";
@@ -187,7 +187,7 @@ class Responsable implements JsonSerializable
 
 	public function update()
 	{
-		$consulta = "update responsable 
+		$consulta = "update responsables 
 					set responsable = " . ((!is_null($this->get_responsable())) ? "'" . $this->get_responsable() . "'" : "null") . ", 
 						accountid = " . ((!is_null($this->get_account_id())) ? "'" . $this->get_account_id() . "'" : "null") . ", 
 						estado = " . ((!is_null($this->get_estado())) ? $this->get_estado() : "null") . "
@@ -201,7 +201,7 @@ class Responsable implements JsonSerializable
 
 	public function save()
 	{
-		$consulta = "INSERT INTO responsable ( 
+		$consulta = "INSERT INTO responsables ( 
 										responsable, 
 										accountid, 
 										estado
