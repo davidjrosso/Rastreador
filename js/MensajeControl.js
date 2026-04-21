@@ -672,7 +672,7 @@ export function CancelarModificacionCategoria(xID) {
         })
         .then((willDelete) => {
         if (willDelete) {
-            window.location.href = 'Controladores/DeletePeticionModificacionCategoria.php?ID=' + xID;
+            window.location.href = 'deletepeticionmodificarcategoria?ID=' + xID;
         } 
         });
 }

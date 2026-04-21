@@ -127,6 +127,7 @@ try {
 	$routes[] = Route::get('color_categoria', '/categoria/colorcategoria\?ID={id}/ID_Forma={forma}', [CategoriaController::class, 'color_categoria']);
 	$routes[] = Route::post('crear_categoria_control', '/crear_categoria', [CategoriaController::class, 'crear_categoria_control']);
 	$routes[] = Route::post('sol_unif_control', 'pedirunificarcategoria', [CategoriaController::class, 'sol_unif_control']);
+	$routes[] = Route::get('del_md_peticion_control', 'deletepeticionmoficarcategoria', [CategoriaController::class, 'del_mod_categoria']);
 	$routes[] = Route::post('buscar_categorias_desc', 'buscar_categorias_desc', [CategoriaController::class, 'buscar_categorias_desc']);
 	$routes[] = Route::post('buscar_categorias_filtrado', 'buscar_categorias_filtrado', [CategoriaController::class, 'buscar_categorias_filtrado']);
 	$routes[] = Route::get('motivos_listado', '/motivos', [MotivoController::class, 'listado_motivos']);
