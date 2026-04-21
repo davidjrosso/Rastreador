@@ -41,7 +41,7 @@ class Solicitud_EliminarCategoria
 						   AND Estado = 1";
         $rs = mysqli_query($coneccion->Conexion,$consulta) or die("Problemas al consultar las acciones.");
         $ret = mysqli_fetch_assoc($rs);
-        if (!$ret) $id_categoria = $ret["ID_Categoria"];
+        if ($ret) $id_categoria = $ret["ID_Categoria"];
         return $id_categoria;
     }
 
@@ -185,7 +185,8 @@ class Solicitud_EliminarCategoria
 
     function delete()
     {
-        $consulta = "delete solicitudes_eliminarcategorias
+        $consulta = "update solicitudes_eliminarcategorias
+                     set Estado = 0
                      where ID = " . $this->getID();
         $MensajeError = "No se pudo del la solicitud";
         mysqli_query($this->coneccion->Conexion, $consulta) or die($MensajeError);
