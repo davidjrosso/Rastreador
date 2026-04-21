@@ -367,10 +367,12 @@ class CategoriaController
             $Con = new Conexion();
             $Con->OpenConexion();
 
-            $categoria = new Categoria(xID_Categoria: $ID_Categoria, xConecction: $Con);
-            $categoria->delete();
-            $accion = new Accion(xaccountid: $ID_Usuario, xFecha: $Fecha, xDetalles: $Detalles, xID_TipoAccion: $ID_TipoAccion);
-            $accion->save();
+            if (Categoria::exist_categoria(connection: $Con, id_categoria: $ID_Categoria)) {
+                $categoria = new Categoria(xID_Categoria: $ID_Categoria, xConecction: $Con);
+                $categoria->delete();
+                $accion = new Accion(xaccountid: $ID_Usuario, xFecha: $Fecha, xDetalles: $Detalles, xID_TipoAccion: $ID_TipoAccion);
+                $accion->save();
+            }
             $id_sl = Solicitud_EliminarCategoria::get_id_categoria_sl(coneccion: $Con, id: $_REQUEST["ID"]);            
             $sl = new Solicitud_EliminarCategoria(xConeccion:$Con  , xID: $id_sl);
             $sl->delete();
