@@ -59,7 +59,7 @@ class CtrGeneral
 								 inner join movimientos M on (P.id_persona = M.id_persona)
 								 left join movimientos_responsables RN on (M.id_movimiento = RN.id_movimiento)
 								 left join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
-								 inner join responsables R on (RN.id_responable = R.id_responsable)
+								 inner join responsables R on (RN.id_responsable = R.id_responsable)
 							where MT.id_motivo IN (SELECT * FROM INN) 
 								and M.estado = 1
 								and P.estado = 1
