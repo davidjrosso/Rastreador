@@ -85,6 +85,54 @@ class EscuelaController
             $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
             $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 
+            $exist = false;
+            
+            if(isset($_REQUEST["ID"])) {
+              $ID_Escuela = $_REQUEST["ID"];
+              $exist = true;
+              $Con = new Conexion();
+              $Con->OpenConexion();
+
+              $InstEscuela = new Escuela(
+                         $Con,
+                            $ID_Escuela) ;
+
+              $ID_Escuela = $InstEscuela->getID_Escuela();
+              $Codigo = $InstEscuela->getCodigo();              
+              $Escuela = $InstEscuela->getEscuela();
+              $CUE = $InstEscuela->getCUE();
+              $Localidad = $InstEscuela->getLocalidad();
+              $Departamento = $InstEscuela->getDepartamento();
+              $Directora = $InstEscuela->getDirectora();
+              $Telefono = $InstEscuela->getTelefono();
+              $Mail = $InstEscuela->getMail();
+              $ID_Nivel = $InstEscuela->getID_Nivel();
+              $Estado = $InstEscuela->getEstado();
+
+              if($CUE == 'null'){
+                $CUE = "";
+              }
+
+              if($Localidad == 'null'){
+                $Localidad = "";
+              }
+
+              if($Departamento == 'null'){
+                $Departamento = "";
+              }
+
+              if($Directora == 'null'){
+                $Directora = "";
+              }
+
+              if($Telefono == 'null'){
+                $Telefono = "";
+              }
+
+              if($Mail == 'null'){
+                $Mail = "";
+              }
+            }
             include("./Views/view_modescuelas.php");
         }
         exit();

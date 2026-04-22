@@ -17,19 +17,6 @@
  * along with Rastreador3; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
-
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Escuela.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-
-header("Content-Type: text/html;charset=utf-8");
-
-
-$ID_Usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $usuario->get_id_tipo_usuario();
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -79,7 +66,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_ESCUELA);
   ?>
   <div class = "col-md-9">
@@ -96,70 +82,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
           <!-- Search -->
         <div class = "row">
           <?php  
-            if(isset($_REQUEST["ID"]) && $_REQUEST["ID"]!=null){
-              $ID_Escuela = $_REQUEST["ID"];
-
-              $Con = new Conexion();
-              $Con->OpenConexion();
-
-              $ConsultarDatos = "select * from escuelas where ID_Escuela = $ID_Escuela";
-              $MensajeErrorDatos = "No se pudo consultar los Datos de la Escuela";
-
-              $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
-
-              $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
-
-              $ID_Escuela = $Ret["ID_Escuela"];
-              $Codigo = $Ret["Codigo"];              
-              $Escuela = $Ret["Escuela"];
-              $CUE = $Ret["CUE"];
-              $Localidad = $Ret["Localidad"];
-              $Departamento = $Ret["Departamento"];
-              $Directora = $Ret["Directora"];
-              $Telefono = $Ret["Telefono"];
-              $Mail = $Ret["Mail"];
-              $ID_Nivel = $Ret["ID_Nivel"];
-              $Estado = $Ret["Estado"];
-
-              if($CUE == 'null'){
-                $CUE = "";
-              }
-
-              if($Localidad == 'null'){
-                $Localidad = "";
-              }
-
-              if($Departamento == 'null'){
-                $Departamento = "";
-              }
-
-              if($Directora == 'null'){
-                $Directora = "";
-              }
-
-              if($Telefono == 'null'){
-                $Telefono = "";
-              }
-
-              if($Mail == 'null'){
-                $Mail = "";
-              }
-
-              $InstEscuela = new Escuela(
-                         $Con,
-                            $ID_Escuela,
-                                $Codigo,
-                               $Escuela,
-                                   $CUE,
-                             $Localidad,
-                          $Departamento,
-                             $Directora,
-                              $Telefono,
-                                  $Mail,
-                              $ID_Nivel,
-                          $Estado
-                                        );
-
+            if($exist) {
               ?>
             <div class = "col-10">
             <form method = "post" onKeydown="return event.key != 'Enter';" action = "modificar_escuela">
@@ -222,7 +145,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Nivel: </label>
                   <div class="col-md-10">
                     <?php 
-                    $Element = new Elements();
                     echo $Element->CBModNivelEscuelas($InstEscuela->getID_Nivel());
                     ?>
                   </div>
