@@ -563,7 +563,7 @@ class PersonaController
         if (isset($_REQUEST["NumeroDeCalle"])) {
             $nro_calle = $_REQUEST["NumeroDeCalle"];
         }
-        $ID_Barrio = $_REQUEST["ID_Barrio"];
+        $ID_Barrio = (isset($_REQUEST["ID_Barrio"])) ? $_REQUEST["ID_Barrio"] : 0;
         $Localidad = ucwords($_REQUEST["Localidad"]);
         $Circunscripcion = 0;
         $Seccion = 0;

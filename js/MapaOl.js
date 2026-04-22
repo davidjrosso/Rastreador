@@ -92,7 +92,7 @@ export class MapaOl {
     }
 
     addPersonMapAddress(calleNombre, nro, calleId) {
-      let addres = "../Controladores/georeferenciadomiciliopersona.php?calle=" + calleId + "&nro=" + nro;
+      let addres = "/georeferencia_calle_control?calle=" + calleId + "&nro=" + nro;
       let barrio = null;
       let barrioResp = null;
       let id_request = null;
@@ -192,7 +192,7 @@ export class MapaOl {
         if (feature) {
           const coordinates = feature.getGeometry().getCoordinates();
           windowsReference = window.open(
-                                         "view_modpersonas.php?ID=" + feature.get('description'),
+                                         "persona/editar?ID=" + feature.get('description'),
                                          "Ventana" + feature.get('description'), 
                                          "width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no"
                                         );
@@ -520,7 +520,7 @@ export class MapaOl {
             request = $.ajax({
                 type: "POST",
                 cache: false,
-                url: "/Controladores/UbicacionesInformacion.php" + query,
+                url: "/ubicacion_persona" + query,
                 async: true,
                 processData: false,
                 contentType: false,

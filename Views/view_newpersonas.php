@@ -146,38 +146,58 @@
 			        controlMensaje(mensajeSuccess, mensajeError);
           });
 
-       function calcularEdad() {
-            var Fecha_Nac = document.getElementById("Fecha_Nacimiento").value;
-            var Fecha = Fecha_Nac.split('/').reverse().join('-');
-            var hoy = new Date();
-            var cumpleanos = new Date(Fecha);
-            var edad = hoy.getFullYear() - cumpleanos.getFullYear();
-            var m = hoy.getMonth() - cumpleanos.getMonth();
 
-            if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
-                edad--;
-            }
+          function calcularEdad() {
+                  let fecha = document.getElementById("Fecha_Nacimiento").value;
+                  if (fecha !== null && fecha.length != 0) {
+                    fecha = fecha.split('/').reverse().join('-');
+                    cumpleanos = new Date(fecha + " GMT-0300");
+                  } else {
+                    cumpleanos = new Date();
+                  }
 
-            var Anios = document.getElementById("Edad");
-            if(!isNaN(edad)){
-              Anios.value = edad;
-            }
-            
+                  let mes = cumpleanos.getMonth() + 1;
+                  let ano = cumpleanos.getFullYear();
+                  let dia = cumpleanos.getDate();
 
-            var CalcMeses = 0;
-            if(m<0){
-              CalcMeses = (12 + m);
-            }else{
-              CalcMeses = m;
+                  let fecha_hoy = new Date();
+                  let ahora_ano = fecha_hoy.getYear();
+                  let ahora_mes = fecha_hoy.getMonth() + 1;
+                  let ahora_dia = fecha_hoy.getDate();
+
+                  let edad = (ahora_ano + 1900) - ano;
+                  if (ahora_mes < mes) {
+                      edad--;
+                  }
+
+                  if ((mes == ahora_mes) && (ahora_dia < dia)) {
+                      edad--;
+                  }
+
+                  if (edad > 1900) {
+                      edad -= 1900;
+                  }
+
+                  let meses = 0;
+
+                  if (ahora_mes > mes && dia > ahora_dia)
+                      meses = ahora_mes - mes - 1;
+                  else if (ahora_mes > mes)
+                      meses = ahora_mes - mes
+                  if (ahora_mes < mes && dia < ahora_dia)
+                      meses = 12 - (mes - ahora_mes);
+                  else if (ahora_mes < mes)
+                      meses = 12 - (mes - ahora_mes + 1);
+                  if (ahora_mes == mes && dia > ahora_dia)
+                      meses = 11;
+
+                  let Anios = document.getElementById("Edad");
+                  Anios.value = edad;
+
+                  let Meses = document.getElementById("Meses");
+                  Meses.value = meses;
             }
-            
-            var Meses = document.getElementById("Meses");
-            if(!isNaN(CalcMeses)){
-              Meses.value = CalcMeses;        
-            }
-            
-      }
-  </script>
+</script>
 </head>
 <body>
 <div class = "row">

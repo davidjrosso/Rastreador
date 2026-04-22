@@ -199,7 +199,8 @@
       let Meses = document.getElementById("Meses");
       Meses.value = CalcMeses;
     }
-  </script>
+
+</script>
 
 </head>
 
@@ -242,12 +243,15 @@
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="documento" class="col-md-2 col-form-label LblForm">Documento: </label>
+                    <label for="idDocumento" class="col-md-2 col-form-label LblForm">Documento: </label>
                     <div class="col-md-10">
-                      <input type="text" class="form-control" name="DNI" id="documento" autocomplete="off"
+                      <input type="text" class="form-control" name="DNI" id="idDocumento" autocomplete="off" oninput="ValidarDocumento()"
                         value="<?php echo $Persona->getDNI(); ?>">
                     </div>
                   </div>
+                  <div class="div-modal-Error" id="ErrorDocumento">
+                  </div>
+
                   <div class="form-group row">
                     <label for="Fecha_Nacimiento" class="col-md-2 col-form-label LblForm" style="margin-bottom: -8px;">Fecha
                       de Nacimiento: </label>

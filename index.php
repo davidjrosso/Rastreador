@@ -211,6 +211,8 @@ try {
 	$routes[] = Route::get('new_calle_succes', '/calle/nueva\?Mensaje={mensaje}', [CalleController::class, 'new_calle']);
 	$routes[] = Route::get('new_calle_error', '/calle/nueva\?MensajeError={mensaje}', [CalleController::class, 'new_calle']);
 	$routes[] = Route::post('new_calle_control', '/new_calle_control', [CalleController::class, 'new_calle_control']);
+	$routes[] = Route::get('georeferencia_calle_control', '/georeferencia_calle_control\?calle={val}/nro={num}', [CalleController::class, 'georeferencia_calle_persona']);
+	$routes[] = Route::get('ubicacion_calle_control', '/ubicacion_calle_control\?calle={cal}/nro={num}', [CalleController::class, 'ubicacion_persona']);
 	$routes[] = Route::get('unif_calle', '/calle/unificar', [CalleController::class, 'unif_calle']);
 	$routes[] = Route::post('unif_calle_control', '/unificar_direcciones', [CalleController::class, 'unif_calle_control']);
 	$routes[] = Route::post('buscar_unif_direcciones', '/buscar_unif_direcciones\?valorBusqueda={valor}', [CalleController::class, 'buscar_unif_direcciones']);
