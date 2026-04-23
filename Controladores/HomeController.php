@@ -162,18 +162,14 @@ class HomeController
 
     public function login_control() 
     {
-        if (isset($_SESSION["Usuario"])) {
-            header("Location: /");
-            exit();
-        }
-
+        header("content-type: application/json");
         $con = new Conexion();
         $con->OpenConexion();
 
         $user_name = $_REQUEST["UserName"];
         $user_pass = md5($_REQUEST["UserPass"]);
         if (isset($_SESSION["Usuario"])) {
-            header("Location: /");
+           $mesaje["redirect"] = true;
         } else {
             $control = Account::control_user_password(
                                                     con: $con,
@@ -185,17 +181,17 @@ class HomeController
                 $user = new Account(account_id: $control);
                 if ($user->is_active()) {
                     $_SESSION["Usuario"] = $control;
-                    header("Location: /");			
+                    $mesaje["redirect"] = true;
                 } else {
                     $mensaje_error = "Usuario incativo";
-                    header("Location: /login?MensajeError=" . $mensaje_error);			
+                    $mensaje["MensajeError"] = $mensaje_error;
                 }
             } else {
                 $mensaje_error = "Nombre de Usuario o Password incorrectos";
-                header("Location: /login?MensajeError=" . $mensaje_error);
+                $mensaje["MensajeError"] = $mensaje_error;
             }
-
         }
+        echo json_encode($mensaje) ;
     }
 
     public function logout_control()

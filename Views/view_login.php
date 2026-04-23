@@ -33,29 +33,8 @@
 		<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
 		<link rel="stylesheet" type="text/css" href="css/Estilos.css">
 		<link rel="stylesheet" href="css/style.css">
-		<script src="https://code.jquery.com/jquery-3.7.1.slim.js"
-				integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc="
-				crossorigin="anonymous"></script>
-		<script src="dist/control.js"></script>
+		<script src="dist/login.js"></script>
 
-		<script>
-			$(document).ready(function() {
-				$("#spanMostrar").on("click", function(){
-					var elementInput= $("#login-pass");
-					var elementIcon= $("#iconMostrar");
-					if(elementIcon.hasClass("active")){
-						elementIcon.removeClass("active");
-						elementIcon.html("visibility_off");
-						elementInput.prop("type","password");
-					} else {
-						elementIcon.addClass("active");
-						elementIcon.html("visibility");
-						elementInput.prop("type","text");
-					}
-				});
-
-			});
-		</script>
 	</head>
 	<body>
 		<div class="login">
@@ -65,7 +44,7 @@
 				</div>
 
 				<div class="login-form">
-					<form method = "post" action = "login_control" autocomplete="off">
+					<form method = "post" action = "login_control" id = "frm-login" autocomplete="off">
 					<div class="control-group">
 						<input type="text" class="login-field" value="" placeholder="Nombre de Usuario" id="login-name" name = "UserName" autocomplete = "off">
 						<label class="login-field-icon fui-user" for="login-name"></label>
@@ -80,7 +59,8 @@
 							</i>
 						</span>
 					</div>
-					<button class="btn btn-primary btn-large btn-block Hander" style="margin-bottom: 12px;" type = "submit">Entrar</button>				
+					<button class="btn btn-primary btn-large btn-block Hander" style="margin-bottom: 12px;" 
+							type = "submit" >Entrar</button>				
 					</form>
 					<a href="/password_peticion" class="recovery-email">¿Olvidaste tu contraseña?</a>
 				</div>

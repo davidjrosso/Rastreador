@@ -121,7 +121,7 @@ class MovimientoController
               $Con->OpenConexion();
 
               $ConsultarDatos = "select M.id_movimiento, M.fecha, M.id_centro, P.id_persona, P.apellido, 
-                                        P.nombre, M.observaciones, group_concat(distinct R.id_resp separator '|')
+                                        P.nombre, M.observaciones, group_concat(distinct R.id_responsable separator '|') ,
                                         R.responsable, C.centro_salud, I.ID_OtraInstitucion, I.Nombre, group_concat(distinct MT.id_motivo separator '|')
                                 from movimientos M 
                                       INNER JOIN movimientos_motivos MEMT ON (M.id_movimiento = MEMT.id_movimiento)
