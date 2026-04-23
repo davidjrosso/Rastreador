@@ -169,7 +169,7 @@ class HomeController
         $user_name = $_REQUEST["UserName"];
         $user_pass = md5($_REQUEST["UserPass"]);
         if (isset($_SESSION["Usuario"])) {
-           $mesaje["redirect"] = true;
+           $mensaje["redirect"] = true;
         } else {
             $control = Account::control_user_password(
                                                     con: $con,
@@ -181,7 +181,7 @@ class HomeController
                 $user = new Account(account_id: $control);
                 if ($user->is_active()) {
                     $_SESSION["Usuario"] = $control;
-                    $mesaje["redirect"] = true;
+                    $mensaje["redirect"] = true;
                 } else {
                     $mensaje_error = "Usuario incativo";
                     $mensaje["MensajeError"] = $mensaje_error;

@@ -360,12 +360,12 @@ class Account implements JsonSerializable
 
 	public function is_active() 
 	{
-		$control_expiracion = 1;
+		$control_expiracion = false;
 		if(!empty($this->expired_date)){
 			$fecha_actual = DateTime::createFromFormat(format: 'Y-m-d', datetime: date('Y-m-d'));
 			$diferencia = $fecha_actual->diff($this->expired_date, true);
 			$año = $diferencia->y;
-			$control_expiracion = ($año >= 1) ? 0 : 1;
+			$control_expiracion = ($año >= 1);
 		}
 		return $control_expiracion;
 	}
