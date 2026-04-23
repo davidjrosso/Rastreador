@@ -13,6 +13,7 @@ module.exports = {
     alerta : './js/Enlace-Drive.js',
     control : './js/MensajeControl.js',
     form : './js/form.js',
+    login : './js/login.js',
     reporte : './js/ReporteMovimiento.js',
     excel : './js/excel.js'
   },
