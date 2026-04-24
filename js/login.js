@@ -31,7 +31,7 @@ $(function() {
                         data: datos,
                         success : function (data, status, requestHttp) {
                             if (requestHttp.responseJSON.redirect) {
-                                window.location = "/home";
+                                window.location.href = "/home";
                             } else if (requestHttp.responseJSON.MensajeError) {
                                 swal.fire(requestHttp.responseJSON.MensajeError, '', 'warning');
                             }

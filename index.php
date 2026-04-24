@@ -189,6 +189,9 @@ try {
 	$routes[] = Route::get('listado_barrios_succes', '/barrios\?Mensaje={mensaje}', [BarrioController::class, 'listado_barrios']);
 	$routes[] = Route::get('listado_barrios_error', '/barrios\?MensajeError={mensaje}', [BarrioController::class, 'listado_barrios']);
 	$routes[] = Route::get('mod_barrio', '/barrio/editar\?ID={id}', [BarrioController::class, 'mod_barrio']);
+	$routes[] = Route::get('mod_barrio_s', '/barrio/editar\?ID={id}/Mensaje={ma}', [BarrioController::class, 'mod_barrio']);
+	$routes[] = Route::get('mod_barrio_e', '/barrio/editar\?ID={id}/MensajeError={ma}', [BarrioController::class, 'mod_barrio']);
+
 	$routes[] = Route::post('mod_barrio_control', '/modificar_barrio', [BarrioController::class, 'mod_barrio_control']);
 	$routes[] = Route::get('del_barrio_control', '/delete_barrio\?ID={id}', [BarrioController::class, 'del_barrio_control']);
 	$routes[] = Route::get('crear_barrio', '/barrio/nuevo', [BarrioController::class, 'crear_barrio']);

@@ -1360,11 +1360,11 @@ class CtrGeneral
 	public function getResponsables(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "SELECT id_resp, responsable 
+		$Consulta = "SELECT id_responsable, responsable 
 					 FROM responsables 
 					 WHERE estado = 1 
-					   AND id_resp <> 64
-					 ORDER BY id_resp";
+					   AND id_responsable <> 64
+					 ORDER BY id_responsable";
 		$MessageError = "Problemas al intentar mostrar Responsables";
 		$Table = "<table class='table'>
 				    <thead>
@@ -1383,12 +1383,12 @@ class CtrGeneral
 							$Ret["responsable"] . "
 						 </td>
 						 <td>
-							<a href = '/responsable/editar?ID=" . $Ret["id_resp"] . "'>
+							<a href = '/responsable/editar?ID=" . $Ret["id_responsable"] . "'>
 								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
 							</a>
 						 </td>
 						 <td>
-							 <a onClick = 'Verificar(" . $Ret["id_resp"] . ")'>
+							 <a onClick = 'Verificar(" . $Ret["id_responsable"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							 </a>
 						  </td>
@@ -1403,7 +1403,7 @@ class CtrGeneral
 	public function getResponsablesxID($ID){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_resp, responsable from responsables where id_resp = $ID and estado = 1 order by id_resp";
+		$Consulta = "select id_responsable, responsable from responsables where id_responsable = $ID and estado = 1 order by id_resp";
 		$MessageError = "Problemas al intentar mostrar Responsables por ID";
 		$Table = "<table class='table'>
 					<thead>
@@ -1421,12 +1421,12 @@ class CtrGeneral
 						 <td>" . $Ret["responsable"] . "
 						 </td>
 						 <td>
-						 	<a href = '/responsable/editar?ID=" . $Ret["id_resp"] . "'>
+						 	<a href = '/responsable/editar?ID=" . $Ret["id_responsable"] . "'>
 								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
 							</a>
 						 </td>
 						 <td>
-						 	<a onClick = 'Verificar(" . $Ret["id_resp"] . ")'>
+						 	<a onClick = 'Verificar(" . $Ret["id_responsable"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>
 						 </td>
@@ -1441,12 +1441,12 @@ class CtrGeneral
 	public function getResponsablesxResponsable($Responsable){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_resp, responsable from responsables where responsable like '%$Responsable%' and estado = 1 order by id_resp";
+		$Consulta = "select id_responsable, responsable from responsables where responsable like '%$Responsable%' and estado = 1 order by id_resp";
 		$MessageError = "Problemas al intentar mostrar Responsables por Responsable";
 		$Table = "<table class='table'><thead><tr><th>Responsable</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["responsable"]."</td><td><a href = '/responsable/editar?ID=".$Ret["id_resp"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_resp"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["responsable"]."</td><td><a href = '/responsable/editar?ID=".$Ret["id_responsable"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_responsable"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
