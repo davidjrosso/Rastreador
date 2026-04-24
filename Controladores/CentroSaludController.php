@@ -24,7 +24,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Accion.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_Unificacion.php");
-
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Archivo.php") ;
 
 class CentroSaludController 
 {
@@ -78,6 +78,28 @@ class CentroSaludController
             
             $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
             $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
+            $exist = false;
+
+            if(isset($_REQUEST["ID"])){
+              $exist = true;
+              $id_centro = $_REQUEST["ID"];
+
+              $con = new Conexion();
+              $con->OpenConexion();
+              $centro_salud = new CentroSalud(
+                                              coneccion_base: $con, 
+                                              id_centro: $id_centro
+                                            );
+
+              $id_centro = $centro_salud->get_id_centro();
+              $centro_salud_nombre = $centro_salud->get_centro_salud();
+              $list_arch = [];
+              if (Archivo::exist_id_cs(id: $id_centro, coneccion: $con)) {
+                $list_arch = Archivo::get_ids_cs( id: $id_centro, coneccion: $con );              
+              }
+             
+            }
 
             include("./Views/view_modcentros.php");
         }

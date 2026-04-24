@@ -64,6 +64,19 @@ class OtraInstitucionController
             $usuario = new Account(account_id: $ID_Usuario);
             $TipoUsuario = $usuario->get_id_tipo_usuario();
 
+            $exist = false;
+            if(isset($_REQUEST["ID"])){
+              $exist = true;
+              $ID_OtraInstitucion = $_REQUEST["ID"];
+
+              $Con = new Conexion();
+              $Con->OpenConexion();
+
+              $InstInstitucion = new OtraInstitucion(
+                                                     xConeccion: $Con,
+                                                     xID_OtraInstitucion: $ID_OtraInstitucion
+                                                    );
+            }
             include("./Views/view_modotrasinstituciones.php");
         }
         exit();
@@ -93,7 +106,7 @@ class OtraInstitucionController
             $accion->save();
             $Con->CloseConexion();
             $Mensaje = "La otra_institucion fue eliminada Correctamente";
-            header('Location: /home?Mensaje=' . $Mensaje);
+            header('Location: /otrasinstituciones?Mensaje=' . $Mensaje);
         } catch (Exception $e) {
             echo "Error: ".$e->getMessage();
         }
@@ -114,7 +127,7 @@ class OtraInstitucionController
             $Con = new Conexion();
             $Con->OpenConexion();
 
-            if (OtraInstitucion::get_id_by_name($Con, $nombre)) {
+            if (!OtraInstitucion::get_id_by_name($Con, $nombre)) {
                 $Con->CloseConexion();
                 $Mensaje = "Ya existe una Institución con ese Nombre";
                 header('Location: /otrainstitucion/editar?ID=' . $id . '&MensajeError=' . $Mensaje);

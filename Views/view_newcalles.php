@@ -53,12 +53,8 @@
   </script>
 -->
   <script type="text/javascript">
-      var getImport = document.quearySelector ('link [rel = import]'); 
-      var getContent = getImport.import.querySelector('body');
-
-      var ContenidoPagina = document.getElementById("ContenidoPagina");
-
-      ContenidoPagina.appendChild(document.importNode(getContent, true));
+    let mensajeSuccess = '<?php echo $mensaje_success;?>';
+    let mensajeError = '<?php echo $mensaje_error; ?>'
   </script>
 
 </head>

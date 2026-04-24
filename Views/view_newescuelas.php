@@ -24,7 +24,7 @@
   <script src="js/ValidarResponsable.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script src="js/ValidarEscuela.js"></script>
-  <script src="./dist/"></script>
+  <script src="./dist/control.js"></script>
   <!--
   <script>
        $(document).ready(function(){
@@ -53,14 +53,10 @@
 
   </script>
 -->
-  <script type="text/javascript">
-      var getImport = document.quearySelector ('link [rel = import]'); 
-      var getContent = getImport.import.querySelector('body');
-
-      var ContenidoPagina = document.getElementById("ContenidoPagina");
-
-      ContenidoPagina.appendChild(document.importNode(getContent, true));
-  </script>
+  <script>
+    let mensajeSuccess = '<?php echo $mensaje_success;?>';
+    let mensajeError = '<?php echo $mensaje_error; ?>';
+</script>
 
 </head>
 <body>
@@ -80,7 +76,7 @@
       <div class="col"></div>
       <div class="col-10">
           <div class="row">
-              <center><button class = "btn btn-secondary btn-sm" onClick="location.href ='view_newmovimientos.php'">Agregar Nuevo Movimiento</button></center>
+              <center><button class = "btn btn-secondary btn-sm" onClick="location.href ='/movimiento/nuevo'">Agregar Nuevo Movimiento</button></center>
           </div>
       </div>
       <div class="col"></div>
@@ -90,7 +86,7 @@
       <div class = "col-10">
           <!-- Carga -->
           <p class = "Titulos">Cargar Nueva Escuela</p>
-          <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/InsertEscuela.php" onSubmit = "return ValidarEscuela();">
+          <form method = "post" onKeydown="return event.key != 'Enter';" action = "/insertar_escuela" onSubmit = "return ValidarEscuela();">
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Codigo *: </label>
               <div class="col-md-10">

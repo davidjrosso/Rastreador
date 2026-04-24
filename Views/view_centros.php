@@ -18,17 +18,6 @@
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-
-
-header("Content-Type: text/html;charset=utf-8");
-
-$ID_Usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $usuario->get_id_tipo_usuario(); 
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -46,6 +35,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="./dist/control.js"></script>
   <script>
        $(document).ready(function(){
               var date_input=$('input[name="date"]'); //our date input has the name "date"
@@ -57,6 +47,9 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   autoclose: true,
               });
           });
+
+       let mensajeSuccess = '<?php echo $mensaje_success; ?>';
+       let mensajeError = '<?php echo $mensaje_error; ?>';
 
        function Verificar(xID){
               swal({

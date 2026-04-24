@@ -281,20 +281,23 @@ class EscuelaController
         try {
             $Con = new Conexion();
             $Con->OpenConexion();
-            $escuela = new Escuela(coneccion_base: $Con, xEscuela: $ID_Escuela);
-            $Consulta = "update escuelas set Estado = 0 where ID_Escuela = $ID_Escuela";
-            if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
-                throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 0);		
-            }
-            $ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
-            if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
-                throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 1);
-            }	
-            $Con->CloseConexion();
-            $Mensaje = "La Escuela fue eliminada Correctamente";
-            header('Location: /escuelas?Mensaje='.$Mensaje);
-        } catch (Exception $e) {
-            echo "Error: ".$e->getMessage();
+            if (Escuela::exist_id(id: $ID_Escuela, coneccion: $Con)) {
+                $escuela = new Escuela(coneccion_base: $Con, xID_Escuela: $ID_Escuela);
+                $escuela->delete();
+
+                $ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
+                if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
+                    throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 1);
+                }	
+                $Con->CloseConexion();
+                $Mensaje = "La Escuela fue eliminada Correctamente";
+                header('Location: /escuelas?Mensaje='.$Mensaje);
+            } else {
+                $Mensaje = "La Escuela fue eliminada previamente";
+                header('Location: /escuelas?MensajeError='.$Mensaje);
+           }           
+         } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
         }
     }
 
@@ -317,64 +320,25 @@ class EscuelaController
         $Con = new Conexion();
         $Con->OpenConexion();
         $Escuela_Nueva = new Escuela(
-                                     $Con,
-                                     $ID_Escuela,
-                                     $Codigo,
-                                     $Escuela,
-                                     $CUE,
-                                     $Localidad,
-                                     $Departamento,
-                                     $Directora,
-                                     $Telefono,
-                                     $Mail,
-                                     $ID_Nivel,
-                                     $Estado);
+                                     coneccion_base: $Con,
+                                     xID_Escuela : $ID_Escuela);
 
         $Fecha = date("Y-m-d");
         $ID_TipoAccion = 2;
 
         try {
-            $ConsultarRegistrosIguales = "select * from escuelas where Escuela = '$Escuela' and ID_Escuela != $ID_Escuela and estado = 1";
-            if(!$Ret = mysqli_query($Con->Conexion,$ConsultarRegistrosIguales)){
-                throw new Exception("Error al consultar registros. Consulta: ".$ConsultarRegistrosIguales, 0);		
-            }
-            $Resultado = mysqli_num_rows($Ret);
-            if ($Resultado > 0) {
+
+            if (Escuela::exist_name_with_id(name: $Escuela,coneccion: $Con, id: $ID_Escuela) ) {
                 $Con->CloseConexion();
                 $Mensaje = "Ya existe una Escuela con ese Nombre";
                 header('Location: /escuelas?ID='.$ID_Escuela.'&MensajeError='.$Mensaje);
             } else {
-                $ConsultarDatosViejos = "select * from escuelas where ID_Escuela = $ID_Escuela and Estado = 1";
-                $ErrorDatosViejos = "No se pudieron consultar los datos";
-                if(!$RetDatosViejos = mysqli_query($Con->Conexion,$ConsultarDatosViejos)){
-                    throw new Exception("Error al intentar registrar. Consulta: ".$ConsultarDatosViejos, 1);
-                }		
-                $TomarDatosViejos = mysqli_fetch_assoc($RetDatosViejos);
-                $ID_Escuela = $TomarDatosViejos["ID_Escuela"];
-                $Codigo = $TomarDatosViejos["Codigo"];
-                $Escuela = $TomarDatosViejos["Escuela"];
-                $CUE = $TomarDatosViejos["CUE"];
-                $Localidad = $TomarDatosViejos["Localidad"];
-                $Departamento = $TomarDatosViejos["Departamento"];
-                $Directora = $TomarDatosViejos["Directora"];
-                $Telefono = $TomarDatosViejos["Telefono"];
-                $Mail = $TomarDatosViejos["Mail"];
-                $ID_Nivel = $TomarDatosViejos["ID_Nivel"];
-                $Estado = $TomarDatosViejos["Estado"];
                 
-                $Escuela_Vieja = new Escuela($ID_Escuela,$Codigo,$Escuela,$CUE,$Localidad,$Departamento,$Directora,$Telefono,$Mail,$ID_Nivel,$Estado);
-                
+                $Escuela_Vieja = new Escuela($Con, $ID_Escuela,$Codigo,$Escuela,$CUE,$Localidad,$Departamento,$Directora,$Telefono,$Mail,$ID_Nivel,$Estado);
+                $Escuela_Vieja->update();
 
-                $Consulta = "update escuelas set Codigo = '{$Escuela_Nueva->getCodigo()}', Escuela = '{$Escuela_Nueva->getEscuela()}', CUE = '{$Escuela_Nueva->getCUE()}', Localidad = '{$Escuela_Nueva->getLocalidad()}', Departamento = '{$Escuela_Nueva->getDepartamento()}', Directora = '{$Escuela_Nueva->getDirectora()}', Telefono = '{$Escuela_Nueva->getTelefono()}', Mail = '{$Escuela_Nueva->getMail()}', ID_Nivel = {$Escuela_Nueva->getID_Nivel()} where ID_Escuela = {$Escuela_Nueva->getID_Escuela()} and Estado = 1";
-                if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
-                    throw new Exception("Error al intentar registrar. Consulta: " . $ConsultarRegistrosIguales, 2);
-                }
+                $Detalles = "El usuario con ID: $ID_Usuario ha modificado una Escuela. Datos: Dato Anterior: " . $Escuela_Nueva->getCodigo() . " - , Dato Nuevo: " . $Escuela_Vieja->getCodigo() . " - Dato Anterior: " . $Escuela_Nueva->getEscuela() .  ", Dato Nuevo: {" . $Escuela_Vieja->getEscuela() . "- Dato Anterior: " . $Escuela_Nueva->getCUE() . ", Dato Nuevo: {" . $Escuela_Vieja->getCUE() . "- Dato Anterior:" . $Escuela_Nueva->getLocalidad() . ", Dato Nuevo:  " . $Escuela_Vieja->getLocalidad() . "- Dato Anterior: " . $Escuela_Nueva->getDepartamento() . ", Dato Nuevo: " . $Escuela_Vieja->getDepartamento() . "- Dato Anterior: " . $Escuela_Nueva->getDirectora() . ", Dato Nuevo: " . $Escuela_Vieja->getDirectora() . "- Dato Anterior: " . $Escuela_Nueva->getTelefono() . ", Dato Nuevo: {" . $Escuela_Vieja->getTelefono() . "- Dato Anterior: " . $Escuela_Nueva->getMail() . ", Dato Nuevo: " . $Escuela_Vieja->getMail() . "- Dato Anterior: " . $Escuela_Nueva->getID_Nivel()  . ", Dato Nuevo: " . $Escuela_Vieja->getID_Nivel() ;
 
-                $Detalles = "El usuario con ID: $ID_Usuario ha modificado una Escuela. Datos: Dato Anterior: {$Escuela_Vieja->getCodigo()} , Dato Nuevo: {$Escuela_Nueva->getCodigo()} - Dato Anterior: {$Escuela_Vieja->getEscuela()} , Dato Nuevo: {$Escuela_Nueva->getEscuela()} - Dato Anterior: {$Escuela_Vieja->getCUE()} , Dato Nuevo: {$Escuela_Nueva->getCUE()} - Dato Anterior: {$Escuela_Vieja->getLocalidad()} , Dato Nuevo: {$Escuela_Nueva->getLocalidad()} - Dato Anterior: {$Escuela_Vieja->getDepartamento()} , Dato Nuevo: {$Escuela_Nueva->getDepartamento()} - Dato Anterior: {$Escuela_Vieja->getDirectora()} , Dato Nuevo: {$Escuela_Nueva->getDirectora()} - Dato Anterior: {$Escuela_Vieja->getTelefono()} , Dato Nuevo: {$Escuela_Nueva->getTelefono()} - Dato Anterior: {$Escuela_Vieja->getMail()} , Dato Nuevo: {$Escuela_Nueva->getMail()} - Dato Anterior: {$Escuela_Vieja->getID_Nivel()} , Dato Nuevo: {$Escuela_Nueva->getID_Nivel()}.";
-                $ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
-                if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
-                    throw new Exception("Error al intentar registrar Accion. Consulta: " . $ConsultaAccion, 3);
-                }
                 $Con->CloseConexion();
                 $Mensaje = "La Escuela se modificó Correctamente";
                 header('Location: /escuela/editar?ID=' . $ID_Escuela . '&Mensaje=' . $Mensaje);

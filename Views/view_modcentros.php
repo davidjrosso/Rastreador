@@ -1,17 +1,3 @@
-<?php 
-
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Elements.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/CtrGeneral.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/CentroSalud.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Account.php';
-
-
-header("Content-Type: text/html;charset=utf-8");
-
-$ID_Usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $ID_Usuario); 
-$TipoUsuario = $usuario->get_id_tipo_usuario();
-?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,7 +15,8 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script src="./dist/alerta.js"></script>
-  <script>
+  <script src="./dist/control.js"></script>
+<script>
 
     var cantArchivo = 0;
        $(document).ready(function(){
@@ -42,9 +29,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   autoclose: true,
               });
           });
-
-          function validarNombreArchivo() {
-          }
 
     function agregarArchivo(){
       cantArchivo++;
@@ -86,7 +70,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_CENTRO_SALUD);
   ?>
   <div class = "col-md-9">
@@ -103,23 +86,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
           <!-- Search -->
         <div class = "row">
           <?php  
-            if(isset($_REQUEST["ID"]) && $_REQUEST["ID"]!=null){
-              $id_centro = $_REQUEST["ID"];
-
-              $con = new Conexion();
-              $con->OpenConexion();
-              $centro_salud = new CentroSalud(
-                                              coneccion_base: $con, 
-                                              id_centro: $id_centro
-                                            );
-
-              $id_centro = $centro_salud->get_id_centro();
-              $centro_salud_nombre = $centro_salud->get_centro_salud();
-
-              $consulta = "select * from archivos where centro_salud = $id_centro";
-              $mensaje = "Error al consultar los registros de archivos";
-              $result = mysqli_query($con->Conexion,$consulta) or die($mensaje);
-
+            if($exist){
             ?>
             <div class = "col-10">
             <form method="post" onKeydown="return event.key != 'Enter';" action = "mod_centro_salud">
@@ -139,10 +106,9 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   </div>
                 </div>
                 <?php 
-                  $max_count = mysqli_num_rows($result);
-                  $count = 0;
-                  while($row = mysqli_fetch_array($result)) {
-                    if ($count == 0) {
+                foreach ($list_arch as $key => $value) {
+
+                if ($key == 0) {
                 ?>
                 <div class="form-group row">
                   <label for="archivo" class="col-md-2 col-form-label LblForm">Archivo: </label>
@@ -165,7 +131,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                     <input type="text" class="form-control" name = "planilla" id="planilla" autocomplete="off" value = "<?php echo $row["planilla"]; ?>">
                   </div>
                   <?php
-                    if ($count + 1 == $max_count) {
+                    if ($key + 1 == count($list_arch)) {
                   ?>
                   <div class="col-md-1">
                     <button type="button" class="btn btn-primary" onClick="agregarPlanilla()" id="agregar-planilla-id">+</button>
@@ -183,7 +149,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                 <div id="contenedor-planilla">
                 </div>
                 <?php
-                  $count++;
+
                 }
                 ?>
                 <div id="contenedor-archivos">
@@ -191,7 +157,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                 <div class="form-group row">
                   <div class="offset-md-2 col-md-10">
                     <button type="submit" class="btn btn-outline-success">Guardar</button>
-                    <button type = "button" class = "btn btn-danger" onClick = "location.href = '/home'">Atras</button>
+                    <button type = "button" class = "btn btn-danger" onClick = "location.href = '/centrosdesalud'">Atras</button>
                   </div>
                 </div>
             </form>

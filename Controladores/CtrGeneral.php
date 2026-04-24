@@ -1531,12 +1531,12 @@ class CtrGeneral
 	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select E.ID_Escuela, E.Escuela, E.Localidad, N.Nivel from escuelas E, nivel_escuelas N where E.ID_Nivel = N.ID_Nivel and E.Estado = 1 order by E.ID_Escuela";
+		$Consulta = "select E.id_escuela, E.escuela, E.localidad, N.nivel from escuelas E, nivel_escuelas N where E.id_nivel = N.id_nivel and E.estado = 1 order by E.id_escuela";
 		$MessageError = "Problemas al intentar mostrar Escuelas";
 		$Table = "<table class='table'><thead><tr><th>Escuela</th><th>Localidad</th><th>Nivel</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["Escuela"]."</td><td>".$Ret["Localidad"]."</td><td>".$Ret["Nivel"]."</td><td><a href = '/escuela/editar?ID=".$Ret["ID_Escuela"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'VerificarDeleteEscuela(".$Ret["ID_Escuela"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["escuela"]."</td><td>".$Ret["localidad"]."</td><td>".$Ret["nivel"]."</td><td><a href = '/escuela/editar?ID=".$Ret["id_escuela"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'VerificarDeleteEscuela(".$Ret["id_escuela"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -1548,12 +1548,12 @@ class CtrGeneral
 	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select E.ID_Escuela, E.Escuela, E.Localidad, N.Nivel from escuelas E, nivel_escuelas N where E.ID_Nivel = N.ID_Nivel and E.ID_Escuela = $ID and E.Estado = 1 order by E.ID_Escuela";
+		$Consulta = "select E.id_escuela, E.escuela, E.localidad, N.nivel from escuelas E, nivel_escuelas N where E.ID_Nivel = N.ID_Nivel and E.ID_Escuela = $ID and E.Estado = 1 order by E.ID_Escuela";
 		$MessageError = "Problemas al intentar mostrar Escuelas por ID";
 		$Table = "<table class='table'><thead><tr><th>Escuela</th><th>Localidad</th><th>Nivel</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["Escuela"]."</td><td>".$Ret["Localidad"]."</td><td>".$Ret["Nivel"]."</td><td><a href = '/escuela/editar?ID=".$Ret["ID_Escuela"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'VerificarDeleteEscuela(".$Ret["ID_Escuela"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["escuela"]."</td><td>".$Ret["localidad"]."</td><td>".$Ret["nivel"]."</td><td><a href = '/escuela/editar?ID=".$Ret["id_escuela"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'VerificarDeleteEscuela(".$Ret["id_escuela"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -1565,12 +1565,12 @@ class CtrGeneral
 	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select E.ID_Escuela, E.Escuela, E.Localidad, N.Nivel from escuelas E, nivel_escuelas N where E.ID_Nivel = N.ID_Nivel and E.Escuela like '%$Escuela%' and E.Estado = 1 order by E.ID_Escuela";
+		$Consulta = "select E.id_escuela, E.escuela, E.localidad, N.nivel from escuelas E, nivel_escuelas N where E.ID_Nivel = N.ID_Nivel and E.Escuela like '%$Escuela%' and E.Estado = 1 order by E.ID_Escuela";
 		$MessageError = "Problemas al intentar mostrar Escuelas por Nombre de Escuela";
 		$Table = "<table class='table'><thead><tr><th>Escuela</th><th>Localidad</th><th>Nivel</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["Escuela"]."</td><td>".$Ret["Localidad"]."</td><td>".$Ret["Nivel"]."</td><td><a href = '/escuela/editar?ID=".$Ret["ID_Escuela"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'VerificarDeleteEscuela(".$Ret["ID_Escuela"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["escuela"]."</td><td>".$Ret["localidad"]."</td><td>".$Ret["nivel"]."</td><td><a href = '/escuela/editar?ID=".$Ret["id_escuela"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'VerificarDeleteEscuela(".$Ret["id_escuela"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -1855,7 +1855,7 @@ class CtrGeneral
 		$Table = "<table class='table'><thead><tr><th>Nombre</th><th>Telefono</th><th>E-Mail</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["Nombre"]."</td><td>".$Ret["Telefono"]."</td><td>".$Ret["Mail"]."</td><td><a href = '/otrainstitucion/editar?ID=".$Ret["ID_OtraInstitucion"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='Verificar(".$Ret["ID_OtraInstitucion"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr><td>".$Ret["Nombre"]."</td><td>".$Ret["Telefono"]."</td><td>".$Ret["Mail"]."</td><td><a href = '/otrainstitucion/editar?ID=".$Ret["ID_OtraInstitucion"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick='VerificarEliminarOtraInstitucion(".$Ret["ID_OtraInstitucion"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";

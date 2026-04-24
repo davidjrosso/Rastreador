@@ -39,8 +39,8 @@ class CalleController
             include("./Views/Error_Session.php");
         } else {
             $ID_Usuario = $_SESSION["Usuario"];
-            $Filtro = $_REQUEST["Search"];
-            $ID_Filtro = $_REQUEST["ID_Filtro"];
+            $Filtro = (isset($_REQUEST["Search"])) ? $_REQUEST["Search"] : null;
+            $ID_Filtro = (isset($_REQUEST["ID_Filtro"])) ?   $_REQUEST["ID_Filtro"] : null;
 
             $usuario = new Account(account_id: $ID_Usuario);
             $TipoUsuario = $usuario->get_id_tipo_usuario();
@@ -86,6 +86,17 @@ class CalleController
             $DTGeneral = new CtrGeneral();
             $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
             $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
+            $exist = false;
+            if(isset($_REQUEST["ID"])){
+              $exist = 1;
+              $ID_Calle = $_REQUEST["ID"];
+
+              $Con = new Conexion();
+              $Con->OpenConexion();
+
+              $calle = new Calle(id_calle: $ID_Calle) ;
+            }
 
             include("./Views/view_modcalles.php");
         }
@@ -219,11 +230,12 @@ class CalleController
                 header('Location: /calles?ID='. $ID_Calle . '&MensajeError=' . $Mensaje);
             } else {
                 $calle_obj = new Calle(id_calle: $ID_Calle);
-                $calle_obj->save();
 
                 $CalleViejo = $calle_obj->get_calle_nombre();
+                $calle_obj->set_calle_nombre($Calle) ;
+                $calle_obj->update();
 
-                $Detalles = "El usuario con ID: $ID_Usuario ha modificado un Calle. Datos: Dato Anterior: $CalleViejo , Dato Nuevo: $Calle";
+                $Detalles = "El usuario con ID: $ID_Usuario ha modificado un Calle. Datos: Dato Anterior:" .  $CalleViejo . "  Dato Nuevo: " . $Calle;
                 $accion = new Accion(
                     xaccountid: $ID_Usuario,
                     xFecha : $Fecha,

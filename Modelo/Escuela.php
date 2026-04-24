@@ -56,18 +56,20 @@ class Escuela
 				$consultar_usuario) or die("Problemas al consultar filtro Escuelas");
 			$ret = mysqli_fetch_assoc($ejecutar_consultar);
 			if (!is_null($ret)) {
-				$row_codigo = $ret['codigo'];
-				$row_escuela = $ret['escuela'];
-				$row_cue = $ret['cue'];
-				$row_localidad = $ret['localidad'];
-				$row_departamento = $ret['departamento'];
-				$row_directora = $ret['directora'];
-				$row_telefono = $ret['telefono'];
-				$row_mail = $ret['mail'];
-				$row_observacion = $ret['observaciones'];
-				$row_nivel = $ret['id_nivel'];
-				$row_estado = $ret['estado'];
 
+				$row_codigo = ($xCodigo) ? $xCodigo : $ret["codigo"];
+				$row_escuela = ($xEscuela) ? $xEscuela : $ret['escuela'];
+				$row_cue = ($xCUE) ? $xCUE : $ret['cue'];
+				$row_localidad = ($xLocalidad) ? $xLocalidad : $ret['localidad'];
+				$row_departamento = ($xDepartamento) ? $xDepartamento :$ret['departamento'];
+				$row_directora = ( $xDirectora) ?  $xDirectora : $ret['directora'];
+				$row_telefono = ($xTelefono) ? $xTelefono : $ret['telefono'];
+				$row_mail = ($xMail) ? $xMail : $ret['mail'];
+				$row_observacion = ($observaciones) ? $observaciones : $ret['observaciones'];
+				$row_nivel = ($xID_Nivel) ? $xID_Nivel : $ret['id_nivel'];
+				$row_estado = ($xEstado) ? $xEstado : $ret['estado'];
+
+				$this->ID_Escuela = $xID_Escuela;
 				$this->ID_Escuela = $xID_Escuela;
 				$this->Codigo = $row_codigo;
 				$this->Escuela = $row_escuela;
@@ -88,11 +90,36 @@ class Escuela
 	{
 		$query = "select *
 				  from escuelas
-				  where Escuela like '%$name%'";
-		if ($obj = mysqli_query($coneccion, $query))	
+				  where escuela like '%$name%'";
+		if (!$obj = mysqli_query($coneccion->Conexion, $query))	
 			throw new Exception("Error query");
 		$result = mysqli_num_rows($obj);
 		return $result;
+	}
+
+	public static function exist_name_with_id($name = null, $id = null, $coneccion = null)
+	{
+		$query = "select *
+				  from escuelas
+				  where escuela like '%$name%'
+				  	and id_escuela <> $id";
+		if (!$obj = mysqli_query($coneccion->Conexion, $query))	
+			throw new Exception("Error query");
+		$result = mysqli_num_rows($obj);
+		return $result;
+	}
+
+	public static function exist_id($id = null, $coneccion = null)
+	{
+		$query = "select *
+				  from escuelas
+				  where id_escuela = $id
+				  	and estado = 1";
+		if (!$obj = mysqli_query($coneccion->Conexion, $query))	
+			throw new Exception("Error query");
+		$result = mysqli_num_rows($obj);
+		return $result;
+
 	}
 	//METODOS SET
 	public function setID_Escuela($xID_Escuela)
@@ -218,19 +245,40 @@ class Escuela
 
 	public function delete()
 	{
-		$query = "delete escuelas
-				  where ID_Escuela = " . $this->getID_Escuela();
+		$query = "update escuelas
+				  set estado = 0
+				  where id_escuela = " . $this->getID_Escuela();
 		$ejecutar_consultar = mysqli_query(
 			$this->coneccion_base->Conexion, 
 			$query) or die("Problemas en query Escuelas");
 	}
 
+	public function update()
+	{
+        $consulta = "update   escuelas
+					 set codigo =" . (!empty($this->getCodigo()) ? "'" . $this->getCodigo() . "'": "null") . ",
+					 	 	escuela =  " . (!empty($this->getEscuela()) ? "'" . $this->getEscuela() . "'": "null") . ",
+							cue =  " . (!empty($this->getCUE()) ? "'" . $this->getCUE() . "'": "null") . ",
+					 		localidad =  " . (!empty($this->getLocalidad()) ? "'" . $this->getLocalidad() . "'": "null") . ",
+					 		departamento =  " . (!empty($this->getDepartamento()) ? "'" . $this->getDepartamento() . "'": "null") . ",
+					 		directora =  " . (!empty($this->getDirectora()) ? "'" . $this->getDirectora() . "'": "null") . ",
+					 		telefono =  " . (!empty($this->getTelefono()) ? "'" . $this->getTelefono() . "'": "null") . ",
+					 		mail =  " . (!empty($this->getMail()) ? "'" . $this->getMail() . "'": "null") . ",
+					 		id_nivel =  " . (!empty($this->getID_Nivel()) ? $this->getID_Nivel() : "null") . ",
+					 		estado =  " . (!empty($this->getEstado()) ? $this->getEstado() : "null") ."
+					 where id_escuela=" . $this->getID_Escuela();
+							;
+		if (!$obj = mysqli_query($this->coneccion_base->Conexion, $consulta))
+			throw new Exception("Error query");
+		
+	}
+
 	public function save()
 	{
-        $consulta = "insert into escuelas(Codigo,Escuela,CUE,Localidad,Departamento,Directora,Telefono,Mail,ID_Nivel,Estado) 
-					 values('" . (!empty($this->getCodigo()) ? "'" . $this->getCodigo() . "'": "null") . ","
+        $consulta = "insert into escuelas(codigo,escuela,cue,localidad,departamento,directora,telefono,mail,id_nivel,estado) 
+					 values(" . (!empty($this->getCodigo()) ? "'" . $this->getCodigo() . "'": "null") . ","
 					 		   . (!empty($this->getEscuela()) ? "'" . $this->getEscuela() . "'": "null") . ","
-							   . (!empty($this->getCUE()) ? "'" . $this->getCUE() . "'": "null")
+							   . (!empty($this->getCUE()) ? "'" . $this->getCUE() . "'": "null"). ","
 					 		   . (!empty($this->getLocalidad()) ? "'" . $this->getLocalidad() . "'": "null") . ","
 					 		   . (!empty($this->getDepartamento()) ? "'" . $this->getDepartamento() . "'": "null") . ","
 					 		   . (!empty($this->getDirectora()) ? "'" . $this->getDirectora() . "'": "null") . ","
@@ -239,7 +287,8 @@ class Escuela
 					 		   . (!empty($this->getID_Nivel()) ? $this->getID_Nivel() : "null") . ","
 					 		   . (!empty($this->getEstado()) ? $this->getEstado() : "null")
 							   . ")";
-		if (!$obj = mysqli_query($this->coneccion_base, $consulta))
+		if (!$ret = mysqli_query($this->coneccion_base->Conexion, $consulta))
 			throw new Exception("Error query");
+		$this->ID_Escuela = null;
 	}
 }

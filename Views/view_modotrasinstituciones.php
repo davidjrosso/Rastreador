@@ -63,7 +63,6 @@
        }
       let mensajeError = '<?php echo $mensaje_error;?>';
       let mensajeSuccess = '<?php echo $mensaje_success;?>';
-      control
 </script>
 
 </head>
@@ -76,7 +75,7 @@
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
-        <p>Movimientos</p>
+        <p>otra institucion</p>
       </div>
       <div class="col"></div>
     </div><br>
@@ -86,17 +85,7 @@
           <!-- Search -->
         <div class = "row">
           <?php  
-            if(isset($_REQUEST["ID"]) && $_REQUEST["ID"]!=null){
-              $ID_OtraInstitucion = $_REQUEST["ID"];
-
-              $Con = new Conexion();
-              $Con->OpenConexion();
-
-              $InstInstitucion = new OtraInstitucion(
-                                                     xConeccion: $Con,
-                                                     xID_OtraInstitucion: $ID_OtraInstitucion
-                                                    );
-
+            if ($exist) {
               ?>
             <div class = "col-10">
             <form method = "post" onKeydown="return event.key != 'Enter';" action = "modificar_otra_institucion">
@@ -140,7 +129,7 @@
             </div>
             </div>
               <?php  
-            }else{
+            } else {
               $Mensaje = "No se pudo consultar los Datos porque no se pudo obtener el ID de la Institución";
               echo $Mensaje;
             }

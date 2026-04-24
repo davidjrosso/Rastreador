@@ -18,16 +18,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-
-header("Content-Type: text/html;charset=utf-8");
-
-$ID_Usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $usuario->get_id_tipo_usuario();
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -64,7 +54,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_CALLE);
   ?>
   <div class = "col-md-9">
@@ -81,29 +70,15 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
           <!-- Search -->
         <div class = "row">
           <?php  
-            if(isset($_REQUEST["ID"]) && $_REQUEST["ID"]!=null){
-              $ID_Calle = $_REQUEST["ID"];
-
-              $Con = new Conexion();
-              $Con->OpenConexion();
-
-              $ConsultarDatos = "select * from calle where ID_calle = $ID_Calle";
-              $MensajeErrorDatos = "No se pudo consultar los Datos del Calle";
-
-              $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
-
-              $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
-
-              $Calle_nombre = $Ret["calle_nombre"];
-
+            if($exist){
               ?>
             <div class = "col-10">
-            <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/ModificarCalle.php">
-                <input type="hidden" name="ID" value = "<?php echo $ID_Calle; ?>">
+            <form method = "post" onKeydown="return event.key != 'Enter';" action = "modificar_calle">
+                <input type="hidden" name="ID" value = "<?php echo $calle->get_id_calle(); ?>">
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Calle: </label>
                   <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Calle" id="inputPassword" autocomplete="off" value = "<?php echo $Calle_nombre; ?>">
+                    <input type="text" class="form-control" name = "Calle" id="inputPassword" autocomplete="off" value = "<?php echo $calle->get_calle_nombre(); ?>">
                   </div>
                 </div>
                 <div class="form-group row">
@@ -121,7 +96,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
             </div>
             </div>
               <?php  
-            }else{
+            } else {
               $Mensaje = "No se pudo consultar los Datos porque no se pudo obtener el ID de la Calle";
               echo $Mensaje;
             }

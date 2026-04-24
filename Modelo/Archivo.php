@@ -89,6 +89,33 @@ class Archivo
 		$is_exist = (mysqli_num_rows($ejecutar_consultar) >= 1);
 		return $is_exist;
 	} 
+
+	public static function exist_id_cs($coneccion = null, $id = null)
+	{
+		$query = "select *
+				  from archivos
+				  where centro_salud = $id";
+		if(!$ej = mysqli_query($coneccion->Conexion, $query))
+			throw new Exception("error query");		  
+		$ret = mysqli_num_rows($ej) > 0;		
+		return $ret;
+	}
+
+	public static function get_ids_cs($coneccion = null, $id = null)
+	{
+		$list = [];
+		$query = "select *
+				  from archivos
+				  where centro_salud  = $id";
+		if(!$ej = mysqli_query($coneccion->Conexion, $query))
+			throw new Exception("error query");		  
+		while (!$ret = mysqli_fetch_assoc($ej)) {
+			$list[] = $ret["id"];
+		}
+		return $list;
+	}
+
+
 	//METODOS SET
 	public function set_id_archivo($id_archivo)
 	{

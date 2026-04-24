@@ -32,7 +32,7 @@ class Responsable implements JsonSerializable
 				$consultar) or die("Problemas al consultar filtro pesona");
 			$ret = mysqli_fetch_assoc($ejecutar_consultar);
 			if (!is_null($ret)) {
-				$resp_id_responsable = $ret["id_resp"];
+				$resp_id_responsable = $ret["id_responsable"];
 				$resp_responsable = $ret["responsable"];
 				$resp_estado = $ret["estado"];
 				$resp_account_id = $ret["id_account"];
