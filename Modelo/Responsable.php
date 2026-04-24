@@ -85,6 +85,7 @@ class Responsable implements JsonSerializable
 
 	public static function get_id_responsable_by_name($coneccion_base, $responsable)
 	{
+		$id = 0;
 		$consulta = "select id_responsable 
 					 from responsables 
 					 where lower(responsable) like lower('%" . $responsable. "%') 
@@ -96,7 +97,8 @@ class Responsable implements JsonSerializable
 			$mensaje_error . " Consulta: " . $consulta
 		);
 		$row = mysqli_fetch_assoc($ret);
-		$id = $row["id_resp"];
+		if ($row )
+			$id = $row["id_responsable"];
 		return $id;
 	}
 

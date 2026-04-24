@@ -154,6 +154,10 @@ try {
 	$routes[] = Route::get('listado_responsables', '/responsables', [ResponsableController::class, 'listado_responsables']);
 	$routes[] = Route::post('listado_responsables_filtro', '/responsables', [ResponsableController::class, 'listado_responsables']);
 	$routes[] = Route::get('mod_responsable', '/responsable/editar\?ID={id}', [ResponsableController::class, 'mod_responsable']);
+	$routes[] = Route::get('new_responsable',  '/responsable/nuevo', [ResponsableController::class, 'new_responsable']);
+	$routes[] = Route::get('new_responsable_s',  '/responsable/nuevo\?Mensaje={ma}', [ResponsableController::class, 'new_responsable']);
+	$routes[] = Route::get('new_responsable_e',  '/responsable/nuevo\?MensajeError={ma}', [ResponsableController::class, 'new_responsable']);
+	$routes[] = Route::post('ins_responsable',  '/insertar_responsable', [ResponsableController::class, 'new_responsable_control']);
 	$routes[] = Route::get('sol_del_responsable', '/pedireliminarresponsable\?ID={id}', [ResponsableController::class, 'sol_del_responsable']);
 	$routes[] = Route::get('unif_responsable', '/responsable/unificar', [ResponsableController::class, 'unif_responsable']);
 	$routes[] = Route::get('responsables', '/pedirunificarresponsable', [ResponsableController::class, 'index']);

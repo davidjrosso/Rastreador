@@ -6,6 +6,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Responsable.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Accion.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_Unificacion.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
 
 
 class ResponsableController 
@@ -21,6 +23,29 @@ class ResponsableController
         }
         exit();
     }
+
+    public function new_responsable()
+    {
+        header("Content-Type: text/html;charset=utf-8");
+        if (!isset($_SESSION["Usuario"])) {
+            include("./Views/Error_Session.php");
+        } else {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+            $ID_Usuario = $_SESSION["Usuario"];
+            $ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
+            $MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
+            $EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
+            $Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
+            $TipoUsuario = $Ret["ID_TipoUsuario"];
+            $Con->CloseConexion();
+            $Element = new Elements();
+            
+            include("./Views/view_newresponsables.php");
+        }
+        exit();
+    }
+
 
     public function mod_responsable($id_responsable)
     {
@@ -422,7 +447,7 @@ class ResponsableController
 
         try {
             $responsable_obj = new Responsable(responsable: $Responsable, coneccion_base: $Con);
-            $ConsultarResponsablesIguales = "select * from responsable where responsable = '$Responsable' and estado = 1";
+            $ConsultarResponsablesIguales = "select * from responsables where responsable = '$Responsable' and estado = 1";
             if(!$Ret = mysqli_query($Con->Conexion,$ConsultarResponsablesIguales)){
                 throw new Exception("Error al consultar registros. Consulta: ".$ConsultarResponsablesIguales, 0);		
             }
@@ -430,9 +455,9 @@ class ResponsableController
             if(Responsable::get_id_responsable_by_name(coneccion_base: $Con, responsable: $Responsable) > 0){
                 $Con->CloseConexion();
                 $Mensaje = "Ya existe un Responsable con ese Nombre";
-                header('Location: ../view_newresponsables.php?MensajeError='.$Mensaje);
-            }else{
-                $Consulta = "insert into responsable(responsable,estado) values('$Responsable',$Estado)";
+                header('Location: /responsable/nuevo?MensajeError='.$Mensaje);
+            } else {
+                $Consulta = "insert into responsables(responsable, estado) values('$Responsable',$Estado)";
                 if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
                     throw new Exception("Error al intentar registrar. Consulta: ".$Consulta, 1);
                 }	
@@ -442,7 +467,7 @@ class ResponsableController
                 }
                 $Con->CloseConexion();
                 $Mensaje = "El Responsable se registro Correctamente";
-                header('Location: ../view_newresponsables.php?Mensaje='.$Mensaje);
+                header('Location: /responsable/nuevo?Mensaje='.$Mensaje);
             }
         } catch (Exception $e) {
             echo "Error: ".$e->getMessage();

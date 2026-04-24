@@ -1,28 +1,8 @@
-<?php 
-session_start(); 
-require_once "Controladores/Elements.php";
-require_once "Controladores/CtrGeneral.php";
-header("Content-Type: text/html;charset=utf-8");
-
-/*     CONTROL DE USUARIOS                    */
-if(!isset($_SESSION["Usuario"])){
-    header("Location: Error_Session.php");
-}
-
-$Con = new Conexion();
-$Con->OpenConexion();
-$ID_Usuario = $_SESSION["Usuario"];
-$ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
-$MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
-$EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
-$Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
-$TipoUsuario = $Ret["ID_TipoUsuario"];
-$Con->CloseConexion();
-?>
 <!DOCTYPE html>
 <html>
 <head>
   <title>Rastreador III</title>
+  <base href="/">
   <meta charset="utf-8">
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
@@ -69,20 +49,10 @@ $Con->CloseConexion();
 
   </script>
 -->
-  <script type="text/javascript">
-      var getImport = document.quearySelector ('link [rel = import]'); 
-      var getContent = getImport.import.querySelector('body');
-
-      var ContenidoPagina = document.getElementById("ContenidoPagina");
-
-      ContenidoPagina.appendChild(document.importNode(getContent, true));
-  </script>
-
 </head>
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_RESPONSABLE);
   ?>
   <div class = "col-md-9">
@@ -97,7 +67,7 @@ $Con->CloseConexion();
       <div class="col"></div>
       <div class="col-10">
           <div class="row">
-              <center><button class = "btn btn-secondary btn-sm" onClick="location.href ='view_newmovimientos.php'">Agregar Nuevo Movimiento</button></center>
+              <center><button class = "btn btn-secondary btn-sm" onClick="location.href ='/movimiento/nuevo'">Agregar Nuevo Movimiento</button></center>
           </div>
       </div>
       <div class="col"></div>
@@ -107,7 +77,7 @@ $Con->CloseConexion();
       <div class = "col-10">
           <!-- Carga -->
           <p class = "Titulos">Cargar Nuevo Responsable</p>
-          <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/InsertResponsable.php" onSubmit = "return ValidarResponsable();">
+          <form method = "post" onKeydown="return event.key != 'Enter';" action = "/insertar_responsable" onSubmit = "return ValidarResponsable();">
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Responsable *: </label>
               <div class="col-md-10">
