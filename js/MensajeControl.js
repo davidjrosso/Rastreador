@@ -557,7 +557,7 @@ export function VerificarEliminarNotificacion(xID_Notificacion) {
 }
 
 export function VerificarEliminarOtraInstitucion(xID){
-        swal({
+        swal.fire({
         title: "¿Está seguro?",
         text: "¿Seguro de querer eliminar esta institución?",
         icon: "warning",
