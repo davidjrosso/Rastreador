@@ -453,7 +453,7 @@ use function PHPUnit\Framework\isNull;
 	try {
 		ob_implicit_flush(true);
 		set_time_limit(600);
-
+        ini_set('memory_limit', '-1');
 		$con = new Conexion();
 		$con->OpenConexion();
 		$private_key = Parametria::get_value_by_code($con, 'SECRET_KEY');
