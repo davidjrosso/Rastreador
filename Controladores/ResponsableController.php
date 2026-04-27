@@ -8,7 +8,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Accion.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_Unificacion.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/SolicitudModificacion.php");
 
 class ResponsableController 
 {
@@ -53,6 +53,28 @@ class ResponsableController
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
+            $ID_Usuario = $_SESSION["Usuario"];
+            $account = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $account->get_id_tipo_usuario();
+            $Element = new Elements();
+
+            $exist = false;
+            if (isset($_REQUEST["ID"])) {
+              $exist = true;
+
+              $id_responsable = $_REQUEST["ID"];
+
+              $con = new Conexion();
+              $con->OpenConexion();
+              $responsable = new Responsable(
+                                             coneccion_base: $con,
+                                             id_responsable: $id_responsable
+                                            );
+              $id_responsable = $responsable->get_id_responsable();
+              $Responsable = $responsable->get_responsable();
+              $con->CloseConexion();
+            }
+
             include("./Views/view_modresponsables.php");
         }
         exit();
@@ -97,7 +119,7 @@ class ResponsableController
             }
             $con->CloseConexion();
             $Mensaje = "La solicitud de eliminación se envió a los administradores para ser confirmada.";
-            header('Location: ./responsables?Mensaje=' . $Mensaje);
+            header('Location: ./responsable?Mensaje=' . $Mensaje);
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
         }
@@ -198,11 +220,11 @@ class ResponsableController
             
                 $con->CloseConexion();
                 $mensaje = "La solicitud de modificacion de responsable se envió a los administradores para ser confirmada.";
-                header('Location: /responsables/editar?ID=' . $id_responsable . '&Mensaje=' . $mensaje);
+                header('Location: /responsable/editar?ID=' . $id_responsable . '&Mensaje=' . $mensaje);
             } else {
                 $con->CloseConexion();
                 $mensaje = "El responsable no esta registrado.";
-                header('Location: /responsables?MensajeError=' . $mensaje);
+                header('Location: /responsable?MensajeError=' . $mensaje);
             }
 
         } else {

@@ -238,72 +238,7 @@
         <div class = "row">
           <?php  
             if(isset($_REQUEST["ID"])){
-              $ID_Movimiento = $_REQUEST["ID"];
-
-              $Con = new Conexion();
-              $Con->OpenConexion();
-
-              $ConsultarDatos = "select M.id_movimiento, M.fecha, M.id_centro, P.id_persona, P.apellido, 
-                                        P.nombre, M.observaciones, group_concat(distinct R.id_resp separator '|')
-                                        R.responsable, C.centro_salud, I.ID_OtraInstitucion, I.Nombre, group_concat(distinct MT.id_motivo separator '|')
-                                from movimiento M 
-                                      INNER JOIN movimiento_motivo MEMT ON (M.id_movimiento = MEMT.id_movimiento)
-                                      INNER JOIN motivo MT ON (MEMT.id_motivo = MT.id_motivo)
-                                      INNER JOIN persona P ON (M.id_persona = P.id_persona)
-                                      INNER JOIN movimiento_responsable RN ON (M.id_movimiento = RN.id_movimiento)
-                                      INNER JOIN responsable R ON (RN.id_responsable = R.id_responsable)
-                                      LEFT JOIN centros_salud C ON (M.id_centro = C.id_centro)
-                                      LEFT JOIN otras_instituciones I ON (M.id_otrainstitucion = I.ID_OtraInstitucion )
-                                 where M.id_movimiento = $ID_Movimiento
-                                 group by M.id_movimiento, M.fecha, M.id_centro, P.id_persona, P.apellido, 
-                                        P.nombre, M.observaciones, C.centro_salud, I.ID_OtraInstitucion";
-
-              $MensajeErrorDatos = "No se pudo consultar los Datos del Movimiento";
-
-              $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
-
-              $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
-
-              $ID_Movimiento = $Ret["id_movimiento"];
-              $id_motivo = $Ret["id_motivo"];
-              $Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
-              $Apellido = $Ret["apellido"];
-              $Nombre = $Ret["nombre"];
-              $Observaciones = $Ret["observaciones"];
-              $Responsable = $Ret["responsable"];
-              $ID_Persona = $Ret["id_persona"];
-              $ID_Responsable = $Ret["id_resp"];
-              $ID_Responsable_2 = $Ret["id_resp_2"];
-              $ID_Responsable_3 = $Ret["id_resp_3"];
-              $ID_Responsable_4 = $Ret["id_resp_4"];
-              $ID_Centro = $Ret["id_centro"];
-              $Centro_Salud = (!empty($Ret["centro_salud"])) ? $Ret["centro_salud"] : null;
-              $ID_OtraInstitucion = $Ret["ID_OtraInstitucion"];
-              $OtraInstitucion = (!empty($Ret["Nombre"])) ? $Ret["Nombre"] : null;
-
-              $DtoMovimiento = new DtoMovimiento(
-                                                xID_Movimiento: $ID_Movimiento,
-                                                xFecha: $Fecha,
-                                                xApellido: $Apellido,
-                                                xNombre: $Nombre,
-                                                xMotivo_1: $id_motivo,
-                                                xObservaciones: $Observaciones,
-                                                xResponsable: $Responsable,
-                                                xCentroSalud: $Centro_Salud,
-                                                xOtraInstitucion: $OtraInstitucion
-              );
-
-              $count_motivo = 2;
-              while ($Ret = mysqli_fetch_assoc($EjecutarConsultarDatos)) {
-                if ($count_motivo == 2) $DtoMovimiento->setMotivo_2($Ret["id_motivo"]);
-                if ($count_motivo == 3) $DtoMovimiento->setMotivo_3($Ret["id_motivo"]);
-                if ($count_motivo == 4) $DtoMovimiento->setMotivo_4($Ret["id_motivo"]);
-                if ($count_motivo == 5) $DtoMovimiento->setMotivo_5($Ret["id_motivo"]);
-                $count_motivo++;
-              }
-
-              $Con->CloseConexion();
-              ?>
+             ?>
             <div class = "col-10">
             <form method = "post" onKeydown="return event.key != 'Enter';" action = "modificar_movimiento" onSubmit = "return ValidarMovimiento();">
                 <!-- <div class="form-group row">

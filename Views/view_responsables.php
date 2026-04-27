@@ -18,15 +18,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-
-header("Content-Type: text/html;charset=utf-8");
-
-$ID_Usuario = $_SESSION["Usuario"];
-$usuario = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $usuario->get_id_tipo_usuario();
 ?>
 <!DOCTYPE html>
 <html>
@@ -64,7 +55,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                 dangerMode: true,
               }).then((willDelete) => {
                 if (willDelete) {
-                  window.location.href = 'pedir_eliminar_responsable?ID=' + xID;
+                  window.location.href = 'pedireliminarresponsable?ID=' + xID;
                 }
               });
         }
@@ -75,7 +66,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_RESPONSABLE);
   ?>
   <div class = "col-md-9">
@@ -100,7 +90,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
      <div class = "row">
       <div class = "col-10">
            <!-- Carga -->
-          <form method = "post" action = "Controladores/CtrBuscarResponsables.php">
+          <form method = "post" action = "/responsables">
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Buscar: </label>
               <div class="col-md-4">
@@ -123,15 +113,11 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
           <!-- Search -->
         <div class = "row">
           <?php  
-            if(isset($_REQUEST["Filtro"]) && $_REQUEST["Filtro"]!=null){
-              $Filtro = $_REQUEST["Filtro"];
-              $ID_Filtro = $_REQUEST["ID_Filtro"];
-              $DTGeneral = new CtrGeneral();
-
+            if($search) {
               switch ($ID_Filtro) {
-                case 'ID': echo $DTGeneral->getResponsablesxID($Filtro);break;
-                case 'Responsable': echo $DTGeneral->getResponsablesxResponsable($Filtro);break;
-                default: echo $DTGeneral->getResponsablesxID($Filtro);break;
+                case 'ID': echo $DTGeneral->getResponsablesxID($search);break;
+                case 'Responsable': echo $DTGeneral->getResponsablesxResponsable($search);break;
+                default: echo $DTGeneral->getResponsablesxID($search);break;
               }
             }else{
               $DTGeneral = new CtrGeneral();

@@ -18,18 +18,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Responsable.php");
-
-
-header("Content-Type: text/html;charset=utf-8");
-
-$ID_Usuario = $_SESSION["Usuario"];
-$account = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $account->get_id_tipo_usuario();
 ?>
 <!DOCTYPE html>
 <html>
@@ -79,14 +67,13 @@ $TipoUsuario = $account->get_id_tipo_usuario();
 <body>
 <div class = "row">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_RESPONSABLE);
   ?>
   <div class = "col-md-9">
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
-        <p>Movimientos</p>
+        <p>Responsable</p>
       </div>
       <div class="col"></div>
     </div><br>
@@ -96,22 +83,10 @@ $TipoUsuario = $account->get_id_tipo_usuario();
           <!-- Search -->
         <div class = "row">
           <?php  
-            if (isset($_REQUEST["ID"]) && $_REQUEST["ID"] != null) {
-              $id_responsable = $_REQUEST["ID"];
-
-              $con = new Conexion();
-              $con->OpenConexion();
-              $responsable = new Responsable(
-                                             coneccion_base: $con,
-                                             id_responsable: $id_responsable
-                                            );
-              $id_responsable = $responsable->get_id_responsable();
-              $Responsable = $responsable->get_responsable();
-              $con->CloseConexion();
-
+            if ($exist) {
               ?>
             <div class = "col-10">
-            <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/pedirmodificarresponsable.php">
+            <form method = "post" onKeydown="return event.key != 'Enter';" action = "/pedirmodificarresponsable">
                 <!-- <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Id: </label>
                   <div class="col-md-10">

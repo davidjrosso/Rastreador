@@ -41,7 +41,7 @@ class Solicitud_EliminarCategoria
 						   AND Estado = 1";
         $rs = mysqli_query($coneccion->Conexion,$consulta) or die("Problemas al consultar las acciones.");
         $ret = mysqli_fetch_assoc($rs);
-        if ($ret) $id_categoria = $ret["ID_Categoria"];
+        if ($ret) $id_categoria = $ret["ID"];
         return $id_categoria;
     }
 

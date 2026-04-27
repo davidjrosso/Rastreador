@@ -261,7 +261,7 @@ class SolicitudController
 
             $con->CloseConexion();
             $Mensaje = "La solicitud fue eliminada Correctamente";
-            header('Location: ../view_inicio.php?Mensaje=' . $Mensaje);
+            header('Location: /home?Mensaje=' . $Mensaje);
         } catch (Exception $e) {
             echo "Error: ".$e->getMessage();
         }

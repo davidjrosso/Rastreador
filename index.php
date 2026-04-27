@@ -131,7 +131,8 @@ try {
 	$routes[] = Route::post('buscar_categorias_desc', 'buscar_categorias_desc', [CategoriaController::class, 'buscar_categorias_desc']);
 	$routes[] = Route::post('buscar_categorias_filtrado', 'buscar_categorias_filtrado', [CategoriaController::class, 'buscar_categorias_filtrado']);
 	$routes[] = Route::get('motivos_listado', '/motivos', [MotivoController::class, 'listado_motivos']);
-	$routes[] = Route::get('motivos_listado_filtrado', '/motivos\?Filtro={filtro}/ID_Filtro={id}', [MotivoController::class, 'listado_motivos']);
+	$routes[] = Route::post('motivos_listado_filtr', '/motivos', [MotivoController::class, 'listado_motivos']);
+	$routes[] = Route::get('motivos_listado_filtrado', '/motivos\?Search={ma}/ID_Filtro={id}', [MotivoController::class, 'listado_motivos']);
 	$routes[] = Route::get('motivos_listado_success', '/motivos\?Mensaje={mensaje}', [MotivoController::class, 'listado_motivos']);
 	$routes[] = Route::get('motivos_listado_error', '/motivos\?MensajeError={mensaje}', [MotivoController::class, 'listado_motivos']);
 	$routes[] = Route::post('buscar_motivos_control', '/buscar_motivos', [MotivoController::class, 'buscar_motivos']);
@@ -152,15 +153,23 @@ try {
 	$routes[] = Route::post('sol_unif_motivo_control', 'pedirunificarmotivos', [MotivoController::class, 'sol_unif_control']);
 	$routes[] = Route::post('unif_motivo_control', 'unificarmotivos', [MotivoController::class, 'unif_motivo_control']);
 	$routes[] = Route::get('listado_responsables', '/responsables', [ResponsableController::class, 'listado_responsables']);
+	$routes[] = Route::get('listado_responsables_s', '/responsables\?Mensaje={ma}', [ResponsableController::class, 'listado_responsables']);
+	$routes[] = Route::get('listado_responsables_e', '/responsables\?MensajeError={n}', [ResponsableController::class, 'listado_responsables']);
 	$routes[] = Route::post('listado_responsables_filtro', '/responsables', [ResponsableController::class, 'listado_responsables']);
 	$routes[] = Route::get('mod_responsable', '/responsable/editar\?ID={id}', [ResponsableController::class, 'mod_responsable']);
+	$routes[] = Route::get('mod_responsable_s', '/responsable/editar\?ID={id}/Mensaje={ma}', [ResponsableController::class, 'mod_responsable']);
+	$routes[] = Route::get('mod_responsable_e', '/responsable/editar\?ID={id}/MensajeError={ma}', [ResponsableController::class, 'mod_responsable']);
+	$routes[] = Route::get('mod_responsable_control', '/modificarresponsable\?ID={id}/Responsable={r}',  [ResponsableController::class, 'mod_responsable_control']);
 	$routes[] = Route::get('new_responsable',  '/responsable/nuevo', [ResponsableController::class, 'new_responsable']);
 	$routes[] = Route::get('new_responsable_s',  '/responsable/nuevo\?Mensaje={ma}', [ResponsableController::class, 'new_responsable']);
 	$routes[] = Route::get('new_responsable_e',  '/responsable/nuevo\?MensajeError={ma}', [ResponsableController::class, 'new_responsable']);
 	$routes[] = Route::post('ins_responsable',  '/insertar_responsable', [ResponsableController::class, 'new_responsable_control']);
-	$routes[] = Route::get('sol_del_responsable', '/pedireliminarresponsable\?ID={id}', [ResponsableController::class, 'sol_del_responsable']);
+	$routes[] = Route::get('sol_del_responsable', '/pedireliminarresponsable\?ID={id}', [ResponsableController::class, 'sol_del_control']);
 	$routes[] = Route::get('unif_responsable', '/responsable/unificar', [ResponsableController::class, 'unif_responsable']);
+	$routes[] = Route::get('bsc_responsable', '/buscar_responsable\?Search={value}/ID_Filtro={id}', [ResponsableController::class, 'buscar_responsable']);
 	$routes[] = Route::get('responsables', '/pedirunificarresponsable', [ResponsableController::class, 'index']);
+	$routes[] = Route::post('sl_md_responsable',  '/pedirmodificarresponsable', [ResponsableController::class, 'sol_mod_control']);
+
 	$routes[] = Route::post('buscar_responsable', '/buscar_responsable\?valorBusqueda={valor}/idResponsable={id}', [ResponsableController::class, 'buscar_responsable']);
 	$routes[] = Route::get('listado_centros_salud', '/centrosdesalud', [CentroSaludController::class, 'listado_centros_salud']);
 	$routes[] = Route::get('listado_centros_salud_filtro', '/centrosdesalud\?Filtro={filt}/ID_Filtro={idfilt}', [CentroSaludController::class, 'listado_centros_salud']);
@@ -271,6 +280,7 @@ try {
 	$routes[] = Route::get('del_new_categoria', '/deletepedirnewcategoria\?ID={id}', [SolicitudController::class, 'del_new_categoria']);
 	$routes[] = Route::get('del_sl_del_categoria', '/deletepedirdelcategoria\?ID={id}', [SolicitudController::class, 'del_su_categoria']);
 	$routes[] = Route::post('solicitud_filtro', '/solicitud', [SolicitudController::class, 'listado_solicitud']);
+	$routes[] = Route::get('del_sl_md_responsable',  '/deletepeticionmodificacion\?ID={id}', [SolicitudController::class, 'delete_modificacion']);
 	$routes[] = Route::get('solicitud_filtr', '/solicitud\?filtro={filtro}/ID_Filtro={id_filtro}', [SolicitudController::class, 'listado_solicitud']);
 	$routes[] = Route::get('listado_solicitud_control', '/listado_solicitud_control\?filtro={filtro}/ID_Filtro={id_filtro}', [SolicitudController::class, 'listado_solicitud_control']);
 	$routes[] = Route::get('auditoria', '/auditoria', [AccionController::class, 'listado_auditoria']);

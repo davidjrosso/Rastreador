@@ -78,7 +78,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/DtoMovimiento.php';
 <div class = "row">
 <?php
 
-    if (isset($_REQUEST["ID"]) && $_REQUEST["ID"] != null) {
+    if (isset($_REQUEST["ID"])) {
       $ID_Movimiento = $_REQUEST["ID"];
 
       $Con = new Conexion();
@@ -93,19 +93,20 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/DtoMovimiento.php';
 
       $ConsultarDatos = "select M.id_movimiento, M.fecha, P.apellido,
                                 P.nombre, M.observaciones,
-                                R.responsable, M.id_resp_2,
-                                M.id_resp_3, M.id_resp_4,
+                                R.responsable, GROUP_CONCAT(DISTINCT responsable SEPARATOR '|'),
                                 C.centro_salud, I.Nombre,
                                 MT.motivo as Mot
-                          from movimiento M 
-                              INNER JOIN movimiento_motivo MEMT ON (M.id_movimiento = MEMT.id_movimiento)
+                          from movimientos M 
+                              INNER JOIN movimientos_motivos MEMT ON (M.id_movimiento = MEMT.id_movimiento)
                               INNER JOIN motivo MT ON (MEMT.id_motivo = MT.id_motivo)
                               INNER JOIN MTPERM ME ON (MT.id_motivo = ME.id_motivo)
-                              INNER JOIN persona P ON (M.id_persona = P.id_persona)
-                              INNER JOIN responsable R ON (M.id_resp = R.id_resp) 
+                              INNER JOIN personas P ON (M.id_persona = P.id_persona)
+                              INNER JOIN movimientos_responsables MS ON (M.id_movimiento = MS.id_movimiento)
+                              INNER JOIN responsables R ON (MS.id_responsable = R.id_responsable) 
                               LEFT JOIN centros_salud C ON (M.id_centro = C.id_centro)
                               LEFT JOIN otras_instituciones I ON (M.id_otrainstitucion = I.ID_OtraInstitucion )
-                          where M.id_movimiento = $ID_Movimiento";
+                          where M.id_movimiento = $ID_Movimiento
+                          GROUP BY responsable";
       $MensajeErrorDatos = "No se pudo consultar los Datos del Movimiento";
 
       $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
@@ -132,15 +133,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/DtoMovimiento.php';
       <div class = "col-10">
           <!-- Search -->
         <div class = "row">
-          <?php  
+          <?php
+              $list = explode("|", $Ret["responsable"]);  
               $Fecha = $Fecha_Nacimiento = implode("-", array_reverse(explode("-",$Ret["fecha"])));
               $Apellido = $Ret["apellido"];
               $Nombre = $Ret["nombre"];
               $Observaciones = $Ret["observaciones"];
-              $Responsable = $Ret["responsable"];
-              $ID_Resp_2 = $Ret["id_resp_2"];
-              $ID_Resp_3 = $Ret["id_resp_3"];
-              $ID_Resp_4 = $Ret["id_resp_4"];
+              $Responsable = $list[0] ?? null;
+              $Responsable_2 = $list[1] ?? null;
+              $Responsable_3 = $list[2] ?? null;
+              $Responsable_4 = $list[3] ?? null;
               $Centro_Salud = (!empty($Ret["centro_salud"])) ? $Ret["centro_salud"] : null;
               $OtraInstitucion = (!empty($Ret["Nombre"])) ? $Ret["Nombre"] : null;
               $id_motivo = $Ret["Mot"];
@@ -163,30 +165,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/DtoMovimiento.php';
                 if ($count_motivo == 4) $DtoMovimiento->setMotivo_4($Ret["Mot"]);
                 if ($count_motivo == 5) $DtoMovimiento->setMotivo_5($Ret["Mot"]);
                 $count_motivo++;
-              }
-
-              if ($ID_Resp_2 != null) {
-                $responsable = new Responsable(
-                                              coneccion_base: $Con,
-                                              id_responsable: $ID_Resp_2
-                                              );
-                $Responsable_2 = $responsable->get_responsable();
-              }
-
-              if ($ID_Resp_3 != null) {
-                $responsable = new Responsable(
-                                              coneccion_base: $Con,
-                                              id_responsable: $ID_Resp_3
-                                              );
-                $Responsable_3 = $responsable->get_responsable();
-              }
-
-              if ($ID_Resp_4 != null) {
-                $responsable = new Responsable(
-                                              coneccion_base: $Con,
-                                              id_responsable: $ID_Resp_4
-                                              );
-                $Responsable_4 = $responsable->get_responsable();
               }
 
               $Table = "<table class='table'>
@@ -235,21 +213,22 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/DtoMovimiento.php';
                          </tr>";
               $Table .= "<tr>
                             <td>Responsable</td>
-                            <td>" . $DtoMovimiento->getResponsable() . "</td>
+                            <td>" . $Responsable . "</td>
                          </tr>";
-              if($ID_Resp_2 != null){
+
+              if($Responsable_2){
                 $Table .= "<tr>
                               <td>Responsable 2</td>
                               <td>" . $Responsable_2 . "</td>
                            </tr>";
               }
-              if($ID_Resp_3 != null){
+              if($Responsable_3){
                 $Table .= "<tr>
                               <td>Responsable 3</td>
                               <td>" . $Responsable_3 . "</td>
                            </tr>";
               }
-              if($ID_Resp_4 != null){
+              if($Responsable_4){
                 $Table .= "<tr>
                               <td>Responsable 4</td>
                               <td>" . $Responsable_4 . "</td>

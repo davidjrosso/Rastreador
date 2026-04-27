@@ -49,18 +49,20 @@ class CtrGeneral
 									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
 									   ) or die($MessageError);
 
-		$Consulta = "SELECT M.id_movimiento,
-							M.fecha,
-							M.fecha_creacion,
-							UPPER(P.apellido) AS apellido,
-							P.nombre,
-							R.responsable
-							from personas P
-								 inner join movimientos M on (P.id_persona = M.id_persona)
-								 left join movimientos_responsables RN on (M.id_movimiento = RN.id_movimiento)
-								 left join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
-								 inner join responsables R on (RN.id_responsable = R.id_responsable)
-							where MT.id_motivo IN (SELECT * FROM INN) 
+		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
+					 from movimientos M
+					 	  inner join personas P on (M.id_persona = P.id_persona)
+						  inner join (select id_movimiento, MAX(id_responsable) id_responsable
+						  			  from  movimientos_responsables
+									  where estado = 1
+									  GROUP BY id_movimiento, id_responsable) MS on (M.id_movimiento = MS.id_movimiento)
+						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
+						  left join responsables R on (MS.id_responsable = R.id_responsable)
+						  inner join motivo MC on (MT.id_motivo = MC.id_motivo)
+
+						  inner join categoria C on (MC.cod_categoria = C.cod_categoria)
+						  inner join categorias_roles CS on (C.id_categoria = CS.id_categoria)
+							where MC.id_motivo IN (SELECT * FROM INN) 
 								and M.estado = 1
 								and P.estado = 1
 							order by M.fecha_creacion desc;";
@@ -169,18 +171,21 @@ class CtrGeneral
 									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
 									   ) or die($MessageError);
 
-		$Consulta = "select M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
+		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
 					 from movimientos M
 					 	  inner join personas P on (M.id_persona = P.id_persona)
-						  inner join movimientos_responsables RN on (M.id_responsable = RN.id_repsonsable)
+						  inner join (select id_movimiento, MAX(id_responsable) id_responsable
+						  			  from  movimientos_responsables
+									  where estado = 1
+									  GROUP BY id_movimiento, id_responsable) MS on (M.id_movimiento = MS.id_movimiento)
 						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
-						  left join responsables R on (RN.id_responsable = R.id_responsable)
-						  inner join motivo MS on (MT.id_motivo = MS.id_motivo)
+						  left join responsables R on (MS.id_responsable = R.id_responsable)
+						  inner join motivo MC on (MT.id_motivo = MC.id_motivo)
 
-						  inner join categoria C on (MS.cod_categoria = C.cod_categoria)
-						  inner join categorias_roles CS (C.id_categoria = CS.id_categoria)
+						  inner join categoria C on (MC.cod_categoria = C.cod_categoria)
+						  inner join categorias_roles CS on (C.id_categoria = CS.id_categoria)
 					 where M.id_movimiento = $ID
-					   and MT.id_motivo IN (SELECT * FROM INN) 
+					   and MC.id_motivo IN (SELECT * FROM INN) 
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
@@ -238,15 +243,18 @@ class CtrGeneral
 		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
 					 from movimientos M
 					 	  inner join personas P on (M.id_persona = P.id_persona)
-						  inner join movimientos_responsables RN on (M.id_responsable = RN.id_repsonsable)
+						  inner join (select id_movimiento, MAX(id_responsable) id_responsable
+						  			  from  movimientos_responsables
+									  where estado = 1
+									  GROUP BY id_movimiento, id_responsable) MS on (M.id_movimiento = MS.id_movimiento)
 						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
-						  left join responsables R on (RN.id_responsable = R.id_responsable)
-						  inner join motivo MS on (MT.id_motivo = MS.id_motivo)
+						  left join responsables R on (MS.id_responsable = R.id_responsable)
+						  inner join motivo MC on (MT.id_motivo = MC.id_motivo)
 
-						  inner join categoria C on (MS.cod_categoria = C.cod_categoria)
-						  inner join categorias_roles CS (C.id_categoria = CS.id_categoria)
+						  inner join categoria C on (MC.cod_categoria = C.cod_categoria)
+						  inner join categorias_roles CS on (C.id_categoria = CS.id_categoria)
 					 where M.fecha = '$Fecha'
-					   and MT.id_motivo IN (SELECT * FROM INN) 
+					   and MC.id_motivo IN (SELECT * FROM INN) 
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1
 					   and P.estado = 1
@@ -303,19 +311,18 @@ class CtrGeneral
 		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
 					 from movimientos M
 					 	  inner join personas P on (M.id_persona = P.id_persona)
-						  inner join movimientos_responsables RN on (M.id_responsable = RN.id_repsonsable)
+						  inner join (select id_movimiento, MAX(id_responsable) id_responsable
+						  			  from  movimientos_responsables
+									  where estado = 1
+									  GROUP BY id_movimiento, id_responsable) MS on (M.id_movimiento = MS.id_movimiento)
 						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
-						  left join responsables R on (RN.id_responsable = R.id_responsable)
-						  inner join motivo MS on (MT.id_motivo = MS.id_motivo)
+						  left join responsables R on (MS.id_responsable = R.id_responsable)
+						  inner join motivo MC on (MT.id_motivo = MC.id_motivo)
 
-						  inner join categoria C on (MS.cod_categoria = C.cod_categoria)
-						  inner join categorias_roles CS (C.id_categoria = CS.id_categoria)
-					 where M.id_persona = P.id_persona 
-					   and M.id_resp = R.id_resp 
-					   and P.apellido like '%$Apellido%'
-					   and CS.id_categoria = C.id_categoria
-					   and C.cod_categoria = MT.cod_categoria
-					   and MT.id_motivo IN (SELECT * FROM INN) 
+						  inner join categoria C on (MC.cod_categoria = C.cod_categoria)
+						  inner join categorias_roles CS on (C.id_categoria = CS.id_categoria)
+					 where  P.apellido like '%$Apellido%'
+					   and MC.id_motivo IN (SELECT * FROM INN) 
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
@@ -372,15 +379,18 @@ class CtrGeneral
 		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
 					 from movimientos M
 					 	  inner join personas P on (M.id_persona = P.id_persona)
-						  inner join movimientos_responsables RN on (M.id_responsable = RN.id_repsonsable)
+						  inner join (select id_movimiento, MAX(id_responsable) id_responsable
+						  			  from  movimientos_responsables
+									  where estado = 1
+									  GROUP BY id_movimiento, id_responsable) MS on (M.id_movimiento = MS.id_movimiento)
 						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
-						  left join responsables R on (RN.id_responsable = R.id_responsable)
-						  inner join motivo MS on (MT.id_motivo = MS.id_motivo)
+						  left join responsables R on (MS.id_responsable = R.id_responsable)
+						  inner join motivo MC on (MT.id_motivo = MC.id_motivo)
 
-						  inner join categoria C on (MS.cod_categoria = C.cod_categoria)
-						  inner join categorias_roles CS (C.id_categoria = CS.id_categoria)
+						  inner join categoria C on (MC.cod_categoria = C.cod_categoria)
+						  inner join categorias_roles CS on (C.id_categoria = CS.id_categoria)
 					 where P.nombre like '%$Nombre%'
-					    and MT.id_motivo IN (SELECT * FROM INN) 
+					    and MC.id_motivo IN (SELECT * FROM INN) 
 					    and CS.id_tipousuario = $TipoUsuario
 						and M.estado = 1 
 						and P.estado = 1
@@ -466,15 +476,18 @@ class CtrGeneral
 		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
 					 from movimientos M
 					 	  inner join personas P on (M.id_persona = P.id_persona)
-						  inner join movimientos_responsables RN on (M.id_responsable = RN.id_repsonsable)
+						  inner join (select id_movimiento, MAX(id_responsable) id_responsable
+						  			  from  movimientos_responsables
+									  where estado = 1
+									  GROUP BY id_movimiento, id_responsable) MS on (M.id_movimiento = MS.id_movimiento)
 						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
-						  left join responsables R on (RN.id_responsable = R.id_responsable)
-						  inner join motivo MS on (MT.id_motivo = MS.id_motivo)
+						  left join responsables R on (MS.id_responsable = R.id_responsable)
+						  inner join motivo MC on (MT.id_motivo = MC.id_motivo)
 
-						  inner join categoria C on (MS.cod_categoria = C.cod_categoria)
-						  inner join categorias_roles CS (C.id_categoria = CS.id_categoria)
+						  inner join categoria C on (MC.cod_categoria = C.cod_categoria)
+						  inner join categorias_roles CS on (C.id_categoria = CS.id_categoria)
 					 where P.documento like '%$Documento%'
-					   and MT.id_motivo IN (SELECT * FROM INN) 
+					   and MC.id_motivo IN (SELECT * FROM INN) 
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
@@ -560,13 +573,16 @@ class CtrGeneral
 		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
 					 from movimientos M
 					 	  inner join personas P on (M.id_persona = P.id_persona)
-						  inner join movimientos_responsables RN on (M.id_responsable = RN.id_repsonsable)
+						  inner join (select id_movimiento, MAX(id_responsable) id_responsable
+						  			  from  movimientos_responsables
+									  where estado = 1
+									  GROUP BY id_movimiento, id_responsable) MS on (M.id_movimiento = MS.id_movimiento)
 						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
-						  left join responsables R on (RN.id_responsable = R.id_responsable)
-						  inner join motivo MS on (MT.id_motivo = MS.id_motivo)
+						  left join responsables R on (MS.id_responsable = R.id_responsable)
+						  inner join motivo MC on (MT.id_motivo = MC.id_motivo)
 
-						  inner join categoria C on (MS.cod_categoria = C.cod_categoria)
-						  inner join categorias_roles CS (C.id_categoria = CS.id_categoria)
+						  inner join categoria C on (MC.cod_categoria = C.cod_categoria)
+						  inner join categorias_roles CS on (C.id_categoria = CS.id_categoria)
 					 where R.responsable like '%$Responsable%'
 					   and MT.id_motivo IN (SELECT * FROM INN) 
 					   and CS.id_tipousuario = $TipoUsuario
@@ -625,13 +641,16 @@ class CtrGeneral
 					 from movimientos M
 					 	  inner join personas P on (M.id_persona = P.id_persona)
 						  inner join historias_clinicas HC on (P.id_persona = HC.id_persona)
-						  inner join movimientos_responsables RN on (M.id_responsable = RN.id_repsonsable)
+						  inner join (select id_movimiento, MAX(id_responsable) id_responsable
+						  			  from  movimientos_responsables
+									  where estado = 1
+									  GROUP BY id_movimiento, id_responsable) MS on (M.id_movimiento = MS.id_movimiento)
 						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
-						  left join responsables R on (RN.id_responsable = R.id_responsable)
-						  inner join motivo MS on (MT.id_motivo = MS.id_motivo)
+						  left join responsables R on (MS.id_responsable = R.id_responsable)
+						  inner join motivo MC on (MT.id_motivo = MC.id_motivo)
 
-						  inner join categoria C on (MS.cod_categoria = C.cod_categoria)
-						  inner join categorias_roles CS (C.id_categoria = CS.id_categoria)
+						  inner join categoria C on (MC.cod_categoria = C.cod_categoria)
+						  inner join categorias_roles CS on (C.id_categoria = CS.id_categoria)
 					 where HC.nro_legajo = '$Legajo'
 					   and MT.id_motivo IN (SELECT * FROM INN) 
 					   and CS.id_tipousuario = $TipoUsuario
@@ -699,13 +718,16 @@ class CtrGeneral
 					 from movimientos M
 					 	  inner join personas P on (M.id_persona = P.id_persona)
 						  inner join historias_clinicas HC on (P.id_persona = HC.id_persona)
-						  inner join movimientos_responsables RN on (M.id_responsable = RN.id_repsonsable)
+						  inner join (select id_movimiento, MAX(id_responsable) id_responsable
+						  			  from  movimientos_responsables
+									  where estado = 1
+									  GROUP BY id_movimiento, id_responsable) MS on (M.id_movimiento = MS.id_movimiento)
 						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
-						  left join responsables R on (RN.id_responsable = R.id_responsable)
-						  inner join motivo MS on (MT.id_motivo = MS.id_motivo)
+						  left join responsables R on (MS.id_responsable = R.id_responsable)
+						  inner join motivo MC on (MT.id_motivo = MC.id_motivo)
 
-						  inner join categoria C on (MS.cod_categoria = C.cod_categoria)
-						  inner join categorias_roles CS (C.id_categoria = CS.id_categoria)
+						  inner join categoria C on (MC.cod_categoria = C.cod_categoria)
+						  inner join categorias_roles CS on (C.id_categoria = CS.id_categoria)
 					 where HC.nro_carpeta = '$Carpeta'
 					   and MT.id_motivo IN (SELECT * FROM INN) 
 					   and CS.id_tipousuario = $TipoUsuario
@@ -1203,7 +1225,7 @@ class CtrGeneral
 		$Consulta = "SELECT M.id_motivo, M.motivo, M.codigo, C.categoria
 					 FROM motivo M
 						INNER JOIN categoria C ON (M.cod_categoria = C.cod_categoria)
-					 WHERE M.cod_categoria LIKE '%$Codigo%'
+					 WHERE M.codigo LIKE '%$Codigo%'
 					   AND M.estado = 1
 					   AND C.estado = 1
 					   AND M.id_motivo > 1 
@@ -1403,7 +1425,7 @@ class CtrGeneral
 	public function getResponsablesxID($ID){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_responsable, responsable from responsables where id_responsable = $ID and estado = 1 order by id_resp";
+		$Consulta = "select id_responsable, responsable from responsables where id_responsable = $ID and estado = 1 order by id_responsable";
 		$MessageError = "Problemas al intentar mostrar Responsables por ID";
 		$Table = "<table class='table'>
 					<thead>
@@ -1441,7 +1463,7 @@ class CtrGeneral
 	public function getResponsablesxResponsable($Responsable){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$Consulta = "select id_responsable, responsable from responsables where responsable like '%$Responsable%' and estado = 1 order by id_resp";
+		$Consulta = "select id_responsable, responsable from responsables where responsable like '%$Responsable%' and estado = 1 order by id_responsable";
 		$MessageError = "Problemas al intentar mostrar Responsables por Responsable";
 		$Table = "<table class='table'><thead><tr><th>Responsable</th><th colspan='2'></th></tr></thead>";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);

@@ -92,7 +92,7 @@
      <div class = "row">
       <div class = "col-10">
            <!-- Carga -->
-          <form method = "post" action = "/buscar_motivos">
+          <form method = "post" action = "/motivos">
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Buscar: </label>
               <div class="col-md-4">
@@ -118,24 +118,24 @@
           <!-- Search -->
         <div class = "row">
           <?php  
-            if ($Filtro) {
+            if ($search) {
 
               switch ($ID_Filtro) {
                 case 'ID': 
-                  echo $DTGeneral->getMotivosxID($Filtro);
+                  echo $DTGeneral->getMotivosxID($search);
                   break;
                 case 'Motivo':
-                  echo $DTGeneral->getMotivosxMotivo($Filtro);
+                  echo $DTGeneral->getMotivosxMotivo($search);
                   break;
                 case 'Codigo':
-                  echo $DTGeneral->getMotivosxCodigo($Filtro);
+                  echo $DTGeneral->getMotivosxCodigo($search);
                   break;
                 //case 'Numero': echo $DTGeneral->getMotivosxNumero($Filtro);break;
                 case 'Categoria':
-                  echo $DTGeneral->getMotivosxCategoria($Filtro);
+                  echo $DTGeneral->getMotivosxCategoria($search);
                   break;
                 default:
-                  echo $DTGeneral->getMotivosxID($Filtro);
+                  echo $DTGeneral->getMotivosxID($search);
                   break;
               }
             } else {
@@ -150,6 +150,11 @@
 if(isset($_REQUEST['Mensaje'])){
   echo "<script type='text/javascript'>
     swal('".$_REQUEST['Mensaje']."','','success');
+</script>";
+}
+if(isset($_REQUEST['MensajeError'])){
+  echo "<script type='text/javascript'>
+    swal('".$_REQUEST['MensajeError']."','','warning');
 </script>";
 }
 ?>

@@ -1889,7 +1889,7 @@ public function getMenuSeguridadUsuario($ID){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     //$Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Persona'>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from persona where estado = 1 and id_persona = $xID_Persona order by apellido, nombre")or die("Problemas al mostrar Personas");
+    $Consulta = mysqli_query($Con3->Conexion,"select * from personas where estado = 1 and id_persona = $xID_Persona order by apellido, nombre")or die("Problemas al mostrar Personas");
     $Ret = mysqli_fetch_assoc($Consulta);    
         
     $Boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalPersona'>".$Ret['apellido'].", ".$Ret['nombre']."</button>";
@@ -1977,7 +1977,7 @@ public function getMenuSeguridadUsuario($ID){
                      order by responsable";
     $Consulta = mysqli_query($Con3->Conexion,$Responsables)or die("Problemas al mostrar Responsables");
     while ($Ret = mysqli_fetch_array($Consulta)) {
-      $Select .= "<option value = '".$Ret['id_resp']."'>".$Ret['responsable']."</option>";
+      $Select .= "<option value = '".$Ret['id_responsable']."'>".$Ret['responsable']."</option>";
     }
     $Select .= "</select>";
     $Con3->CloseConexion();
@@ -1990,10 +1990,10 @@ public function getMenuSeguridadUsuario($ID){
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Responsable[]'>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from responsables where estado = 1 order by responsable")or die("Problemas al mostrar Responsables");
     while ($Ret = mysqli_fetch_array($Consulta)) {
-      if($Ret['id_resp'] == $xID_Responsable){
-        $Select .= "<option value = '".$Ret['id_resp']."' selected>".$Ret['responsable']."</option>";
+      if($Ret['id_responsable'] == $xID_Responsable){
+        $Select .= "<option value = '".$Ret['id_responsable']."' selected>".$Ret['responsable']."</option>";
       }else{
-        $Select .= "<option value = '".$Ret['id_resp']."'>".$Ret['responsable']."</option>";
+        $Select .= "<option value = '".$Ret['id_responsable']."'>".$Ret['responsable']."</option>";
       }
     }
     $Select .= "</select>";

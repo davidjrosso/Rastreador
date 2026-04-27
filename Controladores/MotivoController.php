@@ -25,9 +25,9 @@ class MotivoController
             $usuario = new Account(account_id: $ID_Usuario);
             $TipoUsuario = $usuario->get_id_tipo_usuario();
 
-            $Filtro = null;
+            $search = null;
             $ID_Filtro = null;
-            if (isset($_REQUEST["Filtro"])) $Filtro = $_REQUEST["Filtro"];
+            if (isset($_REQUEST['Search'])) $search = $_REQUEST["Search"];
             if (isset($_REQUEST["ID_Filtro"])) $ID_Filtro = $_REQUEST["ID_Filtro"];
 
             $Element = new Elements();

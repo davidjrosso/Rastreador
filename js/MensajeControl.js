@@ -409,7 +409,7 @@ export function VerificarModificacion(id, valor) {
         })
         .then((willDelete) => {
         if (willDelete) {
-            window.location.href = 'Controladores/ModificarResponsable.php?ID=' + id + '&Responsable=' + valor;
+            window.location.href = '/modificarresponsable?ID=' + id + '&Responsable=' + valor;
         }
         });
 }
@@ -424,7 +424,7 @@ export function VerificarEliminacion(id) {
         })
         .then((willDelete) => {
             if (willDelete) {
-                window.location.href = 'Controladores/DeleteResponsable.php?ID=' + id;
+                window.location.href = '/deleteresponsable?ID=' + id;
             }
         });
 }
@@ -597,7 +597,7 @@ export function CancelarUnificacion(xID_Peticion) {
         })
         .then((willDelete) => {
         if (willDelete) {
-            window.location.href = 'Controladores/DeletePeticion.php?ID=' + xID_Peticion;
+            window.location.href = '/deletepeticionmodificarresponsable?ID=' + xID_Peticion;
         }
         });
 }
@@ -612,7 +612,7 @@ export function CancelarModificacionMotivo(xID) {
         })
         .then((willDelete) => {
         if (willDelete) {
-            window.location.href = 'Controladores/DeletePeticionModificacionMotivo.php?ID=' + xID;
+            window.location.href = '/deletepeticionmodificarmotivo?ID=' + xID;
         }
         });
 }
@@ -627,7 +627,7 @@ export function CancelarModificacion(xID) {
         })
         .then((willDelete) => {
         if (willDelete) {
-            window.location.href = 'Controladores/DeletePeticionModificacion.php?ID=' + xID;
+            window.location.href = '/deletepeticionmodificacion?ID=' + xID;
         }
         });
 }
@@ -1066,9 +1066,9 @@ export function insercionDatosFormulario() {
     }
 
     request = $.ajax({
-        type: "POST",
+        type: "GET",
         cache: false,
-        url: "/Controladores/UbicacionesInformacion.php" + query,
+        url: "/ubicacion_calle_control" + query,
         async: true,
         processData: false,
         contentType: false,
