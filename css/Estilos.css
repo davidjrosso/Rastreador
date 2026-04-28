@@ -608,7 +608,7 @@ div .nav-side-menu {
 
 .number-input {
   border: 0;
-  display: flex;
+  display: inline-flex;
 }
 
 .number-input,

@@ -106,7 +106,13 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
   <script src="html2pdf.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.js"></script>
   <script src="https://www.lactame.com/lib/image-js/0.21.2/image.min.js"></script>
+  <script src="https://jsuites.net/v5/jsuites.js"></script>
+  <link rel="./node_modules/jspreadsheet-ce/dist/jspreadsheet.css">
+  <link rel="stylesheet" href="https://bossanova.uk/jspreadsheet/v5/jspreadsheet.css" type="text/css" />
+  <link rel="stylesheet" href="https://jsuites.net/v5/jsuites.css" type="text/css" />
+
   <script src="./dist/mapa.js"></script>
+  <script src="/dist/excel.js"></script>
 
   <script>
     const { PDFDocument, StandardFonts, rgb } = PDFLib;
@@ -135,12 +141,14 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
     let nroPaginaGeneradas = 0;
     let thTable = null;
     let fullscreen = false;
+    let excel = null;
 
     $(document).on("keydown", function (e) {
       NavegacionConTeclado(e);
     });
 
     $(document).on("ready", function (e) {
+      excel = new Excel();
       tablaBody = $("#tablaMovimientos tbody");
       tablaHead = $("#tablaMovimientos thead");
       nroFilasTabla = $("#tablaMovimientos tbody > tr").length - 2;
@@ -208,6 +216,34 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
       $("#BarraDeNavHTabla").on("mousedown", function (e) {
         focusBarraNavegacionH = true;
       });
+
+      $("#excel").on("click", function (e) {
+        if (excel) {
+          excel.delete();
+        }
+        excel = new Excel();
+        excel.init();
+      });
+      
+
+      $("#excel_descarga").on("click", function (e) {
+        let vic = null;
+        let listConfigResult = listConfigResultados();
+        for (let index = 2; index < 5; index++) {
+          objectJsonTabla["header_movimientos_general"].splice(objectJsonTabla["header_movimientos_general"].indexOf("Responsable" + index), 1);
+        }
+
+        vic = excel.excel_download(objectJsonTabla, listConfigResult);
+        vic.then(function (result) {
+          let url = null;
+          let blob = new Blob([result], {
+              type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            });
+          url = URL.createObjectURL(blob);
+          let w = window.open(url);
+        })
+      });
+
 
       $("#BarraDeNavHTabla").on("input", function (e) {
         if (focusBarraNavegacionH) {
@@ -1478,6 +1514,11 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             <div id="divporcentaje">%</div>
             <button id="zoomDecrementar"></button>
           </div>
+            <button id="excel" type = "button" class = "btn btn-secondary" data-toggle="modal" 
+                    data-target="#excel-modal">
+                Excel desplegar
+            </button>
+
         </div>
         <?php
           if (!isset($_REQUEST["Anio"])) {
@@ -2094,6 +2135,10 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             <button id="rep_movimientos" type = "button" class = "btn btn-secondary">
                 Listado
             </button>
+            <!--<button id="excel_descarga" type="button" class="btn btn-secondary">
+                Excel descargar
+            </button>-->
+
           </div>
         </div>
         <?php
@@ -3002,6 +3047,27 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
       </div>
     </div>
   </div>
+
+  <div class="modal fade" id="excel-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="class_modal-dialog modal-dialog" role="document"  id="id_modal-dialog">
+      <div class="modal-content" style="height: 600px; width: 953px;">
+        <div class="modal-header" style="padding: 0rem;">
+            <button type="button" id="boton-fullscreen" class="button-fullscreen" aria-label="fullscreen">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
+                </svg>
+            </button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div id="excel_rev" class="modal-body modal-excel" style="padding: 0rem;">
+          <!--<iframe src="/excel?ID=19" width="100%" height="100%"> </iframe>-->
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <div class="modal fade modal--show-overall" id="map-modal" tabindex="-1" role="dialog"
     aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 2001; overflow: hidden">
