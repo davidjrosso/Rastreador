@@ -19,6 +19,19 @@ class ResponsableController
         if (!isset($_SESSION["Usuario"])) {
             include("./Views/Error_Session.php");
         } else {
+            $ID_Usuario = $_SESSION["Usuario"];
+            $account = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $account->get_id_tipo_usuario();
+            $Element = new Elements();
+            $search = null;
+            $ID_Filtro = null;
+
+            if(isset($_REQUEST["ID_Filtro"])){
+              $search = $_REQUEST["Search"];
+              $ID_Filtro = $_REQUEST["ID_Filtro"];
+              $DTGeneral = new CtrGeneral();
+            }            
+
             include("./Views/view_responsables.php");
         }
         exit();
@@ -119,7 +132,7 @@ class ResponsableController
             }
             $con->CloseConexion();
             $Mensaje = "La solicitud de eliminación se envió a los administradores para ser confirmada.";
-            header('Location: ./responsable?Mensaje=' . $Mensaje);
+            header('Location: ./responsables?Mensaje=' . $Mensaje);
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
         }
@@ -277,7 +290,7 @@ class ResponsableController
                 $accion->save();
 
                 $mensaje = "El Responsable se modificó Correctamente";
-                header('Location: /home?&Mensaje=' . $mensaje);
+                header('Location: /home?Mensaje=' . $mensaje);
             }
         } catch (Exception $e) {
             echo "Error: ".$e->getMessage();
@@ -516,7 +529,7 @@ class ResponsableController
             $Con->OpenConexion();
 
             $query = "SELECT * 
-                    FROM responsable 
+                    FROM responsables 
                     WHERE responsable LIKE '%$consultaBusqueda%' 
                         AND estado = 1
                     ORDER BY responsable ASC";
@@ -539,7 +552,7 @@ class ResponsableController
                     <tbody>';
 
                 while($resultados = mysqli_fetch_array($consulta)) {
-                    $id_responsable = $resultados["id_resp"];			
+                    $id_responsable = $resultados["id_responsable"];			
                     $responsable = $resultados['responsable'];
                     $mensaje .= '<tr>
                                     <th scope="row">' . $id_responsable . '</th>
