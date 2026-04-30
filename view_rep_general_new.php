@@ -3048,9 +3048,9 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
     </div>
   </div>
 
-  <div class="modal fade" id="excel-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="excel-modal" style="z-index:3000" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="class_modal-dialog modal-dialog" role="document"  id="id_modal-dialog">
-      <div class="modal-content" style="height: 600px; width: 953px; z-index: 3000;">
+      <div class="modal-content" style="height: 600px; width: 953px;">
         <div class="modal-header" style="padding: 0rem;">
             <button type="button" id="boton-fullscreen" class="button-fullscreen" aria-label="fullscreen">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
