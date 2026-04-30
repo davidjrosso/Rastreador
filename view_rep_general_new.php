@@ -1072,7 +1072,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
         display: inline-block;
       } */
 
-    tr {
+    #table-responsive tr {
       color: #fff;
     }
 
