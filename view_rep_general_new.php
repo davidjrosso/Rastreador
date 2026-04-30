@@ -104,6 +104,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
   <script src="js/acciones-reporte-grafico.js"></script>
   <script src="js/jquery.wordexport.js"></script>
   <script src="html2pdf.bundle.min.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons" />
   <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.js"></script>
   <script src="https://www.lactame.com/lib/image-js/0.21.2/image.min.js"></script>
   <script src="https://jsuites.net/v5/jsuites.js"></script>
