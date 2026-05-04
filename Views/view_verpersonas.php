@@ -16,32 +16,7 @@
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-  <script>
-       $(document).ready(function(){
-              var date_input=$('input[name="date"]'); //our date input has the name "date"
-              var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-              date_input.datepicker({
-                  format: 'dd/mm/yyyy',
-                  container: container,
-                  todayHighlight: true,
-                  autoclose: true,
-              });
-          });
 
-       function CalcularPrecio(){
-        //var Combus = document.getElementById("Combustible").value;
-        var Litros = document.getElementById("Litros").value;
-        var Combustible = document.getElementById("Combustible");
-        var PrecioxL = Combustible.options[Combustible.selectedIndex].getAttribute("name");
-        
-        var Total = parseFloat(PrecioxL) * parseFloat(Litros);
-
-        var Precio = document.getElementById("Precio");
-        Precio.setAttribute("value",parseFloat(Total).toFixed(2));
-        //Terminar esta parte cuando termine lo demas.
-       }
-
-  </script>
 
 </head>
 <body>
@@ -80,19 +55,19 @@
               $Table .= "<tr><td>Meses</td><td>". $Persona->getMeses() ."</td></tr>";            
               $Table .= "<tr><td>Nro. Carpeta</td><td>".(($historia_clinica) ? $historia_clinica->getNro_Carpeta():"")."</td></tr>";               
               $Table .= "<tr><td>Nro. Legajo</td><td>".(($historia_clinica)? $historia_clinica->getNro_Legajo():"")."</td></tr>";             
-              $Table .= "<tr><td>Localidad</td><td>".$domicilio->getLocalidad()."</td></tr>";
-              $Table .= "<tr><td>Barrio</td><td>".$domicilio->getBarrio()."</td></tr>";  
+              $Table .= "<tr><td>Localidad</td><td>".(($domicilio)? $domicilio->getLocalidad() : null) . "</td></tr>";
+              $Table .= "<tr><td>Barrio</td><td>".(($domicilio) ? $domicilio->getBarrio() : null) . "</td></tr>";  
               $Table .= "<tr><td>Domicilio</td><td>". $calle . "</td></tr>";              
               $Table .= "<tr><td>Manzana</td><td>".(($domicilio)? $domicilio->getManzana():"")."</td></tr>";
-              $Table .= "<tr><td>Lote</td><td>".(($domicilio)? $domicilio->getLote():"")."</td></tr>";
-              $Table .= "<tr><td>Sub-lote</td><td>".$domicilio->getFamilia()."</td></tr>";
+              $Table .= "<tr><td>Lote</td><td>".(($domicilio)? $domicilio->getLote(): "")."</td></tr>";
+              $Table .= "<tr><td>Sub-lote</td><td>".(($domicilio)? $domicilio->getFamilia(): "")."</td></tr>";
               $Table .= "<tr><td>Telefono</td><td>". (($contacto) ? $contacto->getTelefono() : "") ."</td></tr>";
               $Table .= "<tr><td>Mail</td><td>". (($contacto) ? $contacto->getMail() : "") ."</td></tr>";                            
               $Table .= "<tr><td>Obra Social</td><td>".$Persona->getObra_Social()."</td></tr>";              
               $Table .= "<tr><td>Escuela</td><td>".$Escuela."</td></tr>";
               $Table .= "<tr><td>Lugar de Trabajo</td><td>". (($contacto) ? $contacto->getTrabajo() : "") ."</td></tr>";                            
               $Table .= "<tr><td>Observación</td><td>".$Persona->getObservaciones()."</td></tr>";
-              $Table .= "<tr><td>Cambio de Domicilio</td><td>".$domicilio->getCambio_Domicilio()."</td></tr>";
+              $Table .= "<tr><td>Cambio de Domicilio</td><td>". (($domicilio)? $domicilio->getCambio_Domicilio() : null) . "</td></tr>";
 
 
               $Table .= "</table>";

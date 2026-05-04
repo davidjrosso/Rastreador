@@ -380,7 +380,7 @@ class PersonaController
             $Meses = null;
         }
 
-        if (empty($_REQUEST["Fecha_Nacimiento"])) {
+        if(empty($_REQUEST["Fecha_Nacimiento"]) || $_REQUEST["Fecha_Nacimiento"] == "No se cargo fecha de nacimiento") {
             $Fecha_Nacimiento = null;
         } else {
             $Fecha_Nacimiento = implode("-", array_reverse(explode("/",$_REQUEST["Fecha_Nacimiento"])));
@@ -629,22 +629,26 @@ class PersonaController
         $sexo = (isset($_REQUEST["opcion_x"]))? $_REQUEST["opcion_x"] : $sexo;
 
 
-        if(empty($_REQUEST["Fecha_Nacimiento"])){
-            $Fecha_Nacimiento = 'null';
+        if(empty($_REQUEST["Fecha_Nacimiento"]) || $_REQUEST["Fecha_Nacimiento"] == "No se cargo fecha de nacimiento") {
+            $Fecha_Nacimiento = null;
         } else {
             $Fecha_Nacimiento = implode("-", array_reverse(explode("/",$_REQUEST["Fecha_Nacimiento"])));
         }
 
         ///////////////////////////CALCULAR EDAD//////////////////////////////////////////////////
-        if($Edad == 'null' || $Edad == ""){
-            list($ano,$mes,$dia) = explode("-",$Fecha_Nacimiento);
-            $ano_diferencia = date("Y") - $ano;
-            $mes_diferencia = date("m") - $mes;
-            $dia_diferencia = date("d") - $dia;
-            if($dia_diferencia < 0 || $mes_diferencia < 0){
-                $ano_diferencia--;
+        if($Edad == 'null' || $Edad == "") {
+            if ($_REQUEST["Fecha_Nacimiento"] != "No se cargo fecha de nacimiento") {
+                list($ano,$mes,$dia) = explode("-",$Fecha_Nacimiento);
+                $ano_diferencia = date("Y") - $ano;
+                $mes_diferencia = date("m") - $mes;
+                $dia_diferencia = date("d") - $dia;
+                if($dia_diferencia < 0 || $mes_diferencia < 0){
+                    $ano_diferencia--;
+                }
+                $Edad = $ano_diferencia;                
+            } else {
+                $Edad = 0;
             }
-            $Edad = $ano_diferencia;
         }
 
 
