@@ -513,6 +513,12 @@ class PersonaController
         $Edad = $_REQUEST["Edad"];
         $Meses = $_REQUEST["Meses"];
 
+        $sexo = null;
+        $sexo = (isset($_REQUEST["opcion_f"]))? $_REQUEST["opcion_f"] : $sexo;
+        $sexo = (isset($_REQUEST["opcion_m"]))? $_REQUEST["opcion_m"] : $sexo;
+        $sexo = (isset($_REQUEST["opcion_x"]))? $_REQUEST["opcion_x"] : $sexo;
+
+
         if(empty($_REQUEST["Fecha_Nacimiento"])){
             $Fecha_Nacimiento = 'null';
         } else {
@@ -703,6 +709,7 @@ class PersonaController
                 $Persona_Viejo->setDNI($DNI);
                 $Persona_Viejo->setEdad($Edad);
                 $Persona_Viejo->setNombre($Nombre);
+		        $Persona_Viejo->setSexo($Persona->getSexo());
                 $hist->setNro_Legajo($Nro_Legajo);
                 $Persona_Viejo->setFecha_Nacimiento($Fecha_Nacimiento);
                 $Persona_Viejo->setID_Escuela($ID_Escuela);

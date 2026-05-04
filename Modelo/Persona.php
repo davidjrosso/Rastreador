@@ -7,6 +7,7 @@ class Persona implements JsonSerializable {
 	private $coneccion;
 	private $Apellido;
 	private $DNI;
+	private $sexo;
 	private $Edad;
 	private $Estado;
 	private $Fecha_Nacimiento;
@@ -24,6 +25,7 @@ class Persona implements JsonSerializable {
 		$xApellido = null,
 		$xNombre = null,
 		$xDNI = null,
+		$sexo = null,
 		$xEdad = null,
 		$xMeses = null,
 		$xFecha_Nacimiento = null,
@@ -36,6 +38,7 @@ class Persona implements JsonSerializable {
 		if (!$ID_Persona) {
 			$this->Apellido = $xApellido;
 			$this->DNI = $xDNI;
+			$this->sexo = $sexo;
 			$this->Edad = $xEdad;
 			$this->Estado = $xEstado;
 			$this->Fecha_Nacimiento = $xFecha_Nacimiento;
@@ -61,6 +64,7 @@ class Persona implements JsonSerializable {
 			$apellido = $ret["apellido"];
 			$nombre = $ret["nombre"];
 			$dni = $ret["documento"];
+			$query_sexo = $ret["sexo"];
 			$edad = $ret["edad"];
 			$meses = $ret["meses"];
 			if(is_null($ret["fecha_nac"]) || $ret["fecha_nac"] == "null") {
@@ -77,6 +81,7 @@ class Persona implements JsonSerializable {
 			$this->Apellido = ($xApellido) ? $xApellido : $apellido;
 			$this->Nombre = ($xNombre) ? $xNombre : $nombre;
 			$this->DNI = ($xDNI) ? $xDNI : $dni;
+			$this->sexo = ($query_sexo) ? $query_sexo : $sexo;
 			$this->Edad = ($xEdad) ? $xEdad : $edad;
 			$this->Meses = ($xMeses) ? $xMeses : $meses;
 			$this->Fecha_Nacimiento = ($xFecha_Nacimiento) ? $xFecha_Nacimiento : $fecha_nacimiento;
@@ -90,39 +95,55 @@ class Persona implements JsonSerializable {
 
 
 	//METODOS SET
-	public function setID_Persona($xID_Persona){
+	public function setID_Persona($xID_Persona)
+	{
 		$this->ID_Persona = $xID_Persona;
 	}
 
-	public function setApellido($xApellido){
+	public function setApellido($xApellido)
+	{
 		$this->Apellido = $xApellido;
 	}
 
-	public function setNombre($xNombre){
+	public function setNombre($xNombre)
+	{
 		$this->Nombre = $xNombre;
 	}
 
-	public function setDNI($xDNI){
+	public function setsexo($sexo)
+	{
+		$this->sexo = $sexo;
+	}
+
+
+	public function setDNI($xDNI)
+	{
 		$this->DNI = $xDNI;
 	}
 
-	public function setEdad($xEdad){
+	public function setEdad($xEdad)
+	{
 		$this->Edad = $xEdad;
 	}
 
-	public function setMeses($xMeses){
+	public function setMeses($xMeses)
+	{
 		$this->Meses = $xMeses;
 	}
 
-	public function setFecha_Nacimiento($xFecha_Nacimiento){
+	public function setFecha_Nacimiento($xFecha_Nacimiento)
+	{
 		$this->Fecha_Nacimiento = $xFecha_Nacimiento;
 	}
 
-	public function setObra_Social($xObra_Social){
+	public function setObra_Social($xObra_Social)
+	{
 		$this->Obra_Social = $xObra_Social;
 	}
 
-	public function setObservaciones($xObservaciones){
+	
+	public function setObservaciones($xObservaciones)
+	{
 		$this->Observaciones = $xObservaciones;
 	}
 
@@ -135,31 +156,38 @@ class Persona implements JsonSerializable {
 	}
 
 	//METODOS GET
-	public function getID_Persona(){
+	public function getID_Persona()
+	{
 		return $this->ID_Persona;
 	}
 
-	public function getApellido(){
+	public function getApellido()
+	{
 		return $this->Apellido;
 	}
 
-	public function getNombre(){
+	public function getNombre()
+	{
 		return $this->Nombre;
 	}
 
-	public function getDNI(){
+	public function getDNI()
+	{
 		return $this->DNI;
 	}
 
-	public function getEdad(){
+	public function getEdad()
+	{
 		return $this->Edad;
 	}
 
-	public function getMeses(){
+	public function getMeses()
+	{
 		return $this->Meses;
 	}
 
-	public function getFecha_Nacimiento(){
+	public function getFecha_Nacimiento()
+	{
 		return $this->Fecha_Nacimiento;
 	}
 
@@ -196,6 +224,12 @@ class Persona implements JsonSerializable {
 		$RetEscuela["Escuela"];
 		return $RetEscuela["Escuela"];
 	}
+
+	public function getsexo()
+	{
+		return $this->sexo;
+	}
+
 
 	public static function is_exist($coneccion, $id_persona)
 	{
@@ -270,7 +304,8 @@ class Persona implements JsonSerializable {
 		return $id;
 	}
 
-	public function jsonSerialize() {
+	public function jsonSerialize()
+	{
 		return [
 		'ID_Persona' => $this->ID_Persona,
 		'Nombre' => $this->Nombre,
@@ -305,8 +340,9 @@ class Persona implements JsonSerializable {
 						obra_social = " . ((!is_null($this->getObra_Social())) ? "'" . $this->getObra_Social() . "'" : "null") . ", 
 						observacion = " . ((!is_null($this->getObservaciones())) ? "'" . $this->getObservaciones() . "'" : "null") . ", 
 						ID_Escuela = " . ((!is_null($this->getID_Escuela())) ? "'" . $this->getID_Escuela() . "'" : "null") . ", 
-						meses = " . ((!is_null($this->getMeses())) ? "'" . $this->getMeses() . "'" : "null") . " 
-					where id_persona = " . $this->getID_Persona();
+						meses = " . ((!is_null($this->getMeses())) ? "'" . $this->getMeses() . "'" : "null") . " ,
+						sexo = " . ((!is_null($this->getsexo())) ? "'" . $this->getsexo() . "'" : "null") . "
+						where id_persona = " . $this->getID_Persona();
 					$MensajeErrorConsultar = "No se pudo actualizar la Persona";
 					if (!$Ret = mysqli_query($this->coneccion->Conexion, $Consulta)) {
 						throw new Exception($MensajeErrorConsultar . $Consulta, 2);
@@ -376,7 +412,8 @@ class Persona implements JsonSerializable {
 		}
 	}
 
-	public function save(){
+	public function save()
+	{
 		$consulta = "INSERT INTO personas (
 										apellido, 
 										nombre, 
@@ -387,6 +424,7 @@ class Persona implements JsonSerializable {
 										observacion, 
 										ID_Escuela, 
 										meses, 
+										sexo,
 										estado 
 					)
 					VALUES ( " . ((!is_null($this->getApellido())) ? "'" . $this->getApellido() . "'" : "null") . ", 
@@ -398,6 +436,7 @@ class Persona implements JsonSerializable {
 							" . ((!is_null($this->getObservaciones())) ? "'" . $this->getObservaciones() . "'" : "null") . ", 
 							" . ((!is_null($this->getID_Escuela())) ? $this->getID_Escuela() : "null") . ", 
 							" . ((!is_null($this->getMeses())) ? "'" . $this->getMeses() . "'" : "null") . ", 
+							" . ((!is_null($this->getsexo())) ? "'" . $this->getsexo() . "'" : "null") . ", 
 							1
 					)";
 					$MensajeErrorConsultar = "No se pudo insertar la Persona";
