@@ -299,15 +299,15 @@
                     <label for="opcion_f" class="col-md-2 col-form-label LblForm">Sexo: </label>
                     <div class="col-md-10">
                       <div class="form-check form-check-inline" style="margin-left: 2%; margin-top: 1%;">
-                        <input class="form-check-input" type="radio" name="opcion_f" id="opcion_f" value="f">
+                        <input class="form-check-input" type="radio" name="opcion_f" id="opcion_f" value="f" <?php if ($Persona->getsexo() == "f") echo "checked"; ?>>
                         <label class="form-check-label" style="font-size: 1.2rem; margin-left: 7px;" for="opcion_f">f</label>
                       </div>
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="opcion_m" id="opcion_m" value="m">
+                        <input class="form-check-input" type="radio" name="opcion_m" id="opcion_m" value="m" <?php if ($Persona->getsexo() == "m") echo "checked"; ?>>
                         <label class="form-check-label" style="font-size: 1.2rem; margin-left: 7px;" for="opcion_m">m</label>
                       </div>
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="opcion_x" id="opcion_x" value="x">
+                        <input class="form-check-input" type="radio" name="opcion_x" id="opcion_x" value="x" <?php if ($Persona->getsexo() == "x") echo "checked"; ?>>
                         <label class="form-check-label" style="font-size: 1.2rem; margin-left: 7px;" for="opcion_x">x</label>
                       </div>
                       <!-- TOAST PROGRESO ENLACE -->
