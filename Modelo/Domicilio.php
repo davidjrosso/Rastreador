@@ -958,7 +958,7 @@ public function update()
 					 circunscripcion = " . ((!is_null($this->getCircunscripcion())) ? "'" . $this->getCircunscripcion() . "'" : "null") . ", 
 					 seccion = " . ((!is_null($this->getSeccion())) ? "'" . $this->getSeccion() . "'" : "null") . ", 
 					 manzana = " . ((!is_null($this->getManzana())) ? "'" . $this->getManzana() . "'" : "null") . ", 
-					 lote = " . ((!is_null($this->getLote())) ? $this->getLote() : "null") . ", 
+					 lote = " . ((!is_null($this->getLote())) ?  "'" . $this->getLote() . "'": "null") . ", 
 					 familia = " . ((!is_null($this->getFamilia())) ? "'" . $this->getFamilia() . "'" : "null") . ", 
 					 cambio_domicilio = " . ((!is_null($this->getCambio_Domicilio())) ? "'" . $this->getCambio_Domicilio() . "'" : "null") . ", 
 					 georeferencia = " . ((!is_null($this->getGeoreferencia())) ? $this->getGeoreferencia() : "null") . ", 

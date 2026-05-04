@@ -61,7 +61,7 @@ class PersonaDomicilio
 	public static function exist($coneccion, $id_persona, $id_domicilio)
 	{
 		$id = 0;
-		$ConsRegistrosIguales = "select id_persona 
+		$ConsRegistrosIguales = "select id_persona, id_persona_domicilio 
 								from personas_domicilios  
 								where id_persona = $id_persona
 								  and id_domicilio = $id_domicilio

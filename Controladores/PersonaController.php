@@ -292,9 +292,9 @@ class PersonaController
             $http_referer = (!empty($_SERVER["HTTP_REFERER"])) ? $_SERVER["HTTP_REFERER"] : null;
 
             if (!preg_match("~view_personas~", $http_referer)) {
-            $_SESSION["from_reporte_grafico"] = true;
+                $_SESSION["from_reporte_grafico"] = true;
             } else {
-            $_SESSION["from_reporte_grafico"] = false;
+                $_SESSION["from_reporte_grafico"] = false;
             }
 
             $ID_Usuario = $_SESSION["Usuario"];
@@ -569,6 +569,7 @@ class PersonaController
         $Edad = $_REQUEST["Edad"];
         $Meses = $_REQUEST["Meses"];
 
+
         $sexo = null;
         $sexo = (isset($_REQUEST["opcion_f"]))? $_REQUEST["opcion_f"] : $sexo;
         $sexo = (isset($_REQUEST["opcion_m"]))? $_REQUEST["opcion_m"] : $sexo;
@@ -668,7 +669,32 @@ class PersonaController
         }
 
         $id_centro_salud = 7;
+
+        if ($from_reporte_grafico) {
+            $reporte = "true";
+        } else {
+            $reporte = "false";
+        }
         
+        if (is_numeric($DNI)) {
+            if(strlen((string)$DNI) < 8) {
+                $status_process = 4;
+                $Mensaje = "El dni debe ser mayor a 8 digitos";
+                header('status_process:' . $status_process);
+                header('message:' . $Mensaje);
+                header('Location: /persona/editar?ID=' . $ID_Persona . '&MensajeError=' . $Mensaje);
+                exit();
+            }
+        } else {
+            $status_process = 4;
+            $Mensaje = "El dni debe ser un numero";
+            header('status_process:' . $status_process);
+            header('message:' . $Mensaje);
+            header('Location: /persona/editar?ID=' . $ID_Persona . '&MensajeError=' . $Mensaje);
+            exit();
+            }    
+
+
         $Fecha = date("Y-m-d");
         $ID_TipoAccion = 2;
         try {
@@ -765,7 +791,7 @@ class PersonaController
                 $Persona_Viejo->setDNI($DNI);
                 $Persona_Viejo->setEdad($Edad);
                 $Persona_Viejo->setNombre($Nombre);
-		        $Persona_Viejo->setSexo($Persona->getSexo());
+		        $Persona_Viejo->setSexo($sexo);
                 $hist->setNro_Legajo($Nro_Legajo);
                 $Persona_Viejo->setFecha_Nacimiento($Fecha_Nacimiento);
                 $Persona_Viejo->setID_Escuela($ID_Escuela);
@@ -814,11 +840,6 @@ class PersonaController
                 $Con->CloseConexion();
                 $Mensaje = "La Persona fue modificada Correctamente";
 
-                if ($from_reporte_grafico) {
-                    $reporte = "true";
-                } else {
-                    $reporte = "false";
-                }
                 $status_process = 1;
                 header('status_process:' . $status_process);
                 header('message:' . $Mensaje);
