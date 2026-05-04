@@ -466,6 +466,24 @@ class PersonaController
             $ID_Escuela = 2;
         }
 
+        if (is_numeric($DNI)) {
+            if(strlen((string)$DNI) < 8) {
+                $status_process = 4;
+                $Mensaje = "El dni debe ser mayor a 8 digitos";
+                header('status_process:' . $status_process);
+                header('message:' . $Mensaje);
+                header('Location: /persona/nueva?MensajeError=' . $Mensaje);
+                exit();
+            }
+        } else {
+            $status_process = 4;
+            $Mensaje = "El dni debe ser un numero";
+            header('status_process:' . $status_process);
+            header('message:' . $Mensaje);
+            header('Location: /persona/nueva?MensajeError=' . $Mensaje);
+            exit();
+        }  
+
         $Fecha = date("Y-m-d");
         $ID_TipoAccion = 1;
         $Detalles = "El usuario con ID: $ID_Usuario ha registrado una nueva Persona. Datos: Apellido: $Apellido - Nombre: $Nombre - Documento: $DNI - Nro Legajo: $Nro_Legajo - Edad: $Edad - Meses: $Meses - Fecha de Nacimiento: $Fecha_Nacimiento - Telefono: $Telefono - E-Mail: $Mail - Nro Carpeta: $Nro_Carpeta - Obra Social: $Obra_Social - Domicilio: $Domicilio - Barrio: $ID_Barrio - Escuela: $ID_Escuela - Localidad: $Localidad - Circunscripcion: $Circunscripcion - Seccion: $Seccion - Manzana: $Manzana - Lote: $Lote - Familia: $Familia - Observaciones: $Observaciones - Cambio Domicilio: $Cambio_Domicilio";
@@ -493,44 +511,79 @@ class PersonaController
                 );
 
                 $Persona->save();
-                $hist = new HistoriaClinica(coneccion: $Con, 
-                        ID_Persona: $Persona->getID_Persona(),
-                        xNro_Carpeta: $Nro_Carpeta,
-                        xNro_Legajo : $Nro_Legajo,
-                        id_centro_salud: 7
-                        );
-                $hist->save();
 
-                $contac = new Contacto(coneccion: $Con,
-                    id_persona: $Persona->getID_Persona(),
-                    xMail : $Mail,
-                    xTelefono : $Telefono,
-                    xTrabajo : $Trabajo
-                );
-                $contac->save();
-
-
-                $domicilio = new Domicilio(coneccion: $Con,
-                    xBarrio : $ID_Barrio,
-                    xCambio_Domicilio : $Cambio_Domicilio,
-                    xCalle: $id_nombre_calle,
-                    xCircunscripcion : $Circunscripcion,
-                    xFamilia : $Familia,
-                    xNro: $nro_calle,
-                    xSeccion : $Seccion,
-                
-                );                
-                $domicilio->setDomicilio();
-                if (!empty($georeferencia_point)) {
-                    $domicilio->setGeoreferencia($georeferencia_point);
+                if (HistoriaClinica::exist(coneccion: $Con, id_persona: $Persona->getID_Persona())) {
+                    $hist = new HistoriaClinica(coneccion: $Con,
+                                                ID_Persona: $Persona->getID_Persona(), 
+                                                id_centro_salud: 7) ;
+                } else {
+                    $hist = new HistoriaClinica(coneccion: $Con ,
+                            ID_Persona: $Persona->getID_Persona(),
+                            xNro_Carpeta: $Nro_Carpeta,
+                            xNro_Legajo : $Nro_Legajo,
+                            id_centro_salud: 7
+                    );
+                    $hist->save();
                 }
-                $domicilio->save();
 
-                $rev = new PersonaDomicilio(connection: $Con,
+                if (Contacto::tiene_contacto(coneccion: $Con, id_persona: $Persona->getID_Persona())) {
+                    $contac = new Contacto(coneccion: $Con, id_persona: $Persona->getID_Persona());
+                } else {
+                    $contac = new Contacto(coneccion: $Con,
                         id_persona: $Persona->getID_Persona(),
-                        id_domicilio: $domicilio->get_id_domicilio()               
-                );
-                $rev->save();                
+                        xMail : $Mail,
+                        xTelefono : $Telefono,
+                        xTrabajo : $Trabajo
+                    );
+                    $contac->save();
+                }    
+
+
+                if (!Domicilio::is_registered(coneccion: $Con, id_calle: $calle, numero: $nro_calle)) {                                      
+                    $domicilio = new Domicilio(coneccion: $Con, 
+                                            xCalle: $calle,
+                                            xNro: $nro_calle,
+                                            xCircunscripcion: $Circunscripcion,
+                                            xFamilia: $Familia,
+                                            xLocalidad: $Localidad,
+                                            xLote: $Lote,
+                                            xManzana: $Manzana,
+                                            xSeccion: $Seccion,
+                                            xBarrio: $ID_Barrio,
+                                            );
+
+                    if ($domicilio->getId_Calle() && $domicilio->getNro()){
+                        $domicilio->setDomicilio();	
+                    }
+                    if ($georeferencia_point) {
+                        $domicilio->setGeoreferencia(xGeoreferencia: $georeferencia_point);
+                    }
+
+                    $domicilio->save();                        
+                } else {
+                    $domicilio = new Domicilio(coneccion: $Con, xCalle: $calle, xNro: $nro_calle);
+
+                }
+
+                $id_persona_domicilio = PersonaDomicilio::exist(coneccion: $Con, 
+                                            id_persona: $Persona->getID_Persona(), 
+                                            id_domicilio: $domicilio->get_id_domicilio());
+                if (!$id_persona_domicilio) {
+
+                    if (PersonaDomicilio::tiene_domicilio(coneccion:$Con, id_persona: $Persona->getID_Persona())) {
+                        $domicilio_obj = new PersonaDomicilio(connection: $Con, 
+                                                            id_persona: $Persona->getID_Persona());
+                        $domicilio_obj->delete();
+                    }
+                    $domicilio_obj = new PersonaDomicilio(connection: $Con, 
+                                                        id_persona: $Persona->getID_Persona(),
+                                                        id_domicilio: $domicilio->get_id_domicilio());
+                    $domicilio_obj->save();
+                } else {
+                    $domicilio_obj = new PersonaDomicilio(connection: $Con, 
+                                                        id_persona_domicilio: $id_persona_domicilio);
+                }
+
 
                 if ($Persona->getEdad() == 0) {
                     $Persona->update_edad_meses();
@@ -692,7 +745,7 @@ class PersonaController
             header('message:' . $Mensaje);
             header('Location: /persona/editar?ID=' . $ID_Persona . '&MensajeError=' . $Mensaje);
             exit();
-            }    
+        }    
 
 
         $Fecha = date("Y-m-d");
