@@ -80,6 +80,7 @@ try {
 	$routes[] = Route::get('personas_listado_filtrado', '/personas\?Filtro={filtro}/ID_Filtro={id_filtro}', [PersonaController::class, 'listado_personas']);
 	$routes[] = Route::post('personas_listado_filtrado_controler', '/personas_filtrar', [PersonaController::class, 'personas_filter']);
 	$routes[] = Route::post('buscar_personas', '/buscar_personas', [PersonaController::class, 'buscar_personas']);
+	$routes[] = Route::post('buscar_dni_personas', '/buscar_dni_personas', [PersonaController::class, 'buscar_dni_personas']);
 	$routes[] = Route::get('persona_ver', '/persona\?ID={ID}', [PersonaController::class, 'datos_persona']);
 	$routes[] = Route::get('mod_persona', '/persona/editar\?ID={id}', [PersonaController::class, 'mod_persona']);
 	$routes[] = Route::get('mod_persona_success', '/persona/editar\?ID={id}/Mensaje={mensaje}/reporte={report}', [PersonaController::class, 'mod_persona']);

@@ -169,7 +169,7 @@ class PersonaController
 
     public function buscar_dni_personas()
     {
-        header('Content-Type: application/json; charset=utf-8');
+        header('Content-Type: application/json;');
 
         $consultaBusqueda = $_REQUEST['valorBusqueda'];
         $id = (!empty($_REQUEST['id'])) ? $_REQUEST['id'] : null;
