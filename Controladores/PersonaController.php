@@ -167,6 +167,62 @@ class PersonaController
         echo $mensaje;
     }
 
+    public function buscar_dni_personas()
+    {
+        header('Content-Type: application/json; charset=utf-8');
+
+        $consultaBusqueda = $_REQUEST['valorBusqueda'];
+        $id = (!empty($_REQUEST['id'])) ? $_REQUEST['id'] : null;
+
+        //Filtro anti-XSS
+        $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
+        $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
+        $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consultaBusqueda);
+
+        //Variable vacía (para evitar los E_NOTICE)
+
+        $mensaje["exist"] = false;
+        if (isset($consultaBusqueda)) {
+
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            if (is_numeric($consultaBusqueda)) {
+                if(strlen((string)$consultaBusqueda) >= 8){
+
+                    $query = "SELECT p.id_persona, UPPER(apellido) AS apellido, 
+                                                    CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
+                                                    documento, nro_carpeta, concat(calle_nombre, ' ', numero) domicilio
+                                            FROM personas p 
+                                                left join historias_clinicas hc on (p.id_persona = hc.id_persona)
+                                                left join personas_domicilios rn on (p.id_persona = rn.id_persona)
+                                                left join domicilios r on (rn.id_domicilio = r.id_domicilio)
+                                                left join calles c on (c.id_calle = r.id_calle)
+                                            WHERE documento LIKE '%$consultaBusqueda%' 
+                                                and p.estado = 1 
+                                                and p.id_persona <> $id";
+                    $consulta = mysqli_query(
+                                    $Con->Conexion, 
+                                    $query
+                                    );
+
+                    $filas = mysqli_num_rows($consulta);
+
+                    if ($filas > 0) {
+                        $mensaje["exist"] = true;
+                    }
+ 
+                }
+
+            }
+            $Con->CloseConexion();
+
+        };
+
+        echo json_encode($mensaje);
+    }
+
+
     public function datos_persona($id_persona)
     {
         header("Content-Type: text/html;charset=utf-8");

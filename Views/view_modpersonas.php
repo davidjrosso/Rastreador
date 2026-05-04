@@ -260,7 +260,7 @@
                   <div class="form-group row">
                     <label for="idDocumento" class="col-md-2 col-form-label LblForm">Documento: </label>
                     <div class="col-md-10">
-                      <input type="text" class="form-control" name="DNI" id="idDocumento" autocomplete="off" oninput="ValidarDocumento()"
+                      <input type="text" class="form-control" name="DNI" id="idDocumento" autocomplete="off" oninput="ValidarDocumentoWithId(<?php $Persona->getID_Persona();?>)"
                         value="<?php echo $Persona->getDNI(); ?>">
                     </div>
                   </div>

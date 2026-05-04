@@ -191,6 +191,39 @@ export function ValidarDocumento() {
 
 }
 
+export function ValidarDocumentoWithId(id) {
+    let Documento = document.getElementById("idDocumento");
+    let NroDocumento = Documento.value;
+    let xmlhttp = null;
+    let contenidosRecibidos = null;
+ 
+    if (NroDocumento.toString().length < 8) {
+        NotShowModalError();
+        return true;
+    }
+
+    xmlhttp = new XMLHttpRequest();
+
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            contenidosRecibidos = JSON.parse(xmlhttp.responseText);
+            if (contenidosRecibidos.exist) { 
+                Documento.value = "";
+                swal.fire({
+                        title: "El Documento ingresado " + NroDocumento + " ya esta registrado",
+                        icon: "info",
+                        text: "Por favor ingrese un Documento diferente",
+                        confirmButtonText: 'OK'
+                });
+            }
+        }
+    }
+    xmlhttp.open('POST', '/buscar_dni_personas', true);
+    xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xmlhttp.send('valorBusqueda=' + NroDocumento + "&id=" + id);
+
+}
+
 export function successHandler(jqxhr, textStatus) {
     let response = jqxhr.requestJSON;
     if (response.mensaje) {
