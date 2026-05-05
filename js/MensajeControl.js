@@ -1099,10 +1099,12 @@ export function insercionDatosFormulario() {
     }
 
     request = $.ajax({
-        type: "GET",
+        type: "POST",
         cache: false,
-        url: "/ubicacion_calle_control" + query,
+        url: "/ubicacion_calle_control",
         async: true,
+        contentType: 'application/x-www-form-urlencoded',
+        data: query,
         processData: false,
         contentType: false,
         success: function (response) {

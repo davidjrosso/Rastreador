@@ -520,7 +520,9 @@ export class MapaOl {
             request = $.ajax({
                 type: "POST",
                 cache: false,
-                url: "/ubicacion_persona" + query,
+                url: "/ubicacion_calle_control",
+                contentType: 'application/x-www-form-urlencoded',
+                data: query,
                 async: true,
                 processData: false,
                 contentType: false,
