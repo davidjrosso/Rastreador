@@ -734,9 +734,9 @@ class PersonaController
         }
         
         if (is_numeric($DNI)) {
-            if(strlen((string)$DNI) < 8) {
+            if(strlen((string)$DNI) < 7) {
                 $status_process = 4;
-                $Mensaje = "El DNI debe ser igual a 8 digitos";
+                $Mensaje = "El DNI debe tener 7 o 8 digitos";
                 header('status_process:' . $status_process);
                 header('message:' . $Mensaje);
                 header('Location: /persona/editar?ID=' . $ID_Persona . '&MensajeError=' . $Mensaje);
