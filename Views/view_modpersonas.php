@@ -532,7 +532,7 @@
                     Calle
                   </td>
                   <td  id="calle-georeferencia">
-                    <?php echo ($domicilio) ? $domicilio->getNombre_Calle() : "";?>
+                      <input id="input-calle" style="appearance: none;" type="text" value="<?php echo ($domicilio) ? $domicilio->getNombre_Calle() : "";?>">
                   </td>
                   <td id="calle-buttom" style="background-color: transparent; border: none; display: none;">
                       <div>
@@ -545,7 +545,7 @@
                     Nro
                   </td>
                   <td id="nro-georeferencia">
-                    <?php echo ($domicilio) ? $domicilio->getNro() : "";?>
+                    <input id="input-nro" style="appearance: none;" type="number" value="<?php echo ($domicilio) ? $domicilio->getNro() : "";?>">
                   </td>
                   <td id="nro-buttom" style="background-color: transparent; border: none; display: none;">
                       <div>
