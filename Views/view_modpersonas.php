@@ -145,6 +145,18 @@
         }
       });
 
+      $("#input-calle").on("input",function (e) {
+        listadoDeCalles(map);
+      });
+
+      $("#input-nro").on("click ",function (e) {
+        $("#lista-calles-georeferencia").hide();
+      });
+
+      $("#input-nro").on("input",function (e) {
+        map.queryDatosDomicilio();
+      });
+
       $("#boton-desplegale").on("click", function (e) {
         $("#desplegable").toggle();
       });

@@ -1145,6 +1145,46 @@ export function insercionDatosFormulario() {
     $("#formulario-succes").show();
 }
 
+function listadoDeCallesError() {
+    $("#lista-calles-georeferencia").hide();
+    $("#input-calle").val("Error");
+    $("#input-nro").val("0");
+    $("#control-barrio").text("Error");
+}
+
+export function listadoDeCalles(mapa) {
+    let lista = $("#listado-calles");
+    let request = null;
+    let query = "?";
+    $("#lista-calles-georeferencia").show();
+    query += "calle=" + $("#input-calle").val();
+    request = $.ajax({
+        type: "GET",
+        cache: false,
+        url: "/Controladores/listarCalles.php" + query,
+        async: true,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            let count = 1;
+            let nro = $("#input-nro").val();
+            let listaLength = $("#listado-calles li").length;
+            if (listaLength > 0) $("#listado-calles li").remove();
+            response.forEach(element => {
+                let obj = $("<li id='" + element.id_calle + "' class='dropdown-item'>" + 
+                                count++ + " " + element.calle_nombre + "</li>");
+                lista.append(obj);
+                obj.on("click", function (e) {
+                    $("#input-calle").val(element.calle_nombre);
+                    $("#lista-calles-georeferencia").hide();
+                    if (!isNaN(parseInt(nro))) mapa.queryDatosDomicilio();
+                })
+            });
+        },
+        error: listadoDeCallesError
+    });
+}
+
 export function clearDatosFormulario() {
     $("#control-calle").css("display", "none");
     $("#control-nro").css("display", "none");
