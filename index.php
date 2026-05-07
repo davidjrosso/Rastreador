@@ -236,6 +236,7 @@ try {
 	$routes[] = Route::get('unif_calle', '/calle/unificar', [CalleController::class, 'unif_calle']);
 	$routes[] = Route::post('unif_calle_control', '/unificar_direcciones', [CalleController::class, 'unif_calle_control']);
 	$routes[] = Route::get('listar_calles', '/listarcalles\?calle={ma}', [CalleController::class, 'listar_calles']);
+	$routes[] = Route::get('listar_calles_s', '/listarcalles', [CalleController::class, 'listar_calles']);
 	$routes[] = Route::post('buscar_unif_direcciones', '/buscar_unif_direcciones\?valorBusqueda={valor}', [CalleController::class, 'buscar_unif_direcciones']);
 	$routes[] = Route::get('listado_escuelas', '/escuelas', [EscuelaController::class, 'listado_escuelas']);
 	$routes[] = Route::get('listado_escuelas_s', '/escuelas\?Mensaje={ma}', [EscuelaController::class, 'listado_escuelas']);
