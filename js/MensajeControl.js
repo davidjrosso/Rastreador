@@ -1158,29 +1158,31 @@ export function listadoDeCalles(mapa) {
     let query = "?";
     $("#lista-calles-georeferencia").show();
     query += "calle=" + $("#input-calle").val();
-    let url = "/listarcalles" + query;
-    request = $.ajax({
-        type: "GET",
-        url: url,
-        async: true,
-        success: function (response) {
-            let count = 1;
-            let nro = $("#input-nro").val();
-            let listaLength = $("#listado-calles li").length;
-            if (listaLength > 0) $("#listado-calles li").remove();
-            response.forEach(element => {
-                let obj = $("<li id='" + element.id_calle + "' class='dropdown-item'>" + 
-                                count++ + " " + element.calle_nombre + "</li>");
-                lista.append(obj);
-                obj.on("click", function (e) {
-                    $("#input-calle").val(element.calle_nombre);
-                    $("#lista-calles-georeferencia").hide();
-                    if (!isNaN(parseInt(nro))) mapa.queryDatosDomicilio();
-                })
-            });
-        },
-        error: listadoDeCallesError
-    });
+    if ($("#input-calle").val()) {
+        let url = "/listarcalles" + query;
+        request = $.ajax({
+            type: "GET",
+            url: url,
+            async: true,
+            success: function (response) {
+                let count = 1;
+                let nro = $("#input-nro").val();
+                let listaLength = $("#listado-calles li").length;
+                if (listaLength > 0) $("#listado-calles li").remove();
+                response.forEach(element => {
+                    let obj = $("<li id='" + element.id_calle + "' class='dropdown-item'>" + 
+                                    count++ + " " + element.calle_nombre + "</li>");
+                    lista.append(obj);
+                    obj.on("click", function (e) {
+                        $("#input-calle").val(element.calle_nombre);
+                        $("#lista-calles-georeferencia").hide();
+                        if (!isNaN(parseInt(nro))) mapa.queryDatosDomicilio();
+                    })
+                });
+            },
+            error: listadoDeCallesError
+        });        
+    }
 }
 
 export function clearDatosFormulario() {
