@@ -187,7 +187,7 @@ class SolicitudController
             $Con = new Conexion();
             $Con->OpenConexion();
 
-            $cat = new Solicitud_ModificarMotivo(xID: $ID_Peticion);
+            $cat = new Solicitud_ModificarMotivo(xID: $ID_Peticion, xConeccion: $Con );
             $cat->delete();
             $accion = new Accion(xaccountid: $ID_Usuario,
                                  xFecha: $Fecha,
