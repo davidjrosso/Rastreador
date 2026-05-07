@@ -114,7 +114,7 @@ export class MapaOl {
               this.#mapa.getView().setCenter([lon, lat]);
               barrioResp = requestHttp.responseJSON.barrio;
               barrio = (barrioResp) ? barrioResp.trim() : "no disponible";
-              $("#input-calle").val(calleNombre);
+              $("#input-calle").val(calleNombre.trim());
               $("#input-nro").val(nro);
               $("#barrio-georeferencia").text(barrio);
               $("#desplegable").show();

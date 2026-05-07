@@ -532,8 +532,9 @@
         <div class="modal-body" style="padding-top: 0px">
           <div id="basicMap"></div>
         </div>
-        <div id="desplegable" style="display: none; position: absolute; top: 30px; left: 20px; z-index: 1000">
-          <table class="tabla-direccion">
+        <div id="desplegable" style="display: flex; position: absolute; top: 30px; left: 20px; z-index: 1000">
+          <div style="display: flex; flex-direction: column;">
+            <table class="tabla-direccion">
               <thead>
                 <th> </th>
                 <th> </th>
@@ -593,10 +594,16 @@
             Success
           </button>
         </div>
+        <div id="lista-calles-georeferencia" style="display: none" class="dropdown" aria-labelledby="dropdownMenuButton1">
+            <div  id="listado-calles" class="dropdown-menu" style="display: block; top: 1px; max-height: 325px; overflow-y: auto; overflow-x: hidden; width: 255px; font-size: 0.90rem; position: static; margin-top: 6px; padding: 0px;">
+              <h6 class="dropdown-header" style="text-align: center; padding-top: 5px;">Calles</h6>
+            </div>
+        </div>
       </div>
     </div>
   </div>
-  <script>
+</div>
+<script>
 <?php    if ($domicilio) { ?>
       objectJsonPersona.lat = <?php echo (!empty($domicilio->getLatitud())) ? $domicilio->getLatitud() : "null" ; ?>;
       objectJsonPersona.lon = <?php echo (!empty($domicilio->getLonguitud())) ? $domicilio->getLonguitud() : "null"; ?>;

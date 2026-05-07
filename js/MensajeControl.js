@@ -1158,13 +1158,11 @@ export function listadoDeCalles(mapa) {
     let query = "?";
     $("#lista-calles-georeferencia").show();
     query += "calle=" + $("#input-calle").val();
+    let url = "/listarcalles" + query;
     request = $.ajax({
         type: "GET",
-        cache: false,
-        url: "/Controladores/listarCalles.php" + query,
+        url: url,
         async: true,
-        processData: false,
-        contentType: false,
         success: function (response) {
             let count = 1;
             let nro = $("#input-nro").val();
