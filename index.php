@@ -148,6 +148,8 @@ try {
 	$routes[] = Route::post('buscar_motivos_filtro', '/buscar_motivos_filtro', [MotivoController::class, 'buscar_motivos_filtro']);
 	$routes[] = Route::post('sol_mod_motivo', 'pedirmodificarmotivo', [MotivoController::class, 'sol_mod_control']);
 	$routes[] = Route::get('mod_motivo_control', 'modificarmotivo\?ID={id}', [MotivoController::class, 'mod_motivo_control']);
+	$routes[] = Route::get('del_mod_motivo_control', 'deletepeticionmodificarmotivo\?ID={id}', [MotivoController::class, 'del_mod_motivo']);
+
 	$routes[] = Route::get('del_motivo_control', 'pedireliminarmotivo\?ID={id}', [MotivoController::class, 'del_motivo_control']);
 	$routes[] = Route::get('unif_motivo', '/motivo/unificar', [MotivoController::class, 'unif_motivo']);
 	$routes[] = Route::get('unif_motivo_success', '/motivo/unificar\?Mensaje={mensaje}', [MotivoController::class, 'unif_motivo']);
