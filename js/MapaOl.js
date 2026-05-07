@@ -169,7 +169,6 @@ export class MapaOl {
             url: "https://nominatim.openstreetmap.org/reverse?lat=" + lonLat[1] + "&lon=" + lonLat[0] + "&format=jsonv2",
             async: true,
             processData: false,
-            contentType: false,
             success: succesSearchStreetNumber,
             error: errorSearchAddress
           });
