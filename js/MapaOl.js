@@ -497,7 +497,7 @@ export class MapaOl {
         let check_calle = ($("#input-calle").val() != "no disponible") ? 1 : 0;
         let check_barrio = ($("#control-barrio").text() != "no disponible") ? 1 : 0;
         let request = null;
-        let query = "?";
+        let query = "";
         let id_request = null;
         this.#id_request++;
         id_request = this.#id_request;
@@ -525,7 +525,6 @@ export class MapaOl {
                 data: query,
                 async: true,
                 processData: false,
-                contentType: false,
                 success: this.queryDatosSuccess.bind(this, id_request),
                 error: this.queryDatosError
             });
