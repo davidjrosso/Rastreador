@@ -29,6 +29,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_Unificacion.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Movimiento.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Motivo.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/MovimientoMotivo.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/MovimientoResponsable.php");
+
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/DtoMovimiento.php';
 
 
@@ -418,7 +420,7 @@ class MovimientoController
             $movimiento->udpate();
 
             $consulta = "SELECT * 
-                        FROM movimiento_motivo
+                        FROM movimientos_motivos
                         WHERE id_movimiento = $ID_Movimiento
                         AND estado = 1";
             $rs = mysqli_query($con->Conexion,$consulta) or die("Problemas al consultar las acciones.");
@@ -451,7 +453,7 @@ class MovimientoController
             }
 
             $consulta = "SELECT * 
-                        FROM movimiento_responsable
+                        FROM movimientos_responsables
                         WHERE id_movimiento = $ID_Movimiento
                         AND estado = 1";
             $rs = mysqli_query($con->Conexion,$consulta) or die("Problemas al consultar las acciones.");
