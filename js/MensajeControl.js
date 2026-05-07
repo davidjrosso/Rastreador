@@ -299,25 +299,25 @@ export function VerificarUnificacion(
         if (willDelete) {
             switch (xID_TipoUnif) {
             case 'MOTIVO':
-                url = '../Controladores/unificarmotivos.php?ID_Motivo_1=' + xID_Registro_1 + '&ID_Motivo_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
+                url = '/unificarmotivos?ID_Motivo_1=' + xID_Registro_1 + '&ID_Motivo_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
                 break;
             case 'PERSONAS':
-                url = '../Controladores/unificarpersonas.php?ID_Persona_1=' + xID_Registro_1 + '&ID_Persona_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
+                url = '/unificarpersonas?ID_Persona_1=' + xID_Registro_1 + '&ID_Persona_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
                 break;
             case 'CENTROS SALUD':
-                url = '../Controladores/unificarcentros.php?ID_Centro_1=' + xID_Registro_1 + '&ID_Centro_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
+                url = '/unificarcentros?ID_Centro_1=' + xID_Registro_1 + '&ID_Centro_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
                 break;
             case 'ESCUELAS':
-                url = '../Controladores/unificarescuelas.php?ID_Escuela_1=' + xID_Registro_1 + '&ID_Escuela_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
+                url = '/unificarescuelas?ID_Escuela_1=' + xID_Registro_1 + '&ID_Escuela_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
                 break;
             case 'BARRIOS':
-                url = '../Controladores/unificarbarrios.php?ID_Barrio_1=' + xID_Registro_1 + '&ID_Barrio_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
+                url = '/aunificarbarrios?ID_Barrio_1=' + xID_Registro_1 + '&ID_Barrio_2=' + xID_Registro_2 + '&ID_Solicitud=' + xID_Solicitud;
                 break;
             case 'CATEGORIA':
-                url = '../Controladores/unificarcategorias.php?ID=' + xID_Solicitud;
+                url = '/aunificarcategorias?ID=' + xID_Solicitud;
                 break;
             case 'RESPONSABLE':
-                url = '../Controladores/unificarresponsables.php?ID=' + xID_Solicitud;
+                url = '/aunificarresponsables?ID=' + xID_Solicitud;
                 break;
             default:
                 swal.fire("Algo salio mal consulte con el equipo de desarrollo", "", "warning");
@@ -553,7 +553,7 @@ export function VerificarEliminarMotivo(xID_Motivo) {
         })
         .then((willDelete) => {
         if (willDelete) {
-            window.location.href = 'Controladores/DeleteMotivo.php?ID=' + xID_Motivo;
+            window.location.href = '/DeleteMotivo?ID=' + xID_Motivo;
         }
         });
 }
@@ -583,7 +583,7 @@ export function VerificarEliminarNotificacion(xID_Notificacion) {
         })
         .then((willDelete) => {
         if (willDelete) {
-            window.location.href = 'Controladores/DeleteNotificacion.php?ID=' + xID_Notificacion;
+            window.location.href = '/DeleteNotificacion?ID=' + xID_Notificacion;
         } else {
         }
         });
@@ -615,7 +615,7 @@ export function VerificarModificarUsuario(xID_Solcitud) {
         })
         .then((willDelete) => {
         if (willDelete) {
-            window.location.href = 'Controladores//modificar_account?id_solcitud=' + xID_Solcitud;
+            window.location.href = '/modificar_account?id_solcitud=' + xID_Solcitud;
         }
         });
 }
@@ -675,7 +675,7 @@ export function CancelarCrearMotivo(xID) {
         })
         .then((willDelete) => {
         if (willDelete) {
-            window.location.href = 'Controladores/DeletePeticionCrearMotivo.php?ID=' + xID;
+            window.location.href = '/DeletePeticionCrearMotivo?ID=' + xID;
         }
         });
 }
@@ -720,7 +720,7 @@ export function CancelarEliminacionMotivo(xID) {
         })
         .then((willDelete) => {
         if (willDelete) {
-            window.location.href = 'Controladores/DeletePeticionEliminacion.php?ID=' + xID;
+            window.location.href = '/DeletePeticionEliminacion?ID=' + xID;
         }
         });
 }
@@ -750,7 +750,7 @@ export function CancelarSolciitudUsuario(xID) {
         })
         .then((willDelete) => {
         if (willDelete) {
-            window.location.href = 'Controladores/DeletePeticionSolicitudUsuario.php?ID=' + xID;
+            window.location.href = '/DeletePeticionSolicitudUsuario?ID=' + xID;
         } else {        
         }
         });
@@ -811,7 +811,7 @@ export function VerificarDeleteUsuario(xID){
     })
     .then((willDelete) => {
         if (willDelete) {
-        window.location.href = 'Controladores/DeleteUsuario.php?ID='+xID;
+        window.location.href = '/DeleteUsuario?ID='+xID;
         }
     });
 }
@@ -826,7 +826,7 @@ export function VerificarDeleteMovimiento(xID) {
     })
     .then((willDelete) => {
         if (willDelete) {
-        window.location.href = 'Controladores/DeleteMovimiento.php?ID=' + xID;
+        window.location.href = '/DeleteMovimiento?ID=' + xID;
         } else {
         }
     });

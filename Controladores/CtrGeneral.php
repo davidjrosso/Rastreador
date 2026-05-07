@@ -2859,7 +2859,7 @@ class CtrGeneral
 								<td>".$Fecha."</td>
 								<td>".$Codigo."</td>
 								<td>".$Categoria."</td>
-								<td>".(($Permisos !="")?$Permisos:"Ninguno")."</td>
+								<td>". (($Permisos) ? $Permisos : "Ninguno") ."</td>
 								<td>".$Usuario."</td>
 								<td>
 									<button class='btn btn-success' onClick='VerificarModificarCategoria(".$ID.",\"".$Fecha."\",\"".$Codigo."\",\"".$Categoria."\",\"".$ID_Forma."\",\"".$NuevoColor."\",\"".$ID_Categoria."\")'>

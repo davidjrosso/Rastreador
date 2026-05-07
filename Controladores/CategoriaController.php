@@ -395,7 +395,15 @@ class CategoriaController
         $Grupo_Usuarios = $_REQUEST["Tipo_Usuario"];
         $ID_Categoria = $_REQUEST["ID"];
         $Codigo = null;
-        if (isset($_REQUEST["Codigo"])) $Codigo = strtoupper($_REQUEST["Codigo"]);
+        $con = new Conexion();
+        $con->OpenConexion();
+
+        if (!isset($_REQUEST["Codigo"])) {
+            $bj_c = new Categoria(xID_Categoria: $ID_Categoria, xConecction : $con);   
+            $Codigo  = $bj_c->getCod_Categoria();
+        } else {
+            $Codigo  = strtoupper($_REQUEST["Codigo"]);
+        }
         $Categoria = $_REQUEST["Categoria"];
         $ID_Forma = $_REQUEST["ID_Forma"];
         $NuevoColor = $_REQUEST["CodigoColor"];
