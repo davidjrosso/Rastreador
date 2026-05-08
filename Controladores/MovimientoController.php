@@ -134,6 +134,7 @@ class MovimientoController
                                       LEFT JOIN centros_salud C ON (M.id_centro = C.id_centro)
                                       LEFT JOIN otras_instituciones I ON (M.id_otrainstitucion = I.ID_OtraInstitucion )
                                  where M.id_movimiento = $ID_Movimiento
+                                   and MS.estado = 1
                                  group by M.id_movimiento, M.fecha, M.id_centro, P.id_persona, P.apellido, 
                                         P.nombre, M.observaciones, C.centro_salud, I.ID_OtraInstitucion";
 
@@ -479,7 +480,7 @@ class MovimientoController
                     $mov = new MovimientoResponsable(
                                                      connection: $con,
                                                      id_movimiento: $ID_Movimiento,
-                                                     id_responsable: $ret["id_responsable"]
+                                                     id_responsable: $value
                                                      );
 
                     $mov->save();

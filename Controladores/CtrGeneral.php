@@ -55,16 +55,14 @@ class CtrGeneral
 						  inner join (select id_movimiento, MAX(id_responsable) id_responsable
 						  			  from  movimientos_responsables
 									  where estado = 1
-									  GROUP BY id_movimiento, id_responsable) MS on (M.id_movimiento = MS.id_movimiento)
+									  GROUP BY id_movimiento) MS on (M.id_movimiento = MS.id_movimiento)
 						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
 						  left join responsables R on (MS.id_responsable = R.id_responsable)
 						  inner join motivo MC on (MT.id_motivo = MC.id_motivo)
 						  inner join INN NN on (NN.id_motivo = MC.id_motivo)
-						  inner join categoria C on (MC.cod_categoria = C.cod_categoria)
-						  inner join categorias_roles CS on (C.id_categoria = CS.id_categoria)
 							where  M.estado = 1
 								and P.estado = 1
-							group by M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido), P.nombre, R.responsable 
+							group by M.id_movimiento, UPPER(P.apellido), P.nombre, R.responsable 
 							order by M.fecha_creacion desc;";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
@@ -177,13 +175,11 @@ class CtrGeneral
 						  inner join (select id_movimiento, MAX(id_responsable) id_responsable
 						  			  from  movimientos_responsables
 									  where estado = 1
-									  GROUP BY id_movimiento, id_responsable) MS on (M.id_movimiento = MS.id_movimiento)
+									  GROUP BY id_movimiento) MS on (M.id_movimiento = MS.id_movimiento)
 						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
 						  left join responsables R on (MS.id_responsable = R.id_responsable)
 						  inner join motivo MC on (MT.id_motivo = MC.id_motivo)
 						  inner join INN NN on (NN.id_motivo = MC.id_motivo)
-						  inner join categoria C on (MC.cod_categoria = C.cod_categoria)
-						  inner join categorias_roles CS on (C.id_categoria = CS.id_categoria)
 					 where M.id_movimiento = $ID
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
@@ -245,18 +241,15 @@ class CtrGeneral
 						  inner join (select id_movimiento, MAX(id_responsable) id_responsable
 						  			  from  movimientos_responsables
 									  where estado = 1
-									  GROUP BY id_movimiento, id_responsable) MS on (M.id_movimiento = MS.id_movimiento)
+									  GROUP BY id_movimiento) MS on (M.id_movimiento = MS.id_movimiento)
 						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
 						  left join responsables R on (MS.id_responsable = R.id_responsable)
 						  inner join motivo MC on (MT.id_motivo = MC.id_motivo)
 						  inner join INN NN on (NN.id_motivo = MC.id_motivo)
-						  inner join categoria C on (MC.cod_categoria = C.cod_categoria)
-						  inner join categorias_roles CS on (C.id_categoria = CS.id_categoria)
 					 where M.fecha = '$Fecha'
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1
 					   and P.estado = 1
-					   and CS.estado = 1 
 					group by M.id_movimiento, M.fecha, M.fecha_creacion, P.apellido, P.nombre, R.responsable
 					order M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
@@ -312,18 +305,15 @@ class CtrGeneral
 						  inner join (select id_movimiento, MAX(id_responsable) id_responsable
 						  			  from  movimientos_responsables
 									  where estado = 1
-									  GROUP BY id_movimiento, id_responsable) MS on (M.id_movimiento = MS.id_movimiento)
+									  GROUP BY id_movimiento) MS on (M.id_movimiento = MS.id_movimiento)
 						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
 						  left join responsables R on (MS.id_responsable = R.id_responsable)
 						  inner join motivo MC on (MT.id_motivo = MC.id_motivo)
 						  inner join INN NN on (NN.id_motivo = MC.id_motivo)
-						  inner join categoria C on (MC.cod_categoria = C.cod_categoria)
-						  inner join categorias_roles CS on (C.id_categoria = CS.id_categoria)
 					 where  P.apellido like '%$Apellido%'
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
-					   and CS.estado = 1
 					group by M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
 					order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
@@ -379,18 +369,15 @@ class CtrGeneral
 						  inner join (select id_movimiento, MAX(id_responsable) id_responsable
 						  			  from  movimientos_responsables
 									  where estado = 1
-									  GROUP BY id_movimiento, id_responsable) MS on (M.id_movimiento = MS.id_movimiento)
+									  GROUP BY id_movimiento) MS on (M.id_movimiento = MS.id_movimiento)
 						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
 						  left join responsables R on (MS.id_responsable = R.id_responsable)
 						  inner join motivo MC on (MT.id_motivo = MC.id_motivo)
 						  inner join INN NN on (NN.id_motivo = MC.id_motivo)
-						  inner join categoria C on (MC.cod_categoria = C.cod_categoria)
-						  inner join categorias_roles CS on (C.id_categoria = CS.id_categoria)
 					 where P.nombre like '%$Nombre%'
 					    and CS.id_tipousuario = $TipoUsuario
 						and M.estado = 1 
 						and P.estado = 1
-					   and CS.estado = 1 
 					  group by M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable
 					  order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
@@ -475,18 +462,15 @@ class CtrGeneral
 						  inner join (select id_movimiento, MAX(id_responsable) id_responsable
 						  			  from  movimientos_responsables
 									  where estado = 1
-									  GROUP BY id_movimiento, id_responsable) MS on (M.id_movimiento = MS.id_movimiento)
+									  GROUP BY id_movimiento) MS on (M.id_movimiento = MS.id_movimiento)
 						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
 						  left join responsables R on (MS.id_responsable = R.id_responsable)
 						  inner join motivo MC on (MT.id_motivo = MC.id_motivo)
 						  inner join INN NN on (NN.id_motivo = MC.id_motivo)
-						  inner join categoria C on (MC.cod_categoria = C.cod_categoria)
-						  inner join categorias_roles CS on (C.id_categoria = CS.id_categoria)
 					 where P.documento like '%$Documento%'
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
-					   and CS.estado = 1
 					 group by M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable
 					 order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
@@ -571,18 +555,15 @@ class CtrGeneral
 						  inner join (select id_movimiento, MAX(id_responsable) id_responsable
 						  			  from  movimientos_responsables
 									  where estado = 1
-									  GROUP BY id_movimiento, id_responsable) MS on (M.id_movimiento = MS.id_movimiento)
+									  GROUP BY id_movimiento) MS on (M.id_movimiento = MS.id_movimiento)
 						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
 						  left join responsables R on (MS.id_responsable = R.id_responsable)
 						  inner join motivo MC on (MT.id_motivo = MC.id_motivo)
 						  inner join INN NN on (NN.id_motivo = MC.id_motivo)
-						  inner join categoria C on (MC.cod_categoria = C.cod_categoria)
-						  inner join categorias_roles CS on (C.id_categoria = CS.id_categoria)
 					 where R.responsable like '%$Responsable%'
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
-					   and CS.estado = 1  
 					 order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
 		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
@@ -638,18 +619,15 @@ class CtrGeneral
 						  inner join (select id_movimiento, MAX(id_responsable) id_responsable
 						  			  from  movimientos_responsables
 									  where estado = 1
-									  GROUP BY id_movimiento, id_responsable) MS on (M.id_movimiento = MS.id_movimiento)
+									  GROUP BY id_movimiento) MS on (M.id_movimiento = MS.id_movimiento)
 						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
 						  left join responsables R on (MS.id_responsable = R.id_responsable)
 						  inner join motivo MC on (MT.id_motivo = MC.id_motivo)
 						  inner join INN NN on (NN.id_motivo = MC.id_motivo)
-						  inner join categoria C on (MC.cod_categoria = C.cod_categoria)
-						  inner join categorias_roles CS on (C.id_categoria = CS.id_categoria)
 					 where HC.nro_legajo = '$Legajo'
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
-					   and CS.estado = 1  
 					   and HC.estado = 1
 					 group by M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable
 					 order by M.fecha_creacion desc";
@@ -715,18 +693,15 @@ class CtrGeneral
 						  inner join (select id_movimiento, MAX(id_responsable) id_responsable
 						  			  from  movimientos_responsables
 									  where estado = 1
-									  GROUP BY id_movimiento, id_responsable) MS on (M.id_movimiento = MS.id_movimiento)
+									  GROUP BY id_movimiento) MS on (M.id_movimiento = MS.id_movimiento)
 						  inner join movimientos_motivos MT on (M.id_movimiento = MT.id_movimiento)
 						  left join responsables R on (MS.id_responsable = R.id_responsable)
 						  inner join motivo MC on (MT.id_motivo = MC.id_motivo)
 						  inner join INN NN on (NN.id_motivo = MC.id_motivo)
-						  inner join categoria C on (MC.cod_categoria = C.cod_categoria)
-						  inner join categorias_roles CS on (C.id_categoria = CS.id_categoria)
 					 where HC.nro_carpeta = '$Carpeta'
 					   and CS.id_tipousuario = $TipoUsuario
 					   and M.estado = 1 
 					   and P.estado = 1
-					   and CS.estado = 1  
 					 group by M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable
 					 order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
