@@ -445,13 +445,15 @@ class MotivoController
 
     public function buscar_motivos_filtro()
     {
-        $consultaBusqueda = $_REQUEST['valorBusqueda'];
-        $id = $_REQUEST['ID'];
+        //$consultaBusqueda = $_REQUEST['valorBusqueda'];
+        $vs = isset($_REQUEST["vs"]) ? $_REQUEST["vs"] : null;
+        $json_string = file_get_contents('php://input');
+        $lista_motivo = json_decode($json_string, true);
 
         //Filtro anti-XSS
         $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
         $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
-        $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consultaBusqueda);
+        //$consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consultaBusqueda);
 
         //Variable vacía (para evitar los E_NOTICE)
         $mensaje = "";
@@ -460,12 +462,23 @@ class MotivoController
 
             $Con = new Conexion();
             $Con->OpenConexion();
-            $query = "SELECT * 
-                      FROM motivo 
-                      WHERE motivo LIKE '%$consultaBusqueda%' 
-                        and estado = 1";
 
+            if ($vs && $vs == "denominacion") {
+            $query = "SELECT * 
+                    FROM motivo 
+                    WHERE motivo LIKE '%$consultaBusqueda%' 
+                        and estado = 1
+                    ORDER BY tipo_motivo ASC, orden DESC";
+
+            } else {
+                    $query = "SELECT * 
+                            FROM motivo 
+                            WHERE codigo LIKE '%$consultaBusqueda%' 
+                                and estado = 1
+                            ORDER BY tipo_motivo ASC, orden DESC";
+            }
             $consulta = mysqli_query($Con->Conexion, $query);
+
             $filas = mysqli_num_rows($consulta);
 
             if ($filas === 0) {
@@ -481,24 +494,31 @@ class MotivoController
                         </tr>
                     </thead>
                     <tbody>';
+                $valores_motivos = ($lista_motivo) ? array_values(array: $lista_motivo) : [];
 
                 while($resultados = mysqli_fetch_array($consulta)) {
                     $ID_Motivo = $resultados["id_motivo"];			
                     $Motivo = $resultados['motivo'];
-                    $codigo = $resultados['codigo'];					
+                    $codigo = $resultados['codigo'];
+                    $mensaje .= '<tr>
+                                    <th scope="row">' . $Motivo . '</th>
+                                    <td>' . $codigo . '</td>';
 
-                    $mensaje .= '
-                        <tr>
-                        <th scope="row">' . $Motivo . '</th>
-                        <td>' . $codigo . '</td>		
-                        <td>
-                            <button type = "button" class = "btn btn-outline-success" 
-                                    onClick="seleccionMotivo(' . (($id) ? $id : 'null') . ',\'' . $Motivo .'\',' . $ID_Motivo  .')" 
-                                    data-dismiss="modal">
-                                seleccionar
-                            </button>
-                        </td>
-                        </tr>';
+                    if (in_array($ID_Motivo, $valores_motivos)) {
+                        $mensaje .= '<td>
+                                        <button type = "button" style=\'width:12ch\' class = "btn btn-outline-success" onClick="addMultipleMotivo(\'' . $Motivo . '\',' . $ID_Motivo . ', this)">
+                                            &#10003
+                                        </button>
+                                    </td>
+                                </tr>';
+                    } else {
+                        $mensaje .= '<td>
+                                        <button type = "button" class = "btn btn-outline-success" onClick="addMultipleMotivo(\'' . $Motivo . '\',' . $ID_Motivo . ', this)">
+                                            seleccionar
+                                        </button>
+                                    </td>
+                                </tr>';
+                    }
                 };
 
                 $mensaje .= '</tbody>
