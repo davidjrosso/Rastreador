@@ -31,6 +31,7 @@
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+  <script src="js/Utils.js"></script>
 
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
@@ -66,11 +67,16 @@
 
 </head>
 <body>
-<div class = "row">
+<div class="col-md-2" id="expandir" style="padding-left: 6px; position: fixed; z-index: 1000" hidden>
+  <a id="abrir" class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="mostrar()">
+    <i class="fa fa-arrows-alt fa-lg" color="tomato"></i>
+  </a>
+</div>
+<div class = "row margin-right-cero">
 <?php
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_MOTIVO);
   ?>
-  <div class = "col-md-9">
+  <div class = "col-md-9 inicio-md-2">
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
@@ -80,22 +86,22 @@
     </div><br>
     <div class="row">
       <div class = "col"></div>
-      <div class = "col-4">
+      <div class = "col-9">
           <center><button class = "btn btn-secondary" onClick = "location.href='/motivo/nuevo'">Agregar Nuevo Motivo</button></center>
       </div>
-      <div class="col-2">
-                <button type="button" class="btn btn-outline-secondary" onclick="location.href = '/'">Volver</button>
+      <div class="col-1">
+                <button type="button" class="btn btn-outline-secondary" onclick="location.href = '/'">Inicio</button>
       </div>
       <div class = "col"></div>
     </div>
     <br>
-     <div class = "row">
+     <div class = "row" style="justify-content: center;">
       <div class = "col-10">
            <!-- Carga -->
           <form method = "post" action = "/motivos">
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Buscar: </label>
-              <div class="col-md-4">
+              <div class="col-md-5">
                 <input type="text" class="form-control" name = "Search" id="inputPassword" width="100%" autocomplete="off">
               </div>
               <label for="inputPassword" class="col-md-1 col-form-label LblForm">En: </label>
@@ -143,7 +149,14 @@
             }
           ?>
         </div>
-  </div>
+        <div class="row" style="justify-content:center;">
+          <div class="col-2" style="justify-content:center;">
+            <button type="button" class="btn btn-outline-secondary" 
+                    onclick="location.href = 'view_inicio.php'">Inicio</button>
+          </div>
+        </div>
+        <br>
+    </div>
 </div>
 </div>
 <?php  

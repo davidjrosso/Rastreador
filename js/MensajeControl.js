@@ -553,7 +553,7 @@ export function VerificarEliminarMotivo(xID_Motivo) {
         })
         .then((willDelete) => {
         if (willDelete) {
-            window.location.href = '/DeleteMotivo?ID=' + xID_Motivo;
+            window.location.href = '/deletemotivo?ID=' + xID_Motivo;
         }
         });
 }
@@ -583,7 +583,7 @@ export function VerificarEliminarNotificacion(xID_Notificacion) {
         })
         .then((willDelete) => {
         if (willDelete) {
-            window.location.href = '/DeleteNotificacion?ID=' + xID_Notificacion;
+            window.location.href = '/deletenotificacion?ID=' + xID_Notificacion;
         } else {
         }
         });

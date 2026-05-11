@@ -2342,16 +2342,16 @@ public function getMenuSeguridadUsuario($ID){
     $Select .= "<option value = '0'>-Todos-</option>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from escuelas order by Escuela")or die("Problemas al mostrar Escuelas");
     while ($Ret = mysqli_fetch_array($Consulta)) {
-      if($Ret["ID_Nivel"] != null || $Ret["ID_Nivel"] != ""){
-        $ID_Nivel = $Ret["ID_Nivel"];
-        $ConsultarNivel = mysqli_query($Con3->Conexion,"select Nivel from nivel_escuelas where ID_Nivel = $ID_Nivel limit 1") or die("Problemas al Mostrar Niveles de Escuelas");
+      if($Ret["id_nivel"] != null || $Ret["id_nivel"] != ""){
+        $ID_Nivel = $Ret["id_nivel"];
+        $ConsultarNivel = mysqli_query($Con3->Conexion,"select nivel from nivel_escuelas where id_nivel = $ID_Nivel limit 1") or die("Problemas al Mostrar Niveles de Escuelas");
         $RetNivel = mysqli_fetch_assoc($ConsultarNivel);      
-        $RetNivel = "(".$RetNivel["Nivel"].")";
+        $RetNivel = "(".$RetNivel["nivel"].")";
       }else{
         $RetNivel = "";
       }    
       
-      $Select .= "<option value = '".$Ret['ID_Escuela']."'>".$Ret['Escuela']." ".$RetNivel."</option>";
+      $Select .= "<option value = '".$Ret['id_escuela']."'>".$Ret['escuela']." ".$RetNivel."</option>";
     }
     $Select .= "</select>";
     $Con3->CloseConexion();
@@ -2393,7 +2393,7 @@ public function getMenuSeguridadUsuario($ID){
     $Select .= "<option value = '0'>-Todos-</option>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from responsables where estado = 1 order by responsable")or die("Problemas al mostrar Categoría");
     while ($Ret = mysqli_fetch_array($Consulta)) {
-      $Select .= "<option value = '".$Ret['id_resp']."'>".$Ret['responsable']."</option>";
+      $Select .= "<option value = '".$Ret['id_responsable']."'>".$Ret['responsable']."</option>";
     }
     $Select .= "</select>";
     $Con3->CloseConexion();
@@ -2899,7 +2899,7 @@ public function getMenuSeguridadUsuario($ID){
     $ConsultaResult = mysqli_query($Con3->Conexion,$ConsultaNombre)or die("Problemas al mostrar Personas");
     if(mysqli_num_rows($ConsultaResult) > 0){
       $Resultado = mysqli_fetch_array($ConsultaResult);
-      $cardSession = "<div class='title-session'>".
+      $cardSession = "<div class='title-session' style='display: inline-block'>".
                         $Resultado["username"] . "
                       </div>";
     } else {
@@ -2919,7 +2919,7 @@ public function getMenuSeguridadUsuario($ID){
     $ConsultaResult = mysqli_query($Con3->Conexion,$ConsultaNombre)or die("Problemas al mostrar Personas");
     if(mysqli_num_rows($ConsultaResult) > 0) {
       $Resultado = mysqli_fetch_array($ConsultaResult);
-      $cardSession = "<div class='title-session'>
+      $cardSession = "<div class='title-session' style='display: inline-block'>
                         <a id='perfil' style='color: #e1ffff' href='cuenta?account_id=" . $idAccount . "'>".
                           $Resultado["username"] . "
                         </a>
@@ -2934,8 +2934,12 @@ public function getMenuSeguridadUsuario($ID){
   public function menuDeNavegacion($TipoUsuario, $ID_Usuario, $pagina) 
   {
     if ($TipoUsuario == 1) {
-      $menu = "<div class='col-md-2'>
-                  <div class='nav-side-menu'>" . 
+      $menu = "<div id='ContenidoMenu' class='col-md-3 menu-md-2'>
+                  <div class='nav-side-menu'>
+                    <a id='cerrar' class='btn btn-secondary btn-sm' href='javascript:void(0)' onclick='ocultar()'>
+                      <i class='fa fa-arrow-left fa-lg'></i>
+                    </a>" . 
+
                     self::CBSessionNombreUsuario($ID_Usuario) . 
                     "<div class='brand'>General</div>
                        <i class='fa fa-bars fa-2x toggle-btn' data-toggle='collapse' data-target='#menu-content'></i>
@@ -2970,8 +2974,11 @@ public function getMenuSeguridadUsuario($ID){
                       </div>
                     </div>";
     } elseif ($TipoUsuario == 2 || $TipoUsuario > 3) {
-          $menu = "<div class = 'col-md-3'>
-                      <div class='nav-side-menu'>" . 
+          $menu = "<div id='ContenidoMenu' class='col-md-3 menu-md-2'>
+                      <div class='nav-side-menu'>
+                        <a id='cerrar' class='btn btn-secondary btn-sm' href='javascript:void(0)' onclick='ocultar()'>
+                          <i class='fa fa-arrow-left fa-lg'></i>
+                        </a>" . 
                         self::CBSessionNombreUsuario($ID_Usuario) . 
                         "<div class='brand'>General</div>
                           <i class='fa fa-bars fa-2x toggle-btn' data-toggle='collapse' data-target='#menu-content'></i>
@@ -2998,8 +3005,11 @@ public function getMenuSeguridadUsuario($ID){
                           </div>
                         </div>";
     } elseif ($TipoUsuario == 3) {
-      $menu = "<div class = 'col-md-3'>
-                <div class='nav-side-menu'>" . 
+      $menu = "<div id='ContenidoMenu' class='col-md-3 menu-md-2'>
+                <div class='nav-side-menu'>
+                    <a id='cerrar' class='btn btn-secondary btn-sm' href='javascript:void(0)' onclick='ocultar()'>
+                      <i class='fa fa-arrow-left fa-lg'></i>
+                    </a>" . 
                       self::CBSessionNombreUsuario($ID_Usuario) . 
                     "<div class='brand'>General</div>
                     <i class='fa fa-bars fa-2x toggle-btn' data-toggle='collapse' data-target='#menu-content'></i>

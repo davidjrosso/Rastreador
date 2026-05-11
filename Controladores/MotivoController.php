@@ -75,11 +75,40 @@ class MotivoController
             $TipoUsuario = $usuario->get_id_tipo_usuario();
 
             $ID_Motivo = null;
-            if(isset($_REQUEST["ID"])) $ID_Motivo = $_REQUEST["ID"];
+            if(isset($_REQUEST["ID"])) {
+                $ID_Motivo = $_REQUEST["ID"];
 
-            $Element = new Elements();
+                $Element = new Elements();
 
-            include("./Views/view_modmotivos.php");
+                $Con = new Conexion();
+                $Con->OpenConexion();
+
+                $ConsultarDatos = "select * from motivo where id_motivo = $ID_Motivo and estado = 1";
+                $MensajeErrorDatos = "No se pudo consultar los Datos del Motivo";
+
+                $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
+
+                $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
+
+                $ID_Motivo = $Ret["id_motivo"];
+                $Motivo = $Ret["motivo"];
+                $Codigo = $Ret["codigo"];
+                $Cod_Categoria = $Ret["cod_categoria"];
+                $Num_Motivo = $Ret["num_motivo"];
+                $Estado = $Ret["estado"];
+
+                $ConsultarIDCategoria = "select id_categoria from categoria where cod_categoria = '$Cod_Categoria' and estado = 1 limit 1";
+                $MensajeErrorIDCategoria = "No se pudo consultar el ID de la Categoria";
+
+                $EjecutarConsultarIDCategoria = mysqli_query($Con->Conexion,$ConsultarIDCategoria) or die($MensajeErrorIDCategoria);
+
+                $RetID_Categoria = mysqli_fetch_assoc($EjecutarConsultarIDCategoria);
+                $ID_Categoria = $RetID_Categoria["id_categoria"];
+
+                $Con->CloseConexion();
+
+                include("./Views/view_modmotivos.php");               
+            }
         }
         exit();
     }

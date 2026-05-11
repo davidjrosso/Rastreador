@@ -137,8 +137,9 @@ class Notificacion implements JsonSerializable
 
 	public function delete()
 	{
-		$query = "delete notificaciones
-				  where ID_Notificacion = " . $this->get_id_notificacion();
+		$query = "update notificaciones
+				  set Estado = 0
+		    	  where ID_Notificacion = " . $this->get_id_notificacion();
 		$mensaje_error = "No se pudo del la notificacion";
 		$ret = mysqli_query($this->coneccion_base->Conexion, $query);
 		if (!$ret) {

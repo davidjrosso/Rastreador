@@ -32,6 +32,7 @@
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
+  <script src="js/Utils.js"></script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="js/bootstrap-datepicker.min.js"></script> <!-- ESTO ES NECESARIO PARA QUE ANDE EN ESPAÑOL -->
@@ -269,27 +270,34 @@
 
 </head>
 <body>
-<div class = "row">
+  <div class="col-md-2" id="expandir" style="padding-left: 6px; position: fixed; z-index: 1000" hidden>
+    <a id="abrir" class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="mostrar()">
+      <i class="fa fa-arrows-alt fa-lg" color="tomato"></i>
+    </a>
+  </div>
+
+<div class = "row margin-right-cero">
 <?php
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_MOVIMIENTO);
   ?>
-  <div class = "col-md-9">
+  <div class = "col-md-9 inicio-md-2">
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
         <p>Movimientos</p>
       </div>
       <div class="col"></div>
-    </div><br>
+    </div>
     <br>
-     <div class = "row">
+    <br>
+     <div class = "row" style="justify-content: center">
       <div class = "col-10">
           <!-- Search -->
         <div class = "row">
           <?php  
             if(isset($_REQUEST["ID"])){
              ?>
-            <div class = "col-10">
+          <div class = "col-11">
             <form method = "post" onKeydown="return event.key != 'Enter';" action = "modificar_movimiento" onSubmit = "return ValidarMovimiento();">
                 <!-- <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Id: </label>

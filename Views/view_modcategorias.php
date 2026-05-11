@@ -36,6 +36,7 @@
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="js/Utils.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" 		crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -92,46 +93,32 @@
 
 </head>
 <body>
-<div class = "row">
+<div class="col-md-2" id="expandir" style="padding-left: 6px; position: fixed; z-index: 1000" hidden>
+  <a id="abrir" class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="mostrar()">
+    <i class="fa fa-arrows-alt fa-lg" color="tomato"></i>
+  </a>
+</div>
+<div class = "row margin-right-cero">
 <?php
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_CATEGORIA);
   ?>
-  <div class = "col-md-9">
+  <div class = "col-md-9 inicio-md-2">
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
         <p>Modificación de Categoría</p>
       </div>
       <div class="col"></div>
-    </div><br>
+    </div>
     <br>
-     <div class = "row">
+    <br>
+     <div style="justify-content: center;" class = "row">
       <div class = "col-10">
           <!-- Search -->
         <div class = "row">
           <?php  
-            if(isset($_REQUEST["ID"])){
-              $ID_Categoria = $_REQUEST["ID"];
-
-              $Con = new Conexion();
-              $Con->OpenConexion();
-
-              $ConsultarDatos = "select * from categoria where id_categoria = $ID_Categoria";
-              $ConsultarPermisos = "select id_tipousuario from categorias_roles where id_categoria = $ID_Categoria";
-              $MensajeErrorDatos = "No se pudo consultar los Datos de la Categoria";
-              $MensajeErrorPermisos = "No se pudo consultar los Permisos de la Categoria";
-              $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
-              $EjecutarConsultarPermisos = mysqli_query($Con->Conexion,$ConsultarPermisos) or die($MensajeErrorPermisos);
-              $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
-              $RetPermisos = mysqli_fetch_array($EjecutarConsultarPermisos);
-
-              $ID_Categoria = $Ret["id_categoria"];
-              $Cod_Categoria = $Ret["cod_categoria"];
-              $Categoria = $Ret["categoria"];
-              $ID_Forma = $Ret["ID_Forma"];
-              $Color = $Ret["color"];
-              $Permisos = (isset($RetPermisos["id_tipousuario"]))?$RetPermisos["id_tipousuario"]:null;
-              ?>
+            if ($ID_Categoria) {
+          ?>
             <div class = "col-10">
             <form method = "post" onKeydown="return event.key != 'Enter';" action = "pedirmodificarcategoria">
                 <!-- <div class="form-group row">
@@ -150,8 +137,8 @@
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Forma: </label>
                   <div class="col-md-10">                   
-                    <?php $Element = new Elements();
-                    echo $Element->CBModFormas_Categoria($ID_Forma);?>
+                    <?php
+                                        echo $Element->CBModFormas_Categoria($ID_Forma);?>
                   </div>
                 </div>
                 <!--
@@ -166,8 +153,7 @@
                   <label id="grupousuarios" for="grupousuarios" class="col-md-2 col-form-label LblForm">Permisos : </label>                  
                   <div class="col-md-10">
                     <?php 
-                      $Element = new Elements();
-                      if(isset($Permisos)){    
+                      if (isset($Permisos)) {    
                         echo $Element->CBCategorias_Roles_ID($ID_Categoria);
                       } else {
                         echo $Element->CBTipos_Usuario();

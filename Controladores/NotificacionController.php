@@ -55,19 +55,18 @@ class NotificacionController
             $Con = new Conexion();
             $Con->OpenConexion();
 
-            $Consulta = "update notificaciones set estado = 0 where ID_Notificacion = $ID";
-            if(!$Ret = mysqli_query($Con->Conexion,$Consulta)){
-                throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 0);		
-            }
+            $obj = new Notificacion(coneccion_base: $Con , id_notificacion: $ID);
+            $obj->delete();
+
             $ConsultaAccion = "insert into Acciones(accountid,Fecha,Detalles,ID_TipoAccion) values($ID_Usuario,'$Fecha','$Detalles',$ID_TipoAccion)";
             if(!$RetAccion = mysqli_query($Con->Conexion,$ConsultaAccion)){
                 throw new Exception("Error al intentar registrar Accion. Consulta: ".$ConsultaAccion, 1);
             }
             $Con->CloseConexion();
             $Mensaje = "La notificación fue eliminada correctamente";
-            header('Location: ../view_inicio.php?Mensaje='.$Mensaje);
+            header('Location: /home?Mensaje=' . $Mensaje);
         } catch (Exception $e) {
-            echo "Error: ".$e->getMessage();
+            echo "Error: " . $e->getMessage();
         }
         
     }

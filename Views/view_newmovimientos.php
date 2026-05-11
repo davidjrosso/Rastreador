@@ -35,6 +35,7 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   <script src="js/bootstrap-datepicker.min.js"></script>
   <script src="js/ValidarMovimiento.js"></script>
+  <script src="js/Utils.js"></script>
   <script src="./dist/form.js"></script>
   <script defer src="./dist/control.js"></script>
   <script>
@@ -66,21 +67,26 @@
   </script>
 </head>
 <body>
-<div class = "row">
+<div class='col-md-2' id='expandir' style='padding-left: 6px; position: fixed; z-index: 1000' hidden>
+  <a id='abrir' class='btn btn-secondary btn-sm' href='javascript:void(0)' onclick='mostrar()'>
+    <i class='fa fa-arrows-alt fa-lg' color='tomato'></i>
+  </a>
+</div>
+<div class = "row margin-right-cero">
 <?php
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_MOVIMIENTO);
   ?>
-  <div class = "col-md-9">
+  <div class = "col-md-9  inicio-md-2">
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
         <p>Nuevo Movimiento</p>
       </div>
       <div class="col"></div>
-    </div><br>
-    <div class="row">
-      <div class="col"></div>
-      <div class="col-10">
+    </div>
+    <br>
+    <div class="row" style="justify-content: center;">
+      <div class="col-10  row" style="justify-content: center;">
           <div class="row">
               <center>
                 <button class = "btn btn-secondary btn-sm" onClick="location.href ='/movimiento/nuevo'">Agregar Nuevo Movimiento</button>
@@ -88,18 +94,14 @@
                 <button class = "btn btn-secondary btn-sm" onClick="location.href='/motivo/nuevo'">Agregar Nuevo Motivo</button>
                 <button class = "btn btn-secondary btn-sm" onClick="location.href='/responsable/nuevo'">Agregar Nuevo Responsable</button>
               </center>
-          </div>
-          <br>
-          <div class="row">
               <center>
                 <button class = "btn btn-secondary btn-sm" onClick="location.href='/centrodesalud/nuevo'">Agregar Nuevo Centro</button>
               </center>
           </div>
       </div>
-      <div class="col"></div>
     </div>
     <br>
-     <div class = "row">
+     <div class = "row" style="justify-content: center;">
       <div class = "col-10">
           <!-- Carga -->
           <p class = "Titulos">Cargar Nuevo Movimiento</p>
@@ -193,7 +195,7 @@
               </div>
             </div>
             <div class="form-group row">
-              <div class="offset-md-2 col-md-10" id = "InputsGenerales">
+              <div class="col-md-12 row" style="justify-content: center;" id = "InputsGenerales">
                 <input type="hidden" name="ID_Persona" id = "ID_Persona" value = "0">
                 <input type="hidden" name="ID_Motivo_1" id = "ID_Motivo_1" value = "0">
                 <input type="hidden" name="ID_Motivo_2" id = "ID_Motivo_2" value = "0">

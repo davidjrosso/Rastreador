@@ -39,6 +39,7 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
     integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
     crossorigin="anonymous"></script>
+  <script src="js/Utils.js"></script>
   <script src="./dist/mapa.js"></script>
   <script src="./dist/control.js"></script>
 
@@ -198,61 +199,38 @@
       }
     });
 
-    function calcularEdad() {
-      let Fecha_Nac = document.getElementById("Fecha_Nacimiento").value;
-      let Fecha = Fecha_Nac.split('/').reverse().join('-');
-      let hoy = new Date();
-      let cumpleanos = new Date(Fecha);
-      let edad = hoy.getFullYear() - cumpleanos.getFullYear();
-      let m = hoy.getMonth() - cumpleanos.getMonth();
-      if (m < 0 || (m === 0 && hoy.getDay() < cumpleanos.getDay())) {
-        edad--;
-      }
-      let Anios = document.getElementById("Edad");
-      Anios.value = edad;
-
-      let CalcMeses = 0;
-      if (m < 0) {
-        CalcMeses = (12 + m);
-      } else if (m == 0) {
-        if (hoy.getDay() < cumpleanos.getDay()) {
-          m = 11;
-        }
-        CalcMeses = m;
-      } else {
-        CalcMeses = m;
-      }
-
-      let Meses = document.getElementById("Meses");
-      Meses.value = CalcMeses;
-    }
-
 </script>
 
 </head>
 
 <body>
-  <div class="row">
+  <div class='col-md-2' id='expandir' style='padding-left: 6px; position: fixed; z-index: 1000' hidden>
+    <a id='abrir' class='btn btn-secondary btn-sm' href='javascript:void(0)' onclick='mostrar()'>
+      <i class='fa fa-arrows-alt fa-lg' color='tomato'></i>
+    </a>
+  </div>
+  <div class="row margin-right-cero">
     <?php
     echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_PERSONA);
     ?>
-    <div class="col-md-9">
-      <div class="row">
-        <div class="col"></div>
-        <div class="col-10 Titulo">
-          <p>Persona</p>
+    <div class="col-md-9  inicio-md-2 row margin-right-cero">
+      <div class="col-1"></div>
+      <div class="col">
+        <div class="row">
+          <div class="col Titulo">
+            <p>Persona</p>
+          </div>
         </div>
-        <div class="col"></div>
-      </div><br>
-      <br>
-      <div class="row">
-        <div class="col-10">
+        <br>
+        <br>
+      <div class="row"  style="justify-content: center;">
+        <div class="col">
           <!-- Search -->
-          <div class="row">
+          <div class="row"  style="justify-content: center;">
             <?php
             if ($exist) {
               ?>
-              <div class="col-10">
+              <div class="col-11">  
                 <form id="form-mod-persona" method="post" onKeydown="return event.key != 'Enter';" action="modificar_persona">
                   <input type="hidden" name="ID" value="<?php echo $Persona->getID_Persona(); ?>">
                   <div class="form-group row">
@@ -487,6 +465,8 @@
           </div>
         </div>
       </div>
+      </div>
+      <div class="col-2"></div>
     </div>
   </div>
   <div class="modal fade modal--show-overall" id="map-modal" tabindex="-1" role="dialog"

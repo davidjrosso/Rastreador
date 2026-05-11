@@ -280,6 +280,8 @@ try {
 	$routes[] = Route::get('listado_notificacion_control', '/lista_notificacion_control\?ID_Filtro={id_filtro}', [NotificacionController::class, 'listado_notificacion_control']);
 	$routes[] = Route::get('notificacion_filtro', '/notificacion\?ID_Filtro={id_filtro}', [NotificacionController::class, 'listado_notificacion']);
 	$routes[] = Route::get('listado_notificacion_control', '/lista_notificacion_control\?ID_Filtro={id_filtro}', [NotificacionController::class, 'listado_notificacion_control']);
+	$routes[] = Route::get('del_notificacion_control', '/deletenotificacion\?ID={id}', [NotificacionController::class, 'delete_notificacion_control']);
+
 	$routes[] = Route::get('notificacion_filtro', '/notificacion\?ID_Filtro={id_filtro}', [NotificacionController::class, 'listado_notificacion']);
 	$routes[] = Route::get('solicitud', '/solicitud', [SolicitudController::class, 'listado_solicitud']);
 	$routes[] = Route::get('del_new_categoria', '/deletepedirnewcategoria\?ID={id}', [SolicitudController::class, 'del_new_categoria']);

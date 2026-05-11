@@ -57,11 +57,16 @@
 
 </head>
 <body>
-<div class = "row">
+<div class="col-md-2" id="expandir" style="padding-left: 6px; position: fixed; z-index: 1000" hidden>
+  <a id="abrir" class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="mostrar()">
+    <i class="fa fa-arrows-alt fa-lg" color="tomato"></i>
+  </a>
+</div>
+<div class = "row margin-right-cero">
 <?php
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_MOTIVO);
   ?>
-  <div class = "col-md-9">
+  <div class = "col-md-9 inicio-md-2">
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
@@ -72,14 +77,14 @@
     <div class="row">
       <div class="col"></div>
       <div class="col-10">
-          <div class="row">
+          <div style="justify-content: center;" class="row">
               <center><button class = "btn btn-secondary btn-sm" onClick="location.href ='movimiento/nuevo'">Agregar Nuevo Movimiento</button></center>
           </div>
       </div>
       <div class="col"></div>
     </div>
     <br>
-     <div class = "row">
+     <div style="justify-content: center;" class = "row">
       <div class = "col-10">
           <!-- Carga -->
           <p class = "Titulos">Cargar Nuevo Motivo</p>

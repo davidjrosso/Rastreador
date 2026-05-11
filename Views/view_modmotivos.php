@@ -31,6 +31,7 @@
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+  <script src="js/Utils.js"></script>
 
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
@@ -65,11 +66,16 @@
 
 </head>
 <body>
-<div class = "row">
+  <div class="col-md-2" id="expandir" style="padding-left: 6px; position: fixed; z-index: 1000" hidden>
+    <a id="abrir" class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="mostrar()">
+      <i class="fa fa-arrows-alt fa-lg" color="tomato"></i>
+    </a>
+  </div>
+<div class = "row margin-right-cero">
 <?php
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_MOTIVO);
   ?>
-  <div class = "col-md-9">
+  <div class = "col-md-9 inicio-md-2">
     <div class="row">
       <div class="col"></div>
       <div class="col-10 Titulo">
@@ -78,39 +84,12 @@
       <div class="col"></div>
     </div><br>
     <br>
-     <div class = "row">
+     <div style="justify-content: center;" class = "row">
       <div class = "col-10">
           <!-- Search -->
-        <div class = "row">
+        <div style="justify-content: center;" class = "row">
           <?php  
             if ($ID_Motivo) {
-
-              $Con = new Conexion();
-              $Con->OpenConexion();
-
-              $ConsultarDatos = "select * from motivo where id_motivo = $ID_Motivo and estado = 1";
-              $MensajeErrorDatos = "No se pudo consultar los Datos del Motivo";
-
-              $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
-
-              $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
-
-              $ID_Motivo = $Ret["id_motivo"];
-              $Motivo = $Ret["motivo"];
-              $Codigo = $Ret["codigo"];
-              $Cod_Categoria = $Ret["cod_categoria"];
-              $Num_Motivo = $Ret["num_motivo"];
-              $Estado = $Ret["estado"];
-
-              $ConsultarIDCategoria = "select id_categoria from categoria where cod_categoria = '$Cod_Categoria' and estado = 1 limit 1";
-              $MensajeErrorIDCategoria = "No se pudo consultar el ID de la Categoria";
-
-              $EjecutarConsultarIDCategoria = mysqli_query($Con->Conexion,$ConsultarIDCategoria) or die($MensajeErrorIDCategoria);
-
-              $RetID_Categoria = mysqli_fetch_assoc($EjecutarConsultarIDCategoria);
-              $ID_Categoria = $RetID_Categoria["id_categoria"];
-
-              $Con->CloseConexion();
 
               ?>
             <div class = "col-10">
@@ -142,11 +121,11 @@
                     ?>
                   </div>
                 </div>
-                <div class="form-group row">
-                  <div class="offset-md-2 col-md-10">
-                    <button type="submit" class="btn btn-outline-success">Guardar</button>
-                    <button type = "button" class = "btn btn-danger" onClick = "location.href = '/motivos'">Atras</button>
-                  </div>
+                <div style="justify-content: center;" class="form-group row">
+                     <div class=" col-md-4">
+                      <button type="submit" class="btn btn-outline-success">Guardar</button>
+                      <button type = "button" class = "btn btn-danger" onClick = "location.href = '/motivos'">Atras</button>
+                    </div>
                 </div>
             </form>
             </div>
@@ -161,7 +140,6 @@
             <div class="col-10"></div>
             <div class="col-2">
               
-            
             </div>
         </div>
   </div>

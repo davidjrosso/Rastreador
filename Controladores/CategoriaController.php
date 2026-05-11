@@ -78,8 +78,32 @@ class CategoriaController
             $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
             $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 
+            $ID_Categoria = null;
+            if(isset($_REQUEST["ID"])){
+
+              $ID_Categoria = $_REQUEST["ID"];
+
+              $Con = new Conexion();
+              $Con->OpenConexion();
+
+              $ConsultarDatos = "select * from categoria where id_categoria = $ID_Categoria";
+              $ConsultarPermisos = "select id_tipousuario from categorias_roles where id_categoria = $ID_Categoria";
+              $MensajeErrorDatos = "No se pudo consultar los Datos de la Categoria";
+              $MensajeErrorPermisos = "No se pudo consultar los Permisos de la Categoria";
+              $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
+              $EjecutarConsultarPermisos = mysqli_query($Con->Conexion,$ConsultarPermisos) or die($MensajeErrorPermisos);
+              $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
+              $RetPermisos = mysqli_fetch_array($EjecutarConsultarPermisos);
+
+              $ID_Categoria = $Ret["id_categoria"];
+              $Cod_Categoria = $Ret["cod_categoria"];
+              $Categoria = $Ret["categoria"];
+              $ID_Forma = $Ret["ID_Forma"];
+              $Color = $Ret["color"];
+              $Permisos = (isset($RetPermisos["id_tipousuario"]))?$RetPermisos["id_tipousuario"]:null;
 
             include("./Views/view_modcategorias.php");
+          }
         }
         exit();
     }
