@@ -39,6 +39,7 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="js/ValidarMovimiento.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script defer src="./dist/control.js"></script>
   <script>
         let cantMotivos = 3;
         let listaMotivos = new Map();
@@ -116,66 +117,6 @@
         xmlhttp.send();
       }
 
-      function buscarMotivos_1(){
-        var xMotivo = document.getElementById('SearchMotivos_1').value;
-        var textoBusqueda = xMotivo;
-        xmlhttp=new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-          if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-            contenidosRecibidos = xmlhttp.responseText;
-            document.getElementById("ResultadosMotivos_1").innerHTML=contenidosRecibidos;
-            }
-        }
-        xmlhttp.open('POST', 'buscarMotivos_1?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
-        xmlhttp.send();
-      }
-
-      function buscarMotivos_2(){
-        var xMotivo = document.getElementById('SearchMotivos_2').value;
-        var textoBusqueda = xMotivo;
-        xmlhttp=new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-          if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-            contenidosRecibidos = xmlhttp.responseText;
-            document.getElementById("ResultadosMotivos_2").innerHTML=contenidosRecibidos;
-            }
-        }
-        xmlhttp.open('POST', 'buscarMotivos_2?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
-        xmlhttp.send();
-      }
-
-      function buscarMotivos_3(){
-        var xMotivo = document.getElementById('SearchMotivos_3').value;
-        var textoBusqueda = xMotivo;
-        xmlhttp=new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-          if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-            contenidosRecibidos = xmlhttp.responseText;
-            document.getElementById("ResultadosMotivos_3").innerHTML=contenidosRecibidos;
-            }
-        }
-        xmlhttp.open('POST', 'buscarMotivos_3?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
-        xmlhttp.send();
-      }
-
-      function buscarMotivosGeneral(id_Motivo){
-        let xMotivo = document.getElementById("SearchMotivos" + id_Motivo).value;
-        let bodyJson = Object.fromEntries(listaMotivos);
-        let textoBusqueda = xMotivo;
-        let vs = $("#select-motivo" + id_Motivo)[0].value;
-        xmlhttp=new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-          if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-            contenidosRecibidos = xmlhttp.responseText;
-            document.getElementById("ResultadosMotivos" + id_Motivo).innerHTML=contenidosRecibidos;
-          }
-        }
-
-        xmlhttp.open('POST', '/buscar_motivos_filtro', true); // Método post y url invocada
-        xmlhttp.setRequestHeader("Content-Type", "application/json");
-        xmlhttp.send(JSON.stringify(bodyJson));
-      }
-
      function seleccionMultipleMotivo() {
         let motivoNumero = 1;
         let idMotivo = null;
@@ -225,30 +166,6 @@
         Persona.innerHTML = "";
         Persona.innerHTML = "<p>"+xNombre+"</p>";
         ID_Persona.setAttribute('value',xID);
-      }
-
-      function seleccionMotivo_1(xMotivo,xID){
-        var Motivo = document.getElementById("Motivo_1");
-        var ID_Motivo = document.getElementById("ID_Motivo_1");
-        Motivo.innerHTML = "";
-        Motivo.innerHTML = "<p>"+xMotivo+"</p>";
-        ID_Motivo.setAttribute('value',xID);
-      }
-
-      function seleccionMotivo_2(xMotivo,xID){
-        var Motivo = document.getElementById("Motivo_2");
-        var ID_Motivo = document.getElementById("ID_Motivo_2");
-        Motivo.innerHTML = "";
-        Motivo.innerHTML = "<p>"+xMotivo+"</p>";
-        ID_Motivo.setAttribute('value',xID);
-      }
-
-      function seleccionMotivo_3(xMotivo,xID){
-        var Motivo = document.getElementById("Motivo_3");
-        var ID_Motivo = document.getElementById("ID_Motivo_3");
-        Motivo.innerHTML = "";
-        Motivo.innerHTML = "<p>"+xMotivo+"</p>";
-        ID_Motivo.setAttribute('value',xID);
       }
 
       function seleccionMotivo(xMotivo,xID,xNumber){
@@ -384,50 +301,28 @@
                     <textarea class = "form-control" row = "3" name = "Observaciones" value = ""><?php echo $DtoMovimiento->getObservaciones(); ?></textarea>
                   </div>
                 </div>
+                <?php foreach($ID_Responsable as $key => $value) {?>
                 <div class="form-group row">
-                  <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable: </label>
+                  <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable <?php echo ($key) ? $key : "";?>: </label>
+                  <?php if (!$key) {?>
+                  <div class = "col-md-9">
+                    <?php } else { ?>
                   <div class = "col-md-10">
-                    <?php  
-                    echo $Element->CBModResponsables($ID_Responsable);
+                  <?php } ?>
+                    <?php
+                    $Element = new Elements();
+                    echo $Element->CBModResponsables($value);
                     ?>
                   </div>
+                  <?php if (!$key) {?>
+                  <div class="col-md-1">
+                      <button type="button" class="btn btn-primary" onClick="agregarResponsable()" id="agregarResponsableID">+</button>
+                  </div>
+                  <?php }?>
                 </div>
-                <?php if($ID_Responsable_2){ ?>
-                  <div class="form-group row">
-                    <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable 2: </label>
-                    <div class = "col-md-10">
-                      <?php  
-                      echo $Element->CBModResponsables($ID_Responsable_2);
-                      ?>
-                    </div>
-                  </div>
-                <?php  
-                }
-                ?>
-                <?php if($ID_Responsable_3 != null){ ?>
-                  <div class="form-group row">
-                    <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable 3: </label>
-                    <div class = "col-md-10">
-                      <?php  
-                      echo $Element->CBModResponsables($ID_Responsable_3);
-                      ?>
-                    </div>
-                  </div>
-                <?php  
-                }
-                ?>
-                <?php if($ID_Responsable_4 != null){ ?>
-                  <div class="form-group row">
-                    <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable 4: </label>
-                    <div class = "col-md-10">
-                      <?php  
-                      echo $Element->CBModResponsables($ID_Responsable_4);
-                      ?>
-                    </div>
-                  </div>
-                <?php
-                }
-                ?>
+              <?php }?>
+              <div id="contenedorResponsables">              
+              </div>
                 <div class="form-group row">
                   <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Centro de Salud: </label>
                   <div class = "col-md-10">
@@ -542,8 +437,8 @@
                   <div class="col"></div>
                   <div class="col-10">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos1" onKeyUp="buscarMotivosGeneral(1)" autocomplete="off">
-                      <select id="select-motivo1" name="select-motivo1" oninput="buscarMotivosGeneral(1)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos_1" onKeyUp="buscarMotivos(1, listaMotivos)" autocomplete="off">
+                      <select id="select-motivo1" name="select-motivo1" oninput="buscarMotivos(1, listaMotivos)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
                         <option value="denominacion" selected>Denominacion</option>
                         <option value="codigo">Codigo</option>
                       </select>
@@ -556,7 +451,7 @@
                 </div>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-10" id = "ResultadosMotivos1">
+                  <div class="col-10" id = "ResultadosMotivos_1">
                     
                   </div>
                   <div class="col"></div>
@@ -587,8 +482,8 @@
                   <div class="col"></div>
                   <div class="col-10">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos2" onKeyUp="buscarMotivosGeneral(2)" autocomplete="off">
-                      <select id="select-motivo2" name="select-motivo2" oninput="buscarMotivosGeneral(2)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos_2" onKeyUp="buscarMotivos(2, listaMotivos)" autocomplete="off">
+                      <select id="select-motivo2" name="select-motivo2" oninput="buscarMotivos(2, listaMotivos)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
                         <option value="denominacion" selected>Denominacion</option>
                         <option value="codigo">Codigo</option>
                       </select>
@@ -601,7 +496,7 @@
                 </div>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-10" id = "ResultadosMotivos2">
+                  <div class="col-10" id = "ResultadosMotivos_2">
                     
                   </div>
                   <div class="col"></div>
@@ -632,8 +527,8 @@
                   <div class="col"></div>
                   <div class="col-10">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos3" onKeyUp="buscarMotivosGeneral(3)" autocomplete="off">
-                      <select id="select-motivo3" name="select-motivo3" oninput="buscarMotivosGeneral(3)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos_3" onKeyUp="buscarMotivos(3, listaMotivos)" autocomplete="off">
+                      <select id="select-motivo3" name="select-motivo3" oninput="buscarMotivos(3, listaMotivos)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
                         <option value="denominacion" selected>Denominacion</option>
                         <option value="codigo">Codigo</option>
                       </select>
@@ -646,7 +541,7 @@
                 </div>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-10" id = "ResultadosMotivos3">
+                  <div class="col-10" id = "ResultadosMotivos_3">
                     
                   </div>
                   <div class="col"></div>
@@ -677,8 +572,8 @@
                   <div class="col"></div>
                   <div class="col-10">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos4" onKeyUp="buscarMotivosGeneral(4)" autocomplete="off">
-                      <select id="select-motivo4" name="select-motivo4" oninput="buscarMotivosGeneral(4)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos_4" onKeyUp="buscarMotivos(4, listaMotivos)" autocomplete="off">
+                      <select id="select-motivo4" name="select-motivo4" oninput="buscarMotivos(4, listaMotivos)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
                         <option value="denominacion" selected>Denominacion</option>
                         <option value="codigo">Codigo</option>
                       </select>
@@ -691,7 +586,7 @@
                 </div>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-10" id = "ResultadosMotivos4">
+                  <div class="col-10" id = "ResultadosMotivos_4">
                     
                   </div>
                   <div class="col"></div>
@@ -722,8 +617,8 @@
                   <div class="col"></div>
                   <div class="col-10">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos5" onKeyUp="buscarMotivosGeneral(5)" autocomplete="off">
-                      <select id="select-motivo5" name="select-motivo5" oninput="buscarMotivosGeneral(5)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos_5" onKeyUp="buscarMotivos(5, listaMotivos )" autocomplete="off">
+                      <select id="select-motivo5" name="select-motivo5" oninput="buscarMotivos(5, listaMotivos)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
                         <option value="denominacion" selected>Denominacion</option>
                         <option value="codigo">Codigo</option>
                       </select>
@@ -736,7 +631,7 @@
                 </div>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-10" id = "ResultadosMotivos5">
+                  <div class="col-10" id = "ResultadosMotivos_5">
                     
                   </div>
                   <div class="col"></div>

@@ -157,12 +157,12 @@ class MovimientoController
               $Apellido = $Ret["apellido"];
               $Nombre = $Ret["nombre"];
               $Observaciones = $Ret["observaciones"];
-              $ID_Responsable = $list[0] ?? null;
+              $ID_Responsable[] = $list[0] ?? null;
               $ID_Persona = $Ret["id_persona"];
 
-              $ID_Responsable_2 = $list[1] ?? null;
-              $ID_Responsable_3 = $list[2] ?? null;
-              $ID_Responsable_4 = $list[3] ?? null;
+              $ID_Responsable[] = $list[1] ?? null;
+              $ID_Responsable[] = $list[2] ?? null;
+              $ID_Responsable[] = $list[3] ?? null;
               $ID_Centro = $Ret["id_centro"];
               $Centro_Salud = (!empty($Ret["centro_salud"])) ? $Ret["centro_salud"] : null;
               $ID_OtraInstitucion = $Ret["ID_OtraInstitucion"];
@@ -431,7 +431,7 @@ class MovimientoController
                     $movimiento_motivo = new MovimientoMotivo(
                                                             connection: $con,
                                                             id_movimiento: $ID_Movimiento,
-                                                            id_motivo: $ret
+                                                            id_motivo: $ret["id_motivo"]
                     );
                     $movimiento_motivo->delete();
                 }
