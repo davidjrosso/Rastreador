@@ -383,10 +383,6 @@ class MovimientoController
         if (!empty($Arr_ID_Responsable[3])) $lista_res[] = $Arr_ID_Responsable[3];
         if (!empty($Arr_ID_Responsable[0])) $lista_res[] = $Arr_ID_Responsable[0];
 
-        if(empty($ID_Responsable[0])){
-            $ID_Responsable = 'null';
-        }
-
         if(empty($ID_Centro)){
             $ID_Centro = 'null';
         }
