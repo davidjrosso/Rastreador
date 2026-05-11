@@ -1018,17 +1018,23 @@ export function actualizarContenido(){
     }
 }
 
-export function buscarMotivos(id){
-    let xMotivo = null;
+export function buscarMotivos(id, listadoMotivos){
     let xmlhttp = null;
     let textoBusqueda = null;
     let contenidosRecibidos = null;
     let url = null;
+    let bodyJson = Object.fromEntries(listaMotivos);
 
-    xMotivo = (id) ? $('#SearchMotivos_' + id).val() : $('#SearchMotivos').val();
-    textoBusqueda = xMotivo;
+    textoBusqueda = (id) ? $('#SearchMotivos_' + id).val() : $('#SearchMotivos').val();
+    let vs = $("#select-motivo" + id)[0].value;
+
+    bodyJson.valorBusqueda = textoBusqueda;
+    bodyJson.vs = vs;    
+
     url = 'valorBusqueda=' + textoBusqueda;
     if (id) url += '&ID=' + id;
+
+    if (id) bodyJson.id = id;
 
     xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
@@ -1042,8 +1048,8 @@ export function buscarMotivos(id){
         }
     }
     xmlhttp.open('POST', '/buscar_motivos_filtro', true);
-    xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xmlhttp.send(url);
+    xmlhttp.setRequestHeader('Content-Type', 'application/json');
+    xmlhttp.send(JSON.stringify(bodyJson));
 }
 
 export function seleccionMotivo(id, xMotivo, xID) {

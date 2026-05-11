@@ -76,3 +76,19 @@ function calcularEdad() {
 		}
 
 }
+
+function buscarMotivosGeneral(id_Motivo){
+    let xMotivo = document.getElementById("SearchMotivos" + id_Motivo).value;
+    let bodyJson = Object.fromEntries(listaMotivos);
+    let textoBusqueda = xMotivo;
+    let vs = $("#select-motivo" + id_Motivo)[0].value;
+    xmlhttp=new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+        contenidosRecibidos = xmlhttp.responseText;
+        document.getElementById("ResultadosMotivos" + id_Motivo).innerHTML=contenidosRecibidos;
+        }
+    }
+    xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda=' + textoBusqueda + '&number=' + id_Motivo + "&vs=" + vs, true); // Método post y url invocada
+    xmlhttp.send(JSON.stringify(bodyJson));
+}

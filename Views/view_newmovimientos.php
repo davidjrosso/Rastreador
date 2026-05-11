@@ -41,8 +41,11 @@
   <script>
       let mensajeError = '<?php echo $mensaje_error;?>';
       let mensajeSuccess = '<?php echo $mensaje_success;?>';
+      let cantResponsables = 1;
+      let cantMotivos = 3;
+      let listaMotivos = new Map();
 
-       $(document).ready(function () {
+      $(document).ready(function () {
               let date_input=$('input[name="Fecha"]');
               let container=$('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
               date_input.datepicker({
@@ -63,6 +66,226 @@
               });
 			        controlMensaje(mensajeSuccess, mensajeError);
           });
+
+      function agregarMotivo(){
+        if (cantMotivos <= 4) {
+          cantMotivos++;
+          var divContenedor = document.getElementById('contenedorMotivos');
+          var divMotivo = document.createElement("div");
+          divMotivo.setAttribute('class','form-group row');
+          var labelMotivo = document.createElement("label");
+          labelMotivo.setAttribute('class','col-md-2 col-form-label LblForm');
+          labelMotivo.innerText = 'Motivo '+ cantMotivos +':';
+          var divBotonMotivo = document.createElement("div");
+          divBotonMotivo.setAttribute("id", "Motivo_" + cantMotivos);
+          divBotonMotivo.setAttribute('class','col-md-10');
+          var boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_" + cantMotivos + "'>Seleccione un Motivo</button>";
+          divBotonMotivo.innerHTML = boton;      
+          divMotivo.appendChild(labelMotivo);
+          divMotivo.appendChild(divBotonMotivo);
+          divContenedor.appendChild(divMotivo);
+          var divInputsGenerales = document.getElementById('InputsGenerales');
+          var divInput = document.createElement("input");
+          divInput.setAttribute("id", "ID_Motivo_" + cantMotivos);
+          divInput.setAttribute("name", "ID_Motivo_" + cantMotivos);
+          divInput.setAttribute("type", "hidden");
+          divInputsGenerales.appendChild(divInput);
+        }
+      }
+
+
+      function buscarMotivosGeneral(id_Motivo){
+        let xMotivo = document.getElementById("SearchMotivos" + id_Motivo).value;
+        let bodyJson = Object.fromEntries(listaMotivos);
+        let textoBusqueda = xMotivo;
+        let vs = $("#select-motivo" + id_Motivo)[0].value;
+        xmlhttp=new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+            contenidosRecibidos = xmlhttp.responseText;
+            document.getElementById("ResultadosMotivos" + id_Motivo).innerHTML=contenidosRecibidos;
+          }
+        }
+        xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda=' + textoBusqueda + '&number=' + id_Motivo + "&vs=" + vs, true); // Método post y url invocada
+        xmlhttp.send(JSON.stringify(bodyJson));
+      }
+
+      function seleccionPersona(xNombre,xID){
+        var Persona = document.getElementById("Persona");
+        var ID_Persona = document.getElementById("ID_Persona");
+        Persona.innerHTML = "";
+        Persona.innerHTML = "<p>"+xNombre+" <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalPersona'><i class='fa fa-cog text-secondary'></i></button></p>";
+        ID_Persona.setAttribute('value',xID);
+      }
+
+      function seleccionMultipleMotivo() {
+        let motivoNumero = 1;
+        let idMotivo = null;
+        listaMotivos.forEach((value, key, map) => {
+            idMotivo = value;
+            if (motivoNumero <= 1) {
+              if (motivoNumero == 1) {
+                $("#Motivo_1").html("<p>" + key + "<button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo_" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
+                $("#ID_Motivo_1").val(idMotivo);
+              } else {
+                $("#Motivo_" + motivoNumero).html("<p>" + key + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo_" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
+                $("#ID_Motivo_" + motivoNumero).val(idMotivo);
+              }
+            } else {
+              agregarMotivo();
+              $("#Motivo_" + motivoNumero).html("<p>" + key + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo_" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
+              $("#ID_Motivo_" + motivoNumero).val(idMotivo);
+            }
+            motivoNumero++;
+        });
+        for (let index = motivoNumero; index <= 5; index++) {
+          if (index == 1) {
+            $("#Motivo_1").html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo_1'>Seleccione Motivo</button>");
+            $("#ID_Motivo_1").val(null);
+          } else {
+            $("#Motivo_" + index).html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo_" + index + "'>Seleccione Motivo</button>");
+            $("#ID_Motivo_" + index).val(null);
+          }
+          
+        }
+      }
+
+      function agregarResponsable(){        
+        cantResponsables++;
+        if(cantResponsables < 5){
+          var divContenedor = document.getElementById('contenedorResponsables');
+          var divResponsables= document.createElement("div");
+          divResponsables.setAttribute('class','form-group row');
+          var labelResponsables= document.createElement("label");
+          labelResponsables.setAttribute('class','col-md-2 col-form-label LblForm');
+          labelResponsables.innerText = 'Responsable '+cantResponsables+':';
+          var divSelectResponsables= document.createElement("div");
+          divSelectResponsables.setAttribute('class','col-md-10');
+          var select = `<?php $Element = new Elements(); echo $Element->CBResponsables(); ?>`;
+          divSelectResponsables.innerHTML = select;      
+          divResponsables.appendChild(labelResponsables);
+          divResponsables.appendChild(divSelectResponsables);
+          divContenedor.appendChild(divResponsables);
+        }
+
+      }
+
+      function resetearForm(){
+            swal({
+              title: "¿Está seguro?",
+              text: "¿Seguro de querer resetear el formulario?",
+              icon: "warning",
+              buttons: true,
+              dangerMode: true,
+            })
+            .then((willDelete) => {
+              if (willDelete) {
+                reiniciarFormulario();
+                // window.location.href = 'Controladores/DeletePersona.php?ID='+xID;
+                //alert('SI');
+              }
+            });
+      }
+
+      function tomarElemento(xID){
+        return document.getElementById(xID);
+      }
+
+      function crearElemento(xTipo){
+        return document.createElement(xTipo);
+      }
+
+      function agregarAtributoxElemento(xElemento,xAtributo,xValue){
+          xElemento.setAttribute(xAtributo,xValue);
+      }
+
+      function agregarEtiqueta(xElemento,xEtiqueta){
+        xElemento.innerHTML = xEtiqueta;
+      }
+
+      function resetearValorElemento(xID){
+        document.getElementById(xID).value = "";
+      }
+
+      function resetearValorSelect(xID){
+        document.getElementById(xID).selectedIndex = 0;
+      }
+
+      function resetearValorDiv(xDiv){
+        xDiv.innerHTML = "";
+      }
+
+      function agregarElementoxDiv(xDiv,xElemento){
+        xDiv.appendChild(xElemento);
+      }
+
+
+
+      function reiniciarFormulario(){
+        //RESETEANDO CAMPO FECHA
+        resetearValorElemento("datepicker");        
+        //RESETEANDO BOTON PERSONA
+        var btnPersona = crearElemento("button");
+        agregarAtributoxElemento(btnPersona,"type","button");
+        agregarAtributoxElemento(btnPersona,"class","btn btn-lg btn-primary btn-block");
+        agregarAtributoxElemento(btnPersona,"data-toggle","modal");
+        agregarAtributoxElemento(btnPersona,"data-target","#ModalPersona");        
+        agregarEtiqueta(btnPersona,"Seleccione una Persona");        
+        var div_btnPersona = tomarElemento("Persona");
+        resetearValorDiv(div_btnPersona);        
+        agregarElementoxDiv(div_btnPersona,btnPersona);        
+        //RESETEANDO BOTON SELECCIONE UN MOTIVO 1
+        var btnMotivo_1 = crearElemento("button");
+        agregarAtributoxElemento(btnMotivo_1,"type","button");
+        agregarAtributoxElemento(btnMotivo_1,"class","btn btn-lg btn-primary btn-block");
+        agregarAtributoxElemento(btnMotivo_1,"data-toggle","modal");
+        agregarAtributoxElemento(btnMotivo_1,"data-target","#ModalMotivo_1");        
+        agregarEtiqueta(btnMotivo_1,"Seleccione un Motivo");        
+        var div_btnMotivo_1 = tomarElemento("Motivo_1");
+        resetearValorDiv(div_btnMotivo_1);        
+        agregarElementoxDiv(div_btnMotivo_1,btnMotivo_1); 
+        //RESETEANDO BOTON SELECCIONE UN MOTIVO 2
+        var btnMotivo_2 = crearElemento("button");
+        agregarAtributoxElemento(btnMotivo_2,"type","button");
+        agregarAtributoxElemento(btnMotivo_2,"class","btn btn-lg btn-primary btn-block");
+        agregarAtributoxElemento(btnMotivo_2,"data-toggle","modal");
+        agregarAtributoxElemento(btnMotivo_2,"data-target","#ModalMotivo_2");        
+        agregarEtiqueta(btnMotivo_2,"Seleccione un Motivo");        
+        var div_btnMotivo_2 = tomarElemento("Motivo_2");
+        resetearValorDiv(div_btnMotivo_2);        
+        agregarElementoxDiv(div_btnMotivo_2,btnMotivo_2);  
+        //RESETEANDO BOTON SELECCIONE UN MOTIVO 3
+        var btnMotivo_3 = crearElemento("button");
+        agregarAtributoxElemento(btnMotivo_3,"type","button");
+        agregarAtributoxElemento(btnMotivo_3,"class","btn btn-lg btn-primary btn-block");
+        agregarAtributoxElemento(btnMotivo_3,"data-toggle","modal");
+        agregarAtributoxElemento(btnMotivo_3,"data-target","#ModalMotivo_3");        
+        agregarEtiqueta(btnMotivo_3,"Seleccione un Motivo");        
+        var div_btnMotivo_3 = tomarElemento("Motivo_3");
+        resetearValorDiv(div_btnMotivo_3);        
+        agregarElementoxDiv(div_btnMotivo_3,btnMotivo_3);  
+        //RESETEANDO OBSERVACIONES
+        resetearValorElemento("Observaciones");
+        //RESETEANDO RESPONSABLE
+        resetearValorSelect("ID_Responsable");
+        //RESETEANDO CENTRO DE SALUD
+        resetearValorSelect("ID_Centro");
+        //RESETEANDO RESPONSABLES CREADOS
+        var div_btnPersona = tomarElemento("contenedorResponsables");
+        resetearValorDiv(div_btnPersona);   
+        cantResponsables = 1; 
+      }
+
+    function addMultipleMotivo(xMotivo, xID, element) {
+      if (!listaMotivos.has(xMotivo) && (listaMotivos.size <= 4)) {
+        listaMotivos.set(xMotivo, xID);
+        element.innerHTML = "&#10003";
+        element.style.width = "12ch";
+      } else if (listaMotivos.has(xMotivo)){
+        listaMotivos.delete(xMotivo);
+        element.innerHTML = "seleccionar";
+      }
+    }
 
   </script>
 </head>
@@ -265,12 +488,16 @@
               </button>
             </div>
             <div class="modal-body">
-              <form>
+                        <form>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-8">
+                  <div class="col-10">
                     <div class="input-group mb-3">
                       <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos_1" onKeyUp="buscarMotivos(1)" autocomplete="off">
+                      <select id="select-motivo1" name="select-motivo1" oninput="buscarMotivos(1, listaMotivos)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                        <option value="denominacion" selected>Denominacion</option>
+                        <option value="codigo">Codigo</option>
+                      </select>
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -288,7 +515,9 @@
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>             
+        
             </div>
           </div>
         </div>
@@ -305,12 +534,16 @@
               </button>
             </div>
             <div class="modal-body">
-              <form>
+                        <form>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-8">
+                  <div class="col-10">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos_2" onKeyUp="buscarMotivos(2)" autocomplete="off">
+                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos2" onKeyUp="buscarMotivosGeneral(2, listaMotivos)" autocomplete="off">
+                      <select id="select-motivo2" name="select-motivo2" oninput="buscarMotivos(2, listaMotivos)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                        <option value="denominacion" selected>Denominacion</option>
+                        <option value="codigo">Codigo</option>
+                      </select>
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -320,7 +553,7 @@
                 </div>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-10" id = "ResultadosMotivos_2">
+                  <div class="col-10" id = "ResultadosMotivos2">
                     
                   </div>
                   <div class="col"></div>
@@ -328,7 +561,9 @@
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>             
+        
             </div>
           </div>
         </div>
@@ -345,12 +580,16 @@
               </button>
             </div>
             <div class="modal-body">
-              <form>
+                        <form>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-8">
+                  <div class="col-10">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos_3" onKeyUp="buscarMotivos(3)" autocomplete="off">
+                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos3" onKeyUp="buscarMotivosGeneral(3, listaMotivos)" autocomplete="off">
+                      <select id="select-motivo3" name="select-motivo3" oninput="buscarMotivos(3, listaMotivos)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                        <option value="denominacion" selected>Denominacion</option>
+                        <option value="codigo">Codigo</option>
+                      </select>
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -360,7 +599,7 @@
                 </div>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-10" id = "ResultadosMotivos_3">
+                  <div class="col-10" id = "ResultadosMotivos3">
                     
                   </div>
                   <div class="col"></div>
@@ -368,7 +607,9 @@
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>             
+        
             </div>
           </div>
         </div>
@@ -390,7 +631,7 @@
                   <div class="col"></div>
                   <div class="col-8">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos4" id = "SearchMotivos_4" onKeyUp="buscarMotivos(4)" autocomplete="off">
+                      <input class = "form-control" type="text" name="BuscarMotivos4" id = "SearchMotivos_4" onKeyUp="buscarMotivos(4, listaMotivos)" autocomplete="off">
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -408,7 +649,9 @@
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>             
+        
             </div>
           </div>
         </div>
@@ -425,12 +668,16 @@
               </button>
             </div>
             <div class="modal-body">
-              <form>
+                        <form>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-8">
+                  <div class="col-10">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos5" id = "SearchMotivos_5" onKeyUp="buscarMotivos(5)" autocomplete="off">
+                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos_5" onKeyUp="buscarMotivosGeneral(5, listaMotivos)" autocomplete="off">
+                      <select id="select-motivo5" name="select-motivo5" oninput="buscarMotivos(5, listaMotivos)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                        <option value="denominacion" selected>Denominacion</option>
+                        <option value="codigo">Codigo</option>
+                      </select>
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -440,7 +687,7 @@
                 </div>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-10" id = "ResultadosMotivos_5">
+                  <div class="col-10" id = "ResultadosMotivos5">
                     
                   </div>
                   <div class="col"></div>
@@ -448,7 +695,9 @@
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+              <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>             
+        
             </div>
           </div>
         </div>

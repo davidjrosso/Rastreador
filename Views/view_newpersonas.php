@@ -40,6 +40,7 @@
   <script defer src="js/ValidarPersona.js"></script>
   <script defer src="./dist/mapa.js"></script>
   <script defer src="./dist/control.js"></script>
+  <script src="js/Utils.js"></script>
 
   <script>
       let map = null;
@@ -159,84 +160,39 @@
 			        controlMensaje(mensajeSuccess, mensajeError);
           });
 
-
-          function calcularEdad() {
-                  let fecha = document.getElementById("Fecha_Nacimiento").value;
-                  if (fecha !== null && fecha.length != 0) {
-                    fecha = fecha.split('/').reverse().join('-');
-                    cumpleanos = new Date(fecha + " GMT-0300");
-                  } else {
-                    cumpleanos = new Date();
-                  }
-
-                  let mes = cumpleanos.getMonth() + 1;
-                  let ano = cumpleanos.getFullYear();
-                  let dia = cumpleanos.getDate();
-
-                  let fecha_hoy = new Date();
-                  let ahora_ano = fecha_hoy.getYear();
-                  let ahora_mes = fecha_hoy.getMonth() + 1;
-                  let ahora_dia = fecha_hoy.getDate();
-
-                  let edad = (ahora_ano + 1900) - ano;
-                  if (ahora_mes < mes) {
-                      edad--;
-                  }
-
-                  if ((mes == ahora_mes) && (ahora_dia < dia)) {
-                      edad--;
-                  }
-
-                  if (edad > 1900) {
-                      edad -= 1900;
-                  }
-
-                  let meses = 0;
-
-                  if (ahora_mes > mes && dia > ahora_dia)
-                      meses = ahora_mes - mes - 1;
-                  else if (ahora_mes > mes)
-                      meses = ahora_mes - mes
-                  if (ahora_mes < mes && dia < ahora_dia)
-                      meses = 12 - (mes - ahora_mes);
-                  else if (ahora_mes < mes)
-                      meses = 12 - (mes - ahora_mes + 1);
-                  if (ahora_mes == mes && dia > ahora_dia)
-                      meses = 11;
-
-                  let Anios = document.getElementById("Edad");
-                  Anios.value = edad;
-
-                  let Meses = document.getElementById("Meses");
-                  Meses.value = meses;
-            }
 </script>
 </head>
 <body>
-<div class = "row">
+  <div class="col-md-2" id="expandir" style="padding-left: 6px; position: fixed; z-index: 1000" hidden>
+    <a id="abrir" class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="mostrar()">
+      <i class="fa fa-arrows-alt fa-lg" color="tomato"></i>
+    </a>
+  </div>
+<div class = "row margin-right-cero">
 <?php
   echo $Element->menuDeNavegacion($tipo_usuario, $id_usuario, $Element::PAGINA_PERSONA);
   ?>
-  <div class = "col-md-9">
+  <div class = "col-md-9 inicio-md-2  row margin-right-cero">
+    <div class="col-1"></div>
+    <div class="col">
     <div class="row">
-      <div class="col"></div>
-      <div class="col-10 Titulo">
+      <div class="col Titulo">
         <p>Nueva Persona</p>
       </div>
-      <div class="col"></div>
-    </div><br>
-    <div class="row">
-      <div class="col"></div>
-      <div class="col-10">
-          <div class="row">
-              <center><button class = "btn btn-secondary btn-sm" onClick="location.href ='movimiento/nuevo'">Agregar Nuevo Movimiento</button></center>
-          </div>
-      </div>
-      <div class="col"></div>
     </div>
     <br>
-     <div class = "row">
-      <div class = "col-10">
+    <div class="row" style="justify-content: center;">
+      <div class="col"></div>
+        <div class="col-10">
+            <div class="row" style="justify-content: center;">
+                <center><button class = "btn btn-secondary btn-sm" onClick="location.href ='movimiento/nuevo'">Agregar Nuevo Movimiento</button></center>
+            </div>
+        </div>
+      <div class="col"></div>
+      </div>
+      <br>
+      <div class = "row" style="justify-content: center;">
+        <div class = "col-11">
           <!-- Carga -->
           <p class = "Titulos">Cargar Nueva Persona</p>
           <form method = "post" onKeydown="return event.key != 'Enter';" action = "insertar_persona" onSubmit = "return ValidarPersona();">
@@ -263,7 +219,7 @@
             <div class="form-group row">
               <label for="Fecha_Nacimiento" class="col-md-2 col-form-label LblForm" style="margin-bottom: -8px;">Fecha de Nacimiento: </label>
               <div class="col-md-10">
-                <input type="text" class="form-control" name = "Fecha_Nacimiento" id="Fecha_Nacimiento" autocomplete="off" placeholder="Ejemplo: 01/01/2010" onFocusOut="calcularEdad()"> 
+                <input type="text" class="form-control" name = "Fecha_Nacimiento" id="Fecha_Nacimiento" autocomplete="off" placeholder="Ejemplo: 01/01/2010" onchange="calcularEdad()"> 
               </div>
             </div>
             <div class="row LblForm col-md-2" style="margin-bottom: 1.04%; font-size: 1.031rem">
@@ -393,7 +349,7 @@
               </div>
             </div>
             <div class="form-group row">
-              <div class="offset-md-2 col-md-10">
+              <div class="col-md-12 row" style="justify-content: center;">
                 <button type="submit" class="btn btn-outline-success">Guardar</button>
                 <button type = "button" class = "btn btn-danger" onClick = "location.href = 'personas'">Atras</button>
               </div>
@@ -407,7 +363,9 @@
               <div class="col-10"></div>
               <div class="col-2"></div>
           </div>
-          <!-- Fin Carga -->
+      </div>
+
+    <!-- Fin Carga -->
 
           <!-- Modal de Carga de Calle-->
       <div class="modal fade bd-example-modal-lg" id="ModalCalle" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -550,6 +508,11 @@
         </div>
       </div>
     </div>
+  </div>
+
+
+  <div class="col-2"></div>
+  
   </div>
 </div>
 </body>

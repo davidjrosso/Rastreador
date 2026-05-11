@@ -475,14 +475,20 @@ class MotivoController
     public function buscar_motivos_filtro()
     {
         //$consultaBusqueda = $_REQUEST['valorBusqueda'];
-        $vs = isset($_REQUEST["vs"]) ? $_REQUEST["vs"] : null;
+        //$vs = isset($_REQUEST["vs"]) ? $_REQUEST["vs"] : null;
         $json_string = file_get_contents('php://input');
         $lista_motivo = json_decode($json_string, true);
+
+        $vs = $lista_motivo["vs"];
+        unset($lista_motivo["vs"]);
+        $consultaBusqueda = $lista_motivo["valorBusqueda"];
+        unset($lista_motivo["valorBusqueda"]);
+        unset($lista_motivo["id"]);
 
         //Filtro anti-XSS
         $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
         $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
-        //$consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consultaBusqueda);
+        $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consultaBusqueda);
 
         //Variable vacía (para evitar los E_NOTICE)
         $mensaje = "";
