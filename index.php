@@ -104,6 +104,7 @@ try {
 	$routes[] = Route::get('crear_movimiento_success', '/movimiento/nuevo\?Mensaje={mensaje}', [MovimientoController::class, 'crear_movimiento']);
 	$routes[] = Route::get('crear_movimiento_error', '/movimiento/nuevo\?MensajeError={mensaje}', [MovimientoController::class, 'crear_movimiento']);
 	$routes[] = Route::post('mod_movimiento_control', '/modificar_movimiento', [MovimientoController::class, 'mod_movimiento_control']);
+	$routes[] = Route::post('ins_movimiento_control', '/insert_movimiento', [MovimientoController::class, 'new_movimiento_control']);
 	$routes[] = Route::get('del_movimiento', '/delete_movimiento\?ID={id}', [MovimientoController::class, 'del_movimiento_control']);
 	$routes[] = Route::get('filtro_movimientos_grafico', '/filtrografico', [ReporteGraficoController::class, 'filtro_movimientos']);
 	$routes[] = Route::post('reporte_movimientos_grafico', '/reportegrafico', [ReporteGraficoController::class, 'reporte']);

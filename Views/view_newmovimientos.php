@@ -94,22 +94,6 @@
       }
 
 
-      function buscarMotivosGeneral(id_Motivo){
-        let xMotivo = document.getElementById("SearchMotivos" + id_Motivo).value;
-        let bodyJson = Object.fromEntries(listaMotivos);
-        let textoBusqueda = xMotivo;
-        let vs = $("#select-motivo" + id_Motivo)[0].value;
-        xmlhttp=new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-          if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-            contenidosRecibidos = xmlhttp.responseText;
-            document.getElementById("ResultadosMotivos" + id_Motivo).innerHTML=contenidosRecibidos;
-          }
-        }
-        xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda=' + textoBusqueda + '&number=' + id_Motivo + "&vs=" + vs, true); // Método post y url invocada
-        xmlhttp.send(JSON.stringify(bodyJson));
-      }
-
       function seleccionPersona(xNombre,xID){
         var Persona = document.getElementById("Persona");
         var ID_Persona = document.getElementById("ID_Persona");
@@ -539,7 +523,7 @@
                   <div class="col"></div>
                   <div class="col-10">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos2" onKeyUp="buscarMotivosGeneral(2, listaMotivos)" autocomplete="off">
+                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos_2" onKeyUp="buscarMotivos(2, listaMotivos)" autocomplete="off">
                       <select id="select-motivo2" name="select-motivo2" oninput="buscarMotivos(2, listaMotivos)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
                         <option value="denominacion" selected>Denominacion</option>
                         <option value="codigo">Codigo</option>
@@ -553,7 +537,7 @@
                 </div>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-10" id = "ResultadosMotivos2">
+                  <div class="col-10" id = "ResultadosMotivos_2">
                     
                   </div>
                   <div class="col"></div>
@@ -585,7 +569,7 @@
                   <div class="col"></div>
                   <div class="col-10">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos3" onKeyUp="buscarMotivosGeneral(3, listaMotivos)" autocomplete="off">
+                      <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos_3" onKeyUp="buscarMotivos(3, listaMotivos)" autocomplete="off">
                       <select id="select-motivo3" name="select-motivo3" oninput="buscarMotivos(3, listaMotivos)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
                         <option value="denominacion" selected>Denominacion</option>
                         <option value="codigo">Codigo</option>
@@ -599,7 +583,7 @@
                 </div>
                 <div class="row">
                   <div class="col"></div>
-                  <div class="col-10" id = "ResultadosMotivos3">
+                  <div class="col-10" id = "ResultadosMotivos_3">
                     
                   </div>
                   <div class="col"></div>
