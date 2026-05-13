@@ -1164,6 +1164,10 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
       background-color: #ccc;
     }
 
+    td[class~="DatosResultados"] {
+      background-color: white !important;
+    }
+
     .nombreCategoria {
       font-size: 10px;
       font-weight: bold;
@@ -1515,10 +1519,10 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
             <div id="divporcentaje">%</div>
             <button id="zoomDecrementar"></button>
           </div>
-            <button id="excel" type = "button" class = "btn btn-secondary" data-toggle="modal" 
+            <!--<button id="excel" type = "button" class = "btn btn-secondary" data-toggle="modal" 
                     data-target="#excel-modal">
                 Excel desplegar
-            </button>
+            </button>-->
 
         </div>
         <?php
