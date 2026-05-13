@@ -1164,7 +1164,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
       background-color: #ccc;
     }
 
-    td[class~="DatosResultados"] {
+    td[name~="DatosResultados"] {
       background-color: white !important;
     }
 
