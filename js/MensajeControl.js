@@ -188,3 +188,28 @@ export function controlMensaje(mensajeSuccess, mensajeError) {
         swal.fire(mensajeError, '', 'warning');
     }
 }
+
+export function titleInstSet(e) {
+    let text = e.target.value;
+    let data = "valor=" + text;
+    let request = $.ajax({
+        type: "POST",
+        cache: false,
+        url: "/Controladores/modificaciontituloinst.php",
+        data: data,
+        contentType: "application/x-www-form-urlencoded",
+        async: true,
+        processData: false,
+        success: function (response) {
+            let index = null;
+            if (response.status) {
+                controlMensaje("La modificacion se realizo", null)
+            } else {
+                controlMensaje(null, "Error en modificacion del tit");
+            }
+        },
+        error: function (response) {
+            controlMensaje(null, "Error");
+        }
+    });    
+}

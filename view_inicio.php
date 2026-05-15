@@ -40,6 +40,7 @@ $tipo_usuario = $account->get_id_tipo_usuario();
 
 $fecha_actual = new DateTime(date("Y-m-d"));
 $value = new Parametria(coneccion_base: $Con, codigo: "UPDATE_FECHA_PERSONA");
+$title_obj = new Parametria(coneccion_base: $Con, codigo: "TITUL_INSTIT");
 $fecha_update = new DateTime($value->get_valor());
 if ($fecha_actual > $fecha_update) {
   $consultar_datos_personas = "UPDATE persona p
@@ -79,6 +80,7 @@ $Con->CloseConexion();
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="./dist/control.js"></script>
   <script>
        $(document).ready(function() {
               var date_input=$('input[name="date"]'); //our date input has the name "date"
@@ -97,6 +99,9 @@ $Con->CloseConexion();
                   $(".nav-side-menu").addClass("menu-item-selected");
                   $(".col.inicio-md-2").show();
                 }
+              });
+              $("#title-intit").on("blur", function (e) {
+                titleInstSet(e);
               })
           });
 
@@ -628,20 +633,6 @@ $Con->CloseConexion();
   </div>
 <?php } ?>
   <div class = "col inicio-md-2">
-    <div class="row">
-      <div class="col col-display-none"></div>
-      <div class="col-8 col-media-title">
-        <div class="row">
-          <div class="col-1">
-            <img src="images/escudo.png" width="100%" height="auto">
-          </div>
-          <div class="col-11 CopyRight">
-    	       <p>Desarrollado en cooperación con la Dirección de Cómputos de la Municipalidad de Río Tercero</p>
-          </div>
-        </div>
-      </div>
-      <div class="col col-display-none"></div>
-    </div>
     <br>
     <div class="row justify-content-center">
       <div class="col col-display-none"></div>
@@ -767,15 +758,15 @@ $Con->CloseConexion();
           ?>
         </div>  
       </div>     
-  <?php } else { ?>
-      <div class = "row">
-        <div class="col"></div>
-        <div class="col-4 Contenedor-Imagen-Inicio">
-          <img src="images/FondoInicio.jpg" class = "FondoInicio">
-        </div>      
-        <div class="col"></div>          
-      </div>
-  <?php }
+      <?php } else { ?>
+          <div class = "row">
+            <div class="col"></div>
+            <div class="col-4 Contenedor-Imagen-Inicio">
+              <img src="images/FondoInicio.jpg" class = "FondoInicio">
+            </div>      
+            <div class="col"></div>          
+          </div>
+    <?php }
       } else { ?>
     <div class = "row">
       <div class="col"></div>
@@ -793,6 +784,24 @@ $Con->CloseConexion();
       <div class="col"></div>
     </div>
     <br>	
+    <div class="row">
+      <div class="col-2 col-display-none"></div>
+      <div class="col-10 col-media-title">
+        <div style="margin: 5px;" class="row">
+          <?php if ($tipo_usuario == 1) { ?>
+          <div class="col-10">
+            <textarea style="height: 40px; resize: none; border-color: white; margin-top: 20px; overflow: hidden;" id="title-intit" class = "form-control CopyRight" row = "3" name = "Observaciones" value = ""><?php echo $title_obj->get_valor(); ?></textarea>
+          </div>
+          <div class="col-2">
+          </div>
+          <?php } else { ?>
+            <div class="col-11 CopyRight">
+              <p><?php echo $title_obj->get_valor(); ?></p>
+            </div>
+            <?php } ?>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 <?php  
