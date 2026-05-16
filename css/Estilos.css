@@ -350,8 +350,8 @@ body {
 }
 
 .CopyRight {
-  color: #000;
-  font-weight: bold;
+  color: #000 !important;
+  font-weight: bold !important;
   text-align: left;
   font-family: times;
 }
@@ -1148,4 +1148,19 @@ input[type="radio"] {
   background-color: #545b62;
   color: white;
   border-radius: 2%;
+}
+
+.menu-bar {
+  padding: 10px;
+  background-color: #f3f3f3;
+  border: 1px solid #ccc;
+}
+.menu-bar button {
+  margin-right: 5px;
+  cursor: pointer;
+}
+.ProseMirror {
+  border: 1px solid #ccc;
+  padding: 10px;
+  min-height: 100px;
 }

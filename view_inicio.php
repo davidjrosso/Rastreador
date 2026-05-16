@@ -785,14 +785,16 @@ $Con->CloseConexion();
     </div>
     <br>	
     <div class="row">
-      <div class="col-2 col-display-none"></div>
+      <div class="col-1 col-display-none"></div>
       <div class="col-10 col-media-title">
         <div style="margin: 5px;" class="row">
           <?php if ($tipo_usuario == 1) { ?>
-          <div class="col-10">
-            <textarea style="height: 40px; resize: none; border-color: white; margin-top: 20px; overflow: hidden;" id="title-intit" class = "form-control CopyRight" row = "3" name = "Observaciones" value = ""><?php echo $title_obj->get_valor(); ?></textarea>
+          <div class="col-1">
           </div>
-          <div class="col-2">
+          <div class="col-10">
+            <textarea style="height: 40px; resize: none; border-color: white; margin-top: 20px; overflow: hidden; text-align: center;" id="title-intit" class = "form-control CopyRight" row = "3" name = "Observaciones" value = ""><?php echo $title_obj->get_valor(); ?></textarea>
+          </div>
+          <div class="col-1">
           </div>
           <?php } else { ?>
             <div class="col-11 CopyRight">
@@ -801,6 +803,7 @@ $Con->CloseConexion();
             <?php } ?>
         </div>
       </div>
+      <div class="col-1 col-display-none"></div>
     </div>
   </div>
 </div>
