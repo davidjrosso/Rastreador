@@ -12,6 +12,7 @@ module.exports = {
     reporte : './js/acciones-reporte-grafico.js',
     alerta : './js/Enlace-Drive.js',
     control : './js/MensajeControl.js',
+    editor: "./js/editor.js",
     reporte : './js/ReporteMovimiento.js',
     excel : './js/excel.js'
   },
@@ -20,5 +21,11 @@ module.exports = {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
   },
-  target: 'web'
-};
+  target: 'web',
+  module: {
+    rules: [{
+        test: /\.css$/i,
+        // Loaders execute from right to left (sass -> css -> style)
+        use: ["style-loader", "css-loader"], 
+      }]
+}};

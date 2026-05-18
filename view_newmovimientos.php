@@ -465,12 +465,7 @@ if(!isset($_SESSION["Usuario"])){
             </div>
             <div id="contenedorMotivos">              
             </div>
-            <div class="form-group row">
-              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Observaciones: </label>
-              <div class="col-md-10">
-                <textarea class = "form-control" row = "3" name = "Observaciones" id="Observaciones"></textarea>
-              </div>
-            </div>
+
             <div class="form-group row">
               <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable: </label>
               <div class = "col-md-9">
@@ -520,14 +515,23 @@ if(!isset($_SESSION["Usuario"])){
               </div>
             </div>
             <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Observaciones: </label>
+              <div class="col-md-10">
+                <div id="element-ct" class="col"></div>
+              </div>
+            </div>
+            <div class="form-group row">
               <div class="col-md-12 row" style="justify-content: center;" id = "InputsGenerales">
                 <input type="hidden" name="ID_Persona" id = "ID_Persona" value = "0">
                 <input type="hidden" name="ID_Motivo_1" id = "ID_Motivo_1" value = "0">
                 <input type="hidden" name="ID_Motivo_2" id = "ID_Motivo_2" value = "0">
                 <input type="hidden" name="ID_Motivo_3" id = "ID_Motivo_3" value = "0">
-                <button type="submit" class="btn btn-outline-success">Guardar</button> 
-                <button type="button" class="btn btn-outline-secondary" onClick="resetearForm()">Cancelar</button>
-                <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_movimientos.php'">Atras</button>
+                <textarea style="display: none" class = "form-control" row = "3" name = "Observaciones" id="Observaciones"></textarea>
+                <div style="margin: auto;">
+                  <button type="submit" class="btn btn-outline-success">Guardar</button> 
+                  <button type="button" class="btn btn-outline-secondary" onClick="resetearForm()">Cancelar</button>
+                  <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_movimientos.php'">Atras</button>
+                </div>
               </div>
             </div>
           </form>
@@ -836,4 +840,5 @@ if(isset($_REQUEST["Mensaje"])){
  */
 ?>
 </body>
+<script src="./dist/editor.js"></script>
 </html>

@@ -481,12 +481,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                 ?>
                 <div id="contenedorMotivos">              
                 </div>
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Observaciones: </label>
-                  <div class="col-md-10">
-                    <textarea class = "form-control" row = "3" name = "Observaciones" value = ""><?php echo $DtoMovimiento->getObservaciones(); ?></textarea>
-                  </div>
-                </div>
                 <?php foreach($ID_Responsable as $key => $value) {?>
                 <div class="form-group row">
                   <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable <?php echo ($key) ? $key : "";?>: </label>
@@ -528,11 +522,19 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   </div>
                 </div>
                 <div class="form-group row">
-                  <div class="offset-md-2 col-md-10" id = "InputsGenerales">
+                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Observaciones: </label>
+                  <div class="col-md-10">
+                    <div id="element-ct" class="col"></div>
+                  </div>
+                </div>
+                <br>
+                <div class="form-group row">
+                  <div style="align-content: center;" class="col row" id = "InputsGenerales">
                     <input type="hidden" name="ID_Persona" id = "ID_Persona" value = "<?php echo $ID_Persona; ?>">
                     <input type="hidden" name="ID_Motivo_1" id = "ID_Motivo_1" value = "<?php echo $DtoMovimiento->getMotivo_1();?>">
                     <input type="hidden" name="ID_Motivo_2" id = "ID_Motivo_2" value = "<?php echo $DtoMovimiento->getMotivo_2();?>">
                     <input type="hidden" name="ID_Motivo_3" id = "ID_Motivo_3" value = "<?php echo $DtoMovimiento->getMotivo_3();?>">
+                    <textarea style="display: none;" id="Observaciones" class = "form-control" row = "3" name = "Observaciones" value = ""><?php echo $DtoMovimiento->getObservaciones(); ?></textarea>
                     <?php
                       if($DtoMovimiento->getMotivo_4() != "" && $DtoMovimiento->getMotivo_4() != 1){
                     ?>
@@ -547,8 +549,10 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                     <?php
                       }
                     ?>
-                    <button type="submit" class="btn btn-outline-success">Guardar</button>
-                    <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_movimientos.php'">Atras</button>
+                    <div style="margin: auto;">
+                      <button type="submit" class="btn btn-outline-success">Guardar</button>
+                      <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_movimientos.php'">Atras</button>
+                    </div>
                   </div>
                 </div>
             </form>
@@ -837,6 +841,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   </div>
 </div>
 </div>
+<div id="editor" style="display: none"></div>
 <script>
   <?php foreach ($motivos as $key => $val) {?>
   listaMotivos.set('<?php echo  $val;?>', '<?php echo $key; ?>');
@@ -844,4 +849,5 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   cantResponsables = <?php echo count($ID_Responsable);?>;
 </script>
 </body>
+<script src="/dist/editor.js"></script>
 </html>

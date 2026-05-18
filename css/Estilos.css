@@ -1164,3 +1164,7 @@ input[type="radio"] {
   padding: 10px;
   min-height: 100px;
 }
+
+.ck-evaluation-badge {
+  display: none;
+}
