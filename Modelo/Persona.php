@@ -1112,7 +1112,7 @@ public static function is_registered($documento)
 	$Con->OpenConexion();
 	$ConsRegistrosIguales = "select id_persona 
 							 from persona 
-							 where documento like '%" . $documento. "%' 
+							 where documento = '$documento' 
 							   and estado = 1";
 	$MensajeErrorRegistrosIguales = "Hubo un problema al consultar los registros para validar";
 	$ret = mysqli_query($Con->Conexion,
