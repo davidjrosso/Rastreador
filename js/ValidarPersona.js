@@ -84,6 +84,7 @@ function ValidarPersona(e) {
 
 export function calcularEdad() {
 	let fecha = document.getElementById("Fecha_Nacimiento").value;
+	let cumpleanos = null;
 	if (fecha !== null && fecha.length != 0) {
 		fecha = fecha.split('/').reverse().join('-');
 		cumpleanos = new Date(fecha + " GMT-0300");
