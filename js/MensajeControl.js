@@ -81,7 +81,7 @@ export function insercionDatosFormulario() {
 
                 } else {
                     index = $("#calle_" + response.id_calle)[0].index;
-                    $("#ID_Calle")[0].selectedIndex = index;
+                    $("#Calle")[0].selectedIndex = index;
                 }
             }
 
