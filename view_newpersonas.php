@@ -36,7 +36,7 @@
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-  <script src="js/ValidarPersona.js"></script>
+  <script src="./dist/ValidarPersona.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script src="./dist/mapa.js"></script>
   <script src="./dist/control.js"></script>
@@ -223,57 +223,6 @@
             xMLHTTP.send();
         }
 
-        function calcularEdad() {
-                let fecha = document.getElementById("Fecha_Nacimiento").value;
-                if (fecha !== null && fecha.length != 0) {
-                  fecha = fecha.split('/').reverse().join('-');
-                  cumpleanos = new Date(fecha + " GMT-0300");
-                } else {
-                  cumpleanos = new Date();
-                }
-
-                let mes = cumpleanos.getMonth() + 1;
-                let ano = cumpleanos.getFullYear();
-                let dia = cumpleanos.getDate();
-
-                let fecha_hoy = new Date();
-                let ahora_ano = fecha_hoy.getYear();
-                let ahora_mes = fecha_hoy.getMonth() + 1;
-                let ahora_dia = fecha_hoy.getDate();
-
-                let edad = (ahora_ano + 1900) - ano;
-                if (ahora_mes < mes) {
-                    edad--;
-                }
-
-                if ((mes == ahora_mes) && (ahora_dia < dia)) {
-                    edad--;
-                }
-
-                if (edad > 1900) {
-                    edad -= 1900;
-                }
-
-                let meses = 0;
-
-                if (ahora_mes > mes && dia > ahora_dia)
-                    meses = ahora_mes - mes - 1;
-                else if (ahora_mes > mes)
-                    meses = ahora_mes - mes
-                if (ahora_mes < mes && dia < ahora_dia)
-                    meses = 12 - (mes - ahora_mes);
-                else if (ahora_mes < mes)
-                    meses = 12 - (mes - ahora_mes + 1);
-                if (ahora_mes == mes && dia > ahora_dia)
-                    meses = 11;
-
-                let Anios = document.getElementById("Edad");
-                Anios.value = edad;
-
-                let Meses = document.getElementById("Meses");
-                Meses.value = meses;
-          }
-
       function buscarCalles(){
         var xNombre = document.getElementById('SearchCalle').value;
         var textoBusqueda = xNombre;
@@ -335,7 +284,7 @@
       <div class = "col-10">
           <!-- Carga -->
           <p class = "Titulos">Cargar Nueva Persona</p>
-          <form method = "post" action = "Controladores/InsertPersona.php" onSubmit = "return ValidarPersona();">
+          <form method = "post" action = "Controladores/InsertPersona.php">
             <div class="form-group row">
               <label for="Apellido" class="col-md-2 col-form-label LblForm">Apellido: </label>
               <div class="col-md-10">

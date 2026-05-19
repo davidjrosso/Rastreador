@@ -65,6 +65,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
     integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
     crossorigin="anonymous"></script>
+  <script src="/dist/ValidarPersona.js"></script>
   <script src="js/Utils.js"></script>
   <script src="./dist/mapa.js"></script>
   <script src="./dist/control.js"></script>
@@ -137,14 +138,14 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
         $("button[class='ol-zoom-in']").click();
       });
 
-      $("#ID_Calle").on("input", function(e) {
+      $("#Calle").on("input", function(e) {
         let nro = $("#NumeroDeCalle").val();
         let calleId = null;
         let calleNombre = null;
         if (nro) {
           $("#mapa-sig").prop('disabled', false);
-          calleNombre = $("#ID_Calle").find(":selected").text();
-          calleId = $("#ID_Calle").val();
+          calleNombre = $("#Calle").find(":selected").text();
+          calleId = $("#Calle").val();
           nro = $("#NumeroDeCalle").val();
           if (!map) {
             map = init(
@@ -162,8 +163,8 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
         }
       });
       $("#NumeroDeCalle").on("input", function(e) {
-        let calleNombre = $("#ID_Calle").find(":selected").text();
-        let calleId = $("#ID_Calle").val();
+        let calleNombre = $("#Calle").find(":selected").text();
+        let calleId = $("#Calle").val();
         let nro = $(this).val();
         if (calleNombre) {
           $("#mapa-sig").prop('disabled', false);
@@ -225,61 +226,11 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
         $("#liveToast").toggle();
       });
 
-      if($("#ID_Calle").find(":selected").val()) {
+      if($("#Calle").find(":selected").val()) {
         $("#mapa-sig").prop('disabled', false);
       }
     });
 
-    function calcularEdad() {
-        let fecha = document.getElementById("Fecha_Nacimiento").value;
-        if (fecha !== null && fecha.length != 0) {
-          fecha = fecha.split('/').reverse().join('-');
-          cumpleanos = new Date(fecha + " GMT-0300");
-        } else {
-          cumpleanos = new Date();
-        }
-
-        let mes = cumpleanos.getMonth() + 1;
-        let ano = cumpleanos.getFullYear();
-        let dia = cumpleanos.getDate();
-
-        let fecha_hoy = new Date();
-        let ahora_ano = fecha_hoy.getYear();
-        let ahora_mes = fecha_hoy.getMonth() + 1;
-        let ahora_dia = fecha_hoy.getDate();
-
-        let edad = (ahora_ano + 1900) - ano;
-        if (ahora_mes < mes) {
-            edad--;
-        }
-
-        if ((mes == ahora_mes) && (ahora_dia < dia)) {
-            edad--;
-        }
-
-        if (edad > 1900) {
-            edad -= 1900;
-        }
-
-        let meses = 0;
-
-        if (ahora_mes > mes && dia > ahora_dia)
-            meses = ahora_mes - mes - 1;
-        else if (ahora_mes > mes)
-            meses = ahora_mes - mes
-        if (ahora_mes < mes && dia < ahora_dia)
-            meses = 12 - (mes - ahora_mes);
-        else if (ahora_mes < mes)
-            meses = 12 - (mes - ahora_mes + 1);
-        if (ahora_mes == mes && dia > ahora_dia)
-            meses = 11;
-
-        let Anios = document.getElementById("Edad");
-        Anios.value = edad;
-
-        let Meses = document.getElementById("Meses");
-        Meses.value = meses;
-    }
   </script>
 </head>
 
@@ -362,7 +313,7 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 
                           ?>
                           <div class="col-11">
-                            <form id="form-mod-persona" method="post" onsubmit="return ValidarPersona()" action="Controladores/ModificarPersona.php">
+                            <form id="form-mod-persona" method="post" action="Controladores/ModificarPersona.php">
                               <input type="hidden" name="ID" value="<?php echo $Persona->getID_Persona(); ?>">
                               <div class="form-group row">
                                 <label for="apellido" class="col-md-2 col-form-label LblForm">Apellido: </label>

@@ -1,27 +1,31 @@
-function ValidarPersona() {
-	let apellido = document.getElementById("Apellido").value;
-	let nombre = document.getElementById("Nombre").value;
-	let Fecha_Nacimiento = document.getElementById("Fecha_Nacimiento").value;
+import Swal from 'sweetalert2';
+
+
+$(function (e) {
+	$("#form-mod-persona").on("submit", ValidarPersona);
+})
+
+function ValidarPersona(e) {
+	let apellido = $("#Apellido").prop("value");
+	let nombre = $("#Nombre").prop("value");
+	let Fecha_Nacimiento = $("#Fecha_Nacimiento").prop("value");
 
 	let division = Fecha_Nacimiento.split("/");
 	let anios = division[0];
-
-	let opcion_f = $("#opcion_f").prop("checked");
-	opcion_f = $("#opcion_m").prop("checked") || opcion_f;
-	opcion_f = $("#opcion_x").prop("checked") || opcion_f;
+	let bandera = true;
+	let Mensaje = "";
+	let check = false;
+	check = check || $("#opcion_m").prop("checked");
+	check = check || $("#opcion_f").prop("checked");
+	check = check || $("#opcion_x").prop("checked");
 
 	let calle = $("#Calle").prop("value");
 	let barrio = $("#ID_Barrio").prop("value");
-	/*
-	var Fecha_Nacimiento = document.getElementById("Fecha_Nacimiento").value;
-	var ID_Barrio = document.getElementById("ID_Barrio").value;
-	var ID_Escuela = document.getElementById("ID_Escuela").value;
-	*/
-	let bandera = true;
-	let Mensaje = "";
 
-	if (!opcion_f) Mensaje = "Seleccione una opcion de sexo";
-
+	if (!check) {
+		Mensaje = "Seleccione una opcion de sexo";
+		e.preventDefault();
+	}
 	if (!calle) {
 		Mensaje = "Seleccione una calle";
 		bandera = false;
@@ -33,7 +37,7 @@ function ValidarPersona() {
 	}
 
 
-	bandera = opcion_f && bandera;
+	bandera = check && bandera;
 
 	// if(Apellido == "" || Apellido == null){
 	// 	Mensaje += "Debe ingresar un Apellido.";
@@ -70,10 +74,61 @@ function ValidarPersona() {
 	*/
 
 	if (bandera == false) {
-		swal(Mensaje,'','warning');
+		Swal.fire(Mensaje,'','warning');
 		return bandera;
 	} else {
 		return bandera;
 	}
 
+}
+
+export function calcularEdad() {
+	let fecha = document.getElementById("Fecha_Nacimiento").value;
+	if (fecha !== null && fecha.length != 0) {
+		fecha = fecha.split('/').reverse().join('-');
+		cumpleanos = new Date(fecha + " GMT-0300");
+	} else {
+		cumpleanos = new Date();
+	}
+
+	let mes = cumpleanos.getMonth() + 1;
+	let ano = cumpleanos.getFullYear();
+	let dia = cumpleanos.getDate();
+
+	let fecha_hoy = new Date();
+	let ahora_ano = fecha_hoy.getYear();
+	let ahora_mes = fecha_hoy.getMonth() + 1;
+	let ahora_dia = fecha_hoy.getDate();
+
+	let edad = (ahora_ano + 1900) - ano;
+	if (ahora_mes < mes) {
+		edad--;
+	}
+
+	if ((mes == ahora_mes) && (ahora_dia < dia)) {
+		edad--;
+	}
+
+	if (edad > 1900) {
+		edad -= 1900;
+	}
+
+	let meses = 0;
+
+	if (ahora_mes > mes && dia > ahora_dia)
+		meses = ahora_mes - mes - 1;
+	else if (ahora_mes > mes)
+		meses = ahora_mes - mes
+	if (ahora_mes < mes && dia < ahora_dia)
+		meses = 12 - (mes - ahora_mes);
+	else if (ahora_mes < mes)
+		meses = 12 - (mes - ahora_mes + 1);
+	if (ahora_mes == mes && dia > ahora_dia)
+		meses = 11;
+
+	let Anios = document.getElementById("Edad");
+	Anios.value = edad;
+
+	let Meses = document.getElementById("Meses");
+	Meses.value = meses;
 }
