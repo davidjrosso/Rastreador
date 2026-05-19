@@ -13,7 +13,7 @@ let editor = ClassicEditor.create( {
 		plugins: [ Essentials, Bold, Italic, Font, Paragraph, Alignment, Image, Heading, Mermaid, MediaEmbed, Link, List, ListEditing, FindAndReplace, Fullscreen, AutoImage, PageBreak, PasteFromOffice, Table, Style, LinkImage, Indent, ImageCaption, BlockQuote, HorizontalLine, Typing, ShiftEnter, Enter, WordCount],
 		toolbar: [
     'undo', 'redo', '|', 'bold', 'italic', '|', 'alignment', 'Image', 'Mermaid', '|', 'PageBreak', '|',
-    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|', '-', 'FindAndReplace', 'Fullscreen', 
+     'fontFamily', 'fontColor', 'fontBackgroundColor', '|', '-', 'FindAndReplace', 'Fullscreen', 
     'WordCount', 'BlockQuote', 'Typing', 'ShiftEnter', 'LinkImage',  'Enter', 'HorizontalLine', 'ImageCaption', 
     'Indent', 'Style', '|', 'AutoImage', 'PasteFromOffice', 'numberedList', 'bulletedList', '|', 'heading', '|', 
     'link', 'List', 'ListEditing', 'Table', 'uploadImage',
@@ -81,6 +81,16 @@ let editor = ClassicEditor.create( {
         $("#Observaciones").prop("value", v.getData());
       });
 
+      $("#mdal_ct").on("show.bs.modal", function (event) {
+          // Button that triggered the modal
+          const button = event.relatedTarget;
+          // Extract info from data-bs-* attributes
+          const recipient = button.getAttribute('data-bs-whatever');
+          // Update the modal's content
+          const modalTitle = myModal.querySelector('.modal-title');
+          modalTitle.textContent = 'Message to ' + recipient;
+          v.setData(delt);
+        });
+
     });
   });
-  
