@@ -33,7 +33,7 @@ if (isset($consultaBusqueda)) {
 						  				 CONCAT(UPPER(SUBSTRING(p.nombre,1,1)),LOWER(SUBSTRING(p.nombre,2))) as nombre,
 							  			 p.documento, p.nro_carpeta, CONCAT(c.calle_nombre, ' ', p.nro) as domicilio 
 								  	  FROM persona p LEFT JOIN calle c ON (p.calle = c.id_calle) 
-									  WHERE p.documento LIKE '%$consultaBusqueda%' 
+									  WHERE p.documento = '$consultaBusqueda' 
 									  	and p.estado = 1 
 									  order by upper(p.apellido) ASC, upper(p.nombre) ASC, upper(p.documento) ASC"
 									);

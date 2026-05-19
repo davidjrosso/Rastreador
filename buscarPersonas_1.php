@@ -31,7 +31,7 @@ if (isset($consultaBusqueda)) {
 						  				 CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 										 documento, nro_carpeta, domicilio
 						  		  FROM persona 
-								  WHERE documento LIKE '%$consultaBusqueda%' and estado = 1 
+								  WHERE documento = '$consultaBusqueda' and estado = 1 
 								  order by apellido, nombre"
 								);
 	}else{

@@ -2,13 +2,14 @@ import Swal from 'sweetalert2';
 
 
 $(function (e) {
-	$("#form-mod-persona").on("submit", ValidarPersona);
+	$("#form-persona").on("submit", ValidarPersona);
 })
 
 function ValidarPersona(e) {
 	let apellido = $("#Apellido").prop("value");
 	let nombre = $("#Nombre").prop("value");
 	let Fecha_Nacimiento = $("#Fecha_Nacimiento").prop("value");
+	let dni = $("#documento").prop("value");
 
 	let division = Fecha_Nacimiento.split("/");
 	let anios = division[0];
@@ -24,8 +25,14 @@ function ValidarPersona(e) {
 
 	if (!check) {
 		Mensaje = "Seleccione una opcion de sexo";
-		e.preventDefault();
+		bandera = false;
 	}
+	if (dni.length > 8 || dni-length < 7) {
+		bandera = false;
+		Mensaje = "El DNI tiene que tener 7 u 8 digitos"
+	}
+
+	/*
 	if (!calle) {
 		Mensaje = "Seleccione una calle";
 		bandera = false;
@@ -35,7 +42,7 @@ function ValidarPersona(e) {
 		Mensaje = "Seleccione un barrio";
 		bandera = false;
 	}
-
+	*/
 
 	bandera = check && bandera;
 
@@ -73,7 +80,8 @@ function ValidarPersona(e) {
 	}
 	*/
 
-	if (bandera == false) {
+	if (!bandera) {
+		e.preventDefault();
 		Swal.fire(Mensaje,'','warning');
 		return bandera;
 	} else {
@@ -132,4 +140,34 @@ export function calcularEdad() {
 
 	let Meses = document.getElementById("Meses");
 	Meses.value = meses;
+}
+
+function ValidarDocumento(){
+	let Documento = document.getElementById("documento");
+	let NroDocumento = Documento.value;
+	if (NroDocumento.toString().length < 8){
+		NotShowModalError();
+		return true;
+	}
+
+	const DniNoRepetido = "<p>No hay ningún registro con ese nombre, documento o legajo</p>";
+	xmlhttp = new XMLHttpRequest();
+
+	xmlhttp.onreadystatechange = function() {
+		if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+		var contenidosRecibidos = xmlhttp.responseText;
+		if(DniNoRepetido != contenidosRecibidos){ 
+			Documento.value = "";
+			swal({
+				title: "El Documento ingresado "+ NroDocumento +" ya esta registrado",
+				icon: "info",
+				text: "Por favor ingrese un Documento diferente",
+				confirmButtonText: 'OK'
+			})
+		}
+		}
+	}
+	xmlhttp.open('POST', 'buscarPersonas.php?valorBusqueda='+NroDocumento, true); // Método post y url invocada
+	xmlhttp.send();
+
 }
