@@ -345,7 +345,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
         sendToRepMovimientos();
       });
 
-      $("#boton-fullscreen").on("click", function (e) {
+      $("#boton-fullscreen-mp , #boton-fullscreen-xc").on("click", function (e) {
         if (!fullscreen) {
           $("#map-modal div[class='modal-content']")[0].requestFullscreen();
           fullscreen = true;
@@ -3057,7 +3057,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
     <div class="class_modal-dialog modal-dialog" role="document"  id="id_modal-dialog">
       <div class="modal-content" style="height: 600px; width: 953px;">
         <div class="modal-header" style="padding: 0rem;">
-            <button type="button" id="boton-fullscreen" class="button-fullscreen" aria-label="fullscreen">
+            <button type="button" id="boton-fullscreen-xc" class="button-fullscreen" aria-label="fullscreen">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
                   <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
                 </svg>
@@ -3088,7 +3088,7 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
               <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm8.5 2.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293z"/>
             </svg>
           </button>
-          <button type="button" id="boton-fullscreen" class="button-fullscreen" aria-label="fullscreen">
+          <button type="button" id="boton-fullscreen-mp" class="button-fullscreen" aria-label="fullscreen">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-square" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>
               </svg>
