@@ -1,7 +1,9 @@
 <?php 
 session_start(); 
-require_once "Controladores/Elements.php";
-require_once "Controladores/CtrGeneral.php";
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
+
 header("Content-Type: text/html;charset=utf-8");
 
 /*     CONTROL DE USUARIOS                    */
@@ -19,6 +21,11 @@ if(!isset($_SESSION["Usuario"])){
   $Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
   $TipoUsuario = $Ret["ID_TipoUsuario"];
   $Con->CloseConexion();
+
+  $ID_Persona = $_REQUEST["ID"] ?? null;
+  
+  $persona = null;
+  if ($ID_Persona) $persona = new Persona(ID_Persona: $ID_Persona);
 ?>
 <!DOCTYPE html>
 <html>
@@ -439,7 +446,12 @@ if(!isset($_SESSION["Usuario"])){
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Persona: </label>
               <div class="col-md-10" id = "Persona">
+                <?php if (!$ID_Persona) { ?>
                 <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalPersona">Seleccione una Persona</button>  
+
+                <?php } else { ?>
+                <p> <?php echo $persona->getNombre() . " " . $persona->getApellido();?> <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalPersona'><i class='fa fa-cog text-secondary'></i></button></p>
+                <?php }?>
               </div>
             </div>
             <div class="form-group row">
@@ -472,7 +484,7 @@ if(!isset($_SESSION["Usuario"])){
                 <?php  
                 $Element = new Elements();
                 if (!empty($_SESSION["UltResponsable"])) {
-                  $xID_Responsable = $_SESSION["UltResponsable"];
+                  $xID_Responsable = $_REQUEST["responsable"] ?? $_SESSION["UltResponsable"];
                   echo $Element->CBModResponsables($xID_Responsable);
                 } else {
                   echo $Element->CBResponsables();
@@ -522,7 +534,7 @@ if(!isset($_SESSION["Usuario"])){
             </div>
             <div class="form-group row">
               <div class="col-md-12 row" style="justify-content: center;" id = "InputsGenerales">
-                <input type="hidden" name="ID_Persona" id = "ID_Persona" value = "0">
+                <input type="hidden" name="ID_Persona" id = "ID_Persona" value = "<?php echo ($ID_Persona) ? $ID_Persona : "0"?>">
                 <input type="hidden" name="ID_Motivo_1" id = "ID_Motivo_1" value = "0">
                 <input type="hidden" name="ID_Motivo_2" id = "ID_Motivo_2" value = "0">
                 <input type="hidden" name="ID_Motivo_3" id = "ID_Motivo_3" value = "0">

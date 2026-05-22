@@ -46,6 +46,8 @@ $redirect = preg_match("~view_listados~", $http_referer);
 $_SESSION["reporte_listado"] = true;
 $_SESSION["reporte_grafico"] = false;
 $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
+$filtro_persona = $_REQUEST["familia-check"] ?? null;
+$ID_Persona = $_REQUEST["ID_Persona"];
 
 if (empty($_REQUEST["ID_Persona"])) {
   $_SESSION["retorno"] = $_REQUEST;
@@ -73,6 +75,7 @@ if (empty($_REQUEST["ID_Persona"])) {
   <script src="dist/reporte.js"></script>
   <script src="https://jsuites.net/v5/jsuites.js"></script>
   <link rel="./node_modules/jspreadsheet-ce/dist/jspreadsheet.css">
+  <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/48.1.1/ckeditor5.css" />
   <link rel="stylesheet" href="https://bossanova.uk/jspreadsheet/v5/jspreadsheet.css" type="text/css" />
   <link rel="stylesheet" href="https://jsuites.net/v5/jsuites.css" type="text/css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons" />
@@ -162,6 +165,10 @@ if (empty($_REQUEST["ID_Persona"])) {
                   url = URL.createObjectURL(blob);
                   let w = window.open(url);
                 })
+              });
+
+              $("#btn-new-persona").on("click", function (e) {
+                window.location.href = "view_newmovimientos.php?ID=" + <?= $ID_Persona;?>;
               });
 
               $("#boton-fullscreen").on("click", function (e) {
@@ -332,6 +339,47 @@ if (empty($_REQUEST["ID_Persona"])) {
           form.submit(); 
       }      
 
+      function sendToPersonaListado(idPersona) {
+          const form = document.createElement('form');
+          let datos = <?php echo json_encode($_REQUEST)?>;
+          form.method = 'POST';
+          form.action = "/view_vermovlistados.php";
+          form.style.display = 'none';
+
+          for (const key in datos) {
+              if (Object.prototype.hasOwnProperty.call(datos, key)) {
+                  if (datos[key] instanceof Array) {
+                    datos[key].forEach(function (e) {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = key + "[]";
+                        input.value = e;
+                        form.appendChild(input);
+                    })
+                  } else {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    if (key == "ID_Persona") {
+                      input.value = idPersona;
+                    } else {
+                      input.value = datos[key];
+                    }
+                    form.appendChild(input);
+                  }
+              }
+          }
+          const input = document.createElement('input');
+          input.type = 'checkbox';
+          input.name = "familia-check";
+          input.value = "true";
+          input.checked = true;
+          form.appendChild(input);  
+          document.body.appendChild(form);
+          form.submit(); 
+      }      
+
+
       function sendToRepListado(idPersona) {
           const form = document.createElement('form');
           let datos = <?php echo json_encode($_REQUEST)?>;
@@ -341,6 +389,8 @@ if (empty($_REQUEST["ID_Persona"])) {
 
           for (const key in datos) {
               if (Object.prototype.hasOwnProperty.call(datos, key)) {
+
+                  if (key == "familia-check") continue;
                   if (datos[key] instanceof Array) {
                     datos[key].forEach(function (e) {
                         const input = document.createElement('input');
@@ -496,7 +546,7 @@ if (empty($_REQUEST["ID_Persona"])) {
       	if(!isset($_REQUEST["Anio"])){
               $Fecha_Inicio = implode("-", array_reverse(explode("/",$_REQUEST["Fecha_Desde"])));
               $Fecha_Fin = implode("-", array_reverse(explode("/",$_REQUEST["Fecha_Hasta"])));
-              $ID_Persona = $_REQUEST["ID_Persona"];
+
               $Edad_Desde = $_REQUEST["Edad_Desde"];
               $Edad_Hasta = $_REQUEST["Edad_Hasta"];
               $Meses_Desde = $_REQUEST["Meses_Desde"];
@@ -953,7 +1003,24 @@ if (empty($_REQUEST["ID_Persona"])) {
               $motivo_query = "motivo";
             }
             if($ID_Persona > 0) {
-              $persona_query .= " and id_persona = $ID_Persona";
+             if (Persona::is_exist($Con, $ID_Persona) && $filtro_persona) {
+               $persona = new Persona(ID_Persona: $ID_Persona);
+               if ($persona->getId_Calle() && $persona->getNro()) {
+                  
+                  $ConsultarPersdomicilio = "SELECT id_persona
+                                             FROM persona
+                                             WHERE calle = " . $persona->getId_Calle() . "
+                                               AND nro = " . $persona->getNro() . "
+                                               AND estado = 1";
+                  $persona_query  .= " and id_persona in ($ConsultarPersdomicilio)";
+                } else {
+                  $persona_query  .= " and id_persona = $ID_Persona";
+                }
+              } else {
+                $persona_query  .= " and id_persona = $ID_Persona";
+              }
+              $json_filtro[] = "Persona " . $RetConsultarPersona["apellido"] . " " . $RetConsultarPersona["nombre"];
+
             }
 
             $query_movimiento_motivo = "SELECT *
@@ -1241,7 +1308,11 @@ if (empty($_REQUEST["ID_Persona"])) {
               */
               $head_det_persona = [];
               $head_movimientos = [];
-              $Table = "<div class='row' style='justify-content: center; margin-top: 1.7rem; margin-bottom: 1.7rem;'>
+
+              $Table = "<div class='row' style='justify-content: center; margin-top: 1.1rem; margin-bottom: 1.7rem;'>
+                          <button id = 'btn-new-persona' class = 'btn btn-secondary' style= 'max-width: min-content; background-color: #EDAF74; margin-bottom: 0.6rem; padding: .475rem .95rem; font-size: 1.1rem; color: #05131d;' type = 'button'>
+                          Agregar Nuevo Movimiento
+                          </button>    
                           <div class='col-11 row border p-0' style='margin-bottom: 1rem;'>
                             <div class='col-12 margin-bottom head-dat' style='margin-bottom: 0.5rem; padding-bottom: 0.5rem'>
                               <div class='col-11'>
@@ -1426,9 +1497,9 @@ if (empty($_REQUEST["ID_Persona"])) {
                             <div class='col-3 text-secondary '>
                               <span class='border-bottom'>Observación</span>
                             </div>
-                            <div class='col-9 data-form'>" . $Persona->getObservaciones() . "</div>
+                            <div class='col-9 data-form' >" . $Persona->getObservaciones() . "</div>
                          </div>";
-              $tablePrint .= "<tr><td>Observación</td><td>" . $Persona->getObservaciones() ."</td></tr>";
+              $tablePrint .= "<tr><td>Observación</td><td data-toggle='modal' data-target='#mdal_ct'>" . $Persona->getObservaciones() ."</td></tr>";
               $jsonTable["det_persona"]["observacion"] = $Persona->getObservaciones();
               $head_det_persona[] = "observacion";
               $Table .= "<div class='col-12 row div-space-text'>
@@ -1491,7 +1562,7 @@ if (empty($_REQUEST["ID_Persona"])) {
                                 <th rowspan=2 class='trDomicilio'>Domicilio</th>
                                 <th rowspan=2 class='trBarrio'>Barrio</th>
                                 <th rowspan=2 class='trLocalidad'>Localidad</th>
-                                <th rowspan=2 class='trObservaciones'>Observaciones</th>
+                                <th rowspan=2 class='trObservaciones' data-toggle='modal' data-target='#mdal_ct'>Observaciones</th>
                                 <th rowspan=2 class='trResponsable'>Responsable</th>
                                 <th rowspan=2 class='trCentrosSalud'>Centro de salud</th>
                                 <th rowspan=2 class='trOtrasInstituciones'>Otras Instituciones</th>
@@ -1570,6 +1641,7 @@ if (empty($_REQUEST["ID_Persona"])) {
                               <thead>
                                 <tr rowspan='2' class='thead-dark'>
                                   <th rowspan='2' class='trFecha' style='min-width: 150px;'>Fecha</th>
+                                  <th rowspan='2' class='trIcon'></th>
                                   <th rowspan='2' class='trIcon'></th>
                                   <th rowspan='2' class='trPersona'>Persona</th>";
                 $TableMov .= $MotivosTh;
@@ -1894,9 +1966,9 @@ if (empty($_REQUEST["ID_Persona"])) {
                       $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 3"])) ? strlen($json_row["Motivo 3"]) : $json_row["height"];
                     }
 
-                    $TableMov .= "<tr class='trObservaciones'>
+                    $TableMov .= "<tr class='trObservaciones' data-id-mv = '". $DtoMovimiento->getID_Movimiento() . "'>
                                     <td style = 'width: 30%;'>Observaciones</td>
-                                    <td style = 'width: 70%;'>" . $DtoMovimiento->getObservaciones() . "</td>
+                                    <td style = 'width: 70%;' data-toggle='modal' data-target='#mdal_ct'>" . $DtoMovimiento->getObservaciones() . "</td>
                                   </tr>";
                     $TableMovPrint .= "<tr class='trObservaciones'>
                                         <td style = 'width: 30%;'>Observaciones</td>
@@ -1936,6 +2008,7 @@ if (empty($_REQUEST["ID_Persona"])) {
                     $TableMov .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td>";
                     $TableMovPrint .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td>";
                     $json_row["Fecha"] = $DtoMovimiento->getFecha();
+                    $TableMov .= "<td style = 'width: auto;' onclick='sendToPersonaListado(" . $id_persona . ")'><div class='tdIcon' style='background: #212529; border-radius:50%; border-color:#37f337; border-width:6px;width:17px; height:17px; margin-top: 9%;border-style: ridge;'></td>";
                     $TableMov .= "<td style = 'width: auto;' onclick='sendToRepListado(" . $id_persona . ")'><div class='tdIcon' style='background: #212529; border-radius:50%; border-color:yellow; border-width:6px;width:17px; height:17px; margin-top: 9%;border-style: ridge;'></td>";
                     $TableMov .= "<td class='trPersona' style = 'width: auto;'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $id_persona . "\",\"Ventana" . $id_persona . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" . $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "</a></td>";
                     $TableMovPrint .= "<td class='trPersona' style = 'width: auto;'>".
@@ -2016,8 +2089,8 @@ if (empty($_REQUEST["ID_Persona"])) {
                     $TableMov .= "<td class='trLocalidad' style = 'width: auto;'>" . $Localidad."</td>";
                     $TableMovPrint .= "<td class='trLocalidad' style = 'width: auto;'>" . $Localidad."</td>";
                     $json_row["Localidad"] = $Localidad;
-                    $TableMov .= "<td class='trObservaciones' style = 'width: auto;'>
-                                    <div style='max-height: 9em; overflow: hidden'>" . $DtoMovimiento->getObservaciones() . "</div>
+                    $TableMov .= "<td class='trObservaciones' style = 'width: auto;' data-toggle='modal' data-target='#mdal_ct' data-id-mv = '". $DtoMovimiento->getID_Movimiento() . "'>
+                                    <div style='max-height: 9em; overflow: hidden' >" . $DtoMovimiento->getObservaciones() . "</div>
                                   </td>";
                     $TableMovPrint .= "<td class='trObservaciones' style = 'width: auto;'>" . $DtoMovimiento->getObservaciones() . "</td>";
                     $json_row["Observaciones"] = $DtoMovimiento->getObservaciones();
@@ -2275,9 +2348,9 @@ if (empty($_REQUEST["ID_Persona"])) {
                                   </td></tr>";
                   $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
                   $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 3"])) ? strlen($json_row["Motivo 3"]) : $json_row["height"];
-                  $TableMov .= "<tr class='trObservaciones'>
+                  $TableMov .= "<tr class='trObservaciones'  data-toggle='modal' data-target='#mdal_ct' data-id-mv = '". $DtoMovimiento->getID_Movimiento() . "'>
                                   <td style = 'width: 30%;'>Observaciones</td>
-                                  <td style = 'width: 70%;'>" . $DtoMovimiento->getObservaciones() . "</td>
+                                  <td style = 'width: 70%;' >" . $DtoMovimiento->getObservaciones() . "</td>
                                 </tr>";
                   $json_row["Observaciones"] = $DtoMovimiento->getObservaciones();
                   $TableMov .= "<tr class='trResponsable'>
@@ -2325,6 +2398,7 @@ if (empty($_REQUEST["ID_Persona"])) {
                   $TableMov .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td></tr>";
                   $TableMovPrint .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td></tr>";
                   $json_row["Fecha"] = $DtoMovimiento->getFecha();
+                  $TableMov .= "<td style = 'width: auto;' onclick='sendToPersonaListado(" . $id_persona . ")'><div class='tdIcon' style='background: #212529; border-radius:50%; border-color:#37f337; border-width:6px;width:17px; height:17px; margin-top: 9%; border-style: ridge;'></div></td>";
                   $TableMov .= "<td style = 'width: auto;' onclick='sendToRepListado(" . $id_persona . ")'><div class='tdIcon' style='background: #212529; border-radius:50%; border-color:yellow; border-width:6px;width:17px; height:17px; margin-top: 9%; border-style: ridge;'></div></td>";
                   $TableMov .= "<td class='trPersona' style = 'width: auto;'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $RetTodos["id_persona"]."\",\"Ventana" . $RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" . $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "</a></td></tr>";
                   $TableMovPrint .= "<td class='trPersona' style = 'width: auto;'>".
@@ -2383,7 +2457,7 @@ if (empty($_REQUEST["ID_Persona"])) {
                   $TableMov .= "<td class='trLocalidad' style = 'width: auto;'>" . $Localidad."</td>";
                   $TableMovPrint .= "<td class='trLocalidad' style = 'width: auto;'>" . $Localidad."</td>";
                   $json_row["Localidad"] = $Localidad;
-                  $TableMov .= "<td class='trObservaciones' style = 'width: auto;'>" . $DtoMovimiento->getObservaciones() . "</td>";
+                  $TableMov .= "<td class='trObservaciones' style = 'width: auto;'  data-toggle='modal' data-target='#mdal_ct'>" . $DtoMovimiento->getObservaciones() . "</td>";
                   $TableMovPrint .= "<td class='trObservaciones' style = 'width: auto;'>" . $DtoMovimiento->getObservaciones() . "</td>";
                   $json_row["observacion"] = $DtoMovimiento->getObservaciones();
                   $TableMov .= "<td class='trResponsable' style = 'width: auto;'>" . implode("-", $responsables) . "</td>";
@@ -2518,6 +2592,26 @@ if (empty($_REQUEST["ID_Persona"])) {
       <div class="modal-footer modal-footer-flex-center">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
         <button type="button" class="btn btn-primary" onClick="configResultados()" data-dismiss="modal">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="mdal_ct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="class_modal-dialog modal-dialog" role="document"  id="id_modal_ct">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel" style="margin-left: auto;">observaciones</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="element-ct"></div>
+      </div>
+      <div class="modal-footer modal-footer-flex-center">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Guardar</button>
+        <button type="button" class="btn btn-secondary" onClick="setMvimient()" data-dismiss="modal">Cancelar</button>
       </div>
     </div>
   </div>
@@ -3261,4 +3355,5 @@ if (empty($_REQUEST["ID_Persona"])) {
     }
 </script> -->
 </body>
+<script src="./dist/editor.js"></script>
 </html>

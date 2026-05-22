@@ -162,7 +162,7 @@ class Accion
 												ID_TipoAccion) 
 									values(" . ((!$this->accountid) ? "null" : $this->accountid) . ",'" 
 											. $this->Fecha . "','" 
-											. $this->Detalles . "',
+											. mysqli_real_escape_string( $con->Conexion, $this->Detalles) . "',
 												1)";
 		if (!$RetAccion = mysqli_query($con->Conexion,$consulta_accion)) {
 			throw new Exception("Error al intentar registrar Accion. Consulta: ". $consulta_accion, 3);

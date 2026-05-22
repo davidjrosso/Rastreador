@@ -72,7 +72,8 @@ let editor = ClassicEditor.create( {
       const converter = new QuillDeltaToHtmlConverter(JSON.parse(delt), {});
       v.setData(converter.convert());
       */
-      v.setData(delt);
+      
+      if (delt) v.setData(delt);
 
       v.model.document.on("change:data", function (e) {
 
@@ -82,15 +83,26 @@ let editor = ClassicEditor.create( {
       });
 
       $("#mdal_ct").on("show.bs.modal", function (event) {
-          // Button that triggered the modal
-          const button = event.relatedTarget;
-          // Extract info from data-bs-* attributes
-          const recipient = button.getAttribute('data-bs-whatever');
-          // Update the modal's content
-          const modalTitle = myModal.querySelector('.modal-title');
-          modalTitle.textContent = 'Message to ' + recipient;
-          v.setData(delt);
+          let button = event.relatedTarget;
+          let recipient = button.getAttribute('data-id-mv');
+          let obj = button.childNodes[1];
+          if (obj && obj.innerHTML) v.setData(obj.innerHTML);
+          $("element-ct").prop("id_mv", recipient);
         });
+        
+        $("#bt-guardar").on("click", function (e) {
+
+            let data = v.getData();
+            let query = "data=" . data;
+            let request = $.ajax({
+                type: "POST",
+                cache: false,
+                url: "/Controladores/modificacionmovimientoobservacion.php",
+                async: true,
+                data: data,
+                processData: false,
+            });          
+        })
 
     });
   });
