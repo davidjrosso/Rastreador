@@ -346,6 +346,13 @@ try {
                         continue;
                     }
 
+                    if ($header_mov_general[$h] == "Observaciones") {
+                        $sd = $array_filas[$i][$header_mov_general[$h]];
+                        $mr = preg_replace('~data-list-item-id=\\"[aA-zZ0-9]*\\"~', "", $sd);
+                        $row .= $array_filas[$i][$header_mov_general[$h]];
+                        continue;
+                    }
+
                     $row .= substr(
                             ucfirst(strtolower($array_filas[$i][$header_mov_general[$h]])),
                             0,
@@ -595,13 +602,15 @@ try {
     $output = $dompdf->output();
     */
 
+
     $mpdf = new \Mpdf\Mpdf([
         'mode' => 'utf-8',
         'format' => 'A4-L', // 'A4-L' es para A4 apaisado (Landscape)
         'orientation' => 'L', // Alternativa directa
         'tempDir' => sys_get_temp_dir()
     ]);
-    $mpdf->WriteHTML(mb_convert_encoding($table, 'HTML-ENTITIES', 'UTF-8'));
+    $mt = mb_convert_encoding($table, 'HTML-ENTITIES', 'UTF-8');
+    $mpdf->WriteHTML($mt);
     $output = $mpdf->OutputBinaryData();
     $data = base64_encode($output);
     header('Content-Type: application/pdf');
