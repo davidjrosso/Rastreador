@@ -101,8 +101,8 @@ class Movimiento implements JsonSerializable
 				$this->ID_Responsable_2 = (($mov_id_resp_2) ? $mov_id_resp_2  : null);
 				$this->ID_Responsable_3 = (($mov_id_resp_3) ? $mov_id_resp_3 : null);
 				$this->ID_Responsable_4 = (($mov_id_resp_4) ? $mov_id_resp_4 : null);
-				$this->mov_id_centro = (($mov_id_centro) ? $mov_id_centro : null);
-				$this->mov_id_otrainstitucion = (($mov_id_otrainstitucion) ?  $mov_id_otrainstitucion : null);
+				$this->id_centro = (($mov_id_centro) ? $mov_id_centro : null);
+				$this->id_otrainstitucion = (($mov_id_otrainstitucion) ?  $mov_id_otrainstitucion : null);
 				$this->Fecha_Creacion = (($mov_fecha_creacion) ? $mov_fecha_creacion : null);
 				$this->ID_Persona = (($mov_id_persona) ? $mov_id_persona : null);
 				$this->estado = (($mov_estado) ? $mov_estado : null);
@@ -309,7 +309,7 @@ class Movimiento implements JsonSerializable
 
 	public function udpate(){
 		$fecha = $this->getFecha_Creacion();
-		$fecha_format = (($fecha) ? $fecha->format("Y-m-d") : "null");
+		$fecha_format = ((is_a($fecha,  DateTime::class)) ? $fecha->format("Y-m-d") : $fecha);
 		$consulta = "update movimiento
 					 set fecha = " . (($this->getFecha()) ? "'" . $this->getFecha() . "'" : "null") .",
 					 	 fecha_creacion = " . (($fecha_format) ? "'" . $fecha_format . "'" : "null") . ",
