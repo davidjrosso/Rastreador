@@ -77,6 +77,7 @@ try {
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_FAILONERROR, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (X11; Linux x86_64)");
         $response = curl_exec($ch);
         $error = curl_error($ch);
         $arr_obj_json = json_decode($response);
