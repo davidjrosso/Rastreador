@@ -85,7 +85,7 @@ let editor = ClassicEditor.create( {
       $("#mdal_ct").on("show.bs.modal", function (event) {
           let tr = event.relatedTarget;
           let id = tr.getAttribute('data-id-mv');
-          let div = button.childNodes[1];
+          let div = tr.childNodes[1];
           if (div) v.setData(div.innerHTML);
           $("#mdal_ct").prop("id_mv", id);
         });
