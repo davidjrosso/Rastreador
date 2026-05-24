@@ -654,9 +654,13 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
               }
               $Mostrar = $_REQUEST["Mostrar"];
               $ID_OtraInstitucion = $_REQUEST["ID_OtraInstitucion"];
-              $ID_Responsable = array_filter($_REQUEST["ID_Responsable"], function ($e, $val) {
-                return !empty($e);
-              }, ARRAY_FILTER_USE_BOTH);
+              $ID_Responsable = [];
+
+              if (isset($_REQUEST["ID_Responsable"])) {
+                  $ID_Responsable = array_filter($_REQUEST["ID_Responsable"], function ($e, $val) {
+                    return !empty($e);
+                  }, ARRAY_FILTER_USE_BOTH);
+              }
 
               $motivos = array_filter($MotivosOpciones, 
                                   function ($x) {
