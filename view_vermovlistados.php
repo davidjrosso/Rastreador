@@ -2610,7 +2610,8 @@ if (empty($_REQUEST["ID_Persona"])) {
         <div id="element-ct"></div>
       </div>
       <div class="modal-footer modal-footer-flex-center">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Guardar</button>
+        <button id="bt-guardar" type="button" class="btn btn-primary" >Guardar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-secondary" onClick="setMvimient()" data-dismiss="modal">Cancelar</button>
       </div>
     </div>

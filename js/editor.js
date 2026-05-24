@@ -83,24 +83,27 @@ let editor = ClassicEditor.create( {
       });
 
       $("#mdal_ct").on("show.bs.modal", function (event) {
-          let button = event.relatedTarget;
-          let recipient = button.getAttribute('data-id-mv');
-          let obj = button.childNodes[1];
-          if (obj && obj.innerHTML) v.setData(obj.innerHTML);
-          $("element-ct").prop("id_mv", recipient);
+          let tr = event.relatedTarget;
+          let id = tr.getAttribute('data-id-mv');
+          let div = button.childNodes[1];
+          if (div) v.setData(div.innerHTML);
+          $("#mdal_ct").prop("id_mv", id);
         });
         
         $("#bt-guardar").on("click", function (e) {
-
-            let data = v.getData();
-            let query = "data=" . data;
+            let id = $("#mdal_ct").prop("id_mv");            
+            let data = {data : v.getData(), ID : id} ;
             let request = $.ajax({
                 type: "POST",
                 cache: false,
-                url: "/Controladores/modificacionmovimientoobservacion.php",
+                url: "/Controladores/modificarmovimientoobservacion.php",
                 async: true,
-                data: data,
+                data: JSON.stringify(data),
+                contentType: "application/json",
                 processData: false,
+                success: function (e) {
+                  $("td[data-id-mv=" + id + "]").children()[0].innerHTML = v.getData();
+                }
             });          
         })
 
