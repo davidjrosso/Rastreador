@@ -48,10 +48,13 @@ $_SESSION["reporte_grafico"] = false;
 $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
 $filtro_persona = $_REQUEST["familia-check"] ?? null;
 $ID_Persona = $_REQUEST["ID_Persona"];
+$ID_CentroSalud = $_REQUEST["ID_CentroSalud"] ?? null;
 
 if (empty($_REQUEST["ID_Persona"])) {
   $_SESSION["retorno"] = $_REQUEST;
 }
+
+$ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
 
 ?>
 <!DOCTYPE html>
@@ -168,7 +171,12 @@ if (empty($_REQUEST["ID_Persona"])) {
               });
 
               $("#btn-new-persona").on("click", function (e) {
-                window.location.href = "view_newmovimientos.php?ID=" + <?= $ID_Persona;?>;
+                let url = "view_newmovimientos.php?";
+                if ("<?= $ID_Persona;?>") url += "ID=" + "<?= $ID_Persona;?>";
+                if ("<?= $ID_CentroSalud;?>") url += "<?= (isset($ID_Persona)) ? "&" : "";?>ID_Centro=<?= $ID_CentroSalud;?>";
+ 
+                if ("<?= $ID_OtraInstitucion?>") url += "<?= (isset($ID_OtraInstitucion) ? "&" : "")?>ID_institucion=<?= $ID_OtraInstitucion?>";
+                window.location.href = url;
               });
 
               $("#boton-fullscreen").on("click", function (e) {
@@ -645,7 +653,6 @@ if (empty($_REQUEST["ID_Persona"])) {
                 $Trabajo = null;
               }
               $Mostrar = $_REQUEST["Mostrar"];
-              $ID_CentroSalud = $_REQUEST["ID_CentroSalud"];
               $ID_OtraInstitucion = $_REQUEST["ID_OtraInstitucion"];
               $ID_Responsable = array_filter($_REQUEST["ID_Responsable"], function ($e, $val) {
                 return !empty($e);

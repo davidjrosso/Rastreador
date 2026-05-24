@@ -502,8 +502,9 @@ if(!isset($_SESSION["Usuario"])){
               <div class = "col-md-10">
                 <?php  
                 $Element = new Elements();
-                if (!empty($_SESSION["UltCentro"])) {
-                  $xID_Centro = $_SESSION["UltCentro"];
+                $xID_Centro = $_SESSION["UltCentro"] ?? ($_REQUEST["ID_Centro"] ?? null);
+
+                if ($xID_Centro ) {
                   echo $Element->CBModCentros($xID_Centro);                  
                 } else {
                   echo $Element->CBCentros();
@@ -516,13 +517,13 @@ if(!isset($_SESSION["Usuario"])){
               <div class = "col-md-10">
                 <?php  
                 $Element = new Elements();
-                /*if(isset($_SESSION["UltOtraInstitucion"])){
-                  $xID_OtraInstitucion = $_SESSION["UltOtraInstitucion"];
+                if (isset($_REQUEST["ID_institucion"])) {
+                  $xID_OtraInstitucion = $_REQUEST["ID_institucion"];
                   echo $Element->CBModOtrasInstituciones($xID_OtraInstitucion);                  
                 }else{
                   echo $Element->CBOtrasInstituciones();
-                }*/
-                echo $Element->CBOtrasInstituciones();
+                }
+
                 ?>
               </div>
             </div>
