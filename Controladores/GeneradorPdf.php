@@ -265,7 +265,9 @@ try {
         for ($i = 0; $i < $count; $i++) {
             $row .= "<tr>";
             for ($h = 0; $h < count($header_mov_general); $h++) {
-                if (isset($array_filas[$i][$header_mov_general[$h]])) {
+                $rev = isset($header_mov_general[$h]) && $header_mov_general[$h] == "Motivo";
+                $rev = $rev && isset($array_filas[$i]["Motivo 1"]);
+                if (isset($array_filas[$i][$header_mov_general[$h]]) || $rev) {
                     $row .= "<td style=" . $hight_text . ">";
                     if ($header_mov_general[$h] == "Domicilio") {
                         $list = preg_split("~[ ]+~", ucwords(strtolower($array_filas[$i][$header_mov_general[$h]])));
@@ -353,12 +355,25 @@ try {
                         continue;
                     }
 
+                    if ($rev) {
                     $row .= substr(
-                            ucfirst(strtolower($array_filas[$i][$header_mov_general[$h]])),
+                            ucfirst(strtolower($array_filas[$i]["Motivo 1"])),
                             0,
                             70
                             );
                     $row .= "<br>";
+
+                    } else {
+                        $row .= substr(
+                                ucfirst(strtolower($array_filas[$i][$header_mov_general[$h]])),
+                                0,
+                                70
+                                );
+                        $row .= "<br>";
+                            
+                    }
+
+
                     /*
                     if ($header_mov_general[$h] != "Motivo 1"
                         && $header_mov_general[$h] != "Motivo 2"
