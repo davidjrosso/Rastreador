@@ -47,9 +47,9 @@ let editor = ClassicEditor.create( {
   //let quill = new Quill('#editor');
 
   $(document).ready(function (e, d) {
-    $(".ck.ck-reset.ck-editor.ck-rounded-corners").on("keyup", function (e) {
+    $(".ck.ck-reset.ck-editor.ck-rounded-corners").on("keydown", function (e) {
       e.preventDefault();
-      e.stop()
+      e.stopPropagation()
       if (e.key === 'Enter' && e.shiftKey) {
         editor.then(function (v) {
         v.execute('shiftEnter');
