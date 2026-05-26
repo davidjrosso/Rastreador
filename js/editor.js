@@ -1,4 +1,4 @@
-import { ClassicEditor, Essentials, Bold, Italic, Font, Paragraph, Alignment, Image, Heading, Link, List, MediaEmbed, ListEditing, FindAndReplace, PasteFromOffice, PageBreak, AutoImage, Fullscreen, Table, Style, LinkImage, Indent, ImageCaption, BlockQuote, HorizontalLine, Typing, ShiftEnter, Enter, WordCount, Title} from 'ckeditor5';
+import { ClassicEditor, Essentials, Bold, Italic, Font, FontSize, Paragraph, Alignment, Image, Heading, Link, List, MediaEmbed, ListEditing, FindAndReplace, PasteFromOffice, PageBreak, AutoImage, Fullscreen, Table, Style, LinkImage, Indent, ImageCaption, BlockQuote, HorizontalLine, Typing, ShiftEnter, Enter, WordCount, Title} from 'ckeditor5';
 import { Mermaid } from '@ckeditor/ckeditor5-mermaid';
 import 'ckeditor5/ckeditor5.css';
 import '@ckeditor/ckeditor5-mermaid/index.css';
@@ -13,7 +13,7 @@ let editor = ClassicEditor.create( {
 		plugins: [ Essentials, Bold, Italic, Font, Paragraph, Alignment, Image, Heading, Mermaid, MediaEmbed, Link, List, ListEditing, FindAndReplace, Fullscreen, AutoImage, PageBreak, PasteFromOffice, Table, Style, LinkImage, Indent, ImageCaption, BlockQuote, HorizontalLine, Typing, ShiftEnter, Enter, WordCount],
 		toolbar: [
     'undo', 'redo', '|', 'bold', 'italic', '|', 'alignment', 'Image', 'Mermaid', '|', 'PageBreak', '|',
-     'fontFamily', 'fontColor', 'fontBackgroundColor', '|', '-', 'FindAndReplace', 'Fullscreen', 
+     'fontFamily', 'fontColor', 'fontBackgroundColor', 'fontsize', '|', '-', 'FindAndReplace', 'Fullscreen', 
     'WordCount', 'BlockQuote', 'Typing', 'ShiftEnter', 'LinkImage',  'Enter', 'HorizontalLine', 'ImageCaption', 
     'Indent', 'Style', '|', 'AutoImage', 'PasteFromOffice', 'numberedList', 'bulletedList', '|', 'heading', '|', 
     'link', 'List', 'ListEditing', 'Table', 'uploadImage',
@@ -49,15 +49,14 @@ let editor = ClassicEditor.create( {
   $(document).ready(function (e, d) {
     $(".ck.ck-reset.ck-editor.ck-rounded-corners").on("keyup", function (e) {
       e.preventDefault();
+      e.stop()
       if (e.key === 'Enter' && e.shiftKey) {
         editor.then(function (v) {
         v.execute('shiftEnter');
-        v.stop();
       });
     } else if (e.key === 'Enter' && !e.shiftKey) {
         editor.then(function (v) {
           v.execute('enter');
-          v.stop();
       });      
     }
     });
