@@ -48,13 +48,15 @@ let editor = ClassicEditor.create( {
 
   $(document).ready(function (e, d) {
     $(".ck.ck-reset.ck-editor.ck-rounded-corners").on("keydown", function (e) {
-      e.preventDefault();
-      e.stopPropagation()
       if (e.key === 'Enter' && e.shiftKey) {
+        e.preventDefault();
+        e.stopPropagation();
         editor.then(function (v) {
         v.execute('shiftEnter');
       });
     } else if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        e.stopPropagation();
         editor.then(function (v) {
           v.execute('enter');
       });      
