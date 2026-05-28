@@ -2943,7 +2943,8 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
                                   $jsonTable[$clave]["$Mes/$Anio"][] = [
                                                                         $RetTodos["Forma_Categoria"],
                                                                         $RetTodos["codigo"],
-                                                                        $RetTodos["color"]
+                                                                        $RetTodos["color"],
+                                                                        $RetTodos["id_movimiento"]
                                                                         ];
                                   $forma_motivo = $RetTodos["Forma_Categoria"];
                                   if (strlen($forma_motivo) > 1) {
@@ -2953,7 +2954,8 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
                                   $jsonTable[$clave]["lista_formas_categorias"][$forma_motivo] = [
                                                                                                   $RetTodos["color"],
                                                                                                   $RetTodos["tipo_categoria"],
-                                                                                                  $RetTodos["fecha"]
+                                                                                                  $RetTodos["fecha"],
+                                                                                                  $RetTodos["id_movimiento"]
                                                                                                   ];
                                   $lista_animacion[] = [
                                     $RetTodos["id_persona"],

@@ -143,7 +143,8 @@ export function carga(map, listReferencias) {
                     offsetX,
                     elemento,
                     categoria,
-                    lista_formas[categoria][0]
+                    lista_formas[categoria][0],
+                    lista_formas[categoria][3]
         );
         row["id_persona"] = elemento.id_persona;
         row["positionFormas"] = [positionFormas[0] + offsetY,
@@ -159,6 +160,7 @@ export function carga(map, listReferencias) {
   });
   map.layerAddToMapp();
   map.viewPersonaGeoreferenciada();
+  map.viewMovimientoGeoreferenciada();
 }
 
 function ordenCategoria(categoriaA, categoriaB) {

@@ -167,7 +167,7 @@ export class MapaOl {
             type: "GET",
             cache: false,
             url: "https://nominatim.openstreetmap.org/reverse?lat=" + lonLat[1] + "&lon=" + lonLat[0] + "&format=jsonv2",
-            async: true,
+            async: true,            
             processData: false,
             contentType: false,
             success: succesSearchStreetNumber,
@@ -194,6 +194,24 @@ export class MapaOl {
           windowsReference = window.open(
                                          "view_modpersonas.php?ID=" + feature.get('description'),
                                          "Ventana" + feature.get('description'), 
+                                         "width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no"
+                                        );
+        }
+      });
+    }
+
+    viewMovimientoGeoreferenciada() {
+      this.#mapa.on('contextmenu', function (evt) {
+        let windowsReference = null;
+        evt.preventDefault();
+        const feature = this.forEachFeatureAtPixel(evt.pixel, function (feature) {
+          return feature;
+        });
+        if (feature) {
+          const coordinates = feature.getGeometry().getCoordinates();
+          windowsReference = window.open(
+                                         "view_modmovimientos.php?ID=" + feature.get('id_movimiento'),
+                                         "Ventana" + feature.get('id_movimiento'), 
                                          "width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no"
                                         );
         }
@@ -265,7 +283,8 @@ export class MapaOl {
                   desplazamientoX,
                   elemento,
                   simbolo,
-                  color
+                  color,
+                  movimiento
     ) {
       let pos = [parseFloat(lon), parseFloat(lat)];
       pos = add(pos, [desplazamientoY, desplazamientoX]);
@@ -276,6 +295,7 @@ export class MapaOl {
       let textLabel = new Feature({
         geometry: point,
         description: elemento.id_persona,
+        id_movimiento: movimiento,
         tipo: "motivo"
       });
 
