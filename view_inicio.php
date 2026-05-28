@@ -638,7 +638,19 @@ $Con->CloseConexion();
       <div class="col col-display-none"></div>
       <div class="col-11 Titulo">
         <br>
-        <p style="font-family: times; font-weight: bold;">RASTREADOR <br><i>GRÁFICO DE CO-EVOLUCIÓN PARA LA EVALUACIÓN COMUNITARIA DE COBERTURA</i><br> Sistema Orientado a la Georeferenciación</p>
+        <p style="font-family: times; font-weight: bold; margin-bottom: 0px;">
+            <span style="font-size: 2.3rem">CFd+R</span>
+            <br>
+        </p>
+        <p style="font-family: times; font-weight: bold; line-height: normal;">
+            <span style="font-style: italic;">Carpeta Familiar digital </span>
+            <br>
+            <span style="font-size: 1.6rem;"> + </span>
+            <br>
+            <span>RASTREADOR</span> 
+            </i>
+            <br>
+        </p>
       </div>
       <div class="col col-display-none"></div>
     </div>
