@@ -822,12 +822,10 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
                                   WHERE estado = 1 ";
 
             if ($movimiento_inicial || $movimiento_fin) {
-              if (!$movimiento_inicial && !$movimiento_fin) {
-                $movimiento_query .=  "AND fecha between '$Fecha_Inicio' and '$Fecha_Fin'";
-              } else {
                 if (!$movimiento_inicial) $movimiento_query .= "AND fecha  >= '$Fecha_Inicio'";
                 if (!$movimiento_fin) $movimiento_query .= "AND fecha  <= '$Fecha_Fin'";
-              }
+            } else if (!$movimiento_inicial && !$movimiento_fin) {
+                $movimiento_query .=  "AND fecha between '$Fecha_Inicio' and '$Fecha_Fin'";
             }
 
             if ($Edad_Desde !== null && $Edad_Desde !== "" && $Edad_Hasta !== null && $Edad_Hasta !== "") {

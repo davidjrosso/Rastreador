@@ -1815,12 +1815,10 @@ $movimiento_fin = (!empty($_REQUEST["fin-movimiento-check"])) ? true : false;
                                   WHERE estado = 1 ";
 
             if ($movimiento_inicial || $movimiento_fin) {
-              if (!$movimiento_inicial && !$movimiento_fin) {
-                $movimiento_query .=  "AND fecha between '$Fecha_Inicio' and '$Fecha_Fin'";
-              } else {
                 if (!$movimiento_inicial) $movimiento_query .= "AND fecha  >= '$Fecha_Inicio'";
                 if (!$movimiento_fin) $movimiento_query .= "AND fecha  <= '$Fecha_Fin'";
-              }
+            } else if (!$movimiento_inicial && !$movimiento_fin) {
+                $movimiento_query .=  "AND fecha between '$Fecha_Inicio' and '$Fecha_Fin'";
             }
 
 
