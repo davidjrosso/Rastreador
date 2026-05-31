@@ -38,13 +38,15 @@ let checkInputHasta = false;
 
 $(function (e) {
     $("#fecha-desde-inicial").on("click", function (e) {
+        let date = new Date();
         if (!checkInputDesde) {
             $("#Fecha_Desde").val("");
             $("#inicial-movimiento-check").prop("value", "1");
             checkInputDesde = true;            
         } else {
-            $("#Fecha_Desde").val(new Date());
-            $('input[name="Fecha_Desde"]').datepicker("setDate");
+            date.setFullYear(date.getFullYear() - 1);
+            $("#Fecha_Desde").val(date);
+            $('input[name="Fecha_Desde"]').datepicker("setDate", '-1y');
             $("#inicial-movimiento-check").prop("value", null);
             checkInputDesde = false;
         }
@@ -55,7 +57,7 @@ $(function (e) {
             $("#fin-movimiento-check").prop("value", "1");            
             checkInputHasta = true;
         } else {
-             $("#Fecha_Hasta").val(new Date());
+             $("#Fecha_Hasta").val(date);
             $('input[name="Fecha_Hasta"]').datepicker("setDate");
             $("#fin-movimiento-check").prop("value", null);            
 
