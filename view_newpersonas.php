@@ -244,15 +244,15 @@
     <div class="row">
       <div class="col"></div>
       <div class="col-10">
-          <div class="row">
-              <center><button class = "btn btn-secondary btn-sm" onClick="location.href ='view_newmovimientos.php'">Agregar Nuevo Movimiento</button></center>
+          <div class="row" style="justify-content: center;">
+              <button class = "btn btn-secondary btn-sm" onClick="location.href ='view_newmovimientos.php'">Agregar Nuevo Movimiento</button>
           </div>
       </div>
       <div class="col"></div>
     </div>
     <br>
-     <div class = "row">
-      <div class = "col-10">
+     <div class = "row" style="justify-content: center;">
+      <div class = "col-9">
           <!-- Carga -->
           <p class = "Titulos">Cargar Nueva Persona</p>
           <form method = "post" id="form-persona" action = "Controladores/InsertPersona.php">
