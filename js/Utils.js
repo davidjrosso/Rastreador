@@ -32,6 +32,37 @@ function ocultar() {
     $("#BarraDeNavHTabla").attr("style", "width: 95%; margin-left: 2%;");
 }
 */
+let checkInputDesde = false; 
+let checkInputHasta = false; 
+
+
+$(function (e) {
+    $("#fecha-desde-inicial").on("click", function (e) {
+        if (!checkInputDesde) {
+            $("#Fecha_Desde").val("");
+            $("#inicial-movimiento-check").prop("value", "1");
+            checkInputDesde = true;            
+        } else {
+            $("#Fecha_Desde").val(new Date());
+            $('input[name="Fecha_Desde"]').datepicker("setDate");
+            $("#inicial-movimiento-check").prop("value", null);
+            checkInputDesde = false;
+        }
+    });
+   $("#fecha-hasta-inicial").on("click", function (e) {
+        if (!checkInputHasta) {
+            $("#Fecha_Hasta").val("");
+            $("#fin-movimiento-check").prop("value", "1");            
+            checkInputHasta = true;
+        } else {
+             $("#Fecha_Hasta").val(new Date());
+            $('input[name="Fecha_Hasta"]').datepicker("setDate");
+            $("#fin-movimiento-check").prop("value", null);            
+
+            checkInputHasta = false;
+        }
+    });
+});
 
 function mostrar() {
 

@@ -774,13 +774,23 @@ $TipoUsuario = $account->get_id_tipo_usuario();
                         <div class="form-group row">
                             <label for="Fecha_Desde" class="col-md-2 col-form-label LblForm">Fecha desde *: </label>
                             <div class="col-md-10">
-                                <input type="text" name="Fecha_Desde" id = "Fecha_Desde" class="form-control" autocomplete="off" value = "<?php echo implode("/", array_reverse(explode("-",date('Y-m-d',strtotime(date('Y-m-d')."- 1 year"))))); ?>">
+                              <div class="input-group mb-3">
+                                <div class="input-group-append" id="fecha-desde-inicial">
+                                  <span class="input-group-text">&#8734;</span>
+                                </div>
+                                <input type="text" name="Fecha_Desde" id = "Fecha_Desde" class="form-control" autocomplete="off" value = "<?= (isset($datosNav["Fecha_Desde"])) ? $datosNav["Fecha_Desde"] : implode("/", array_reverse(explode("-",date('Y-m-d',strtotime(date('Y-m-d')."- 1 year"))))) ?>">
+                              </div>
                             </div>
                         </div> 
                         <div class="form-group row">
                             <label for="Fecha_Hasta" class="col-md-2 col-form-label LblForm">Fecha hasta *: </label>
                             <div class="col-md-10">
-                                <input type="text" name="Fecha_Hasta" id = "Fecha_Hasta" class="form-control" autocomplete="off" value = "<?php echo implode("/", array_reverse(explode("-",date('Y-m-d')))); ?>">
+                              <div class="input-group mb-3">
+                                <div class="input-group-append" id="fecha-hasta-inicial">
+                                  <span class="input-group-text">&#8734;</span>
+                                </div>
+                                <input type="text" name="Fecha_Hasta" id = "Fecha_Hasta" class="form-control" autocomplete="off" value = "<?= (isset($datosNav["Fecha_Hasta"])) ? $datosNav["Fecha_Hasta"] : implode("/", array_reverse(explode("-",date('Y-m-d')))) ?>">
+                              </div>
                             </div>
                         </div>
                         <div class="form-group row" style="margin-bottom: 0.6rem;">
@@ -999,6 +1009,8 @@ $TipoUsuario = $account->get_id_tipo_usuario();
                             <div class="offset-md-3 col-md-10" id = "InputsGenerales">
                                 <input type="hidden" name="ID_Motivo" id = "ID_Motivo" value = "0">
                                 <input type="hidden" name="ID_Categoria" id = "ID_Categoria" value = "0">
+                                <input type="hidden" name="inicial-movimiento-check" id = "inicial-movimiento-check" value = "">
+                                <input type="hidden" name="fin-movimiento-check" id = "fin-movimiento-check" value = "">
                                 <input type="hidden" name="Calle" id="Calle" value="0">
                                 <input type="hidden" name="width-display" id = "width-display" value = "0">
                                 <button type="submit" class="btn btn-outline-success">Aceptar</button>

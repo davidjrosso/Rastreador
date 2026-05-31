@@ -49,6 +49,9 @@ $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
 $filtro_persona = $_REQUEST["familia-check"] ?? null;
 $ID_Persona = $_REQUEST["ID_Persona"];
 $ID_CentroSalud = $_REQUEST["ID_CentroSalud"] ?? null;
+$movimiento_inicial = (!empty($_REQUEST["inicial-movimiento-check"])) ? true : false;
+
+$movimiento_fin = (!empty($_REQUEST["fin-movimiento-check"])) ? true : false;
 
 if (empty($_REQUEST["ID_Persona"])) {
   $_SESSION["retorno"] = $_REQUEST;
@@ -816,8 +819,16 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
                                         id_resp, id_resp_2, id_resp_3, id_resp_4, id_centro,
                                         id_otrainstitucion
                                   FROM movimiento 
-                                  WHERE fecha between '$Fecha_Inicio' and '$Fecha_Fin'
-                                    AND estado = 1";
+                                  WHERE estado = 1 ";
+
+            if ($movimiento_inicial || $movimiento_fin) {
+              if (!$movimiento_inicial && !$movimiento_fin) {
+                $movimiento_query .=  "AND fecha between '$Fecha_Inicio' and '$Fecha_Fin'";
+              } else {
+                if (!$movimiento_inicial) $movimiento_query .= "AND fecha  >= '$Fecha_Inicio'";
+                if (!$movimiento_fin) $movimiento_query .= "AND fecha  <= '$Fecha_Fin'";
+              }
+            }
 
             if ($Edad_Desde !== null && $Edad_Desde !== "" && $Edad_Hasta !== null && $Edad_Hasta !== "") {
               $persona_query .= " and edad >= $Edad_Desde and edad <= $Edad_Hasta";
@@ -1246,11 +1257,21 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
 
               $MensajeError = "No se pudieron consultar los Datos";
 
-              $Etiqueta_Fecha_Inicio = implode("-", array_reverse(explode("-",$Fecha_Inicio)));
-              $Etiqueta_Fecha_Fin = implode("-", array_reverse(explode("-",$Fecha_Fin)));
+              if (!$movimiento_inicial) {
+                $Etiqueta_Fecha_Inicio = implode("-", array_reverse(explode("-",$Fecha_Inicio)));                
+              } else {
+                //$Etiqueta_Fecha_Inicio = "<span style='font-size: 1.7rem'> &#8734; </span>";
+                $Etiqueta_Fecha_Inicio = "<span style='font-size: 1.3rem'> &#8734; </span>";
+              }
+              if (!$movimiento_fin) {
+                $Etiqueta_Fecha_Fin = implode("-", array_reverse(explode("-",$Fecha_Fin)));                
+              } else {
+                //$Etiqueta_Fecha_Inicio = "<span style='font-size: 1.7rem'> &#8734; </span>";
+                $Etiqueta_Fecha_Fin = "<span style='font-size: 1.3rem'> &#8734; </span>";
+              }
 
       	?>
-        <center><p class = "LblForm">ENTRE: <?php echo $Etiqueta_Fecha_Inicio." Y " . $Etiqueta_Fecha_Fin; ?></p></center>
+        <center><p class = "LblForm">ENTRE: <?php echo $Etiqueta_Fecha_Inicio." y " . $Etiqueta_Fecha_Fin; ?></p></center>
         </div>
         <div class="col-md-4" style="display: flex; row-gap:2px; column-gap: 4px; padding-left: 2px; padding-right: 2px; flex-wrap: wrap;">
             <button type = "button" class = "btn btn-secondary" data-toggle="modal" 
@@ -2962,7 +2983,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
         // <input type="checkbox" id="chkBarrio"> Barrio 
         // <input type="checkbox" id="chkLocalidad"> Localidad 
   objectJsonTabla = <?php echo (!empty($jsonTable)) ? json_encode($jsonTable) : "{}";?>;
-  fechaDesde = "<?php echo $Fecha_Inicio;?>";
+  fechaDesde = "<?php echo $Fecha_Inicio ?? null;?>";
   fechaHasta = "<?php echo $Fecha_Fin;?>";
   filtroSeleccionados = <?php echo json_encode($filtros); ?>;
   cantFiltros = <?php echo count($filtros); ?>;

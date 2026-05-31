@@ -73,6 +73,7 @@ $Element = new Elements();
                   clear: "Borrar",
                   weekStart: 1,
               });
+              date_input.on("change", $("#inicial-movimiento-check").val(""));
               var date_input2 =$('input[name="Fecha_Hasta"]'); //our date input has the name "date"
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
               date_input2.datepicker({
@@ -91,7 +92,7 @@ $Element = new Elements();
                   clear: "Borrar",
                   weekStart: 1,
               });
-
+              date_input2.on("change", $("#fin-movimiento-check").val(""))
               $("#inpMostrar").on("change", function (event){
                 controlMovimiento(this);
               });
@@ -615,13 +616,23 @@ $Element = new Elements();
               <div class="form-group row">
                   <label for="Fecha_Desde" class="col-md-2 col-form-label LblForm">Fecha desde *: </label>
                   <div class="col-md-10">
+                    <div class="input-group mb-3">
+                      <div class="input-group-append" id="fecha-desde-inicial">
+                        <span class="input-group-text">&#8734;</span>
+                      </div>
                       <input type="text" name="Fecha_Desde" id = "Fecha_Desde" class="form-control" autocomplete="off" value = "<?= (isset($datosNav["Fecha_Desde"])) ? $datosNav["Fecha_Desde"] : implode("/", array_reverse(explode("-",date('Y-m-d',strtotime(date('Y-m-d')."- 1 year"))))) ?>">
+                    </div>
                   </div>
               </div> 
               <div class="form-group row">
                   <label for="Fecha_Hasta" class="col-md-2 col-form-label LblForm">Fecha hasta *: </label>
                   <div class="col-md-10">
+                    <div class="input-group mb-3">
+                      <div class="input-group-append" id="fecha-hasta-inicial">
+                        <span class="input-group-text">&#8734;</span>
+                      </div>
                       <input type="text" name="Fecha_Hasta" id = "Fecha_Hasta" class="form-control" autocomplete="off" value = "<?= (isset($datosNav["Fecha_Hasta"])) ? $datosNav["Fecha_Hasta"] : implode("/", array_reverse(explode("-",date('Y-m-d')))) ?>">
+                    </div>
                   </div>
               </div>
               <div class="form-group row" style="margin-bottom: 0.6rem;">
@@ -840,6 +851,8 @@ $Element = new Elements();
                 <div class="offset-md-1 col-md-10" id = "InputsGenerales">
                   <input type="hidden" name="ID_Motivo" id = "ID_Motivo" value = "0">
                   <input type="hidden" name="ID_Categoria" id = "ID_Categoria" value = "0">
+                  <input type="hidden" name="inicial-movimiento-check" id = "inicial-movimiento-check" value = "">
+                  <input type="hidden" name="fin-movimiento-check" id = "fin-movimiento-check" value = "">
                   <input type="hidden" name="ID_Config" id="ID_Config" value="table">
                   <input type="hidden" name="Calle" id="Calle" value="0">
                   <button type="submit" style="display:block; margin: auto;" class="btn btn-outline-success">Aceptar</button>

@@ -54,7 +54,7 @@ if (empty($_REQUEST["ID_Persona"])) {
   $_SESSION["retorno"] = $_REQUEST;
 }
 
-if (isset($_REQUEST["Fecha_Desde"])) {
+if (!empty($_REQUEST["Fecha_Desde"])) {
   $lista_animacion = explode("/", $_REQUEST["Fecha_Desde"]);
   $Fecha_Inicio = implode("-", array_reverse($lista_animacion));
   $fecha_init_animacion = $Fecha_Inicio;
@@ -65,12 +65,16 @@ if (isset($_REQUEST["Fecha_Desde"])) {
   $Fecha_Inicio = null;
 }
 
-if (isset($_REQUEST["Fecha_Hasta"])) {
+if (!empty($_REQUEST["Fecha_Hasta"])) {
   $Fecha_Fin = implode("-", array_reverse(explode("/", $_REQUEST["Fecha_Hasta"])));
   $fecha_end_animacion = $Fecha_Fin;
 } else {
   $Fecha_Fin = null;
 }
+
+$movimiento_inicial = (!empty($_REQUEST["inicial-movimiento-check"])) ? true : false;
+
+$movimiento_fin = (!empty($_REQUEST["fin-movimiento-check"])) ? true : false;
 
 ?>
 <!DOCTYPE html>
@@ -1808,8 +1812,17 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
                                         id_resp, id_resp_2, id_resp_3, id_resp_4, id_centro,
                                         id_otrainstitucion
                                   FROM movimiento 
-                                  WHERE fecha between '$Fecha_Inicio' and '$Fecha_Fin'
-                                    AND estado = 1";
+                                  WHERE estado = 1 ";
+
+            if ($movimiento_inicial || $movimiento_fin) {
+              if (!$movimiento_inicial && !$movimiento_fin) {
+                $movimiento_query .=  "AND fecha between '$Fecha_Inicio' and '$Fecha_Fin'";
+              } else {
+                if (!$movimiento_inicial) $movimiento_query .= "AND fecha  >= '$Fecha_Inicio'";
+                if (!$movimiento_fin) $movimiento_query .= "AND fecha  <= '$Fecha_Fin'";
+              }
+            }
+
 
             if ($Edad_Desde !== null && $Edad_Desde !== "" && $Edad_Hasta !== null && $Edad_Hasta !== "") {
               $persona_query .= " and edad >= $Edad_Desde and edad <= $Edad_Hasta";
@@ -2117,8 +2130,18 @@ if (isset($_REQUEST["Fecha_Hasta"])) {
 
             $MensajeError = "No se pudieron consultar los Datos";
 
-            $Etiqueta_Fecha_Inicio = implode("-", array_reverse(explode("-", $Fecha_Inicio)));
-            $Etiqueta_Fecha_Fin = implode("-", array_reverse(explode("-", $Fecha_Fin)));
+            if (!$movimiento_inicial) {
+              $Etiqueta_Fecha_Inicio = implode("-", array_reverse(explode("-",$Fecha_Inicio)));                
+            } else {
+              //$Etiqueta_Fecha_Inicio = "<span style='font-size: 1.7rem'> &#8734; </span>";
+              $Etiqueta_Fecha_Inicio = "<span style='font-size: 1.3rem'> &#8734; </span>";
+            }
+            if (!$movimiento_fin) {
+              $Etiqueta_Fecha_Fin = implode("-", array_reverse(explode("-",$Fecha_Fin)));                
+            } else {
+              //$Etiqueta_Fecha_Inicio = "<span style='font-size: 1.7rem'> &#8734; </span>";
+              $Etiqueta_Fecha_Fin = "<span style='font-size: 1.3rem'> &#8734; </span>";
+            }
 
           ?>
           <div class="col-3">
