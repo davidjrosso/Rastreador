@@ -9,7 +9,7 @@ import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
 
 let editor = ClassicEditor.create( {
 		attachTo: document.querySelector( '#element-ct' ),
-		licenseKey: 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3ODAyNzE5OTksImp0aSI6IjMyNjUxN2FmLWU2NjUtNDk2OC05MzNlLTJkNTVhYmEyNWY2NiIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6ImZhNmExNDU0In0.UShtGMJrmzcVN_wcIO2R3oqVoviKwud-ho74o41GFZttNtUgIYxIfCT8SZpY198yO53RyCEnmqx4RCy4L3hxhg', // Or 'GPL'.
+		licenseKey: 'GPL',
 		plugins: [ Essentials, Bold, Italic, Font, Paragraph, Alignment, Image, Heading, Mermaid, MediaEmbed, Link, List, ListEditing, FindAndReplace, Fullscreen, AutoImage, PageBreak, PasteFromOffice, Table, Style, LinkImage, Indent, ImageCaption, BlockQuote, HorizontalLine, Typing, ShiftEnter, Enter, WordCount],
 		toolbar: [
     'undo', 'redo', '|', 'bold', 'italic', '|', 'alignment', 'Image', 'Mermaid', '|', 'PageBreak', '|',
