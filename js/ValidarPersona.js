@@ -27,7 +27,7 @@ function ValidarPersona(e) {
 		Mensaje = "Seleccione una opcion de sexo";
 		bandera = false;
 	}
-	if (dni.length > 8 || dni-length < 7) {
+	if (dni.length > 8 || dni.length < 7) {
 		bandera = false;
 		Mensaje = "El DNI tiene que tener 7 u 8 digitos"
 	}
