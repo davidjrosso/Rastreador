@@ -126,7 +126,7 @@ $Detalles = "El usuario con ID: $ID_Usuario ha registrado una nueva Persona. Dat
 try {
 	if (Persona::is_registered($DNI)) {
 		$Mensaje = "Ya existe un Usuario con el mismo Apellido y Nombre que el que esta intentando crear. Por favor ingrese un DNI para identificar a la persona.";
-		header('Location: ../view_newpersonas.php?Mensaje=' . $Mensaje);
+		header('Location: ../view_newpersonas.php?MensajeError=' . $Mensaje);
 	} else {
 		$Persona = new Persona(
 			xApellido : $Apellido,

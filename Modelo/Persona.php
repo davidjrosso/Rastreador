@@ -203,7 +203,7 @@ class Persona implements JsonSerializable {
 			$this->Cambio_Domicilio = ($xCambio_Domicilio) ? $xCambio_Domicilio : $cambio_Domicilio;
 			$this->Telefono = ($xTelefono) ? $xTelefono : $telefono;
 			$this->Mail = ($xMail) ? $xMail : $mail;
-			$this->sexo = ($xMail) ? $xSexo : $sexo;
+			$this->sexo = ($xSexo) ? $xSexo : $sexo;
 			$this->ID_Escuela = ($xID_Escuela) ? $xID_Escuela : $ID_Escuela;	
 			$this->Estado = ($xEstado) ? $xEstado : $estado;
 			$this->Trabajo = ($xTrabajo) ? $xTrabajo : $trabajo;
