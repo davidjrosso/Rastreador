@@ -81,6 +81,7 @@ $Con->CloseConexion();
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script src="./dist/control.js"></script>
+  <script src="./js/Utils.js"></script>
   <script>
        $(document).ready(function() {
               var date_input=$('input[name="date"]'); //our date input has the name "date"
@@ -537,13 +538,22 @@ $Con->CloseConexion();
 
 </head>
 <body>
-<div class = "row margin-right-cero media-menu-wrap" style="flex-wrap: nowrap;">
-<?php
+  <div class='col-md-2' id='expandir' style='padding-left: 6px; position: fixed; z-index: 1000' hidden>
+    <a id='abrir' class='btn btn-secondary btn-sm' href='javascript:void(0)' onclick='mostrar()'>
+      <i style="font-size: 1.33333333em;" class='fa fa-arrows-alt' color='tomato'></i>
+    </a>
+  </div>
+
+  <div class = "row margin-right-cero">
+  <?php 
   $Element = new Elements();
   if ($tipo_usuario == 1) {
   ?>
-  <div class = "col-md-2 menu-md-2">
-    <div class="nav-side-menu position-static media-nav-flex menu-item-selected">
+  <div id='ContenidoMenu' class='col-md-3 menu-md-2'>
+    <div class="nav-side-menu media-nav-flex menu-item-selected">
+      <a id='cerrar' class='btn btn-secondary btn-sm' href='javascript:void(0)' onclick='ocultar()'>
+        <i style="font-size: 1.33333333em;" class='fa fa-arrow-left'></i>
+      </a>
       <?php
             echo $Element->CBSessionNombreUsuario($id_usuario);
       ?>
@@ -576,8 +586,11 @@ $Con->CloseConexion();
     }
     if ($tipo_usuario == 2 || $tipo_usuario > 3) {
   ?>
-  <div class = "col-md-2 menu-md-2">
-  <div class="nav-side-menu position-static media-nav-flex menu-item-selected">
+  <div id='ContenidoMenu' class='col-md-3 menu-md-2'>
+    <div class="nav-side-menu media-nav-flex menu-item-selected">
+      <a id='cerrar' class='btn btn-secondary btn-sm' href='javascript:void(0)' onclick='ocultar()'>
+        <i class='fa fa-arrow-left fa-lg'></i>
+      </a>
       <?php
             echo $Element->CBSessionNombreUsuario($id_usuario);
       ?>
@@ -604,8 +617,11 @@ $Con->CloseConexion();
   }  
   if ($tipo_usuario == 3) {    
   ?>
-  <div class = "col-md-2 menu-md-2">
-<div class="nav-side-menu position-static media-nav-flex menu-item-selected">
+  <div id='ContenidoMenu' class='col-md-3 menu-md-2'>
+    <div class="nav-side-menu media-nav-flex menu-item-selected">
+      <a id='cerrar' class='btn btn-secondary btn-sm' href='javascript:void(0)' onclick='ocultar()'>
+        <i class='fa fa-arrow-left fa-lg'></i>
+      </a>
       <?php
             echo $Element->CBSessionNombreUsuario($id_usuario);
       ?>
@@ -632,7 +648,7 @@ $Con->CloseConexion();
     </div>
   </div>
 <?php } ?>
-  <div class = "col inicio-md-2">
+  <div class = "col-md-9 inicio-md-2">
     <br>
     <div class="row justify-content-center">
       <div class="col col-display-none"></div>
@@ -697,8 +713,68 @@ $Con->CloseConexion();
         <div class="col-4 Contenedor-Imagen-Inicio">
           <img src="images/FondoInicio.jpg" class = "FondoInicio">
         </div>
+        <div class="col-5">
+          <div class="nav-side-menu media-nav-flex menu-item-selected" style="align-content: center;">
+          <div class="menu-list">
+                    <ul id="menu-content" class="menu-content collapse show  out">
+                        <li class="collapsed" style="text-align: center; font-size: 2rem; padding-bottom: 1rem; padding-top: 1rem;" onClick = "location.href = 'view_listados.php'">
+                            Listados
+                        </li>
+                        <li class="collapsed" style="text-align: center; font-size: 2rem; padding-bottom: 1rem; padding-top: 1rem;" onClick = "location.href = 'view_movimientos.php'">
+                          <a href="view_movimientos.php"> Movimientos</a>
+                        </li>
+                        <li class="collapsed" style="text-align: center; font-size: 2rem; padding-bottom: 1rem; padding-top: 1rem;" onClick = "location.href = 'view_general_new.php'">
+                          <a href="view_general_new.php">Gráficos</a>
+                        </li>
+                    </ul>
+          </div>
+        </div>      
+        </div>              
+      </div>
+      <br>
+      <br>
+      <div class = "row" style="justify-content: center; align-content: space-between; margin-bottom: 10px; padding-left: 15px; padding-right: 15px;">
+        <div class="bg-secondary col-12" style="padding: 10px;">
+          <h3 class="bg-secondary text-light" style="text-align: center;">Solicitudes por autorizar</h3>
+        </div>
+      </div>
+      <div class = "row" style="justify-content: center; align-content: space-between;">
+        <div class="col-6">
+        <?php
+          if ($CantDel > 0) {
+              ?>
+              <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Eliminar Motivos</h3>
+              <?php
+              echo $CtrGeneral->getSolicitudes_EliminacionMotivo();
+            }
+            if ($CantDelCat > 0) {
+              ?>
+              <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Eliminar Categorias</h3>
+              <?php
+              echo $CtrGeneral->getSolicitudes_EliminacionCategoria();
+            }
+            if ($CantSolUsr > 0) {
+              ?>
+              <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Solcitud de Usuario</h3>
+              <?php
+              echo $CtrGeneral->get_solicitudes_usuario();
+            }
+            if ($CantDelResp > 0) {
+              ?>
+              <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Eliminar Responsable</h3>
+              <?php
+              echo $CtrGeneral->getEliminacion_Responsable();
+            }
+            if ($CantNot > 0) {
+              ?>
+              <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Eliminar Notificaciones</h3>
+              <?php
+              echo $CtrGeneral->getSolicitudes_Notificaciones();
+            }
+          ?>          
+        </div>
+
         <div class="col-6 solicitudes">
-          <h3 class="bg-secondary text-light" style="text-align: center; padding: 10px;">Solicitudes por autorizar</h3>
           <?php 
             if ($CantUnif > 0) {
               ?>
@@ -737,36 +813,7 @@ $Con->CloseConexion();
               <?php              
               echo $CtrGeneral->getSolicitudes_Modificacion();
             }
-            if ($CantDel > 0) {
-              ?>
-              <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Eliminar Motivos</h3>
-              <?php
-              echo $CtrGeneral->getSolicitudes_EliminacionMotivo();
-            }
-            if ($CantDelCat > 0) {
-              ?>
-              <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Eliminar Categorias</h3>
-              <?php
-              echo $CtrGeneral->getSolicitudes_EliminacionCategoria();
-            }
-            if ($CantSolUsr > 0) {
-              ?>
-              <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Solcitud de Usuario</h3>
-              <?php
-              echo $CtrGeneral->get_solicitudes_usuario();
-            }
-            if ($CantDelResp > 0) {
-              ?>
-              <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Eliminar Responsable</h3>
-              <?php
-              echo $CtrGeneral->getEliminacion_Responsable();
-            }
-            if ($CantNot > 0) {
-              ?>
-              <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Eliminar Notificaciones</h3>
-              <?php
-              echo $CtrGeneral->getSolicitudes_Notificaciones();
-            }
+
           ?>
         </div>  
       </div>     
@@ -788,25 +835,13 @@ $Con->CloseConexion();
       <div class="col"></div>  
     </div>
     <?php } ?>
-    <br>
-    <div class="row">
-      <div class="col"></div>
-      <div class="col-10">        
-      </div>
-      <div class="col"></div>
-    </div>
     <br>	
     <div class="row">
-      <div class="col-1 col-display-none"></div>
-      <div class="col-10 col-media-title">
+      <div class="col-12 col-media-title">
         <div style="margin: 5px;" class="row">
           <?php if ($tipo_usuario == 1) { ?>
-          <div class="col-1">
-          </div>
-          <div class="col-10">
-            <textarea style="height: 40px; resize: none; border-color: white; margin-top: 20px; overflow: hidden; text-align: center;" id="title-intit" class = "form-control CopyRight" row = "3" name = "Observaciones" value = ""><?php echo $title_obj->get_valor(); ?></textarea>
-          </div>
-          <div class="col-1">
+          <div class="col">
+            <textarea style="height: 40px; resize: none; border-color: white; margin-top: 20px; overflow: hidden; text-align: center; font-size: 1.5rem; height: 55px;" id="title-intit" class = "form-control CopyRight" row = "3" name = "Observaciones" value = ""><?php echo $title_obj->get_valor(); ?></textarea>
           </div>
           <?php } else { ?>
             <div class="col-11 CopyRight">
@@ -817,6 +852,7 @@ $Con->CloseConexion();
       </div>
       <div class="col-1 col-display-none"></div>
     </div>
+    <br>
   </div>
 </div>
 <?php  

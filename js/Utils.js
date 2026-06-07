@@ -71,7 +71,7 @@ function mostrar() {
     $("#expandir").css("display", "none");
     $("#ContenidoTabla").removeClass("div--padding-left-menu-active");
     $("#ContenidoMenu").css("display", "block");
-    $("#cerrar").css("display", "inline");
+    $("#cerrar").css("display", "inline-block");
 }
 
 function ocultar() {

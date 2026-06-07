@@ -2923,7 +2923,7 @@ public function getMenuSeguridadUsuario($ID){
       $menu = "<div id='ContenidoMenu' class='col-md-3 menu-md-2'>
                 <div class='nav-side-menu'>
                     <a id='cerrar' class='btn btn-secondary btn-sm' href='javascript:void(0)' onclick='ocultar()'>
-                      <i class='fa fa-arrow-left fa-lg'></i>
+                      <i style='font-size: 1.33333333em;' class='fa fa-arrow-left'></i>
                     </a>" . 
                     self::CBSessionNombreUsuario($ID_Usuario) . 
                     "<div class='brand'>General</div>
@@ -2960,7 +2960,11 @@ public function getMenuSeguridadUsuario($ID){
                     </div>";
     } elseif ($TipoUsuario == 2 || $TipoUsuario > 3) {
           $menu = "<div class = 'col-md-3 menu-md-2'>
-                      <div class='nav-side-menu'>" . 
+                      <div class='nav-side-menu'>
+                        <a id='cerrar' class='btn btn-secondary btn-sm' href='javascript:void(0)' onclick='ocultar()'>
+                          <i style='font-size: 1.33333333em;' class='fa fa-arrow-left'></i>
+                        </a>" . 
+ 
                         self::CBSessionNombreUsuario($ID_Usuario) . 
                         "<div class='brand'>General</div>
                           <i class='fa fa-bars fa-2x toggle-btn' data-toggle='collapse' data-target='#menu-content'></i>
@@ -2988,8 +2992,12 @@ public function getMenuSeguridadUsuario($ID){
                         </div>";
     } elseif ($TipoUsuario == 3) {
       $menu = "<div class = 'col-md-3 menu-md-2'>
-                <div class='nav-side-menu'>" . 
-                      self::CBSessionNombreUsuario($ID_Usuario) . 
+                <div class='nav-side-menu'> 
+                    <a id='cerrar' class='btn btn-secondary btn-sm' href='javascript:void(0)' onclick='ocultar()'>
+                      <i style='font-size: 1.33333333em;' class='fa fa-arrow-left'></i>
+                    </a>" . 
+
+                self::CBSessionNombreUsuario($ID_Usuario) . 
                     "<div class='brand'>General</div>
                     <i class='fa fa-bars fa-2x toggle-btn' data-toggle='collapse' data-target='#menu-content'></i>
                         <div class='menu-list'>" . 
