@@ -246,6 +246,21 @@
   -ms-transition: all 1s ease;
   transition: all 1s ease;
 }
+
+.menu-center:hover {
+  border: 3px solid #a09d98;
+  box-shadow: inset 0px 0px 4px 1px rgb(255 255 255);
+}
+
+.menu-center li {
+  border-left: 0px solid #2e353d !important;
+}
+
+.menu-center li:hover {
+  border-left: 0px solid #2e353d !important;
+}
+
+
 @media (max-width: 767px) {
   .nav-side-menu {
     position: relative;
