@@ -721,10 +721,10 @@ $Con->CloseConexion();
                                 Listados
                             </li>
                             <li class="collapsed" style="text-align: center; font-size: 2rem; padding-bottom: 1rem; padding-top: 1rem;" onClick = "location.href = 'view_movimientos.php'">
-                              <a href="view_movimientos.php"> Movimientos</a>
+                              Movimientos
                             </li>
                             <li class="collapsed" style="text-align: center; font-size: 2rem; padding-bottom: 1rem; padding-top: 1rem;" onClick = "location.href = 'view_general_new.php'">
-                              <a href="view_general_new.php">Gráficos</a>
+                              Gráficos
                             </li>
                         </ul>
               </div>
@@ -818,13 +818,28 @@ $Con->CloseConexion();
         </div>  
       </div>     
       <?php } else { ?>
-          <div class = "row">
-            <div class="col"></div>
-            <div class="col-4 Contenedor-Imagen-Inicio">
-              <img src="images/FondoInicio.jpg" class = "FondoInicio">
-            </div>      
-            <div class="col"></div>          
-          </div>
+      <div class = "row" style="justify-content: center; align-content: space-between;">
+        <div class="col-4 Contenedor-Imagen-Inicio">
+          <img src="images/FondoInicio.jpg" class = "FondoInicio">
+        </div>
+        <div class="col-5">
+            <div class="nav-side-menu media-nav-flex menu-center menu-item-selected" style="align-content: center;">
+              <div class="menu-list">
+                        <ul id="menu-content" class="menu-content collapse show  out">
+                            <li class="collapsed" style="text-align: center; font-size: 2rem; padding-bottom: 1rem; padding-top: 1rem; border-top: 1px solid #23282e;" onClick = "location.href = 'view_listados.php'">
+                                Listados
+                            </li>
+                            <li class="collapsed" style="text-align: center; font-size: 2rem; padding-bottom: 1rem; padding-top: 1rem;" onClick = "location.href = 'view_movimientos.php'">
+                              Movimientos
+                            </li>
+                            <li class="collapsed" style="text-align: center; font-size: 2rem; padding-bottom: 1rem; padding-top: 1rem;" onClick = "location.href = 'view_general_new.php'">
+                              Gráficos
+                            </li>
+                        </ul>
+              </div>
+          </div>      
+        </div>              
+      </div>
     <?php }
       } else { ?>
     <div class = "row">
