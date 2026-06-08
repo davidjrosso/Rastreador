@@ -868,13 +868,13 @@ $Con->CloseConexion();
     <br>
     <div class="row">
       <div class="col-12 col-media-title">
+        <br>
         <div style="margin: 5px; justify-content: center;" class="row">
           <?php if ($tipo_usuario == 1) { ?>
           <div class="col">
             <textarea style="height: 40px; resize: none; border-color: white; margin-top: 20px; overflow: hidden; text-align: center; font-size: 1.5rem; height: 55px;" id="title-intit" class = "form-control CopyRight" row = "3" name = "Observaciones" value = ""><?php echo $title_obj->get_valor(); ?></textarea>
           </div>
           <?php } else { ?>
-          <br>
             <div class="col-11 CopyRight" style="text-align: center; font-size: 1.5rem;">
               <p><?php echo $title_obj->get_valor(); ?></p>
             </div>
