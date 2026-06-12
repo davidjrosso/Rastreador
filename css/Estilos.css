@@ -514,7 +514,7 @@ input[type=number].number-to-text {
 }
 
 .multiselect-container > li.disabled {
-  display:none;
+  display: none;
 }
 
 .multiselect-native-select > .btn-group {
@@ -1182,4 +1182,29 @@ input[type="radio"] {
 
 .ck-evaluation-badge {
   display: none;
+}
+
+#central-navigation {
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+  line-height: 67px !important;
+  cursor: pointer;
+  overflow: auto;
+  font-family: verdana;
+  font-size: 12px;
+  font-weight: 200;
+  background-color: #747679;
+  height: 100%;
+  color: #e1ffff;
+  height: 100%;
+}
+
+#central-navigation li {
+  border-bottom: 2px solid #969faa;
+}
+
+#central-navigation li:hover {
+  background-color: #4f5b69;
+  transition: all 1s ease;
 }
