@@ -22,7 +22,8 @@ if(!isset($_SESSION["Usuario"])){
   $TipoUsuario = $Ret["ID_TipoUsuario"];
   $Con->CloseConexion();
 
-  $ID_Persona = $_REQUEST["ID"] ?? null;
+  $ID_Persona = $_REQUEST["ID_Persona"] ?? null;
+  if ($ID_Persona) $_SESSION["return"] = $_REQUEST;
   
   $persona = null;
   if ($ID_Persona) $persona = new Persona(ID_Persona: $ID_Persona);
@@ -58,10 +59,11 @@ if(!isset($_SESSION["Usuario"])){
       let cantResponsables = 1;
       let cantMotivos = 3;
       let listaMotivos = new Map();
+      let datos = <?= ($_REQUEST) ? json_encode($_SESSION["return"]) : null;?>;
 
-       $(document).ready(function(){
-              var date_input=$('input[name="Fecha"]'); //our date input has the name "date"
-              var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+       $(function (e){
+              let date_input=$('input[name="Fecha"]'); //our date input has the name "date"
+              let container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
               date_input.datepicker({
                   format: 'dd/mm/yyyy',
                   container: container,
@@ -78,7 +80,10 @@ if(!isset($_SESSION["Usuario"])){
                   clear: "Borrar",
                   weekStart: 1,
               });
-          });
+              $("#volver").on("click", function (e) {
+                  if (datos) sendToRepL(datos);
+              });
+       });
 
        function buscarPersonas(){
         var xNombre = document.getElementById('SearchPersonas').value;
@@ -484,7 +489,7 @@ if(!isset($_SESSION["Usuario"])){
                 <?php  
                 $Element = new Elements();
                 if (!empty($_SESSION["UltResponsable"])) {
-                  $xID_Responsable = $_REQUEST["responsable"] ?? $_SESSION["UltResponsable"];
+                  $xID_Responsable = $_REQUEST["ID_Responsable"][0] ?? $_SESSION["UltResponsable"];
                   echo $Element->CBModResponsables($xID_Responsable);
                 } else {
                   echo $Element->CBResponsables();
@@ -543,7 +548,7 @@ if(!isset($_SESSION["Usuario"])){
                 <div style="margin: auto;">
                   <button type="submit" class="btn btn-outline-success">Guardar</button> 
                   <button type="button" class="btn btn-outline-secondary" onClick="resetearForm()">Cancelar</button>
-                  <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_movimientos.php'">Atras</button>
+                  <button id="volver" type = "button" class = "btn btn-danger" onClick = "location.href = 'view_movimientos.php'">Atras</button>
                 </div>
               </div>
             </div>
