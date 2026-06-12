@@ -1,4 +1,8 @@
-function ValidarMovimiento(){
+$(function (e) {
+	$("#form-movimiento").on("submit", ValidarMovimiento);
+});
+
+function ValidarMovimiento(e) {
 	//var Fecha = document.getElementById("datepicker").value;
 	var ID_Persona = document.getElementById("ID_Persona").value;
 	var ID_Motivo_1 = document.getElementById("ID_Motivo_1").value;
@@ -26,8 +30,9 @@ function ValidarMovimiento(){
 		Bandera = false;
 	}
 
-	if(Bandera == false){
+	if(!Bandera){
 		swal(Mensaje,'','warning');
+		e.preventDefault();	
 		return Bandera;	
 	}else{
 		return Bandera;

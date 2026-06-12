@@ -441,7 +441,7 @@ if(!isset($_SESSION["Usuario"])){
       <div class = "col-10">
           <!-- Carga -->
           <p class = "Titulos">Cargar Nuevo Movimiento</p>
-          <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/InsertMovimiento.php" onSubmit = "return ValidarMovimiento();">
+          <form id="form-movimiento" method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/InsertMovimiento.php" onSubmit = "return ValidarMovimiento();">
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Fecha: </label>
               <div class="col-md-10">
