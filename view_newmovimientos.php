@@ -488,7 +488,7 @@ if(!isset($_SESSION["Usuario"])){
               <div class = "col-md-9">
                 <?php  
                 $Element = new Elements();
-                if (!empty($_SESSION["UltResponsable"])) {
+                if (!empty($_SESSION["UltResponsable"]) || !empty($_REQUEST["ID_Responsable"][0])) {
                   $xID_Responsable = $_REQUEST["ID_Responsable"][0] ?? $_SESSION["UltResponsable"];
                   echo $Element->CBModResponsables($xID_Responsable);
                 } else {
