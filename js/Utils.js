@@ -81,3 +81,63 @@ function ocultar() {
     $("#expandir").css("display", "block");
     $("#cerrar").css("display", "none");
 }
+
+function sendToRepL(datos) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = "/view_vermovlistados.php";
+    form.style.display = 'none';
+
+    for (const key in datos) {
+        if (Object.prototype.hasOwnProperty.call(datos, key)) {
+            if (datos[key] instanceof Array) {
+                datos[key].forEach(function (e) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key + "[]";
+                    input.value = e;
+                    form.appendChild(input);
+                })
+            } else {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = datos[key];
+                form.appendChild(input);
+            }
+        }
+    }
+
+    document.body.appendChild(form);
+    form.submit(); // Submit the form to initiate the navigation
+}
+
+function sendToNewMovimiento(datos) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = "/view_newmovimientos.php";
+    form.style.display = 'none';
+
+    for (const key in datos) {
+        if (Object.prototype.hasOwnProperty.call(datos, key)) {
+            if (datos[key] instanceof Array) {
+            datos[key].forEach(function (e) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key + "[]";
+                input.value = e;
+                form.appendChild(input);
+            })
+            } else {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = key;
+            input.value = datos[key];
+            form.appendChild(input);
+            }
+        }
+    }
+
+    document.body.appendChild(form);
+    form.submit(); 
+} 
