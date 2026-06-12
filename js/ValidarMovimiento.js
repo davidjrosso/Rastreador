@@ -4,11 +4,12 @@ $(function (e) {
 
 function ValidarMovimiento(e) {
 	//var Fecha = document.getElementById("datepicker").value;
-	var ID_Persona = document.getElementById("ID_Persona").value;
-	var ID_Motivo_1 = document.getElementById("ID_Motivo_1").value;
-	var ID_Responsable = document.getElementById("ID_Responsable").value;
-	var Mensaje = "";
-	var Bandera = true;
+	let ID_Persona = document.getElementById("ID_Persona").value;
+	let ID_Motivo_1 = document.getElementById("ID_Motivo_1").value;
+	let ID_Responsable = document.getElementById("ID_Responsable").value;
+	let ID_salud = $("#ID_Centro").prop("value");
+	let Mensaje = "";
+	let Bandera = true;
 	/*if(Fecha == "" || Fecha == null){
 		Mensaje += "Debe seleccionar una Fecha.";
 		Bandera = false;
@@ -27,6 +28,11 @@ function ValidarMovimiento(e) {
 
 	if(ID_Responsable == '-Seleccione un Responsable-'){
 		Mensaje += " Debe seleccionar un Responsable.";	
+		Bandera = false;
+	}
+
+	if(ID_salud == '-Seleccione un Centro de Salud-'){
+		Mensaje += " Debe seleccionar un Centro de Salud.";	
 		Bandera = false;
 	}
 
