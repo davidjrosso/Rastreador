@@ -10,7 +10,8 @@ function ValidarPersona(e) {
 	let nombre = $("#Nombre").prop("value");
 	let Fecha_Nacimiento = $("#Fecha_Nacimiento").prop("value");
 	let dni = $("#documento").prop("value");
-
+	let id_calle = $("#Calle").prop("value");
+	let nro_calle = $("#NumeroDeCalle").prop("val");
 	let division = Fecha_Nacimiento.split("/");
 	let anios = division[0];
 	let bandera = true;
@@ -32,6 +33,10 @@ function ValidarPersona(e) {
 		Mensaje = "El DNI tiene que tener 7 u 8 digitos"
 	}
 
+	if (id_calle && id_calle != "565" && !nro_calle) {
+		bandera = false;
+		Mensaje = "Tiene que ingresar un nro de calle"
+	}
 	/*
 	if (!calle) {
 		Mensaje = "Seleccione una calle";
