@@ -15,10 +15,15 @@ $ID_Usuario = $_SESSION["Usuario"];
 $account = new Account(account_id: $ID_Usuario);
 $TipoUsuario = $account->get_id_tipo_usuario();
 
+$Con = new Conexion();
+$Con->OpenConexion();
+
 $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
 
 $Element = new Elements();
 
+$id_motivo = !empty($_REQUEST["id_motivo"]) ? $_REQUEST["id_motivo"] : null;
+$motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
 ?>
 <!DOCTYPE html>
 <html>
@@ -140,6 +145,14 @@ $Element = new Elements();
                     $("#SearchCategorias").val("");
                     $("#ResultadosCategorias").html("");
               });
+              <?php if (!empty($id_motivo)) {?>
+              if(<?=$id_motivo?>) {
+               if (!listaMotivos.has('<?=$motivo->get_motivo()?>') && (listaMotivos.size <= 4)) {
+                  listaMotivos.set('<?=$motivo->get_motivo();?>', <?=$id_motivo;?>);
+                }
+                seleccionMultipleMotivo();
+              }
+            <?php }?>
           });
 
     function buscarPersonas(){
@@ -583,7 +596,6 @@ $Element = new Elements();
 
 <div class = "row margin-right-cero">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_REPORTE_LISTADO);
   ?>
   <div class = "col-md-9 inicio-md-2">
