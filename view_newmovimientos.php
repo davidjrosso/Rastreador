@@ -59,7 +59,7 @@ if(!isset($_SESSION["Usuario"])){
       let cantResponsables = 1;
       let cantMotivos = 3;
       let listaMotivos = new Map();
-      let datos = <?= ($_REQUEST) ? json_encode($_SESSION["return"]) : null;?>;
+      let datos = <?= ($_REQUEST) ? json_encode($_SESSION["return"]) : 'null';?>;
 
        $(function (e){
               let date_input=$('input[name="Fecha"]'); //our date input has the name "date"
