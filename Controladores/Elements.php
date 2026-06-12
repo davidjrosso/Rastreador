@@ -1980,7 +1980,7 @@ public function getMenuSeguridadUsuario($ID){
     $Select = "<select class='form-control' id='ID_Responsable' name = 'ID_Responsable[]'>";
     $Consulta = mysqli_query($Con3->Conexion, $query) or die("Problemas al mostrar Responsables");
     while ($Ret = mysqli_fetch_array($Consulta)) {
-      if($Ret['id_resp'] == $xID_Responsable) {
+      if(!empty($xID_Responsable) && $Ret['id_resp'] == $xID_Responsable) {
         $Select .= "<option value = '".$Ret['id_resp']."' selected>".$Ret['responsable']."</option>";
       } else if (empty($xID_Responsable) && $Ret['id_resp'] == 64){
         $Select .= "<option value = '".$Ret['id_resp']."' selected>".$Ret['responsable']."</option>";
