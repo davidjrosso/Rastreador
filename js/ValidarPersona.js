@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 
 $(function (e) {
 	$("#form-persona").on("submit", ValidarPersona);
-})
+});
 
 function ValidarPersona(e) {
 	let apellido = $("#Apellido").prop("value");
@@ -11,7 +11,7 @@ function ValidarPersona(e) {
 	let Fecha_Nacimiento = $("#Fecha_Nacimiento").prop("value");
 	let dni = $("#documento").prop("value");
 	let id_calle = $("#Calle").prop("value");
-	let nro_calle = $("#NumeroDeCalle").prop("val");
+	let nro_calle = $("#NumeroDeCalle").prop("value");
 	let division = Fecha_Nacimiento.split("/");
 	let anios = division[0];
 	let bandera = true;
