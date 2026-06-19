@@ -23,7 +23,9 @@ if(!isset($_SESSION["Usuario"])){
   $Con->CloseConexion();
 
   $ID_Persona = $_REQUEST["ID_Persona"] ?? null;
+  $volver = null;
   if ($ID_Persona) $_SESSION["return"] = $_REQUEST;
+
   
   $persona = null;
   if ($ID_Persona) $persona = new Persona(ID_Persona: $ID_Persona);
@@ -81,7 +83,9 @@ if(!isset($_SESSION["Usuario"])){
                   weekStart: 1,
               });
               $("#volver").on("click", function (e) {
+                  e.preventDefault();
                   if (datos) sendToRepL(datos);
+                  if (!datos) location.href = 'view_movimientos.php';
               });
 
        });
@@ -842,8 +846,10 @@ if(!isset($_SESSION["Usuario"])){
 if(isset($_REQUEST["Mensaje"])){
   echo "<script type='text/javascript'>
   swal('".$_REQUEST["Mensaje"]."','','success').then((result) => {
-    if (result) {
+    if (result && datos) {
     sendToRepL(datos);
+  } else {
+    location.href = 'view_vermovlistados.php';
   }});
 </script>";
 }

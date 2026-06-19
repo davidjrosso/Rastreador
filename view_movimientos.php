@@ -11,6 +11,7 @@ if (!isset($_SESSION["Usuario"])) {
 
 $Con = new Conexion();
 $Con->OpenConexion();
+$_SESSION["return"] = null;
 $ID_Usuario = $_SESSION["Usuario"];
 $ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
 $MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";

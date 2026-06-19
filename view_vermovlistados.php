@@ -34,7 +34,7 @@ if(!isset($_SESSION["Usuario"])){
     header("Location: Error_Session.php");
     exit();
 }
-
+$_SESSION["return"] = null;
 $ID_Usuario = $_SESSION["Usuario"];
 $usuario = new Account(account_id: $ID_Usuario);
 $TipoUsuario = $usuario->get_id_tipo_usuario();
