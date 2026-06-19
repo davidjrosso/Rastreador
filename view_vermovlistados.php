@@ -1287,7 +1287,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
                     data-target="#configModal">
                 Columnas
             </button>
-            <button type = "button" class = "btn btn-danger" onClick = "<?php echo (isset($_SESSION["retorno"]) && ($redirect ||  (!$redirect && empty($_REQUEST['ID_Persona'])))) ? "location.href = 'view_listados.php'" : "sendToRepL()" ;?>">
+            <button type = "button" class = "btn btn-danger" onClick = "<?php echo (!$redirect_newper && isset( $_SESSION["retorno"]) && ($redirect ||  (!$redirect && empty($_REQUEST['ID_Persona'])))) ? "location.href = 'view_listados.php'" : "sendToRepL()" ;?>">
                 Atrás
             </button>
             <button id="grilla_tabla" type = "button" class = "btn btn-secondary">
