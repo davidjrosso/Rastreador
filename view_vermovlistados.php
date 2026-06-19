@@ -35,6 +35,7 @@ if(!isset($_SESSION["Usuario"])){
     exit();
 }
 $_SESSION["return"] = null;
+$request = null;
 $ID_Usuario = $_SESSION["Usuario"];
 $usuario = new Account(account_id: $ID_Usuario);
 $TipoUsuario = $usuario->get_id_tipo_usuario();
@@ -42,6 +43,8 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
 $http_referer = (!empty($_SERVER["HTTP_REFERER"])) ? $_SERVER["HTTP_REFERER"] : null;
 
 $redirect = preg_match("~view_listados~", $http_referer);
+$redirect_per = preg_match("~view_vermovlistado~", $http_referer);
+$redirect_newper = preg_match("~view_newper~", $http_referer);
 
 $_SESSION["reporte_listado"] = true;
 $_SESSION["reporte_grafico"] = false;
@@ -55,6 +58,8 @@ $movimiento_fin = (!empty($_REQUEST["fin-movimiento-check"])) ? true : false;
 
 if (empty($_REQUEST["ID_Persona"])) {
   $_SESSION["retorno"] = $_REQUEST;
+} else {
+  $request = $_REQUEST;
 }
 
 $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
@@ -95,7 +100,8 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
       let fullscreen = false;
       let excel = null;
       let intervalo = null;
-      let datos = <?php echo json_encode($_REQUEST)?>;
+      let datosPersona = <?php echo (($redirect_newper) ? json_encode($request) : 'null'); ?>;
+      let datos = <?php echo (($redirect_per) ? json_encode($_REQUEST) : 'null');?>;
       $(document).ready(function(){
               var date_input=$('input[name="date"]');
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
@@ -174,7 +180,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
               });
 
               $("#btn-new-persona").on("click", function (e) {
-                sendToNewMovimiento(datos);
+                if (datosPersona) sendToNewMovimiento(datosPersona);
               });
 
               $("#boton-fullscreen").on("click", function (e) {
