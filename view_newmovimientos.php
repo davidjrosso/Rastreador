@@ -83,6 +83,7 @@ if(!isset($_SESSION["Usuario"])){
               $("#volver").on("click", function (e) {
                   if (datos) sendToRepL(datos);
               });
+
        });
 
        function buscarPersonas(){
@@ -402,6 +403,13 @@ if(!isset($_SESSION["Usuario"])){
       }
     }
 
+    function seleccionCentroSalud(Centro, xID) {
+      var Motivo = document.getElementById("centro-contenedor");
+      var ID_Motivo = document.getElementById("id_centro_1");
+      Motivo.innerHTML = "";
+      Motivo.innerHTML = "<p>"+ Centro +" <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo_3'><i class='fa fa-cog text-secondary'></i></button></p>";
+      ID_Motivo.setAttribute('value', xID);
+    }    
 
   </script>
 </head>
@@ -504,7 +512,7 @@ if(!isset($_SESSION["Usuario"])){
             </div>
             <div class="form-group row">
               <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Centro de Salud: </label>
-              <div class = "col-md-10">
+              <div class = "col-md-10" id = "centro-contenedor">
                 <?php  
                 $Element = new Elements();
                 $xID_Centro = $_SESSION["UltCentro"] ?? ($_REQUEST["ID_Centro"] ?? null);
@@ -833,7 +841,10 @@ if(!isset($_SESSION["Usuario"])){
 <?php  
 if(isset($_REQUEST["Mensaje"])){
   echo "<script type='text/javascript'>
-  swal('".$_REQUEST["Mensaje"]."','','success');
+  swal('".$_REQUEST["Mensaje"]."','','success').then((result) => {
+    if (result) {
+    sendToRepL(datos);
+  }});
 </script>";
 }
 ?>
