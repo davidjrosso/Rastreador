@@ -100,7 +100,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
       let fullscreen = false;
       let excel = null;
       let intervalo = null;
-      let datosPersona = <?php echo (($redirect_newper) ? json_encode($request) : 'null'); ?>;
+      let datosPersona = <?php echo (($request) ? json_encode($request) : 'null'); ?>;
       let datos = <?php echo (($redirect_per) ? json_encode($_REQUEST) : 'null');?>;
       $(document).ready(function(){
               var date_input=$('input[name="date"]');
