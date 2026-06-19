@@ -44,13 +44,12 @@ $http_referer = (!empty($_SERVER["HTTP_REFERER"])) ? $_SERVER["HTTP_REFERER"] : 
 
 $redirect = preg_match("~view_listados~", $http_referer);
 $redirect_per = preg_match("~view_vermovlistado~", $http_referer);
-$redirect_newper = preg_match("~view_newper~", $http_referer);
+$redirect_newper = preg_match("~view_newm~", $http_referer);
 
 $_SESSION["reporte_listado"] = true;
 $_SESSION["reporte_grafico"] = false;
 $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
-$filtro_persona = $_REQUEST["familia-check"] ?? null;
-$ID_Persona = $_REQUEST["ID_Persona"];
+$filtro_persona = $_REQUEST["familia-check"] ?? null;$ID_Persona = $_REQUEST["ID_Persona"];
 $ID_CentroSalud = $_REQUEST["ID_CentroSalud"] ?? null;
 $movimiento_inicial = (!empty($_REQUEST["inicial-movimiento-check"])) ? true : false;
 
@@ -1287,7 +1286,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
                     data-target="#configModal">
                 Columnas
             </button>
-            <button type = "button" class = "btn btn-danger" onClick = "<?php echo (!$redirect_newper && isset( $_SESSION["retorno"]) && ($redirect ||  (!$redirect && empty($_REQUEST['ID_Persona'])))) ? "location.href = 'view_listados.php'" : "sendToRepL()" ;?>">
+            <button type = "button" class = "btn btn-danger" onClick = "<?php echo ($redirect_newper && isset( $_SESSION["retorno"]) && ($redirect ||  (!$redirect && empty($_REQUEST['ID_Persona'])))) ? "location.href = 'view_listados.php'" : "sendToRepL()" ;?>">
                 Atrás
             </button>
             <button id="grilla_tabla" type = "button" class = "btn btn-secondary">
