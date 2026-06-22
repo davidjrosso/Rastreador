@@ -50,13 +50,14 @@ $_SESSION["reporte_listado"] = true;
 $_SESSION["reporte_grafico"] = false;
 $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
 $filtro_persona = $_REQUEST["familia-check"] ?? null;
+$filtro_div = $_REQUEST["div-check"] ?? null;
 $ID_Persona = $_REQUEST["ID_Persona"];
 $ID_CentroSalud = $_REQUEST["ID_CentroSalud"] ?? null;
 $movimiento_inicial = (!empty($_REQUEST["inicial-movimiento-check"])) ? true : false;
 
 $movimiento_fin = (!empty($_REQUEST["fin-movimiento-check"])) ? true : false;
 
-if ($filtro_persona) {
+if ($filtro_persona || $filtro_div) {
   $_SESSION["retorno"] = $_REQUEST;
 } else {
   $_SESSION["retorno"] = null;
@@ -291,6 +292,8 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
 
         for (const key in datos) {
             if (Object.prototype.hasOwnProperty.call(datos, key)) {
+                if (key == "familia-check") continue;
+                if (key == "div-check") continue;
                 if (datos[key] instanceof Array) {
                   datos[key].forEach(function (e) {
                       const input = document.createElement('input');
@@ -425,6 +428,12 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
                   }
               }
           }
+          const input = document.createElement('input');
+          input.type = 'checkbox';
+          input.name = "div-check";
+          input.value = "true";
+          input.checked = true;
+          form.appendChild(input);
           document.body.appendChild(form);
           form.submit();
       }
@@ -1288,7 +1297,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
                     data-target="#configModal">
                 Columnas
             </button>
-            <button type = "button" class = "btn btn-danger" onClick = "<?php echo ($redirect_newper || $redirect || (isset( $_SESSION["retorno"]) && ($redirect ||  (!$redirect && empty($_REQUEST['ID_Persona']))))) ? "location.href = 'view_listados.php'" : "sendToRepL()" ;?>">
+            <button type = "button" class = "btn btn-danger" onClick = "<?php echo ($redirect_newper || $redirect || (!$filtro_persona && !$filtro_div)) ? "location.href = 'view_listados.php'" : "sendToRepL()" ;?>">
                 Atrás
             </button>
             <button id="grilla_tabla" type = "button" class = "btn btn-secondary">
