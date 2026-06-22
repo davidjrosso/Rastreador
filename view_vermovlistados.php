@@ -49,15 +49,17 @@ $redirect_newper = preg_match("~view_newm~", $http_referer);
 $_SESSION["reporte_listado"] = true;
 $_SESSION["reporte_grafico"] = false;
 $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
-$filtro_persona = $_REQUEST["familia-check"] ?? null;$ID_Persona = $_REQUEST["ID_Persona"];
+$filtro_persona = $_REQUEST["familia-check"] ?? null;
+$ID_Persona = $_REQUEST["ID_Persona"];
 $ID_CentroSalud = $_REQUEST["ID_CentroSalud"] ?? null;
 $movimiento_inicial = (!empty($_REQUEST["inicial-movimiento-check"])) ? true : false;
 
 $movimiento_fin = (!empty($_REQUEST["fin-movimiento-check"])) ? true : false;
 
-if (empty($_REQUEST["ID_Persona"])) {
+if ($filtro_persona) {
   $_SESSION["retorno"] = $_REQUEST;
 } else {
+  $_SESSION["retorno"] = null;
   $request = $_REQUEST;
 }
 
@@ -348,7 +350,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
           
           document.body.appendChild(form);
           form.submit(); 
-      }      
+      }
 
       function sendToPersonaListado(idPersona) {
           const form = document.createElement('form');
@@ -366,7 +368,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
                         input.name = key + "[]";
                         input.value = e;
                         form.appendChild(input);
-                    })
+                    });
                   } else {
                     const input = document.createElement('input');
                     input.type = 'hidden';
@@ -385,10 +387,10 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
           input.name = "familia-check";
           input.value = "true";
           input.checked = true;
-          form.appendChild(input);  
+          form.appendChild(input);
           document.body.appendChild(form);
           form.submit(); 
-      }      
+      }
 
 
       function sendToRepListado(idPersona) {
@@ -424,8 +426,8 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
               }
           }
           document.body.appendChild(form);
-          form.submit(); 
-      }      
+          form.submit();
+      }
 
       function sendToRepGrillaLista() {
           const form = document.createElement('form');
