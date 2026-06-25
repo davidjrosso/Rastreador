@@ -519,10 +519,10 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
           <button id="excel_descarga" type="button" class="btn btn-secondary">
               Excel descargar
           </button>
-          <!--<button id="excel" type = "button" class = "btn btn-secondary" data-toggle="modal" 
+          <button id="excel" type = "button" class = "btn btn-secondary" data-toggle="modal" 
                   data-target="#excel-modal">
               Excel desplegar
-          </button>-->
+          </button>
           <button id="rep_grafico" type = "button" class = "btn btn-secondary">
               Gráfico
           </button>
