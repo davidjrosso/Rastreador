@@ -516,6 +516,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
           <button id="enviar_imprimir" type="button" class="btn btn-secondary">
               Imprimir
           </button>
+          <div style="display: inline-flex; flex-direction: column;">
           <button id="excel_descarga" type="button" class="btn btn-secondary">
               Excel descargar
           </button>
@@ -523,6 +524,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
                   data-target="#excel-modal">
               Excel desplegar
           </button>
+          </div>
           <button id="rep_grafico" type = "button" class = "btn btn-secondary">
               Gráfico
           </button>
