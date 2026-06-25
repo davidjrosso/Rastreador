@@ -1,4 +1,4 @@
-import { ClassicEditor, Essentials, Bold, Italic, Font, FontSize, Paragraph, Alignment, Image, Heading, Link, List, MediaEmbed, ListEditing, FindAndReplace, PasteFromOffice, PageBreak, AutoImage, Fullscreen, Table, Style, LinkImage, Indent, ImageCaption, BlockQuote, HorizontalLine, Typing, ShiftEnter, Enter, WordCount, Title} from 'ckeditor5';
+import { ClassicEditor, Essentials, Bold, Italic, Font, FontSize, Paragraph, Alignment, Image, Heading, Link, List, MediaEmbed, ListEditing, FindAndReplace, PasteFromOffice, PageBreak, AutoImage, ImageBlock, ImageUpload, ImageInline, Fullscreen, Table, Style, LinkImage, Indent, ImageCaption, ImageResize, BlockQuote, HorizontalLine, Typing, ShiftEnter, Enter, WordCount, Title} from 'ckeditor5';
 import { Mermaid } from '@ckeditor/ckeditor5-mermaid';
 import 'ckeditor5/ckeditor5.css';
 import '@ckeditor/ckeditor5-mermaid/index.css';
@@ -10,13 +10,13 @@ import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
 let editor = ClassicEditor.create( {
 		attachTo: document.querySelector( '#element-ct' ),
 		licenseKey: 'GPL',
-		plugins: [ Essentials, Bold, Italic, Font, Paragraph, Alignment, Image, Heading, Mermaid, MediaEmbed, Link, List, ListEditing, FindAndReplace, Fullscreen, AutoImage, PageBreak, PasteFromOffice, Table, Style, LinkImage, Indent, ImageCaption, BlockQuote, HorizontalLine, Typing, ShiftEnter, Enter, WordCount],
+		plugins: [ Essentials, Bold, Italic, Font, Paragraph, Alignment, Image, Heading, Mermaid, MediaEmbed, Link, List, ListEditing, FindAndReplace, Fullscreen, AutoImage, PageBreak, PasteFromOffice, Table, Style, ImageUpload, LinkImage, Indent, ImageCaption, ImageResize, ImageInline, ImageBlock, BlockQuote, HorizontalLine, Typing, ShiftEnter, Enter, WordCount],
 		toolbar: [
     'undo', 'redo', '|', 'bold', 'italic', '|', 'alignment', 'Image', 'Mermaid', '|', 'PageBreak', '|',
      'fontFamily', 'fontColor', 'fontBackgroundColor', 'fontsize', '|', '-', 'FindAndReplace', 'Fullscreen', 
     'WordCount', 'BlockQuote', 'Typing', 'ShiftEnter', 'LinkImage',  'Enter', 'HorizontalLine', 'ImageCaption', 
     'Indent', 'Style', '|', 'AutoImage', 'PasteFromOffice', 'numberedList', 'bulletedList', '|', 'heading', '|', 
-    'link', 'List', 'ListEditing', 'Table', 'uploadImage',
+    'link', 'List', 'ListEditing', 'Table', 'uploadImage', 'ImageInline'
 		],
 		root: {
 			placeholder: ''
