@@ -3,6 +3,7 @@
 use function PHPUnit\Framework\isNull;
 require_once($_SERVER['DOCUMENT_ROOT'] . '/Modelo/Accion.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/Modelo/Parametria.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/Modelo/Calle.php');
 
 class Persona implements JsonSerializable {
 	//DECLARACION DE VARIABLES
@@ -157,12 +158,17 @@ class Persona implements JsonSerializable {
 			if(is_null($ret["fecha_nac"]) || $ret["fecha_nac"] == "null") {
 				$fecha_nacimiento = "No se cargo fecha de nacimiento";
 			} else {
-				$fecha_nacimiento = implode("/", array_reverse(explode("-",$ret["fecha_nac"])));
+				$fecha_nacimiento = implode("/", array_reverse(explode("-", $ret["fecha_nac"])));
 			}
 			$nro_Carpeta = $ret["nro_carpeta"];
 			$nro_Legajo = $ret["nro_legajo"];
 			$obra_Social = $ret["obra_social"];
-			$domicilio = $ret["domicilio"];
+			$calle = $ret["calle"];
+			$nro = $ret["nro"];
+			$cl = new Calle(id_calle: $calle);
+			$domicilio = $cl->get_calle_nombre() . " " . $nro;
+			$domicilio = (!empty($calle)) ? $domicilio : $ret["domicilio"];
+
 			$barrio = $ret["ID_Barrio"];
 			$localidad = $ret["localidad"];
 			$circunscripcion = $ret["circunscripcion"];
@@ -178,8 +184,7 @@ class Persona implements JsonSerializable {
 			$ID_Escuela = $ret["ID_Escuela"];
 			$estado = $ret["estado"];
 			$trabajo = $ret["Trabajo"];
-			$calle = $ret["calle"];
-			$nro = $ret["nro"];
+
 			$georefencia = (isset($ret["georeferencia"])) ? "POINT(" . $ret["lat"] . "," . $ret["lon"] . ")" : null;
 			$this->ID_Persona = $ID_Persona;
 			$this->Apellido = ($xApellido) ? $xApellido : $apellido;
