@@ -51,6 +51,7 @@ $_SESSION["reporte_grafico"] = false;
 $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
 $filtro_persona = $_REQUEST["familia-check"] ?? null;
 $filtro_div = $_REQUEST["div-check"] ?? null;
+$filtro_motivo = isset($_SESSION["redirect_motivo"]);
 $ID_Persona = $_REQUEST["ID_Persona"];
 $ID_CentroSalud = $_REQUEST["ID_CentroSalud"] ?? null;
 $movimiento_inicial = (!empty($_REQUEST["inicial-movimiento-check"])) ? true : false;
@@ -775,7 +776,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
           	  $Consulta = "SELECT M.id_movimiento, M.fecha, M.id_persona, MONTH(M.fecha) as 'Mes',
                                   YEAR(M.fecha) as 'Anio', B.Barrio, P.manzana, P.documento, P.obra_social,
                                   P.localidad, P.edad, P.meses, P.lote, P.familia, UPPER(P.apellido) as apellido, P.fecha_nac,
-                                  P.nombre, P.fecha_nac, P.domicilio, MT.motivo, R.responsable, R2.responsable as responsable_2, R3.responsable as responsable_3,
+                                  P.nombre, P.fecha_nac, CONCAT(CL.calle_nombre , ' ', P.nro) as domicilio, MT.motivo, R.responsable, R2.responsable as responsable_2, R3.responsable as responsable_3,
                                   R4.responsable as responsable_4, M.observaciones, CS.centro_salud,
                                   I.Nombre as 'NombreInst', MST.id_motivo, MST.nro_motivo";
 
@@ -1077,8 +1078,10 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
                                   ON (GN.id_motivo = MT.id_motivo)
                                   RIGHT JOIN ($persona_query) P 
                                   ON (M.id_persona = P.id_persona)
-                                  INNER JOIN barrios B 
-                                  ON (B.ID_Barrio = P.ID_Barrio)                                    
+                                  INNER JOIN barrios B
+                                  ON (B.ID_Barrio = P.ID_Barrio)
+                                  LEFT JOIN calle CL
+                                  ON (CL.id_calle = P.calle)                                 
                                   LEFT JOIN ($categoria_query) C
                                   ON (C.cod_categoria = MT.cod_categoria)
                                   LEFT JOIN centros_salud CS
@@ -1105,7 +1108,9 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
                                   INNER JOIN ($persona_query) P 
                                   ON (M.id_persona = P.id_persona)
                                   INNER JOIN barrios B 
-                                  ON (B.ID_Barrio = P.ID_Barrio)                                    
+                                  ON (B.ID_Barrio = P.ID_Barrio)
+                                  LEFT JOIN calle CL
+                                  ON (CL.id_calle = P.calle)                                       
                                   INNER JOIN ($categoria_query) C
                                   ON (C.cod_categoria = MT.cod_categoria)
                                   INNER JOIN centros_salud CS
@@ -1127,7 +1132,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
               // de movimientos usando los atributos de los movimiento asociados a la persona, en casos contrario, si no
               // se agrega a la persona en el filtrado, se ordenara la lista de movimientos sobre los atributos de cada persona en general.
 
-              $Consulta .= " order by M.fecha DESC, B.Barrio DESC, P.domicilio DESC, P.manzana DESC, P.lote DESC, P.familia DESC, P.domicilio DESC, P.apellido DESC, M.id_movimiento DESC";
+              $Consulta .= " order by M.fecha DESC, B.Barrio DESC, CONCAT(CL.calle_nombre , ' ', P.nro) DESC, P.manzana DESC, P.lote DESC, P.familia DESC, P.domicilio DESC, P.apellido DESC, M.id_movimiento DESC";
    
               $ConsultarMovimientosPersona = $Consulta;
               //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
