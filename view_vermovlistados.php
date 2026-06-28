@@ -512,20 +512,20 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
       </div>
     </div>
     <div class="row">
-        <div class="col-md-4" style="padding-right: 0px;padding-left: 0pc;">
-          <button id="enviar_imprimir" type="button" class="btn btn-secondary">
+        <div class="col-md-4 row" style="padding-right: 0px;padding-left: 0pc; display: inline-flex; flex-wrap: nowrap; height: 43px; column-gap: 4px;">
+          <button id="enviar_imprimir" type="button" style="flex-shrink: 1;" class="btn btn-secondary">
               Imprimir
           </button>
-          <div style="display: inline-flex; flex-direction: column;">
-          <button id="excel_descarga" type="button" class="btn btn-secondary">
-              Excel descargar
-          </button>
-          <button id="excel" type = "button" class = "btn btn-secondary" data-toggle="modal" 
-                  data-target="#excel-modal">
-              Excel desplegar
-          </button>
+          <div style="display: inline-flex; flex-direction: column; flex-shrink: 1; padding: 0px; row-gap: 1px;">
+            <button id="excel_descarga" type="button" style="max-height: 50%; padding: 0px; font-size: 0.95rem; line-height: 21px;" class="btn btn-secondary">
+                Excel descargar
+            </button>
+            <button id="excel" type = "button" style="max-height: 50%; padding: 0px; font-size: 0.95rem; line-height: 21px;" class = "btn btn-secondary" data-toggle="modal" 
+                    data-target="#excel-modal">
+                Excel desplegar
+            </button>
           </div>
-          <button id="rep_grafico" type = "button" class = "btn btn-secondary">
+          <button id="rep_grafico" type = "button" style="flex-shrink: 1;" class = "btn btn-secondary">
               Gráfico
           </button>
         </div>
@@ -2122,7 +2122,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
                       $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
                       $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 3"])) ? strlen($json_row["Motivo 3"]) : $json_row["height"];
                     }
-                                      
+
                     $TableMov .= "<td class='trObservaciones' style = 'width: auto;' data-toggle='modal' data-target='#mdal_ct' data-id-mv = '". $DtoMovimiento->getID_Movimiento() . "'>
                                     <div style='max-height: 9em; overflow: hidden' >" . $DtoMovimiento->getObservaciones() . "</div>
                                   </td>";
