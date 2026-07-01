@@ -70,14 +70,20 @@ function mostrar() {
 
     $("#expandir").css("display", "none");
     $("#ContenidoTabla").removeClass("div--padding-left-menu-active");
+    $("#ContenidoTabla").addClass("col-md-10");
+    $("#ContenidoTabla").removeClass("col-md-12");
     $("#ContenidoMenu").css("display", "block");
+    $("#tabla-responsive").css("position", "relative");
     $("#cerrar").css("display", "inline-block");
 }
 
 function ocultar() {
     $("#expandir").attr("hidden", false);
     $("#ContenidoTabla").addClass("div--padding-left-menu-active");
+    $("#ContenidoTabla").removeClass("col-md-10");
+    $("#ContenidoTabla").addClass("col-md-12");
     $("#ContenidoMenu").css("display", "none");
+    $("#tabla-responsive").css("position", "static");
     $("#expandir").css("display", "block");
     $("#cerrar").css("display", "none");
 }
