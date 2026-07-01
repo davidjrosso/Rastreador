@@ -72,6 +72,7 @@ function mostrar() {
     $("#ContenidoTabla").removeClass("div--padding-left-menu-active");
     $("#ContenidoTabla").addClass("col-md-10");
     $("#ContenidoTabla").removeClass("col-md-12");
+    $("#BarraDeNavHTabla").removeAttr("style");
     $("#ContenidoMenu").css("display", "block");
     $("#tabla-responsive").css("position", "relative");
     $("#cerrar").css("display", "inline-block");
@@ -85,6 +86,7 @@ function ocultar() {
     $("#ContenidoMenu").css("display", "none");
     $("#tabla-responsive").css("position", "static");
     $("#expandir").css("display", "block");
+    $("#BarraDeNavHTabla").css("margin", "auto");
     $("#cerrar").css("display", "none");
 }
 
