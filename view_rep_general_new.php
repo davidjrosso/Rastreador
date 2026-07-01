@@ -96,9 +96,9 @@ $movimiento_fin = (!empty($_REQUEST["fin-movimiento-check"])) ? true : false;
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
 
   <script src="js/FileSaver.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script src="js/Utils.js"></script>
-  <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" 
           integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script type="text/javascript"
     src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
@@ -1077,7 +1077,7 @@ $movimiento_fin = (!empty($_REQUEST["fin-movimiento-check"])) ? true : false;
         display: inline-block;
       } */
 
-    #table-responsive tr {
+    #table-responsive-rep tr {
       color: #fff;
     }
 
@@ -1090,7 +1090,7 @@ $movimiento_fin = (!empty($_REQUEST["fin-movimiento-check"])) ? true : false;
       border: 1px solid black;
     }
 
-    .table-responsive {
+    .table-responsive-rep {
       height: 480px;
       width: 98%;
       /*overflow-y: hidden;*/
@@ -1328,7 +1328,7 @@ $movimiento_fin = (!empty($_REQUEST["fin-movimiento-check"])) ? true : false;
     <?php
     if ($TipoUsuario == 1) {
       ?>
-      <div class="col-md-2" id="expandir" hidden>
+      <div class="col-md-2" style="position: absolute; z-index: 1000;" id="expandir" hidden>
         <a id="abrir" class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="mostrar()">
           <i class="fa fa-arrows-alt fa-lg" color="tomato"></i>
         </a>
@@ -2187,7 +2187,7 @@ $movimiento_fin = (!empty($_REQUEST["fin-movimiento-check"])) ? true : false;
         </div>
         <div class="col-md-12">
 
-          <div class="table-responsive" id="tabla-responsive">
+          <div class="table-responsive-rep" id="tabla-responsive">
             <?php
           
             $tomarRetTodos = array();
