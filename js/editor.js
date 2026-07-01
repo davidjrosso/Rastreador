@@ -1,23 +1,29 @@
-import { ClassicEditor, Essentials, Bold, Italic, Font, FontSize, Paragraph, Alignment, Image, Heading, Link, List, MediaEmbed, ListEditing, FindAndReplace, PasteFromOffice, PageBreak, AutoImage, ImageBlock, ImageUpload, ImageInline, Fullscreen, Table, Style, LinkImage, Indent, ImageCaption, ImageResize, BlockQuote, HorizontalLine, Typing, ShiftEnter, Enter, WordCount, Title} from 'ckeditor5';
+import { ClassicEditor, Essentials, Bold, Italic, Font, FontSize, Paragraph, Alignment, ImageStyle, Heading, Link, List, MediaEmbed, ListEditing, FindAndReplace, PasteFromOffice, PageBreak, AutoImage, ImageBlock, ImageUpload, ImageInline, Fullscreen, Table, Style, LinkImage, Indent, ImageCaption, ImageResize, BlockQuote, HorizontalLine, Typing, ShiftEnter, Enter, WordCount, Title} from 'ckeditor5';
 import { Mermaid } from '@ckeditor/ckeditor5-mermaid';
+import { Image  } from '@ckeditor/ckeditor5-image';
 import 'ckeditor5/ckeditor5.css';
 import '@ckeditor/ckeditor5-mermaid/index.css';
 import esTranslations from 'ckeditor5/translations/es.js';
 import Quill from 'quill';
 import { HtmlToDelta } from 'quill-delta-from-html';
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
+import { Base64UploadAdapter } from '@ckeditor/ckeditor5-upload';
 
-let editor = ClassicEditor.create( {
+
+let editor = ClassicEditor.create({
 		attachTo: document.querySelector( '#element-ct' ),
 		licenseKey: 'GPL',
-		plugins: [ Essentials, Bold, Italic, Font, Paragraph, Alignment, Image, Heading, Mermaid, MediaEmbed, Link, List, ListEditing, FindAndReplace, Fullscreen, AutoImage, PageBreak, PasteFromOffice, Table, Style, ImageUpload, LinkImage, Indent, ImageCaption, ImageResize, ImageInline, ImageBlock, BlockQuote, HorizontalLine, Typing, ShiftEnter, Enter, WordCount],
-		toolbar: [
-    'undo', 'redo', '|', 'bold', 'italic', '|', 'alignment', 'Image', 'Mermaid', '|', 'PageBreak', '|',
-     'fontFamily', 'fontColor', 'fontBackgroundColor', 'fontsize', '|', '-', 'FindAndReplace', 'Fullscreen', 
-    'WordCount', 'BlockQuote', 'Typing', 'ShiftEnter', 'LinkImage',  'Enter', 'HorizontalLine', 'ImageCaption', 
-    'Indent', 'Style', '|', 'AutoImage', 'PasteFromOffice', 'numberedList', 'bulletedList', '|', 'heading', '|', 
-    'link', 'List', 'ListEditing', 'Table', 'uploadImage', 'ImageInline'
-		],
+		plugins: [ Essentials, Bold, Italic, Font, Paragraph, Alignment, Image, ImageStyle, Heading, Mermaid, MediaEmbed, Link, List, ListEditing, FindAndReplace, Fullscreen, AutoImage, ImageUpload, Base64UploadAdapter, PageBreak, PasteFromOffice, Table, Style, LinkImage, Indent, ImageCaption, ImageResize, ImageInline, ImageBlock, BlockQuote, HorizontalLine, Typing, ShiftEnter, Notification, Enter, WordCount],
+				toolbar: {
+	    items:[
+        'undo', 'redo', '|', 'bold', 'italic', '|', 'alignment', 'Image', 'Mermaid', '|', 'PageBreak', '|',
+        'fontFamily', 'fontColor', 'fontBackgroundColor', 'fontsize', '|', '-', 'FindAndReplace', 'Fullscreen', 
+        'WordCount', 'BlockQuote', 'Typing', 'ShiftEnter', 'LinkImage',  'Enter', 'HorizontalLine', 'ImageCaption', 
+        'Indent', 'Style', '|', 'AutoImage', 'PasteFromOffice', 'numberedList', 'bulletedList', 'ImageInline', 'ImageUpload', 'ImageStyle', '|', 'heading', '|', 
+        'link', 'List', 'ListEditing', 'Table',
+      ],
+      shouldNotGroupWhenFull: false
+    },
 		root: {
 			placeholder: ''
 		},
@@ -37,7 +43,7 @@ let editor = ClassicEditor.create( {
         },
     language: {
         ui: 'es',
-        content: 'es' 
+        content: 'es'
     },
     translations: [
         esTranslations
