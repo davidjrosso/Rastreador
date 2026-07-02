@@ -224,7 +224,7 @@ if(!isset($_SESSION["Usuario"])){
             $("#Motivo_" + index).html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo_" + index + "'>Seleccione Motivo</button>");
             $("#ID_Motivo_" + index).val(null);
           }
-          
+
         }
       }
 
@@ -849,7 +849,7 @@ if(isset($_REQUEST["Mensaje"])){
     if (result && datos) {
     sendToRepL(datos);
   } else {
-    location.href = 'view_vermovlistados.php';
+    location.href = 'view_movimientos.php';
   }});
 </script>";
 }
