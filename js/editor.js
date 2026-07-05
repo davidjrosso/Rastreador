@@ -1,6 +1,6 @@
-import { ClassicEditor, Essentials, Bold, Italic, Font, FontSize, Paragraph, Alignment, ImageStyle, Heading, Link, List, MediaEmbed, ListEditing, FindAndReplace, PasteFromOffice, PageBreak, AutoImage, ImageBlock, ImageUpload, ImageInline, Fullscreen, Table, Style, LinkImage, Indent, ImageCaption, ImageResize, BlockQuote, HorizontalLine, Typing, ShiftEnter, Enter, WordCount, Title} from 'ckeditor5';
+import { ClassicEditor, Essentials, Bold, Italic, Font, FontSize, Paragraph, Alignment, ImageStyle, Heading, Link, List, MediaEmbed, ListEditing, FindAndReplace, PasteFromOffice, PageBreak, AutoImage, ImageBlock, ImageUpload, Fullscreen, Table, Style, LinkImage, Indent, ImageCaption, ImageResize, BlockQuote, HorizontalLine, Typing, ShiftEnter, Enter, WordCount, Title} from 'ckeditor5';
 import { Mermaid } from '@ckeditor/ckeditor5-mermaid';
-import { Image  } from '@ckeditor/ckeditor5-image';
+import { Image, ImageToolbar, ImageInline } from '@ckeditor/ckeditor5-image';
 import 'ckeditor5/ckeditor5.css';
 import '@ckeditor/ckeditor5-mermaid/index.css';
 import esTranslations from 'ckeditor5/translations/es.js';
@@ -13,17 +13,23 @@ import { Base64UploadAdapter } from '@ckeditor/ckeditor5-upload';
 let editor = ClassicEditor.create({
 		attachTo: document.querySelector( '#element-ct' ),
 		licenseKey: 'GPL',
-		plugins: [ Essentials, Bold, Italic, Font, Paragraph, Alignment, Image, ImageStyle, Heading, Mermaid, MediaEmbed, Link, List, ListEditing, FindAndReplace, Fullscreen, AutoImage, ImageUpload, Base64UploadAdapter, PageBreak, PasteFromOffice, Table, Style, LinkImage, Indent, ImageCaption, ImageResize, ImageInline, ImageBlock, BlockQuote, HorizontalLine, Typing, ShiftEnter, Notification, Enter, WordCount],
+		plugins: [ Essentials, Bold, Italic, Font, Paragraph, Alignment, Image, ImageToolbar, ImageStyle, Heading, Mermaid, MediaEmbed, Link, List, ListEditing, FindAndReplace, Fullscreen, AutoImage, ImageUpload, Base64UploadAdapter, PageBreak, PasteFromOffice, Table, Style, LinkImage, Indent, ImageCaption, ImageResize, ImageInline, ImageBlock, BlockQuote, HorizontalLine, Typing, ShiftEnter, Notification, Enter, WordCount],
 				toolbar: {
 	    items:[
         'undo', 'redo', '|', 'bold', 'italic', '|', 'alignment', 'Image', 'Mermaid', '|', 'PageBreak', '|',
         'fontFamily', 'fontColor', 'fontBackgroundColor', 'fontsize', '|', '-', 'FindAndReplace', 'Fullscreen', 
         'WordCount', 'BlockQuote', 'Typing', 'ShiftEnter', 'LinkImage',  'Enter', 'HorizontalLine', 'ImageCaption', 
-        'Indent', 'Style', '|', 'AutoImage', 'PasteFromOffice', 'numberedList', 'bulletedList', 'ImageInline', 'ImageUpload', 'ImageStyle', '|', 'heading', '|', 
+      'Indent', 'Style', '|', 'AutoImage', 'PasteFromOffice', 'numberedList', 'bulletedList', 'ImageInline' , 'ImageToolbar', 'ImageUpload', 'ImageStyle', '|', 'heading', '|', 
         'link', 'List', 'ListEditing', 'Table',
       ],
       shouldNotGroupWhenFull: false
     },
+    image: {
+			toolbar: [ 'imageInline', 'toggleImageCaption', 'imageTextAlternative', 'ckboxImageEdit', 'imageStyle:inline', 'imageStyle:wrapText', 'imageStyle:full', 'imageStyle:side', 'imageStyle:alignLeft', 'imageStyle:alignRight'],
+      styles: {
+				options: ['alignLeft', 'alignRight', 'wrapText', 'full', 'side']
+			}
+		},
 		root: {
 			placeholder: ''
 		},
