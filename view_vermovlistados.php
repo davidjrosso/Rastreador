@@ -528,10 +528,10 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
               Imprimir
           </button>
           <div style="display: inline-flex; flex-direction: column; flex-shrink: 1; padding: 0px; row-gap: 1px;">
-            <button id="excel_descarga" type="button" style="max-height: 50%; padding: 0px; font-size: 0.85rem; line-height: 21px;" class="btn btn-secondary">
+            <button id="excel_descarga" type="button" style="max-height: 50%; padding: 0px; font-size: 0.65rem; line-height: 21px;" class="btn btn-secondary">
                 Excel descargar
             </button>
-            <button id="excel" type = "button" style="max-height: 50%; padding: 0px; font-size: 0.85rem; line-height: 21px;" class = "btn btn-secondary" data-toggle="modal" 
+            <button id="excel" type = "button" style="max-height: 50%; padding: 0px; font-size: 0.65rem; line-height: 21px;" class = "btn btn-secondary" data-toggle="modal" 
                     data-target="#excel-modal">
                 Excel desplegar
             </button>
