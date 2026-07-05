@@ -35,6 +35,7 @@ if(!isset($_SESSION["Usuario"])){
     exit();
 }
 $_SESSION["return"] = null;
+
 $request = null;
 $ID_Usuario = $_SESSION["Usuario"];
 $usuario = new Account(account_id: $ID_Usuario);
@@ -51,15 +52,24 @@ $_SESSION["reporte_grafico"] = false;
 $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
 $filtro_persona = $_REQUEST["familia-check"] ?? null;
 $filtro_div = $_REQUEST["div-check"] ?? null;
-$filtro_motivo = isset($_SESSION["redirect_motivo"]);
+$filtro_id_motivo = !empty($_SESSION["redirect_motivo"]);
 $ID_Persona = $_REQUEST["ID_Persona"];
 $ID_CentroSalud = $_REQUEST["ID_CentroSalud"] ?? null;
 $movimiento_inicial = (!empty($_REQUEST["inicial-movimiento-check"])) ? true : false;
 
+if (($redirect && !$filtro_id_motivo) || $redirect_per 
+    || $redirect_newper) {
+  $_SESSION["redirect_motivo"] = null;
+}
+
 $movimiento_fin = (!empty($_REQUEST["fin-movimiento-check"])) ? true : false;
+
+if (!$filtro_id_motivo) $_SESSION["retorno_motivo"] = $_REQUEST;
 
 if ($filtro_persona || $filtro_div) {
   $_SESSION["retorno"] = $_REQUEST;
+} else if ($filtro_id_motivo && $redirect) {
+  $_SESSION["retorno"] = $_SESSION["retorno_motivo"];
 } else {
   $_SESSION["retorno"] = null;
   $request = $_REQUEST;
@@ -512,16 +522,16 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
         <button id="zoomDecrementar"></button>
       </div>
     </div>
-    <div class="row">
+    <div class="row" style="justify-content: center;">
         <div class="col-md-4 row" style="padding-right: 0px;padding-left: 0pc; display: inline-flex; flex-wrap: nowrap; height: 43px; column-gap: 4px;">
           <button id="enviar_imprimir" type="button" style="flex-shrink: 1;" class="btn btn-secondary">
               Imprimir
           </button>
           <div style="display: inline-flex; flex-direction: column; flex-shrink: 1; padding: 0px; row-gap: 1px;">
-            <button id="excel_descarga" type="button" style="max-height: 50%; padding: 0px; font-size: 0.95rem; line-height: 21px;" class="btn btn-secondary">
+            <button id="excel_descarga" type="button" style="max-height: 50%; padding: 0px; font-size: 0.85rem; line-height: 21px;" class="btn btn-secondary">
                 Excel descargar
             </button>
-            <button id="excel" type = "button" style="max-height: 50%; padding: 0px; font-size: 0.95rem; line-height: 21px;" class = "btn btn-secondary" data-toggle="modal" 
+            <button id="excel" type = "button" style="max-height: 50%; padding: 0px; font-size: 0.85rem; line-height: 21px;" class = "btn btn-secondary" data-toggle="modal" 
                     data-target="#excel-modal">
                 Excel desplegar
             </button>
@@ -1304,7 +1314,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
                     data-target="#configModal">
                 Columnas
             </button>
-            <button type = "button" class = "btn btn-danger" onClick = "<?php echo ($redirect_newper || $redirect || (!$filtro_persona && !$filtro_div)) ? "location.href = 'view_listados.php'" : "sendToRepL()" ;?>">
+            <button type = "button" class = "btn btn-danger" onClick = "<?php echo ($redirect_newper || ($redirect && !$filtro_id_motivo) || (!$filtro_persona && !$filtro_div && !$filtro_id_motivo)) ? "location.href = 'view_listados.php'" : "sendToRepL()" ;?>">
                 Atrás
             </button>
             <button id="grilla_tabla" type = "button" class = "btn btn-secondary">
