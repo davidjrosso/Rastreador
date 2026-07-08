@@ -1,4 +1,4 @@
-import { ClassicEditor, Essentials, Bold, Italic, Font, FontSize, Paragraph, Alignment, ImageStyle, Heading, Link, List, MediaEmbed, ListEditing, FindAndReplace, PasteFromOffice, PageBreak, AutoImage, ImageBlock, ImageUpload, Fullscreen, Table, Style, LinkImage, Indent, ImageCaption, ImageResize, BlockQuote, HorizontalLine, Typing, ShiftEnter, Enter, WordCount, Title} from 'ckeditor5';
+import { ClassicEditor, Essentials, Bold, Italic, Mention, Font, FontSize, Paragraph, ImageInsert, Alignment, ImageStyle, Heading, Link, List, MediaEmbed, ListEditing, FindAndReplace, PasteFromOffice, PageBreak, AutoImage, ImageBlock, ImageUpload, Fullscreen, Table, Style, LinkImage, IndentBlock, Indent, ImageCaption, ImageResize, BlockQuote, HorizontalLine, DecoupledEditor, Clipboard, TableSelection, TableToolbar, Typing, TodoList, ShiftEnter, Enter, WordCount, Title} from 'ckeditor5';
 import { Mermaid } from '@ckeditor/ckeditor5-mermaid';
 import { Image, ImageToolbar, ImageInline } from '@ckeditor/ckeditor5-image';
 import 'ckeditor5/ckeditor5.css';
@@ -13,13 +13,13 @@ import { Base64UploadAdapter } from '@ckeditor/ckeditor5-upload';
 let editor = ClassicEditor.create({
 		attachTo: document.querySelector( '#element-ct' ),
 		licenseKey: 'GPL',
-		plugins: [ Essentials, Bold, Italic, Font, Paragraph, Alignment, Image, ImageToolbar, ImageStyle, Heading, Mermaid, MediaEmbed, Link, List, ListEditing, FindAndReplace, Fullscreen, AutoImage, ImageUpload, Base64UploadAdapter, PageBreak, PasteFromOffice, Table, Style, LinkImage, Indent, ImageCaption, ImageResize, ImageInline, ImageBlock, BlockQuote, HorizontalLine, Typing, ShiftEnter, Notification, Enter, WordCount],
+		plugins: [ Essentials, Bold, Italic, Font, Paragraph, ImageInsert, Mention, Alignment, Image, ImageToolbar, ImageStyle, Heading, Mermaid, MediaEmbed, Link, List, ListEditing, FindAndReplace, Fullscreen, AutoImage, ImageUpload, Base64UploadAdapter, PageBreak, PasteFromOffice, Table, Style, LinkImage, Indent, IndentBlock, ImageCaption, ImageResize, ImageInline, ImageBlock, BlockQuote, HorizontalLine, Clipboard, TodoList, TableSelection, TableToolbar, Typing, ShiftEnter, Notification, Enter, WordCount],
 				toolbar: {
 	    items:[
         'undo', 'redo', '|', 'bold', 'italic', '|', 'alignment', 'Image', 'Mermaid', '|', 'PageBreak', '|',
         'fontFamily', 'fontColor', 'fontBackgroundColor', 'fontsize', '|', '-', 'FindAndReplace', 'Fullscreen', 
-        'WordCount', 'BlockQuote', 'Typing', 'ShiftEnter', 'LinkImage',  'Enter', 'HorizontalLine', 'ImageCaption', 
-      'Indent', 'Style', '|', 'AutoImage', 'PasteFromOffice', 'numberedList', 'bulletedList', 'ImageInline' , 'ImageToolbar', 'ImageUpload', 'ImageStyle', '|', 'heading', '|', 
+        'WordCount', 'BlockQuote', 'Typing', 'ShiftEnter', 'LinkImage', 'Mention', 'ImageInsert', 'Enter', 'HorizontalLine', 'ImageCaption', 'outdent', 'indent', 'TableSelection', 'TableToolbar',
+        'Style', '|', 'AutoImage', 'PasteFromOffice', 'numberedList', 'todoList', 'bulletedList', 'ImageInline' , 'ImageToolbar', 'ImageStyle', '|', 'heading', '|', 
         'link', 'List', 'ListEditing', 'Table',
       ],
       shouldNotGroupWhenFull: false
@@ -53,7 +53,23 @@ let editor = ClassicEditor.create({
     },
     translations: [
         esTranslations
-    ]
+    ],
+    table: {
+            // Toolbar shown when a table cell content is selected
+            contentToolbar: [
+                'tableColumn', 
+                'tableRow', 
+                'mergeTableCells', 
+                'tableCellProperties', 
+                'tableProperties'
+            ],
+            // Toolbar shown when the entire table is selected
+            tableToolbar: [ 
+                'tableColumn', 
+                'tableRow', 
+                'mergeTableCells' 
+            ]
+        }
   });
 
   //let quill = new Quill('#editor');
