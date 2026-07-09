@@ -64,15 +64,26 @@ if (($redirect && !$filtro_id_motivo) || $redirect_per
 
 $movimiento_fin = (!empty($_REQUEST["fin-movimiento-check"])) ? true : false;
 
-if (!$filtro_id_motivo) $_SESSION["retorno_motivo"] = $_REQUEST;
-
-if ($filtro_persona || $filtro_div) {
+if ($redirect && !$filtro_id_motivo) {
+  $redireccion = ($_SESSION["br"] == 0);
+  $_SESSION["br"]++;
   $_SESSION["retorno"] = $_REQUEST;
-} else if ($filtro_id_motivo && $redirect) {
-  $_SESSION["retorno"] = $_SESSION["retorno_motivo"];
+  $_SESSION["redirect_motivo"] = null;
+} else if ($redirect && $filtro_id_motivo) {
+  $redireccion = ($_SESSION["br"] == 0);
+  $_SESSION["redirect_motivo"] = null;
+} else if ($filtro_persona && $redirect_per) {
+  $_SESSION["br"]++;
+  $redireccion = ($_SESSION["br"] == 0);
+} else if ($redirect_per && $filtro_div) {
+  $_SESSION["br"]++;
+  $redireccion = ($_SESSION["br"] == 0);
+} else if ($redirect_newper) {
+  $_SESSION["return"] = null;
+  $redireccion = ($_SESSION["br"] == 0);
 } else {
-  $_SESSION["retorno"] = null;
-  $request = $_REQUEST;
+  $_SESSION["br"]--;
+  $redireccion = ($_SESSION["br"] == 0);
 }
 
 $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
@@ -1314,7 +1325,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
                     data-target="#configModal">
                 Columnas
             </button>
-            <button type = "button" class = "btn btn-danger" onClick = "<?php echo ($redirect_newper || ($redirect && !$filtro_id_motivo) || (!$filtro_persona && !$filtro_div && !$filtro_id_motivo)) ? "location.href = 'view_listados.php'" : "sendToRepL()" ;?>">
+            <button type = "button" class = "btn btn-danger" onClick = "<?php echo ($redireccion) ? "location.href = 'view_listados.php'" : "sendToRepL()" ;?>">
                 Atrás
             </button>
             <button id="grilla_tabla" type = "button" class = "btn btn-secondary">
@@ -2683,7 +2694,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
         <div id="element-ct"></div>
       </div>
       <div class="modal-footer modal-footer-flex-center">
-        <button id="bt-guardar" type="button" class="btn btn-primary" >Guardar</button>
+        <!--<button id="bt-guardar" type="button" class="btn btn-primary" >Guardar</button>-->
         <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
         <button type="button" class="btn btn-secondary" onClick="setMvimient()" data-dismiss="modal">Cancelar</button>
       </div>
