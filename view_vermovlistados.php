@@ -34,9 +34,8 @@ if(!isset($_SESSION["Usuario"])){
     header("Location: Error_Session.php");
     exit();
 }
-$_SESSION["return"] = null;
 
-$request = null;
+
 $ID_Usuario = $_SESSION["Usuario"];
 $usuario = new Account(account_id: $ID_Usuario);
 $TipoUsuario = $usuario->get_id_tipo_usuario();
@@ -65,25 +64,24 @@ if (($redirect && !$filtro_id_motivo) || $redirect_per
 $movimiento_fin = (!empty($_REQUEST["fin-movimiento-check"])) ? true : false;
 
 if ($redirect && !$filtro_id_motivo) {
-  $redireccion = ($_SESSION["br"] == 0);
-  $_SESSION["br"]++;
-  $_SESSION["retorno"] = $_REQUEST;
+  $_SESSION["retorno"][] = $_REQUEST;
+  $redireccion = (count($_SESSION["retorno"]) == 1);
   $_SESSION["redirect_motivo"] = null;
 } else if ($redirect && $filtro_id_motivo) {
-  $redireccion = ($_SESSION["br"] == 0);
+  $_SESSION["retorno"][] = $_REQUEST;
+  $redireccion = (count($_SESSION["retorno"]) == 1);
   $_SESSION["redirect_motivo"] = null;
 } else if ($filtro_persona && $redirect_per) {
-  $_SESSION["br"]++;
-  $redireccion = ($_SESSION["br"] == 0);
+  $_SESSION["retorno"][] = $_REQUEST;
+  $redireccion = (count($_SESSION["retorno"]) == 1);
 } else if ($redirect_per && $filtro_div) {
-  $_SESSION["br"]++;
-  $redireccion = ($_SESSION["br"] == 0);
+  $_SESSION["retorno"][] = $_REQUEST;
+  $redireccion = (count($_SESSION["retorno"]) == 1);
 } else if ($redirect_newper) {
-  $_SESSION["return"] = null;
-  $redireccion = ($_SESSION["br"] == 0);
+  $redireccion = (count($_SESSION["retorno"]) == 1);
 } else {
-  $_SESSION["br"]--;
-  $redireccion = ($_SESSION["br"] == 0);
+  $element = array_pop($_SESSION["retorno"]);
+  $redireccion = (count($_SESSION["retorno"]) == 1);
 }
 
 $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
@@ -124,7 +122,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
       let fullscreen = false;
       let excel = null;
       let intervalo = null;
-      let datosPersona = <?php echo (($request) ? json_encode($request) : 'null'); ?>;
+      let datosPersona = <?php echo (($_SESSION["retorno"]) ? json_encode(end($_SESSION["retorno"])) : 'null'); ?>;
       let datos = <?php echo (($redirect_per) ? json_encode($_REQUEST) : 'null');?>;
       $(document).ready(function(){
               var date_input=$('input[name="date"]');
@@ -307,7 +305,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
 
     function sendToRepL() {
         const form = document.createElement('form');
-        let datos = <?php echo (!empty($_SESSION["retorno"]))? json_encode($_SESSION["retorno"]) : "{}" ;?>;
+        let datos = <?php echo (!empty(end($_SESSION["retorno"])))? json_encode(end($_SESSION["retorno"])) : "{}" ;?>;
         form.method = 'POST';
         form.action = "/view_vermovlistados.php";
         form.style.display = 'none';
