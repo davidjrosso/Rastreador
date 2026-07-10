@@ -23,6 +23,8 @@ $datosNav = (isset($_SESSION["datosNav"])) ? $_SESSION["datosNav"]: [];
 $Element = new Elements();
 
 $id_motivo = !empty($_REQUEST["id_motivo"]) ? $_REQUEST["id_motivo"] : null;
+$_SESSION["redirect_motivo"] = isset($id_motivo);
+if (!$id_motivo) $_SESSION["retorno"] = [];
 $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
 ?>
 <!DOCTYPE html>
@@ -610,10 +612,15 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
     <div class="row" style="margin-bottom: 0.6rem;">
       <div style="flex: 0 0 4.333333%; max-width: 4.333333%;">
       </div>
-      <div class="col-2">
+      <div class="col-4">
         <button id="btn-enlace-driver" class="btn btn-md btn-secondary" data-toggle="modal" data-target="#modal-enlace-drive">Enlace</button>
       </div>
-      <div class="col-md-7">
+      <!--
+      <div class="col-2">
+        <button id="btn-datos" class="btn btn-md btn-secondary" data-toggle="modal" data-target="#modal-datos">Preferencias</button>
+      </div>
+      -->
+      <div class="col-md-5">
       </div>
       <div class="col-md-2">
         <button type="button" class="btn btn-outline-secondary" onclick="location.href = 'view_inicio.php'">Inicio</button>
@@ -1281,6 +1288,34 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
               </div>
             </div>
             <!-- FIN MODAL SELECCION ENLACE DRIVER -->
+            <!-- Modal filtro-->
+            <div class="modal fade bd-example-modal-lg" id="modal-datos" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header" style="justify-content: center;">
+                    <h1>filtro</h1>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="col-4">
+                        <?php
+                          //echo $Element->CBCSfiltros();
+                        ?>
+                      </div>
+                      <div class="col-8">
+                        <?php 
+                          //echo $Element->CBfiltro();
+                        ?>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- FIN MODAL SELECCION filtro -->
             <!-- FIN SECCION DE MODALES -->
       </div>
       <div class = "col-1">
