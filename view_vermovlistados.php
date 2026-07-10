@@ -64,24 +64,27 @@ if (($redirect && !$filtro_id_motivo) || $redirect_per
 $movimiento_fin = (!empty($_REQUEST["fin-movimiento-check"])) ? true : false;
 
 if ($redirect && !$filtro_id_motivo) {
-  $_SESSION["retorno"][] = $_REQUEST;
-  $redireccion = (count($_SESSION["retorno"]) == 1);
+  $_SESSION["request_prev"] = $_REQUEST;
+  $redireccion = (count($_SESSION["retorno"]) == 0);
   $_SESSION["redirect_motivo"] = null;
 } else if ($redirect && $filtro_id_motivo) {
-  $_SESSION["retorno"][] = $_REQUEST;
-  $redireccion = (count($_SESSION["retorno"]) == 1);
+  $_SESSION["retorno"][] = $_SESSION["request_prev"];
+  $_SESSION["request_prev"] = $_REQUEST;
+  $redireccion = (count($_SESSION["retorno"]) == 0);
   $_SESSION["redirect_motivo"] = null;
 } else if ($filtro_persona && $redirect_per) {
-  $_SESSION["retorno"][] = $_REQUEST;
-  $redireccion = (count($_SESSION["retorno"]) == 1);
+  $_SESSION["retorno"][] = $_SESSION["request_prev"];
+  $_SESSION["request_prev"] = $_REQUEST;
+  $redireccion = (count($_SESSION["retorno"]) == 0);
 } else if ($redirect_per && $filtro_div) {
-  $_SESSION["retorno"][] = $_REQUEST;
-  $redireccion = (count($_SESSION["retorno"]) == 1);
+  $_SESSION["retorno"][] = $_SESSION["request_prev"];
+  $_SESSION["request_prev"] = $_REQUEST;
+  $redireccion = (count($_SESSION["retorno"]) == 0);
 } else if ($redirect_newper) {
-  $redireccion = (count($_SESSION["retorno"]) == 1);
+  $redireccion = (count($_SESSION["retorno"]) == 0);
 } else {
   $element = array_pop($_SESSION["retorno"]);
-  $redireccion = (count($_SESSION["retorno"]) == 1);
+  $redireccion = (count($_SESSION["retorno"]) == 0);
 }
 
 $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
@@ -122,7 +125,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
       let fullscreen = false;
       let excel = null;
       let intervalo = null;
-      let datosPersona = <?php echo (($_SESSION["retorno"]) ? json_encode(end($_SESSION["retorno"])) : 'null'); ?>;
+      let datosPersona = <?php echo (($_SESSION["request_prev"]) ? json_encode($_SESSION["request_prev"]) : 'null'); ?>;
       let datos = <?php echo (($redirect_per) ? json_encode($_REQUEST) : 'null');?>;
       $(document).ready(function(){
               var date_input=$('input[name="date"]');
