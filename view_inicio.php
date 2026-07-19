@@ -714,7 +714,7 @@ $Con->CloseConexion();
           <img src="images/FondoInicio.jpg" class = "FondoInicio">
         </div>
         <div class="col-4">
-            <div class="menu-center menu-item-selected" style="align-content: center; max-width: 383px;">
+            <div class="menu-center menu-item-selected" style="align-content: center; max-width: 383px; max-height: 301px;">
               <div class="menu-list">
                         <ul style="line-height: 67px" id="central-navigation" class="menu-content collapse show out">
                             <li class="collapsed" style="text-align: center; font-size: 2rem; padding-bottom: 1rem; padding-top: 1rem; border: 2px solid #969faa; border-top: 0px;" onClick = "location.href = 'view_listados.php'">
@@ -823,7 +823,7 @@ $Con->CloseConexion();
           <img src="images/FondoInicio.jpg" class = "FondoInicio">
         </div>
         <div class="col-4">
-            <div class="nav-side-menu media-nav-flex menu-center menu-item-selected" style="align-content: center; max-width: 383px;">
+            <div class="nav-side-menu media-nav-flex menu-center menu-item-selected" style="align-content: center; max-width: 383px; max-height: 301px;">
               <div class="menu-list">
                         <ul id="menu-content" class="menu-content collapse show  out central-navigation">
                             <li class="collapsed" style="text-align: center; font-size: 2rem; padding-bottom: 1rem; padding-top: 1rem; border: 2px solid #969faa; border-top: 0px;" onClick = "location.href = 'view_listados.php'">
