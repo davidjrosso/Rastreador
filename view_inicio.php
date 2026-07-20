@@ -102,7 +102,7 @@ $Con->CloseConexion();
                 }
               });
 
-              $("#title-intit").on("blur", function (e) {
+              $("#text-intit").on("blur", function (e) {
                 titleInstSet(e);
               });
 
