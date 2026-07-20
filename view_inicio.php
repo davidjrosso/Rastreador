@@ -102,7 +102,7 @@ $Con->CloseConexion();
                 }
               });
 
-              $("#text-intit").on("blur", function (e) {
+              $("#text-intit").on("focusout", function (e) {
                 titleInstSet(e);
               });
 
