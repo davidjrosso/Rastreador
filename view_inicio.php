@@ -118,8 +118,8 @@ $Con->CloseConexion();
               });
               $("#footer-text").on("focusout", function (e) {
                 if ($(this).children().prop("tagName") === 'TEXTAREA') {
-                  let text = `<div style="height: auto; resize: none; border-color: white; margin-top: 20px; overflow: hidden; text-align: center; font-size: 1.5rem;" id="title-intit" class = "form-control CopyRight" row = "3" name = "Observaciones"> ` + $("#footer-text").children().val() + `</div>`;
-                  $(this).html(text.replace("\n", "<br>"));
+                  let text = `<div style="height: auto; resize: none; border-color: white; margin-top: 20px; overflow: hidden; text-align: center; font-size: 1.5rem;" id="title-intit" class = "form-control CopyRight" row = "3" name = "Observaciones"> ` + $("#footer-text").children().prop("value").replace("\n", "<br>") + `</div>`;
+                  $(this).html(text);
                 }
               });
           });
@@ -891,12 +891,12 @@ $Con->CloseConexion();
           <?php if ($tipo_usuario == 1) { ?>
           <div class="col">
             <div id='footer-text'>
-              <div style="height: auto; resize: none; border-color: white; margin-top: 20px; overflow: hidden; text-align: center; font-size: 1.5rem;" id="title-intit" class = "form-control CopyRight" row = "3" name = "Observaciones"><?php echo $title_obj->get_valor(); ?></div>
+              <div style="height: auto; resize: none; border-color: white; margin-top: 20px; overflow: hidden; text-align: center; font-size: 1.5rem;" id="title-intit" class = "form-control CopyRight" row = "3" name = "Observaciones"><?php echo str_replace("\n", "<br>", $title_obj->get_valor()); ?></div>
             </div>
           </div>
           <?php } else { ?>
             <div class="col-11 CopyRight" style="text-align: center; font-size: 1.5rem;">
-              <p><?php echo $title_obj->get_valor(); ?></p>
+              <p><?php echo str_replace("\n", "<br>", $title_obj->get_valor()); ?></p>
             </div>
             <?php } ?>
         </div>
