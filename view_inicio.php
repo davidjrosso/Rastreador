@@ -892,7 +892,7 @@ $Con->CloseConexion();
           <?php if ($tipo_usuario == 1) { ?>
           <div class="col">
             <div id='footer-text'>
-              <div style="height: 40px; resize: none; border-color: white; margin-top: 20px; overflow: hidden; text-align: center; font-size: 1.5rem; height: 55px;" id="title-intit" class = "form-control CopyRight" row = "3" name = "Observaciones"><?php echo $title_obj->get_valor(); ?></div>
+              <div style="hresize: none; border-color: white; margin-top: 20px; overflow: hidden; text-align: center; font-size: 1.5rem;" id="title-intit" class = "form-control CopyRight" row = "3" name = "Observaciones"><?php echo $title_obj->get_valor(); ?></div>
             </div>
           </div>
           <?php } else { ?>
