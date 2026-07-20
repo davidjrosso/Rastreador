@@ -26,18 +26,19 @@ if (isset($consultaBusqueda)) {
 	//o $consultaBusqueda sea igual a nombre + (espacio) + apellido
 	$caracater = str_contains($consultaBusqueda, ",");
 	if(is_numeric($consultaBusqueda)) {
-		if(strlen((string)$consultaBusqueda) >= 7){
-			$consulta = mysqli_query(
-							  $Con->Conexion, 
-							  "SELECT p.id_persona, UPPER(p.apellido) AS apellido, 
-						  				 CONCAT(UPPER(SUBSTRING(p.nombre,1,1)),LOWER(SUBSTRING(p.nombre,2))) as nombre,
-							  			 p.documento, p.nro_carpeta, CONCAT(c.calle_nombre, ' ', p.nro) as domicilio 
-								  	  FROM persona p LEFT JOIN calle c ON (p.calle = c.id_calle) 
-									  WHERE p.documento like '%$consultaBusqueda%' 
-									  	and p.estado = 1 
-									  order by upper(p.apellido) ASC, upper(p.nombre) ASC, upper(p.documento) ASC"
-									);
-	    } else {
+		//if(strlen((string)$consultaBusqueda) >= 7){
+		$consulta = mysqli_query(
+							$Con->Conexion, 
+							"SELECT p.id_persona, UPPER(p.apellido) AS apellido, 
+										CONCAT(UPPER(SUBSTRING(p.nombre,1,1)),LOWER(SUBSTRING(p.nombre,2))) as nombre,
+										p.documento, p.nro_carpeta, CONCAT(c.calle_nombre, ' ', p.nro) as domicilio 
+									FROM persona p LEFT JOIN calle c ON (p.calle = c.id_calle) 
+									WHERE p.documento like '%$consultaBusqueda%' 
+									and p.estado = 1 
+									order by upper(p.apellido) ASC, upper(p.nombre) ASC, upper(p.documento) ASC"
+								);
+	    /*
+			} else {
 			$consulta = mysqli_query(
 							  $Con->Conexion, 
 							  "SELECT p.id_persona, UPPER(p.apellido) AS apellido, 
@@ -48,7 +49,7 @@ if (isset($consultaBusqueda)) {
 										AND p.estado = 1 
 									  ORDER BY upper(p.apellido) ASC, upper(p.nombre) ASC, upper(p.documento) ASC"
 									);
-		}
+		}*/
 	} else {
 
 		$query_filter = "";
