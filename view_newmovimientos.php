@@ -60,7 +60,7 @@ if(!isset($_SESSION["Usuario"])){
       let cantResponsables = 1;
       let cantMotivos = 3;
       let listaMotivos = new Map();
-      let datos = <?= (!empty($_SESSION["request_prev"])) ? json_encode($_SESSION["request_prev"]) : 'null';?>;
+      let datosPrev = <?= (!empty($_SESSION["request_prev"])) ? json_encode($_SESSION["request_prev"]) : 'null';?>;
 
        $(function (e){
               let date_input=$('input[name="Fecha"]'); //our date input has the name "date"
@@ -83,8 +83,8 @@ if(!isset($_SESSION["Usuario"])){
               });
               $("#volver").on("click", function (e) {
                   e.preventDefault();
-                  if (datos) sendToRepL(datos);
-                  if (!datos) location.href = 'view_movimientos.php';
+                  if (datosPrev) sendToRepL(datosPrev);
+                  if (!datosPrev) location.href = 'view_movimientos.php';
               });
 
        });
@@ -845,8 +845,8 @@ if(!isset($_SESSION["Usuario"])){
 if(isset($_REQUEST["Mensaje"])){
   echo "<script type='text/javascript'>
   swal('".$_REQUEST["Mensaje"]."','','success').then((result) => {
-    if (result && datos) {
-    sendToRepL(datos);
+    if (result && datosPrev) {
+    sendToRepL(datosPrev);
   } else {
     location.href = 'view_movimientos.php';
   }});
