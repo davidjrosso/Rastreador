@@ -101,9 +101,28 @@ $Con->CloseConexion();
                   $(".col.inicio-md-2").show();
                 }
               });
+
               $("#title-intit").on("blur", function (e) {
                 titleInstSet(e);
-              })
+              });
+
+              $("#text-intit").on("click", function (e) {
+                e.stopPropagation();
+              });
+
+              $("#footer-text").on("click", function (e) {
+                if (!($(this).children().prop("tagName") === 'TEXTAREA')) {
+                  let input = `<textarea style="resize: none; border-color: white; margin-top: 20px; overflow: hidden; text-align: center; font-size: 1.5rem;" id="text-intit" class="form-control CopyRight" row="3" name="Observaciones" value="` + $("#title-intit").text().trim() + `">` + $("#title-intit").text().trim() + `</textarea>`;
+                  $(this).html(input);
+                  $(this).children().click();
+                }
+              });
+              $("#footer-text").on("focusout", function (e) {
+                if ($(this).children().prop("tagName") === 'TEXTAREA') {
+                  let text = `<div style="height: auto; resize: none; border-color: white; margin-top: 20px; overflow: hidden; text-align: center; font-size: 1.5rem;" id="title-intit" class = "form-control CopyRight" row = "3" name = "Observaciones"> ` + $("#footer-text").children().val() + `</div>`;
+                  $(this).html(text.replace("\n", "<br>"));
+                }
+              });
           });
 
        function CalcularPrecio() {
@@ -872,7 +891,9 @@ $Con->CloseConexion();
         <div style="margin: 5px; justify-content: center;" class="row">
           <?php if ($tipo_usuario == 1) { ?>
           <div class="col">
-            <textarea style="height: 40px; resize: none; border-color: white; margin-top: 20px; overflow: hidden; text-align: center; font-size: 1.5rem; height: 55px;" id="title-intit" class = "form-control CopyRight" row = "3" name = "Observaciones" value = ""><?php echo $title_obj->get_valor(); ?></textarea>
+            <div id='footer-text'>
+              <div style="height: 40px; resize: none; border-color: white; margin-top: 20px; overflow: hidden; text-align: center; font-size: 1.5rem; height: 55px;" id="title-intit" class = "form-control CopyRight" row = "3" name = "Observaciones"><?php echo $title_obj->get_valor(); ?></div>
+            </div>
           </div>
           <?php } else { ?>
             <div class="col-11 CopyRight" style="text-align: center; font-size: 1.5rem;">
