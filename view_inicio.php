@@ -102,10 +102,6 @@ $Con->CloseConexion();
                 }
               });
 
-              $("#text-intit").on("focusout", function (e) {
-                titleInstSet(e);
-              });
-
               $("#text-intit").on("click", function (e) {
                 e.stopPropagation();
               });
@@ -114,6 +110,9 @@ $Con->CloseConexion();
                 if (!($(this).children().prop("tagName") === 'TEXTAREA')) {
                   let input = `<textarea style="resize: none; border-color: white; margin-top: 20px; overflow: hidden; text-align: center; font-size: 1.5rem;" id="text-intit" class="form-control CopyRight" row="3" name="Observaciones" value="` + $("#title-intit").text().trim() + `">` + $("#title-intit").text().trim() + `</textarea>`;
                   $(this).html(input);
+                  $("#text-intit").on("focusout", function (e) {
+                    titleInstSet(e);
+                  });
                   $(this).children().click();
                 }
               });
