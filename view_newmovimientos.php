@@ -24,7 +24,6 @@ if(!isset($_SESSION["Usuario"])){
 
   $ID_Persona = $_REQUEST["ID_Persona"] ?? null;
   $volver = null;
-  if ($ID_Persona) $_SESSION["return"] = $_REQUEST;
 
   
   $persona = null;
@@ -61,7 +60,7 @@ if(!isset($_SESSION["Usuario"])){
       let cantResponsables = 1;
       let cantMotivos = 3;
       let listaMotivos = new Map();
-      let datos = <?= ($_REQUEST) ? json_encode($_SESSION["return"]) : 'null';?>;
+      let datos = <?= (!empty($_SESSION["request_prev"])) ? json_encode($_SESSION["request_prev"]) : 'null';?>;
 
        $(function (e){
               let date_input=$('input[name="Fecha"]'); //our date input has the name "date"
