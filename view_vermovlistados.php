@@ -126,7 +126,6 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
       let excel = null;
       let intervalo = null;
       let datosPersona = <?php echo (($_SESSION["request_prev"]) ? json_encode($_SESSION["request_prev"]) : 'null'); ?>;
-      let datos = <?php echo (($redirect_per) ? json_encode($_REQUEST) : 'null');?>;
       $(document).ready(function(){
               var date_input=$('input[name="date"]');
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
