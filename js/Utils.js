@@ -34,7 +34,7 @@ function ocultar() {
 */
 let checkInputDesde = false; 
 let checkInputHasta = false; 
-
+let predeterminado = {};
 
 $(function (e) {
     $("#fecha-desde-inicial").on("click", function (e) {
@@ -72,8 +72,15 @@ $(function (e) {
         $("#text-filtro").val("");
 
     });
-    $("select[data-select='1']").on("change", );
-    $("#bn-filtro-dato").attr("disabled", true);
+
+    $("#bn-filtro-dato").on("click", function (e) {
+        $("#save-data").toggle();
+        $("#send-admin").toggle();
+    });
+
+    $("#cancel-data").on("click", function (e) {
+        $(this).toggle();
+    });
 });
 
 function mostrar() {
@@ -373,7 +380,6 @@ function datos(e, num) {
 
 
 function addSelect(char, num, d) {
-
     let row = $(`<tr>
                     <td style='text-align: center; align-content: center; width: 36%;'>
                         <select id='e-` + num + `-` + char +`' class="form-control" data-select='1' onChange="datos('` + char +`','` + num + `')">
@@ -447,6 +453,7 @@ function addDatos(e, num, b, d) {
             nodo1.prop("disabled", true);
             nodo2.append(`<input type="text" name="id-persona" id = "id-persona" class="form-control" autocomplete="off">`);
             nodo2.children().prop("value", d);
+            predeterminado[b] = d;
             nodo2.children().prop("disabled", true);
             break;
         case "Edad_Desde" :
@@ -456,6 +463,7 @@ function addDatos(e, num, b, d) {
             nodo2.append(`<input type="text" name="Años - Desde" id = "Años - Desde" class="form-control" autocomplete="off">`);
             nodo2.children().prop("value", d);
             nodo2.children().prop("disabled", true);
+            predeterminado[b] = d;
             break;
         case "Edad_Hasta" :
             nodo1.prop("selectedIndex", index);
@@ -463,6 +471,7 @@ function addDatos(e, num, b, d) {
             nodo2.html(`<input type="text" name="Años - Hasta" id = "Años - Hasta" class="form-control" autocomplete="off">`);
             nodo2.children().prop("value", d);
             nodo2.children().prop("disabled", true);
+            predeterminado[b] = d;
             break;
         case "Meses_Desde" :
             nodo1.prop("selectedIndex", index);
@@ -470,6 +479,7 @@ function addDatos(e, num, b, d) {
             nodo2.html(`<input type="text" name="Meses - Desde" id = "Meses - Desde" class="form-control" autocomplete="off">`);
             nodo2.children().prop("value", d);
             nodo2.children().prop("disabled", true);
+            predeterminado[b] = d;
             break;
         case "Meses_Hasta" :
             nodo1.prop("selectedIndex", index);
@@ -478,6 +488,7 @@ function addDatos(e, num, b, d) {
             nodo2.append();
             nodo2.children().prop("value", index);
             nodo2.children().prop("disabled", true);
+            predeterminado[b] = d;
             break;
         case "ID_Barrio" :
             nodo1.prop("selectedIndex", 6);
@@ -488,6 +499,8 @@ function addDatos(e, num, b, d) {
             op.removeClass();
             op.addClass("form-control");
             op.prop("disabled", true);
+            if (!predeterminado[b]) predeterminado[b] = []; 
+            predeterminado[b].append(d);
             nodo2.html("");
             nodo2.append(op);
             op.prop("selectedIndex", index);
@@ -498,6 +511,7 @@ function addDatos(e, num, b, d) {
             nodo2.html("");
             nodo2.children().prop("value", d);
             nodo2.children().prop("disabled", true);
+            predeterminado[b] = d;
             break;
         case "Manzana" :
             nodo1.prop("selectedIndex", index);
@@ -505,6 +519,7 @@ function addDatos(e, num, b, d) {
             nodo2.html(`<input type="text" name="Manzana" id = "Manzana" class="form-control" autocomplete="off">`);
             nodo2.children().prop("value", d);
             nodo2.children().prop("disabled", true);
+            predeterminado[b] = d;
             break;
         case "Lote" :
             nodo1.prop("selectedIndex", index);
@@ -512,6 +527,7 @@ function addDatos(e, num, b, d) {
             nodo2.html(`<input type="text" name="Lote" id = "Lote" class="form-control" autocomplete="off">`);
             nodo2.children().prop("value", d);
             nodo2.children().prop("disabled", true);
+            predeterminado[b] = d;
             break;
         case "Familia" :
             nodo1.prop("selectedIndex", index);
@@ -527,11 +543,15 @@ function addDatos(e, num, b, d) {
             nodo2.html("");
             nodo2.children().prop("value", d);
             nodo2.children().prop("disabled", true);
+            if (!predeterminado[b]) predeterminado[b] = []; 
+            predeterminado[b].append(d);
             break;
         case "ID_Motivo" :
             nodo2.html("");
             nodo2.children().prop("value", d);
             nodo2.children().prop("disabled", true);
+            if (!predeterminado[b]) predeterminado[b] = []; 
+            predeterminado[b].append(d);
             break;
         case "ID_Centro" :
             nodo1.prop("selectedIndex", index);
@@ -545,6 +565,7 @@ function addDatos(e, num, b, d) {
             nodo2.html("");
             nodo2.append(op);
             op.prop("selectedIndex", d);
+            predeterminado[b] = d;
             break;
         case "Nro_Carpeta" :
             nodo1.prop("selectedIndex", index);
@@ -552,6 +573,7 @@ function addDatos(e, num, b, d) {
             nodo2.html(`<input type="text" name="nro-carpeta" id = "nro-carpeta" class="form-control" autocomplete="off">`);
             nodo2.children().prop("value", d);
             nodo2.children().prop("disabled", true);
+            predeterminado[b] = d;
             break;
         case "Nro_Legajo" :
             nodo1.prop("selectedIndex", index);
@@ -560,6 +582,7 @@ function addDatos(e, num, b, d) {
             nodo2.append();
             nodo2.children().prop("value", d);
             nodo2.children().prop("disabled", true);
+            predeterminado[b] = d;
             break;
         case "ID_OtraInstitucion" :
             nodo1.prop("selectedIndex", index);
@@ -571,6 +594,7 @@ function addDatos(e, num, b, d) {
             nodo2.html("");
             nodo2.append(op);
             op.prop("selectedIndex", d);
+            predeterminado[b] = d;
             break;
         case "ID_Escuela" :
             nodo1.prop("selectedIndex", index);
@@ -582,6 +606,7 @@ function addDatos(e, num, b, d) {
             nodo2.html("");
             nodo2.append(op);
             op.prop("selectedIndex", d);
+            predeterminado[b] = d;
             break;
         case "ID_Responsable" :
             nodo1.prop("selectedIndex", index);
@@ -593,6 +618,8 @@ function addDatos(e, num, b, d) {
             nodo2.append(op);
             op.prop("selectedIndex", d);
             op.prop("disabled", true);
+            if (!predeterminado[b]) predeterminado[b] = []; 
+            predeterminado[b].append(d);
             break;
         case "inpMostrar" :
             nodo1.prop("selectedIndex", index);
@@ -604,6 +631,7 @@ function addDatos(e, num, b, d) {
             nodo2.html("");
             nodo2.append(op);
             op.prop("value", d);
+            predeterminado[b] = d;
             break;
     }
 }

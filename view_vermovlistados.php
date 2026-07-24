@@ -1657,11 +1657,11 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
                 "Motivo 1",
                 "Motivo 2",
                 "Motivo 3",
+                "Observaciones",
                 "Persona",
                 "Domicilio",
                 "Barrio",
                 "Obra Social",
-                "Observaciones",
                 "Otra Institucion",
                 "Responsable",
                 "Responsable2",
@@ -1736,6 +1736,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
                                 <th rowspan='2' class='trCentrosSalud'>Centro de salud</th>
                                 <th rowspan='2' class='trOtrasInstituciones'>Otras Instituciones</th>
                               </tr>";
+                $header_movimientos_general[] = "Observaciones";
                 $header_movimientos_general[] = "DNI";
                 $header_movimientos_general[] = "Fecha Nac";
                 //$header_movimientos_general[] = "Edad";
@@ -1745,7 +1746,6 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
                 $header_movimientos_general[] = "Domicilio";
                 $header_movimientos_general[] = "Barrio";
                 $header_movimientos_general[] = "Localidad";
-                $header_movimientos_general[] = "Observaciones";
                 $header_movimientos_general[] = "Responsable";
                 $header_movimientos_general[] = "Responsable2";
                 $header_movimientos_general[] = "Responsable3";

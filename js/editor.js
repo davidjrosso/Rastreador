@@ -116,6 +116,8 @@ let editor = ClassicEditor.create({
           let div = tr.childNodes[1];
           if (div) v.setData(div.innerHTML);
           $("#mdal_ct").prop("id_mv", id);
+          disableEditor();
+
         });
         
         $("#bt-guardar").on("click", function (e) {
@@ -133,7 +135,14 @@ let editor = ClassicEditor.create({
                   $("td[data-id-mv=" + id + "]").children()[0].innerHTML = v.getData();
                 }
             });          
-        })
+        });
 
     });
+    
   });
+
+  export function disableEditor() {
+    editor.then(function (v) {
+      v.enableReadOnlyMode('lock-id');
+    });
+  }

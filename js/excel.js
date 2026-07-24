@@ -2,6 +2,8 @@ import jspreadsheet from "../node_modules/jspreadsheet-ce";
 import ExcelJS from "../node_modules/exceljs";
 import Chart from 'chart.js/auto';
 import Jsuit from 'jsuites';
+import $ from "jquery";
+
 export class Excel {
     #zoom = null;
     #charts = new Map();
@@ -41,6 +43,7 @@ export class Excel {
                 let typeData = "text";
                 let text = $(this).text().trim();
 
+                if (!text) return true;
                 if (text == "Años") return true;
                 if (text == "Meses") return true;
                 if (text == "Fecha") typeData = "calendar";
@@ -79,7 +82,8 @@ export class Excel {
             if (tableCount == 1) {
                 $("tbody tr").each(function (index) {
                     let rowlist = [];
-                    $(this).children(":not([hidden])").each(function (e) {
+                    let qry = ":not([hidden]):not(:nth-child(2)):not(:nth-child(3)):not(:nth-child(5)):not(:nth-child(7)):not(:nth-child(9))";
+                    $(this).children(qry).each(function (e) {
                         if (!e.hidden) {
                             rowlist.push(
                                 $(this).text().trim()
@@ -710,6 +714,7 @@ export class Excel {
                     delete velem["Responsable4"];
                 }
             });
+            velem["Observaciones"] = $(velem["Observaciones"]).text();
             delete velem["cant_resp"];
             delete velem["height"];
             return velem;
@@ -733,6 +738,7 @@ export class Excel {
                                             };
                 continue;
             }
+
             value = Object.values(listaDeMovimientos[row - 2]).slice(1);
             value.push(listaDeMovimientos[row - 2]["Responsable"]);
             worksheet.getRow(row).values  = value;
