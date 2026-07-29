@@ -700,6 +700,7 @@ export class Excel {
         let count = objectJsonTabla.movimientos_general.length;
         let th = [];
         let cant_r = 0;
+        let parser = new DOMParser();
         let listaDeMovimientos = objectJsonTabla.movimientos_general.map(function (velem, index, array) {
             cant_r = velem["cant_resp"];
             for (let l = 2; l <= 4; l++) {
@@ -714,7 +715,8 @@ export class Excel {
                     delete velem["Responsable4"];
                 }
             });
-            velem["Observaciones"] = $(velem["Observaciones"]).text();
+            const doc = parser.parseFromString(velem["Observaciones"], 'text/html');
+            velem["Observaciones"] = doc.body.textContent || "";
             delete velem["cant_resp"];
             delete velem["height"];
             return velem;
