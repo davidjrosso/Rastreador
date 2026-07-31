@@ -93,6 +93,8 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               $("#Motivo_4 button").css("background-color", "#007bff");
               $("#Motivo_5 button").attr("disabled", true);
               $("#Motivo_5 button").css("background-color", "#007bff");
+              $("#Motivo_5 button").css("background-color", "#007bff");
+              $("#btn-modal-persona-md").attr("disabled", true);
               disableEditor();
 
               $("select[name~='ID_Responsable[]']").attr("disabled", true);
