@@ -78,6 +78,23 @@ class Categoria {
         return $num_rows;
     }
 
+    public static function exist_cod_categoria($connection, $cod_categoria) 
+    {
+		$id = 0;
+        $consultar = "select *
+                        from categoria 
+                        where cod_categoria = '" . $cod_categoria . "'
+                          and estado = 1";
+        $ejecutar_consultar = mysqli_query(
+            $connection->Conexion,
+            $consultar);
+		
+        $row = mysqli_fetch_assoc($ejecutar_consultar);
+		if ($row) $id = $row["id_categoria"];
+        return $id;
+    }
+
+
 	//METODOS SET
 	public function setID_Categoria($xID_Categoria)
 	{
@@ -183,4 +200,21 @@ class Categoria {
 			throw new Exception($mensaje_error . $consulta, 2);
 		}
 	}
+
+	public function save(){
+		$consulta = "insert into categoria (tipo_categoria, categoria, cod_categoria, ID_Forma, orden, color, estado) values (
+					 " . (($this->getTipo_Categoria()) ? $this->getTipo_Categoria() : "null") . ",
+						  " . (($this->getCategoria()) ? "'" . $this->getCategoria() . "'": "null") . ", 
+						 " . (($this->getCod_Categoria()) ? "'" . $this->getCod_Categoria() . "'": "null") . ", 
+						 " . (($this->getID_Forma()) ? "'" . $this->getID_Forma() . "'" : "null") .",
+						 " . (($this->getOrden()) ? $this->getOrden() : "null") . ",
+						 " . (($this->getColor()) ? "'" . $this->getColor() . "'": "null") . ",
+						 " . (($this->getEstado()) ? $this->getEstado() : "0") . ");";
+		$mensaje_error = "No se pudo agregar la categoria";
+		$ret = mysqli_query($this->Conecction->Conexion, $consulta);
+		if (!$ret) {
+			throw new Exception($mensaje_error . $consulta, 2);
+		}
+	}
+
 }
