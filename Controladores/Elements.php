@@ -1874,7 +1874,7 @@ public function getMenuSeguridadUsuario($ID){
     $Consulta = mysqli_query($Con3->Conexion,"select * from persona where estado = 1 and id_persona = $xID_Persona order by apellido, nombre")or die("Problemas al mostrar Personas");
     $Ret = mysqli_fetch_assoc($Consulta);    
         
-    $Boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalPersona'>".$Ret['apellido'].", ".$Ret['nombre']."</button>";
+    $Boton = "<button id='btn-modal-persona-md' type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalPersona'>".$Ret['apellido'].", ".$Ret['nombre']."</button>";
     $Con3->CloseConexion();
     return $Boton;
   }
@@ -1926,7 +1926,7 @@ public function getMenuSeguridadUsuario($ID){
   public function CBModBarrios($xID_Barrio){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' name = 'ID_Barrio' id = 'ID_Barrio' required>";
+    $Select = "<select data-pre = '1' class='form-control' name = 'ID_Barrio' id = 'ID_Barrio' required>";
     if (!$xID_Barrio){
       $Select .= "<option value = '0' disabled = 'disabled' selected = 'true'>- Seleccione un Barrio -</option>";
     }
@@ -2035,7 +2035,7 @@ public function getMenuSeguridadUsuario($ID){
   public function CBRepModCentros($xID_Centro){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' id='exampleFormControlSelect1' name ='ID_CentroSalud' id ='ID_CentroSalud'>";    
+    $Select = "<select class='form-control' data-pre = '1' id='exampleFormControlSelect1' name ='ID_CentroSalud' id ='ID_CentroSalud'>";    
     $Consulta = mysqli_query($Con3->Conexion,"select * from centros_salud where estado = 1 order by centro_salud")or die("Problemas al mostrar Centros de Salud");
     while ($Ret = mysqli_fetch_array($Consulta)) {      
       if($Ret['id_centro'] == $xID_Centro){
@@ -2324,7 +2324,7 @@ public function getMenuSeguridadUsuario($ID){
   public function CBRepBarrios(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='btn btn-lg btn-primary btn-block' id='ID_Barrio' name = 'ID_Barrio[]'>";
+    $Select = "<select data-pre = '1' class='btn btn-lg btn-primary btn-block' id='ID_Barrio' name = 'ID_Barrio[]'>";
     $Select .= "<option value ='0' selected ='true' disable='disable'>Seleccione Barrio</option>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from barrios where estado = 1 order by Barrio")or die("Problemas al mostrar Barrios");
     while ($Ret = mysqli_fetch_array($Consulta)) {
@@ -2389,7 +2389,7 @@ public function getMenuSeguridadUsuario($ID){
   public function CBRepResponsable(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control'  name = 'ID_Responsable[]' id='ID_Responsable'>";
+    $Select = "<select class='form-control'  name = 'ID_Responsable[]' data-pre = '1' id='ID_Responsable'>";
     $Select .= "<option value = '0'>-Todos-</option>";
     $query = "SELECT * 
               FROM responsable 
@@ -2407,7 +2407,7 @@ public function getMenuSeguridadUsuario($ID){
   public function CBRepCentros(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='btn btn-lg btn-primary btn-block' id='ID_Centro' name = 'ID_CentroSalud'>";
+    $Select = "<select class='btn btn-lg btn-primary btn-block' data-pre = '1' id='ID_Centro' name = 'ID_CentroSalud'>";
     $Select .= "<option value = '0'>Seleccione Centro Salud</option>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from centros_salud where estado = 1 order by centro_salud")or die("Problemas al mostrar Centros de Salud");
     while ($Ret = mysqli_fetch_array($Consulta)) {
@@ -2421,7 +2421,7 @@ public function getMenuSeguridadUsuario($ID){
   public function CBRepOtrasInstituciones(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' id='ID_OtraInstitucion' name = 'ID_OtraInstitucion'>";
+    $Select = "<select class='form-control' data-pre = '1' id='ID_OtraInstitucion' name = 'ID_OtraInstitucion'>";
     $Select .= "<option value = '0'>-Todos-</option>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from otras_instituciones where estado = 1 order by Nombre")or die("Problemas al mostrar Otras Instituciones");
     while ($Ret = mysqli_fetch_array($Consulta)) {
@@ -2435,7 +2435,7 @@ public function getMenuSeguridadUsuario($ID){
   public function CBRepModOtrasInstituciones($xID_OtraInstitucion){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' id='exampleFormControlSelect1' name ='ID_OtraInstitucion' id ='ID_OtraInstitucion'>";    
+    $Select = "<select class='form-control' data-pre = '1' id='exampleFormControlSelect1' name ='ID_OtraInstitucion' id ='ID_OtraInstitucion'>";    
     $Consulta = mysqli_query($Con3->Conexion,"select * from otras_instituciones where estado = 1 order by Nombre")or die("Problemas al mostrar Otras Instituciones");
     while ($Ret = mysqli_fetch_array($Consulta)) {      
       if($Ret['ID_OtraInstitucion'] == $xID_OtraInstitucion){
@@ -2452,7 +2452,7 @@ public function getMenuSeguridadUsuario($ID){
   public function CBRepModResponsables($xID_Responsable){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' name ='ID_Responsable[]' id ='ID_Responsable'>";    
+    $Select = "<select class='form-control' name ='ID_Responsable[]' data-pre = '1' id ='ID_Responsable'>";    
     $query = "SELECT * 
               FROM responsable
               WHERE estado = 1
@@ -2540,7 +2540,7 @@ public function getMenuSeguridadUsuario($ID){
   public function CBEscuelas($xID_Nivel){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' id='ID_Escuela' name = 'ID_Escuela'>";
+    $Select = "<select class='form-control' data-pre = '1' id='ID_Escuela' name = 'ID_Escuela'>";
     if($xID_Nivel == 0){
       $Select .= "<option selected = 'true' disabled = 'disabled' value = '0'>- Debe seleccionar primero un Nivel Escolar -</option>";  
     }else{
@@ -2559,7 +2559,7 @@ public function getMenuSeguridadUsuario($ID){
   public function CBModEscuelas($xID_Escuela){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' name = 'ID_Escuela' id = 'ID_Escuela'>";
+    $Select = "<select class='form-control' data-pre = '1' name = 'ID_Escuela' id = 'ID_Escuela'>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from escuelas order by Escuela")or die("Problemas al mostrar Escuelas");
     while ($Ret = mysqli_fetch_array($Consulta)) {
       if($Ret['ID_Escuela'] == $xID_Escuela){
@@ -2876,8 +2876,255 @@ public function getMenuSeguridadUsuario($ID){
     return $div;
   }
 
+  ////////////////////////////////////////
+
+  public function CBCSfiltros()
+  {
+    $con = new Conexion();
+    $con->OpenConexion();
+    $div = "<div class='list-group-item' style='display: flex; justify-content: center;'>
+              <div> </div>
+              <span style='align-content: center; font-weight: bold; color: #000'>Lista de predeterminados</span>
+              <!--
+              <button class='btn btn-primary' data-toggle='modal' data-target='#filtro-nombre-Modal'>
+                              +
+              </button>
+              -->
+            </div>
+            <div class='list-group lista-centro-salud' 
+                 id='list-tab-filtro' 
+                 role='tablist' 
+                 style='overflow: auto; border-bottom: 1px solid #cdcdcd; border-top: 1px solid #cdcdcd;'>";
+    $consulta = "SELECT *
+                 FROM filtros
+                 WHERE estado = 1
+                 ORDER BY titulo  ASC";
+    $obj_query = mysqli_query(
+                      $con->Conexion,
+                      $consulta
+                      ) or die("Problemas al mostrar Personas");
+    $count = 0;
+    while ($Ret = mysqli_fetch_array($obj_query)) {
+      $div .= "<a  class='list-group-item list-group-item-action " . (($count == 0) ? "active": "") . " ' data-toggle='list' role='tab' 
+                  id='list-" . $Ret['id_filtro'] . "-list' 
+                   
+                  href='#list-" . $Ret['id_filtro'] . "' 
+                  
+                  aria-controls='" . $Ret['id_filtro'] . "'>" . 
+                        $Ret['titulo'] . 
+                "</a>
+                 <!--
+                  <button type='button' class='btn btn-outline-success' onclick=''>
+									seleccionar
+								</button>
+                -->";
+      $count++;
+    }
+
+    $div .= "</div>";
+    $con->CloseConexion();
+    return $div;
+  }
+
+  public function CBfiltro()
+  {
+    $con = new Conexion();
+    $con->OpenConexion();
+    $div = "<div class='tab-content' id='nav-tabContent-filtro'>";
+    $consulta = "SELECT *
+                 FROM filtros
+                 WHERE estado = 1
+                 ORDER BY titulo  ASC";
+    $obj_query = mysqli_query(
+                      $con->Conexion,
+                      $consulta
+                      ) or die("Problemas al mostrar los barrios");
+    $count = 0;
+
+		$Table = "<table class='table'>
+                <thead>
+                  <tr>
+                    <th style='text-align: center; align-content: center;' colspan='2'>datos</th>
+                    <th style='max-width: 27px; padding-left: 4%; text-align: center;'>
+                      <button class='btn btn-primary'
+                              style='text-align: center;'>
+                              +
+                      </button></th>
+                  </tr>
+              </thead>";
+
+    while ($ret = mysqli_fetch_array($obj_query)) {
+        $div .= "<div class='tab-pane fade " . (($count == 0) ? "show active": "") . "'
+                      id='list-" . $ret['id_filtro'] . "'
+                      role='tabpanel'
+                      aria-labelledby='list-" . $ret['id_filtro'] . "-list'>";
+        $div .= $Table;
+
+        $consulta = "SELECT * 
+                     FROM filtros_motivos m inner join motivo mv on (m.id_motivo = mv.id_motivo)
+                     WHERE id_filtro = " . $ret['id_filtro'] . "
+                       AND m.estado = 1";
+        $result = mysqli_query($con->Conexion, $consulta) or die("Problemas al mostrar los archivos");
+        while ($row = mysqli_fetch_array($result)) {
+            $div .= "<tr>
+                        <td style='align-content: center;'>
+                          Motivo " . $row["id_filtro"] . "
+                        </td>
+                        <td style='align-content: center;'>" . 
+                          $row["motivo"] . "
+                        </td>
+                        <td style='max-width: 45px;'> 
+                            <button class='btn btn-danger' style='display: inline;'
+                                    onClick='cargaDatos" . 
+                                                                    $row['id_filtro'] . "," . 
+                                                                    $ret['fecha'] . "
+                                                                  )'>
+                              x
+                            </button>
+                            <button class='btn btn-warning' style='display: inline;'
+                                    onClick='cargaDatos" . 
+                                                                    $row['id_filtro'] . "," . 
+                                                                    $ret['fecha'] . "
+                                                                  )'>
+                              x
+                            </button>
+                            <button class='btn btn-warning' style='display: inline;'
+                                    onClick='cargaDatos" . 
+                                                                    $row['id_filtro'] . "," . 
+                                                                    $ret['fecha'] . "
+                                                                  )'>
+                              x
+                            </button>
+                        </td>
+                     </tr>";
+        }
+        $consulta = "SELECT * 
+                     FROM filtros_responsables d inner join responsable n on (d.id_responsable = n.id_resp)
+                     WHERE id_filtro = " . $ret['id_filtro'] . "
+                       AND d.estado = 1";
+        $result = mysqli_query($con->Conexion, $consulta) or die("Problemas al mostrar los archivos");
+        while ($row = mysqli_fetch_array($result)) {
+            $div .= "<tr>
+                        <td class='tabla-celda-planilla' style='align-content: center;'>
+                          Responsable " . $row["id_filtro"] . "
+                        </td>
+                        <td class='tabla-celda-planilla' style='align-content: center;'>" . 
+                          $row["responsable"] . "
+                        </td>
+                        <td style='max-width: 45px;'> 
+                            <button class='btn btn-danger' style='display: inline;'
+                                    onClick='cargaDatos" . 
+                                                                    $row['id_filtro'] . "," . 
+                                                                    $ret['fecha'] . "
+                                                                  )'>
+                              x
+                            </button>
+                            <button class='btn btn-warning' style='display: inline;'
+                                    onClick='cargaDatos" . 
+                                                                    $row['id_filtro'] . "," . 
+                                                                    $ret['fecha'] . "
+                                                                  )'>
+                              x
+                            </button>
+                            <button class='btn btn-warning' style='display: inline;'
+                                    onClick='cargaDatos" . 
+                                                                    $row['id_filtro'] . "," . 
+                                                                    $ret['fecha'] . "
+                                                                  )'>
+                              x
+                            </button>
+                        </td>
+                     </tr>";
+        }
+        $consulta = "SELECT * 
+                     FROM filtros_barrios bs inner join barrios b on (bs.id_barrio = b.ID_Barrio)
+                     WHERE id_filtro = " . $ret['id_filtro'] . "
+                       AND bs.estado = 1";
+        $result = mysqli_query($con->Conexion,$consulta) or die("Problemas al mostrar los archivos");
+        while ($row = mysqli_fetch_array($result)) {
+            $div .= "<tr>
+                        <td class='tabla-celda-planilla' style='align-content: center;'>
+                          Barrio " . $row["Barrio"] . "
+                        </td>
+                        <td class='tabla-celda-planilla' style='align-content: center;'>" . 
+                          $row["motivo"] . "
+                        </td>
+                        <td style='max-width: 45px;'> 
+                            <button class='btn btn-danger' style='display: inline;'
+                                    onClick='cargaDatos" . 
+                                                                    $row['id_filtro'] . "," . 
+                                                                    $ret['fecha'] . "
+                                                                  )'>
+                              x
+                            </button>
+                            <button class='btn btn-warning' style='display: inline;'
+                                    onClick='cargaDatos" . 
+                                                                    $row['id_filtro'] . "," . 
+                                                                    $ret['fecha'] . "
+                                                                  )'>
+                              x
+                            </button>
+                            <button class='btn btn-warning' style='display: inline;'
+                                    onClick='cargaDatos" . 
+                                                                    $row['id_filtro'] . "," . 
+                                                                    $ret['fecha'] . "
+                                                                  )'>
+                              x
+                            </button>
+                        </td>
+                     </tr>";
+        }
+        $consulta = "SELECT * 
+                     FROM filtros_categorias c inner join categoria cs on (c.id_categoria = cs.id_categoria)
+                     WHERE id_filtro = " . $ret['id_filtro'] . "
+                       AND c.estado = 1";
+        $result = mysqli_query($con->Conexion,$consulta) or die("Problemas al mostrar los archivos");
+        while ($row = mysqli_fetch_array($result)) {
+            $div .= "<tr>
+                        <td class='tabla-celda-planilla' style='align-content: center;'>
+                          Categoria " . $row["categoria"] . "
+                        </td>
+                        <td class='tabla-celda-planilla' style='align-content: center;'>" . 
+                          $row["motivo"] . "
+                        </td>
+                        <td style='max-width: 45px;'> 
+                            <button class='btn btn-danger' style='display: inline;'
+                                    onClick='cargaDatos" . 
+                                                                    $row['id_filtro'] . "," . 
+                                                                    $ret['fecha'] . "
+                                                                  )'>
+                              x
+                            </button>
+                            <button class='btn btn-warning' style='display: inline;'
+                                    onClick='cargaDatos" . 
+                                                                    $row['id_filtro'] . "," . 
+                                                                    $ret['fecha'] . "
+                                                                  )'>
+                              x
+                            </button>
+                            <button class='btn btn-warning' style='display: inline;'
+                                    onClick='cargaDatos" . 
+                                                                    $row['id_filtro'] . "," . 
+                                                                    $ret['fecha'] . "
+                                                                  )'>
+                              x
+                            </button>
+                        </td>
+                     </tr>";
+        }
+        $div .= "</table>";
+        $div .= "</div>";
+        $count++;
+    }
+
+    $div .= "</div>";
+    $con->CloseConexion();
+    return $div;
+  }
+
   /////////////////////////////////////// MENU DE NAVEGACION /////////////////////////////////////////
-  public function CBSessionNombre($idAccount){
+  public function CBSessionNombre($idAccount)
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $ConsultaNombre = "select *
