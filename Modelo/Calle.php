@@ -31,10 +31,10 @@ class Calle {
 			$Con = new Conexion();
 			$Con->OpenConexion();
 			$consultar = "select *
-						from calle 
-						where id_calle = $id_calle
+						  from calle 
+						  where id_calle = $id_calle
 							and estado = 1
-						order by calle_nombre ASC";
+						  order by calle_nombre ASC";
 			$ejecutar_consultar_calle = mysqli_query(
 				$Con->Conexion, 
 				$consultar) or die("Problemas al consultar filtro Calle");
@@ -101,6 +101,8 @@ class Calle {
 
 	public static function existe_id_calle($id_calle=null, $connection=null)
 	{
+		$existe_calle = false;
+
 		if ($id_calle) {
 			$consulta = "select *
 						 from calle
@@ -453,6 +455,47 @@ class Calle {
 		return $calle;
 	}
 
+	public static function existe_calle_nombre($calle, $coneccion)
+	{
+		$existe_calle = false;
+		if ($calle) {
+			$consulta = "select *
+						 from calles
+						 where upper(calle_nombre) = upper('$calle')
+						   and estado = 1
+						 order by calle_nombre asc;";
+			$query_object = mysqli_query(
+								  $coneccion->Conexion, 
+								  $consulta
+								  	   ) or die("Error al consultar datos calle");
+			if (mysqli_num_rows($query_object) > 0) {
+				$existe_calle = true;
+			};
+		}
+		return $existe_calle;		
+	}
+
+	public static function existe_calle_con_id($calle, $id_calle, $coneccion)
+	{
+		$existe_calle = false;
+		if ($calle) {
+			$consulta = "select *
+						 from calles
+						 where upper(calle_nombre) = upper('$calle')
+						   and id_calle != $id_calle
+						   and estado = 1
+						 order by calle_nombre asc;";
+			$query_object = mysqli_query(
+								  $coneccion->Conexion, 
+								  $consulta
+								  	   ) or die("Error al consultar datos");
+			if (mysqli_num_rows($query_object) > 0) {
+				$existe_calle = true;
+			};
+		}
+		return $existe_calle;		
+	}
+
 	// METODOS SET
 	public function set_id_calle($id_calle){
 		$this->id_calle = $id_calle;
@@ -529,4 +572,46 @@ class Calle {
 		}
 		$Con->CloseConexion();
 	}
+
+	public function delete(){
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "update calles 
+					set 
+						estado = " . ((!is_null($this->get_estado())) ? "'" . $this->get_estado() . "'" : "null") . "
+					where id_calle = " . $this->get_id_calle();
+		$MensajeErrorConsultar = "No se pudo actualizar la Calle";
+		if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+			throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+		}
+		$Con->CloseConexion();
+	}
+
+
+	public function save()
+	{
+		$con = new Conexion();
+		$con->OpenConexion();
+		$query = "insert into calles (
+									 codigo_calle,
+									 calle_nombre,
+									 calle_abreviado,
+									 estado,
+									 calle_open,
+									 geocoder
+				) values (
+				  	" . ((!empty($this->get_codigo_calle())) ? "'" . $this->get_codigo_calle() . "" : "null") . ",
+					" . ((!empty($this->get_calle_nombre())) ? "'" . $this->get_calle_nombre() . "'" : "null") . ",
+					" . ((!empty($this->get_calle_abreviado() ? "'" . $this->get_calle_abreviado() . "'" : "null"))) . ",
+					" . (!empty($this->get_estado()) ? "'" . $this->get_estado() . "'" : "null") . ",
+					" . (!empty($this->get_calle_open()) ? "'" . $this->get_calle_open() . "'" : "null") . ",
+					" . ((!empty($this->get_geocoder())) ? "'" . $this->get_geocoder() . "'" : "null" ) . "
+				)";
+		$mensaje_error = "No se pudo alamcenar la Calle";
+		if (!$ret = mysqli_query($con->Conexion, $query)) {
+			throw new Exception($mensaje_error  . $query, 2);
+		}
+		$con->CloseConexion();
+	}
+
 }
