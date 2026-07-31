@@ -753,7 +753,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
               if (count(array_filter($CategoriasOpciones))) {
                   $query_cod_categoria = "SELECT cod_categoria
                                           FROM categoria
-                                          WHERE id_categoria IN $listaDeCategorias";
+                                          WHERE estado = 1 and id_categoria IN $listaDeCategorias";
                   $codCategorias = mysqli_query(
                                     $Con->Conexion, $query_cod_categoria
                                     ) or die($MessageError);
@@ -776,7 +776,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
               if (count(array_filter($motivos))) {
                   $query_cod_motivo = "SELECT cod_categoria
                                           FROM motivo
-                                          WHERE id_motivo IN $listaDeMotivos";
+                                          WHERE estado = 1 and id_motivo IN $listaDeMotivos";
                   $codMotivo = mysqli_query(
                                     $Con->Conexion, $query_cod_motivo
                                     ) or die($MessageError);
@@ -855,7 +855,8 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
                               WHERE ";
             $categoria_query = "SELECT id_categoria, cod_categoria, categoria,
                                        ID_Forma, color, tipo_categoria
-                                FROM categoria ";
+                                FROM categoria 
+                                WHERE estado = 1";
             $movimiento_query = "SELECT id_movimiento, fecha, id_persona, observaciones,
                                         id_resp, id_resp_2, id_resp_3, id_resp_4, id_centro,
                                         id_otrainstitucion
@@ -1001,10 +1002,12 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
             }
 
             if (count(array_filter($CategoriasOpciones))) {
-              $categoria_query .= " WHERE id_categoria in $listaDeCategorias";
+              $categoria_query .= "and (id_categoria in $listaDeCategorias";
               if (count(array_filter($MotivosOpciones))) {
-                $categoria_query .= " or cod_categoria in $listaCodMotivo";
-              }              
+                $categoria_query .= " or cod_categoria in $listaCodMotivo)";
+              } else {
+                $categoria_query .= ") ";
+              }
               $motivo_query .= "cod_categoria in $listaCodCategorias";
               $filtros[] = $filtro_categoria;
             }

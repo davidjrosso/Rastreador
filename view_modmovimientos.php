@@ -51,12 +51,12 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
-  <script src="js/Utils.js"></script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="js/bootstrap-datepicker.min.js"></script> <!-- ESTO ES NECESARIO PARA QUE ANDE EN ESPAÑOL -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="js/ValidarMovimiento.js"></script>
+  <script src="js/Utils.js"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script>
         let cantMotivos = 3;
@@ -82,6 +82,20 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   clear: "Borrar",
                   weekStart: 1,
               });
+              
+              $("#Motivo_1 button").attr("disabled", true);
+              $("#Motivo_1 button").css("background-color", "#007bff");
+              $("#Motivo_2 button").attr("disabled", true);
+              $("#Motivo_2 button").css("background-color", "#007bff");
+              $("#Motivo_3 button").attr("disabled", true);
+              $("#Motivo_3 button").css("background-color", "#007bff");
+              $("#Motivo_4 button").attr("disabled", true);
+              $("#Motivo_4 button").css("background-color", "#007bff");
+              $("#Motivo_5 button").attr("disabled", true);
+              $("#Motivo_5 button").css("background-color", "#007bff");
+              disableEditor();
+
+              $("select[name~='ID_Responsable[]']").attr("disabled", true);
           });
 
           function agregarMotivo(){
@@ -407,7 +421,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Fecha: </label>
                   <div class="col-md-10">
-                    <input type="text" class="form-control" name = "Fecha" id="datepicker" placeholder="01/01/2001" width="100%" autocomplete="off" value = "<?php echo $DtoMovimiento->getFecha(); ?>">
+                    <input type="text" disabled class="form-control" name = "Fecha" id="datepicker" placeholder="01/01/2001" width="100%" autocomplete="off" value = "<?php echo $DtoMovimiento->getFecha(); ?>">
                   </div>
                 </div>
                 <div class="form-group row">
@@ -428,7 +442,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                     ?>
                   </div>
                   <div class="col-md-1">
-                  <button type="button" class="btn btn-primary" onClick="agregarMotivo()" id="agregarMotivoID">+</button>
+                  <button type="button" class="btn btn-primary" disabled onClick="agregarMotivo()" id="agregarMotivoID">+</button>
               </div>
                 </div>
                 <div class="form-group row">
@@ -496,7 +510,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   </div>
                   <?php if (!$key) {?>
                   <div class="col-md-1">
-                      <button type="button" class="btn btn-primary" onClick="agregarResponsable()" id="agregarResponsableID">+</button>
+                      <button type="button" class="btn btn-primary" disabled onClick="agregarResponsable()" id="agregarResponsableID">+</button>
                   </div>
                   <?php }?>
                 </div>
