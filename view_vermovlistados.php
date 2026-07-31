@@ -856,7 +856,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
             $categoria_query = "SELECT id_categoria, cod_categoria, categoria,
                                        ID_Forma, color, tipo_categoria
                                 FROM categoria 
-                                WHERE estado = 1";
+                                WHERE estado = 1 ";
             $movimiento_query = "SELECT id_movimiento, fecha, id_persona, observaciones,
                                         id_resp, id_resp_2, id_resp_3, id_resp_4, id_centro,
                                         id_otrainstitucion
