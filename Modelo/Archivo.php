@@ -1,4 +1,5 @@
 <?php
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/CentroSalud.php") ;
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Accion.php");
 class Archivo 
 {
