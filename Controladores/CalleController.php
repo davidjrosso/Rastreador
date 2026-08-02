@@ -19,14 +19,10 @@
  */
 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Parametria.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Categoria.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/CategoriaRol.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Accion.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_Unificacion.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_EliminarCategoria.php");
 
 
 class CalleController 
@@ -105,38 +101,34 @@ class CalleController
 
     public function buscar_calle()
     {
-        $consultaBusqueda = $_REQUEST['valorBusqueda'];
+        $consulta = $_REQUEST['valorBusqueda'];
 
         //Filtro anti-XSS
         $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
         $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
-        $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consultaBusqueda);
-        $consultaBusqueda = strtolower($consultaBusqueda);
+        $consulta = str_replace($caracteres_malos, $caracteres_buenos, $consulta);
+        $consulta = strtolower($consulta);
 
         //Variable vacía (para evitar los E_NOTICE)
         $mensaje = "";
 
 
-        if (isset($consultaBusqueda)) {
+        if (isset($consulta)) {
 
             $Con = new Conexion();
             $Con->OpenConexion();
 
-            $consultaCalles = "SELECT id_calle, codigo_calle, calle_nombre
-                            FROM calles	
-                            WHERE estado = 1
-                                and ((LOWER(calle_nombre) REGEXP '[a-z]* ".$consultaBusqueda."[a-z]*')
-                                    or (LOWER(calle_nombre) REGEXP '^".$consultaBusqueda."[a-z]*'))
-                            order by calle_nombre ASC";
-            $consulta = mysqli_query($Con->Conexion, $consultaCalles);
+            $con = new Conexion();
+            $con->OpenConexion();
+            $consulta = trim(strtolower($consulta));
+            $res = Calle::get_list_like_name(coneccion: $con, name: $consulta);
+            $con->CloseConexion();
 
-            $filas = mysqli_num_rows($consulta);
+            $cant = count($res);
 
-            if ($filas === 0) {
+            if (!$cant) {
                 $mensaje = "<p>No hay ningún registro con ese nombre, documento o legajo</p>";
             } else {
-                //Si existe alguna fila que sea igual a $consultaBusqueda, entonces mostramos el siguiente mensaje
-                //echo 'Resultados para <strong>'.$consultaBusqueda.'</strong>';
 
                 $mensaje .= '<table class="table">
                     <thead class="thead-dark">
@@ -148,21 +140,18 @@ class CalleController
                     </thead>
                     <tbody>';
 
-                while($resultados = mysqli_fetch_array($consulta)) {
-                    $ID_Calle = $resultados["id_calle"];
-                    $Codigo = $resultados["codigo_calle"];
-                    $Nombre = $resultados['calle_nombre'];
-                    //Output
-                    //$fragmentos = explode(" ",$Nombre);
-                    //preg_grep();
-                    //if($Nombre){
+                foreach($res as $val => $calle) {
 
-                    //}
                     $mensaje .= '
                         <tr>
-                        <th scope="row">'.$Codigo.'</th>
-                        <td>'.$Nombre.'</td>			
-                        <td><button type = "button" class = "btn btn-outline-success" onClick="seleccionCalle(\''.$Nombre.'\','.$ID_Calle.')" data-dismiss="modal">seleccionar</button></td>
+                        <th scope="row">' . $calle->get_codigo_calle() . '</th>
+                        <td>' . $calle->get_calle_nombre() . '</td>			
+                        <td>
+                            <button type = "button" class = "btn btn-outline-success" 
+                                    onClick="seleccionCalle(\'' . $calle->get_calle_nombre() . '\',' . $calle->get_id_calle() . ')" data-dismiss="modal">
+                                seleccionar
+                            </button>
+                        </td>
                         </tr>';
                 };
 
@@ -448,7 +437,6 @@ class CalleController
     public function buscar_unif_direcciones($valor)
     {
         header('Content-Type: text/html; charset=utf-8');
-        //Variable de búsqueda
         $consultaBusqueda = $valor;
 
         //Filtro anti-XSS
@@ -460,15 +448,11 @@ class CalleController
         $mensaje = "";
 
 
-        //Comprueba si $consultaBusqueda está seteado
         if (isset($consultaBusqueda)) {
 
             $Con = new Conexion();
             $Con->OpenConexion();
-            //Selecciona todo de la tabla mmv001 
-            //donde el nombre sea igual a $consultaBusqueda, 
-            //o el apellido sea igual a $consultaBusqueda, 
-            //o $consultaBusqueda sea igual a nombre + (espacio) + apellido
+
             $query = "SELECT id_persona, apellido, nombre, CONCAT(c.calle_nombre, ' ', s.nro) as direccion
                       FROM persona s INNER JOIN calles c ON (s.calle = c.id_calle)
                       WHERE calle_nombre LIKE '%$consultaBusqueda%' 
@@ -478,15 +462,11 @@ class CalleController
             $consulta = mysqli_query($Con->Conexion, $query);
 
 
-            //Obtiene la cantidad de filas que hay en la consulta
             $filas = mysqli_num_rows($consulta);
 
-            //Si no existe ninguna fila que sea igual a $consultaBusqueda, entonces mostramos el siguiente mensaje
             if ($filas === 0) {
                 $mensaje = "<p>No hay ningún registro con ese dato</p>";
             } else {
-                //Si existe alguna fila que sea igual a $consultaBusqueda, entonces mostramos el siguiente mensaje
-                //echo 'Resultados para <strong>'.$consultaBusqueda.'</strong>';
 
                 $mensaje .= '<table class="table">
                     <thead class="thead-dark">
@@ -498,13 +478,11 @@ class CalleController
                     </thead>
                     <tbody>';
 
-                //La variable $resultado contiene el array que se genera en la consulta, así que obtenemos los datos y los mostramos en un bucle
                 while($resultados = mysqli_fetch_array($consulta)) {
                     $ID_Persona = $resultados["id_persona"];
                     $NombrePersona = $resultados["apellido"].", ".$resultados["nombre"];
                     $Domicilio = $resultados["direccion"];
 
-                    //Output
                     $mensaje .= '
                         <tr>
                         <th scope="row">' . $NombrePersona . '</th>
@@ -512,12 +490,12 @@ class CalleController
                         <td><button type = "button" class = "btn btn-outline-success" onClick="seleccionDireccion(\'' . $ID_Persona . '\',this)">seleccionar</button></td>
                         </tr>';
 
-                };//Fin while $resultados
+                };
 
                 $mensaje .= '</tbody>
                     </table>';
 
-            }; //Fin else $filas
+            };
             $Con->CloseConexion();
 
         };
@@ -574,36 +552,25 @@ class CalleController
     {
         header('Content-Type: application/json;');
 
-        $consultaBusqueda = (!isset($_REQUEST['calle']) ? null : $_REQUEST['calle']);
+        $consulta = (!isset($_REQUEST['calle']) ? null : $_REQUEST['calle']);
 
         //Filtro anti-XSS
         $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
         $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
-        $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consultaBusqueda);
-        $consultaBusqueda = strtolower($consultaBusqueda);
-        $resultados = [];
+        $consulta = str_replace($caracteres_malos, $caracteres_buenos, $consulta);
+        $consulta = strtolower($consulta);
+        $res = [];
 
-        if (!is_null($consultaBusqueda)) {
+        if (!is_null($consulta)) {
 
             $con = new Conexion();
             $con->OpenConexion();
-            $consultaBusqueda = trim(strtolower($consultaBusqueda));
-            $consultaCalles = "SELECT id_calle, calle_nombre
-                            FROM calles
-                            WHERE estado = 1
-                                AND ((LOWER(calle_nombre) REGEXP '[a-z]* " . $consultaBusqueda . "[a-z]*')
-                                    or (LOWER(calle_nombre) REGEXP '^" .  $consultaBusqueda . "[a-z]*'))
-                            order by calle_nombre ASC";
-            $consulta = mysqli_query($con->Conexion, $consultaCalles);
-
-            $filas = mysqli_num_rows($consulta);
-
-            if ($filas) $resultados = mysqli_fetch_all($consulta,  MYSQLI_ASSOC);
-
+            $consulta = trim(strtolower($consulta));
+            $res = Calle::get_list_like_name(coneccion: $con, name: $consulta);
             $con->CloseConexion();
         }
 
-        $json_mensaje = json_encode($resultados);
+        $json_mensaje = json_encode($res);
         echo $json_mensaje;        
     }
 }

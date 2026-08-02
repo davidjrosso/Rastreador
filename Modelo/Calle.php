@@ -1,5 +1,5 @@
 <?php  
-class Calle {
+class Calle implements JsonSerializable {
 	// DECLARACION DE VARIABLES
 	private $id_calle;
 	private $codigo_calle;
@@ -475,6 +475,29 @@ class Calle {
 		return $existe_calle;		
 	}
 
+	public static function get_list_like_name($coneccion, $name)
+	{
+		$list = [];
+		if ($name) {
+			$consulta = "SELECT *
+							FROM calle
+							WHERE estado = 1
+								AND ((LOWER(calle_nombre) REGEXP '[a-z]* " . $name . "[a-z]*')
+									or (LOWER(calle_nombre) REGEXP '^" .  $name . "[a-z]*'))
+							order by calle_nombre ASC";
+			$cn = mysqli_query($coneccion->Conexion, $consulta);
+			if (!$cn) {
+				throw new Exception("error al consultar calles", 2);
+			}
+			
+			while($row = mysqli_fetch_assoc($cn)) {
+				$list[] = new self(id_calle: $row["id_calle"]);
+			}
+		}
+
+		return $list;
+	}
+
 	public static function existe_calle_con_id($calle, $id_calle, $coneccion)
 	{
 		$existe_calle = false;
@@ -497,61 +520,87 @@ class Calle {
 	}
 
 	// METODOS SET
-	public function set_id_calle($id_calle){
+	public function set_id_calle($id_calle)
+	{
 		$this->id_calle = $id_calle;
 	}
 
-	public function set_codigo_calle($codigo_calle){
+	public function set_codigo_calle($codigo_calle)
+	{
 		$this->codigo_calle = $codigo_calle;
 	}
 
-	public function set_calle_abreviado($calle_abreviado){
+	public function set_calle_abreviado($calle_abreviado)
+	{
 		$this->calle_abreviado = $calle_abreviado;
 	}
 
-	public function set_estado($estado){
+	public function set_estado($estado)
+	{
 		$this->estado = $estado;
 	}
 
-	public function set_calle_open($calle_open){
+	public function set_calle_open($calle_open)
+	{
 		$this->calle_open = $calle_open;
 	}
 
-	public function set_calle_nombre($calle_nombre){
+	public function set_calle_nombre($calle_nombre)
+	{
 		$this->calle_nombre = $calle_nombre;
 	}
 
-	public function set_geocoder($geocoder){
+	public function set_geocoder($geocoder)
+	{
 		$this->geocoder = $geocoder;
 	}
 
 	// METODOS GET
-	public function get_id_calle(){
+	public function get_id_calle()
+	{
 		return $this->id_calle;
 	}
 
-	public function get_codigo_calle(){
+	public function get_codigo_calle()
+	{
 		return $this->codigo_calle;
 	}
 
-	public function get_calle_abreviado(){
+	public function get_calle_abreviado()
+	{
 		return $this->calle_abreviado;
 	}
 
-	public function get_estado(){
+	public function get_estado()
+	{
 		return $this->estado;
 	}
 
-	public function get_calle_open(){
+	public function get_calle_open()
+	{
 		return $this->calle_open;
 	}
 
-	public function get_calle_nombre(){
+	public function get_calle_nombre()
+	{
 		return $this->calle_nombre;
 	}
 
-	public function get_geocoder(){
+	public function get_geocoder()
+	{
 		return $this->geocoder;
+	}
+
+	public function jsonSerialize(): mixed {
+		return [
+			"calle_nombre" => $this->calle_nombre,
+			"calle_open" => $this->calle_open,
+			"codigo_calle" => $this->codigo_calle,
+			"id_calle" => $this->id_calle,
+			"calle_abreviado" => $this->calle_abreviado,
+			"estado" => $this->estado,
+			"geocoder" => $this->geocoder
+		];
 	}
 
 	public function update(){
