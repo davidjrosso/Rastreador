@@ -219,270 +219,87 @@ class Persona implements JsonSerializable {
 		}
 	}
 
+	public static function get_list_barrios($coneccion, $id_barrio)
+	{
+		$list = [];
+		if ($id_barrio) {
+			$consultar = "select * 
+						  from persona 
+						  where ID_Barrio = $id_barrio 
+								and estado = 1";
+			$mensaje_error = "No se pudieron consultar los casos de igualdad en el Barrio";
 
-//METODOS SET
-public function setID_Persona($xID_Persona){
-	$this->ID_Persona = $xID_Persona;
-}
-
-public function setApellido($xApellido){
-	$this->Apellido = $xApellido;
-}
-
-public function setNombre($xNombre){
-	$this->Nombre = $xNombre;
-}
-
-public function setDNI($xDNI){
-	$this->DNI = $xDNI;
-}
-
-public function setNro_Legajo($xNro_Legajo){
-	$this->Nro_Legajo = $xNro_Legajo;
-}
-public function setEdad($xEdad){
-	$this->Edad = $xEdad;
-}
-
-public function setMeses($xMeses){
-	$this->Meses = $xMeses;
-}
-
-public function setFecha_Nacimiento($xFecha_Nacimiento){
-	$this->Fecha_Nacimiento = $xFecha_Nacimiento;
-}
-
-public function setNro_Carpeta($xNro_Carpeta){
-	$this->Nro_Carpeta = $xNro_Carpeta;
-}
-
-public function setObra_Social($xObra_Social){
-	$this->Obra_Social = $xObra_Social;
-}
-
-public function setDomicilio($xDomicilio = null)
-{
-	$id_calle = (!$xDomicilio) ? $this->getId_Calle() : null;
-	$numero_calle = (!$xDomicilio) ? trim($this->getNro()) : null;
-	$domicilio = ($xDomicilio) ? $xDomicilio : null;
-	$nombre_calle = null;
-
-	$con = new Conexion();
-	$con->OpenConexion();
-	if (!is_null($id_calle)) {
-		$nombre_calle = $this->getNombre_Calle();
-		$domicilio = "$nombre_calle $numero_calle";
-		$domicilio = str_replace(array('á','é','í','ó','ú','ñ'), array('a','e','i','o','u','n'), $domicilio);
-	} else if ($domicilio) {
-		$consulta = "select calle_open, id_calle
-					 from calle
-					 where lower(calle_nombre) like CONCAT(
-															'%',
-															REGEXP_REPLACE( 
-																	REGEXP_REPLACE(
-																					REGEXP_SUBSTR(
-																							lower('$domicilio'), 
-																							'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
-																					),
-																					'( )+',
-																					'%'
-																					),
-																			'(\\\\.)',
-																			''
-																			),
-															'%'
-															)
-					    and estado = 1
-					 order by calle_nombre asc;";
-		$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
-
-		$nro_calle = trim($domicilio);
-		$out = null;
-		$ret = null;
-		if (preg_match('~ [0-9]+$~', $nro_calle, $out)) {
-			$nro_calle = trim($out[0]);
-		} else {
-			if (preg_match('~ [0-9]+ ([aA-zZ]|[0-9])+~', $nro_calle, $ret)) {
-				$lista = explode(" ", trim($ret[0]));
-				$nro_calle = trim($lista[0]);
-			} else {
-				preg_match('~^[0-9]+$~', $nro_calle, $out);
-				if (!empty($out[0])) {
-					$nro_calle = trim($out[0]);
-				} else {
-					$nro_calle = null;
-				}
+			$ejecutar = mysqli_query($coneccion->Conexion, $consultar);
+			if (!$ejecutar) {
+				throw new Exception($mensaje_error, 2);
 			}
+			while($row = mysqli_fetch_row($ejecutar)) {
+				$list[] = new self(ID_Persona: $row["ID_Persona"]);
+			};
 		}
+		return $list;
 
-		if (mysqli_num_rows($query_object) > 0) {
-			$ret = mysqli_fetch_assoc($query_object);
-			if ($ret["id_calle"]) {
-				$nombre_calle = $ret["calle_open"];
-				$this->Calle = $ret["id_calle"];
-				$this->Nro = (($nro_calle) ? $nro_calle : $this->getNro());
-				$domicilio = "$nombre_calle " . $this->getNro();
-			}
-		}
-		$domicilio = str_replace(array('á','é','í','ó','ú','ñ'), array('a','e','i','o','u','n'), $domicilio);
 	}
 
-	$Fecha = date("Y-m-d");
-	if ($domicilio) {
-		$up_query_go = Parametria::get_value_by_code($con, "UP_GOOGLE");
-		if ($up_query_go) {
-			$ch = curl_init();
-			$url = "https://maps.googleapis.com/maps/api/geocode/json?address=" . str_replace(" ", "+", trim($domicilio)) . "+Rio+Tercero,Cordoba&key=AIzaSyAdiF1F7NoZbmAzBWfV6rxjJrGsr1Yvb1g";
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($ch, CURLOPT_HEADER  , 1);
-			$response = curl_exec($ch);
-			$response_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-			$arr_obj_json = json_decode($response);
-			curl_close($ch);
-			if ($response_status == 200) {
-				$body_request = (($arr_obj_json) ? " " . json_encode($arr_obj_json->results[0]) : "");
-			} else {
-				$body_request = "- El estado de la respuesta de google api es : " . $response_status;
-				$arr_obj_json = null;
-			}
-			$detalles = $url . $body_request;
-			$accion = new Accion(
-				xFecha : $Fecha,
-				xDetalles : $detalles,
-				xID_TipoAccion : 1
-			);
-			$accion->save();
-	
-			$center_rio_tercero_lat = -32.194998;
-			$center_rio_tercero_lon = -64.1684546;
-		} else {
-			$arr_obj_json = null;
-		}
 
-		if ($arr_obj_json && $arr_obj_json->results) {
-			if ((!is_null($arr_obj_json->results[0]->geometry->location->lat) 
-				|| !is_null($arr_obj_json->results[0]->geometry->location->lng))
-				&& ($center_rio_tercero_lat != $arr_obj_json->results[0]->geometry->location->lat)
-				&& ($center_rio_tercero_lon != $arr_obj_json->results[0]->geometry->location->lng)
-			) {
-				$point = "POINT(" . $arr_obj_json->results[0]->geometry->location->lat . ", " . $arr_obj_json->results[0]->geometry->location->lng . ")";
-				$this->Georeferencia = $point;
-			} else {
-				$ch = curl_init();
-				$url = "https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", trim($domicilio)) . "&city=rio+tercero&format=jsonv2&limit=1&email=toromi2132@lohinja.com";
-				curl_setopt($ch, CURLOPT_URL,$url);
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				$response = curl_exec($ch);
-				$arr_obj_json = json_decode($response);
-				curl_close($ch);
-				$body_request = (($arr_obj_json[0]) ? " " . json_encode($arr_obj_json[0]) : "");
-				$body_request = str_replace("'", "", $body_request);
-				$detalles = $url . $body_request;
-				$accion = new Accion(
-					xFecha : $Fecha,
-					xDetalles : $detalles,
-					xID_TipoAccion : 1
-				);
-				$accion->save();
-				if ($arr_obj_json) {
-					if (!is_null($arr_obj_json[0]->lat) || !is_null($arr_obj_json[0]->lon)) {
-						$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
-						$this->Georeferencia = $point;
-					} else {
-						$this->Georeferencia = null;
-					}
-				} else {
-					$this->Georeferencia = null;
-				}
-			}
-		} else {
-			$ch = curl_init();
-			$url = "https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", trim($domicilio)) . "&city=rio+tercero&format=jsonv2&limit=1&email=toromi2132@lohinja.com";
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			$response = curl_exec($ch);
-			$arr_obj_json = json_decode($response);
-			curl_close($ch);
-			$body_request = ((isset($arr_obj_json[0])) ? " " . json_encode($arr_obj_json[0]) : "");
-			$body_request = str_replace("'", "", $body_request);
-			$detalles = $url . $body_request;
-			$accion = new Accion(
-				xFecha : $Fecha,
-				xDetalles : $detalles,
-				xID_TipoAccion : 1
-			);
-			$accion->save();
-			if ($arr_obj_json) {
-				if (!is_null($arr_obj_json[0]->lat) || !is_null($arr_obj_json[0]->lon)) {
-					if (!is_null($this->getNro()) && $this->getNro() > 1000) {
-						$ch = curl_init();
-						$url = "https://nominatim.openstreetmap.org/reverse?lat=" . $arr_obj_json[0]->lat . "&lon=" . $arr_obj_json[0]->lon . "&format=jsonv2&city=rio+tercero&format=jsonv2&limit=1&email=toromi2132@lohinja.com";
-						curl_setopt($ch, CURLOPT_URL, $url);
-						curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-						$response = curl_exec($ch);
-						$reverse_obj_json = json_decode($response);
-						curl_close($ch);
-						$address_number = $reverse_obj_json->address->house_number;
-						if (abs($address_number -  $this->getNro()) > 100 ) {
-							$ch = curl_init();
-							$url = "https://api.tomtom.com/search/2/geocode/Cordoba,+Rio+Tercero," .  str_replace(" ", "+", trim($domicilio)) . ".json?storeResult=false&lat=-32.194998&lon=-64.1684546&radius=300000&view=Unified&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
-							curl_setopt($ch, CURLOPT_URL, $url);
-							curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-							$response = curl_exec($ch);
-							$arr_obj_json = json_decode($response);
-							curl_close($ch);
-							if ($arr_obj_json) {
-								if (!is_null($arr_obj_json->results[0]) || !is_null($arr_obj_json->results[0])) {
-									$point = "POINT(" . $arr_obj_json->results[0]->position->lat . ", " . $arr_obj_json->results[0]->position->lon . ")";
-									$this->Georeferencia = $point;
-								} else {
-									$this->Georeferencia = null;
-								}
-							} else {
-								$this->Georeferencia = null;
-							}
-
-						} else {
-							$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
-							$this->Georeferencia = $point;
-						}
-					} else {
-						$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
-						$this->Georeferencia = $point;
-					}
-				} else {
-					$this->Georeferencia = null;
-				}
-			} else {
-				$this->Georeferencia = null;
-			}
-		}
+	//METODOS SET
+	public function setID_Persona($xID_Persona){
+		$this->ID_Persona = $xID_Persona;
 	}
-	$this->Domicilio = $domicilio;
-	$con->CloseConexion();
-}
 
-public function setCalleNro($xDomicilio = null)
-{
-	$igual = true;
-	$id_calle = (!$xDomicilio) ? $this->getId_Calle() : null;
-	$numero_calle = (!$xDomicilio) ? trim($this->getNro()) : null;
-	$domicilio = ($xDomicilio) ? $xDomicilio : null;
-	$nombre_calle = null;
+	public function setApellido($xApellido){
+		$this->Apellido = $xApellido;
+	}
 
-	$con = new Conexion();
-	$con->OpenConexion();
-	if (!is_null($id_calle)) {
-		$nombre_calle = $this->getNombre_Calle();
-		$domicilio = "$nombre_calle $numero_calle";
-		$domicilio = str_replace(array('á','é','í','ó','ú','ñ'), array('a','e','i','o','u','n'), $domicilio);
-	} else if ($domicilio) {
-		$consulta = "select calle_open, id_calle
-					 from calle
-					 where lower(calle_nombre) like CONCAT(
-															'%',
-															REGEXP_REPLACE( 
+	public function setNombre($xNombre){
+		$this->Nombre = $xNombre;
+	}
+
+	public function setDNI($xDNI){
+		$this->DNI = $xDNI;
+	}
+
+	public function setNro_Legajo($xNro_Legajo){
+		$this->Nro_Legajo = $xNro_Legajo;
+	}
+	public function setEdad($xEdad){
+		$this->Edad = $xEdad;
+	}
+
+	public function setMeses($xMeses){
+		$this->Meses = $xMeses;
+	}
+
+	public function setFecha_Nacimiento($xFecha_Nacimiento){
+		$this->Fecha_Nacimiento = $xFecha_Nacimiento;
+	}
+
+	public function setNro_Carpeta($xNro_Carpeta){
+		$this->Nro_Carpeta = $xNro_Carpeta;
+	}
+
+	public function setObra_Social($xObra_Social){
+		$this->Obra_Social = $xObra_Social;
+	}
+
+	public function setDomicilio($xDomicilio = null)
+	{
+		$id_calle = (!$xDomicilio) ? $this->getId_Calle() : null;
+		$numero_calle = (!$xDomicilio) ? trim($this->getNro()) : null;
+		$domicilio = ($xDomicilio) ? $xDomicilio : null;
+		$nombre_calle = null;
+
+		$con = new Conexion();
+		$con->OpenConexion();
+		if (!is_null($id_calle)) {
+			$nombre_calle = $this->getNombre_Calle();
+			$domicilio = "$nombre_calle $numero_calle";
+			$domicilio = str_replace(array('á','é','í','ó','ú','ñ'), array('a','e','i','o','u','n'), $domicilio);
+		} else if ($domicilio) {
+			$consulta = "select calle_open, id_calle
+						from calle
+						where lower(calle_nombre) like CONCAT(
+																'%',
 																REGEXP_REPLACE( 
 																		REGEXP_REPLACE(
 																						REGEXP_SUBSTR(
@@ -494,14 +311,744 @@ public function setCalleNro($xDomicilio = null)
 																						),
 																				'(\\\\.)',
 																				''
+																				),
+																'%'
+																)
+							and estado = 1
+						order by calle_nombre asc;";
+			$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
+
+			$nro_calle = trim($domicilio);
+			$out = null;
+			$ret = null;
+			if (preg_match('~ [0-9]+$~', $nro_calle, $out)) {
+				$nro_calle = trim($out[0]);
+			} else {
+				if (preg_match('~ [0-9]+ ([aA-zZ]|[0-9])+~', $nro_calle, $ret)) {
+					$lista = explode(" ", trim($ret[0]));
+					$nro_calle = trim($lista[0]);
+				} else {
+					preg_match('~^[0-9]+$~', $nro_calle, $out);
+					if (!empty($out[0])) {
+						$nro_calle = trim($out[0]);
+					} else {
+						$nro_calle = null;
+					}
+				}
+			}
+
+			if (mysqli_num_rows($query_object) > 0) {
+				$ret = mysqli_fetch_assoc($query_object);
+				if ($ret["id_calle"]) {
+					$nombre_calle = $ret["calle_open"];
+					$this->Calle = $ret["id_calle"];
+					$this->Nro = (($nro_calle) ? $nro_calle : $this->getNro());
+					$domicilio = "$nombre_calle " . $this->getNro();
+				}
+			}
+			$domicilio = str_replace(array('á','é','í','ó','ú','ñ'), array('a','e','i','o','u','n'), $domicilio);
+		}
+
+		$Fecha = date("Y-m-d");
+		if ($domicilio) {
+			$up_query_go = Parametria::get_value_by_code($con, "UP_GOOGLE");
+			if ($up_query_go) {
+				$ch = curl_init();
+				$url = "https://maps.googleapis.com/maps/api/geocode/json?address=" . str_replace(" ", "+", trim($domicilio)) . "+Rio+Tercero,Cordoba&key=AIzaSyAdiF1F7NoZbmAzBWfV6rxjJrGsr1Yvb1g";
+				curl_setopt($ch, CURLOPT_URL, $url);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt($ch, CURLOPT_HEADER  , 1);
+				$response = curl_exec($ch);
+				$response_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+				$arr_obj_json = json_decode($response);
+				curl_close($ch);
+				if ($response_status == 200) {
+					$body_request = (($arr_obj_json) ? " " . json_encode($arr_obj_json->results[0]) : "");
+				} else {
+					$body_request = "- El estado de la respuesta de google api es : " . $response_status;
+					$arr_obj_json = null;
+				}
+				$detalles = $url . $body_request;
+				$accion = new Accion(
+					xFecha : $Fecha,
+					xDetalles : $detalles,
+					xID_TipoAccion : 1
+				);
+				$accion->save();
+		
+				$center_rio_tercero_lat = -32.194998;
+				$center_rio_tercero_lon = -64.1684546;
+			} else {
+				$arr_obj_json = null;
+			}
+
+			if ($arr_obj_json && $arr_obj_json->results) {
+				if ((!is_null($arr_obj_json->results[0]->geometry->location->lat) 
+					|| !is_null($arr_obj_json->results[0]->geometry->location->lng))
+					&& ($center_rio_tercero_lat != $arr_obj_json->results[0]->geometry->location->lat)
+					&& ($center_rio_tercero_lon != $arr_obj_json->results[0]->geometry->location->lng)
+				) {
+					$point = "POINT(" . $arr_obj_json->results[0]->geometry->location->lat . ", " . $arr_obj_json->results[0]->geometry->location->lng . ")";
+					$this->Georeferencia = $point;
+				} else {
+					$ch = curl_init();
+					$url = "https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", trim($domicilio)) . "&city=rio+tercero&format=jsonv2&limit=1&email=toromi2132@lohinja.com";
+					curl_setopt($ch, CURLOPT_URL,$url);
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+					$response = curl_exec($ch);
+					$arr_obj_json = json_decode($response);
+					curl_close($ch);
+					$body_request = (($arr_obj_json[0]) ? " " . json_encode($arr_obj_json[0]) : "");
+					$body_request = str_replace("'", "", $body_request);
+					$detalles = $url . $body_request;
+					$accion = new Accion(
+						xFecha : $Fecha,
+						xDetalles : $detalles,
+						xID_TipoAccion : 1
+					);
+					$accion->save();
+					if ($arr_obj_json) {
+						if (!is_null($arr_obj_json[0]->lat) || !is_null($arr_obj_json[0]->lon)) {
+							$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
+							$this->Georeferencia = $point;
+						} else {
+							$this->Georeferencia = null;
+						}
+					} else {
+						$this->Georeferencia = null;
+					}
+				}
+			} else {
+				$ch = curl_init();
+				$url = "https://nominatim.openstreetmap.org/search?street=" . str_replace(" ", "+", trim($domicilio)) . "&city=rio+tercero&format=jsonv2&limit=1&email=toromi2132@lohinja.com";
+				curl_setopt($ch, CURLOPT_URL, $url);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				$response = curl_exec($ch);
+				$arr_obj_json = json_decode($response);
+				curl_close($ch);
+				$body_request = ((isset($arr_obj_json[0])) ? " " . json_encode($arr_obj_json[0]) : "");
+				$body_request = str_replace("'", "", $body_request);
+				$detalles = $url . $body_request;
+				$accion = new Accion(
+					xFecha : $Fecha,
+					xDetalles : $detalles,
+					xID_TipoAccion : 1
+				);
+				$accion->save();
+				if ($arr_obj_json) {
+					if (!is_null($arr_obj_json[0]->lat) || !is_null($arr_obj_json[0]->lon)) {
+						if (!is_null($this->getNro()) && $this->getNro() > 1000) {
+							$ch = curl_init();
+							$url = "https://nominatim.openstreetmap.org/reverse?lat=" . $arr_obj_json[0]->lat . "&lon=" . $arr_obj_json[0]->lon . "&format=jsonv2&city=rio+tercero&format=jsonv2&limit=1&email=toromi2132@lohinja.com";
+							curl_setopt($ch, CURLOPT_URL, $url);
+							curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+							$response = curl_exec($ch);
+							$reverse_obj_json = json_decode($response);
+							curl_close($ch);
+							$address_number = $reverse_obj_json->address->house_number;
+							if (abs($address_number -  $this->getNro()) > 100 ) {
+								$ch = curl_init();
+								$url = "https://api.tomtom.com/search/2/geocode/Cordoba,+Rio+Tercero," .  str_replace(" ", "+", trim($domicilio)) . ".json?storeResult=false&lat=-32.194998&lon=-64.1684546&radius=300000&view=Unified&key=Tj0CNZcoMipF9sVJ2GKE3LZ907yNogpt";
+								curl_setopt($ch, CURLOPT_URL, $url);
+								curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+								$response = curl_exec($ch);
+								$arr_obj_json = json_decode($response);
+								curl_close($ch);
+								if ($arr_obj_json) {
+									if (!is_null($arr_obj_json->results[0]) || !is_null($arr_obj_json->results[0])) {
+										$point = "POINT(" . $arr_obj_json->results[0]->position->lat . ", " . $arr_obj_json->results[0]->position->lon . ")";
+										$this->Georeferencia = $point;
+									} else {
+										$this->Georeferencia = null;
+									}
+								} else {
+									$this->Georeferencia = null;
+								}
+
+							} else {
+								$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
+								$this->Georeferencia = $point;
+							}
+						} else {
+							$point = "POINT(" . $arr_obj_json[0]->lat . ", " . $arr_obj_json[0]->lon . ")";
+							$this->Georeferencia = $point;
+						}
+					} else {
+						$this->Georeferencia = null;
+					}
+				} else {
+					$this->Georeferencia = null;
+				}
+			}
+		}
+		$this->Domicilio = $domicilio;
+		$con->CloseConexion();
+	}
+
+	public function setCalleNro($xDomicilio = null)
+	{
+		$igual = true;
+		$id_calle = (!$xDomicilio) ? $this->getId_Calle() : null;
+		$numero_calle = (!$xDomicilio) ? trim($this->getNro()) : null;
+		$domicilio = ($xDomicilio) ? $xDomicilio : null;
+		$nombre_calle = null;
+
+		$con = new Conexion();
+		$con->OpenConexion();
+		if (!is_null($id_calle)) {
+			$nombre_calle = $this->getNombre_Calle();
+			$domicilio = "$nombre_calle $numero_calle";
+			$domicilio = str_replace(array('á','é','í','ó','ú','ñ'), array('a','e','i','o','u','n'), $domicilio);
+		} else if ($domicilio) {
+			$consulta = "select calle_open, id_calle
+						from calle
+						where lower(calle_nombre) like CONCAT(
+																'%',
+																REGEXP_REPLACE( 
+																	REGEXP_REPLACE( 
+																			REGEXP_REPLACE(
+																							REGEXP_SUBSTR(
+																									lower('$domicilio'), 
+																									'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
+																							),
+																							'( )+',
+																							'%'
+																							),
+																					'(\\\\.)',
+																					''
+																				),
+																				'S/N',
+																				''
 																			),
-																			'S/N',
-																			''
+																'%'
+																)
+							and estado = 1
+						order by calle_nombre asc;";
+			$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
+
+			$nro_calle = trim($domicilio);
+			$out = null;
+			$ret = null;
+			if (preg_match('~ [0-9]+$~', $nro_calle, $out)) {
+				$nro_calle = trim($out[0]);
+				$igual = $igual && ($this->getNroCalle() == $nro_calle);
+			} else {
+				if (preg_match('~ [0-9]+ ([aA-zZ]|[0-9])+~', $nro_calle, $ret)) {
+					$lista = explode(" ", trim($ret[0]));
+					$nro_calle = trim($lista[0]);
+					$igual = $igual && ($this->getNroCalle() == $nro_calle);
+				} else {
+					preg_match('~^[0-9]+$~', $nro_calle, $out);
+					if (!empty($out[0])) {
+						$nro_calle = trim($out[0]);
+						$igual = $igual && ($this->getNro() == $nro_calle);
+					} else {
+						$nro_calle = null;
+					}
+				}
+			}
+
+			if (mysqli_num_rows($query_object) > 0) {
+				$ret = mysqli_fetch_assoc($query_object);
+				if ($ret["id_calle"] != $this->Calle
+					|| $nro_calle != $this->getNro()) {
+					$nombre_calle = $ret["calle_open"];
+					$this->Calle = $ret["id_calle"];
+					$domicilio = "$nombre_calle " . $this->getNro();
+					$igual = false;
+				}
+			}
+			$domicilio = str_replace(array('á','é','í','ó','ú','ñ'), array('a','e','i','o','u','n'), $domicilio);
+		}
+
+		$this->Domicilio = $domicilio;
+
+		$igual = $igual && !is_null($this->getGeoreferencia());
+		$con->CloseConexion();
+		return $igual;
+	}
+
+	public function setCalleNroConBarrio(
+										$domicilio=null,
+										$id_barrio=null,
+										$coneccion=null
+										)
+	{
+		$igual = true;
+		$id_calle = (!$domicilio) ? $this->getId_Calle() : null;
+		$numero_calle = (!$domicilio) ? trim($this->getNro()) : null;
+		$domicilio_info = ($domicilio) ? $domicilio : null;
+		$nombre_calle = null;
+
+		if (!is_null($id_calle)) {
+			$nombre_calle = $this->getNombre_Calle();
+			$domicilio_info = "$nombre_calle $numero_calle";
+			$domicilio_info = str_replace(array('á','é','í','ó','ú','ñ'), array('a','e','i','o','u','n'), $domicilio_info);
+		} else if ($domicilio_info) {
+			$nro_calle = trim($domicilio_info);
+			$out = null;
+			$ret = null;
+			if (preg_match('~ [0-9]+$~', $nro_calle, $out)) {
+				$nro_calle = trim($out[0]);
+				$igual = $igual && ($this->getNroCalle() == $nro_calle);
+			} else {
+				if (preg_match('~ [0-9]+ ([aA-zZ]|[0-9])+~', $nro_calle, $ret)) {
+					$lista = explode(" ", trim($ret[0]));
+					$nro_calle = trim($lista[0]);
+					$igual = $igual && ($this->getNroCalle() == $nro_calle);
+				} else {
+					preg_match('~^[0-9]+$~', $nro_calle, $out);
+					if (!empty($out[0])) {
+						$nro_calle = trim($out[0]);
+						$igual = $igual && ($this->getNro() == $nro_calle);
+					} else {
+						$nro_calle = null;
+					}
+				}
+			}
+
+			$calle_query = "";
+			$barrio_query = "";
+			if (!empty($nro_calle)) $calle_query = "AND $nro_calle BETWEEN cs.min_num AND cs.max_num";
+			if (!empty($id_barrio)) $barrio_query = "AND id_barrio = $id_barrio";
+
+			$consulta = "SELECT c.calle_open, c.id_calle
+						FROM calle  c INNER JOIN calles_barrios cs ON (c.id_calle = cs.id_calle)
+						WHERE lower(calle_nombre) LIKE CONCAT(
+																'%',
+																REGEXP_REPLACE( 
+																	REGEXP_REPLACE( 
+																			REGEXP_REPLACE(
+																							REGEXP_SUBSTR(
+																									lower('$domicilio_info'), 
+																									'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
+																							),
+																							'( )+',
+																							'%'
+																							),
+																					'(\\\\.)',
+																					''
+																				),
+																				'S/N',
+																				''
+																			),
+																'%'
+																)
+						$calle_query
+						$barrio_query
+						AND c.estado = 1
+						AND cs.estado = 1
+						ORDER BY c.calle_nombre ASC;";
+			$query_object = mysqli_query($coneccion->Conexion, $consulta) or die("Error al consultar datos");
+
+			if (mysqli_num_rows($query_object) > 0) {
+				$ret = mysqli_fetch_assoc($query_object);
+				if ($ret["id_calle"] != $this->Calle
+					|| $nro_calle != $this->getNro()) {
+					$nombre_calle = $ret["calle_open"];
+					$this->Calle = $ret["id_calle"];
+					$domicilio_info = "$nombre_calle " . $this->getNro();
+					$igual = false;
+				}
+			}
+			$domicilio_info = str_replace(array('á','é','í','ó','ú','ñ'), array('a','e','i','o','u','n'), $domicilio_info);
+		}
+
+		$this->Domicilio = $domicilio_info;
+		$igual = $igual && !is_null($this->getGeoreferencia());
+
+		return $igual;
+	}
+
+	public function setCalle($xCalle)
+	{
+		$this->Calle = $xCalle;
+	}
+
+	public function setNro($xNro)
+	{
+
+		$nro_calle = (!empty($xNro)) ? trim($xNro) : "";
+		$out = null;
+		$ret = null;
+		if (preg_match('~ [0-9]+$~', $nro_calle, $out)) {
+			$nro_calle = trim($out[0]);
+		} else {
+			if (preg_match('~ [0-9]+ ([aA-zZ]|[0-9])+~', $nro_calle, $ret)) {
+				$lista = explode(" ", trim($ret[0]));
+				$nro_calle = trim($lista[0]);
+			} else {
+				preg_match('~^[0-9]+$~', $nro_calle, $out);
+				if (!empty($out[0])) {
+					$nro_calle = trim($out[0]);
+				} else {
+					$nro_calle = null;
+				}
+			}
+		}
+		$this->Nro = ((!is_null($nro_calle)) ? $nro_calle : null);
+	}
+
+	public function setBarrio($xBarrio){
+		$this->Barrio = $xBarrio;
+	}
+
+	public function setLocalidad($xLocalidad){
+		$this->Localidad = $xLocalidad;
+	}
+
+	public function setCircunscripcion($xCircunscripcion){
+		$this->Circunscripcion = $xCircunscripcion;
+	}
+
+	public function setSeccion($xSeccion){
+		$this->Seccion = $xSeccion;
+	}
+
+	public function setManzana($xManzana){
+		$this->Manzana = $xManzana;
+	}
+
+	public function setLote($xLote){
+		$this->Lote = $xLote;
+	}
+
+	public function setFamilia($xFamilia){
+		$this->Familia = $xFamilia;
+	}
+
+	public function setGeoreferencia($xGeoreferencia){
+		$this->Georeferencia = $xGeoreferencia;
+	}
+
+	public function setSexo($xSexo){
+		$this->sexo = $xSexo;
+	}
+
+	public function setObservaciones($xObservaciones){
+		$this->Observaciones = $xObservaciones;
+	}
+
+	public function setCamio_Domicilio($xCambio_Domicilio){
+		$this->Cambio_Domicilio = $xCambio_Domicilio;
+	}
+
+	public function setTelefono($xTelefono){
+		$this->Telefono = $xTelefono;
+	}
+
+	public function setMail($xMail){
+		$this->Mail = $xMail;
+	}
+
+	public function setEstado($xEstado){
+		$this->Estado = $xEstado;
+	}
+
+	public function setID_Escuela($xID_Escuela){
+		$this->ID_Escuela = $xID_Escuela;
+	}
+
+	public function setTrabajo($xTrabajo){
+		$this->Trabajo = $xTrabajo;
+	}
+
+	//METODOS GET
+	public function getID_Persona(){
+		return $this->ID_Persona;
+	}
+
+	public function getApellido(){
+		return $this->Apellido;
+	}
+
+	public function getNombre(){
+		return $this->Nombre;
+	}
+
+	public function getDNI(){
+		return $this->DNI;
+	}
+
+	public function getNro_Legajo()
+	{
+		return $this->Nro_Legajo;
+	}
+	public function getEdad()
+	{
+		return $this->Edad;
+	}
+
+	public function getMeses()
+	{
+		return $this->Meses;
+	}
+
+	public function getFecha_Nacimiento()
+	{
+		return $this->Fecha_Nacimiento;
+	}
+
+	public function getNro_Carpeta()
+	{
+		return $this->Nro_Carpeta;
+	}
+
+	public function getObra_Social()
+	{
+		return $this->Obra_Social;
+	}
+
+	public function getDomicilio()
+	{
+		return $this->Domicilio;
+	}
+
+	public function getId_Calle()
+	{
+		return $this->Calle;
+	}
+
+	public function getNombre_Calle()
+	{
+		$con = new Conexion();
+		$con->OpenConexion();
+		$calle_open = null;
+		if (!empty($this->getId_Calle())) {
+			$consulta_calle = "select *
+							from calle 
+							where id_calle = " . $this->getId_Calle() . " 
+								and estado = 1";
+			$result = mysqli_query($con->Conexion, $consulta_calle);
+			if (!$result) {
+				$mensaje_error_consultar = "No se pudo consultar la tabla calle";
+				throw new Exception($mensaje_error_consultar . $consulta_calle, 2);
+			}
+			$result_row = mysqli_fetch_assoc($result);
+			$calle_open = $result_row["calle_open"];
+		}
+		return $calle_open;
+	}
+
+	public function getNro()
+	{
+		return $this->Nro;
+	}
+
+	public function getCalle()
+	{
+		$LongString = strlen($this->Domicilio);
+		if ($LongString > 4) {
+		$StringDelimitado = chunk_split($this->Domicilio,$LongString - 4,"-");
+		$PartesDireccion = explode("-", $StringDelimitado);
+		$DomActual = $PartesDireccion[0];
+		if (!preg_match("~[0-9]~", $PartesDireccion[1])) {
+			$DomActual = $this->Domicilio;
+		} else {
+			$NroCalle = $this->getNroCalle();
+			if($NroCalle < 10000){
+				$DomActual = substr($this->Domicilio, 0, $LongString - 5);
+				if($NroCalle < 1000){
+					$DomActual = substr($this->Domicilio, 0, $LongString - 4);
+					if($NroCalle < 100){
+						$DomActual = substr($this->Domicilio, 0, $LongString - 3);
+						if($NroCalle < 10){
+							$DomActual = substr($this->Domicilio, 0, $LongString - 2);
+						}
+					}
+				}
+			}
+		}
+		} else {
+		$DomActual = null;
+		}
+		return $DomActual;
+	}
+
+	public function getNroCalle()
+	{
+		$NroDomActual = null;
+		if (preg_match("~[aA-zZ]* [0-9]*~", $this->Domicilio)) {
+			$LongString = strlen($this->Domicilio);
+			$has_number = preg_match("~[0-9]*~", $this->Domicilio);
+			if ($has_number && $LongString > 4) {
+			$StringDelimitado = chunk_split($this->Domicilio,$LongString - 4,"-");
+			$PartesDireccion = explode("-", $StringDelimitado);
+
+			$NroDomActual = (int) filter_var($PartesDireccion[1], FILTER_SANITIZE_NUMBER_INT);
+			if($NroDomActual == 0){
+				$NroDomActual = null;
+			}
+			}
+		}
+		return $NroDomActual;
+	}
+
+	public function getBarrio()
+	{
+		if (!empty($this->Barrio)) {
+			$Con = new Conexion();
+			$Con->OpenConexion();
+			$ConsultarBarrio = "select * 
+								from barrios 
+								where ID_Barrio = {$this->Barrio}";
+			$MensajeErrorBarrio = "No se pudo consultar el Barrio de la persona";
+			$EjecutarConsultarBarrio = mysqli_query($Con->Conexion,$ConsultarBarrio) or die($MensajeErrorBarrio);
+			$RetBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);
+			$barrio = $RetBarrio["Barrio"];
+			$Con->CloseConexion();
+		} else {
+			$barrio = null;
+		}
+		return $barrio;
+	}
+
+	public function getId_Barrio()
+	{
+		return $this->Barrio;
+	}
+
+	public function getLocalidad()
+	{
+		return $this->Localidad;
+	}
+
+	public function getCircunscripcion()
+	{
+		return $this->Circunscripcion;
+	}
+
+	public function getSeccion()
+	{
+		return $this->Seccion;
+	}
+
+	public function getManzana()
+	{
+		return $this->Manzana;
+	}
+
+	public function getLote()
+	{
+		return $this->Lote;
+	}
+
+	public function getFamilia()
+	{
+		return $this->Familia;
+	}
+
+	public function getGeoreferencia()
+	{
+		return $this->Georeferencia;
+	}
+
+	public function getLonguitud()
+	{
+		$con = new Conexion();
+		$con->OpenConexion();
+		$consulta = "select p.*,
+							ST_Y(p.georeferencia) as lon
+					from persona p
+					where id_persona = " . $this->getID_Persona();
+		$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
+		$ret = mysqli_fetch_assoc($query_object);
+		return $ret["lon"];
+	}
+	public function getLatitud()
+	{
+		$con = new Conexion();
+		$con->OpenConexion();
+		$consulta = "select p.*,
+							ST_X(p.georeferencia) as lat
+					from persona p
+					where id_persona = " . $this->getID_Persona();
+		$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
+		$ret = mysqli_fetch_assoc($query_object);
+		return $ret["lat"];
+	}
+
+	public function getSexo(){
+		return $this->sexo;
+	}
+
+	public function getObservaciones()
+	{
+		return $this->Observaciones;
+	}
+
+	public function getCambio_Domicilio()
+	{
+		return $this->Cambio_Domicilio;
+	}
+
+	public function getTelefono()
+	{
+		return $this->Telefono;
+	}
+
+	public function getMail()
+	{
+		return $this->Mail;
+	}
+
+	public function getEstado()
+	{
+		return $this->Estado;
+	}
+
+	public function getID_Escuela()
+	{
+		return $this->ID_Escuela;
+	}
+
+	public function getEscuela()
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$ConsultarEscuela = "select Escuela 
+							from escuelas 
+							where ID_Escuela = {$this->ID_Escuela}";
+		$MensajeErrorConsultarEscuela = "No se pudo consultar la Escuela";
+		$EjecutarConsultarEscuela = mysqli_query(
+			$Con->Conexion,
+			$ConsultarEscuela
+			) or die($MensajeErrorConsultarEscuela);
+		$RetEscuela = mysqli_fetch_assoc($EjecutarConsultarEscuela);
+		$RetEscuela["Escuela"];
+		$Con->CloseConexion();
+		return $RetEscuela["Escuela"];
+	}
+	public function getTrabajo()
+	{
+		return $this->Trabajo;
+	}
+
+
+	public function igual_domicilio($domicilio){
+		$con = new Conexion();
+		$con->OpenConexion();
+		$igual = true;
+		$consulta = "select calle_open, id_calle
+					from calle
+					where lower(calle_nombre) like CONCAT(
+														'%',
+														REGEXP_REPLACE( 
+																REGEXP_REPLACE(
+																				REGEXP_SUBSTR(
+																						lower('$domicilio'), 
+																						'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
+																				),
+																				'( )+',
+																				'%'
+																				),
+																		'(\\\\.)',
+																		''
 																		),
-															'%'
-															)
-					    and estado = 1
-					 order by calle_nombre asc;";
+														'%'
+														)
+					and estado = 1
+					order by calle_nombre asc;";
 		$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
 
 		$nro_calle = trim($domicilio);
@@ -509,17 +1056,14 @@ public function setCalleNro($xDomicilio = null)
 		$ret = null;
 		if (preg_match('~ [0-9]+$~', $nro_calle, $out)) {
 			$nro_calle = trim($out[0]);
-			$igual = $igual && ($this->getNroCalle() == $nro_calle);
 		} else {
 			if (preg_match('~ [0-9]+ ([aA-zZ]|[0-9])+~', $nro_calle, $ret)) {
 				$lista = explode(" ", trim($ret[0]));
 				$nro_calle = trim($lista[0]);
-				$igual = $igual && ($this->getNroCalle() == $nro_calle);
 			} else {
 				preg_match('~^[0-9]+$~', $nro_calle, $out);
 				if (!empty($out[0])) {
 					$nro_calle = trim($out[0]);
-					$igual = $igual && ($this->getNro() == $nro_calle);
 				} else {
 					$nro_calle = null;
 				}
@@ -527,977 +1071,455 @@ public function setCalleNro($xDomicilio = null)
 		}
 
 		if (mysqli_num_rows($query_object) > 0) {
-			$ret = mysqli_fetch_assoc($query_object);
-			if ($ret["id_calle"] != $this->Calle
-				|| $nro_calle != $this->getNro()) {
-				$nombre_calle = $ret["calle_open"];
-				$this->Calle = $ret["id_calle"];
-				$domicilio = "$nombre_calle " . $this->getNro();
+			$id_calle = (empty($ret["calle_open"])) ? 0 : $ret["calle_open"];
+			if ($id_calle != $this->getId_Calle()
+				|| $this->getNro() != $nro_calle) {
 				$igual = false;
 			}
 		}
-		$domicilio = str_replace(array('á','é','í','ó','ú','ñ'), array('a','e','i','o','u','n'), $domicilio);
+		return $igual;
 	}
 
-	$this->Domicilio = $domicilio;
 
-	$igual = $igual && !is_null($this->getGeoreferencia());
-	$con->CloseConexion();
-	return $igual;
-}
-
-public function setCalleNroConBarrio(
-									$domicilio=null,
-									$id_barrio=null,
-									$coneccion=null
-									)
-{
-	$igual = true;
-	$id_calle = (!$domicilio) ? $this->getId_Calle() : null;
-	$numero_calle = (!$domicilio) ? trim($this->getNro()) : null;
-	$domicilio_info = ($domicilio) ? $domicilio : null;
-	$nombre_calle = null;
-
-	if (!is_null($id_calle)) {
-		$nombre_calle = $this->getNombre_Calle();
-		$domicilio_info = "$nombre_calle $numero_calle";
-		$domicilio_info = str_replace(array('á','é','í','ó','ú','ñ'), array('a','e','i','o','u','n'), $domicilio_info);
-	} else if ($domicilio_info) {
-		$nro_calle = trim($domicilio_info);
-		$out = null;
-		$ret = null;
-		if (preg_match('~ [0-9]+$~', $nro_calle, $out)) {
-			$nro_calle = trim($out[0]);
-			$igual = $igual && ($this->getNroCalle() == $nro_calle);
-		} else {
-			if (preg_match('~ [0-9]+ ([aA-zZ]|[0-9])+~', $nro_calle, $ret)) {
-				$lista = explode(" ", trim($ret[0]));
-				$nro_calle = trim($lista[0]);
-				$igual = $igual && ($this->getNroCalle() == $nro_calle);
-			} else {
-				preg_match('~^[0-9]+$~', $nro_calle, $out);
-				if (!empty($out[0])) {
-					$nro_calle = trim($out[0]);
-					$igual = $igual && ($this->getNro() == $nro_calle);
-				} else {
-					$nro_calle = null;
-				}
-			}
-		}
-
-		$calle_query = "";
-		$barrio_query = "";
-		if (!empty($nro_calle)) $calle_query = "AND $nro_calle BETWEEN cs.min_num AND cs.max_num";
-		if (!empty($id_barrio)) $barrio_query = "AND id_barrio = $id_barrio";
-
-		$consulta = "SELECT c.calle_open, c.id_calle
-					 FROM calle  c INNER JOIN calles_barrios cs ON (c.id_calle = cs.id_calle)
-					 WHERE lower(calle_nombre) LIKE CONCAT(
-															'%',
-															REGEXP_REPLACE( 
-																REGEXP_REPLACE( 
-																		REGEXP_REPLACE(
-																						REGEXP_SUBSTR(
-																								lower('$domicilio_info'), 
-																								'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
-																						),
-																						'( )+',
-																						'%'
-																						),
-																				'(\\\\.)',
-																				''
-																			),
-																			'S/N',
-																			''
+	public function igual_calle($domicilio){
+		$con = new Conexion();
+		$con->OpenConexion();
+		$igual = true;
+		$consulta = "select calle_open, id_calle
+					from calle
+					where lower(calle_nombre) like CONCAT(
+														'%',
+														REGEXP_REPLACE( 
+																REGEXP_REPLACE(
+																				REGEXP_SUBSTR(
+																						lower('$domicilio'), 
+																						'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
+																				),
+																				'( )+',
+																				'%'
+																				),
+																		'(\\\\.)',
+																		''
 																		),
-															'%'
-															)
-					   $calle_query
-					   $barrio_query
-					   AND c.estado = 1
-					   AND cs.estado = 1
-					 ORDER BY c.calle_nombre ASC;";
-		$query_object = mysqli_query($coneccion->Conexion, $consulta) or die("Error al consultar datos");
-
+														'%'
+														)
+					and estado = 1
+					order by calle_nombre asc;";
+		$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
+		$ret = mysqli_fetch_assoc($query_object);
 		if (mysqli_num_rows($query_object) > 0) {
-			$ret = mysqli_fetch_assoc($query_object);
-			if ($ret["id_calle"] != $this->Calle
-				|| $nro_calle != $this->getNro()) {
-				$nombre_calle = $ret["calle_open"];
-				$this->Calle = $ret["id_calle"];
-				$domicilio_info = "$nombre_calle " . $this->getNro();
+			$id_calle = (empty($ret["calle_open"])) ? 0 : $ret["calle_open"];
+			if ($id_calle != $this->getId_Calle()) {
 				$igual = false;
 			}
 		}
-		$domicilio_info = str_replace(array('á','é','í','ó','ú','ñ'), array('a','e','i','o','u','n'), $domicilio_info);
+		return $igual;
 	}
 
-	$this->Domicilio = $domicilio_info;
-	$igual = $igual && !is_null($this->getGeoreferencia());
+	public static function is_exist($coneccion, $id_persona)
+	{
+		$consulta = "select * 
+					from persona 
+					where id_persona = $id_persona 
+					and estado = 1";
+		$mensaje_error = "Hubo un problema al consultar los registros para validar";
+		$ret = mysqli_query(
+					$coneccion->Conexion,
+					$consulta
+		) or die(
+			$mensaje_error
+		);
+		$is_multiple = (mysqli_num_rows($ret) >= 1);
+		return $is_multiple;
+	}
 
-	return $igual;
-}
+	public static function is_registered($documento)
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$ConsRegistrosIguales = "select id_persona 
+								from persona 
+								where documento = '$documento' 
+								and estado = 1";
+		$MensajeErrorRegistrosIguales = "Hubo un problema al consultar los registros para validar";
+		$ret = mysqli_query($Con->Conexion,
+			$ConsRegistrosIguales
+		) or die(
+			$MensajeErrorRegistrosIguales . " Consulta: " . $ConsRegistrosIguales
+		);
+		$is_multiple = (mysqli_num_rows($ret) >= 1);
+		$Con->CloseConexion();
+		return $is_multiple;
+	}
 
-public function setCalle($xCalle)
-{
-	$this->Calle = $xCalle;
-}
+	public static function get_id_persona_by_dni($coneccion, $documento)
+	{
+		$consulta = "select id_persona 
+					from persona 
+					where documento like '%" . $documento. "%' 
+					and estado = 1";
+		$mensaje_error = "Hubo un problema al consultar el id de la persona";
+		$ret = mysqli_query(
+					$coneccion->Conexion,
+					$consulta
+		) or die(
+			$mensaje_error . " Consulta: " . $consulta
+		);
+		$row = mysqli_fetch_assoc($ret);
+		$id = (empty($row["id_persona"])) ? null : $row["id_persona"];
+		return $id;
+	}
 
-public function setNro($xNro)
-{
+	public function jsonSerialize() {
+		return [
+		'ID_Persona' => $this->ID_Persona,
+		'Nombre' => $this->Nombre,
+		'Apellido' => $this->Apellido,
+		'DNI' => $this->DNI,
+		'Nro_Legajo' => $this->Nro_Legajo,
+		'Edad' => $this->Edad,
+		'Meses' => $this->Meses,
+		'Fecha_Nacimiento' => $this->Fecha_Nacimiento,
+		'Nro_Carpeta' => $this->Nro_Carpeta,
+		'Obra_Social' => $this->Obra_Social,
+		'Domicilio' => $this->Domicilio,
+		'Barrio' => $this->Barrio,
+		'Localidad' => $this->Localidad,
+		'Circunscripcion' => $this->Circunscripcion,
+		'Seccion' => $this->Seccion,
+		'Manzana' => $this->Manzana,
+		'Lote' => $this->Lote,
+		'Familia' => $this->Familia,
+		'Observaciones' => $this->Observaciones,
+		'Cambio_Domicilio' => $this->Cambio_Domicilio,
+		'Telefono' => $this->Telefono,
+		'Mail' => $this->Mail,
+		'ID_Escuela' => $this->ID_Escuela,	
+		'Estado' => $this->Estado,
+		'Trabajo' => $this->Trabajo,
+		'Georeferencia' => $this->Georeferencia,
+		'Nro' => $this->Nro,
+		'Calle' => $this->Calle
+		];
+	}
 
-	$nro_calle = (!empty($xNro)) ? trim($xNro) : "";
-	$out = null;
-	$ret = null;
-	if (preg_match('~ [0-9]+$~', $nro_calle, $out)) {
-		$nro_calle = trim($out[0]);
-	} else {
-		if (preg_match('~ [0-9]+ ([aA-zZ]|[0-9])+~', $nro_calle, $ret)) {
-			$lista = explode(" ", trim($ret[0]));
-			$nro_calle = trim($lista[0]);
-		} else {
-			preg_match('~^[0-9]+$~', $nro_calle, $out);
-			if (!empty($out[0])) {
-				$nro_calle = trim($out[0]);
+	public function update_geo()
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "update persona 
+					set georeferencia = " . ((!is_null($this->getGeoreferencia())) ? $this->getGeoreferencia() : "null") . " 
+					where id_persona = " . $this->getID_Persona();
+					$MensajeErrorConsultar = "No se pudo actualizar la Persona ";
+					if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+						throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+					}
+					$Con->CloseConexion();
+	}
+
+	public function update_calle()
+	{
+		$con = new Conexion();
+		$con->OpenConexion();
+		$consulta = "update persona 
+					set calle = " . ((!is_null($this->getId_Calle())) ? $this->getId_Calle() : "null") . " 
+					where id_persona = " . $this->getID_Persona();
+		$mensaje_error_consultar = "No se pudo actualizar la Persona ";
+		if (!$Ret = mysqli_query($con->Conexion, $consulta)) {
+			throw new Exception($mensaje_error_consultar . $consulta, 2);
+		}
+		$con->CloseConexion();
+	}
+
+	public function update_contacto()
+	{
+		$con = new Conexion();
+		$con->OpenConexion();
+		$consulta = "update persona 
+					set telefono = " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono() . "'" : "null") . ", 
+						mail = " . ((!is_null($this->getMail())) ? "'" . $this->getMail() . "'" : "null") . "
+					where id_persona = " . $this->getID_Persona();
+		$mensaje_error_consultar = "No se pudo actualizar la Persona ";
+		if (!$Ret = mysqli_query($con->Conexion, $consulta)) {
+			throw new Exception($mensaje_error_consultar . $consulta, 2);
+		}
+		$con->CloseConexion();
+	}
+
+
+	public function update_nro()
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "update persona 
+					set nro = " . ((!is_null($this->getNro())) ? $this->getNro() : "null") . " 
+					where id_persona = " . $this->getID_Persona();
+					$MensajeErrorConsultar = "No se pudo actualizar la Persona ";
+					if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+						throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+					}
+					$Con->CloseConexion();
+	}
+
+	public function update_familia()
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "update persona 
+					set familia = " . ((!is_null($this->getFamilia())) ? "'" . $this->getFamilia() . "'" : "null") . " 
+					where id_persona = " . $this->getID_Persona();
+					$MensajeErrorConsultar = "No se pudo actualizar la Persona ";
+					if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+						throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+					}
+					$Con->CloseConexion();
+	}
+
+	public function update_NroCarpeta()
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "update persona 
+					set nro_carpeta = " . ((!is_null($this->getNro_Carpeta())) ? intval($this->getNro_Carpeta()) : "null") . " 
+					where id_persona = " . $this->getID_Persona();
+					$MensajeErrorConsultar = "No se pudo actualizar la Persona";
+					if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+						throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+					}
+					$Con->CloseConexion();
+	}
+
+	public function update_barrio()
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "update persona 
+					set ID_Barrio = " . ((!is_null($this->getId_Barrio())) ? $this->getId_Barrio() : "null") . " 
+					where id_persona = " . $this->getID_Persona();
+					$MensajeErrorConsultar = "No se pudo actualizar la Persona ";
+					if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+						throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+					}
+					$Con->CloseConexion();
+	}
+
+	public function update_direccion()
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "update persona 
+					set domicilio = " . ((!is_null($this->getDomicilio())) ? "'" . $this->getDomicilio() . "'" : "null") . ", 
+						georeferencia = " . ((!is_null($this->getGeoreferencia())) ? $this->getGeoreferencia() : "null") . ", 
+						calle = " . ((!is_null($this->getId_Calle())) ? $this->getId_Calle() : "null") . ", 
+						nro = " . ((!is_null($this->getNro())) ? $this->getNro() : "null") . ", 
+						familia = " . ((!is_null($this->getFamilia())) ? "'" . $this->getFamilia() . "'": "null") . ",
+						ID_Barrio = " . ((!is_null($this->getId_Barrio())) ? $this->getId_Barrio() : "null") . "
+					where id_persona = " . $this->getID_Persona();
+		$mensaje_error_consulta = "No se pudo actualizar la Persona";
+		if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+			throw new Exception($mensaje_error_consulta . $Consulta, 2);
+		}
+		$Con->CloseConexion();
+	}
+
+	public function update_nombre_apellido()
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "update persona 
+					set apellido = " . ((!is_null($this->getApellido())) ? "'" . $this->getApellido() . "'" : "null") . ", 
+						nombre = " . ((!is_null($this->getNombre())) ? "'" . $this->getNombre() . "'" : "null") . " 
+					where id_persona = " . $this->getID_Persona();
+					$MensajeErrorConsultar = "No se pudo actualizar la Persona";
+					if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+						throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+					}
+					$Con->CloseConexion();
+	}
+
+	public function update()
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$fecha = implode(
+			"-",
+				array_reverse(explode(
+										"/",
+											$this->getFecha_Nacimiento()
+													)
+									)
+						);
+		$Consulta = "update persona 
+					set apellido = " . ((!is_null($this->getApellido())) ? "'" . $this->getApellido() . "'" : "null") . ", 
+						nombre = " . ((!is_null($this->getNombre())) ? "'" . $this->getNombre() . "'" : "null") . ", 
+						documento = " . ((!is_null($this->getDNI())) ? "'" . $this->getDNI() . "'" : "null") . ", 
+						nro_legajo = " . ((!is_null($this->getNro_Legajo())) ? "'" . $this->getNro_Legajo() . "'" : "null") . ", 
+						edad = " . ((!is_null($this->getEdad())) ? "'" . $this->getEdad() . "'" : "null") . ", 
+						fecha_nac = " . ((!is_null($this->getFecha_Nacimiento())) ? "'" . $fecha . "'" : "null") . ", 
+						telefono = " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono() . "'" : "null") . ", 
+						mail = " . ((!is_null($this->getMail())) ? "'" . $this->getMail() . "'" : "null") . ", 
+						nro_carpeta = " . ((!is_null($this->getNro_Carpeta())) ? "'" . $this->getNro_Carpeta() . "'" : "null") . ", 
+						obra_social = " . ((!is_null($this->getObra_Social())) ? "'" . $this->getObra_Social() . "'" : "null") . ", 
+						domicilio = " . ((!is_null($this->getDomicilio())) ? "'" . $this->getDomicilio() . "'" : "null") . ", 
+						ID_Barrio = " . ((!is_null($this->getId_Barrio())) ? "'" . $this->getId_Barrio() . "'" : "null") . ", 
+						localidad = " . ((!is_null($this->getLocalidad())) ? "'" . $this->getLocalidad() . "'" : "null") . ", 
+						circunscripcion = " . ((!is_null($this->getCircunscripcion())) ? "'" . $this->getCircunscripcion() . "'" : "null") . ", 
+						seccion = " . ((!is_null($this->getSeccion())) ? "'" . $this->getSeccion() . "'" : "null") . ", 
+						manzana = " . ((!is_null($this->getManzana())) ? "'" . $this->getManzana() . "'" : "null") . ", 
+						lote = " . ((!is_null($this->getLote())) ? $this->getLote() : "null") . ", 
+						familia = " . ((!is_null($this->getFamilia())) ? "'" . $this->getFamilia() . "'" : "null") . ", 
+						sexo = " . ((!is_null($this->getSexo())) ? "'" . $this->getSexo() . "'" : "null") . ", 
+						observacion = " . ((!is_null($this->getObservaciones())) ? "'" . $this->getObservaciones() . "'" : "null") . ", 
+						cambio_domicilio = " . ((!is_null($this->getCambio_Domicilio())) ? "'" . $this->getCambio_Domicilio() . "'" : "null") . ", 
+						telefono = " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono() . "'" : "null") . ", 
+						ID_Escuela = " . ((!is_null($this->getID_Escuela())) ? "'" . $this->getID_Escuela() . "'" : "null") . ", 
+						meses = " . ((!is_null($this->getMeses())) ? "'" . $this->getMeses() . "'" : "null") . ", 
+						Trabajo = " . ((!is_null($this->getTrabajo())) ? "'" . $this->getTrabajo() . "'" : "null") . ",
+						georeferencia = " . ((!is_null($this->getGeoreferencia())) ? $this->getGeoreferencia() : "null") . ", 
+						calle = " . ((!is_null($this->getId_Calle())) ? $this->getId_Calle() : "null") . ", 
+						nro = " . ((!is_null($this->getNro())) ? $this->getNro() : "null") . " 
+					where id_persona = " . $this->getID_Persona();
+		$MensajeErrorConsultar = "No se pudo actualizar la Persona";
+		if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+			throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+		}
+		$Con->CloseConexion();
+	}
+
+	public function update_edad_meses()
+	{
+		$con = new Conexion();
+		$con->OpenConexion();
+
+		$Edad = (isset($this->Edad)) ? $this->Edad : null;
+		$Meses = (isset($this->Meses)) ? $this->Meses : null;
+		$Fecha_Nacimiento = $this->Fecha_Nacimiento;
+		if ($Fecha_Nacimiento != 'null' && !empty($Fecha_Nacimiento)) {
+			if (substr_count("-", $Fecha_Nacimiento)) {
+				list($ano, $mes, $dia) = explode("-", $Fecha_Nacimiento);
 			} else {
-				$nro_calle = null;
+				list($ano, $mes, $dia) = explode("/", $Fecha_Nacimiento);
 			}
-		}
-	}
-	$this->Nro = ((!is_null($nro_calle)) ? $nro_calle : null);
-}
-
-public function setBarrio($xBarrio){
-	$this->Barrio = $xBarrio;
-}
-
-public function setLocalidad($xLocalidad){
-	$this->Localidad = $xLocalidad;
-}
-
-public function setCircunscripcion($xCircunscripcion){
-	$this->Circunscripcion = $xCircunscripcion;
-}
-
-public function setSeccion($xSeccion){
-	$this->Seccion = $xSeccion;
-}
-
-public function setManzana($xManzana){
-	$this->Manzana = $xManzana;
-}
-
-public function setLote($xLote){
-	$this->Lote = $xLote;
-}
-
-public function setFamilia($xFamilia){
-	$this->Familia = $xFamilia;
-}
-
-public function setGeoreferencia($xGeoreferencia){
-	$this->Georeferencia = $xGeoreferencia;
-}
-
-public function setSexo($xSexo){
-	$this->sexo = $xSexo;
-}
-
-public function setObservaciones($xObservaciones){
-	$this->Observaciones = $xObservaciones;
-}
-
-public function setCamio_Domicilio($xCambio_Domicilio){
-	$this->Cambio_Domicilio = $xCambio_Domicilio;
-}
-
-public function setTelefono($xTelefono){
-	$this->Telefono = $xTelefono;
-}
-
-public function setMail($xMail){
-	$this->Mail = $xMail;
-}
-
-public function setEstado($xEstado){
-	$this->Estado = $xEstado;
-}
-
-public function setID_Escuela($xID_Escuela){
-	$this->ID_Escuela = $xID_Escuela;
-}
-
-public function setTrabajo($xTrabajo){
-	$this->Trabajo = $xTrabajo;
-}
-
-//METODOS GET
-public function getID_Persona(){
-	return $this->ID_Persona;
-}
-
-public function getApellido(){
-	return $this->Apellido;
-}
-
-public function getNombre(){
-	return $this->Nombre;
-}
-
-public function getDNI(){
-	return $this->DNI;
-}
-
-public function getNro_Legajo()
-{
-	return $this->Nro_Legajo;
-}
-public function getEdad()
-{
-	return $this->Edad;
-}
-
-public function getMeses()
-{
-	return $this->Meses;
-}
-
-public function getFecha_Nacimiento()
-{
-	return $this->Fecha_Nacimiento;
-}
-
-public function getNro_Carpeta()
-{
-	return $this->Nro_Carpeta;
-}
-
-public function getObra_Social()
-{
-	return $this->Obra_Social;
-}
-
-public function getDomicilio()
-{
-	return $this->Domicilio;
-}
-
-public function getId_Calle()
-{
-	return $this->Calle;
-}
-
-public function getNombre_Calle()
-{
-	$con = new Conexion();
-	$con->OpenConexion();
-	$calle_open = null;
-	if (!empty($this->getId_Calle())) {
-		$consulta_calle = "select *
-						   from calle 
-						   where id_calle = " . $this->getId_Calle() . " 
-							 and estado = 1";
-		$result = mysqli_query($con->Conexion, $consulta_calle);
-		if (!$result) {
-			$mensaje_error_consultar = "No se pudo consultar la tabla calle";
-			throw new Exception($mensaje_error_consultar . $consulta_calle, 2);
-		}
-		$result_row = mysqli_fetch_assoc($result);
-		$calle_open = $result_row["calle_open"];
-	}
-	return $calle_open;
-}
-
-public function getNro()
-{
-	return $this->Nro;
-}
-
-public function getCalle()
-{
-	$LongString = strlen($this->Domicilio);
-	if ($LongString > 4) {
-	  $StringDelimitado = chunk_split($this->Domicilio,$LongString - 4,"-");
-	  $PartesDireccion = explode("-", $StringDelimitado);
-	  $DomActual = $PartesDireccion[0];
-	  if (!preg_match("~[0-9]~", $PartesDireccion[1])) {
-	    $DomActual = $this->Domicilio;
-	  } else {
-		$NroCalle = $this->getNroCalle();
-		if($NroCalle < 10000){
-			$DomActual = substr($this->Domicilio, 0, $LongString - 5);
-			if($NroCalle < 1000){
-				$DomActual = substr($this->Domicilio, 0, $LongString - 4);
-				if($NroCalle < 100){
-					$DomActual = substr($this->Domicilio, 0, $LongString - 3);
-					if($NroCalle < 10){
-						$DomActual = substr($this->Domicilio, 0, $LongString - 2);
+			$ano_diferencia = date("Y") - $ano;
+			$mes_diferencia = date("m") - $mes;
+			$dia_diferencia = date("d") - $dia;
+			if ($ano_diferencia > 0) {
+				if ($mes_diferencia == 0) {
+					if ($dia_diferencia < 0) {
+						$ano_diferencia--;
+					}
+				} elseif ($mes_diferencia < 0) {
+					$ano_diferencia--;
+				}
+			} else {
+				if ($mes_diferencia > 0) {
+					if ($dia_diferencia < 0) {
+						$mes_diferencia--;
 					}
 				}
 			}
+			$Edad = $ano_diferencia;
+			$Meses = $mes_diferencia;
 		}
-	  }
-	} else {
-	  $DomActual = null;
-	}
-	return $DomActual;
-}
 
-public function getNroCalle()
-{
-	$NroDomActual = null;
-	if (preg_match("~[aA-zZ]* [0-9]*~", $this->Domicilio)) {
-		$LongString = strlen($this->Domicilio);
-		$has_number = preg_match("~[0-9]*~", $this->Domicilio);
-		if ($has_number && $LongString > 4) {
-		  $StringDelimitado = chunk_split($this->Domicilio,$LongString - 4,"-");
-		  $PartesDireccion = explode("-", $StringDelimitado);
-
-		  $NroDomActual = (int) filter_var($PartesDireccion[1], FILTER_SANITIZE_NUMBER_INT);
-		  if($NroDomActual == 0){
-			$NroDomActual = null;
-		  }
+		//PROBAR SI ESTO DA LA DIFERENCIA ENTRE MESES NOMAS O TAMBIEN TOMA LOS AÑOS COMO MESES EN ESE CASO TOMAR LA CANTIDAD DE AÑOS Y MULTIPLICARLO POR 12 Y A ESO RESTARLE AL RESULTADO DEL TOTAL DE MESES DE DIFERENCIA.
+		if ($Fecha_Nacimiento != 'null' && !empty($Fecha_Nacimiento)) {
+			$Fecha_Actual = new DateTime();
+			if (substr_count("-", $Fecha_Nacimiento)) {
+				$fecha_activacion_registrada = DateTime::createFromFormat('d-m-Y', 
+																		$Fecha_Nacimiento);
+				$Diferencia = $fecha_activacion_registrada->diff($Fecha_Actual);
+				$Meses = $Diferencia->m;
+				$Edad = $Diferencia->y;
+			} else if (substr_count("/", $Fecha_Nacimiento)){
+				$fecha_activacion_registrada = DateTime::createFromFormat('d/m/Y', 
+																		$Fecha_Nacimiento);
+				$Diferencia = $fecha_activacion_registrada->diff($Fecha_Actual);
+				$Meses = $Diferencia->m;
+				$Edad = $Diferencia->y;
+			}
 		}
-	}
-	return $NroDomActual;
-}
 
-public function getBarrio()
-{
-	if (!empty($this->Barrio)) {
+		$consulta = "update persona
+					set edad = " . ((!is_null($Edad)) ? "'" . $Edad . "'" : "null") . ", 
+						meses = " . ((!is_null($Meses)) ? "'" . $Meses . "'" : "null") . " 
+					where id_persona = " . $this->getID_Persona();
+		$MensajeErrorConsultar = "No se pudo actualizar la Persona";
+		if (!$Ret = mysqli_query($con->Conexion, $consulta)) {
+			throw new Exception($MensajeErrorConsultar . $consulta, 2);
+		}
+		$con->CloseConexion();
+	}
+
+	public function save(){
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$ConsultarBarrio = "select * 
-							from barrios 
-							where ID_Barrio = {$this->Barrio}";
-		$MensajeErrorBarrio = "No se pudo consultar el Barrio de la persona";
-		$EjecutarConsultarBarrio = mysqli_query($Con->Conexion,$ConsultarBarrio) or die($MensajeErrorBarrio);
-		$RetBarrio = mysqli_fetch_assoc($EjecutarConsultarBarrio);
-		$barrio = $RetBarrio["Barrio"];
-		$Con->CloseConexion();
-	} else {
-		$barrio = null;
+		$consulta = "INSERT INTO persona (
+										apellido, 
+										nombre, 
+										documento, 
+										nro_legajo,
+										edad, 
+										fecha_nac, 
+										telefono, 
+										mail, 
+										nro_carpeta, 
+										obra_social,
+										domicilio, 
+										ID_Barrio, 
+										localidad, 
+										circunscripcion, 
+										seccion,
+										manzana, 
+										lote, 
+										familia, 
+										sexo,
+										observacion, 
+										cambio_domicilio,
+										ID_Escuela, 
+										meses, 
+										Trabajo, 
+										georeferencia,
+										calle,
+										nro, 
+										estado 
+					)
+					VALUES ( " . ((!is_null($this->getApellido())) ? "'" . $this->getApellido() . "'" : "null") . ", 
+							" . ((!is_null($this->getNombre())) ? "'" . $this->getNombre() . "'" : "null") . ", 
+							" . ((!is_null($this->getDNI())) ? "'" . $this->getDNI() . "'" : "null") . ", 
+							" . ((!is_null($this->getNro_Legajo())) ? "'" . $this->getNro_Legajo() . "'" : "null") . ", 
+							" . ((!is_null($this->getEdad())) ? $this->getEdad() : "null") . ", 
+							" . ((!is_null($this->getFecha_Nacimiento())) ? "'" . $this->getFecha_Nacimiento() . "'" : "null") . ", 
+							" . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono() . "'" : "null") . ", 
+							" . ((!is_null($this->getMail())) ? "'" . $this->getMail() . "'" : "null") . ", 
+							" . ((!is_null($this->getNro_Carpeta())) ? "'" . $this->getNro_Carpeta() . "'" : "null") . ", 
+							" . ((!is_null($this->getObra_Social())) ? "'" . $this->getObra_Social() . "'" : "null") . ", 
+							" . ((!is_null($this->getDomicilio())) ? "'" . $this->getDomicilio() . "'" : "null") . ", 
+							" . ((!is_null($this->getId_Barrio())) ? $this->getId_Barrio() : "null") . ", 
+							" . ((!is_null($this->getLocalidad())) ? "'" . $this->getLocalidad() . "'" : "null") . ", 
+							" . ((!is_null($this->getCircunscripcion())) ? $this->getCircunscripcion() : "null") . ", 
+							" . ((!is_null($this->getSeccion())) ? $this->getSeccion() : "null") . ", 
+							" . ((!is_null($this->getManzana())) ? "'" . $this->getManzana() . "'" : "null") . ", 
+							" . ((!is_null($this->getLote())) ? $this->getLote() : "null") . ", 
+							" . ((!is_null($this->getFamilia())) ? "'" . $this->getFamilia() . "'" : "null") . ", 
+							" . ((!is_null($this->getSexo())) ? "'" . $this->getSexo() . "'" : "null") . ", 
+							" . ((!is_null($this->getObservaciones())) ? "'" . $this->getObservaciones() . "'" : "null") . ", 
+							" . ((!is_null($this->getCambio_Domicilio())) ? "'" . $this->getCambio_Domicilio() . "'" : "null") . ", 
+							" . ((!is_null($this->getID_Escuela())) ? $this->getID_Escuela() : "null") . ", 
+							" . ((!is_null($this->getMeses())) ? "'" . $this->getMeses() . "'" : "null") . ", 
+							" . ((!is_null($this->getTrabajo())) ? "'" . $this->getTrabajo() . "'" : "null") . ",
+							" . ((!is_null($this->getGeoreferencia())) ? $this->getGeoreferencia() : "null") . ",
+							" . ((!empty($this->getId_Calle())) ? $this->getId_Calle() : "null") . ",
+							" . ((!empty($this->getNro())) ? $this->getNro() : "null") . ",
+							1
+					)";
+					$MensajeErrorConsultar = "No se pudo insertar la Persona";
+					$ret = mysqli_query($Con->Conexion, $consulta);
+					if (!$ret) {
+						throw new Exception($MensajeErrorConsultar . $consulta, 2);
+					}
+					$this->ID_Persona = mysqli_insert_id($Con->Conexion);
+					$Con->CloseConexion();
 	}
-	return $barrio;
-}
-
-public function getId_Barrio()
-{
-	return $this->Barrio;
-}
-
-public function getLocalidad()
-{
-	return $this->Localidad;
-}
-
-public function getCircunscripcion()
-{
-	return $this->Circunscripcion;
-}
-
-public function getSeccion()
-{
-	return $this->Seccion;
-}
-
-public function getManzana()
-{
-	return $this->Manzana;
-}
-
-public function getLote()
-{
-	return $this->Lote;
-}
-
-public function getFamilia()
-{
-	return $this->Familia;
-}
-
-public function getGeoreferencia()
-{
-	return $this->Georeferencia;
-}
-
-public function getLonguitud()
-{
-	$con = new Conexion();
-	$con->OpenConexion();
-	$consulta = "select p.*,
-						ST_Y(p.georeferencia) as lon
-				 from persona p
-				 where id_persona = " . $this->getID_Persona();
-	$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
-	$ret = mysqli_fetch_assoc($query_object);
-	return $ret["lon"];
-}
-public function getLatitud()
-{
-	$con = new Conexion();
-	$con->OpenConexion();
-	$consulta = "select p.*,
-						ST_X(p.georeferencia) as lat
-				 from persona p
-				 where id_persona = " . $this->getID_Persona();
-	$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
-	$ret = mysqli_fetch_assoc($query_object);
-	return $ret["lat"];
-}
-
-public function getSexo(){
-	return $this->sexo;
-}
-
-public function getObservaciones()
-{
-	return $this->Observaciones;
-}
-
-public function getCambio_Domicilio()
-{
-	return $this->Cambio_Domicilio;
-}
-
-public function getTelefono()
-{
-	return $this->Telefono;
-}
-
-public function getMail()
-{
-	return $this->Mail;
-}
-
-public function getEstado()
-{
-	return $this->Estado;
-}
-
-public function getID_Escuela()
-{
-	return $this->ID_Escuela;
-}
-
-public function getEscuela()
-{
-	$Con = new Conexion();
-	$Con->OpenConexion();
-	$ConsultarEscuela = "select Escuela 
-						 from escuelas 
-						 where ID_Escuela = {$this->ID_Escuela}";
-	$MensajeErrorConsultarEscuela = "No se pudo consultar la Escuela";
-	$EjecutarConsultarEscuela = mysqli_query(
-		$Con->Conexion,
-		$ConsultarEscuela
-		) or die($MensajeErrorConsultarEscuela);
-	$RetEscuela = mysqli_fetch_assoc($EjecutarConsultarEscuela);
-	$RetEscuela["Escuela"];
-	$Con->CloseConexion();
-	return $RetEscuela["Escuela"];
-}
-public function getTrabajo()
-{
-	return $this->Trabajo;
-}
-
-
-public function igual_domicilio($domicilio){
-	$con = new Conexion();
-	$con->OpenConexion();
-	$igual = true;
-	$consulta = "select calle_open, id_calle
-				 from calle
-				 where lower(calle_nombre) like CONCAT(
-				 									'%',
-				 									REGEXP_REPLACE( 
-				 											REGEXP_REPLACE(
-				 															REGEXP_SUBSTR(
-				 																	lower('$domicilio'), 
-				 																	'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
-				 															),
-				 															'( )+',
-				 															'%'
-				 															),
-				 													'(\\\\.)',
-				 													''
-				  													),
-				 									'%'
-				 									)
-				 and estado = 1
-				 order by calle_nombre asc;";
-	$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
-
-	$nro_calle = trim($domicilio);
-	$out = null;
-	$ret = null;
-	if (preg_match('~ [0-9]+$~', $nro_calle, $out)) {
-		$nro_calle = trim($out[0]);
-	} else {
-		if (preg_match('~ [0-9]+ ([aA-zZ]|[0-9])+~', $nro_calle, $ret)) {
-			$lista = explode(" ", trim($ret[0]));
-			$nro_calle = trim($lista[0]);
-		} else {
-			preg_match('~^[0-9]+$~', $nro_calle, $out);
-			if (!empty($out[0])) {
-				$nro_calle = trim($out[0]);
-			} else {
-				$nro_calle = null;
-			}
-		}
-	}
-
-	if (mysqli_num_rows($query_object) > 0) {
-		$id_calle = (empty($ret["calle_open"])) ? 0 : $ret["calle_open"];
-		if ($id_calle != $this->getId_Calle()
-			|| $this->getNro() != $nro_calle) {
-			$igual = false;
-		}
-	}
-	return $igual;
-}
-
-
-public function igual_calle($domicilio){
-	$con = new Conexion();
-	$con->OpenConexion();
-	$igual = true;
-	$consulta = "select calle_open, id_calle
-				 from calle
-				 where lower(calle_nombre) like CONCAT(
-				 									'%',
-				 									REGEXP_REPLACE( 
-				 											REGEXP_REPLACE(
-				 															REGEXP_SUBSTR(
-				 																	lower('$domicilio'), 
-				 																	'([1-9]+( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*( )+[a-zA-Zá-úÁ-Ú]+(\\\\.)*)|([a-zA-Zá-úÁ-Ú]+(\\\\.)*)'
-				 															),
-				 															'( )+',
-				 															'%'
-				 															),
-				 													'(\\\\.)',
-				 													''
-				  													),
-				 									'%'
-				 									)
-				 and estado = 1
-				 order by calle_nombre asc;";
-	$query_object = mysqli_query($con->Conexion, $consulta) or die("Error al consultar datos");
-	$ret = mysqli_fetch_assoc($query_object);
-	if (mysqli_num_rows($query_object) > 0) {
-		$id_calle = (empty($ret["calle_open"])) ? 0 : $ret["calle_open"];
-		if ($id_calle != $this->getId_Calle()) {
-			$igual = false;
-		}
-	}
-	return $igual;
-}
-
-public static function is_exist($coneccion, $id_persona)
-{
-	$consulta = "select * 
-				 from persona 
-				 where id_persona = $id_persona 
-				   and estado = 1";
-	$mensaje_error = "Hubo un problema al consultar los registros para validar";
-	$ret = mysqli_query(
-				$coneccion->Conexion,
-				$consulta
-	) or die(
-		$mensaje_error
-	);
-	$is_multiple = (mysqli_num_rows($ret) >= 1);
-	return $is_multiple;
-}
-
-public static function is_registered($documento)
-{
-	$Con = new Conexion();
-	$Con->OpenConexion();
-	$ConsRegistrosIguales = "select id_persona 
-							 from persona 
-							 where documento = '$documento' 
-							   and estado = 1";
-	$MensajeErrorRegistrosIguales = "Hubo un problema al consultar los registros para validar";
-	$ret = mysqli_query($Con->Conexion,
-		$ConsRegistrosIguales
-	) or die(
-		$MensajeErrorRegistrosIguales . " Consulta: " . $ConsRegistrosIguales
-	);
-	$is_multiple = (mysqli_num_rows($ret) >= 1);
-	$Con->CloseConexion();
-	return $is_multiple;
-}
-
-public static function get_id_persona_by_dni($coneccion, $documento)
-{
-	$consulta = "select id_persona 
-				 from persona 
-				 where documento like '%" . $documento. "%' 
-				   and estado = 1";
-	$mensaje_error = "Hubo un problema al consultar el id de la persona";
-	$ret = mysqli_query(
-				 $coneccion->Conexion,
-				 $consulta
-	) or die(
-		$mensaje_error . " Consulta: " . $consulta
-	);
-	$row = mysqli_fetch_assoc($ret);
-	$id = (empty($row["id_persona"])) ? null : $row["id_persona"];
-	return $id;
-}
-
-public function jsonSerialize() {
-	return [
-	'ID_Persona' => $this->ID_Persona,
-	'Nombre' => $this->Nombre,
-	'Apellido' => $this->Apellido,
-	'DNI' => $this->DNI,
-	'Nro_Legajo' => $this->Nro_Legajo,
-	'Edad' => $this->Edad,
-	'Meses' => $this->Meses,
-	'Fecha_Nacimiento' => $this->Fecha_Nacimiento,
-	'Nro_Carpeta' => $this->Nro_Carpeta,
-	'Obra_Social' => $this->Obra_Social,
-	'Domicilio' => $this->Domicilio,
-	'Barrio' => $this->Barrio,
-	'Localidad' => $this->Localidad,
-	'Circunscripcion' => $this->Circunscripcion,
-	'Seccion' => $this->Seccion,
-	'Manzana' => $this->Manzana,
-	'Lote' => $this->Lote,
-	'Familia' => $this->Familia,
-	'Observaciones' => $this->Observaciones,
-	'Cambio_Domicilio' => $this->Cambio_Domicilio,
-	'Telefono' => $this->Telefono,
-	'Mail' => $this->Mail,
-	'ID_Escuela' => $this->ID_Escuela,	
-	'Estado' => $this->Estado,
-	'Trabajo' => $this->Trabajo,
-	'Georeferencia' => $this->Georeferencia,
-	'Nro' => $this->Nro,
-	'Calle' => $this->Calle
-	];
-}
-
-public function update_geo()
-{
-	$Con = new Conexion();
-	$Con->OpenConexion();
-	$Consulta = "update persona 
-				 set georeferencia = " . ((!is_null($this->getGeoreferencia())) ? $this->getGeoreferencia() : "null") . " 
-				 where id_persona = " . $this->getID_Persona();
-				 $MensajeErrorConsultar = "No se pudo actualizar la Persona ";
-				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
-					throw new Exception($MensajeErrorConsultar . $Consulta, 2);
-				}
-				 $Con->CloseConexion();
-}
-
-public function update_calle()
-{
-	$con = new Conexion();
-	$con->OpenConexion();
-	$consulta = "update persona 
-				 set calle = " . ((!is_null($this->getId_Calle())) ? $this->getId_Calle() : "null") . " 
-				 where id_persona = " . $this->getID_Persona();
-	$mensaje_error_consultar = "No se pudo actualizar la Persona ";
-	if (!$Ret = mysqli_query($con->Conexion, $consulta)) {
-		throw new Exception($mensaje_error_consultar . $consulta, 2);
-	}
-	$con->CloseConexion();
-}
-
-public function update_contacto()
-{
-	$con = new Conexion();
-	$con->OpenConexion();
-	$consulta = "update persona 
-				 set telefono = " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono() . "'" : "null") . ", 
-					 mail = " . ((!is_null($this->getMail())) ? "'" . $this->getMail() . "'" : "null") . "
-				 where id_persona = " . $this->getID_Persona();
-	$mensaje_error_consultar = "No se pudo actualizar la Persona ";
-	if (!$Ret = mysqli_query($con->Conexion, $consulta)) {
-		throw new Exception($mensaje_error_consultar . $consulta, 2);
-	}
-	$con->CloseConexion();
-}
-
-
-public function update_nro()
-{
-	$Con = new Conexion();
-	$Con->OpenConexion();
-	$Consulta = "update persona 
-				 set nro = " . ((!is_null($this->getNro())) ? $this->getNro() : "null") . " 
-				 where id_persona = " . $this->getID_Persona();
-				 $MensajeErrorConsultar = "No se pudo actualizar la Persona ";
-				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
-					throw new Exception($MensajeErrorConsultar . $Consulta, 2);
-				}
-				 $Con->CloseConexion();
-}
-
-public function update_familia()
-{
-	$Con = new Conexion();
-	$Con->OpenConexion();
-	$Consulta = "update persona 
-				 set familia = " . ((!is_null($this->getFamilia())) ? "'" . $this->getFamilia() . "'" : "null") . " 
-				 where id_persona = " . $this->getID_Persona();
-				 $MensajeErrorConsultar = "No se pudo actualizar la Persona ";
-				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
-					throw new Exception($MensajeErrorConsultar . $Consulta, 2);
-				}
-				 $Con->CloseConexion();
-}
-
-public function update_NroCarpeta()
-{
-	$Con = new Conexion();
-	$Con->OpenConexion();
-	$Consulta = "update persona 
-				 set nro_carpeta = " . ((!is_null($this->getNro_Carpeta())) ? intval($this->getNro_Carpeta()) : "null") . " 
-				 where id_persona = " . $this->getID_Persona();
-				 $MensajeErrorConsultar = "No se pudo actualizar la Persona";
-				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
-					throw new Exception($MensajeErrorConsultar . $Consulta, 2);
-				}
-				 $Con->CloseConexion();
-}
-
-public function update_barrio()
-{
-	$Con = new Conexion();
-	$Con->OpenConexion();
-	$Consulta = "update persona 
-				 set ID_Barrio = " . ((!is_null($this->getId_Barrio())) ? $this->getId_Barrio() : "null") . " 
-				 where id_persona = " . $this->getID_Persona();
-				 $MensajeErrorConsultar = "No se pudo actualizar la Persona ";
-				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
-					throw new Exception($MensajeErrorConsultar . $Consulta, 2);
-				}
-				 $Con->CloseConexion();
-}
-
-public function update_direccion()
-{
-	$Con = new Conexion();
-	$Con->OpenConexion();
-	$Consulta = "update persona 
-				 set domicilio = " . ((!is_null($this->getDomicilio())) ? "'" . $this->getDomicilio() . "'" : "null") . ", 
-					 georeferencia = " . ((!is_null($this->getGeoreferencia())) ? $this->getGeoreferencia() : "null") . ", 
-					 calle = " . ((!is_null($this->getId_Calle())) ? $this->getId_Calle() : "null") . ", 
-					 nro = " . ((!is_null($this->getNro())) ? $this->getNro() : "null") . ", 
-					 familia = " . ((!is_null($this->getFamilia())) ? "'" . $this->getFamilia() . "'": "null") . ",
-					 ID_Barrio = " . ((!is_null($this->getId_Barrio())) ? $this->getId_Barrio() : "null") . "
-				 where id_persona = " . $this->getID_Persona();
-	$mensaje_error_consulta = "No se pudo actualizar la Persona";
-	if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
-		throw new Exception($mensaje_error_consulta . $Consulta, 2);
-	}
-	$Con->CloseConexion();
-}
-
-public function update_nombre_apellido()
-{
-	$Con = new Conexion();
-	$Con->OpenConexion();
-	$Consulta = "update persona 
-				 set apellido = " . ((!is_null($this->getApellido())) ? "'" . $this->getApellido() . "'" : "null") . ", 
-				 	 nombre = " . ((!is_null($this->getNombre())) ? "'" . $this->getNombre() . "'" : "null") . " 
-				 where id_persona = " . $this->getID_Persona();
-				 $MensajeErrorConsultar = "No se pudo actualizar la Persona";
-				 if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
-					throw new Exception($MensajeErrorConsultar . $Consulta, 2);
-				}
-				 $Con->CloseConexion();
-}
-
-public function update()
-{
-	$Con = new Conexion();
-	$Con->OpenConexion();
-	$fecha = implode(
-		  "-",
-			  array_reverse(explode(
-									   "/",
-								  		  $this->getFecha_Nacimiento()
-												 )
-								  )
-					);
-	$Consulta = "update persona 
-				 set apellido = " . ((!is_null($this->getApellido())) ? "'" . $this->getApellido() . "'" : "null") . ", 
-				 	 nombre = " . ((!is_null($this->getNombre())) ? "'" . $this->getNombre() . "'" : "null") . ", 
-					 documento = " . ((!is_null($this->getDNI())) ? "'" . $this->getDNI() . "'" : "null") . ", 
-					 nro_legajo = " . ((!is_null($this->getNro_Legajo())) ? "'" . $this->getNro_Legajo() . "'" : "null") . ", 
-					 edad = " . ((!is_null($this->getEdad())) ? "'" . $this->getEdad() . "'" : "null") . ", 
-					 fecha_nac = " . ((!is_null($this->getFecha_Nacimiento())) ? "'" . $fecha . "'" : "null") . ", 
-					 telefono = " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono() . "'" : "null") . ", 
-					 mail = " . ((!is_null($this->getMail())) ? "'" . $this->getMail() . "'" : "null") . ", 
-					 nro_carpeta = " . ((!is_null($this->getNro_Carpeta())) ? "'" . $this->getNro_Carpeta() . "'" : "null") . ", 
-					 obra_social = " . ((!is_null($this->getObra_Social())) ? "'" . $this->getObra_Social() . "'" : "null") . ", 
-					 domicilio = " . ((!is_null($this->getDomicilio())) ? "'" . $this->getDomicilio() . "'" : "null") . ", 
-					 ID_Barrio = " . ((!is_null($this->getId_Barrio())) ? "'" . $this->getId_Barrio() . "'" : "null") . ", 
-					 localidad = " . ((!is_null($this->getLocalidad())) ? "'" . $this->getLocalidad() . "'" : "null") . ", 
-					 circunscripcion = " . ((!is_null($this->getCircunscripcion())) ? "'" . $this->getCircunscripcion() . "'" : "null") . ", 
-					 seccion = " . ((!is_null($this->getSeccion())) ? "'" . $this->getSeccion() . "'" : "null") . ", 
-					 manzana = " . ((!is_null($this->getManzana())) ? "'" . $this->getManzana() . "'" : "null") . ", 
-					 lote = " . ((!is_null($this->getLote())) ? $this->getLote() : "null") . ", 
-					 familia = " . ((!is_null($this->getFamilia())) ? "'" . $this->getFamilia() . "'" : "null") . ", 
-					 sexo = " . ((!is_null($this->getSexo())) ? "'" . $this->getSexo() . "'" : "null") . ", 
-					 observacion = " . ((!is_null($this->getObservaciones())) ? "'" . $this->getObservaciones() . "'" : "null") . ", 
-					 cambio_domicilio = " . ((!is_null($this->getCambio_Domicilio())) ? "'" . $this->getCambio_Domicilio() . "'" : "null") . ", 
-					 telefono = " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono() . "'" : "null") . ", 
-					 ID_Escuela = " . ((!is_null($this->getID_Escuela())) ? "'" . $this->getID_Escuela() . "'" : "null") . ", 
-					 meses = " . ((!is_null($this->getMeses())) ? "'" . $this->getMeses() . "'" : "null") . ", 
-					 Trabajo = " . ((!is_null($this->getTrabajo())) ? "'" . $this->getTrabajo() . "'" : "null") . ",
-					 georeferencia = " . ((!is_null($this->getGeoreferencia())) ? $this->getGeoreferencia() : "null") . ", 
-					 calle = " . ((!is_null($this->getId_Calle())) ? $this->getId_Calle() : "null") . ", 
-					 nro = " . ((!is_null($this->getNro())) ? $this->getNro() : "null") . " 
-				 where id_persona = " . $this->getID_Persona();
-	$MensajeErrorConsultar = "No se pudo actualizar la Persona";
-	if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
-		throw new Exception($MensajeErrorConsultar . $Consulta, 2);
-	}
-	$Con->CloseConexion();
-}
-
-public function update_edad_meses()
-{
-	$con = new Conexion();
-	$con->OpenConexion();
-
-	$Edad = (isset($this->Edad)) ? $this->Edad : null;
-	$Meses = (isset($this->Meses)) ? $this->Meses : null;
-	$Fecha_Nacimiento = $this->Fecha_Nacimiento;
-	if ($Fecha_Nacimiento != 'null' && !empty($Fecha_Nacimiento)) {
-		if (substr_count("-", $Fecha_Nacimiento)) {
-			list($ano, $mes, $dia) = explode("-", $Fecha_Nacimiento);
-		} else {
-			list($ano, $mes, $dia) = explode("/", $Fecha_Nacimiento);
-		}
-		$ano_diferencia = date("Y") - $ano;
-		$mes_diferencia = date("m") - $mes;
-		$dia_diferencia = date("d") - $dia;
-		if ($ano_diferencia > 0) {
-			if ($mes_diferencia == 0) {
-				if ($dia_diferencia < 0) {
-					$ano_diferencia--;
-				}
-			} elseif ($mes_diferencia < 0) {
-				$ano_diferencia--;
-			}
-		} else {
-			if ($mes_diferencia > 0) {
-				if ($dia_diferencia < 0) {
-					$mes_diferencia--;
-				}
-			}
-		}
-		$Edad = $ano_diferencia;
-		$Meses = $mes_diferencia;
-	}
-
-	//PROBAR SI ESTO DA LA DIFERENCIA ENTRE MESES NOMAS O TAMBIEN TOMA LOS AÑOS COMO MESES EN ESE CASO TOMAR LA CANTIDAD DE AÑOS Y MULTIPLICARLO POR 12 Y A ESO RESTARLE AL RESULTADO DEL TOTAL DE MESES DE DIFERENCIA.
-	if ($Fecha_Nacimiento != 'null' && !empty($Fecha_Nacimiento)) {
-		$Fecha_Actual = new DateTime();
-		if (substr_count("-", $Fecha_Nacimiento)) {
-			$fecha_activacion_registrada = DateTime::createFromFormat('d-m-Y', 
-																	$Fecha_Nacimiento);
-			$Diferencia = $fecha_activacion_registrada->diff($Fecha_Actual);
-			$Meses = $Diferencia->m;
-			$Edad = $Diferencia->y;
-		} else if (substr_count("/", $Fecha_Nacimiento)){
-			$fecha_activacion_registrada = DateTime::createFromFormat('d/m/Y', 
-																	$Fecha_Nacimiento);
-			$Diferencia = $fecha_activacion_registrada->diff($Fecha_Actual);
-			$Meses = $Diferencia->m;
-			$Edad = $Diferencia->y;
-		}
-	}
-
-	$consulta = "update persona
-				 set edad = " . ((!is_null($Edad)) ? "'" . $Edad . "'" : "null") . ", 
-					 meses = " . ((!is_null($Meses)) ? "'" . $Meses . "'" : "null") . " 
-				 where id_persona = " . $this->getID_Persona();
-	$MensajeErrorConsultar = "No se pudo actualizar la Persona";
-	if (!$Ret = mysqli_query($con->Conexion, $consulta)) {
-		throw new Exception($MensajeErrorConsultar . $consulta, 2);
-	}
-	$con->CloseConexion();
-}
-
-public function save(){
-	$Con = new Conexion();
-	$Con->OpenConexion();
-	$consulta = "INSERT INTO persona (
-									  apellido, 
-									  nombre, 
-									  documento, 
-									  nro_legajo,
-									  edad, 
-									  fecha_nac, 
-									  telefono, 
-									  mail, 
-									  nro_carpeta, 
-									  obra_social,
-									  domicilio, 
-									  ID_Barrio, 
-									  localidad, 
-									  circunscripcion, 
-									  seccion,
-									  manzana, 
-									  lote, 
-									  familia, 
-									  sexo,
-									  observacion, 
-									  cambio_domicilio,
-									  ID_Escuela, 
-									  meses, 
-									  Trabajo, 
-									  georeferencia,
-									  calle,
-									  nro, 
-									  estado 
-				 )
-				 VALUES ( " . ((!is_null($this->getApellido())) ? "'" . $this->getApellido() . "'" : "null") . ", 
-						 " . ((!is_null($this->getNombre())) ? "'" . $this->getNombre() . "'" : "null") . ", 
-						 " . ((!is_null($this->getDNI())) ? "'" . $this->getDNI() . "'" : "null") . ", 
-						 " . ((!is_null($this->getNro_Legajo())) ? "'" . $this->getNro_Legajo() . "'" : "null") . ", 
-						 " . ((!is_null($this->getEdad())) ? $this->getEdad() : "null") . ", 
-						 " . ((!is_null($this->getFecha_Nacimiento())) ? "'" . $this->getFecha_Nacimiento() . "'" : "null") . ", 
-						 " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono() . "'" : "null") . ", 
-						 " . ((!is_null($this->getMail())) ? "'" . $this->getMail() . "'" : "null") . ", 
-						 " . ((!is_null($this->getNro_Carpeta())) ? "'" . $this->getNro_Carpeta() . "'" : "null") . ", 
-						 " . ((!is_null($this->getObra_Social())) ? "'" . $this->getObra_Social() . "'" : "null") . ", 
-						 " . ((!is_null($this->getDomicilio())) ? "'" . $this->getDomicilio() . "'" : "null") . ", 
-						 " . ((!is_null($this->getId_Barrio())) ? $this->getId_Barrio() : "null") . ", 
-						 " . ((!is_null($this->getLocalidad())) ? "'" . $this->getLocalidad() . "'" : "null") . ", 
-						 " . ((!is_null($this->getCircunscripcion())) ? $this->getCircunscripcion() : "null") . ", 
-						 " . ((!is_null($this->getSeccion())) ? $this->getSeccion() : "null") . ", 
-						 " . ((!is_null($this->getManzana())) ? "'" . $this->getManzana() . "'" : "null") . ", 
-						 " . ((!is_null($this->getLote())) ? $this->getLote() : "null") . ", 
-						 " . ((!is_null($this->getFamilia())) ? "'" . $this->getFamilia() . "'" : "null") . ", 
-						 " . ((!is_null($this->getSexo())) ? "'" . $this->getSexo() . "'" : "null") . ", 
-						 " . ((!is_null($this->getObservaciones())) ? "'" . $this->getObservaciones() . "'" : "null") . ", 
-						 " . ((!is_null($this->getCambio_Domicilio())) ? "'" . $this->getCambio_Domicilio() . "'" : "null") . ", 
-						 " . ((!is_null($this->getID_Escuela())) ? $this->getID_Escuela() : "null") . ", 
-						 " . ((!is_null($this->getMeses())) ? "'" . $this->getMeses() . "'" : "null") . ", 
-						 " . ((!is_null($this->getTrabajo())) ? "'" . $this->getTrabajo() . "'" : "null") . ",
-						 " . ((!is_null($this->getGeoreferencia())) ? $this->getGeoreferencia() : "null") . ",
-						 " . ((!empty($this->getId_Calle())) ? $this->getId_Calle() : "null") . ",
-						 " . ((!empty($this->getNro())) ? $this->getNro() : "null") . ",
-						 1
-				 )";
-				 $MensajeErrorConsultar = "No se pudo insertar la Persona";
-				 $ret = mysqli_query($Con->Conexion, $consulta);
-				 if (!$ret) {
-					throw new Exception($MensajeErrorConsultar . $consulta, 2);
-				 }
-				 $this->ID_Persona = mysqli_insert_id($Con->Conexion);
-				 $Con->CloseConexion();
-}
 
 }

@@ -64,7 +64,8 @@ class BarrioController
     {
         header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("./Views/Error_Session.php");
+            //include("./Views/Error_Session.php");
+            include("../Error_Session.php");
         } else {
             $id_usuario = $_SESSION["Usuario"];
             $account = new Account(account_id: $id_usuario);
@@ -74,7 +75,8 @@ class BarrioController
             $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
             $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 
-            include("./Views/view_verbarrios.php");
+            //include("./Views/view_verbarrios.php");
+            include("../view_verbarrios.php");
         }
         exit();
     }
@@ -83,7 +85,8 @@ class BarrioController
     {
         header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("./Views/Error_Session.php");
+            //include("./Views/Error_Session.php");
+            include("../Error_Session.php");
         } else {
             $id_usuario = $_SESSION["Usuario"];
             $account = new Account(account_id: $id_usuario);
@@ -93,7 +96,8 @@ class BarrioController
             $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
             $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 
-            include("./Views/view_newbarrios.php");
+            //include("./Views/view_newbarrios.php");
+            include("../view_newbarrios.php");
         }
         exit();
     }
@@ -166,10 +170,7 @@ class BarrioController
 
             $barrio = new Barrio(coneccion: $con, id_barrio: $id_barrio);
 
-            $Consulta = "update barrios set estado = 0 where ID_Barrio = $id_barrio";
-            if (!$Ret = mysqli_query($con->Conexion, $Consulta)) {
-                throw new Exception("Problemas en la consulta. Consulta: ".$Consulta, 0);		
-            }
+            $barrio->delete();
 
             $accion = new Accion(
                 xaccountid: $id_usuario,
@@ -180,8 +181,9 @@ class BarrioController
             $accion->save();
 
             $con->CloseConexion();
-            $Mensaje = "El barrio fue eliminado Correctamente";
-            header('Location: /barrios?Mensaje=' . $Mensaje);
+            $mensaje = "El barrio fue eliminado Correctamente";
+            //header('Location: /barrios?Mensaje=' . $Mensaje);
+            header('Location: /barrios?Mensaje=' . $mensaje);
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
         }
@@ -261,7 +263,7 @@ class BarrioController
         $Estado = 1;
         $TipoUnif = 5;
 
-        if ($ID_Registro_1 > 0 && $ID_Registro_2 > 0) {
+        if ($ID_Registro_1 && $ID_Registro_2) {
             $Con = new Conexion();
             $Con->OpenConexion();
 
@@ -303,36 +305,28 @@ class BarrioController
 
     public function unif_barrio_control()
     {
-        $ID_Solicitud = $_REQUEST["ID_Solicitud"];
+        $id_solicitud = $_REQUEST["ID_Solicitud"];
         $ID_Barrio_1 = $_REQUEST["ID_Barrio_1"];
         $ID_Barrio_2 = $_REQUEST["ID_Barrio_2"];
 
         if($ID_Barrio_1 && $ID_Barrio_2) {
-            $Con = new Conexion();
-            $Con->OpenConexion();
+            $con = new Conexion();
+            $con->OpenConexion();
 
-            $ConsultarBarrios = "select * from persona where ID_Barrio = $ID_Barrio_2 and estado = 1";
-            $MensajeErrorConsultarBarrios = "No se pudieron consultar los casos de igualdad en el Barrio 1";
+            $list = Persona::get_list_barrios(coneccion: $con, id_barrio: $ID_Barrio_2);
 
-            $EjecutarConsultarBarrios = mysqli_query($Con->Conexion, $ConsultarBarrios) or die($MensajeErrorConsultarBarrios);
-            while($RetBarrios = mysqli_fetch_assoc($EjecutarConsultarBarrios)){
-                $ID_PersonaBarrio = $RetBarrios["id_persona"];
-                $CambiarBarrios = "update persona set ID_Barrio = $ID_Barrio_1 where id_persona = $ID_PersonaBarrio";
-                $MensajeErrorCambiarBarrios = "No se pudieron cambiar los barrios";
-                mysqli_query($Con->Conexion, $CambiarBarrios) or die($MensajeErrorCambiarBarrios);
+            foreach ($list as $val => $persona) {
+                $persona->set_barrio($ID_Barrio_1);
+                $persona->update_barrio();
             }
 
-            $ConsultaBajaBarrio = "update barrios set estado = 0 where ID_Barrio = $ID_Barrio_2";
-            $MensajeErrorBajaBarrio = "No se pudo dar de baja el Barrio";
+            $barrio = new Barrio(coneccion: $con, id_barrio: $ID_Barrio_2);
+            $barrio->delete();
 
-            mysqli_query($Con->Conexion,$ConsultaBajaBarrio) or die($MensajeErrorBajaBarrio);
+            $sl = new Solicitud_Unificacion(coneccion: $con, xID_Solicitud: $id_solicitud);
+            $sl->delete();
 
-            $ConsultaSolicitud = "update solicitudes_unificacion set Estado = 0 where ID_Solicitud_Unificacion = $ID_Solicitud";
-            if(!$Ret = mysqli_query($Con->Conexion,$ConsultaSolicitud)){
-                throw new Exception("Problemas en la consulta. Consulta: ".$ConsultaSolicitud, 3);			
-            }
-
-            $Con->CloseConexion();
+            $con->CloseConexion();
             $Mensaje = "Los datos se unificaron Correctamente";
             header('Location: /home?Mensaje=' . $Mensaje);
         } else {
@@ -359,14 +353,13 @@ class BarrioController
 
         if (isset($consultaBusqueda)) {
 
-            $Con = new Conexion();
-            $Con->OpenConexion();
+            $con = new Conexion();
+            $con->OpenConexion();
 
-            $consulta = mysqli_query($Con->Conexion, "SELECT ID_Barrio, Barrio FROM barrios WHERE Barrio LIKE '%$consultaBusqueda%' and estado = 1");
+            $list = Barrio::get_list_like_name(coneccion: $con, name: $consultaBusqueda);
+            $cant = count($list);
 
-            $filas = mysqli_num_rows($consulta);
-
-            if ($filas === 0) {
+            if (!$cant) {
                 $mensaje = "<p>No hay ningún registro con ese dato</p>";
             } else {
 
@@ -380,20 +373,20 @@ class BarrioController
                     </thead>
                     <tbody>';
 
-                while($resultados = mysqli_fetch_array($consulta)) {
-                    $ID_Barrio = $resultados["ID_Barrio"];			
-                    $Barrio = $resultados['Barrio'];										
-
-                    //Output
+                foreach($list as $val => $barrio) {
+									
                     $mensaje .= '
                         <tr>
-                        <th scope="row">' . $ID_Barrio . '</th>
-                        <th scope="row">' . $Barrio . '</th>			      			      
-                        <td><button type = "button" class = "btn btn-outline-success" onClick="seleccionBarrio_' . $id  . '(\''.$Barrio.'\','.$ID_Barrio.')" data-dismiss="modal">seleccionar</button></td>
+                        <th scope="row">' . $barrio->get_id_barrio() . '</th>
+                        <th scope="row">' . $barrio->get_barrio() . '</th>			      			      
+                        <td>
+                            <button type = "button" class = "btn btn-outline-success" 
+                                    onClick="seleccionBarrio_' . $id  . '(\''. $barrio->get_id_barrio() .'\','. $barrio->get_barrio() .')" 
+                                    data-dismiss="modal">
+                                seleccionar
+                            </button>
+                        </td>
                         </tr>';
-
-
-
 
                 };
 
@@ -401,7 +394,7 @@ class BarrioController
                     </table>';
 
             };
-            $Con->CloseConexion();
+            $con->CloseConexion();
 
         };
 

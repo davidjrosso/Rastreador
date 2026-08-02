@@ -69,6 +69,26 @@ class Barrio
 		return $id;
 	}
 
+	public static function get_list_like_name($coneccion, $name)
+	{
+		$list = [];
+		if ($list) {
+			$consulta = "select ID_Barrio 
+						from barrios
+						where lower(Barrio) like lower('%" . $name . "%')
+						and estado = 1";
+			$rs = mysqli_query($coneccion->Conexion,
+							   $consulta);
+			if (!$rs) {
+				throw new Exception("Problemas en la consulta", 3);
+			}
+			while(!$ret = mysqli_fetch_row($rs)) {
+				$list[] = new self(coneccion: $coneccion, id_barrio: $ret["ID_Barrio"]);
+			};
+		}
+		return $list;
+	}
+
 	public static function get_id_by_subpalabra($coneccion, $name)
 	{
 		$consulta = "select ID_Barrio 
@@ -166,5 +186,17 @@ class Barrio
 		if (!$Ret = mysqli_query($coneccion->Conexion, $consulta)) {
 			throw new Exception($mensaje_error_consultar, 2);
 		}
+	}
+
+	public function delete()
+	{
+		$consulta = "update barrios 
+					 set estado = 0 
+					 where ID_Barrio = " . $this->id_barrio;
+		$mensaje_error = "No se pudo eliminar el barrio";
+		if (!$Ret = mysqli_query($this->coneccion->Conexion, $consulta)) {
+			throw new Exception($mensaje_error, 2);
+		}
+	
 	}
 }
