@@ -315,7 +315,7 @@ class BarrioController
             $list = Persona::get_list_barrios(coneccion: $con, id_barrio: $ID_Barrio_2);
 
             foreach ($list as $val => $persona) {
-                $persona->set_barrio($ID_Barrio_1);
+                $persona->setBarrio($ID_Barrio_1);
                 $persona->update_barrio();
             }
 
