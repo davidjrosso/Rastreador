@@ -61,7 +61,29 @@ class CentroSalud implements JsonSerializable
 		return $is_multiple;
 	}
 
-    public static function get_id_by_name($coneccion, $centro_salud){
+    public static function exist_nombre_con_diferente_id($coneccion, $nombre, $id_centro_salud)
+	{
+		$cant = 0;
+		$consulta = "select * 
+					 from centros_salud 
+					 where centro_salud = '$nombre' 
+					   and id_centro != $id_centro_salud
+					   and estado = 1";
+
+		$mensaje = "Hubo un problema al consultar los registros";
+		$ret = mysqli_query(
+					$coneccion->Conexion,
+					$consulta
+		);
+		if (!$ret) throw new Exception($mensaje, 2);
+
+		$cant = mysqli_num_rows($ret);
+		return $cant;
+    }
+
+    public static function get_id_por_nombre($coneccion, $centro_salud)
+	{
+		$id_centro = 0;
         $consulta = "select * 
 					 from centros_salud 
 					 where centro_salud like '%$centro_salud%' 
@@ -74,8 +96,39 @@ class CentroSalud implements JsonSerializable
 			$mensaje_error
 		);
 		$row = mysqli_fetch_assoc($ret);
-        $id_centro = (!empty($row["id_centro"])) ? $row["id_centro"] : 1;
+        $id_centro = (!empty($row["id_centro"])) ? $row["id_centro"] : 0;
 		return $id_centro;
+    }
+
+    public static function get_list_nombre($coneccion, $centro_salud)
+	{
+
+		$list = [];
+		$centro = null;
+		if ($centro_salud) {
+			$query = "SELECT id_centro, REPLACE(centro_salud, '\'', '') as centro_salud_s
+					  FROM centros_salud
+					  WHERE centro_salud LIKE '%$centro_salud%'
+						and estado = 1";
+			$mensaje = "Hubo un problema al consultar los registros";
+			$ret = mysqli_query(
+						$coneccion->Conexion,
+						$query
+			);
+
+			if (!$ret) throw new Exception($mensaje, 2);
+
+			while($row = mysqli_fetch_assoc($ret)) {
+				$centro = new self(coneccion_base: $coneccion, 
+								   id_centro: $row["id_centro"]
+								   );
+				$centro->set_centro_salud($row["centro_salud_s"]);
+				$list[] = $centro;
+			}
+
+		}
+
+		return $list;
     }
 
 	// METODOS SET
@@ -118,7 +171,7 @@ class CentroSalud implements JsonSerializable
 		return $this->coneccion_base;
 	}
 
-	public function jsonSerialize() 
+	public function jsonSerialize() : mixed 
 	{
 		return [
 			'id_centro' => $this->id_centro,

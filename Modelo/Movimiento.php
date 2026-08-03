@@ -150,6 +150,27 @@ class Movimiento implements JsonSerializable
 		return $is_multiple;
 	}
 
+	public static function get_list_movimiento($coneccion, $id_movimiento)
+	{
+		$list = [];
+		if ($id_movimiento) {
+			$consulta = "select * 
+					 from movimiento 
+					where id_centro = $id_movimiento 
+					  and estado = 1";
+            $mensaje = "No se pudieron consultar los casos de igualdad en el Centro 1";
+
+            $ejec = mysqli_query($coneccion->Conexion, $consulta);
+			if ($ejec) throw new Exception($mensaje, 2);
+			
+			while($row = mysqli_fetch_assoc($ejec)) {
+				$list[] = new self(coneccion_base: $coneccion, xID_Movimiento: $row["id_movimiento"]);
+			}
+		}
+		return $list;
+
+	}
+
 	// METODOS SET
 	public function setID_Movimiento($xID_Movimiento){
 		$this->ID_Movimiento = $xID_Movimiento;
@@ -319,7 +340,7 @@ class Movimiento implements JsonSerializable
 						 motivo_3 = " . (($this->getID_Motivo_3()) ? $this->getID_Motivo_3() : "null") . ",
 						 motivo_4 = " . (($this->getID_Motivo_4()) ? $this->getID_Motivo_4() : "null") . ",
 						 motivo_5 = " . (($this->getID_Motivo_5()) ? $this->getID_Motivo_5() : "null") . ",
-						 observaciones = " . (($this->getObservaciones()) ? "'" . mysqli_real_escape_string(  $this->coneccion_base->Conexion, $this->getObservaciones()) . "'" : "null") . ",
+						 observaciones = " . (($this->getObservaciones()) ? "'" . mysqli_real_escape_string($this->coneccion_base->Conexion, $this->getObservaciones()) . "'" : "null") . ",
 						 id_resp = " . (($this->getID_Responsable()) ? $this->getID_Responsable() : "null") . ",
 						 id_resp_2 = " . (($this->getID_Responsable_2()) ? $this->getID_Responsable_2() : "null") . ",
 						 id_resp_3 = " . (($this->getID_Responsable_3()) ? $this->getID_Responsable_3() : "null") . ",
