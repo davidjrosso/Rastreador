@@ -16,6 +16,7 @@ class Motivo implements JsonSerializable
 			$coneccion_base=null,
 			$id_motivo=null,
 			$motivo=null,
+			$codigo=null,
 			$cod_categoria=null,
 			$num_motivo=null,
 			$tipo_motivo=null,
@@ -26,6 +27,7 @@ class Motivo implements JsonSerializable
 		if (!$id_motivo) {
 			$this->id_motivo = $id_motivo;
 			$this->motivo = $motivo;
+			$this->codigo = $codigo;
 			$this->cod_categoria = $cod_categoria;
 			$this->num_motivo = $num_motivo;
 			$this->tipo_motivo = $tipo_motivo;
@@ -43,6 +45,7 @@ class Motivo implements JsonSerializable
 			if (!is_null($ret)) {
 				$row_id_motivo = $ret["id_motivo"];
 				$row_motivo = $ret["motivo"];
+				$row_codigo = $ret["codigo"];
 				$row_cod_categoria = $ret["cod_categoria"];
 				$row_num_motivo = $ret["num_motivo"];
 				$row_tipo_motivo = $ret["tipo_motivo"];
@@ -51,6 +54,7 @@ class Motivo implements JsonSerializable
 
 				$this->id_motivo = $row_id_motivo;
 				$this->motivo = $row_motivo;
+				$this->codigo = $row_codigo;
 				$this->cod_categoria = $row_cod_categoria;
 				$this->num_motivo = $row_num_motivo;
 				$this->tipo_motivo = $row_tipo_motivo;
@@ -77,7 +81,8 @@ class Motivo implements JsonSerializable
 		return $is_multiple;
 	}
 
-    public static function get_id_by_name($coneccion, $motivo){
+    public static function get_id_by_name($coneccion, $motivo)
+	{
         $consulta = "select * 
 					 from motivo 
 					 where motivo like '%$motivo%' 
@@ -94,7 +99,8 @@ class Motivo implements JsonSerializable
 		return $id_motivo;
     }
 
-    public static function get_id_by_codigo($coneccion, $codigo){
+    public static function get_id_by_codigo($coneccion, $codigo)
+	{
         $consulta = "select * 
 					 from motivo 
 					 where lower(codigo) = lower('$codigo') 
@@ -112,16 +118,23 @@ class Motivo implements JsonSerializable
     }
 
 	// METODOS SET
-	public function set_id_motivo($id_motivo){
+	public function set_id_motivo($id_motivo)
+	{
 		$this->id_motivo = $id_motivo;
 	}
 
-	public function set_motivo($motivo){
+	public function set_motivo($motivo)
+	{
 		$this->motivo = $motivo;
 	}
 
-	public function set_cod_categoria($xID_Persona){
-		$this->ID_Persona = $xID_Persona;
+	public function set_codigo($codigo)
+	{
+		$this->codigo = $codigo;
+	}
+
+	public function set_cod_categoria($cod_categoria){
+		$this->cod_categoria = $cod_categoria;
 	}
 
 	public function set_tipo_motivo($tipo_motivo){
@@ -133,7 +146,7 @@ class Motivo implements JsonSerializable
 	}
 
 	public function set_num_estado($num_estado){
-		$this->num_estado = $num_estado;
+		$this->num_motivo = $num_estado;
 	}
 
 	public function set_estado($estado){
@@ -154,7 +167,7 @@ class Motivo implements JsonSerializable
 	}
 
 	public function get_codigo(){
-		return $this->motivo;
+		return $this->codigo;
 	}
 
 	public function get_cod_categoria(){

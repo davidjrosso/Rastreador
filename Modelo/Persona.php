@@ -241,6 +241,25 @@ class Persona implements JsonSerializable {
 
 	}
 
+	public static function get_list_personas_calle($coneccion, $calle)
+	{
+		$list = [];
+		if ($calle) {
+			$query = "SELECT id_persona, 
+							 apellido, 
+							 nombre,
+							 CONCAT(c.calle_nombre, ' ', s.nro) as direccion
+					  FROM persona s INNER JOIN calles c ON (s.calle = c.id_calle)
+					  WHERE calle_nombre LIKE '%$calle%' 
+					    and s.estado = 1 
+					  order by apellido ASC, nombre ASC, calle_nombre ASC";
+
+            $cn = mysqli_query($coneccion->Conexion, $query);
+			$list = mysqli_fetch_all($cn, MYSQLI_BOTH);
+		}
+		return $list;
+
+	}
 
 	//METODOS SET
 	public function setID_Persona($xID_Persona){
@@ -689,67 +708,83 @@ class Persona implements JsonSerializable {
 		$this->Nro = ((!is_null($nro_calle)) ? $nro_calle : null);
 	}
 
-	public function setBarrio($xBarrio){
+	public function setBarrio($xBarrio)
+	{
 		$this->Barrio = $xBarrio;
 	}
 
-	public function setLocalidad($xLocalidad){
+	public function setLocalidad($xLocalidad)
+	{
 		$this->Localidad = $xLocalidad;
 	}
 
-	public function setCircunscripcion($xCircunscripcion){
+	public function setCircunscripcion($xCircunscripcion)
+	{
 		$this->Circunscripcion = $xCircunscripcion;
 	}
 
-	public function setSeccion($xSeccion){
+	public function setSeccion($xSeccion)
+	{
 		$this->Seccion = $xSeccion;
 	}
 
-	public function setManzana($xManzana){
+	public function setManzana($xManzana)
+	{
 		$this->Manzana = $xManzana;
 	}
 
-	public function setLote($xLote){
+	public function setLote($xLote)
+	{
 		$this->Lote = $xLote;
 	}
 
-	public function setFamilia($xFamilia){
+	public function setFamilia($xFamilia)
+	{
 		$this->Familia = $xFamilia;
 	}
 
-	public function setGeoreferencia($xGeoreferencia){
+	public function setGeoreferencia($xGeoreferencia)
+	{
 		$this->Georeferencia = $xGeoreferencia;
 	}
 
-	public function setSexo($xSexo){
+	public function setSexo($xSexo)
+	{
 		$this->sexo = $xSexo;
 	}
 
-	public function setObservaciones($xObservaciones){
+	public function setObservaciones($xObservaciones)
+	{
 		$this->Observaciones = $xObservaciones;
 	}
 
-	public function setCamio_Domicilio($xCambio_Domicilio){
+	public function setCamio_Domicilio($xCambio_Domicilio)
+	{
 		$this->Cambio_Domicilio = $xCambio_Domicilio;
 	}
 
 	public function setTelefono($xTelefono){
+
 		$this->Telefono = $xTelefono;
 	}
 
-	public function setMail($xMail){
+	public function setMail($xMail)
+	{
 		$this->Mail = $xMail;
 	}
 
-	public function setEstado($xEstado){
+	public function setEstado($xEstado)
+	{
 		$this->Estado = $xEstado;
 	}
 
-	public function setID_Escuela($xID_Escuela){
+	public function setID_Escuela($xID_Escuela)
+	{
 		$this->ID_Escuela = $xID_Escuela;
 	}
 
-	public function setTrabajo($xTrabajo){
+	public function setTrabajo($xTrabajo)
+	{
 		$this->Trabajo = $xTrabajo;
 	}
 

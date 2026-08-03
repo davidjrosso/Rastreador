@@ -626,10 +626,9 @@ class Calle implements JsonSerializable {
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$Consulta = "update calles 
-					set 
-						estado = " . ((!is_null($this->get_estado())) ? "'" . $this->get_estado() . "'" : "null") . "
+					set estado = " . ((!is_null($this->get_estado())) ? "'" . $this->get_estado() . "'" : "null") . "
 					where id_calle = " . $this->get_id_calle();
-		$MensajeErrorConsultar = "No se pudo actualizar la Calle";
+		$MensajeErrorConsultar = "No se pudo eliminar la Calle";
 		if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
 			throw new Exception($MensajeErrorConsultar . $Consulta, 2);
 		}
@@ -656,7 +655,7 @@ class Calle implements JsonSerializable {
 					" . (!empty($this->get_calle_open()) ? "'" . $this->get_calle_open() . "'" : "null") . ",
 					" . ((!empty($this->get_geocoder())) ? "'" . $this->get_geocoder() . "'" : "null" ) . "
 				)";
-		$mensaje_error = "No se pudo alamcenar la Calle";
+		$mensaje_error = "No se pudo almacenar la Calle";
 		if (!$ret = mysqli_query($con->Conexion, $query)) {
 			throw new Exception($mensaje_error  . $query, 2);
 		}

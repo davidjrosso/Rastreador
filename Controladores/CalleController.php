@@ -115,9 +115,6 @@ class CalleController
 
         if (isset($consulta)) {
 
-            $Con = new Conexion();
-            $Con->OpenConexion();
-
             $con = new Conexion();
             $con->OpenConexion();
             $consulta = trim(strtolower($consulta));
@@ -131,14 +128,14 @@ class CalleController
             } else {
 
                 $mensaje .= '<table class="table">
-                    <thead class="thead-dark">
-                        <tr>
-                        <th scope="col">Codigo</th>
-                        <th scope="col">Nombre</th>
-                        <th scope="col">Accion</th>
-                        </tr>
-                    </thead>
-                    <tbody>';
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">Codigo</th>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col">Accion</th>
+                                    </tr>
+                                </thead>
+                                <tbody>';
 
                 foreach($res as $val => $calle) {
 
@@ -159,7 +156,6 @@ class CalleController
                     </table>';
 
             };
-            $Con->CloseConexion();
 
         };
 
@@ -437,34 +433,29 @@ class CalleController
     public function buscar_unif_direcciones($valor)
     {
         header('Content-Type: text/html; charset=utf-8');
-        $consultaBusqueda = $valor;
+        $consulta = $valor;
 
         //Filtro anti-XSS
         $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
         $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
-        $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consultaBusqueda);
+        $consulta = str_replace($caracteres_malos, $caracteres_buenos, $consulta);
 
         //Variable vacía (para evitar los E_NOTICE)
         $mensaje = "";
 
+        $list = [];
 
-        if (isset($consultaBusqueda)) {
+        if (isset($consulta)) {
 
-            $Con = new Conexion();
-            $Con->OpenConexion();
+            $con = new Conexion();
+            $con->OpenConexion();
 
-            $query = "SELECT id_persona, apellido, nombre, CONCAT(c.calle_nombre, ' ', s.nro) as direccion
-                      FROM persona s INNER JOIN calles c ON (s.calle = c.id_calle)
-                      WHERE calle_nombre LIKE '%$consultaBusqueda%' 
-                        and s.estado = 1 
-                        order by apellido ASC, nombre ASC, calle_nombre ASC";
+            $list = Persona::get_list_personas_calle(coneccion: $con, calle: $consulta);
 
-            $consulta = mysqli_query($Con->Conexion, $query);
+            $con->CloseConexion();
+            $cant = count($list);
 
-
-            $filas = mysqli_num_rows($consulta);
-
-            if ($filas === 0) {
+            if (!$cant) {
                 $mensaje = "<p>No hay ningún registro con ese dato</p>";
             } else {
 
@@ -478,16 +469,18 @@ class CalleController
                     </thead>
                     <tbody>';
 
-                while($resultados = mysqli_fetch_array($consulta)) {
-                    $ID_Persona = $resultados["id_persona"];
-                    $NombrePersona = $resultados["apellido"].", ".$resultados["nombre"];
-                    $Domicilio = $resultados["direccion"];
+                foreach($list as $val => $row) {
 
                     $mensaje .= '
                         <tr>
-                        <th scope="row">' . $NombrePersona . '</th>
-                        <th scope="row">' . $Domicilio . '</th>
-                        <td><button type = "button" class = "btn btn-outline-success" onClick="seleccionDireccion(\'' . $ID_Persona . '\',this)">seleccionar</button></td>
+                            <td scope="row">' . $row["apellido"] . ", " . $row["nombre"] . '</td>
+                            <td scope="row">' . $row["direccion"] . '</td>
+                            <td>
+                                <button type = "button" class = "btn btn-outline-success" 
+                                        onClick="seleccionDireccion(\'' . $row["id_persona"] . '\',this)">
+                                    seleccionar
+                                </button>
+                            </td>
                         </tr>';
 
                 };
@@ -496,7 +489,6 @@ class CalleController
                     </table>';
 
             };
-            $Con->CloseConexion();
 
         };
         echo $mensaje;
