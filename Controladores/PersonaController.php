@@ -1,0 +1,1014 @@
+<?php
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Parametria.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_Unificacion.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Calle.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Accion.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/HistoriaClinica.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/PersonaDomicilio.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Contacto.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Domicilio.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Notificacion.php");
+
+
+class PersonaController 
+{
+
+    public function listado_personas($mensaje = null)
+    {
+        header("Content-Type: text/html;charset=utf-8");
+        if (!isset($_SESSION["Usuario"])) {
+            include("./Views/Error_Session.php");
+        } else {
+
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+
+            $Filtro = null;
+            $ID_Filtro = null;
+
+            if (isset($_REQUEST["Filtro"])) $Filtro = $_REQUEST["Filtro"];
+            if (isset($_REQUEST["ID_Filtro"])) $ID_Filtro = $_REQUEST["ID_Filtro"];
+            
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
+            include("./Views/view_personas.php");
+        }
+        exit();
+    }
+
+    public function personas_filter()
+    {
+        $Filtro = $_REQUEST["Search"];
+        $ID_Filtro = $_REQUEST["ID_Filtro"];
+        header("Location: ../personas?Filtro=" . $Filtro . "&ID_Filtro=" . $ID_Filtro);
+    }
+
+    public function buscar_personas()
+    {
+        header('Content-Type: text/html; charset=utf-8');
+
+        $consultaBusqueda = $_REQUEST['valorBusqueda'];
+        $id = (!empty($_REQUEST['ID'])) ? $_REQUEST['ID'] : null;
+
+        //Filtro anti-XSS
+        $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
+        $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
+        $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consultaBusqueda);
+
+        //Variable vacía (para evitar los E_NOTICE)
+        $mensaje = "";
+
+        if (isset($consultaBusqueda)) {
+
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            if(is_numeric($consultaBusqueda)){
+                if(strlen((string)$consultaBusqueda) >= 8){
+                    $consulta = mysqli_query(
+                                    $Con->Conexion, 
+                                    "SELECT p.id_persona, UPPER(apellido) AS apellido, 
+                                                    CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
+                                                    documento, nro_carpeta, concat(calle_nombre, ' ', numero) domicilio
+                                            FROM personas p 
+                                                left join historias_clinicas hc on (p.id_persona = hc.id_persona)
+                                                left join personas_domicilios rn on (p.id_persona = rn.id_persona)
+                                                left join domicilios r on (rn.id_domicilio = r.id_domicilio)
+                                                left join calles c on (c.id_calle = r.id_calle)
+                                            WHERE documento LIKE '%$consultaBusqueda%' 
+                                                and p.estado = 1 
+                                            order by upper(apellido) ASC, upper(nombre) ASC, upper(documento) ASC"
+                                            );
+                } else {
+                    $consulta = mysqli_query(
+                                    $Con->Conexion, 
+                                    "SELECT p.id_persona, UPPER(apellido) AS apellido, 
+                                                    CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
+                                                    documento, nro_carpeta, concat(calle_nombre, ' ', numero) domicilio
+                                            FROM personas p inner join historias_clinicas hc on (p.id_persona = hc.id_persona)  
+                                               left join personas_domicilios rn on (p.id_persona = rn.id_persona)
+                                                left join domicilios r on (rn.id_domicilio = r.id_domicilio)
+                                                left join calles c on (c.id_calle = r.id_calle)
+                                             WHERE nro_legajo LIKE '%$consultaBusqueda%' 
+                                                AND p.estado = 1 
+                                            ORDER BY upper(apellido) ASC, upper(nombre) ASC, upper(documento) ASC"
+                                            );
+                }
+            } else {
+                $consulta = mysqli_query(
+                                $Con->Conexion, 
+                                "SELECT p.id_persona, UPPER(apellido) AS apellido, 
+                                                CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
+                                                documento, nro_carpeta, concat(calle_nombre, ' ', numero) domicilio
+                                        FROM personas p left join historias_clinicas hc on (p.id_persona = hc.id_persona) 
+                                               left join personas_domicilios rn on (p.id_persona = rn.id_persona)
+                                                left join domicilios r on (rn.id_domicilio = r.id_domicilio)
+                                                left join calles c on (c.id_calle = r.id_calle)
+                                         WHERE (apellido LIKE '%$consultaBusqueda%' or nombre LIKE '%$consultaBusqueda%') and p.estado = 1 order by upper(apellido) ASC, upper(nombre) ASC, upper(documento) ASC"
+                                        );
+            }
+
+            $filas = mysqli_num_rows($consulta);
+
+            if ($filas === 0) {
+                $mensaje = "<p>No hay ningún registro con ese nombre, documento o legajo</p>";
+            } else {
+                $mensaje .= '<table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">DNI</th>
+                        <th scope="col">Nro Carpeta</th>
+                        <th scope="col">Domicilio</th>
+                        <th scope="col">Accion</th>
+                        </tr>
+                    </thead>
+                    <tbody>';
+
+                while($resultados = mysqli_fetch_array($consulta)) {
+                    $ID_Persona = $resultados["id_persona"];
+                    $Nombre = $resultados['apellido'].", ".$resultados['nombre'];
+                    $DNI = $resultados['documento'];
+                    $Nro_Carpeta = $resultados['nro_carpeta'];
+                    // $Nro_Legajo= $resultados['nro_legajo'];
+                    $Domicilio = $resultados['domicilio'];			
+
+                    //Output
+                    $mensaje .= '
+                        <tr>
+                        <th scope="row">' . $Nombre . '</th>
+                        <td>' . $DNI . '</td>
+                        <td>' . $Nro_Carpeta . '</td>				
+                        <td>' . $Domicilio . '</td>
+                        <td>
+                            <button type = "button" class = "btn btn-outline-success" 
+                                    onClick="seleccionPersona(' . (($id) ? $id : 'null') . ',\'' . $Nombre . '\',' . $ID_Persona . ')" 
+                                    data-dismiss="modal">
+                                seleccionar
+                            </button>
+                        </td>
+                        </tr>';
+                        //   <td>'.$Nro_Legajo.'</td>
+                };
+
+                $mensaje .= '</tbody>
+                    </table>';
+
+            };
+            $Con->CloseConexion();
+
+        };
+        echo $mensaje;
+    }
+
+    public function buscar_dni_personas()
+    {
+        header('Content-Type: application/json;');
+
+        $consultaBusqueda = $_REQUEST['valorBusqueda'];
+        $id = (!empty($_REQUEST['id'])) ? $_REQUEST['id'] : null;
+
+        //Filtro anti-XSS
+        $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
+        $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
+        $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consultaBusqueda);
+
+        //Variable vacía (para evitar los E_NOTICE)
+
+        $mensaje["exist"] = false;
+        if (isset($consultaBusqueda)) {
+
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            if (is_numeric($consultaBusqueda)) {
+                if(strlen((string)$consultaBusqueda) >= 8){
+
+                    $query = "SELECT p.id_persona, UPPER(apellido) AS apellido, 
+                                                    CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
+                                                    documento, nro_carpeta, concat(calle_nombre, ' ', numero) domicilio
+                                            FROM personas p 
+                                                left join historias_clinicas hc on (p.id_persona = hc.id_persona)
+                                                left join personas_domicilios rn on (p.id_persona = rn.id_persona)
+                                                left join domicilios r on (rn.id_domicilio = r.id_domicilio)
+                                                left join calles c on (c.id_calle = r.id_calle)
+                                            WHERE documento LIKE '%$consultaBusqueda%' 
+                                                and p.estado = 1 
+                                                and p.id_persona <> $id";
+                    $consulta = mysqli_query(
+                                    $Con->Conexion, 
+                                    $query
+                                    );
+
+                    $filas = mysqli_num_rows($consulta);
+
+                    if ($filas > 0) {
+                        $mensaje["exist"] = true;
+                    }
+ 
+                }
+
+            }
+            $Con->CloseConexion();
+
+        };
+
+        echo json_encode($mensaje);
+    }
+
+
+    public function datos_persona($id_persona)
+    {
+        header("Content-Type: text/html;charset=utf-8");
+        if (!isset($_SESSION["Usuario"])) {
+            include("./Views/Error_Session.php");
+        } else {
+
+            $ID_Usuario = $_SESSION["Usuario"];
+            $account = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $account->get_id_tipo_usuario();
+            $Element = new Elements();
+
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
+
+            if (isset($_REQUEST["ID"])) {
+              $ID = $_REQUEST["ID"];
+
+              $Con = new Conexion();
+              $Con->OpenConexion();
+
+              $historia_clinica = null;
+              $contacto = null;
+              $domicilio = null;
+              $Escuela = null;
+              $calle = null;
+              if ($exist = Persona::is_exist(coneccion: $Con, id_persona: $ID)) {
+                $Persona = new Persona(ID_Persona: $ID);
+                $escuela_obj = new Escuela(coneccion_base: $Con, xID_Escuela: $Persona->getID_Escuela());
+                $Escuela = $escuela_obj->getEscuela();
+
+                if (HistoriaClinica::exist(coneccion: $Con, id_persona: $ID)) {
+                    $historia_clinica = new HistoriaClinica(coneccion: $Con, ID_Persona: $ID, id_centro_salud: 7);
+                }
+                if (Contacto::tiene_contacto(coneccion: $Con, id_persona: $ID)) {
+                    $contacto = new Contacto(coneccion: $Con, id_persona: $ID);
+                }
+                if (PersonaDomicilio::tiene_domicilio(coneccion: $Con, id_persona: $ID)) {
+                    $domicilio_obj = new PersonaDomicilio(connection: $Con, id_persona: $ID);
+                    $domicilio = new Domicilio(coneccion: $Con, id_domicilio: $domicilio_obj->get_id_domicilio());
+                    $barrio = new Barrio(
+                                        coneccion: $Con,
+                                        id_barrio: $domicilio->getId_Barrio() 
+                                        );
+                    $RetBarrio = $barrio->get_barrio();
+
+                    $calle_obj = new Calle(id_calle: $domicilio->getId_Calle());
+                    $calle = $calle_obj->get_calle_nombre() . " " . $domicilio->getNro();
+                }
+              }
+              $Con->CloseConexion();
+            }
+
+            include("./Views/view_verpersonas.php");
+        }
+        exit();
+    }
+
+    public function mod_persona($id_persona)
+    {
+        header("Content-Type: text/html;charset=utf-8");
+        if (!isset($_SESSION["Usuario"])) {
+            include("./Views/Error_Session.php");
+        } else {
+            if(session_status() !== PHP_SESSION_ACTIVE) session_start();
+            $http_referer = (!empty($_SERVER["HTTP_REFERER"])) ? $_SERVER["HTTP_REFERER"] : null;
+
+            if (!preg_match("~view_personas~", $http_referer)) {
+                $_SESSION["from_reporte_grafico"] = true;
+            } else {
+                $_SESSION["from_reporte_grafico"] = false;
+            }
+
+            $ID_Usuario = $_SESSION["Usuario"];
+            $account = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $account->get_id_tipo_usuario();
+            $Element = new Elements();
+
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
+            if (isset($_REQUEST["ID"])) {
+              $ID = $_REQUEST["ID"];
+
+              $Con = new Conexion();
+              $Con->OpenConexion();
+
+              $historia_clinica = null;
+              $contacto = null;
+              $domicilio = null;
+
+              if ($exist = Persona::is_exist(coneccion: $Con, id_persona: $ID)) {
+                $Persona = new Persona(ID_Persona: $ID);
+                if (HistoriaClinica::exist(coneccion: $Con, id_persona: $ID)) {
+                    $historia_clinica = new HistoriaClinica(coneccion: $Con, ID_Persona: $ID, id_centro_salud: 7);
+                }
+                if (Contacto::tiene_contacto(coneccion: $Con, id_persona: $ID)) {
+                    $contacto = new Contacto(coneccion: $Con, id_persona: $ID);
+                }
+                if (PersonaDomicilio::tiene_domicilio(coneccion: $Con, id_persona: $ID)) {
+                    $domicilio_obj = new PersonaDomicilio(connection: $Con, id_persona: $ID);
+                    $domicilio = new Domicilio(coneccion: $Con, id_domicilio: $domicilio_obj->get_id_domicilio());
+                }
+              }
+              $Con->CloseConexion();
+            }
+
+            include("./Views/view_modpersonas.php");
+        }
+        exit();
+    }
+
+    function crear_persona()
+    {
+        header("Content-Type: text/html;charset=utf-8");
+        if (!isset($_SESSION["Usuario"])) {
+            include("./Views/Error_Session.php");
+        } else {
+
+            $id_usuario = $_SESSION["Usuario"];
+            $account = new Account(account_id: $id_usuario);
+            $tipo_usuario = $account->get_id_tipo_usuario();
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
+            include("./Views/view_newpersonas.php");
+        }
+        exit();    
+    }
+
+    function crear_persona_control()
+    {
+        $ID_Usuario = $_SESSION["Usuario"];
+
+        $Apellido = ucwords($_REQUEST["Apellido"]);
+        $Nombre = ucwords($_REQUEST["Nombre"]);
+        $DNI = trim(str_replace(array('.'), '', $_REQUEST["DNI"]));
+
+        $Nro_Legajo = $_REQUEST["Nro_Legajo"];
+        if (empty($Nro_Legajo)) {
+            $Nro_Legajo = null;
+        }
+
+        $Edad = $_REQUEST["Edad"];
+        $Meses = $_REQUEST["Meses"];
+        if (empty($Edad)) {
+            $Edad = null;
+        }
+
+        if (empty($Meses)) {
+            $Meses = null;
+        }
+
+        if(empty($_REQUEST["Fecha_Nacimiento"]) || $_REQUEST["Fecha_Nacimiento"] == "No se cargo fecha de nacimiento") {
+            $Fecha_Nacimiento = null;
+        } else {
+            $Fecha_Nacimiento = implode("-", array_reverse(explode("/",$_REQUEST["Fecha_Nacimiento"])));
+        }
+
+        $Nro_Carpeta = $_REQUEST["Nro_Carpeta"];
+        if (empty($Nro_Carpeta)) {
+            $Nro_Carpeta = null;
+        }
+        $Obra_Social = $_REQUEST["Obra_Social"];
+
+        $id_nombre_calle = null;
+        if(isset($_REQUEST["Calle"])){
+            $calle = ucwords($_REQUEST["Calle"]);
+            $nombre_calle = new Calle(id_calle : $calle);
+            $Domicilio = $nombre_calle->get_calle_nombre();
+            $id_nombre_calle = $nombre_calle->get_id_calle();
+        }
+        $nro_calle = null;
+        if(isset($_REQUEST["NumeroDeCalle"])){
+            $nro_calle = $_REQUEST["NumeroDeCalle"];
+            $Domicilio .= " ". $nro_calle;
+        }
+
+        $georeferencia_point = null;
+        if (!empty($_REQUEST["lat"])) {
+            $lat_point = $_REQUEST["lat"];
+            $georeferencia_point = "POINT(" . $lat_point;
+
+            if (!empty($_REQUEST["lon"])){
+                $lon_point = $_REQUEST["lon"];
+                $georeferencia_point .= "," . $lon_point . ")";
+            } else {
+                $georeferencia_point = null;
+            }
+        }
+
+        if (!isset($_REQUEST["ID_Barrio"])) {
+            $ID_Barrio = null;
+        } else {
+            $ID_Barrio = $_REQUEST["ID_Barrio"];
+        }
+        if (empty($ID_Barrio)) {
+            $ID_Barrio = 37;
+        }
+
+        $Localidad = ucwords($_REQUEST["Localidad"]);
+
+        $Circunscripcion = 0;
+        if (empty($Circunscripcion)) {
+            $Circunscripcion = null;
+        }
+        $Seccion = 0;
+        if (empty($Seccion)) {
+            $Seccion = null;
+        }
+        $Manzana = $_REQUEST["Manzana"];
+        if (empty($Manzana)) {
+            $Manzana = null;
+        }
+        $Lote = $_REQUEST["Lote"];
+        if (empty($Lote)) {
+            $Lote = null;
+        }
+        $Familia = $_REQUEST["Familia"];
+        if (empty($Familia)) {
+            $Familia = null;
+        }
+        $Observaciones = ucfirst($_REQUEST["Observaciones"]);
+        $Cambio_Domicilio = $_REQUEST["Cambio_Domicilio"];
+        $Telefono = $_REQUEST["Telefono"];
+        $Mail = ucfirst($_REQUEST["Mail"]);
+        $Estado = 1;
+        if (!isset($_REQUEST["ID_Escuela"])) {
+            $ID_Escuela = null;
+        } else {
+            $ID_Escuela = $_REQUEST["ID_Escuela"];
+        }
+
+        $Trabajo = strtoupper($_REQUEST["Trabajo"]);
+
+        if (empty($ID_Escuela)) {
+            $ID_Escuela = 2;
+        }
+
+        if (is_numeric($DNI)) {
+            if(strlen((string)$DNI) < 8) {
+                $status_process = 4;
+                $Mensaje = "El dni debe ser mayor a 8 digitos";
+                header('status_process:' . $status_process);
+                header('message:' . $Mensaje);
+                header('Location: /persona/nueva?MensajeError=' . $Mensaje);
+                exit();
+            }
+        } else {
+            $status_process = 4;
+            $Mensaje = "El dni debe ser un numero";
+            header('status_process:' . $status_process);
+            header('message:' . $Mensaje);
+            header('Location: /persona/nueva?MensajeError=' . $Mensaje);
+            exit();
+        }  
+
+        $Fecha = date("Y-m-d");
+        $ID_TipoAccion = 1;
+        $Detalles = "El usuario con ID: $ID_Usuario ha registrado una nueva Persona. Datos: Apellido: $Apellido - Nombre: $Nombre - Documento: $DNI - Nro Legajo: $Nro_Legajo - Edad: $Edad - Meses: $Meses - Fecha de Nacimiento: $Fecha_Nacimiento - Telefono: $Telefono - E-Mail: $Mail - Nro Carpeta: $Nro_Carpeta - Obra Social: $Obra_Social - Domicilio: $Domicilio - Barrio: $ID_Barrio - Escuela: $ID_Escuela - Localidad: $Localidad - Circunscripcion: $Circunscripcion - Seccion: $Seccion - Manzana: $Manzana - Lote: $Lote - Familia: $Familia - Observaciones: $Observaciones - Cambio Domicilio: $Cambio_Domicilio";
+
+        try {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+            
+            if (Persona::is_registered($DNI)) {
+                $Mensaje = "Ya existe un Usuario con el mismo Apellido y Nombre que el que esta intentando crear. Por favor ingrese un DNI para identificar a la persona.";
+                header('Location: /persona/nueva?MensajeError=' . $Mensaje);
+            } else {
+                $Persona = new Persona(
+                    xApellido : $Apellido,
+                    xDNI : $DNI,
+                    xEdad : $Edad,
+                    xEstado : $Estado,
+                    xFecha_Nacimiento: $Fecha_Nacimiento,
+                    xID_Escuela : $ID_Escuela,
+                    xMeses : $Meses,
+                    xNombre : $Nombre,
+                    xObservaciones : $Observaciones,
+                    xObra_Social: $Obra_Social,
+                );
+
+                $Persona->save();
+
+                if (HistoriaClinica::exist(coneccion: $Con, id_persona: $Persona->getID_Persona())) {
+                    $hist = new HistoriaClinica(coneccion: $Con,
+                                                ID_Persona: $Persona->getID_Persona(), 
+                                                id_centro_salud: 7) ;
+                } else {
+                    $hist = new HistoriaClinica(coneccion: $Con ,
+                            ID_Persona: $Persona->getID_Persona(),
+                            xNro_Carpeta: $Nro_Carpeta,
+                            xNro_Legajo : $Nro_Legajo,
+                            id_centro_salud: 7
+                    );
+                    $hist->save();
+                }
+
+                if (Contacto::tiene_contacto(coneccion: $Con, id_persona: $Persona->getID_Persona())) {
+                    $contac = new Contacto(coneccion: $Con, id_persona: $Persona->getID_Persona());
+                } else {
+                    $contac = new Contacto(coneccion: $Con,
+                        id_persona: $Persona->getID_Persona(),
+                        xMail : $Mail,
+                        xTelefono : $Telefono,
+                        xTrabajo : $Trabajo
+                    );
+                    $contac->save();
+                }    
+
+
+                if (!Domicilio::is_registered(coneccion: $Con, id_calle: $calle, numero: $nro_calle)) {                                      
+                    $domicilio = new Domicilio(coneccion: $Con, 
+                                            xCalle: $calle,
+                                            xNro: $nro_calle,
+                                            xCircunscripcion: $Circunscripcion,
+                                            xFamilia: $Familia,
+                                            xLocalidad: $Localidad,
+                                            xLote: $Lote,
+                                            xManzana: $Manzana,
+                                            xSeccion: $Seccion,
+                                            xBarrio: $ID_Barrio,
+                                            );
+
+                    if ($domicilio->getId_Calle() && $domicilio->getNro()){
+                        $domicilio->setDomicilio();	
+                    }
+                    if ($georeferencia_point) {
+                        $domicilio->setGeoreferencia(xGeoreferencia: $georeferencia_point);
+                    }
+
+                    $domicilio->save();                        
+                } else {
+                    $domicilio = new Domicilio(coneccion: $Con, xCalle: $calle, xNro: $nro_calle);
+
+                }
+
+                $id_persona_domicilio = PersonaDomicilio::exist(coneccion: $Con, 
+                                            id_persona: $Persona->getID_Persona(), 
+                                            id_domicilio: $domicilio->get_id_domicilio());
+                if (!$id_persona_domicilio) {
+
+                    if (PersonaDomicilio::tiene_domicilio(coneccion:$Con, id_persona: $Persona->getID_Persona())) {
+                        $domicilio_obj = new PersonaDomicilio(connection: $Con, 
+                                                            id_persona: $Persona->getID_Persona());
+                        $domicilio_obj->delete();
+                    }
+                    $domicilio_obj = new PersonaDomicilio(connection: $Con, 
+                                                        id_persona: $Persona->getID_Persona(),
+                                                        id_domicilio: $domicilio->get_id_domicilio());
+                    $domicilio_obj->save();
+                } else {
+                    $domicilio_obj = new PersonaDomicilio(connection: $Con, 
+                                                        id_persona_domicilio: $id_persona_domicilio);
+                }
+
+
+                if ($Persona->getEdad() == 0) {
+                    $Persona->update_edad_meses();
+                }
+                $accion = new Accion(
+                    xaccountid: $ID_Usuario,
+                    xFecha : $Fecha,
+                    xDetalles: $Detalles,
+                    xID_TipoAccion: $ID_TipoAccion	 
+                );
+                $accion->save();
+                $Mensaje = "La persona fue registrada Correctamente";
+                header('Location: /persona/nueva?Mensaje=' . $Mensaje);
+            }
+            
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+        exit();    
+    } 
+
+    public function mod_persona_control($id = null, $mensaje = null, $report = null)
+    {
+        header("Content-Type: text/html;charset=utf-8");
+
+        $ID_Usuario = $_SESSION["Usuario"];
+
+        $from_reporte_grafico = (!empty($_SESSION["from_reporte_grafico"])) ? true : false;
+
+        $ID_Persona = $_REQUEST["ID"];
+        $Apellido = ucwords($_REQUEST["Apellido"]);
+        $Nombre = ucwords($_REQUEST["Nombre"]);
+        $DNI = trim(str_replace(array('.'),'',$_REQUEST["DNI"]));
+        $Nro_Legajo = $_REQUEST["Nro_Legajo"];
+
+        $Edad = $_REQUEST["Edad"];
+        $Meses = $_REQUEST["Meses"];
+
+
+        $sexo = null;
+        $sexo = (isset($_REQUEST["opcion_f"]))? $_REQUEST["opcion_f"] : $sexo;
+        $sexo = (isset($_REQUEST["opcion_m"]))? $_REQUEST["opcion_m"] : $sexo;
+        $sexo = (isset($_REQUEST["opcion_x"]))? $_REQUEST["opcion_x"] : $sexo;
+
+
+        if(empty($_REQUEST["Fecha_Nacimiento"]) || $_REQUEST["Fecha_Nacimiento"] == "No se cargo fecha de nacimiento") {
+            $Fecha_Nacimiento = null;
+        } else {
+            $Fecha_Nacimiento = implode("-", array_reverse(explode("/",$_REQUEST["Fecha_Nacimiento"])));
+        }
+
+        ///////////////////////////CALCULAR EDAD//////////////////////////////////////////////////
+        if($Edad == 'null' || $Edad == "") {
+            if ($_REQUEST["Fecha_Nacimiento"] != "No se cargo fecha de nacimiento") {
+                list($ano,$mes,$dia) = explode("-",$Fecha_Nacimiento);
+                $ano_diferencia = date("Y") - $ano;
+                $mes_diferencia = date("m") - $mes;
+                $dia_diferencia = date("d") - $dia;
+                if($dia_diferencia < 0 || $mes_diferencia < 0){
+                    $ano_diferencia--;
+                }
+                $Edad = $ano_diferencia;                
+            } else {
+                $Edad = 0;
+            }
+        }
+
+
+        if($Edad == 0){
+            $Fecha_Actual = new DateTime();
+            $Fecha_Nacimiento_Registrada = new DateTime($Fecha_Nacimiento);
+            $Diferencia = $Fecha_Nacimiento_Registrada->diff($Fecha_Actual);
+            $Meses = $Diferencia->m;
+        }
+        /////////////////////////////////////////////////////////////////////////////////////////
+
+        $georeferencia_point = null; 
+        if (!empty($_REQUEST["lat"])) {
+            $lat_point = $_REQUEST["lat"];
+            $georeferencia_point = "POINT(" . $lat_point;
+
+            if (!empty($_REQUEST["lon"])){
+                $lon_point = $_REQUEST["lon"];
+                $georeferencia_point .= "," . $lon_point . ")";
+            } else {
+                $georeferencia_point = null;
+            }
+        }
+
+        $Nro_Carpeta = $_REQUEST["Nro_Carpeta"];
+        $Obra_Social = $_REQUEST["Obra_Social"];
+        $calle = null;
+        if (isset($_REQUEST["Calle"])) {
+            $calle = ucwords($_REQUEST["Calle"]);
+        }
+
+        if (isset($_REQUEST["NumeroDeCalle"])) {
+            $nro_calle = $_REQUEST["NumeroDeCalle"];
+        }
+        $ID_Barrio = (isset($_REQUEST["ID_Barrio"])) ? $_REQUEST["ID_Barrio"] : 0;
+        $Localidad = ucwords($_REQUEST["Localidad"]);
+        $Circunscripcion = 0;
+        $Seccion = 0;
+        $Manzana = $_REQUEST["Manzana"];
+        $Lote = $_REQUEST["Lote"];
+        $Familia = ucfirst($_REQUEST["Familia"]);
+        $Observaciones = ucfirst($_REQUEST["Observaciones"]);
+        $Cambio_Domicilio = $_REQUEST["Cambio_Domicilio"];
+        $Telefono = $_REQUEST["Telefono"];
+        $Mail = ucfirst($_REQUEST["Mail"]);
+        $Estado = 1;
+        $ID_Escuela = $_REQUEST["ID_Escuela"];
+        $Trabajo = strtoupper($_REQUEST["Trabajo"]);
+
+        if(empty($ID_Escuela)){
+            $ID_Escuela = 2;
+        }
+
+        if(empty($Nro_Carpeta)){
+            $Nro_Carpeta = null;
+        }
+        if(empty($Circunscripcion)){
+            $Circunscripcion = null;
+        }
+        if(empty($Seccion)){
+            $Seccion = null;
+        }
+        if(empty($Manzana)){
+            $Manzana = null;
+        }
+        if(empty($Lote)){
+            $Lote = null;
+        }
+        if(empty($Familia)){
+            $Familia = null;
+        }
+
+        if(empty($ID_Barrio)){
+            $ID_Barrio = 37;
+        }
+
+        $id_centro_salud = 7;
+
+        if ($from_reporte_grafico) {
+            $reporte = "true";
+        } else {
+            $reporte = "false";
+        }
+        
+        if (is_numeric($DNI)) {
+            if(strlen((string)$DNI) < 7 || strlen((string)$DNI) > 8) {
+                $status_process = 4;
+                $Mensaje = "El DNI debe tener 7 o 8 digitos";
+                header('status_process:' . $status_process);
+                header('message:' . $Mensaje);
+                header('Location: /persona/editar?ID=' . $ID_Persona . '&MensajeError=' . $Mensaje);
+                exit();
+            }
+        } else {
+            $status_process = 4;
+            $Mensaje = "El dni debe ser un numero";
+            header('status_process:' . $status_process);
+            header('message:' . $Mensaje);
+            header('Location: /persona/editar?ID=' . $ID_Persona . '&MensajeError=' . $Mensaje);
+            exit();
+        }    
+
+
+        $Fecha = date("Y-m-d");
+        $ID_TipoAccion = 2;
+        try {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            $Persona = new Persona(ID_Persona : $ID_Persona);
+
+            if (HistoriaClinica::exist(coneccion: $Con, id_persona: $ID_Persona)) {
+                $hist = new HistoriaClinica(coneccion: $Con,
+                                            ID_Persona: $ID_Persona, 
+                                            id_centro_salud: $id_centro_salud) ;
+            } else {
+                $hist = new HistoriaClinica(coneccion: $Con ,
+                ID_Persona: $ID_Persona,
+                id_centro_salud: $id_centro_salud
+                );
+                $hist->save();
+            }
+
+            if (Contacto::tiene_contacto(coneccion: $Con, id_persona: $ID_Persona)) {
+                $contac = new Contacto(coneccion: $Con, id_persona: $ID_Persona);
+            } else {
+                $contac = new Contacto(coneccion: $Con,
+                    id_persona: $ID_Persona,
+                    xMail : $Mail,
+                    xTelefono : $Telefono,
+                    xTrabajo : $Trabajo
+                );
+                $contac->save();
+            }    
+
+            if (!Domicilio::is_registered(coneccion: $Con, id_calle: $calle, numero: $nro_calle)) {                                      
+                $domicilio = new Domicilio(coneccion: $Con, 
+                                        xCalle: $calle,
+                                        xNro: $nro_calle,
+                                        xCircunscripcion: $Circunscripcion,
+                                        xFamilia: $Familia,
+                                        xLocalidad: $Localidad,
+                                        xLote: $Lote,
+                                        xManzana: $Manzana,
+                                        xSeccion: $Seccion,
+                                        xBarrio: $ID_Barrio,
+                                        );
+
+                if ($domicilio->getId_Calle() && $domicilio->getNro()){
+                    $domicilio->setDomicilio();	
+                }
+                if ($georeferencia_point) {
+                    $domicilio->setGeoreferencia(xGeoreferencia: $georeferencia_point);
+                }
+
+                $domicilio->save();                        
+            } else {
+                $domicilio = new Domicilio(coneccion: $Con, xCalle: $calle, xNro: $nro_calle);
+
+            }
+
+            $id_persona_domicilio = PersonaDomicilio::exist(coneccion: $Con, 
+                                        id_persona: $ID_Persona, 
+                                        id_domicilio: $domicilio->get_id_domicilio());
+            if (!$id_persona_domicilio) {
+
+                if (PersonaDomicilio::tiene_domicilio(coneccion:$Con, id_persona: $ID_Persona)) {
+                    $domicilio_obj = new PersonaDomicilio(connection: $Con, 
+                                                        id_persona: $ID_Persona);
+                    $domicilio_obj->delete();
+                }
+                $domicilio_obj = new PersonaDomicilio(connection: $Con, 
+                                                      id_persona: $ID_Persona,
+                                                      id_domicilio: $domicilio->get_id_domicilio());
+                $domicilio_obj->save();
+            } else {
+                $domicilio_obj = new PersonaDomicilio(connection: $Con, 
+                                                      id_persona_domicilio: $id_persona_domicilio);
+            }
+
+
+            if (Persona::is_registered_with_id(coneccion: $Con, documento: $DNI, id_persona: $ID_Persona) && !empty($DNI)) {
+                $Con->CloseConexion();
+                $status_process = 2;
+                $Mensaje = "Ya existe una Persona con ese Apellido y Nombre por Favor Introduzca Otros Datos";
+                header('status_process:' . $status_process);
+                header('message:' . $Mensaje);
+                header('Location: /persona/editar?ID=' . $ID_Persona . '&MensajeError=' . $Mensaje);
+            } else {
+
+                $Persona_Viejo = new Persona(ID_Persona: $ID_Persona);
+                $Persona_Viejo->setApellido($Apellido);
+                $domicilio->setBarrio($ID_Barrio);
+                $domicilio->setCamio_Domicilio($Cambio_Domicilio);
+                $Persona_Viejo->setDNI($DNI);
+                $Persona_Viejo->setEdad($Edad);
+                $Persona_Viejo->setNombre($Nombre);
+		        $Persona_Viejo->setSexo($sexo);
+                $hist->setNro_Legajo($Nro_Legajo);
+                $Persona_Viejo->setFecha_Nacimiento($Fecha_Nacimiento);
+                $Persona_Viejo->setID_Escuela($ID_Escuela);
+                $domicilio->setLocalidad($Localidad);
+                $contac->setMail($Mail);
+                $domicilio->setLote($Lote);
+                $domicilio->setFamilia($Familia);
+                $domicilio->setManzana($Manzana);
+                $Persona_Viejo->setMeses($Meses);
+                $hist->setNro_Carpeta($Nro_Carpeta);
+                $Persona_Viejo->setObra_Social($Obra_Social);
+                $Persona_Viejo->setObservaciones($Observaciones);
+                $contac->setTrabajo($Trabajo);
+                $contac->setTelefono($Telefono);
+                $domicilio->setCalle($calle);
+
+                $Persona_Viejo->update();
+                $hist->update();                
+                $contac->update();
+                $domicilio->update();
+
+                $Detalles = "El usuario con ID: $ID_Usuario ha modificado una Persona. Datos modificados : ";
+                $Detalles .= mysqli_real_escape_string($Con->Conexion, json_encode($Persona_Viejo));
+                $Detalles .= " Datos anteriores : " .  mysqli_real_escape_string($Con->Conexion, json_encode($Persona));
+
+                $accion = new Accion(
+                    xaccountid: $ID_Usuario,
+                    xFecha : $Fecha,
+                    xDetalles: $Detalles,
+                    xID_TipoAccion: $ID_TipoAccion	 
+                );
+                $accion->save();
+                    
+                // CREANDO NOTIFICACION PARA EL USUARIO		
+                $Detalles = 'Se modifico la persona Nombre: ' . $Persona->getApellido() . ', ' . $Persona->getNombre(). (($Persona->getDNI() == null)?'':' dni: '. $Persona->getDNI());
+                $Expira = date("Y-m-d", strtotime($Fecha." + 15 days"));
+
+                $rev = new Notificacion(
+                                        coneccion_base: $Con, 
+                                        detalle: $Detalles , 
+                                        fecha: $Expira
+                                        );
+                $rev->save();            
+
+
+                $Con->CloseConexion();
+                $Mensaje = "La Persona fue modificada Correctamente";
+
+                $status_process = 1;
+                header('status_process:' . $status_process);
+                header('message:' . $Mensaje);
+                header('Location: /persona/editar?ID=' . $ID_Persona . '&Mensaje=' . $Mensaje . "&reporte=" . $reporte);		
+            }
+
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+        exit();
+    }
+
+    public function unif_persona()
+    {
+        header("Content-Type: text/html;charset=utf-8");
+        if (!isset($_SESSION["Usuario"])) {
+            include("./Views/Error_Session.php");
+        } else {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Con->CloseConexion();
+
+            $Element = new Elements();
+
+            include("./Views/view_unifpersonas.php");
+        }
+        exit();
+    }
+
+    public function unif_persona_control()
+    {
+        $ID_Solicitud = isset($_REQUEST["ID_Solicitud"])? $_REQUEST["ID_Solicitud"] : null;
+        $ID_Persona_1 = $_REQUEST["ID_Persona_1"];
+        $ID_Persona_2 = $_REQUEST["ID_Persona_2"];
+        $ID_Usuario = isset($_SESSION["Usuario"])? $_SESSION["Usuario"]: null;
+        if ($ID_Persona_1 > 0 && $ID_Persona_2 > 0) {
+            $con = new Conexion();
+            $con->OpenConexion();
+            
+            if (!empty($ID_Solicitud)) {
+
+                $persona_2 = new Persona(ID_Persona: $ID_Persona_2);
+
+                $consulta = "update movimiento 
+                             set id_persona = $ID_Persona_1 
+                             where id_persona = $ID_Persona_2";
+                
+                mysqli_query($con->Conexion,$consulta) or die("Problemas en la consulta");
+                
+                $persona_2->delete();
+
+                $unificar = new Solicitud_Unificacion(coneccion: $con, xID_Solicitud: $ID_Solicitud);
+                $unificar->delete();
+
+                $con->CloseConexion();
+                $Mensaje = "Los datos se unificaron Correctamente";
+                header('Location: /home?Mensaje=' . $Mensaje);
+            } else {
+                $consulta = "UPDATE movimiento 
+                             SET id_persona = $ID_Persona_1 
+                             WHERE id_persona = $ID_Persona_2";
+                mysqli_query($con->Conexion,$consulta) or die("Problemas en la consulta");
+
+                $persona_2 = new Persona(ID_Persona: $ID_Persona_2);
+                $persona_2->delete();
+                $Mensaje = "Los datos se unificaron Correctamente";
+                header('Location: /home?Mensaje=' . $Mensaje);
+            }
+        } else {
+            $MensajeError = "Debe seleccionar Primera Persona y Segunda Persona";
+            header('Location: /home?MensajeError=' . $MensajeError);
+        }
+
+    }
+
+    public function delete_persona()
+    {
+        $ID_Usuario = $_SESSION["Usuario"];
+
+        $ID_Persona = $_REQUEST["ID"];
+
+        $Fecha = date("Y-m-d");
+        $ID_TipoAccion = 3;
+        $Detalles = "El usuario con ID: $ID_Usuario ha dado de baja una Persona. Datos: Persona: $ID_Persona";
+
+        try {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            $persona = new Persona(ID_Persona: $ID_Persona);
+            $persona->delete();
+
+            $acc = new Accion(xFecha: $Fecha, xDetalles: $Detalles, xaccountid: $ID_Usuario, xID_TipoAccion: $ID_TipoAccion);
+            $acc->save();
+
+            $Apellido = $persona->getApellido();
+            $Nombre = $persona->getNombre();
+            $DNI = $persona->getDNI();
+            
+            // CREANDO NOTIFICACION PARA EL USUARIO		
+            $Detalles = 'Se elimino la persona Nombre: ' . $Apellido. ', '. $Nombre . (($DNI == null)? '' : ' dni: ' . $DNI);
+            $Expira = date("Y-m-d", strtotime($Fecha . " + 15 days"));
+
+            $rev = new Notificacion(coneccion_base: $Con, detalle: $Detalles, fecha: $Expira);
+            $rev->save();            
+
+            $Con->CloseConexion();
+            $Mensaje = "La persona se elimino Correctamente";
+            header('Location: ../personas?Mensaje=' . $Mensaje);
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+
+}

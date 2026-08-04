@@ -117,6 +117,24 @@ class Motivo implements JsonSerializable
 		return $id_motivo;
     }
 
+    public static function existe_motivo_con_nombre($coneccion, $nombre){
+
+		$consulta = "select * 
+					 from motivo 
+					 where motivo = '$nombre' 
+					   and estado = 1";
+		$mensaje_error = "Hubo un problema al consultar los registros";
+		$ret = mysqli_query(
+					$coneccion->Conexion,
+					$consulta
+		) or die(
+			$mensaje_error
+		);
+		$row = mysqli_fetch_assoc($ret);
+        $result = !empty($row["id_motivo"]);
+		return $result;
+    }
+
 	// METODOS SET
 	public function set_id_motivo($id_motivo)
 	{
@@ -206,7 +224,7 @@ class Motivo implements JsonSerializable
 		];
 	}
 
-	public function udpate(){
+	public function update(){
 		$consulta = "update motivo
 					 set motivo = " . (($this->get_motivo()) ? $this->get_motivo() : "null") . ",
 						 codigo = " . (($this->get_codigo()) ? $this->get_codigo() : "null") . ", 
@@ -250,4 +268,16 @@ class Motivo implements JsonSerializable
 		}
 		$this->id_motivo = mysqli_insert_id($this->coneccion_base->Conexion);
 	}
+
+	public function delete(){
+		$consulta = "update motivo
+					 set  estado = 0
+					 where id_motivo = " . $this->get_id_motivo();
+		$mensaje = "No se pudo modificar el motivo";
+		$ret = mysqli_query($this->coneccion_base->Conexion, $consulta);
+		if (!$ret) {
+			throw new Exception($mensaje . $consulta, 2);
+		}
+	}
+
 }

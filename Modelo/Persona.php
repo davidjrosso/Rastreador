@@ -1592,4 +1592,21 @@ class Persona implements JsonSerializable {
 					$Con->CloseConexion();
 	}
 
+	function delete()
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+
+		$query = "update persona
+				  set estado = 0
+				  where id_persona = " . $this->getID_Persona();
+		$MensajeErrorConsultar = "No se pudo eliminar la Persona";
+		$ret = mysqli_query($Con->Conexion, $query);
+		if (!$ret) {
+		throw new Exception($MensajeErrorConsultar . $query, 2);
+		}
+		$Con->CloseConexion();
+
+	}
+
 }
