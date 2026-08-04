@@ -40,7 +40,7 @@ class Responsable implements JsonSerializable
 				$this->id_responsable = $resp_id_responsable;
 				$this->responsable = $resp_responsable;
 				$this->estado = $resp_estado;
-				$this->movimiento = $resp_account_id;
+				$this->account_id = $resp_account_id;
 			}
 		}
 	}
@@ -114,6 +114,29 @@ class Responsable implements JsonSerializable
 		);
 		$exist = (mysqli_num_rows($ret) >= 1);
 		return $exist;
+	}
+
+	public static function get_list_responsable_por_nombre($coneccion_base, $responsable)
+	{
+		$list = [];
+		if ($list) {
+			$consulta = "select id_resp 
+						from responsable 
+						where lower(responsable) like lower('%" . $responsable . "%') 
+						and estado = 1";
+			$mensaje = "Hubo un problema al consultar los registros";
+			$ret = mysqli_query($coneccion_base->Conexion, $consulta);
+			if(!$ret) new Exception($mensaje, 2);
+
+			while($row = mysqli_fetch_assoc($ret)) {
+				$list[] = new self(
+									coneccion_base: $coneccion_base,
+									id_responsable: $row["id_resp"]
+									);
+			};
+		}
+
+		return $list;
 	}
 
 	//METODOS SET
