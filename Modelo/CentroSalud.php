@@ -100,7 +100,7 @@ class CentroSalud implements JsonSerializable
 		return $id_centro;
     }
 
-    public static function get_list_nombre($coneccion, $centro_salud)
+    public static function get_list_por_nombre($coneccion, $centro_salud)
 	{
 
 		$list = [];

@@ -219,7 +219,7 @@ class Persona implements JsonSerializable {
 		}
 	}
 
-	public static function get_list_barrios($coneccion, $id_barrio)
+	public static function get_list_por_barrio($coneccion, $id_barrio)
 	{
 		$list = [];
 		if ($id_barrio) {
@@ -234,6 +234,27 @@ class Persona implements JsonSerializable {
 				throw new Exception($mensaje_error, 2);
 			}
 			while($row = mysqli_fetch_row($ejecutar)) {
+				$list[] = new self(ID_Persona: $row["ID_Persona"]);
+			};
+		}
+		return $list;
+
+	}
+
+	public static function get_list_por_escuela($coneccion, $id_escuela)
+	{
+		$list = [];
+		if ($id_escuela) {
+			$consultar = "select * 
+						  from persona 
+						  where ID_Escuela = $id_escuela
+								and estado = 1";
+			$mensaje = "No se pudieron consultar los casos de igualdad en el Escuela";
+
+			$ejec = mysqli_query($coneccion->Conexion, $consultar);
+			if (!$ejec) throw new Exception($mensaje, 2);
+
+			while($row = mysqli_fetch_row($ejec)) {
 				$list[] = new self(ID_Persona: $row["ID_Persona"]);
 			};
 		}
@@ -1334,6 +1355,20 @@ class Persona implements JsonSerializable {
 					$MensajeErrorConsultar = "No se pudo actualizar la Persona ";
 					if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
 						throw new Exception($MensajeErrorConsultar . $Consulta, 2);
+					}
+					$Con->CloseConexion();
+	}
+
+	public function update_escuela()
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "update persona 
+					set ID_Escuela = " . ((!is_null($this->getID_Escuela())) ? $this->getID_Escuela() : "null") . " 
+					where id_persona = " . $this->getID_Persona();
+					$Mensaje = "No se pudo actualizar la Persona ";
+					if (!$Ret = mysqli_query($Con->Conexion, $Consulta)) {
+						throw new Exception($Mensaje . $Consulta, 2);
 					}
 					$Con->CloseConexion();
 	}

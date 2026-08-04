@@ -84,6 +84,61 @@ class Escuela
 		}
 	}
 
+	public static function exist_nombre($name = null, $coneccion = null)
+	{
+		$query = "select *
+				  from escuelas
+				  where Escuela like '%$name%'";
+		if (!$obj = mysqli_query($coneccion->Conexion, $query))	
+			throw new Exception("Error query");
+		$result = mysqli_num_rows($obj);
+		return $result;
+	}
+
+	public static function exist_nombre_con_id($name = null, $id = null, $coneccion = null)
+	{
+		$query = "select *
+				  from escuelas
+				  where Escuela like '%$name%'
+				  	and ID_Escuela <> $id";
+		if (!$obj = mysqli_query($coneccion->Conexion, $query))	
+			throw new Exception("Error query");
+		$result = mysqli_num_rows($obj);
+		return $result;
+	}
+
+	public static function exist_id($id = null, $coneccion = null)
+	{
+		$query = "select *
+				  from escuelas
+				  where ID_Escuela = $id
+				  	and Estado = 1";
+		if (!$obj = mysqli_query($coneccion->Conexion, $query))	
+			throw new Exception("Error query");
+		$result = mysqli_num_rows($obj);
+		return $result;
+
+	}
+
+	public static function get_list_por_nombre($coneccion, $nombre)
+	{
+		$list = [];
+		if ($nombre) {
+			$consultar = "SELECT * 
+						  FROM escuelas E, nivel_escuelas N 
+						  WHERE E.ID_Nivel = N.ID_Nivel and E.Escuela LIKE '%$nombre%'
+								and E.Estado = 1";
+			$mensaje = "No se pudieron consultar los casos de igualdad en el Escuela";
+
+			$ejec = mysqli_query($coneccion->Conexion, $consultar);
+			if (!$ejec) throw new Exception($mensaje, 2);
+
+			$list = mysqli_fetch_all($ejec);
+		}
+		return $list;
+
+	}
+	
 	//METODOS SET
 	public function setID_Escuela($xID_Escuela)
 	{
@@ -205,4 +260,63 @@ class Escuela
 	{
 		return $this->Estado;
 	}
+
+	public function delete()
+	{
+		$query = "update escuelas
+				  set Estado = 0
+				  where ID_Escuela = " . $this->getID_Escuela();
+		$ejecutar_consultar = mysqli_query(
+			$this->coneccion_base->Conexion, 
+			$query) or die("Problemas en query Escuelas");
+	}
+
+	public function update()
+	{
+        $consulta = "update escuelas
+					 set Codigo =" . (!empty($this->getCodigo()) ? "'" . $this->getCodigo() . "'": "null") . ",
+					 	 	Escuela =  " . (!empty($this->getEscuela()) ? "'" . $this->getEscuela() . "'": "null") . ",
+							CUE =  " . (!empty($this->getCUE()) ? "'" . $this->getCUE() . "'": "null") . ",
+					 		Localidad =  " . (!empty($this->getLocalidad()) ? "'" . $this->getLocalidad() . "'": "null") . ",
+					 		Departamento =  " . (!empty($this->getDepartamento()) ? "'" . $this->getDepartamento() . "'": "null") . ",
+					 		Directora =  " . (!empty($this->getDirectora()) ? "'" . $this->getDirectora() . "'": "null") . ",
+					 		Telefono =  " . (!empty($this->getTelefono()) ? "'" . $this->getTelefono() . "'": "null") . ",
+					 		Mail =  " . (!empty($this->getMail()) ? "'" . $this->getMail() . "'": "null") . ",
+					 		ID_Nivel =  " . (!empty($this->getID_Nivel()) ? $this->getID_Nivel() : "null") . ",
+					 		Estado =  " . (!empty($this->getEstado()) ? $this->getEstado() : "null") ."
+					 where ID_Escuela=" . $this->getID_Escuela();
+							;
+		if (!$obj = mysqli_query($this->coneccion_base->Conexion, $consulta))
+			throw new Exception("Error query");
+		
+	}
+
+	public function save()
+	{
+        $consulta = "insert into escuelas(Codigo,
+										  Escuela,
+										  CUE,
+										  Localidad,
+										  Departamento,
+										  Directora,
+										  telefono,
+										  Mail,
+										  ID_Nivel,
+										  Estado) 
+					 values(" . (!empty($this->getCodigo()) ? "'" . $this->getCodigo() . "'": "null") . ","
+					 		   . (!empty($this->getEscuela()) ? "'" . $this->getEscuela() . "'": "null") . ","
+							   . (!empty($this->getCUE()) ? "'" . $this->getCUE() . "'": "null"). ","
+					 		   . (!empty($this->getLocalidad()) ? "'" . $this->getLocalidad() . "'": "null") . ","
+					 		   . (!empty($this->getDepartamento()) ? "'" . $this->getDepartamento() . "'": "null") . ","
+					 		   . (!empty($this->getDirectora()) ? "'" . $this->getDirectora() . "'": "null") . ","
+					 		   . (!empty($this->getTelefono()) ? "'" . $this->getTelefono() . "'": "null") . ","
+					 		   . (!empty($this->getMail()) ? "'" . $this->getMail() . "'": "null") . ","
+					 		   . (!empty($this->getID_Nivel()) ? $this->getID_Nivel() : "null") . ","
+					 		   . (!empty($this->getEstado()) ? $this->getEstado() : "null")
+							   . ")";
+		if (!$ret = mysqli_query($this->coneccion_base->Conexion, $consulta))
+			throw new Exception("Error query");
+		$this->ID_Escuela = null;
+	}
+
 }

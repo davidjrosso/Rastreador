@@ -27,6 +27,9 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/CentroSalud.php") ;
 
 class CentroSaludController 
 {
+    const CHARS_DEN = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
+    const CHARS_APROV = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;",
+                                   "& #060;", "& #062;", "& #039;", "& #047;");
 
     public function listado_centros_salud($mensaje = null, $id_filtro = null)
     {
@@ -133,9 +136,8 @@ class CentroSaludController
         $id = $_REQUEST['ID'];
 
         //Filtro anti-XSS
-        $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
-        $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
-        $consulta = str_replace($caracteres_malos, $caracteres_buenos, $consulta);
+
+        $consulta = str_replace(self::CHARS_DEN, self::CHARS_APROV, $consulta);
 
         //Variable vacía (para evitar los E_NOTICE)
         $mensaje = "";
@@ -145,7 +147,7 @@ class CentroSaludController
             $con = new Conexion();
             $con->OpenConexion();
 
-            $list = CentroSalud::get_list_nombre(coneccion: $con, centro_salud: $consulta);
+            $list = CentroSalud::get_list_por_nombre(coneccion: $con, centro_salud: $consulta);
             $con->CloseConexion();
 
             $cant = count($list);

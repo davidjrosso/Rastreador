@@ -1,0 +1,502 @@
+<?php
+/*
+ *
+ * This file is part of Rastreador3.
+ *
+ * Rastreador3 is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Rastreador3 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Rastreador3; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
+
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Parametria.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Accion.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_Unificacion.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Escuela.php");
+
+
+
+class EscuelaController 
+{
+    const CHARS_DEN = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
+    const CHARS_APROV = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;",
+                                   "& #060;", "& #062;", "& #039;", "& #047;");
+
+    public function listado_escuelas($mensaje = null)
+    {
+        header('Content-Type: text/html; charset=utf-8');
+        if (!isset($_SESSION["Usuario"])) {
+           include("./Views/Error_Session.php");
+
+        } else {
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
+            include("./Views/view_escuelas.php");
+        }
+        exit();
+    }
+
+     public function new_escuela()
+    {
+        header('Content-Type: text/html; charset=utf-8');
+        if (!isset($_SESSION["Usuario"])) {
+
+            include("./Views/Error_Session.php");
+        } else {
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
+            include("./Views/view_newescuelas.php");
+        }
+        exit();
+    }   
+    public function mod_escuela($id_escuela)
+    {
+        header('Content-Type: text/html; charset=utf-8');
+        if (!isset($_SESSION["Usuario"])) {
+
+            include("./Views/Error_Session.php");
+        } else {
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
+            $exist = false;
+            
+            if(isset($_REQUEST["ID"])) {
+              $ID_Escuela = $_REQUEST["ID"];
+              $exist = true;
+              $Con = new Conexion();
+              $Con->OpenConexion();
+
+              $InstEscuela = new Escuela(
+                         $Con,
+                            $ID_Escuela) ;
+
+              $ID_Escuela = $InstEscuela->getID_Escuela();
+              $Codigo = $InstEscuela->getCodigo();              
+              $Escuela = $InstEscuela->getEscuela();
+              $CUE = $InstEscuela->getCUE();
+              $Localidad = $InstEscuela->getLocalidad();
+              $Departamento = $InstEscuela->getDepartamento();
+              $Directora = $InstEscuela->getDirectora();
+              $Telefono = $InstEscuela->getTelefono();
+              $Mail = $InstEscuela->getMail();
+              $ID_Nivel = $InstEscuela->getID_Nivel();
+              $Estado = $InstEscuela->getEstado();
+
+              if($CUE == 'null'){
+                $CUE = "";
+              }
+
+              if($Localidad == 'null'){
+                $Localidad = "";
+              }
+
+              if($Departamento == 'null'){
+                $Departamento = "";
+              }
+
+              if($Directora == 'null'){
+                $Directora = "";
+              }
+
+              if($Telefono == 'null'){
+                $Telefono = "";
+              }
+
+              if($Mail == 'null'){
+                $Mail = "";
+              }
+            }
+            include("./Views/view_modescuelas.php");
+        }
+        exit();
+    }
+
+    public function new_escuela_control()
+    {
+        $ID_Usuario = $_SESSION["Usuario"];
+
+        $Codigo = $_REQUEST["Codigo"];
+        $Escuela = ucfirst($_REQUEST["Escuela"]);
+        $CUE = $_REQUEST["CUE"];
+        $Localidad = ucwords($_REQUEST["Localidad"]);
+        $Departamento = ucwords($_REQUEST["Departamento"]);
+        $Directora = ucwords($_REQUEST["Directora"]);
+        $Telefono = $_REQUEST["Telefono"];
+        $Mail = ucfirst($_REQUEST["Mail"]);
+        $Estado = 1;
+
+        if($_REQUEST["ID_Nivel"] > 0){
+            $ID_Nivel = $_REQUEST["ID_Nivel"];
+        }else{
+            $ID_Nivel = 'null';
+        }
+
+        if(empty($CUE)){
+            $CUE = 'null';
+        }
+
+        if(empty($Localidad)){
+            $Localidad = 'null';
+        }
+
+        if(empty($Departamento)){
+            $Departamento = 'null';
+        }
+
+        if(empty($Directora)){
+            $Directora = 'null';
+        }
+
+        if(empty($Telefono)){
+            $Telefono = 'null';
+        }
+
+        if(empty($Mail)){
+            $Mail = 'null';
+        }
+
+        $fecha = date("Y-m-d");
+        $ID_TipoAccion = 1;
+        $Detalles = "El usuario con ID: $ID_Usuario ha registrado una nueva Escuela. Datos: Codigo: $Codigo - Escuela: $Escuela - CUE: $CUE - Localidad: $Localidad - Departamento: $Departamento - Directora: $Directora - Telefono: $Telefono - Mail: $Mail - Nivel: $ID_Nivel";
+
+        $Con = new Conexion();
+        $Con->OpenConexion();
+
+        try {
+            if (Escuela::exist_nombre($Escuela, $Con)) { 
+                $Con->CloseConexion();
+                $Mensaje = "Ya existe una Escuela con ese Nombre";
+                header('Location: /escuela/nueva?MensajeError=' . $Mensaje);
+            } else {
+                $Escuela_Nueva = new Escuela(
+                                            coneccion_base: $Con,
+                                            xCodigo: $Codigo,
+                                            xEscuela: $Escuela,
+                                            xCUE: $CUE,
+                                            xLocalidad: $Localidad,
+                                            xDepartamento: $Departamento,
+                                            xDirectora: $Directora,
+                                            xTelefono: $Telefono,
+                                            xMail: $Mail,
+                                            xID_Nivel: $ID_Nivel,
+                                            xEstado: $Estado);
+                $Escuela_Nueva->save();
+                $accion = new Accion(
+                                    xaccountid: $ID_Usuario,
+                                    xDetalles: $Detalles,
+                                    xFecha: $fecha,
+                                    xID_TipoAccion: $ID_TipoAccion
+                                    );
+                $accion->save();
+
+                $Con->CloseConexion();
+                $Mensaje = "La Escuela se registro Correctamente";
+                header('Location: /escuela/nueva?Mensaje=' . $Mensaje);
+            }
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }        
+    }
+    public function datos_escuela($id_escuela)
+    {
+        header('Content-Type: text/html; charset=utf-8');
+        if (!isset($_SESSION["Usuario"])) {
+            include("./Views/Error_Session.php");
+        } else {
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
+            include("./Views/view_verescuelas.php");
+        }
+        exit();
+    }
+
+    public function escuelas_lista()
+    {
+        $ID_Nivel = $_REQUEST["q"];
+
+        $Element = new Elements();
+
+        switch ($ID_Nivel) {
+            case '1':
+                echo $Element->CBEscuelas(1);
+                break;
+            case '2':
+                echo $Element->CBEscuelas(2);
+                break;
+            case '3':
+                echo $Element->CBEscuelas(3);
+                break;
+            case '4':
+                echo $Element->CBEscuelas(4);
+                break;	
+            default:
+                echo $Element->CBEscuelas(0);
+                break;
+        }
+    }
+
+    public function del_escuela_control($id_escuela)
+    {
+        $ID_Usuario = $_SESSION["Usuario"];
+
+        $ID_Escuela = $_REQUEST["ID"];
+
+        $fecha = date("Y-m-d");
+        $ID_TipoAccion = 3;
+        $detalles = "El usuario con ID: $ID_Usuario ha dado de baja una Escuela. Datos: Escuela: $ID_Escuela";
+
+        try {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+            if (Escuela::exist_id(id: $ID_Escuela, coneccion: $Con)) {
+                $escuela = new Escuela(coneccion_base: $Con, xID_Escuela: $ID_Escuela);
+                $escuela->delete();
+
+                $accion = new Accion(
+                                    xaccountid: $ID_Usuario,
+                                    xDetalles: $detalles,
+                                    xFecha: $fecha,
+                                    xID_TipoAccion: $ID_TipoAccion
+                                    );
+                $accion->save();
+                $Con->CloseConexion();
+                $Mensaje = "La Escuela fue eliminada Correctamente";
+                header('Location: /escuelas?Mensaje=' . $Mensaje);
+            } else {
+                $Mensaje = "La Escuela fue eliminada previamente";
+                header('Location: /escuelas?MensajeError=' . $Mensaje);
+           }           
+         } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+
+    public function mod_escuela_control()
+    {
+        $ID_Usuario = $_SESSION["Usuario"];
+
+        $ID_Escuela = $_REQUEST["ID"];
+        $Codigo = $_REQUEST["Codigo"];
+        $Escuela = ucfirst($_REQUEST["Escuela"]);
+        $CUE = $_REQUEST["CUE"];
+        $Localidad = ucwords($_REQUEST["Localidad"]);
+        $Departamento = ucwords($_REQUEST["Departamento"]);
+        $Directora = ucwords($_REQUEST["Directora"]);
+        $Telefono = $_REQUEST["Telefono"];
+        $Mail = ucfirst($_REQUEST["Mail"]);
+        $ID_Nivel = $_REQUEST["ID_Nivel"];
+        $Estado = 1;
+
+        $Con = new Conexion();
+        $Con->OpenConexion();
+        $Escuela_Nueva = new Escuela(
+                                     coneccion_base: $Con,
+                                     xID_Escuela : $ID_Escuela);
+
+        $Fecha = date("Y-m-d");
+        $ID_TipoAccion = 2;
+
+        try {
+
+            if (Escuela::exist_nombre_con_id(name: $Escuela,coneccion: $Con, id: $ID_Escuela) ) {
+                $Con->CloseConexion();
+                $Mensaje = "Ya existe una Escuela con ese Nombre";
+                header('Location: /escuelas?ID=' . $ID_Escuela . '&MensajeError=' . $Mensaje);
+            } else {
+                
+                $Escuela_Vieja = new Escuela($Con, $ID_Escuela,$Codigo,$Escuela,$CUE,$Localidad,$Departamento,$Directora,$Telefono,$Mail,$ID_Nivel,$Estado);
+                $Escuela_Vieja->update();
+
+                $Detalles = "El usuario con ID: $ID_Usuario ha modificado una Escuela. Datos: Dato Anterior: " . $Escuela_Nueva->getCodigo() . " - , Dato Nuevo: " . $Escuela_Vieja->getCodigo() . " - Dato Anterior: " . $Escuela_Nueva->getEscuela() .  ", Dato Nuevo: {" . $Escuela_Vieja->getEscuela() . "- Dato Anterior: " . $Escuela_Nueva->getCUE() . ", Dato Nuevo: {" . $Escuela_Vieja->getCUE() . "- Dato Anterior:" . $Escuela_Nueva->getLocalidad() . ", Dato Nuevo:  " . $Escuela_Vieja->getLocalidad() . "- Dato Anterior: " . $Escuela_Nueva->getDepartamento() . ", Dato Nuevo: " . $Escuela_Vieja->getDepartamento() . "- Dato Anterior: " . $Escuela_Nueva->getDirectora() . ", Dato Nuevo: " . $Escuela_Vieja->getDirectora() . "- Dato Anterior: " . $Escuela_Nueva->getTelefono() . ", Dato Nuevo: {" . $Escuela_Vieja->getTelefono() . "- Dato Anterior: " . $Escuela_Nueva->getMail() . ", Dato Nuevo: " . $Escuela_Vieja->getMail() . "- Dato Anterior: " . $Escuela_Nueva->getID_Nivel()  . ", Dato Nuevo: " . $Escuela_Vieja->getID_Nivel() ;
+
+                $Con->CloseConexion();
+                $Mensaje = "La Escuela se modificó Correctamente";
+                header('Location: /escuela/editar?ID=' . $ID_Escuela . '&Mensaje=' . $Mensaje);
+            }
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+        exit();
+    }
+
+    public function unif_escuelas($mensaje = null)
+    {
+        header('Content-Type: text/html; charset=utf-8');
+        if (!isset($_SESSION["Usuario"])) {
+            include("./Views/Error_Session.php");
+        } else {
+            $ID_Usuario = $_SESSION["Usuario"];
+            $usuario = new Account(account_id: $ID_Usuario);
+            $TipoUsuario = $usuario->get_id_tipo_usuario();
+            $Element = new Elements();
+            $DTGeneral = new CtrGeneral();
+            $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
+            $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
+
+            include("./Views/view_unifescuelas.php");
+        }
+        exit();
+    }
+
+    public function unif_escuela_control()
+    {
+        $ID_Solicitud = $_REQUEST["ID_Solicitud"];
+        $ID_Escuela_1 = $_REQUEST["ID_Escuela_1"];
+        $ID_Escuela_2 = $_REQUEST["ID_Escuela_2"];
+
+        if ($ID_Escuela_1 && $ID_Escuela_2) {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            $list = Persona::get_list_por_escuela(coneccion: $Con, id_escuela: $ID_Escuela_2);
+            foreach($list as $val => $persona) {
+                $persona->setID_Escuela($ID_Escuela_1);
+                $persona->update_escuela();
+            }
+
+            $escuela_2 = new Escuela(coneccion_base: $Con, xID_Escuela: $ID_Escuela_2);
+            $escuela_2->delete();
+
+            $Con->CloseConexion();
+            $Mensaje = "Los datos se unificaron Correctamente";
+            header('Location: /home?Mensaje=' . $Mensaje);
+        } else {
+            $MensajeError = "Debe seleccionar Primer Escuela y Segunda Escuela";
+            header('Location: /home?MensajeError=' . $MensajeError);
+        }
+        
+    }
+
+    public function unif_escuela_lista()
+    {
+        header('Content-Type: text/html; charset=utf-8');
+
+        $consulta = $_REQUEST['valorBusqueda'];
+        $id = $_REQUEST["ID"];
+
+        //Filtro anti-XSS
+
+        $consulta = str_replace(self::CHARS_DEN, self::CHARS_APROV, $consulta);
+
+        $mensaje = "";
+
+        if (isset($consultaBusqueda)) {
+
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            $list = Escuela::get_list_por_nombre(coneccion: $Con, nombre: $consulta);
+            $can = count($list);
+            if (!$can) {
+                $mensaje = "<p>No hay ningún registro con ese dato</p>";
+            } else {
+
+                $mensaje .= '<table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        <th scope="col">Codigo</th>			      
+                        <th scope="col">Escuela</th>
+                        <th scope="col">Nivel</th>			      
+                        <th scope="col">Localidad</th>			      
+                        <th scope="col">Accion</th>	
+                        </tr>
+                    </thead>
+                    <tbody>';
+
+                foreach($list as $val => $escuela) {						
+
+                    $mensaje .= '
+                        <tr>
+                        <td scope="row">' . $escuela['Codigo'] . '</td>
+                        <td scope="row">' . $escuela['Escuela'] . '</td>
+                        <td scope="row">' . $escuela['Nivel'] . '</td>
+                        <td scope="row">' . $escuela['Localidad'] . '</td>			      	
+                        <td>
+                            <button type = "button" class = "btn btn-outline-success" 
+                                    onClick="seleccionEscuela(' . $id . ',\'' . $escuela['Escuela'] . '\',' . $escuela["ID_Escuela"] . ')" 
+                                    data-dismiss="modal">
+                                seleccionar
+                            </button>
+                        </td>
+                        </tr>';
+                };
+
+                $mensaje .= '</tbody>
+                    </table>';
+
+            };
+            $Con->CloseConexion();
+
+        };
+        echo $mensaje;
+    }
+
+    public function sol_unif_escuela_control()
+    {
+        $Fecha = Date("Y-m-d");
+        $ID_Registro_1 = $_REQUEST["ID_Escuela_1"];
+        $ID_Registro_2 = $_REQUEST["ID_Escuela_2"];
+        $ID_Usuario = $_SESSION["Usuario"];
+        $Estado = 1;
+        $TipoUnif = 4;
+
+        if ($ID_Registro_1 && $ID_Registro_2) {
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            $Solicitud = new Solicitud_Unificacion(
+                                                   coneccion: $Con,
+                                                   xFecha: $Fecha,
+                                                   xID_Registro_1: $ID_Registro_1,
+                                                   xID_Registro_2: $ID_Registro_2,
+                                                   xID_Usuario: $ID_Usuario,
+                                                   xEstado: $Estado,
+                                                   xTipoUnif: $TipoUnif);
+            $Solicitud->save();
+
+            $Con->CloseConexion();
+            $Mensaje = "La solicitud de unificación se envió a los administradores para ser confirmada.";
+            header('Location: /escuelas?Mensaje=' . $Mensaje);
+        } else {
+            $MensajeError = "Debe seleccionar Primer Centro y Segundo Centro";
+            header('Location: /escuelas?MensajeError=' . $MensajeError);
+        }
+    }
+
+}

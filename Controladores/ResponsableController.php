@@ -12,6 +12,10 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/SolicitudModificacion.php");
 class ResponsableController 
 {
 
+    const CHARS_DEN = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
+    const CHARS_APROV = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;",
+                                   "& #060;", "& #062;", "& #039;", "& #047;");
+
     public function listado_responsables($mensaje = null)
     {
         header("Content-Type: text/html;charset=utf-8");
@@ -514,10 +518,8 @@ class ResponsableController
         $responsable_nro = $id;
 
         //Filtro anti-XSS
-        $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
-        $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;",
-                                   "& #060;", "& #062;", "& #039;", "& #047;");
-        $consulta = str_replace($caracteres_malos, $caracteres_buenos, $consulta);
+
+        $consulta = str_replace(self::CHARS_DEN, self::CHARS_APROV, $consulta);
 
         $mensaje = "";
 

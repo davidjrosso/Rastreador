@@ -312,7 +312,7 @@ class BarrioController
             $con = new Conexion();
             $con->OpenConexion();
 
-            $list = Persona::get_list_barrios(coneccion: $con, id_barrio: $ID_Barrio_2);
+            $list = Persona::get_list_por_barrio(coneccion: $con, id_barrio: $ID_Barrio_2);
 
             foreach ($list as $val => $persona) {
                 $persona->setBarrio($ID_Barrio_1);
