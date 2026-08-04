@@ -175,4 +175,14 @@ class Solicitud_ModificarCategoria
         mysqli_query($this->coneccion_base->Conexion,$consulta) or die($MensajeError);
 		$this->ID = mysqli_insert_id($this->coneccion_base->Conexion);
     }
+
+    function delete()
+    {
+        $consulta = "update solicitudes_modificarcategorias
+                     set Estado = 0
+                     where ID = " . $this->getID();
+        $MensajeError = "No se pudo del la solicitud";
+        mysqli_query($this->coneccion_base->Conexion,$consulta) or die($MensajeError);
+    }
+
 }

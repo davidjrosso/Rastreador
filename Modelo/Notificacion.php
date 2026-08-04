@@ -170,6 +170,19 @@ class Notificacion implements JsonSerializable
 		if (!$ret) {
 			throw new Exception($mensaje_error . $consulta, 2);
 		}
-		$this->id_centro = mysqli_insert_id($this->coneccion_base->Conexion);
+		$this->id_notificacion = mysqli_insert_id($this->coneccion_base->Conexion);
+	}
+
+		public function delete()
+	{
+		$query = "update notificaciones
+				  set Estado = 0
+		    	  where ID_Notificacion = " . $this->get_id_notificacion();
+		$mensaje_error = "No se pudo del la notificacion";
+		$ret = mysqli_query($this->coneccion_base->Conexion, $query);
+		if (!$ret) {
+			throw new Exception($mensaje_error . $query, 2);
+		}
+
 	}
 }
