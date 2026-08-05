@@ -30,6 +30,11 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
 class HomeController 
 {
 
+    public function inicio()
+    {
+        include("../index.php");
+    }
+
     public function index()
     {
         header("Content-Type: text/html;charset=utf-8");
