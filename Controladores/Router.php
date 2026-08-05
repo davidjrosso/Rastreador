@@ -29,7 +29,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/ReporteGraficoControlle
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/ReporteListadoController.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CategoriaController.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/EscuelaController.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/PreferenciaController.php");
+#require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/PreferenciaController.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CentroSaludController.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/NotificacionController.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CalleController.php");
@@ -74,7 +74,7 @@ try {
 	$routes[] = Route::get('logout', '/logout', [HomeController::class, 'logout_control']);
 	$routes[] = Route::get('password_peticion', '/password_peticion', [HomeController::class, 'password_peticion']);
 	$routes[] = Route::get('password_mod', '/modificar_password', [HomeController::class, 'modificar_password']);
-	$routes[] = Route::post('preferencia_nueva_control', '/preferencia/nueva', [PreferenciaController::class, 'new_preferencia_control']);
+	#$routes[] = Route::post('preferencia_nueva_control', '/preferencia/nueva', [PreferenciaController::class, 'new_preferencia_control']);
 
 	$routes[] = Route::get('personas_listado', '/personas', [PersonaController::class, 'listado_personas']);
 	$routes[] = Route::get('personas_listado_success', '/personas\?Mensaje={mensaje}', [PersonaController::class, 'listado_personas']);
