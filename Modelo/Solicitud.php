@@ -130,8 +130,8 @@ class Solicitud
     public function delete() 
     {
         $consulta = "UPDATE solicitudes
-                             SET estado = 0
-                             WHERE id_solicitud = " . $this->get_id_solicitud();
+                     SET estado = 0
+                     WHERE id_solicitud = " . $this->get_id_solicitud();
         $mensaje = "No se pudo eliminar la solicitud";
         mysqli_query($this->coneccion->Conexion, $consulta);
     }
