@@ -35,7 +35,8 @@ class TipoGrupoOperacion
         }
 	}
 
-	public static function get_lista_tipo_grupo_operacion($id_tipo_grupo_operacion){
+	public static function get_lista_tipo_grupo_operacion($id_tipo_grupo_operacion)
+	{
 		$con = new Conexion();
 		$con->OpenConexion();
 		$filtro = ($id_tipo_grupo_operacion) ? null : " and lower(tipo) like lower('%$id_tipo_grupo_operacion%')"; 
@@ -85,8 +86,18 @@ class TipoGrupoOperacion
 		return $this->estado;
 	}
 
+	public function delete()
+	{
+		$consulta = "delete tipo_grupo_operacion
+					 where id_tipo_grupo_operacion = " . $this->id_tipo_grupo_operacion;
+		if(!$accion = mysqli_query($this->coneccion_base->Conexion, $consulta)){
+			throw new Exception("Error al intentar eliminar.", 3);
+		}
+	}
 
-	public function save() {
+
+	public function save()
+	{
 		$consulta = "insert into tipo_grupo_operacion(
                                                      id_tipo_grupo_operacion,
                                                      tipo,
@@ -97,7 +108,7 @@ class TipoGrupoOperacion
 											1
                                             )";
 		if(!$RetAccion = mysqli_query($this->coneccion_base->Conexion, $consulta)){
-			throw new Exception("Error al intentar registrar. Consulta: ". $consulta, 3);
+			throw new Exception("Error al intentar registrar.", 3);
 		}
         $this->id_tipo_grupo_operacion = mysqli_insert_id(
                                             $this->coneccion_base->Conexion
@@ -105,7 +116,8 @@ class TipoGrupoOperacion
 
 	}
 
-	public function update() {
+	public function update()
+	{
 		$consulta = "update tipo_grupo_operacion
 							set tipo = '" . ((!$this->tipo) ? "null" : $this->tipo) . "',
 								estado = " . ((!$this->estado) ? "null" : $this->estado) . "
@@ -113,10 +125,6 @@ class TipoGrupoOperacion
 		if(!$RetAccion = mysqli_query($this->coneccion_base->Conexion, $consulta)){
 			throw new Exception("Error al intentar actualizar. Consulta: ". $consulta, 3);
 		}
-        $this->id_tipo_grupo_operacion = mysqli_insert_id(
-                                            $this->coneccion_base->Conexion
-                                                );
-
 	}
 
 }
