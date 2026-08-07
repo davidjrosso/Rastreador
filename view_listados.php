@@ -164,7 +164,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
             <?php }?>
           });
 
-    function buscarPersonas(){
+    function buscarPersonas() {
       var xNombre = document.getElementById('SearchPersonas').value;
       var textoBusqueda = xNombre;
       xmlhttp=new XMLHttpRequest();
@@ -188,14 +188,15 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
           contenidosRecibidos = xmlhttp.responseText;
           document.getElementById("ResultadosMotivos1").innerHTML=contenidosRecibidos;
-          }
+          $("div[data-id-element]").css("display", "block");
+        }
       }
       xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda=' + textoBusqueda + "&vs=" + vs, true);
       xmlhttp.setRequestHeader("Content-Type", "application/json;");
       xmlhttp.send(JSON.stringify(bodyJson));
     }
 
-    function buscarMotivos2(){
+    function buscarMotivos2() {
       let xMotivo = document.getElementById('SearchMotivos2').value;
       let bodyJson = Object.fromEntries(listaMotivos);
       let textoBusqueda = xMotivo;
@@ -204,14 +205,15 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
           contenidosRecibidos = xmlhttp.responseText;
           document.getElementById("ResultadosMotivos2").innerHTML=contenidosRecibidos;
-          }
+          $("div[data-id-element]").css("display", "block");
+        }
       }
       xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda='+textoBusqueda+'&number=2', true); // Método post y url invocada
       xmlhttp.setRequestHeader("Content-Type", "application/json;");
       xmlhttp.send(JSON.stringify(bodyJson));
     }
 
-    function buscarMotivos3(){
+    function buscarMotivos3() {
       let xMotivo = document.getElementById('SearchMotivos3').value;
       let bodyJson = Object.fromEntries(listaMotivos);
       let textoBusqueda = xMotivo;
@@ -220,14 +222,15 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
           contenidosRecibidos = xmlhttp.responseText;
           document.getElementById("ResultadosMotivos3").innerHTML=contenidosRecibidos;
-          }
+          $("div[data-id-element]").css("display", "block");
+        }
       }
       xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda='+textoBusqueda+'&number=3', true); // Método post y url invocada
       xmlhttp.setRequestHeader("Content-Type", "application/json;");
       xmlhttp.send(JSON.stringify(bodyJson));
     }
 
-    function buscarMotivos4(motivoNumero){
+    function buscarMotivos4(motivoNumero) {
       let xMotivo = document.getElementById('SearchMotivos' + motivoNumero).value;
       let bodyJson = Object.fromEntries(listaMotivos);
       let textoBusqueda = xMotivo;
@@ -236,6 +239,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
           contenidosRecibidos = xmlhttp.responseText;
           document.getElementById("ResultadosMotivos" + motivoNumero).innerHTML=contenidosRecibidos;
+          $("div[data-id-element]").css("display", "block");
         }
       }
       xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda='+textoBusqueda+'&number=' + motivoNumero, true); // Método post y url invocada
@@ -243,7 +247,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
       xmlhttp.send(JSON.stringify(bodyJson));
     }
 
-    function buscarMotivosGeneral(id_Motivo){
+    function buscarMotivosGeneral(id_Motivo) {
       let xMotivo = document.getElementById("SearchMotivos" + id_Motivo).value;
       let bodyJson = Object.fromEntries(listaMotivos);
       let textoBusqueda = xMotivo;
@@ -253,6 +257,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
           contenidosRecibidos = xmlhttp.responseText;
           document.getElementById("ResultadosMotivos" + id_Motivo).innerHTML=contenidosRecibidos;
+          $("div[data-id-element]").css("display", "block");
         }
       }
       xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda=' + textoBusqueda + '&number=' + id_Motivo + "&vs=" + vs, true); // Método post y url invocada
@@ -267,8 +272,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
           contenidosRecibidos = xmlhttp.responseText;
           document.getElementById("ResultadosCategorias").innerHTML=contenidosRecibidos;
-          $("#btn-up-scroll").css("display", "block");
-          $("#btn-down-scroll").css("display", "block");
+          $("div[data-id-element]").css("display", "block");
           }
       }
       xmlhttp.open('POST', 'buscarCategorias.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
@@ -467,7 +471,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
     }
 
 
-    function cambiarConfig(){
+    function cambiarConfig() {
       var ID_Config = document.getElementById('ID_Config');
       var formatConfig = document.getElementById('formatConfig');
       ID_Config.value = formatConfig.value;
@@ -489,7 +493,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
     }
 
 
-    function disabledMeses(xBool){
+    function disabledMeses(xBool) {
       meses_desde = document.getElementById('Meses_Desde');
       meses_hasta = document.getElementById('Meses_Hasta');
 
@@ -595,12 +599,6 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                                 xID
                               );
       }
-    }
-
-    function scrollAlInput(identificador) {
-      const inputDestino = document.getElementById(identificador);
-      inputDestino.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      setTimeout(() => inputDestino.focus(), 400); 
     }
   </script>
 </head>
@@ -1013,12 +1011,26 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                           
                         </div>
                         <div class="col"></div>
-                      </div>                
+                      </div>
+                      <div id="btn-up-scroll" class="scroll" data-id-element='SearchMotivos1' style="display: none;">
+                          <svg width="46px" height="46px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.00024000000000000003" transform="rotate(180)">
+                              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                              <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.144"></g>
+                              <g id="SVGRepo_iconCarrier"> 
+                                  <rect width="24" height="24" fill="white"></rect> 
+                                  <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12ZM13 8C13 7.44772 12.5523 7 12 7C11.4477 7 11 7.44772 11 8L11 13.5858L9.70711 12.2929C9.31658 11.9024 8.68342 11.9024 8.29289 12.2929C7.90237 12.6834 7.90237 13.3166 8.29289 13.7071L11.2059 16.6201C11.2209 16.6351 11.2363 16.6497 11.252 16.6637C11.4352 16.87 11.7024 17 12 17C12.2976 17 12.5648 16.87 12.748 16.6637C12.7637 16.6497 12.7791 16.6351 12.7941 16.6201L15.7071 13.7071C16.0976 13.3166 16.0976 12.6834 15.7071 12.2929C15.3166 11.9024 14.6834 11.9024 14.2929 12.2929L13 13.5858L13 8Z" fill="#aea7a7"></path> 
+                              </g>
+                          </svg>
+                      </div>
+                      <div id="btn-down-scroll" class="scroll" style='bottom: 248px; display: none;' data-id-element='cerrar-motivo'>
+                          <svg width="46px" height="46px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.00024000000000000003"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.144"></g><g id="SVGRepo_iconCarrier"> <rect width="24" height="24" fill="white"></rect> <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12ZM13 8C13 7.44772 12.5523 7 12 7C11.4477 7 11 7.44772 11 8L11 13.5858L9.70711 12.2929C9.31658 11.9024 8.68342 11.9024 8.29289 12.2929C7.90237 12.6834 7.90237 13.3166 8.29289 13.7071L11.2059 16.6201C11.2209 16.6351 11.2363 16.6497 11.252 16.6637C11.4352 16.87 11.7024 17 12 17C12.2976 17 12.5648 16.87 12.748 16.6637C12.7637 16.6497 12.7791 16.6351 12.7941 16.6201L15.7071 13.7071C16.0976 13.3166 16.0976 12.6834 15.7071 12.2929C15.3166 11.9024 14.6834 11.9024 14.2929 12.2929L13 13.5858L13 8Z" fill="#aea7a7"></path> </g></svg>
+                          <i class='far fa-arrow-alt-circle-down' style='font-size:48px; color:red'></i>
+                      </div>
                     </form>
                   </div>
                   <div class="modal-footer" style="justify-content: center;">
                     <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>           
+                    <button id="cerrar-motivo" type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>           
                   </div>
                 </div>
               </div>
@@ -1058,12 +1070,26 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                           
                         </div>
                         <div class="col"></div>
-                      </div>                
+                      </div>
+                      <div id="btn-up-scroll" class="scroll" data-id-element='SearchMotivos2' style="display: none;">
+                          <svg width="46px" height="46px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.00024000000000000003" transform="rotate(180)">
+                              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                              <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.144"></g>
+                              <g id="SVGRepo_iconCarrier"> 
+                                  <rect width="24" height="24" fill="white"></rect> 
+                                  <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12ZM13 8C13 7.44772 12.5523 7 12 7C11.4477 7 11 7.44772 11 8L11 13.5858L9.70711 12.2929C9.31658 11.9024 8.68342 11.9024 8.29289 12.2929C7.90237 12.6834 7.90237 13.3166 8.29289 13.7071L11.2059 16.6201C11.2209 16.6351 11.2363 16.6497 11.252 16.6637C11.4352 16.87 11.7024 17 12 17C12.2976 17 12.5648 16.87 12.748 16.6637C12.7637 16.6497 12.7791 16.6351 12.7941 16.6201L15.7071 13.7071C16.0976 13.3166 16.0976 12.6834 15.7071 12.2929C15.3166 11.9024 14.6834 11.9024 14.2929 12.2929L13 13.5858L13 8Z" fill="#aea7a7"></path> 
+                              </g>
+                          </svg>
+                      </div>
+                      <div id="btn-down-scroll" class="scroll" style='bottom: 248px; display: none;' data-id-element='cerrar-motivo2'>
+                          <svg width="46px" height="46px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.00024000000000000003"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.144"></g><g id="SVGRepo_iconCarrier"> <rect width="24" height="24" fill="white"></rect> <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12ZM13 8C13 7.44772 12.5523 7 12 7C11.4477 7 11 7.44772 11 8L11 13.5858L9.70711 12.2929C9.31658 11.9024 8.68342 11.9024 8.29289 12.2929C7.90237 12.6834 7.90237 13.3166 8.29289 13.7071L11.2059 16.6201C11.2209 16.6351 11.2363 16.6497 11.252 16.6637C11.4352 16.87 11.7024 17 12 17C12.2976 17 12.5648 16.87 12.748 16.6637C12.7637 16.6497 12.7791 16.6351 12.7941 16.6201L15.7071 13.7071C16.0976 13.3166 16.0976 12.6834 15.7071 12.2929C15.3166 11.9024 14.6834 11.9024 14.2929 12.2929L13 13.5858L13 8Z" fill="#aea7a7"></path> </g></svg>
+                          <i class='far fa-arrow-alt-circle-down' style='font-size:48px; color:red'></i>
+                      </div>
                     </form>
                   </div>
                   <div class="modal-footer" style="justify-content: center;">
                     <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>            
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="cerrar-motivo2">Cerrar</button>            
                   </div>
                 </div>
               </div>
@@ -1103,12 +1129,26 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                           
                         </div>
                         <div class="col"></div>
-                      </div>                
+                      </div>
+                      <div id="btn-up-scroll" class="scroll" data-id-element='SearchMotivos3' style="display: none;">
+                          <svg width="46px" height="46px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.00024000000000000003" transform="rotate(180)">
+                              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                              <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.144"></g>
+                              <g id="SVGRepo_iconCarrier"> 
+                                  <rect width="24" height="24" fill="white"></rect> 
+                                  <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12ZM13 8C13 7.44772 12.5523 7 12 7C11.4477 7 11 7.44772 11 8L11 13.5858L9.70711 12.2929C9.31658 11.9024 8.68342 11.9024 8.29289 12.2929C7.90237 12.6834 7.90237 13.3166 8.29289 13.7071L11.2059 16.6201C11.2209 16.6351 11.2363 16.6497 11.252 16.6637C11.4352 16.87 11.7024 17 12 17C12.2976 17 12.5648 16.87 12.748 16.6637C12.7637 16.6497 12.7791 16.6351 12.7941 16.6201L15.7071 13.7071C16.0976 13.3166 16.0976 12.6834 15.7071 12.2929C15.3166 11.9024 14.6834 11.9024 14.2929 12.2929L13 13.5858L13 8Z" fill="#aea7a7"></path> 
+                              </g>
+                          </svg>
+                      </div>
+                      <div id="btn-down-scroll" class="scroll" style='bottom: 248px; display: none;' data-id-element='cerrar-motivo3'>
+                          <svg width="46px" height="46px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.00024000000000000003"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.144"></g><g id="SVGRepo_iconCarrier"> <rect width="24" height="24" fill="white"></rect> <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12ZM13 8C13 7.44772 12.5523 7 12 7C11.4477 7 11 7.44772 11 8L11 13.5858L9.70711 12.2929C9.31658 11.9024 8.68342 11.9024 8.29289 12.2929C7.90237 12.6834 7.90237 13.3166 8.29289 13.7071L11.2059 16.6201C11.2209 16.6351 11.2363 16.6497 11.252 16.6637C11.4352 16.87 11.7024 17 12 17C12.2976 17 12.5648 16.87 12.748 16.6637C12.7637 16.6497 12.7791 16.6351 12.7941 16.6201L15.7071 13.7071C16.0976 13.3166 16.0976 12.6834 15.7071 12.2929C15.3166 11.9024 14.6834 11.9024 14.2929 12.2929L13 13.5858L13 8Z" fill="#aea7a7"></path> </g></svg>
+                          <i class='far fa-arrow-alt-circle-down' style='font-size:48px; color:red'></i>
+                      </div>
                     </form>
                   </div>
                   <div class="modal-footer" style="justify-content: center;">
                     <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>             
+                    <button type="button" id="cerrar-motivo3" class="btn btn-primary" data-dismiss="modal">Cerrar</button>             
                   </div>
                 </div>
               </div>
@@ -1148,12 +1188,26 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                           
                         </div>
                         <div class="col"></div>
-                      </div>                
+                      </div>
+                      <div id="btn-up-scroll" class="scroll" data-id-element='SearchMotivos4' style="display: none;">
+                          <svg width="46px" height="46px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.00024000000000000003" transform="rotate(180)">
+                              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                              <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.144"></g>
+                              <g id="SVGRepo_iconCarrier"> 
+                                  <rect width="24" height="24" fill="white"></rect> 
+                                  <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12ZM13 8C13 7.44772 12.5523 7 12 7C11.4477 7 11 7.44772 11 8L11 13.5858L9.70711 12.2929C9.31658 11.9024 8.68342 11.9024 8.29289 12.2929C7.90237 12.6834 7.90237 13.3166 8.29289 13.7071L11.2059 16.6201C11.2209 16.6351 11.2363 16.6497 11.252 16.6637C11.4352 16.87 11.7024 17 12 17C12.2976 17 12.5648 16.87 12.748 16.6637C12.7637 16.6497 12.7791 16.6351 12.7941 16.6201L15.7071 13.7071C16.0976 13.3166 16.0976 12.6834 15.7071 12.2929C15.3166 11.9024 14.6834 11.9024 14.2929 12.2929L13 13.5858L13 8Z" fill="#aea7a7"></path> 
+                              </g>
+                          </svg>
+                      </div>
+                      <div id="btn-down-scroll" class="scroll" style='bottom: 248px; display: none;' data-id-element='cerrar-motivo4'>
+                          <svg width="46px" height="46px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.00024000000000000003"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.144"></g><g id="SVGRepo_iconCarrier"> <rect width="24" height="24" fill="white"></rect> <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12ZM13 8C13 7.44772 12.5523 7 12 7C11.4477 7 11 7.44772 11 8L11 13.5858L9.70711 12.2929C9.31658 11.9024 8.68342 11.9024 8.29289 12.2929C7.90237 12.6834 7.90237 13.3166 8.29289 13.7071L11.2059 16.6201C11.2209 16.6351 11.2363 16.6497 11.252 16.6637C11.4352 16.87 11.7024 17 12 17C12.2976 17 12.5648 16.87 12.748 16.6637C12.7637 16.6497 12.7791 16.6351 12.7941 16.6201L15.7071 13.7071C16.0976 13.3166 16.0976 12.6834 15.7071 12.2929C15.3166 11.9024 14.6834 11.9024 14.2929 12.2929L13 13.5858L13 8Z" fill="#aea7a7"></path> </g></svg>
+                          <i class='far fa-arrow-alt-circle-down' style='font-size:48px; color:red'></i>
+                      </div>
                     </form>
                   </div>
                   <div class="modal-footer" style="justify-content: center;">
                     <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>          
+                    <button id="cerrar-motivo4" type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>          
                   </div>
                 </div>
               </div>
@@ -1193,12 +1247,26 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                           
                         </div>
                         <div class="col"></div>
-                      </div>                
+                      </div>
+                      <div id="btn-up-scroll" class="scroll" data-id-element='SearchMotivos5' style="display: none;">
+                          <svg width="46px" height="46px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.00024000000000000003" transform="rotate(180)">
+                              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                              <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.144"></g>
+                              <g id="SVGRepo_iconCarrier"> 
+                                  <rect width="24" height="24" fill="white"></rect> 
+                                  <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12ZM13 8C13 7.44772 12.5523 7 12 7C11.4477 7 11 7.44772 11 8L11 13.5858L9.70711 12.2929C9.31658 11.9024 8.68342 11.9024 8.29289 12.2929C7.90237 12.6834 7.90237 13.3166 8.29289 13.7071L11.2059 16.6201C11.2209 16.6351 11.2363 16.6497 11.252 16.6637C11.4352 16.87 11.7024 17 12 17C12.2976 17 12.5648 16.87 12.748 16.6637C12.7637 16.6497 12.7791 16.6351 12.7941 16.6201L15.7071 13.7071C16.0976 13.3166 16.0976 12.6834 15.7071 12.2929C15.3166 11.9024 14.6834 11.9024 14.2929 12.2929L13 13.5858L13 8Z" fill="#aea7a7"></path> 
+                              </g>
+                          </svg>
+                      </div>
+                      <div id="btn-down-scroll" class="scroll" style='bottom: 248px; display: none;' data-id-element='cerrar-motivo5'>
+                          <svg width="46px" height="46px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.00024000000000000003"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.144"></g><g id="SVGRepo_iconCarrier"> <rect width="24" height="24" fill="white"></rect> <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12ZM13 8C13 7.44772 12.5523 7 12 7C11.4477 7 11 7.44772 11 8L11 13.5858L9.70711 12.2929C9.31658 11.9024 8.68342 11.9024 8.29289 12.2929C7.90237 12.6834 7.90237 13.3166 8.29289 13.7071L11.2059 16.6201C11.2209 16.6351 11.2363 16.6497 11.252 16.6637C11.4352 16.87 11.7024 17 12 17C12.2976 17 12.5648 16.87 12.748 16.6637C12.7637 16.6497 12.7791 16.6351 12.7941 16.6201L15.7071 13.7071C16.0976 13.3166 16.0976 12.6834 15.7071 12.2929C15.3166 11.9024 14.6834 11.9024 14.2929 12.2929L13 13.5858L13 8Z" fill="#aea7a7"></path> </g></svg>
+                          <i class='far fa-arrow-alt-circle-down' style='font-size:48px; color:red'></i>
+                      </div>
                     </form>
                   </div>
                   <div class="modal-footer" style="justify-content: center;">
                     <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>           
+                    <button type="button" class="btn btn-primary" id="cerrar-motivo5" data-dismiss="modal">Cerrar</button>           
                   </div>
                 </div>
               </div>
@@ -1235,7 +1303,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                         </div>
                         <div class="col"></div>
                       </div>
-                      <div id="btn-up-scroll" class="scroll" onclick="scrollAlInput()" style="display: none;">
+                      <div id="btn-up-scroll" class="scroll" data-id-element='SearchCategorias' style="display: none;">
                           <svg width="46px" height="46px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.00024000000000000003" transform="rotate(180)">
                               <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                               <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.144"></g>
@@ -1245,7 +1313,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                               </g>
                           </svg>
                       </div>
-                      <div id="btn-down-scroll" class="scroll" style='bottom: 248px; display: none;' onclick="scrollAlInput2()">
+                      <div id="btn-down-scroll" class="scroll" style='bottom: 248px; display: none;' data-id-element='cerrar-categorias'>
                           <svg width="46px" height="46px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.00024000000000000003"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.144"></g><g id="SVGRepo_iconCarrier"> <rect width="24" height="24" fill="white"></rect> <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12ZM13 8C13 7.44772 12.5523 7 12 7C11.4477 7 11 7.44772 11 8L11 13.5858L9.70711 12.2929C9.31658 11.9024 8.68342 11.9024 8.29289 12.2929C7.90237 12.6834 7.90237 13.3166 8.29289 13.7071L11.2059 16.6201C11.2209 16.6351 11.2363 16.6497 11.252 16.6637C11.4352 16.87 11.7024 17 12 17C12.2976 17 12.5648 16.87 12.748 16.6637C12.7637 16.6497 12.7791 16.6351 12.7941 16.6201L15.7071 13.7071C16.0976 13.3166 16.0976 12.6834 15.7071 12.2929C15.3166 11.9024 14.6834 11.9024 14.2929 12.2929L13 13.5858L13 8Z" fill="#aea7a7"></path> </g></svg>
                           <i class='far fa-arrow-alt-circle-down' style='font-size:48px; color:red'></i>
                       </div>
