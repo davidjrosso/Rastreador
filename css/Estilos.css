@@ -1220,3 +1220,47 @@ input[type="radio"] {
 *, *::before, *::after {
   box-sizing: border-box !important;
 }
+
+.scroll {
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    position: sticky;
+    bottom: 303px;
+    right: -80px;
+    border-radius: 100%;
+    background-color: transparent;
+    text-align: center;
+    box-shadow: #888; 
+    transition: 400ms;
+}
+
+.scroll img {
+    padding-top: 5px;
+    width: 38px;
+    height: 40px;
+    filter: invert(100%);
+    -webkit-filter: invert(100%);
+}
+
+@keyframes rotate {
+
+    from {
+        margin-top: 15px
+    }
+
+    to {
+        margin-top: 5px
+    }
+}
+
+.visible {
+    right: 30px;
+    transition: all 1000ms;
+    transform: rotate(360deg)
+}
+
+
+.swal2-title {
+    padding: 0px;
+}

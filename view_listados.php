@@ -39,6 +39,11 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
   <script src="node_modules/@popperjs/core/dist/umd/popper.js"></script>
   <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
   <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+
+
+  <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+
+
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
@@ -49,6 +54,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
   <script src="js/bootstrap-datepicker.min.js"></script>
   <script src="js/ValidarGeneral.js"></script>
   <script src="js/Utils.js"></script>
+    <script src="./dist/preferencia.js"></script>
   <script src="./dist/alerta.js"></script>
   <script src="./dist/control.js"></script>
   <script>
@@ -61,7 +67,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
     let time = null;
     let idTime = null;
 
-    $(document).ready(function(){
+    $(document).ready(function() {
               var date_input=$('input[name="Fecha_Desde"]'); //our date input has the name "date"
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
               date_input.datepicker({
@@ -147,6 +153,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                     $("#SearchCategorias").val("");
                     $("#ResultadosCategorias").html("");
               });
+
               <?php if (!empty($id_motivo)) {?>
               if(<?=$id_motivo?>) {
                if (!listaMotivos.has('<?=$motivo->get_motivo()?>') && (listaMotivos.size <= 4)) {
@@ -260,6 +267,8 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
           contenidosRecibidos = xmlhttp.responseText;
           document.getElementById("ResultadosCategorias").innerHTML=contenidosRecibidos;
+          $("#btn-up-scroll").css("display", "block");
+          $("#btn-down-scroll").css("display", "block");
           }
       }
       xmlhttp.open('POST', 'buscarCategorias.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
@@ -267,15 +276,16 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
     }
     
     function seleccionPersona(xNombre,xID) {
-      var Persona = document.getElementById("Persona");
-      var ID_Persona = document.getElementById("ID_Persona");
-      Persona.innerHTML = "";
+      let Persona = document.getElementById("Persona");
+      let ID_Persona = document.getElementById("ID_Persona");
       Persona.innerHTML = "<p>" + xNombre + "<button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalPersona'><i class='fa fa-cog text-secondary'></i></button></p>";
       ID_Persona.setAttribute('value',xID);
-      var BtnBarrios = document.getElementById("agregarBarrio");
+      /*
+      let BtnBarrios = document.getElementById("agregarBarrio");
       BtnBarrios.setAttribute('disabled', true);      
-      var SelMostrar = document.getElementById("inpMostrar");
+      let SelMostrar = document.getElementById("inpMostrar");
       SelMostrar.setAttribute('disabled', true);
+      */
     }
 
     function seleccionMotivo(xMotivo,xID,xNumber) {
@@ -430,6 +440,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
         divInput.setAttribute("id", "ID_Motivo" + cantMotivos);
         divInput.setAttribute("name", "ID_Motivo" + cantMotivos);
         divInput.setAttribute("type", "hidden");
+        divInput.setAttribute("data-pre", "1");
         divInputsGenerales.appendChild(divInput);
       }
     }
@@ -549,6 +560,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
         divInput.setAttribute("id", "ID_Categoria" + cantCategoria);
         divInput.setAttribute("name", "ID_Categoria" + cantCategoria);
         divInput.setAttribute("type", "hidden");
+        divInput.setAttribute("data-pre", "1");
         divInputsGenerales.appendChild(divInput);
       }
     }
@@ -585,7 +597,17 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
       }
     }
 
+    function scrollAlInput() {
+      const inputDestino = document.getElementById('SearchCategorias');
+      inputDestino.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => inputDestino.focus(), 400); 
+    }
 
+    function scrollAlInput2() {
+      const inputDestino = document.getElementById('cerrar-categorias');
+      inputDestino.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => inputDestino.focus(), 400); 
+    }
   </script>
 </head>
 <body>
@@ -612,14 +634,10 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
     <div class="row" style="margin-bottom: 0.6rem;">
       <div style="flex: 0 0 4.333333%; max-width: 4.333333%;">
       </div>
-      <div class="col-4">
+      <div class="col-3">
         <button id="btn-enlace-driver" class="btn btn-md btn-secondary" data-toggle="modal" data-target="#modal-enlace-drive">Enlace</button>
+        <!--<button id="btn-datos" class="btn btn-md btn-secondary" data-toggle="modal" data-target="#modal-datos">Predeterminado</button>-->
       </div>
-      <!--
-      <div class="col-2">
-        <button id="btn-datos" class="btn btn-md btn-secondary" data-toggle="modal" data-target="#modal-datos">Preferencias</button>
-      </div>
-      -->
       <div class="col-md-5">
       </div>
       <div class="col-md-2">
@@ -666,8 +684,8 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
               <div class="form-group row">
                     <label for="Edad_Desde" class="col-md-2 col-form-label LblForm">Desde (Años): </label>
                     <div class="col-md-10">
-                        <input type="number" name="Edad_Desde" id="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarMeses(this)" value="<?= (isset($datosNav["Edad_Desde"])) ? $datosNav["Edad_Desde"] : '' ?>">                      
-                        <input type="hidden" name="ID_Persona" id = "ID_Persona" value = "0">
+                        <input type="number" name="Edad_Desde" data-pre = "1" id="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarMeses(this)" value="<?= (isset($datosNav["Edad_Desde"])) ? $datosNav["Edad_Desde"] : '' ?>">                      
+                        <input type="hidden" name="ID_Persona" data-pre = "1" id = "ID_Persona" value = "0">
                         <script>
                           <?php
                             if(isset($datosNav["ID_Persona"])){
@@ -682,7 +700,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
               <div class="form-group row" style="position: relative;">
                   <label for="Edad_Hasta" class="col-md-2 col-form-label LblForm">Hasta (Años): </label>
                   <div class="col-md-10">
-                      <input type="number" name="Edad_Hasta" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarMeses(this)" value="<?= (isset($datosNav["Edad_Hasta"])) ? $datosNav["Edad_Hasta"] : '' ?>">
+                      <input type="number" name="Edad_Hasta" data-pre = "1" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarMeses(this)" value="<?= (isset($datosNav["Edad_Hasta"])) ? $datosNav["Edad_Hasta"] : '' ?>">
                   </div>
                   <div class="position-absolute" style="z-index: 1100; width: auto; right: -20%; top: -83%" data-bs-delay="10">
                     <div id="edad-hasta-toast" class="toast hide dat-toast" style="width:auto;" role="alert" aria-live="assertive" aria-atomic="true">
@@ -695,13 +713,13 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
               <div class="form-group row">
                     <label for="Meses_Desde" class="col-md-2 col-form-label LblForm">Desde (Meses): </label>
                     <div class="col-md-10">
-                        <input type="number" name="Meses_Desde" id="Meses_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarEdad(this)" value="<?= (isset($datosNav["Meses_Desde"])) ? $datosNav["Meses_Desde"] : '' ?>">
+                        <input type="number" name="Meses_Desde" data-pre = "1" id="Meses_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarEdad(this)" value="<?= (isset($datosNav["Meses_Desde"])) ? $datosNav["Meses_Desde"] : '' ?>">
                     </div>
               </div> 
               <div class="form-group row" style="position: relative;">
                   <label for="Meses_Hasta" class="col-md-2 col-form-label LblForm">Hasta (Meses): </label>
                   <div class="col-md-10">
-                      <input type="number" name="Meses_Hasta" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" max="11" onkeyup="habilitarEdad(this)" value="<?= (isset($datosNav["Meses_Hasta"])) ? $datosNav["Meses_Hasta"] : '' ?>">
+                      <input type="number" name="Meses_Hasta" data-pre = "1" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" max="11" onkeyup="habilitarEdad(this)" value="<?= (isset($datosNav["Meses_Hasta"])) ? $datosNav["Meses_Hasta"] : '' ?>">
                   </div>
                   <div class="position-absolute" style="z-index: 1100; width: auto; right: -20%; top: -83%">
                     <div id="meses-hasta-toast" class="toast hide dat-toast" style="width:auto;" role="alert" aria-live="assertive" aria-atomic="true">
@@ -742,19 +760,19 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
               <div class="form-group row">
                 <label for="manzana" class="col-md-2 col-form-label LblForm">Manzana: </label>
                 <div class="col-md-10">
-                  <input type="text" class="form-control" name = "Manzana" id="manzana" autocomplete="off" value="<?= (isset($datosNav["Manzana"])) ? $datosNav["Manzana"] : '' ?>">
+                  <input type="text" class="form-control" name = "Manzana" data-pre = '1' id="manzana" autocomplete="off" value="<?= (isset($datosNav["Manzana"])) ? $datosNav["Manzana"] : '' ?>">
                 </div>
               </div>
               <div class="form-group row">
                 <label for="lote" class="col-md-2 col-form-label LblForm">Lote: </label>
                 <div class="col-md-10">
-                  <input type="number" class="form-control" name = "Lote" id="lote" autocomplete="off" value="<?= (isset($datosNav["Lote"])) ? $datosNav["Lote"] : '' ?>">
+                  <input type="number" class="form-control" name = "Lote" data-pre = '1' id="lote" autocomplete="off" value="<?= (isset($datosNav["Lote"])) ? $datosNav["Lote"] : '' ?>">
                 </div>
               </div>
               <div class="form-group row">
                 <label for="familia" class="col-md-2 col-form-label LblForm">Sub-lote: </label>
                 <div class="col-md-10">
-                  <input type="number" class="form-control" name = "Familia" id="familia" autocomplete="off" value="<?= (isset($datosNav["Familia"])) ? $datosNav["Familia"] : '' ?>">
+                  <input type="number" class="form-control" name = "Familia" data-pre = '1' id="familia" autocomplete="off" value="<?= (isset($datosNav["Familia"])) ? $datosNav["Familia"] : '' ?>">
                 </div>
               </div>
 
@@ -802,13 +820,13 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
               <div class="form-group row">
                 <label for="Nro_Carpeta" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
                 <div class="col-md-10">
-                  <input type="text" class="form-control" name = "Nro_Carpeta" id="Nro_Carpeta" autocomplete="off" value="<?= (isset($datosNav["Nro_Carpeta"])) ? $datosNav["Nro_Carpeta"] : '' ;?>">
+                  <input type="text" class="form-control" data-pre = '1' name = "Nro_Carpeta" id="Nro_Carpeta" autocomplete="off" value="<?= (isset($datosNav["Nro_Carpeta"])) ? $datosNav["Nro_Carpeta"] : '' ;?>">
                 </div>
               </div>
               <div class="form-group row">
                 <label for="Nro_Legajo" class="col-md-2 col-form-label LblForm">Nro. Legajo: </label>
                 <div class="col-md-10">
-                  <input type="text" class="form-control" name = "Nro_Legajo" id="Nro_Legajo" autocomplete="off" value="<?= (isset($datosNav["Nro_Legajo"])) ? $datosNav["Nro_Legajo"] : '' ;?>">
+                  <input type="text" class="form-control" name = "Nro_Legajo" data-pre = '1' id="Nro_Legajo" autocomplete="off" value="<?= (isset($datosNav["Nro_Legajo"])) ? $datosNav["Nro_Legajo"] : '' ;?>">
                 </div>
               </div>
               
@@ -860,20 +878,20 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
               <div class="form-group row">
                 <label for="inpMostrar" class="col-md-2 col-form-label LblForm">Mostrar Personas: </label>
                 <div class="col-md-10">
-                  <select class="form-control" name="Mostrar" id="inpMostrar">
+                  <select class="form-control" name="Mostrar" data-pre = '1' id="inpMostrar">
                     <option value="0" selected>Con Movimientos</option>
                     <option value="1">Todos</option>
                   </select>
                 </div>
               </div>
               <div class="form-group row">
-                <div class="offset-md-1 col-md-10" id = "InputsGenerales">
-                  <input type="hidden" name="ID_Motivo" id = "ID_Motivo" value = "0">
-                  <input type="hidden" name="ID_Categoria" id = "ID_Categoria" value = "0">
+                <div class="offset-md-1 col-md-10" style="text-align: center;" id = "InputsGenerales">
+                  <input type="hidden" name="ID_Motivo" data-pre = '1' id = "ID_Motivo" value = "0">
+                  <input type="hidden" name="ID_Categoria" data-pre = '1' id = "ID_Categoria" value = "0">
                   <input type="hidden" name="inicial-movimiento-check" id = "inicial-movimiento-check" value = "">
                   <input type="hidden" name="fin-movimiento-check" id = "fin-movimiento-check" value = "">
                   <input type="hidden" name="ID_Config" id="ID_Config" value="table">
-                  <input type="hidden" name="Calle" id="Calle" value="0">
+                  <input type="hidden" name="Calle" data-pre = '1' id="Calle" value="0">
                   <button type="submit" style="display:block; margin: auto;" class="btn btn-outline-success">Aceptar</button>
                 </div>
               </div>
@@ -895,7 +913,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                     <form>
                       <div class="row">
                         <div class="col"></div>
-                        <div class="col-8">
+                        <div class="col-10">
                           <div class="input-group mb-3">
                             <input class = "form-control" type="text" name="BuscarPersona" id = "SearchPersonas" onKeyUp="buscarPersonas()" autocomplete="off" placeholder="Ingrese el nombre, apellido, documento o legajo">
                             <div class="input-group-append">
@@ -914,7 +932,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                       </div>			        	
                     </form>
                   </div>
-                  <div class="modal-footer">
+                  <div class="modal-footer" style="justify-content: center;">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>			        
                   </div>
                 </div>
@@ -954,7 +972,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                         </div>
                       </form>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer" style="justify-content: center;">
                       <button type="button" class="btn btn-danger" data-dismiss="modal">OK</button>			        
                     </div>
                   </div>
@@ -1004,7 +1022,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                       </div>                
                     </form>
                   </div>
-                  <div class="modal-footer">
+                  <div class="modal-footer" style="justify-content: center;">
                     <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>           
                   </div>
@@ -1026,7 +1044,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                     <form>
                       <div class="row">
                         <div class="col"></div>
-                        <div class="col-8">
+                        <div class="col-10">
                           <div class="input-group mb-3">
                               <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos2" onKeyUp="buscarMotivosGeneral(2)" autocomplete="off">
                               <select id="select-motivo2" name="select-motivo2" oninput="buscarMotivosGeneral(2)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
@@ -1049,7 +1067,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                       </div>                
                     </form>
                   </div>
-                  <div class="modal-footer">
+                  <div class="modal-footer" style="justify-content: center;">
                     <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>            
                   </div>
@@ -1071,7 +1089,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                     <form>
                       <div class="row">
                         <div class="col"></div>
-                        <div class="col-8">
+                        <div class="col-10">
                           <div class="input-group mb-3">
                               <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos3" onKeyUp="buscarMotivosGeneral(3)" autocomplete="off">
                               <select id="select-motivo3" name="select-motivo3" oninput="buscarMotivosGeneral(3)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
@@ -1094,7 +1112,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                       </div>                
                     </form>
                   </div>
-                  <div class="modal-footer">
+                  <div class="modal-footer" style="justify-content: center;">
                     <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>             
                   </div>
@@ -1116,7 +1134,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                     <form>
                       <div class="row">
                         <div class="col"></div>
-                        <div class="col-8">
+                        <div class="col-10">
                           <div class="input-group mb-3">
                               <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos4" onKeyUp="buscarMotivosGeneral(4)" autocomplete="off">
                               <select id="select-motivo1" name="select-motivo4" oninput="buscarMotivosGeneral(4)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
@@ -1139,7 +1157,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                       </div>                
                     </form>
                   </div>
-                  <div class="modal-footer">
+                  <div class="modal-footer" style="justify-content: center;">
                     <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>          
                   </div>
@@ -1161,7 +1179,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                     <form>
                       <div class="row">
                         <div class="col"></div>
-                        <div class="col-8">
+                        <div class="col-10">
                           <div class="input-group mb-3">
                               <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos5" onKeyUp="buscarMotivosGeneral(5)" autocomplete="off">
                               <select id="select-motivo1" name="select-motivo5" oninput="buscarMotivosGeneral(5)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
@@ -1184,7 +1202,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                       </div>                
                     </form>
                   </div>
-                  <div class="modal-footer">
+                  <div class="modal-footer" style="justify-content: center;">
                     <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>           
                   </div>
@@ -1206,7 +1224,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                     <form>
                       <div class="row">
                         <div class="col"></div>
-                        <div class="col-8">
+                        <div class="col-10">
                           <div class="input-group mb-3">
                             <input class = "form-control" type="text" name="BuscarCategorias" id = "SearchCategorias" onKeyUp="buscarCategorias()" autocomplete="off">
                             <div class="input-group-append">
@@ -1222,10 +1240,24 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                           
                         </div>
                         <div class="col"></div>
-                      </div>                
+                      </div>
+                      <div id="btn-up-scroll" class="scroll" onclick="scrollAlInput()" style="display: none;">
+                          <svg width="64px" height="64px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.00024000000000000003" transform="rotate(180)">
+                              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                              <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.144"></g>
+                              <g id="SVGRepo_iconCarrier"> 
+                                  <rect width="24" height="24" fill="white"></rect> 
+                                  <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12ZM13 8C13 7.44772 12.5523 7 12 7C11.4477 7 11 7.44772 11 8L11 13.5858L9.70711 12.2929C9.31658 11.9024 8.68342 11.9024 8.29289 12.2929C7.90237 12.6834 7.90237 13.3166 8.29289 13.7071L11.2059 16.6201C11.2209 16.6351 11.2363 16.6497 11.252 16.6637C11.4352 16.87 11.7024 17 12 17C12.2976 17 12.5648 16.87 12.748 16.6637C12.7637 16.6497 12.7791 16.6351 12.7941 16.6201L15.7071 13.7071C16.0976 13.3166 16.0976 12.6834 15.7071 12.2929C15.3166 11.9024 14.6834 11.9024 14.2929 12.2929L13 13.5858L13 8Z" fill="#aea7a7"></path> 
+                              </g>
+                          </svg>
+                      </div>
+                      <div id="btn-down-scroll" class="scroll" style='bottom: 248px; display: none;' onclick="scrollAlInput2()">
+                          <svg width="64px" height="64px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.00024000000000000003"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.144"></g><g id="SVGRepo_iconCarrier"> <rect width="24" height="24" fill="white"></rect> <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12ZM13 8C13 7.44772 12.5523 7 12 7C11.4477 7 11 7.44772 11 8L11 13.5858L9.70711 12.2929C9.31658 11.9024 8.68342 11.9024 8.29289 12.2929C7.90237 12.6834 7.90237 13.3166 8.29289 13.7071L11.2059 16.6201C11.2209 16.6351 11.2363 16.6497 11.252 16.6637C11.4352 16.87 11.7024 17 12 17C12.2976 17 12.5648 16.87 12.748 16.6637C12.7637 16.6497 12.7791 16.6351 12.7941 16.6201L15.7071 13.7071C16.0976 13.3166 16.0976 12.6834 15.7071 12.2929C15.3166 11.9024 14.6834 11.9024 14.2929 12.2929L13 13.5858L13 8Z" fill="#aea7a7"></path> </g></svg>
+                          <i class='far fa-arrow-alt-circle-down' style='font-size:48px; color:red'></i>
+                      </div>
                     </form>
                   </div>
-                  <div class="modal-footer">
+                  <div class="modal-footer" style="justify-content: center;">
                     <button type="button" class="btn btn-danger" onclick="seleccionMultipleCategoria()" data-dismiss="modal">OK</button>
                     <button type="button" class="btn btn-primary" id="cerrar-categorias" data-dismiss="modal">Cerrar</button>
                   </div>
@@ -1253,7 +1285,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                       </div>
                     </div>              
                   </div>
-                  <div class="modal-footer">
+                  <div class="modal-footer" style="justify-content: center;">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">OK</button>             
                   </div>
                 </div>
@@ -1281,7 +1313,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                       </div>
                     </div>
                   </div>
-                  <div class="modal-footer">
+                  <div class="modal-footer" style="justify-content: center;">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
                   </div>
                 </div>
@@ -1290,32 +1322,82 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
             <!-- FIN MODAL SELECCION ENLACE DRIVER -->
             <!-- Modal filtro-->
             <div class="modal fade bd-example-modal-lg" id="modal-datos" tabindex="-1" role="dialog" aria-hidden="true">
-              <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+              <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 80%;" role="document">
                 <div class="modal-content">
                   <div class="modal-header" style="justify-content: center;">
-                    <h1>filtro</h1>
+                    <h1 class="col-11" style="text-align: center;">Predeterminado</h1>
+                    <button type="button" class="close col-1" style="margin-left: 0px" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
                   </div>
                   <div class="modal-body">
                     <div class="row">
-                      <div class="col-4">
+                      <div class="col-5">
                         <?php
-                          //echo $Element->CBCSfiltros();
+                          echo $Element->CBCSfiltros();
                         ?>
                       </div>
-                      <div class="col-8">
+                      <div class="col-7">
                         <?php 
-                          //echo $Element->CBfiltro();
+                          echo $Element->CBfiltro();
                         ?>
                       </div>
                     </div>
                   </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
+                  <div class="modal-footer" style="justify-content: center;">
+                    <button id='send-admin' class='btn btn-success' style='display: none;' type='button'>Enviar al administrador</button>
+                    <button id='save-data' class='btn btn-primary' type='button' data-toggle='modal' data-target='#filtro-nombre-dato'> Guardar </button>
+                    <button id='close-data' type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>             
                   </div>
                 </div>
               </div>
             </div>
             <!-- FIN MODAL SELECCION filtro -->
+
+              <div class="modal fade" style="top: 20%;" id="filtro-nombre-Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title col-11" style="text-align: center;">Nombre de Predeterminado</h5>
+                      <button type="button" class="close col-1" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                          <textarea class="form-control" id="message-text"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="justify-content: center;">
+                      <button type="button" class="btn btn-success" id="bn-new-filtro" data-dismiss="modal">Aceptar</button>
+                      <button type="button" class="btn btn-danger">Cancelar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal fade" style="top: 20%;" id="filtro-nombre-dato" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title col-11" style="text-align: center;">Nombre de Predeterminado</h5>
+                      <button type="button" class="close col-1" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                          <textarea class="form-control" id="text-filtro"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="justify-content: center;">
+                      <button type="button" class="btn btn-success" id="bn-filtro-dato" data-dismiss="modal">Aceptar</button>
+                      <button type="button" class="btn btn-danger"  id="bn-cancel-dato" data-dismiss="modal">Cancelar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             <!-- FIN SECCION DE MODALES -->
       </div>
       <div class = "col-1">
