@@ -91,6 +91,20 @@ class TipoAccion
 		return $lista_acciones;
 	}
 
+	public static function get_id_tipo_acciones_por_tipo($coneccion, $tipo)
+    {
+        $id = 0;
+		$filtro = (!$tipo) ? null : " and Tipo like '%$tipo'%"; 
+		$consulta = "select * 
+					 from TipoAcciones 
+					 where estado = 1
+					" . $filtro;
+		$rs = mysqli_query($coneccion->Conexion,$consulta);
+        $ret = mysqli_fetch_assoc($rs);
+        if ($ret) $id = $ret["ID_TipoAccion"];
+		return $id;
+	}
+
 	// METODOS SET
 	public function set_id_tipo_accion($id_tipo_accion)
     {
