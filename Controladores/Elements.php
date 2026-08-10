@@ -2389,7 +2389,7 @@ public function getMenuSeguridadUsuario($ID){
   public function CBRepResponsable(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control'  name = 'ID_Responsable[]' data-pre = '1' id='ID_Responsable'>";
+    $Select = "<select class='btn btn-lg btn-primary btn-block'  name = 'ID_Responsable[]' data-pre = '1' id='ID_Responsable'>";
     $Select .= "<option value = '0'>-Todos-</option>";
     $query = "SELECT * 
               FROM responsable 
@@ -2452,7 +2452,7 @@ public function getMenuSeguridadUsuario($ID){
   public function CBRepModResponsables($xID_Responsable){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' name ='ID_Responsable[]' data-pre = '1' id ='ID_Responsable'>";    
+    $Select = "<select class='btn btn-lg btn-primary btn-block' name ='ID_Responsable[]' data-pre = '1' id ='ID_Responsable'>";    
     $query = "SELECT * 
               FROM responsable
               WHERE estado = 1
