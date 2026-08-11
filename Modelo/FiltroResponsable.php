@@ -6,16 +6,16 @@ class FiltroResponsable implements JsonSerializable
     private $id_filtro_responsable;
     private $id_filtro;
 	private $estado;
-	private $coneccion_base;
+	private $coneccion;
 
     public function __construct(
-			$coneccion_base = null,
+			$coneccion = null,
 			$id_filtro = null,
             $id_filtro_responsable = null,
             $id_responsable = null,
 			$estado = null
 	) {
-		$this->coneccion_base = $coneccion_base;
+		$this->coneccion = $coneccion;
 		if (!$id_filtro_responsable) {
 			$this->id_responsable = $id_responsable;
             $this->id_filtro = $id_filtro;
@@ -27,7 +27,7 @@ class FiltroResponsable implements JsonSerializable
                           where id_filtro_responsable = " . $id_filtro_responsable . " 
                             and estado = 1";
 			$ejecutar_consultar = mysqli_query(
-			$this->coneccion_base->Conexion, 
+			$this->coneccion->Conexion, 
 			$consultar) or die("Problemas al consultar filtro");
 			$ret = mysqli_fetch_assoc($ejecutar_consultar);
 			if (!is_null($ret)) {
@@ -63,6 +63,26 @@ class FiltroResponsable implements JsonSerializable
 		return $is_multiple;
 	}
 
+	public static function exist_responsable_con_filtro($coneccion, $id_filtro, $id_responsable)
+	{
+		$is_multiple = 0;
+		if ($id_filtro && $id_responsable) {
+			$consulta = "select * 
+						from filtros_responsables
+						where id_filtro = $id_filtro
+						and id_responsable = $id_responsable
+						and estado = 1";
+			$mensaje = "Hubo un problema al consultar los registros para validar";
+			$ret = mysqli_query(
+						$coneccion->Conexion,
+						$consulta
+			);
+			if (!$ret) throw new Exception($mensaje, 3);
+			$is_multiple = (mysqli_num_rows($ret) >= 1);
+		}
+		return $is_multiple;
+	}
+
 	// METODOS SET
 	public function set_id_responsable($id_responsable)
     {
@@ -86,7 +106,7 @@ class FiltroResponsable implements JsonSerializable
 
 	public function set_coneccion_base($coneccion_base)
     {
-		$this->coneccion_base = $coneccion_base;
+		$this->coneccion = $coneccion_base;
 	}
 
 	//METODOS GET
@@ -112,7 +132,7 @@ class FiltroResponsable implements JsonSerializable
 
 	public function get_coneccion_base()
 	{
-		return $this->coneccion_base;
+		return $this->coneccion;
 	}
 
 	public function jsonSerialize() 
@@ -132,7 +152,7 @@ class FiltroResponsable implements JsonSerializable
 						 estado = " . (($this->get_estado()) ? $this->get_estado() : "null") . "
 					 where id_filtro_responsable = " . $this->get_id_filtro_responsable();
 		$mensaje_error = "No se pudo modificar el filtro_responsable";
-		$ret = mysqli_query($this->coneccion_base->Conexion, $consulta);
+		$ret = mysqli_query($this->coneccion->Conexion, $consulta);
 		if (!$ret) {
 			throw new Exception($mensaje_error . $consulta, 2);
 		}
@@ -153,10 +173,10 @@ class FiltroResponsable implements JsonSerializable
 						" . (($this->get_estado()) ? $this->get_estado() : "null") . "
 						)";
 		$mensaje_error = "No se pudo insertar";
-		$ret = mysqli_query($this->coneccion_base->Conexion, $consulta);
+		$ret = mysqli_query($this->coneccion->Conexion, $consulta);
 		if (!$ret) {
 			throw new Exception($mensaje_error . $consulta, 2);
 		}
-		$this->id_filtro = mysqli_insert_id($this->coneccion_base->Conexion);
+		$this->id_filtro = mysqli_insert_id($this->coneccion->Conexion);
 	}
 }

@@ -51,6 +51,53 @@ class SolicitudItem
         }
     }
 
+    public static function get_solicitud_items_por_id_solicitud($coneccion, $id_solicitud)
+    {
+        $list = [];
+        if ($id_solicitud) {
+            $query = "SELECT *
+                      FROM solicitudes f INNER JOIN solicitudes_items fs ON (f.id_solicitud = fs.id_solicitud)
+                      WHERE f.estado = 1
+                        and fs.estado = 1
+                        and f.id_solicitud = $id_solicitud";
+            $mensaje = "Error en consultar datos.";
+
+            $ret = mysqli_query($coneccion->Conexion, $query);
+
+            if (!$ret) throw new Exception($mensaje, 1);
+
+            while($res = mysqli_fetch_assoc($ret)) {
+                $list[] = new self(
+                                   coneccion: $coneccion,
+                                   id_solicitud_item: $res["id_solicitud_item"]
+                                   );
+            }
+        }
+        return $list;
+    }
+
+    public static function get_valor_item_por_identificador_solicitud_id($coneccion, $identificador, $id_solicitud)
+    {
+        $valor = 0;
+        if ($identificador && $id_solicitud) {
+            $query = "SELECT *
+                      FROM solicitudes_items
+                      WHERE estado = 1
+                        and id_solicitud = $id_solicitud
+                        and identificador = $identificador";
+            $mensaje = "Error en consultar datos.";
+
+            $ret = mysqli_query($coneccion->Conexion, $query);
+
+            if (!$ret) throw new Exception($mensaje, 1);
+
+            $res = mysqli_fetch_assoc($ret);
+
+            if (!$res) $valor = $res["identificador"];
+        }
+        return $valor;
+    }
+
     //METODOS SET
     public function set_id_solicitud($id_solicitud)
     {
@@ -126,12 +173,12 @@ class SolicitudItem
     {
         $consulta = "insert into solicitudes_items( 
                                                 valor,
-                                                id_solicitud_item,
+                                                id_solicitud,
                                                 identificador,
-                                                estado,
+                                                estado
                                                 ) values(
-                                                    '" . (($this->get_valor()) ? "'" . $this->get_valor() . "'" : "null") . "',
-                                                    " . (($this->get_id_solicitud_item()) ? $this->get_id_solicitud_item() : "null") . ",
+                                                    " . (($this->get_valor()) ? "'" . $this->get_valor() . "'" : "null") . ",
+                                                    " . (($this->get_id_solicitud()) ? $this->get_id_solicitud() : "null") . ",
                                                     " . (($this->get_identificador()) ? "'" . $this->get_identificador() . "'" : "null") . ",
                                                     " . (($this->get_estado()) ? $this->get_estado() : "null") . "
                                                 )";

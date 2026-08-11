@@ -21,6 +21,10 @@
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Parametria.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Filtro.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/FiltroMotivo.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/FiltroResponsable.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/FiltroCategoria.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/FiltroBarrio.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/SolicitudItem.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/TipoAccion.php");
@@ -147,63 +151,179 @@ class PreferenciaController
         }
          
     }
-    public function mod_preferencia_control()
-    {
 
+    public function eliminar_preferencia_control()
+    {
         try {
-            
+            if (!isset($_SESSION["Usuario"])) {
+                header("Content-Type: text/html;charset=utf-8;");
+                include("../Error_Session.php");
+            } else {
+                header("Content-Type: application/json;");
+                $id_usuario = $_SESSION["Usuario"];
+                $id_solicitud = $_POST["id_solicitud"];
+                $fecha = date(format: "Y-m-d");
+
+                $con = new Conexion();
+                $con->OpenConexion();
+
+                $solicitud = new Solicitud(
+                                coneccion: $con,
+                                id_solicitud: $id_solicitud
+                    );
+                $id_filtro = SolicitudItem::get_valor_item_por_identificador_solicitud_id(
+                                                                    coneccion: $con, 
+                                                                    identificador: "ID_FILTRO",
+                                                                    id_solicitud: $solicitud->get_id_solicitud()
+                                                                    );
+                $filtro = new Filtro(
+                                coneccion: $con,
+                                id_filtro: $id_filtro
+                    );
+                $filtro->delete();
+                $solicitud->delete();
+                $con->CloseConexion();
+                $ret["mensaje"] = "La solicitud fue registrada Correctamente";
+                $ret["estado"] = 1;
+            }
+            echo json_encode($ret);
         } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+            $ret["mensaje"] = "error";
+            $ret["estado"] = 0;
+            echo json_encode($ret);
         }
-        exit();
     }
 
     public function nueva_preferencia_control()
     {
-        $id_solicitud = $_POST["id_solicitud"];
-        $fecha = date(format: "Y-m-d");
         try {
-            header("Content-Type: text/html;charset=utf-8");
             if (!isset($_SESSION["Usuario"])) {
+                header("Content-Type: text/html;charset=utf-8;");
                 include("../Error_Session.php");
             } else {
+                header("Content-Type: application/json;");
                 $id_usuario = $_SESSION["Usuario"];
-                $account = new Account(account_id: $id_usuario);
-                $tipo_usuario = $account->get_id_tipo_usuario();
+                $id_solicitud = $_POST["id_solicitud"];
+                $fecha = date(format: "Y-m-d");
+
                 $con = new Conexion();
                 $con->OpenConexion();
+
                 $solicitud = new Solicitud(
                                 coneccion: $con,
                                 id_solicitud: $id_solicitud
                     );
                 $filtro = new Filtro(
-                                coneccion_base: $con,
+                                coneccion: $con,
                                 id_usuario: $solicitud->get_id_usuario(),
-                                fecha: $fecha
+                                fecha: $fecha,
                     );
                 $filtro->save();
 
+                $list = SolicitudItem::get_solicitud_items_por_id_solicitud(coneccion: $con,
+                                                                            id_solicitud: $id_solicitud);
+                $list = array_map(function ($e) use ($filtro, $con) {
+                    $key = $e->get_identificador();
+                    $val = $e->get_valor();
+                    $exist = false;
+                    if ( $key == "ID_Persona") $filtro->set_id_persona($val);
+                    if ( $key == "Meses_Desde") $filtro->set_meses_desde($val);
+                    if ( $key == "Meses_Hasta") $filtro->set_meses_hasta($val);
+                    if ( $key == "Nro_Legajo") $filtro->set_nro_legajo($val);
+                    if ( $key == "Nro_Carpeta") $filtro->set_nro_carpeta($val);
+                    if ( $key == "Manzana") $filtro->set_manzana($val);
+
+                    if ($key == "ID_OtraInstitucion") $filtro->set_id_otra_institucion($val);
+                    if ($key == "Lote") $filtro->set_lote($val);
+                    if ($key == "Sub_Lote") $filtro->set_sub_lote($val);
+                    if ($key == "ID_Responsable") {
+                        $exist = FiltroResponsable::exist_responsable_con_filtro(
+                                    coneccion: $con, 
+                                    id_filtro: $filtro->get_id_filtro(),
+                                    id_responsable: $val
+                                    );
+                        if (!$exist) {
+                            $filtro_responsable = new FiltroResponsable(
+                                                                coneccion: $con,
+                                                                id_responsable: $val,
+                                                                id_filtro: $filtro->get_id_filtro(),
+                                                                estado: 1
+                            );
+                            $filtro_responsable->save();
+                        }
+                    }
+                    if ($key == "ID_Categoria") {
+                        $exist = FiltroCategoria::exist_categoria_con_filtro(
+                                    coneccion: $con, 
+                                    id_filtro: $filtro->get_id_filtro(),
+                                    id_categoria: $val);
+                        if (!$exist) {
+                            $filtro_categoria = new FiltroCategoria(
+                                                            coneccion: $con,
+                                                            id_categoria: $val,
+                                                            id_filtro: $filtro->get_id_filtro(),
+                                                            estado: 1
+                            );
+                            $filtro_categoria->save();
+                        }
+                    }
+                    if ($key == "ID_Motivo") {
+                        $exist = FiltroMotivo::exist_motivo_con_filtro(
+                                    coneccion: $con, 
+                                    id_filtro: $filtro->get_id_filtro(),
+                                    id_motivo: $val);
+                        if (!$exist) {
+                            $filtro_motivo = new FiltroMotivo(
+                                                            coneccion: $con,
+                                                            id_motivo: $val,
+                                                            id_filtro: $filtro->get_id_filtro(),
+                                                            estado: 1
+                            );
+                            $filtro_motivo->save();
+                        }
+                    }
+                    if ($key == "ID_Barrio") {
+                        $exist = FiltroBarrio::exist_barrio_con_filtro(
+                                    coneccion: $con, 
+                                    id_filtro: $filtro->get_id_filtro(),
+                                    id_barrio: $val
+                                    );
+                        if (!$exist) {
+                            $filtro_barrio = new FiltroBarrio(
+                                                            coneccion: $con,
+                                                            id_barrio: $val,
+                                                            id_filtro: $filtro->get_id_filtro(),
+                                                            estado: 1
+                            );
+                            $filtro_barrio->save();
+                        }
+                    }
+                }, $list);
+                $filtro->update();
+                $solicitud->delete();
                 $con->CloseConexion();
-                $mensaje = "La solicitud fue registrada Correctamente";
-                header('Location: ../view_listados.php?Mensaje=' . $mensaje);
+                $ret["mensaje"] = "La solicitud fue registrada Correctamente";
+                $ret["estado"] = 1;
             }
+            echo json_encode($ret);
         } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+            $ret["mensaje"] = "error";
+            $ret["estado"] = 0;
+            echo json_encode($ret);
         }
     }
 
-    public function solicitud_preferencia_control()
+    public function solicitud_nueva_preferencia_control()
     {
-        $nombre_prefrencia = $_POST["id_usuario"];
-        $id_usuario =  $_POST["id_usuario"];
-        $lista_preferencia =  $_POST["lista_preferencias"];
+        $lista_preferencia = json_decode(file_get_contents('php://input'), true, 4);
+        $id_usuario = $_SESSION["Usuario"];
         $fecha = date(format: "Y-m-d");
-
         try {
-            header("Content-Type: application/json;");
             if (!isset($_SESSION["Usuario"])) {
+                header("Content-Type: text/html;charset=utf-8;");
                 include("../Error_Session.php");
             } else {
+                header("Content-Type: application/json;");
                 $id_usuario = $_SESSION["Usuario"];
                 $account = new Account(account_id: $id_usuario);
                 $tipo_usuario = $account->get_id_tipo_usuario();
@@ -222,25 +342,100 @@ class PreferenciaController
                                 id_usuario: $id_usuario,
                                 fecha: $fecha,
                                 id_tipo_grupo_operacion: $id_tipo_grupo_operacion,
-                                id_tipo_accion: $id_tipo_accion
+                                id_tipo_accion: $id_tipo_accion,
+                                estado: 1
                     );
                 $solicitud->save();
                 foreach($lista_preferencia as $key => $valor) {
-                    $solicitud_item = new SolicitudItem(
-                                coneccion: $con,
-                                id_solicitud: $solicitud->get_id_solicitud(),
-                                valor: $valor,
-                                identificador: $key
-                    );
-                    $solicitud_item->save();
+                    if (isset($valor["ID_Motivo"])) {
+                        $flag = array_map(function ($value) use ($con, $solicitud) {
+                            try {
+                                $rev = true;
+                                $solicitud_item = new SolicitudItem(
+                                            coneccion: $con,
+                                            id_solicitud: $solicitud->get_id_solicitud(),
+                                            valor: $value,
+                                            identificador: "ID_Motivo",
+                                            estado: 1
+                                );
+                                $solicitud_item->save();
+                            } catch (Exception $e) {
+                                $rev = false;
+                            }
+                            return $rev;
+                        }, $valor["ID_Motivo"]);
+                    } elseif (isset($valor["ID_Categoria"])) {
+                        $flag = array_map(function ($value) use ($con, $solicitud) {
+                            try {
+                                $rev = true;
+                                $solicitud_item = new SolicitudItem(
+                                            coneccion: $con,
+                                            id_solicitud: $solicitud->get_id_solicitud(),
+                                            valor: $value,
+                                            identificador: "ID_Categoria",
+                                            estado: 1
+                                );
+                                $solicitud_item->save();
+                            } catch (Exception $e) {
+                                $rev = false;
+                            }
+                            return $rev;
+                        }, $valor["ID_Categoria"]);
+                    } elseif (isset($valor["ID_Responsable"])) {
+                        $flag = array_map(function ($value) use ($con, $solicitud) {
+                            try {
+                                $rev = true;
+                                $solicitud_item = new SolicitudItem(
+                                            coneccion: $con,
+                                            id_solicitud: $solicitud->get_id_solicitud(),
+                                            valor: $value,
+                                            identificador: "ID_Responsable",
+                                            estado: 1
+                                );
+                                $solicitud_item->save();
+                            } catch (Exception $e) {
+                                $rev = false;
+                            }
+                            return $rev;
+                        }, $valor["ID_Responsable"]);
+                    } elseif (isset($valor["ID_Barrio"])) {
+                        $flag = array_map(function ($value) use ($con, $solicitud) {
+                            try {
+                                $rev = true;
+                                $solicitud_item = new SolicitudItem(
+                                            coneccion: $con,
+                                            id_solicitud: $solicitud->get_id_solicitud(),
+                                            valor: $value,
+                                            identificador: "ID_Barrio",
+                                            estado: 1
+                                );
+                                $solicitud_item->save();
+                            } catch (Exception $e) {
+                                $rev = false;
+                            }
+                            return $rev;
+                        }, $valor["ID_Barrio"]);
+                    } else {
+                        $rev = true;
+                        $solicitud_item = new SolicitudItem(
+                                    coneccion: $con,
+                                    id_solicitud: $solicitud->get_id_solicitud(),
+                                    valor: $valor[array_key_first($valor)],
+                                    identificador: array_key_first($valor),
+                                    estado: 1
+                        );
+                        $solicitud_item->save();
+                    }
                 }
 
-                $mensaje = "La solicitud fue registrada Correctamente";
-                
+                $resp["mensaje"] = "La solicitud fue registrada Correctamente";
+                $resp["estado"] = 1;
             }
-            echo json_encode($mensaje);
+            echo json_encode($resp);
         } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+            $resp["mensaje"] = "error" . $e->getMessage();
+            $resp["estado"] = 0;
+            echo json_encode($resp);
         }
     }
 

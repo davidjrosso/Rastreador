@@ -74,7 +74,10 @@ try {
 	$routes[] = Route::get('logout', '/logout', [HomeController::class, 'logout_control']);
 	$routes[] = Route::get('password_peticion', '/password_peticion', [HomeController::class, 'password_peticion']);
 	$routes[] = Route::get('password_mod', '/modificar_password', [HomeController::class, 'modificar_password']);
-	$routes[] = Route::post('preferencia_nueva_control', '/preferencia/nueva/control', [PreferenciaController::class, 'nueva_preferencia_control']);
+
+	$routes[] = Route::post('preferencia_nueva_solictud', '/preferencia/solicitud_nueva_preferencia', [PreferenciaController::class, 'solicitud_nueva_preferencia_control']);
+	$routes[] = Route::post('preferencia_eliminar_solictud', '/preferencia/solicitud_eliminar_preferencia', [PreferenciaController::class, 'solicitud_eliminar_preferencia_control']);
+	$routes[] = Route::post('preferencia_nueva_control', '/preferencia/nueva_preferencia_control', [PreferenciaController::class, 'nueva_preferencia_control']);
 
 	$routes[] = Route::get('personas_listado', '/personas', [PersonaController::class, 'listado_personas']);
 	$routes[] = Route::get('personas_listado_success', '/personas\?Mensaje={mensaje}', [PersonaController::class, 'listado_personas']);

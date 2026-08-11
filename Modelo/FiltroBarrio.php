@@ -6,16 +6,16 @@ class FiltroBarrio implements JsonSerializable
     private $id_filtro_barrio;
     private $id_filtro;
 	private $estado;
-	private $coneccion_base;
+	private $coneccion;
 
     public function __construct(
-			$coneccion_base = null,
+			$coneccion = null,
 			$id_filtro = null,
             $id_filtro_barrio = null,
             $id_barrio = null,
 			$estado = null
 	) {
-		$this->coneccion_base = $coneccion_base;
+		$this->coneccion = $coneccion;
 		if (!$id_filtro_barrio) {
 			$this->id_barrio = $id_barrio;
             $this->id_filtro = $id_filtro;
@@ -27,7 +27,7 @@ class FiltroBarrio implements JsonSerializable
                           where id_filtro_barrio = " . $id_filtro_barrio . " 
                             and estado = 1";
 			$ejecutar_consultar = mysqli_query(
-			$this->coneccion_base->Conexion, 
+			$this->coneccion->Conexion, 
 			$consultar) or die("Problemas al consultar filtro");
 			$ret = mysqli_fetch_assoc($ejecutar_consultar);
 			if (!is_null($ret)) {
@@ -63,6 +63,26 @@ class FiltroBarrio implements JsonSerializable
 		return $is_multiple;
 	}
 
+	public static function exist_barrio_con_filtro($coneccion, $id_filtro, $id_barrio)
+	{
+		$is_multiple = 0;
+		if ($id_filtro && $id_barrio) {
+			$consulta = "select * 
+						from filtros_barrios
+						where id_filtro = $id_filtro
+						and id_barrio = $id_barrio
+						and estado = 1";
+			$mensaje = "Hubo un problema al consultar los registros para validar";
+			$ret = mysqli_query(
+						$coneccion->Conexion,
+						$consulta
+			);
+			if (!$ret) throw new Exception($mensaje, 3);
+			$is_multiple = (mysqli_num_rows($ret) >= 1);
+		}
+		return $is_multiple;
+	}
+
 	// METODOS SET
 	public function set_id_barrio($id_barrio)
     {
@@ -84,9 +104,9 @@ class FiltroBarrio implements JsonSerializable
 		$this->estado = $estado;
 	}
 
-	public function set_coneccion_base($coneccion_base)
+	public function set_coneccion($coneccion)
     {
-		$this->coneccion_base = $coneccion_base;
+		$this->coneccion = $coneccion;
 	}
 
 	//METODOS GET
@@ -110,9 +130,9 @@ class FiltroBarrio implements JsonSerializable
 		return $this->estado;
 	}
 
-	public function get_coneccion_base()
+	public function get_coneccion()
 	{
-		return $this->coneccion_base;
+		return $this->coneccion;
 	}
 
 	public function jsonSerialize() 
@@ -132,7 +152,7 @@ class FiltroBarrio implements JsonSerializable
 						 estado = " . (($this->get_estado()) ? $this->get_estado() : "null") . "
 					 where id_filtro_barrio = " . $this->get_id_filtro_barrio();
 		$mensaje_error = "No se pudo modificar el filtro_barrio";
-		$ret = mysqli_query($this->coneccion_base->Conexion, $consulta);
+		$ret = mysqli_query($this->coneccion->Conexion, $consulta);
 		if (!$ret) {
 			throw new Exception($mensaje_error . $consulta, 2);
 		}
@@ -153,10 +173,10 @@ class FiltroBarrio implements JsonSerializable
 						" . (($this->get_estado()) ? $this->get_estado() : "null") . "
 						)";
 		$mensaje_error = "No se pudo insertar";
-		$ret = mysqli_query($this->coneccion_base->Conexion, $consulta);
+		$ret = mysqli_query($this->coneccion->Conexion, $consulta);
 		if (!$ret) {
 			throw new Exception($mensaje_error . $consulta, 2);
 		}
-		$this->id_filtro = mysqli_insert_id($this->coneccion_base->Conexion);
+		$this->id_filtro = mysqli_insert_id($this->coneccion->Conexion);
 	}
 }

@@ -6,16 +6,16 @@ class FiltroCategoria implements JsonSerializable
     private $id_filtro_categoria;
     private $id_filtro;
 	private $estado;
-	private $coneccion_base;
+	private $coneccion;
 
     public function __construct(
-			$coneccion_base = null,
+			$coneccion = null,
 			$id_filtro = null,
             $id_filtro_categoria = null,
             $id_categoria = null,
 			$estado = null
 	) {
-		$this->coneccion_base = $coneccion_base;
+		$this->coneccion = $coneccion;
 		if (!$id_filtro_categoria) {
 			$this->id_categoria = $id_categoria;
             $this->id_filtro = $id_filtro;
@@ -27,7 +27,7 @@ class FiltroCategoria implements JsonSerializable
                           where id_filtro_categoria = " . $id_filtro_categoria . " 
                             and estado = 1";
 			$ejecutar_consultar = mysqli_query(
-			$this->coneccion_base->Conexion, 
+			$this->coneccion->Conexion, 
 			$consultar) or die("Problemas al consultar filtro");
 			$ret = mysqli_fetch_assoc($ejecutar_consultar);
 			if (!is_null($ret)) {
@@ -52,14 +52,33 @@ class FiltroCategoria implements JsonSerializable
 					 from filtros_categoria
 					 where id_filtro = $id_filtro_cateogoria
 					   and estado = 1";
-		$mensaje_error = "Hubo un problema al consultar los registros para validar";
-		$Ret = mysqli_query(
+		$mensaje = "Hubo un problema al consultar los registros para validar";
+		$ret = mysqli_query(
 					$coneccion->Conexion,
 					$consulta
-		) or die(
-			$mensaje_error
 		);
-		$is_multiple = (mysqli_num_rows($Ret) >= 1);
+		if (!$ret) throw new Exception($mensaje, 3);
+		$is_multiple = (mysqli_num_rows($ret) >= 1);
+		return $is_multiple;
+	}
+
+	public static function exist_categoria_con_filtro($coneccion, $id_filtro, $id_categoria)
+	{
+		$is_multiple = 0;
+		if ($id_filtro && $id_categoria) {
+			$consulta = "select * 
+						from filtros_categorias
+						where id_filtro = $id_filtro
+						and id_categoria = $id_categoria
+						and estado = 1";
+			$mensaje = "Hubo un problema al consultar los registros para validar";
+			$ret = mysqli_query(
+						$coneccion->Conexion,
+						$consulta
+			);
+			if (!$ret) throw new Exception($mensaje, 3);
+			$is_multiple = (mysqli_num_rows($ret) >= 1);
+		}
 		return $is_multiple;
 	}
 
@@ -84,9 +103,9 @@ class FiltroCategoria implements JsonSerializable
 		$this->estado = $estado;
 	}
 
-	public function set_coneccion_base($coneccion_base)
+	public function set_coneccion($coneccion)
 	{
-		$this->coneccion_base = $coneccion_base;
+		$this->coneccion = $coneccion;
 	}
 
 	//METODOS GET
@@ -110,9 +129,9 @@ class FiltroCategoria implements JsonSerializable
 		return $this->estado;
 	}
 
-	public function get_coneccion_base()
+	public function get_coneccion()
 	{
-		return $this->coneccion_base;
+		return $this->coneccion;
 	}
 
 	public function jsonSerialize() 
@@ -132,7 +151,7 @@ class FiltroCategoria implements JsonSerializable
 						 estado = " . (($this->get_estado()) ? $this->get_estado() : "null") . "
 					 where id_filtro_categoria = " . $this->get_id_filtro_categoria();
 		$mensaje_error = "No se pudo modificar el filtros_categorias";
-		$ret = mysqli_query($this->coneccion_base->Conexion, $consulta);
+		$ret = mysqli_query($this->coneccion->Conexion, $consulta);
 		if (!$ret) {
 			throw new Exception($mensaje_error . $consulta, 2);
 		}
@@ -140,7 +159,7 @@ class FiltroCategoria implements JsonSerializable
 
 	public function save()
     {
-		$consulta = "insert into filtros_cateogrias (
+		$consulta = "insert into filtros_categorias (
 												id_filtro_categoria,
                                                 id_categoria,
 												id_filtro,
@@ -153,10 +172,10 @@ class FiltroCategoria implements JsonSerializable
 						" . (($this->get_estado()) ? $this->get_estado() : "null") . "
 						)";
 		$mensaje_error = "No se pudo insertar";
-		$ret = mysqli_query($this->coneccion_base->Conexion, $consulta);
+		$ret = mysqli_query($this->coneccion->Conexion, $consulta);
 		if (!$ret) {
 			throw new Exception($mensaje_error . $consulta, 2);
 		}
-		$this->id_filtro = mysqli_insert_id($this->coneccion_base->Conexion);
+		$this->id_filtro = mysqli_insert_id($this->coneccion->Conexion);
 	}
 }

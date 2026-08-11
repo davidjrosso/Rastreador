@@ -6,27 +6,38 @@ class Filtro implements JsonSerializable
     private $fecha;
     private $nro_carpeta;
     private $id_persona;
+	private $manzana;
     private $id_escuela;
     private $titulo;
     private $id_filtro;
-    private $nro_legajo;	
+	private $meses_hasta;
+	private $meses_desde;
+	private $anos_desde;
+	private $anos_hasta;
+    private $nro_legajo;
     private $id_otra_institucion;
     private $id_centro_salud;
 	private $estado;
-	private $coneccion_base;
+	private $coneccion;
     private $movimientos;
 
+	private $lote;
+	private $sub_lote;
 	private $id_tipo_usuario;
 
     public function __construct(
-			$coneccion_base = null,
+			$coneccion = null,
 			$id_filtro = null,
             $fecha = null,
             $id_persona = null,
             $id_escuela = null,
             $nro_carpeta = null,
             $id_centro_salud = null,
-            $nro_legajo = null,
+			$meses_hasta = null,
+			$meses_desde = null,
+			$anos_desde = null,
+			$anos_hasta = null,
+			$nro_legajo = null,
             $titulo = null,
             $id_tipo_usuario = null,
 			$id_usuario = null,
@@ -35,7 +46,7 @@ class Filtro implements JsonSerializable
 			$estado = null,
             $movimientos = null
 	) {
-		$this->coneccion_base = $coneccion_base;
+		$this->coneccion = $coneccion;
 		if (!$id_filtro) {
 			$this->id_centro_salud = $id_centro_salud;
 			$this->id_persona = $id_persona;
@@ -55,7 +66,7 @@ class Filtro implements JsonSerializable
                           where id_filtro = " . $id_filtro . " 
                             and estado = 1";
 			$ejecutar_consultar = mysqli_query(
-			$this->coneccion_base->Conexion, 
+			$this->coneccion->Conexion, 
 			$consultar) or die("Problemas al consultar filtro");
 			$ret = mysqli_fetch_assoc($ejecutar_consultar);
 			if (!is_null($ret)) {
@@ -141,6 +152,11 @@ class Filtro implements JsonSerializable
 		$this->id_persona = $id_persona;
 	}
 
+	public function set_manzana($manzana)
+	{
+		$this->manzana = $manzana;
+	}
+
 	public function set_fecha($fecha)
 	{
 		$this->fecha = $fecha;
@@ -166,7 +182,17 @@ class Filtro implements JsonSerializable
         $this->id_tipo_usuario = $id_tipo_usuario;
     }
 
-    public function set_id_otra_institucion($id_otra_institucion)
+    public function set_lote($lote)
+    {
+        $this->lote = $lote;
+    }
+
+    public function set_sub_lote($sub_lote)
+    {
+        $this->sub_lote = $sub_lote;
+    }
+
+	public function set_id_otra_institucion($id_otra_institucion)
     {
         $this->id_otra_institucion = $id_otra_institucion;
     }
@@ -174,6 +200,26 @@ class Filtro implements JsonSerializable
     public function set_nro_legajo($nro_legajo)
     {
         $this->nro_legajo = $nro_legajo;
+    }
+
+    public function set_meses_desde($meses_desde)
+    {
+        $this->meses_desde = $meses_desde;
+    }
+
+    public function set_meses_hasta($meses_hasta)
+    {
+        $this->meses_hasta = $meses_hasta;
+    }
+
+    public function set_anos_desde($anos_desde)
+    {
+        $this->anos_desde = $anos_desde;
+    }
+
+    public function set_anos_hasta($anos_hasta)
+    {
+        $this->anos_hasta = $anos_hasta;
     }
 
     public function set_titulo($titulo)
@@ -185,9 +231,9 @@ class Filtro implements JsonSerializable
 		$this->estado = $estado;
 	}
 
-	public function set_coneccion_base($coneccion_base)
+	public function set_coneccion($coneccion)
 	{
-		$this->coneccion_base = $coneccion_base;
+		$this->coneccion = $coneccion;
 	}
 
 	
@@ -253,9 +299,9 @@ class Filtro implements JsonSerializable
 		return $this->estado;
 	}
 
-	public function get_coneccion_base()
+	public function get_coneccion()
 	{
-		return $this->coneccion_base;
+		return $this->coneccion;
 	}
 
 	public function jsonSerialize() 
@@ -267,7 +313,18 @@ class Filtro implements JsonSerializable
 		];
 	}
 
-	public function udpate()
+	public function delete()
+	{
+		$consulta = "update filtros
+					 set estado = 0
+					 where id_filtro = " . $this->get_id_filtro();
+		$mensaje = "error";
+		$ret = mysqli_query($this->coneccion->Conexion, $consulta);
+
+		if (!$ret) throw new Exception($mensaje, 3);
+	}
+
+	public function update()
     {
 		$consulta = "update filtros
 					 set id_centro_salud = " . (($this->get_id_centro_salud()) ? $this->get_id_centro_salud() : "null") . ", 
@@ -283,7 +340,7 @@ class Filtro implements JsonSerializable
 					 	 estado = " . (($this->get_estado()) ? $this->get_estado() : "null") . "
 					 where id_filtro = " . $this->get_id_filtro();
 		$mensaje_error = "No se pudo modificar el filtro";
-		$ret = mysqli_query($this->coneccion_base->Conexion, $consulta);
+		$ret = mysqli_query($this->coneccion->Conexion, $consulta);
 		if (!$ret) {
 			throw new Exception($mensaje_error . $consulta, 2);
 		}
@@ -314,15 +371,14 @@ class Filtro implements JsonSerializable
 						" . (($this->get_id_tipo_usuario()) ? $this->get_id_tipo_usuario() : "null") . ",
 						" . (($this->get_id_otra_institucion()) ? $this->get_id_otra_institucion() : "null") . ",
 						" . (($this->get_fecha()) ? "'" . $this->get_fecha() . "'" : "null") . ",
-						" . (($this->get_titulo()) ? $this->get_titulo() : "null") . "
-
+						" . (($this->get_titulo()) ? $this->get_titulo() : "null") . ",
 						" . (($this->get_estado()) ? $this->get_estado() : "null") . "
 						)";
-		$mensaje_error = "No se pudo insertar";
-		$ret = mysqli_query($this->coneccion_base->Conexion, $consulta);
-		if (!$ret) {
-			throw new Exception($mensaje_error . $consulta, 2);
-		}
-		$this->id_filtro = mysqli_insert_id($this->coneccion_base->Conexion);
+		$mensaje = "No se pudo insertar";
+		$ret = mysqli_query($this->coneccion->Conexion, $consulta);
+
+		if (!$ret) throw new Exception($mensaje, 2);
+
+		$this->id_filtro = mysqli_insert_id($this->coneccion->Conexion);
 	}
 }

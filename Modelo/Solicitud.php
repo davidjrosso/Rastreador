@@ -26,7 +26,7 @@ class Solicitud
                             where id_solicitud = " . $id_solicitud . " 
                             and estado = 1";
             $ejec = mysqli_query(
-                                 $coneccion->Conexion, 
+                                 $coneccion->Conexion,
                                  $consultar
                                 );
             $ret = mysqli_fetch_assoc($ejec);
@@ -144,7 +144,7 @@ class Solicitud
                                                 id_tipo_accion,
                                                 id_usuario,
                                                 estado,
-                                                id_tipo_grupo_accion
+                                                id_tipo_grupo_operacion
                                                 ) values(
                                                     '" . (($this->get_fecha()) ? $this->get_fecha() : $fecha) . "',
                                                     " . (($this->get_id_tipo_accion()) ? $this->get_id_tipo_accion() : "null") . ",
