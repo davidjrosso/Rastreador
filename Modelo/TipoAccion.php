@@ -73,19 +73,14 @@ class TipoAccion
 	public static function get_acciones_tipo($id_tipo_accion){
 		$con = new Conexion();
 		$con->OpenConexion();
-		$filtro = ($id_tipo_accion == 0) ? null : " and ID_TipoAccion = $id_tipo_accion"; 
+		$filtro = ($id_tipo_accion == 0) ? null : " where ID_TipoAccion = $id_tipo_accion"; 
 		$consulta = "select * 
-					 from TipoAcciones 
-					 where accountid is not null
-					" . $filtro . "
-					order by Fecha desc";
+					 from TipoAcciones " . $filtro;
 		$rs = mysqli_query($con->Conexion,$consulta) or die("Problemas al consultar las acciones.");
 		$lista_acciones = [];
 		while ($ret = mysqli_fetch_assoc($rs)) {
-			$row["accountid"] = ((!empty($ret["accountid"])) ? $ret["accountid"] : null);
-			$row["Detalles"] = ((!empty($ret["Detalles"])) ? $ret["Detalles"] : null);
-			$row["Fecha"] = ((!empty($ret["Fecha"])) ? $ret["Fecha"] : null);
 			$row["ID_TipoAccion"] = (!empty($ret["ID_TipoAccion"])) ? $ret["ID_TipoAccion"] : null;
+			$row["Tipo"] = (!empty($ret["Tipo"])) ? $ret["Tipo"] : null;
 			$lista_acciones[] = $row;
 		}
 		return $lista_acciones;
@@ -94,11 +89,9 @@ class TipoAccion
 	public static function get_id_tipo_acciones_por_tipo($coneccion, $tipo)
     {
         $id = 0;
-		$filtro = (!$tipo) ? null : " and Tipo like '%$tipo'%"; 
+		$filtro = (!$tipo) ? null : " where Tipo like '%$tipo%'"; 
 		$consulta = "select * 
-					 from TipoAcciones 
-					 where estado = 1
-					" . $filtro;
+					 from TipoAcciones" . $filtro;
 		$rs = mysqli_query($coneccion->Conexion,$consulta);
         $ret = mysqli_fetch_assoc($rs);
         if ($ret) $id = $ret["ID_TipoAccion"];

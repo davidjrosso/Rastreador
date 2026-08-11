@@ -59,8 +59,7 @@ class TipoGrupoOperacion
 		$consulta = "select * 
 					 from tipo_grupo_operaciones
 					 where estado = 1
-					   and lower(tipo) like lower('%$tipo%')
-					order by Fecha desc";
+					   and lower(tipo) like lower('%$tipo%')";
 		$rs = mysqli_query($coneccion->Conexion, $consulta);
 		if ($rs) {
 			$ret = mysqli_fetch_assoc($rs);
