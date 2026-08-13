@@ -15,7 +15,8 @@ module.exports = {
     editor: "./js/editor.js",
     reporte : './js/ReporteMovimiento.js',
     excel : './js/excel.js',
-    validarPersona: "./js/ValidarPersona.js"
+    validarPersona: "./js/ValidarPersona.js",
+    preferencia: "./js/Preferencia.js"
   },
   output: {
     libraryTarget: 'umd',
@@ -27,6 +28,25 @@ module.exports = {
     rules: [{
         test: /\.css$/i,
         // Loaders execute from right to left (sass -> css -> style)
-        use: ["style-loader", "css-loader"], 
+        use: ["style-loader",
+          {
+            loader: 'css-loader',
+            options: {
+              // Ensure it doesn't treat standard assets mistakenly as CSS modules
+              modules: false 
+            }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                plugins: [
+                  require('postcss-nesting'),
+                  require('postcss-custom-properties')
+                ]
+              }
+            }
+          }
+        ], 
       }]
 }};
