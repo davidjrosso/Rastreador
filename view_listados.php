@@ -1169,7 +1169,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                         <div class="col-10">
                           <div class="input-group mb-3">
                               <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos4" onKeyUp="buscarMotivosGeneral(4)" autocomplete="off">
-                              <select id="select-motivo1" name="select-motivo4" oninput="buscarMotivosGeneral(4)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                              <select id="select-motivo4" name="select-motivo4" oninput="buscarMotivosGeneral(4)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
                                 <option value="denominacion" selected>Denominacion</option>
                                 <option value="codigo">Codigo</option>
                               </select>
@@ -1228,7 +1228,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                         <div class="col-10">
                           <div class="input-group mb-3">
                               <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos5" onKeyUp="buscarMotivosGeneral(5)" autocomplete="off">
-                              <select id="select-motivo1" name="select-motivo5" oninput="buscarMotivosGeneral(5)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                              <select id="select-motivo5" name="select-motivo5" oninput="buscarMotivosGeneral(5)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
                                 <option value="denominacion" selected>Denominacion</option>
                                 <option value="codigo">Codigo</option>
                               </select>
