@@ -40,9 +40,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
   <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
   <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
 
-
   <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
-
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
@@ -54,7 +52,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
   <script src="js/bootstrap-datepicker.min.js"></script>
   <script src="js/ValidarGeneral.js"></script>
   <script src="js/Utils.js"></script>
-    <script src="./dist/preferencia.js"></script>
+  <script src="./dist/preferencia.js"></script>
   <script src="./dist/alerta.js"></script>
   <script src="./dist/control.js"></script>
   <script>
@@ -68,14 +66,14 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
     let idTime = null;
 
     $(document).ready(function() {
-              var date_input=$('input[name="Fecha_Desde"]'); //our date input has the name "date"
+              var date_input=$('input[name="Fecha_Desde"]');
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
               date_input.datepicker({
                   format: 'dd/mm/yyyy',
                   container: container,
                   todayHighlight: true,
                   autoclose: true,
-                  closeText: 'Cerrar', /* HASTA ACA */
+                  closeText: 'Cerrar',
                   days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
                   daysShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
                   daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
@@ -86,15 +84,15 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                   clear: "Borrar",
                   weekStart: 1,
               });
-              date_input.on("change", $("#inicial-movimiento-check").val(""));
-              var date_input2 =$('input[name="Fecha_Hasta"]'); //our date input has the name "date"
+              date_input.on("change", (e) => $("#inicial-movimiento-check").val(""));
+              var date_input2 =$('input[name="Fecha_Hasta"]');
               var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
               date_input2.datepicker({
                   format: 'dd/mm/yyyy',
                   container: container,
                   todayHighlight: true,
                   autoclose: true,
-                  closeText: 'Cerrar', /* HASTA ACA */
+                  closeText: 'Cerrar',
                   days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
                   daysShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
                   daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
@@ -105,7 +103,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                   clear: "Borrar",
                   weekStart: 1,
               });
-              date_input2.on("change", $("#fin-movimiento-check").val(""))
+              date_input2.on("change", (e) => $("#fin-movimiento-check").val(""))
               $("#inpMostrar").on("change", function (event){
                 controlMovimiento(this);
               });
@@ -273,7 +271,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
           contenidosRecibidos = xmlhttp.responseText;
           document.getElementById("ResultadosCategorias").innerHTML=contenidosRecibidos;
           $("div[data-id-element]").css("display", "block");
-          }
+        }
       }
       xmlhttp.open('POST', 'buscarCategorias.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
       xmlhttp.send();
@@ -628,7 +626,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
       </div>
       <div class="col-3">
         <button id="btn-enlace-driver" class="btn btn-md btn-secondary" data-toggle="modal" data-target="#modal-enlace-drive">Enlace</button>
-        <!--<button id="btn-datos" class="btn btn-md btn-secondary" data-toggle="modal" data-target="#modal-datos">Predeterminado</button>-->
+        <button id="btn-datos" class="btn btn-md btn-secondary" data-toggle="modal" data-target="#modal-datos">Preferencias</button>
       </div>
       <div class="col-md-5">
       </div>
@@ -1387,7 +1385,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
               <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 80%;" role="document">
                 <div class="modal-content">
                   <div class="modal-header" style="justify-content: center;">
-                    <h1 class="col-11" style="text-align: center;">Predeterminado</h1>
+                    <h1 class="col-11" style="text-align: center;">Preferencias</h1>
                     <button type="button" class="close col-1" style="margin-left: 0px" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
@@ -1420,7 +1418,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title col-11" style="text-align: center;">Nombre de Predeterminado</h5>
+                      <h5 class="modal-title col-11" style="text-align: center;">Nombre de Preferencias</h5>
                       <button type="button" class="close col-1" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
@@ -1442,7 +1440,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title col-11" style="text-align: center;">Nombre de Predeterminado</h5>
+                      <h5 class="modal-title col-11" style="text-align: center;">Nombre de Preferencias</h5>
                       <button type="button" class="close col-1" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
