@@ -624,7 +624,7 @@ export class Preferencia {
         success : function (data, status, requestHttp) {
             swal.fire({
                 title: "",
-                html: "se envio al admin la preferencia.",
+                html: "Se envió al administrar la preferencia para su autorización.",
                 icon: "success",
                 customClass: {
                     htmlContainer: "text-dialog"
