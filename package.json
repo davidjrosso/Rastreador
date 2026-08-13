@@ -10,7 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@ckeditor/ckeditor5-image": "^48.1.0",
     "@ckeditor/ckeditor5-mermaid": "github:ckeditor/ckeditor5-mermaid",
+    "@ckeditor/ckeditor5-upload": "^48.1.0",
     "@editorjs/editorjs": "^2.31.6",
     "@tiptap/core": "^3.23.4",
     "@tiptap/extension-color": "^3.23.4",
@@ -39,6 +41,9 @@
     "ol": "^10.3.1",
     "ol-layerswitcher": "^4.1.2",
     "pdf-lib": "^1.17.1",
+    "postcss-custom-properties": "^14.0.6",
+    "postcss-loader": "^8.2.1",
+    "postcss-nesting": "^13.0.2",
     "quill": "^2.0.3",
     "quill-delta": "^5.1.0",
     "quill-delta-from-html": "^1.0.6",
@@ -52,5 +57,8 @@
     "webpack-cli": "^5.1.4",
     "xlsx": "^0.18.5",
     "xlsx-style": "^0.8.13"
-  }
+  },
+  "sideEffects": [
+    "*.css"
+  ]
 }
