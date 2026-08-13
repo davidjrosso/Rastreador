@@ -44,6 +44,13 @@ export class Preferencia {
         $("#nav-tabContent-filtro").append(z);
     }
 
+    addItemPreferencia(item, valor, texto) {
+        let preferencia = {};
+        preferencia[item] = valor;
+        preferencia["text"] = null;
+        this.#listOpciones.push(preferencia);
+    }
+
     newSelect(e) {
         let tab = $("#bn-" + e).attr("data-tab");
         let num = $("#tab-" + tab + " tbody tr").length;
@@ -601,6 +608,9 @@ export class Preferencia {
             index++;
         }.bind(this));
 
+        this.addItemPreferencia( "titulo", 
+                                $("#list-" + char + "-list").text().trim(),
+                                null);
     }
 
     sendRequestPreferencia() {

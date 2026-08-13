@@ -77,6 +77,7 @@ try {
 
 	$routes[] = Route::post('preferencia_nueva_solictud', '/preferencia/solicitud_nueva_preferencia', [PreferenciaController::class, 'solicitud_nueva_preferencia_control']);
 	$routes[] = Route::post('preferencia_eliminar_solictud', '/preferencia/solicitud_eliminar_preferencia', [PreferenciaController::class, 'solicitud_eliminar_preferencia_control']);
+	$routes[] = Route::post('eliminar_solictud_preferencia', '/preferencia/eliminar_solicitud_preferencia', [PreferenciaController::class, 'eliminar_solicitud_control']);
 	$routes[] = Route::post('preferencia_nueva_control', '/preferencia/nueva_preferencia_control', [PreferenciaController::class, 'nueva_preferencia_control']);
 
 	$routes[] = Route::get('personas_listado', '/personas', [PersonaController::class, 'listado_personas']);

@@ -194,6 +194,36 @@ class PreferenciaController
         }
     }
 
+    public function eliminar_solicitud_control()
+    {
+        try {
+            if (!isset($_SESSION["Usuario"])) {
+                header("Content-Type: text/html;charset=utf-8;");
+                include("../Error_Session.php");
+            } else {
+                header("Content-Type: application/json;");
+                $id_solicitud = $_POST["id_solicitud"];
+
+                $con = new Conexion();
+                $con->OpenConexion();
+
+                $solicitud = new Solicitud(
+                                           coneccion: $con,
+                                           id_solicitud: $id_solicitud
+                                          );
+                $solicitud->delete();
+                $con->CloseConexion();
+                $ret["mensaje"] = "La solicitud fue borrada Correctamente";
+                $ret["estado"] = 1;
+            }
+            echo json_encode($ret);
+        } catch (Exception $e) {
+            $ret["mensaje"] = "error";
+            $ret["estado"] = 0;
+            echo json_encode($ret);
+        }
+    }
+
     public function nueva_preferencia_control()
     {
         try {
@@ -217,6 +247,7 @@ class PreferenciaController
                                 coneccion: $con,
                                 id_usuario: $solicitud->get_id_usuario(),
                                 fecha: $fecha,
+                                estado: 1
                     );
                 $filtro->save();
 
@@ -232,6 +263,7 @@ class PreferenciaController
                     if ( $key == "Nro_Legajo") $filtro->set_nro_legajo($val);
                     if ( $key == "Nro_Carpeta") $filtro->set_nro_carpeta($val);
                     if ( $key == "Manzana") $filtro->set_manzana($val);
+                    if ( $key == "titulo") $filtro->set_titulo($val);
 
                     if ($key == "ID_OtraInstitucion") $filtro->set_id_otra_institucion($val);
                     if ($key == "Lote") $filtro->set_lote($val);

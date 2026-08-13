@@ -2763,6 +2763,203 @@ class CtrGeneral{
 		return $Table;
 	}
 
+
+	public function getCantSolicitudes_Crear_Filtro()
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "select * 
+					 from solicitudes s inner join tipo_grupo_operaciones g on (g.id_tipo_grupo_operacion = s.id_tipo_grupo_operacion)
+					      inner join TipoAcciones c on (s.id_tipo_accion = c.ID_TipoAccion)
+					 where s.estado = 1
+					   and g.estado = 1
+					   and g.tipo = 'PREFERENCIA'
+					   and c.tipo = 'INSERT'";
+		$MessageError = "Problemas al intentar consultar cantidad de Solicitudes";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$Regis = mysqli_num_rows($Con->ResultSet);
+		$Con->CloseConexion();		
+		return $Regis;
+	}
+
+	public function getSolicitudes_Crear_Filtro()
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "select s.id_solicitud, 
+							IF(cn.tipo = 'INSERT', 'Nuevo', '') as Accion, 
+							ac.username as usuario, 
+							s.fecha,
+							GROUP_CONCAT(CONCAT(case identificador
+													when 'ID_Persona' then CONCAT('<b>Persona</b>', ' - ', p.nombre)
+													when 'ID_Responsable' then CONCAT('<b>Responsable</b>', ' - ', r.responsable)
+													when 'ID_Barrio' then CONCAT('<b>Barrio</b>', ' - ', b.Barrio)
+													when 'ID_Motivo' then CONCAT('<b>Motivo</b>', ' - ', v.motivo)
+													when 'ID_Categoria' then CONCAT('<b>Categoria</b>', ' - ', c.categoria)
+													when 'ID_Escuela' then CONCAT('<b>Escuela</b>', ' - ', e.Escuela)
+													when 'ID_Centro' then CONCAT('<b>Centro</b>', ' - ', cs.centro_salud)
+													when 'ID_OtraInstitucion' then CONCAT('<b>Institucion</b>', ' - ', n.Nombre)
+													else CONCAT('<b>', identificador, '</b>', ' - ', valor)
+													end)  SEPARATOR '<br>') AS filtro
+					from solicitudes s inner join tipo_grupo_operaciones g on (g.id_tipo_grupo_operacion = s.id_tipo_grupo_operacion)
+					inner join TipoAcciones cn on (s.id_tipo_accion = cn.ID_TipoAccion)
+					inner join solicitudes_items sc on (s.id_solicitud = sc.id_solicitud)
+					inner join accounts ac on (s.id_usuario = ac.accountid)
+					left join persona p on (sc.valor = p.id_persona and sc.identificador = 'ID_Persona')
+					left join responsable r on (sc.valor = r.id_resp and sc.identificador = 'ID_Responsable')
+					left join barrios b on (sc.valor = b.ID_Barrio and sc.identificador = 'ID_Barrio')
+					left join motivo v on (sc.valor = v.id_motivo and sc.identificador = 'ID_Motivo')
+					left join categoria c on (sc.valor = c.id_categoria and sc.identificador = 'ID_Categoria')
+					left join escuelas e on (sc.valor = e.ID_Escuela and sc.identificador = 'ID_Escuela')
+					left join centros_salud cs on (sc.valor = cs.id_centro and sc.identificador = 'ID_Centro')
+					left join otras_instituciones n on (sc.valor = n.ID_OtraInstitucion and sc.identificador = 'ID_OtraInstitucion')
+					where s.estado = 1
+					  and g.estado = 1
+					  and g.tipo = 'PREFERENCIA'
+					  and cn.tipo = 'INSERT'
+					group by s.id_solicitud";
+
+		$message = "Problemas al intentar mostrar Solicitudes";
+		$Con->ResultSet = mysqli_query($Con->Conexion, $Consulta);
+		$Regis = mysqli_num_rows($Con->ResultSet);
+		if($Regis) {
+			$Table = "<table id='solicitudes-nueva-preferencia' class='table-responsive table-bordered'>
+						<thead>
+							<tr>
+								<th style='min-width:100px; text-align: center;'>Fecha</th>
+								<th style='min-width:400px; text-align: center;'>Filtros</th>
+								<th style='min-width:100px; text-align: center;'>Usuario</th>
+								<th style='min-width:100px; text-align: center;'>Tipo</th>
+								<th style='min-width:100px; text-align: center;'>Acción</th>
+							</tr>
+						</thead>";
+			while ($ret = mysqli_fetch_array($Con->ResultSet)) {
+				$fecha = implode("/", array_reverse(explode("-", $ret["fecha"])));
+				$Table .= "<tr>
+								<td style='text-align: center;'>". $fecha . "</td>
+								<td>". $ret["filtro"] . "</td>
+								<td style='text-align: center;'>". $ret["usuario"] . "</td>
+								<td style='text-align: center;'>". $ret["Accion"] . "</td>
+								<td style='text-align: center;'>
+									<button class='btn btn-success' onClick='VerificarCrearFiltro(" . $ret["id_solicitud"] . ")'>
+										<i class='fa fa-check'></i>
+									</button>
+									<button class='btn btn-danger' onClick='CancelarCrearFiltro(" . $ret["id_solicitud"] . ")'>
+										<i class='fa fa-times'></i>
+									</button>
+								</td>
+							</tr>";
+
+			}			
+			$Table .= "</table>";
+		}else{
+			$Table = "No existen solicitudes de filtro pendientes de aprobación.";
+		}
+
+		$Con->CloseConexion();
+		
+		return $Table;
+	}
+
+	public function getCantSolicitudes_Modificar_Filtro()
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "select * 
+					 from solicitudes s inner join tipo_grupo_operaciones g on (g.id_tipo_grupo_operacion = s.id_tipo_grupo_operacion)
+					      inner join TipoAcciones c on (s.id_tipo_accion = c.ID_TipoAccion)
+					 where s.estado = 1
+					   and g.estado = 1
+					   and g.tipo = 'PREFERENCIA'
+					   and c.tipo = 'MODIFY'";
+		$MessageError = "Problemas al intentar consultar cantidad de Solicitudes";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$Regis = mysqli_num_rows($Con->ResultSet);
+		$Con->CloseConexion();		
+		return $Regis;
+	}
+
+	public function getSolicitudes_Modificar_Filtro()
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "select s.id_solicitud, 
+							IF(cn.tipo = 'INSERT', 'Nuevo', '') as Accion, 
+							ac.username as usuario, 
+							s.fecha,
+							GROUP_CONCAT(CONCAT(case identificador
+													when 'ID_Persona' then CONCAT('<b>Persona</b>', ' - ', p.nombre)
+													when 'ID_Responsable' then CONCAT('<b>Responsable</b>', ' - ', r.responsable)
+													when 'ID_Barrio' then CONCAT('<b>Barrio</b>', ' - ', b.Barrio)
+													when 'ID_Motivo' then CONCAT('<b>Motivo</b>', ' - ', v.motivo)
+													when 'ID_Categoria' then CONCAT('<b>Categoria</b>', ' - ', c.categoria)
+													when 'ID_Escuela' then CONCAT('<b>Escuela</b>', ' - ', e.Escuela)
+													when 'ID_Centro' then CONCAT('<b>Centro</b>', ' - ', cs.centro_salud)
+													when 'ID_OtraInstitucion' then CONCAT('<b>Institucion</b>', ' - ', n.Nombre)
+													else CONCAT('<b>', identificador, '</b>', ' - ', valor)
+													end)  SEPARATOR '<br>') AS filtro
+					from solicitudes s inner join tipo_grupo_operaciones g on (g.id_tipo_grupo_operacion = s.id_tipo_grupo_operacion)
+					inner join TipoAcciones cn on (s.id_tipo_accion = cn.ID_TipoAccion)
+					inner join solicitudes_items sc on (s.id_solicitud = sc.id_solicitud)
+					inner join accounts ac on (s.id_usuario = ac.accountid)
+					left join persona p on (sc.valor = p.id_persona and sc.identificador = 'ID_Persona')
+					left join responsable r on (sc.valor = r.id_resp and sc.identificador = 'ID_Responsable')
+					left join barrios b on (sc.valor = b.ID_Barrio and sc.identificador = 'ID_Barrio')
+					left join motivo v on (sc.valor = v.id_motivo and sc.identificador = 'ID_Motivo')
+					left join categoria c on (sc.valor = c.id_categoria and sc.identificador = 'ID_Categoria')
+					left join escuelas e on (sc.valor = e.ID_Escuela and sc.identificador = 'ID_Escuela')
+					left join centros_salud cs on (sc.valor = cs.id_centro and sc.identificador = 'ID_Centro')
+					left join otras_instituciones n on (sc.valor = n.ID_OtraInstitucion and sc.identificador = 'ID_OtraInstitucion')
+					where s.estado = 1
+					  and g.estado = 1
+					  and g.tipo = 'PREFERENCIA'
+					  and cn.tipo = 'MODIFY'
+					group by s.id_solicitud";
+
+		$message = "Problemas al intentar mostrar Solicitudes";
+		$Con->ResultSet = mysqli_query($Con->Conexion, $Consulta);
+		$Regis = mysqli_num_rows($Con->ResultSet);
+		if($Regis) {
+			$Table = "<table id='solicitudes-nueva-preferencia' class='table-responsive table-bordered'>
+						<thead>
+							<tr>
+								<th style='min-width:50px;'>Id</th>
+								<th style='min-width:100px;'>Fecha</th>
+								<th style='min-width:400px;'>Filtros</th>
+								<th style='min-width:100px;'>Usuario</th>
+								<th style='min-width:100px;'>Tipo</th>
+								<th style='min-width:100px;'>Acción</th>
+							</tr>
+						</thead>";
+			while ($ret = mysqli_fetch_array($Con->ResultSet)) {
+				$fecha = implode("/", array_reverse(explode("-", $ret["fecha"])));
+				$Table .= "<tr>
+								<td>". $ret["id_solicitud"] . "</td>
+								<td>". $fecha . "</td>
+								<td>". $ret["filtro"] . "</td>
+								<td>". $ret["usuario"] . "</td>
+								<td>". $ret["Accion"] . "</td>
+								<td>
+									<button class='btn btn-success' onClick='VerificarmodificarFiltro(" . $ret["id_solicitud"] . ")'>
+										<i class='fa fa-check'></i>
+									</button>
+									<button class='btn btn-danger' onClick='CancelarmodificarFiltro(" . $ret["id_solicitud"] . ")'>
+										<i class='fa fa-times'></i>
+									</button>
+								</td>
+							</tr>";
+
+			}			
+			$Table .= "</table>";
+		}else{
+			$Table = "No existen solicitudes de filtro pendientes de aprobación.";
+		}
+
+		$Con->CloseConexion();
+		
+		return $Table;
+	}
+
 	public function getCantSolicitudes_Crear_Motivo()
 	{
 		$Con = new Conexion();

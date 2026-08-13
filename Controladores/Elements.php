@@ -2884,12 +2884,7 @@ public function getMenuSeguridadUsuario($ID){
     $con->OpenConexion();
     $div = "<div class='list-group-item' style='display: flex; justify-content: center;'>
               <div> </div>
-              <span style='align-content: center; font-weight: bold; color: #000'>Lista de predeterminados</span>
-              <!--
-              <button class='btn btn-primary' data-toggle='modal' data-target='#filtro-nombre-Modal'>
-                              +
-              </button>
-              -->
+              <span style='align-content: center; font-weight: bold; color: #000'>Lista de preferencias</span>
             </div>
             <div class='list-group lista-centro-salud' 
                  id='list-tab-filtro' 
@@ -2912,12 +2907,7 @@ public function getMenuSeguridadUsuario($ID){
                   
                   aria-controls='" . $Ret['id_filtro'] . "'>" . 
                         $Ret['titulo'] . 
-                "</a>
-                 <!--
-                  <button type='button' class='btn btn-outline-success' onclick=''>
-									seleccionar
-								</button>
-                -->";
+                "</a>";
       $count++;
     }
 
@@ -2946,10 +2936,7 @@ public function getMenuSeguridadUsuario($ID){
                   <tr>
                     <th style='text-align: center; align-content: center;' colspan='2'>datos</th>
                     <th style='max-width: 27px; padding-left: 4%; text-align: center;'>
-                      <button class='btn btn-primary'
-                              style='text-align: center;'>
-                              +
-                      </button></th>
+                    </th>
                   </tr>
               </thead>";
 
@@ -2967,34 +2954,11 @@ public function getMenuSeguridadUsuario($ID){
         $result = mysqli_query($con->Conexion, $consulta) or die("Problemas al mostrar los archivos");
         while ($row = mysqli_fetch_array($result)) {
             $div .= "<tr>
-                        <td style='align-content: center;'>
-                          Motivo " . $row["id_filtro"] . "
+                        <td style='text-align: center;'>
+                          Motivo
                         </td>
                         <td style='align-content: center;'>" . 
                           $row["motivo"] . "
-                        </td>
-                        <td style='max-width: 45px;'> 
-                            <button class='btn btn-danger' style='display: inline;'
-                                    onClick='cargaDatos" . 
-                                                                    $row['id_filtro'] . "," . 
-                                                                    $ret['fecha'] . "
-                                                                  )'>
-                              x
-                            </button>
-                            <button class='btn btn-warning' style='display: inline;'
-                                    onClick='cargaDatos" . 
-                                                                    $row['id_filtro'] . "," . 
-                                                                    $ret['fecha'] . "
-                                                                  )'>
-                              x
-                            </button>
-                            <button class='btn btn-warning' style='display: inline;'
-                                    onClick='cargaDatos" . 
-                                                                    $row['id_filtro'] . "," . 
-                                                                    $ret['fecha'] . "
-                                                                  )'>
-                              x
-                            </button>
                         </td>
                      </tr>";
         }
@@ -3005,34 +2969,11 @@ public function getMenuSeguridadUsuario($ID){
         $result = mysqli_query($con->Conexion, $consulta) or die("Problemas al mostrar los archivos");
         while ($row = mysqli_fetch_array($result)) {
             $div .= "<tr>
-                        <td class='tabla-celda-planilla' style='align-content: center;'>
-                          Responsable " . $row["id_filtro"] . "
+                        <td style='text-align: center;'>
+                          Responsable
                         </td>
-                        <td class='tabla-celda-planilla' style='align-content: center;'>" . 
+                        <td style='align-content: center;'>" . 
                           $row["responsable"] . "
-                        </td>
-                        <td style='max-width: 45px;'> 
-                            <button class='btn btn-danger' style='display: inline;'
-                                    onClick='cargaDatos" . 
-                                                                    $row['id_filtro'] . "," . 
-                                                                    $ret['fecha'] . "
-                                                                  )'>
-                              x
-                            </button>
-                            <button class='btn btn-warning' style='display: inline;'
-                                    onClick='cargaDatos" . 
-                                                                    $row['id_filtro'] . "," . 
-                                                                    $ret['fecha'] . "
-                                                                  )'>
-                              x
-                            </button>
-                            <button class='btn btn-warning' style='display: inline;'
-                                    onClick='cargaDatos" . 
-                                                                    $row['id_filtro'] . "," . 
-                                                                    $ret['fecha'] . "
-                                                                  )'>
-                              x
-                            </button>
                         </td>
                      </tr>";
         }
@@ -3043,34 +2984,11 @@ public function getMenuSeguridadUsuario($ID){
         $result = mysqli_query($con->Conexion,$consulta) or die("Problemas al mostrar los archivos");
         while ($row = mysqli_fetch_array($result)) {
             $div .= "<tr>
-                        <td class='tabla-celda-planilla' style='align-content: center;'>
-                          Barrio " . $row["Barrio"] . "
+                        <td style='text-align: center;'>
+                          Barrio
                         </td>
-                        <td class='tabla-celda-planilla' style='align-content: center;'>" . 
-                          $row["motivo"] . "
-                        </td>
-                        <td style='max-width: 45px;'> 
-                            <button class='btn btn-danger' style='display: inline;'
-                                    onClick='cargaDatos" . 
-                                                                    $row['id_filtro'] . "," . 
-                                                                    $ret['fecha'] . "
-                                                                  )'>
-                              x
-                            </button>
-                            <button class='btn btn-warning' style='display: inline;'
-                                    onClick='cargaDatos" . 
-                                                                    $row['id_filtro'] . "," . 
-                                                                    $ret['fecha'] . "
-                                                                  )'>
-                              x
-                            </button>
-                            <button class='btn btn-warning' style='display: inline;'
-                                    onClick='cargaDatos" . 
-                                                                    $row['id_filtro'] . "," . 
-                                                                    $ret['fecha'] . "
-                                                                  )'>
-                              x
-                            </button>
+                        <td style='align-content: center;'>" . 
+                          $row["Barrio"] . "
                         </td>
                      </tr>";
         }
@@ -3081,34 +2999,11 @@ public function getMenuSeguridadUsuario($ID){
         $result = mysqli_query($con->Conexion,$consulta) or die("Problemas al mostrar los archivos");
         while ($row = mysqli_fetch_array($result)) {
             $div .= "<tr>
-                        <td class='tabla-celda-planilla' style='align-content: center;'>
-                          Categoria " . $row["categoria"] . "
+                        <td style='text-align: center;'>
+                          Categoria
                         </td>
-                        <td class='tabla-celda-planilla' style='align-content: center;'>" . 
-                          $row["motivo"] . "
-                        </td>
-                        <td style='max-width: 45px;'> 
-                            <button class='btn btn-danger' style='display: inline;'
-                                    onClick='cargaDatos" . 
-                                                                    $row['id_filtro'] . "," . 
-                                                                    $ret['fecha'] . "
-                                                                  )'>
-                              x
-                            </button>
-                            <button class='btn btn-warning' style='display: inline;'
-                                    onClick='cargaDatos" . 
-                                                                    $row['id_filtro'] . "," . 
-                                                                    $ret['fecha'] . "
-                                                                  )'>
-                              x
-                            </button>
-                            <button class='btn btn-warning' style='display: inline;'
-                                    onClick='cargaDatos" . 
-                                                                    $row['id_filtro'] . "," . 
-                                                                    $ret['fecha'] . "
-                                                                  )'>
-                              x
-                            </button>
+                        <td style='align-content: center;'>" . 
+                          $row["categoria"] . "
                         </td>
                      </tr>";
         }
