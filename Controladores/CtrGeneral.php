@@ -2960,6 +2960,85 @@ class CtrGeneral{
 		return $Table;
 	}
 
+	public function getCantSolicitudes_Eliminar_Filtro()
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "select * 
+					 from solicitudes s inner join tipo_grupo_operaciones g on (g.id_tipo_grupo_operacion = s.id_tipo_grupo_operacion)
+					      inner join TipoAcciones c on (s.id_tipo_accion = c.ID_TipoAccion)
+					 where s.estado = 1
+					   and g.estado = 1
+					   and g.tipo = 'PREFERENCIA'
+					   and c.tipo = 'DELETE'";
+		$MessageError = "Problemas al intentar consultar cantidad de Solicitudes";
+		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$Regis = mysqli_num_rows($Con->ResultSet);
+		$Con->CloseConexion();		
+		return $Regis;
+	}
+
+	public function getSolicitudes_Eliminar_Filtro()
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+		$Consulta = "select s.id_solicitud, 
+							IF(cn.tipo = 'DELETE', 'Eliminar', '') as Accion, 
+							ac.username as usuario, 
+							s.fecha,
+							F.titulo as filtro
+					from solicitudes s inner join tipo_grupo_operaciones g on (g.id_tipo_grupo_operacion = s.id_tipo_grupo_operacion)
+					inner join TipoAcciones cn on (s.id_tipo_accion = cn.ID_TipoAccion)
+					inner join solicitudes_items sc on (s.id_solicitud = sc.id_solicitud)
+					inner join accounts ac on (s.id_usuario = ac.accountid)
+					inner join filtros f on (sc.valor = f.id_filtro and sc.identificador = 'ID_FILTRO')
+					where s.estado = 1
+					  and g.estado = 1
+					  and g.tipo = 'PREFERENCIA'
+					  and cn.tipo = 'DELETE'";
+
+		$message = "Problemas al intentar mostrar Solicitudes";
+		$Con->ResultSet = mysqli_query($Con->Conexion, $Consulta);
+		$Regis = mysqli_num_rows($Con->ResultSet);
+		if($Regis) {
+			$Table = "<table id='solicitudes-nueva-preferencia' class='table-responsive table-bordered'>
+						<thead>
+							<tr>
+								<th style='min-width:100px; text-align: center;'>Fecha</th>
+								<th style='min-width:400px; text-align: center;'>Filtros</th>
+								<th style='min-width:100px; text-align: center;'>Usuario</th>
+								<th style='min-width:100px; text-align: center;'>Tipo</th>
+								<th style='min-width:100px; text-align: center;'>Acción</th>
+							</tr>
+						</thead>";
+			while ($ret = mysqli_fetch_array($Con->ResultSet)) {
+				$fecha = implode("/", array_reverse(explode("-", $ret["fecha"])));
+				$Table .= "<tr>
+								<td style='text-align: center;'>". $fecha . "</td>
+								<td style='text-align: center;'>". $ret["filtro"] . "</td>
+								<td style='text-align: center;'>". $ret["usuario"] . "</td>
+								<td style='text-align: center;'>". $ret["Accion"] . "</td>
+								<td style='text-align: center;'>
+									<button class='btn btn-success' onClick='VerificarEliminarFiltro(" . $ret["id_solicitud"] . ")'>
+										<i class='fa fa-check'></i>
+									</button>
+									<button class='btn btn-danger' onClick='CancelarEliminarFiltro(" . $ret["id_solicitud"] . ")'>
+										<i class='fa fa-times'></i>
+									</button>
+								</td>
+							</tr>";
+
+			}			
+			$Table .= "</table>";
+		}else{
+			$Table = "No existen solicitudes de filtro pendientes de aprobación.";
+		}
+
+		$Con->CloseConexion();
+		
+		return $Table;
+	}
+
 	public function getCantSolicitudes_Crear_Motivo()
 	{
 		$Con = new Conexion();
