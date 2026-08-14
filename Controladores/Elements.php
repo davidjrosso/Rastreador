@@ -2900,10 +2900,10 @@ public function getMenuSeguridadUsuario($ID){
                       ) or die("Problemas al mostrar Personas");
     $count = 0;
     while ($Ret = mysqli_fetch_array($obj_query)) {
-      $div .= "<a  class='list-group-item list-group-item-action " . (($count == 0) ? "active": "") . " ' data-toggle='list' role='tab' 
+      $div .= "<a  class='list-group-item list-group-item-action' data-toggle='list' role='tab' 
                   id='list-" . $Ret['id_filtro'] . "-list' 
                    
-                  href='#list-" . $Ret['id_filtro'] . "' 
+                  href='#list" . $Ret['id_filtro'] . "' 
                   
                   aria-controls='" . $Ret['id_filtro'] . "'>" . 
                         $Ret['titulo'] . 
@@ -2941,8 +2941,8 @@ public function getMenuSeguridadUsuario($ID){
               </thead>";
 
     while ($ret = mysqli_fetch_array($obj_query)) {
-        $div .= "<div class='tab-pane fade " . (($count == 0) ? "show active": "") . "'
-                      id='list-" . $ret['id_filtro'] . "'
+        $div .= "<div class='tab-pane fade'
+                      id='list" . $ret['id_filtro'] . "'
                       role='tabpanel'
                       aria-labelledby='list-" . $ret['id_filtro'] . "-list'>";
         $div .= $Table;
