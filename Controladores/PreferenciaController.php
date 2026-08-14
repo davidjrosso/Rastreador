@@ -471,4 +471,56 @@ class PreferenciaController
         }
     }
 
+    public function solicitud_eliminar_preferencia_control()
+    {
+        $id_solicitud = $_POST["id_solicitud"];
+        $id_usuario = $_SESSION["Usuario"];
+        $fecha = date(format: "Y-m-d");
+        try {
+            if (!isset($_SESSION["Usuario"])) {
+                header("Content-Type: text/html;charset=utf-8;");
+                include("../Error_Session.php");
+            } else {
+                header("Content-Type: application/json;");
+                $id_usuario = $_SESSION["Usuario"];
+                $account = new Account(account_id: $id_usuario);
+                $tipo_usuario = $account->get_id_tipo_usuario();
+                $con = new Conexion();
+                $con->OpenConexion();
+                $id_tipo_grupo_operacion = TipoGrupoOperacion::get_id_por_tipo(
+                                                    coneccion: $con,
+                                                    tipo: "PREFERENCIA"
+                                                    );
+                $id_tipo_accion = TipoAccion::get_id_tipo_acciones_por_tipo(
+                                                    coneccion: $con,
+                                                    tipo: "DELETE"
+                                                    );
+                $solicitud = new Solicitud(
+                                coneccion: $con,
+                                id_usuario: $id_usuario,
+                                fecha: $fecha,
+                                id_tipo_grupo_operacion: $id_tipo_grupo_operacion,
+                                id_tipo_accion: $id_tipo_accion,
+                                estado: 1
+                    );
+                $solicitud->save();
+                $solicitud_item = new SolicitudItem(
+                            coneccion: $con,
+                            id_solicitud: $solicitud->get_id_solicitud(),
+                            valor: $id_solicitud,
+                            identificador: "ID_FILTRO",
+                            estado: 1
+                );
+                $solicitud_item->save();
+                $resp["mensaje"] = "La solicitud fue registrada Correctamente";
+                $resp["estado"] = 1;
+            }
+            echo json_encode($resp);
+        } catch (Exception $e) {
+            $resp["mensaje"] = "error" . $e->getMessage();
+            $resp["estado"] = 0;
+            echo json_encode($resp);
+        }
+    }
+
 }

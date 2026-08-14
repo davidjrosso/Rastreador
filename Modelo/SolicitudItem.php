@@ -84,7 +84,7 @@ class SolicitudItem
                       FROM solicitudes_items
                       WHERE estado = 1
                         and id_solicitud = $id_solicitud
-                        and identificador = $identificador";
+                        and identificador = '$identificador'";
             $mensaje = "Error en consultar datos.";
 
             $ret = mysqli_query($coneccion->Conexion, $query);
@@ -93,7 +93,7 @@ class SolicitudItem
 
             $res = mysqli_fetch_assoc($ret);
 
-            if (!$res) $valor = $res["identificador"];
+            if ($res) $valor = $res["valor"];
         }
         return $valor;
     }

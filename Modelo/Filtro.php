@@ -78,7 +78,7 @@ class Filtro implements JsonSerializable
                 $row_fecha = $ret["fecha"];
                 $row_nro_carpeta = $ret["nro_carpeta"];
                 $row_titulo = $ret["titulo"];
-                $row_id_tipousuario = $ret["id_tipousuario"];
+                $row_id_tipousuario = $ret["id_tipo_usuario"];
                 $row_id_otra_institucion = $ret["id_otra_institucion"];
                 $row_nro_legajo = $ret["nro_legajo"];
                 $row_id_usuario = $ret["id_usuario"];

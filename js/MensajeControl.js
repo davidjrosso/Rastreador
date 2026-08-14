@@ -283,3 +283,73 @@ export function CancelarCrearFiltro(xID) {
     }
     });
 }
+
+export function VerificarEliminarFiltro(xID) {
+    swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Confirma la creación de esta filtro?",
+        icon: "warning",
+        showCloseButton: true,
+        confirmButtonColor: "#e64942",
+        cancelButtonColor: "#efefef",
+        cancelButtonText: '<span style="color:#555">Cancel</span>',
+        showCancelButton: true,
+        showConfirmButton: true
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+            let url = 'preferencia/eliminar_preferencia_control';
+            let datos = 'id_solicitud=' + xID;
+            let request = $.ajax({
+                type:"POST",
+                url : url,
+                async: true,
+                contentType: 'application/x-www-form-urlencoded',
+                data: datos,
+                success : function (data, status, requestHttp) {
+                    if (requestHttp.responseJSON.mensaje) {
+                        controlMensaje(requestHttp.responseJSON.mensaje, null);
+                    } else if (requestHttp.responseJSON.mensaje_error) {
+                        controlMensaje(null, requestHttp.responseJSON.mensaje_error);
+                    }
+                }
+            });
+
+    }
+    });
+}
+
+export function CancelarEliminarFiltro(xID) {
+    swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de eliminar esta solicitud de nuevo filtro?",
+        icon: "danger",
+        showCloseButton: true,
+        confirmButtonColor: "#e64942",
+        cancelButtonColor: "#efefef",
+        cancelButtonText: '<span style="color:#555">Cancel</span>',
+        showCancelButton: true,
+        showConfirmButton: true
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+            let url = 'preferencia/eliminar_solicitud_preferencia';
+            let datos = 'id_solicitud=' + xID;
+            let request = $.ajax({
+                type:"POST",
+                url : url,
+                async: true,
+                contentType: 'application/x-www-form-urlencoded',
+                data: datos,
+                success : function (data, status, requestHttp) {
+                    if (requestHttp.responseJSON.mensaje) {
+                        controlMensaje(requestHttp.responseJSON.mensaje, null);
+                    } else if (requestHttp.responseJSON.mensaje_error) {
+                        controlMensaje(null, requestHttp.responseJSON.mensaje_error);
+                    }
+                }
+            });
+
+    }
+    });
+}

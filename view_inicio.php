@@ -706,8 +706,10 @@ $Con->CloseConexion();
       <?php        
     }
     ?>
-    <?php if ($tipo_usuario == 1) {
+    <?php 
+    if ($tipo_usuario == 1) {
       $CantCrearFiltro = $CtrGeneral->getCantSolicitudes_Crear_Filtro();
+      $CantEliminarFiltro = $CtrGeneral->getCantSolicitudes_Eliminar_Filtro();
       $CantUnif = $CtrGeneral->getCantSolicitudes_Unificacion();
       $CantModMot = $CtrGeneral->getCantSolicitudes_Modificacion_Motivo();
       $CantCrearMot = $CtrGeneral->getCantSolicitudes_Crear_Motivo();
@@ -807,6 +809,13 @@ $Con->CloseConexion();
                 <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Crear Preferencias</h3>
               <?php
               echo $CtrGeneral->getSolicitudes_Crear_Filtro();
+            }
+
+            if ($CantEliminarFiltro > 0) {
+              ?>
+                <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Eliminar Preferencias</h3>
+              <?php
+              echo $CtrGeneral->getSolicitudes_Eliminar_Filtro();
             }
 
             if ($CantCrearMot > 0 ) {

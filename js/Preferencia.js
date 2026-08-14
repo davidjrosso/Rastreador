@@ -605,6 +605,84 @@ export class Preferencia {
                                 null);
     }
 
+    sendRequestModificarPreferencia() {
+      let addres = "/preferencia/solicitud_modificar_preferencia";
+      $.ajax({
+        url : addres,
+        method: "post",
+        dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify(this.#listOpciones),
+        success : function (data, status, requestHttp) {
+            swal.fire({
+                title: "",
+                html: "Se envió al administrar la preferencia para su autorización.",
+                icon: "success",
+                customClass: {
+                    htmlContainer: "text-dialog"
+                },
+                showCloseButton: true,
+                showCancelButton: true,
+                confirmButtonText: `OK`,
+                cancelButtonText: `Cancel`
+            });
+        }.bind(this),
+        error: function (data, status, requestHttp) {
+             swal.fire({
+                title: "",
+                html: "hubo un error.",
+                icon: "warning",
+                customClass: {
+                    htmlContainer: "text-dialog"
+                },
+                showCloseButton: true,
+                showCancelButton: true,
+                confirmButtonText: `OK`,
+                cancelButtonText: `Cancel`
+            });
+        }
+      });
+    }
+    
+    sendRequestDelPreferencia(id) {
+      let addres = "/preferencia/solicitud_eliminar_preferencia";
+      $.ajax({
+        url : addres,
+        method: "post",
+        dataType: "json",
+        contentType: "application/x-www-form-urlencoded",
+        data: "id_solicitud=" + id,
+        success : function (data, status, requestHttp) {
+            swal.fire({
+                title: "",
+                html: "Se envió al administrar la preferencia para su autorización.",
+                icon: "success",
+                customClass: {
+                    htmlContainer: "text-dialog"
+                },
+                showCloseButton: true,
+                showCancelButton: true,
+                confirmButtonText: `OK`,
+                cancelButtonText: `Cancel`
+            });
+        }.bind(this),
+        error: function (data, status, requestHttp) {
+             swal.fire({
+                title: "",
+                html: "hubo un error.",
+                icon: "warning",
+                customClass: {
+                    htmlContainer: "text-dialog"
+                },
+                showCloseButton: true,
+                showCancelButton: true,
+                confirmButtonText: `OK`,
+                cancelButtonText: `Cancel`
+            });
+        }
+      });
+    }
+
     sendRequestPreferencia() {
       let addres = "/preferencia/solicitud_nueva_preferencia";
       $.ajax({
@@ -643,6 +721,46 @@ export class Preferencia {
         }
       });
     }
+
+    sendRequestSeleccionPreferencia(id) {
+      let addres = "/preferencia/seleccion_preferencia";
+      $.ajax({
+        url : addres,
+        method: "post",
+        dataType: "json",
+        contentType: "application/x-www-form-urlencoded",
+        data: "id_solicitud=" + id,
+        success : function (data, status, requestHttp) {
+            swal.fire({
+                title: "",
+                html: "Se envió al administrar la preferencia para su autorización.",
+                icon: "success",
+                customClass: {
+                    htmlContainer: "text-dialog"
+                },
+                showCloseButton: true,
+                showCancelButton: true,
+                confirmButtonText: `OK`,
+                cancelButtonText: `Cancel`
+            });
+        }.bind(this),
+        error: function (data, status, requestHttp) {
+             swal.fire({
+                title: "",
+                html: "hubo un error.",
+                icon: "warning",
+                customClass: {
+                    htmlContainer: "text-dialog"
+                },
+                showCloseButton: true,
+                showCancelButton: true,
+                confirmButtonText: `OK`,
+                cancelButtonText: `Cancel`
+            });
+        }
+      });
+    }
+
 }
 
 let preferencia = new Preferencia();
@@ -663,7 +781,20 @@ $(function (e) {
     $("#cancel-data").on("click", function (e) {
         $(this).toggle();
     });
+
     $("#send-admin").on("click", function (e) {
         preferencia.sendRequestPreferencia();
+    });
+
+    $("div[data-mod-filtro-id]").on("click", function (e) {
+        preferencia.sendRequestModificarPreferencia($(this).attr("data-del-filtro-id"));
+    });
+
+    $("button[data-del-filtro-id]").on("click", function (e) {
+        preferencia.sendRequestDelPreferencia($(this).attr("data-del-filtro-id"));
+    });
+
+    $("div[data-sel-filtro-id]").on("click", function (e) {
+        preferencia.sendRequestSeleccionPreferencia($(this).attr("data-del-filtro-id"));
     });
 });
