@@ -25,14 +25,6 @@ export class Preferencia {
                             <thead>
                             <tr>
                                 <th style='text-align: center; align-content: center;' colspan='3'>` + val + `</th>
-                                <!--
-                                <th style='max-width: 27px; padding-left: 4%; text-align: center;'>
-                                    <button class='btn btn-primary' data-tab='` + char + `' id='bn-` + char + `'
-                                        style='text-align: center;' onclick="newSelect('` + char + `')">
-                                        +
-                                    </button>
-                                </th>
-                                -->
                             </tr>
                         </thead>
                         <tbody>

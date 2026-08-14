@@ -1381,7 +1381,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
             </div>
             <!-- FIN MODAL SELECCION ENLACE DRIVER -->
             <!-- Modal filtro-->
-            <div class="modal fade bd-example-modal-lg" id="modal-datos" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal fade bd-example-modal-lg" id="modal-datos" style="overflow-y: scroll;" tabindex="-1" role="dialog" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 80%;" role="document">
                 <div class="modal-content">
                   <div class="modal-header" style="justify-content: center;">

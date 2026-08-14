@@ -360,7 +360,7 @@ class Filtro implements JsonSerializable
 											fecha,
 											titulo,
 											estado
-											) 
+											)
 				values(
 						" . (($this->get_id_centro_salud()) ? $this->get_id_centro_salud() : "null") . ",
 						" . (($this->get_id_escuela()) ? $this->get_id_escuela() : "null") . ",
