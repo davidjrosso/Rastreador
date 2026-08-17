@@ -2986,7 +2986,7 @@ class CtrGeneral{
 							IF(cn.tipo = 'DELETE', 'Eliminar', '') as Accion, 
 							ac.username as usuario, 
 							s.fecha,
-							F.titulo as filtro
+							f.titulo as filtro
 					from solicitudes s inner join tipo_grupo_operaciones g on (g.id_tipo_grupo_operacion = s.id_tipo_grupo_operacion)
 					inner join TipoAcciones cn on (s.id_tipo_accion = cn.ID_TipoAccion)
 					inner join solicitudes_items sc on (s.id_solicitud = sc.id_solicitud)
