@@ -806,14 +806,14 @@ $Con->CloseConexion();
 
             if ($CantCrearFiltro > 0) {
               ?>
-                <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Crear Preferencias</h3>
+                <h4 id="header-solicitudes-crear-preferencia" class="bg-info text-light" style="text-align: center; padding: 10px;">Crear Preferencias</h3>
               <?php
               echo $CtrGeneral->getSolicitudes_Crear_Filtro();
             }
 
             if ($CantEliminarFiltro > 0) {
               ?>
-                <h4 class="bg-info text-light" style="text-align: center; padding: 10px;">Eliminar Preferencias</h3>
+                <h4 id="header-solicitudes-eliminar-preferencia" class="bg-info text-light" style="text-align: center; padding: 10px;">Eliminar Preferencias</h3>
               <?php
               echo $CtrGeneral->getSolicitudes_Eliminar_Filtro();
             }
