@@ -3001,7 +3001,7 @@ class CtrGeneral{
 		$Con->ResultSet = mysqli_query($Con->Conexion, $Consulta);
 		$Regis = mysqli_num_rows($Con->ResultSet);
 		if($Regis) {
-			$Table = "<table id='solicitudes-nueva-preferencia' class='table-responsive table-bordered'>
+			$Table = "<table id='solicitudes-eliminar-preferencia' class='table-responsive table-bordered'>
 						<thead>
 							<tr>
 								<th style='min-width:100px; text-align: center;'>Fecha</th>
@@ -3019,10 +3019,10 @@ class CtrGeneral{
 								<td style='text-align: center;'>". $ret["usuario"] . "</td>
 								<td style='text-align: center;'>". $ret["Accion"] . "</td>
 								<td style='text-align: center;'>
-									<button class='btn btn-success' onClick='VerificarEliminarFiltro(" . $ret["id_solicitud"] . ")'>
+									<button class='btn btn-success' data-tarea = 'confirmar-eliminar-solicitud' data-id-solicitud = '" . $ret["id_solicitud"] . "'>
 										<i class='fa fa-check'></i>
 									</button>
-									<button class='btn btn-danger' onClick='CancelarEliminarFiltro(" . $ret["id_solicitud"] . ")'>
+									<button class='btn btn-danger' data-tarea = 'cancelar-eliminar-solicitud' data-id-solicitud = '" . $ret["id_solicitud"] . "'>
 										<i class='fa fa-times'></i>
 									</button>
 								</td>

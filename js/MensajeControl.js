@@ -253,7 +253,7 @@ export function CancelarCrearFiltro(xID) {
     swal.fire({
         title: "¿Está seguro?",
         text: "¿Seguro de eliminar esta solicitud de nuevo filtro?",
-        icon: "danger",
+        icon: "warning",
         showCloseButton: true,
         confirmButtonColor: "#e64942",
         cancelButtonColor: "#efefef",
@@ -307,8 +307,14 @@ export function VerificarEliminarFiltro(xID) {
                 contentType: 'application/x-www-form-urlencoded',
                 data: datos,
                 success : function (data, status, requestHttp) {
+                    let count = $("#solicitudes-eliminar-preferencia tbody tr").length;
                     if (requestHttp.responseJSON.mensaje) {
                         controlMensaje(requestHttp.responseJSON.mensaje, null);
+                        $(this).parent().parent().remove();
+                        if (count == 1) {
+                            $("#solicitudes-eliminar-preferencia").remove();
+                            $("#header-solicitudes-eliminar-preferencia").remove();
+                        }
                     } else if (requestHttp.responseJSON.mensaje_error) {
                         controlMensaje(null, requestHttp.responseJSON.mensaje_error);
                     }
@@ -323,7 +329,7 @@ export function CancelarEliminarFiltro(xID) {
     swal.fire({
         title: "¿Está seguro?",
         text: "¿Seguro de eliminar esta solicitud de nuevo filtro?",
-        icon: "danger",
+        icon: "warning",
         showCloseButton: true,
         confirmButtonColor: "#e64942",
         cancelButtonColor: "#efefef",
@@ -342,8 +348,14 @@ export function CancelarEliminarFiltro(xID) {
                 contentType: 'application/x-www-form-urlencoded',
                 data: datos,
                 success : function (data, status, requestHttp) {
+                    let count = $("#solicitudes-eliminar-preferencia tbody tr").length;
                     if (requestHttp.responseJSON.mensaje) {
                         controlMensaje(requestHttp.responseJSON.mensaje, null);
+                        $(this).parent().parent().remove();
+                        if (count == 1) {
+                            $("#solicitudes-eliminar-preferencia").remove();
+                            $("#header-solicitudes-eliminar-preferencia").remove();
+                        }
                     } else if (requestHttp.responseJSON.mensaje_error) {
                         controlMensaje(null, requestHttp.responseJSON.mensaje_error);
                     }
@@ -353,3 +365,16 @@ export function CancelarEliminarFiltro(xID) {
     }
     });
 }
+
+$(function (e) {
+    $("button[data-tarea~='cancelar-eliminar-solicitud'").on("click", function (e) {
+        let idSolicitud = $(this).attr("data-id-solicitud");
+        CancelarEliminarFiltro.bind(this)(idSolicitud);
+    });
+
+    $("button[data-tarea~='confirmar-eliminar-solicitud'").on("click", function (e) {
+        let idSolicitud = $(this).attr("data-id-solicitud");
+        VerificarEliminarFiltro.bind(this)(idSolicitud);
+    });
+
+});
