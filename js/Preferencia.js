@@ -723,7 +723,7 @@ export class Preferencia {
     }
 
     sendRequestSeleccionPreferencia(id) {
-      let addres = "/preferencia/seleccion_preferencia";
+      let addres = "/preferencia/seleccion_preferencia_control";
       $.ajax({
         url : addres,
         method: "post",
@@ -767,6 +767,7 @@ let preferencia = new Preferencia();
 
 $(function (e) {
     $("#bn-new-filtro").on("click", preferencia.newFiltro);
+
     $("#bn-filtro-dato").on("click", function (e) {
         preferencia.datosFormulario();
         $("#text-filtro").val("");

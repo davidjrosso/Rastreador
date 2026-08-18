@@ -83,6 +83,30 @@ class FiltroResponsable implements JsonSerializable
 		return $is_multiple;
 	}
 
+	public static function get_list_responsable_por_id_filtro($coneccion, $id_filtro)
+	{
+		$list = [];
+		if ($id_filtro) {
+			$consulta = "select * 
+					 from filtros_responsables
+					 where id_filtro = $id_filtro
+					   and estado = 1";
+            $mensaje = "Error en consultar datos.";
+
+            $ret = mysqli_query($coneccion->Conexion, $consulta);
+
+            if (!$ret) throw new Exception($mensaje, 1);
+
+            while($res = mysqli_fetch_assoc($ret)) {
+                $list[] = new self(
+                                   coneccion: $coneccion,
+                                   id_filtro_responsable: $res["id_filtro_responsable"]
+                                   );
+            }
+        }
+        return $list;
+	}
+
 	// METODOS SET
 	public function set_id_responsable($id_responsable)
     {

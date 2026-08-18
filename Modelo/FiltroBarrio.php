@@ -83,6 +83,30 @@ class FiltroBarrio implements JsonSerializable
 		return $is_multiple;
 	}
 
+	public static function get_list_barrio_por_id_filtro($coneccion, $id_filtro)
+	{
+		$list = [];
+		if ($id_filtro) {
+			$consulta = "select * 
+					 from filtros_barrios
+					 where id_filtro = $id_filtro
+					   and estado = 1";
+            $mensaje = "Error en consultar datos.";
+
+            $ret = mysqli_query($coneccion->Conexion, $consulta);
+
+            if (!$ret) throw new Exception($mensaje, 1);
+
+            while($res = mysqli_fetch_assoc($ret)) {
+                $list[] = new self(
+                                   coneccion: $coneccion,
+                                   id_filtro_barrio: $res["id_filtro_barrio"]
+                                   );
+            }
+        }
+        return $list;
+	}
+
 	// METODOS SET
 	public function set_id_barrio($id_barrio)
     {
