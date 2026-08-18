@@ -600,7 +600,7 @@ export class Preferencia {
             index++;
         }.bind(this));
 
-        this.addItemPreferencia( "titulo", 
+        this.addItemPreferencia( "titulo",
                                 $("#list-" + char + "-list").text().trim(),
                                 null);
     }
@@ -766,9 +766,8 @@ export class Preferencia {
 let preferencia = new Preferencia();
 
 $(function (e) {
-    $("#bn-new-filtro").on("click", preferencia.newFiltro());
+    $("#bn-new-filtro").on("click", preferencia.newFiltro);
     $("#bn-filtro-dato").on("click", function (e) {
-        preferencia.newFiltro();
         preferencia.datosFormulario();
         $("#text-filtro").val("");
     });
@@ -786,15 +785,15 @@ $(function (e) {
         preferencia.sendRequestPreferencia();
     });
 
-    $("div[data-mod-filtro-id]").on("click", function (e) {
-        preferencia.sendRequestModificarPreferencia($(this).attr("data-del-filtro-id"));
+    $("button[data-mod-filtro-id]").on("click", function (e) {
+        preferencia.sendRequestModificarPreferencia($(this).attr("data-mod-filtro-id"));
     });
 
     $("button[data-del-filtro-id]").on("click", function (e) {
         preferencia.sendRequestDelPreferencia($(this).attr("data-del-filtro-id"));
     });
 
-    $("div[data-sel-filtro-id]").on("click", function (e) {
-        preferencia.sendRequestSeleccionPreferencia($(this).attr("data-del-filtro-id"));
+    $("button[data-sel-filtro-id]").on("click", function (e) {
+        preferencia.sendRequestSeleccionPreferencia($(this).attr("data-sel-filtro-id"));
     });
 });
