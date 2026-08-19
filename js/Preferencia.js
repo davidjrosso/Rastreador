@@ -889,7 +889,7 @@ export class Preferencia {
         }.bind(this));
 
         this.addItemPreferencia( "titulo",
-                                $("#list-" + char + "-list").text().trim(),
+                                $("#list-" + char + "-list span").text().trim(),
                                 null);
     }
 

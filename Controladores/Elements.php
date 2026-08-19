@@ -2973,10 +2973,7 @@ public function getMenuSeguridadUsuario($ID){
                  FROM filtros
                  WHERE estado = 1
                  ORDER BY titulo  ASC";
-    $obj_query = mysqli_query(
-                      $con->Conexion,
-                      $consulta
-                      ) or die("Problemas al mostrar los barrios");
+    $obj_query = mysqli_query($con->Conexion, $consulta);
     $count = 0;
 
 		$Table = "<table class='table'>
@@ -2999,7 +2996,7 @@ public function getMenuSeguridadUsuario($ID){
                      FROM filtros_motivos m inner join motivo mv on (m.id_motivo = mv.id_motivo)
                      WHERE id_filtro = " . $ret['id_filtro'] . "
                        AND m.estado = 1";
-        $result = mysqli_query($con->Conexion, $consulta) or die("Problemas al mostrar los archivos");
+        $result = mysqli_query($con->Conexion, $consulta);
         while ($row = mysqli_fetch_array($result)) {
             $div .= "<tr>
                         <td style='text-align: center;'>
@@ -3014,7 +3011,7 @@ public function getMenuSeguridadUsuario($ID){
                      FROM filtros_responsables d inner join responsable n on (d.id_responsable = n.id_resp)
                      WHERE id_filtro = " . $ret['id_filtro'] . "
                        AND d.estado = 1";
-        $result = mysqli_query($con->Conexion, $consulta) or die("Problemas al mostrar los archivos");
+        $result = mysqli_query($con->Conexion, $consulta);
         while ($row = mysqli_fetch_array($result)) {
             $div .= "<tr>
                         <td style='text-align: center;'>
@@ -3029,7 +3026,7 @@ public function getMenuSeguridadUsuario($ID){
                      FROM filtros_barrios bs inner join barrios b on (bs.id_barrio = b.ID_Barrio)
                      WHERE id_filtro = " . $ret['id_filtro'] . "
                        AND bs.estado = 1";
-        $result = mysqli_query($con->Conexion,$consulta) or die("Problemas al mostrar los archivos");
+        $result = mysqli_query($con->Conexion,$consulta);
         while ($row = mysqli_fetch_array($result)) {
             $div .= "<tr>
                         <td style='text-align: center;'>
@@ -3044,7 +3041,7 @@ public function getMenuSeguridadUsuario($ID){
                      FROM filtros_categorias c inner join categoria cs on (c.id_categoria = cs.id_categoria)
                      WHERE id_filtro = " . $ret['id_filtro'] . "
                        AND c.estado = 1";
-        $result = mysqli_query($con->Conexion,$consulta) or die("Problemas al mostrar los archivos");
+        $result = mysqli_query($con->Conexion,$consulta);
         while ($row = mysqli_fetch_array($result)) {
             $div .= "<tr>
                         <td style='text-align: center;'>
@@ -3055,6 +3052,73 @@ public function getMenuSeguridadUsuario($ID){
                         </td>
                      </tr>";
         }
+
+        if(!empty($ret["id_persona"])) {
+            $div .= "<tr>
+                        <td style='text-align: center;'>
+                          Persona
+                        </td>
+                        <td style='align-content: center;'>" . 
+                          $ret["id_persona"] . "
+                        </td>
+                     </tr>";
+        }
+
+        if(!empty($ret["nro_legajo"])) {
+            $div .= "<tr>
+                        <td style='text-align: center;'>
+                          Nro Legajo
+                        </td>
+                        <td style='align-content: center;'>" . 
+                          $ret["nro_legajo"] . "
+                        </td>
+                     </tr>";          
+        }
+
+        if(!empty($ret["nro_carpeta"])) {
+            $div .= "<tr>
+                        <td style='text-align: center;'>
+                          Nro Carpeta
+                        </td>
+                        <td style='align-content: center;'>" . 
+                          $ret["nro_carpeta"] . "
+                        </td>
+                     </tr>";          
+        }
+
+        if(!empty($ret["id_escuela"])) {
+            $div .= "<tr>
+                        <td style='text-align: center;'>
+                          escuela
+                        </td>
+                        <td style='align-content: center;'>" . 
+                          $ret["id_escuela"] . "
+                        </td>
+                     </tr>";          
+        }
+
+        if(!empty($ret["id_otra_institucion"])) {
+            $div .= "<tr>
+                        <td style='text-align: center;'>
+                          Otra Institucion
+                        </td>
+                        <td style='align-content: center;'>" . 
+                          $ret["id_otra_institucion"] . "
+                        </td>
+                     </tr>";          
+        }
+
+        if(!empty($ret[""])) {
+            $div .= "<tr>
+                        <td style='text-align: center;'>
+                          Responsable
+                        </td>
+                        <td style='align-content: center;'>" . 
+                          $ret[""] . "
+                        </td>
+                     </tr>";          
+        }
+
         $div .= "</table>";
         $div .= "</div>";
         $count++;

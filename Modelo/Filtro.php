@@ -6,8 +6,11 @@ class Filtro implements JsonSerializable
     private $fecha;
     private $nro_carpeta;
     private $id_persona;
+	private $familia;
 	private $manzana;
     private $id_escuela;
+	private $id_calle;
+	private $calle_numero;
     private $titulo;
     private $id_filtro;
 	private $meses_hasta;
@@ -30,6 +33,8 @@ class Filtro implements JsonSerializable
 			$id_filtro = null,
             $fecha = null,
             $id_persona = null,
+			$id_calle = null,
+			$calle_numero = null,
             $id_escuela = null,
             $nro_carpeta = null,
             $id_centro_salud = null,
@@ -59,7 +64,11 @@ class Filtro implements JsonSerializable
             $this->id_tipo_usuario = $id_tipo_usuario;
             $this->id_filtro = $id_filtro;
             $this->fecha = $fecha;
+			$this->id_calle = $id_calle;
+			$this->calle_numero = $calle_numero;
             $this->estado = $estado;
+			$this->anos_desde = $anos_desde;
+			$this->anos_hasta = $anos_hasta;
 		} else {
 			$consultar = "select *
                           from filtros
@@ -82,6 +91,12 @@ class Filtro implements JsonSerializable
                 $row_id_otra_institucion = $ret["id_otra_institucion"];
                 $row_nro_legajo = $ret["nro_legajo"];
                 $row_id_usuario = $ret["id_usuario"];
+                $row_meses_desde = $ret["meses_desde"];
+                $row_anos_desde = $ret["anos_desde"];
+                $row_familia = $ret["familia"];
+                $row_manzana = $ret["manzana"];
+                $row_id_calle = $ret["id_calle"];
+                $row_calle_numero = $ret["calle_numero"];
 
                 $this->id_centro_salud = $row_id_centro_salud;
                 $this->id_persona = $row_id_persona;
@@ -94,6 +109,12 @@ class Filtro implements JsonSerializable
                 $this->id_tipo_usuario = $row_id_tipousuario;
                 $this->id_filtro = $row_id_filtro;
                 $this->fecha = $row_fecha;
+				$this->meses_desde = $row_meses_desde;
+				$this->anos_desde = $row_anos_desde;
+				$this->familia = $row_familia;
+				$this->manzana = $row_manzana;
+				$this->id_calle = $row_id_calle;
+				$this->calle_numero = $row_calle_numero;
                 $this->estado = $row_estado;
 
 			}
@@ -254,6 +275,21 @@ class Filtro implements JsonSerializable
 		return $this->id_persona;
 	}
 
+	public function get_familia()
+	{
+		return $this->familia;
+	}
+
+	public function get_id_calle()
+	{
+		return $this->id_calle;
+	}
+
+	public function get_calle_numero()
+	{
+		return $this->calle_numero;
+	}
+
 	public function get_fecha()
 	{
 		return $this->fecha;
@@ -267,6 +303,26 @@ class Filtro implements JsonSerializable
 	public function get_nro_carpeta()
 	{
 		return $this->nro_carpeta;
+	}
+
+	public function get_manzana()
+	{
+		return $this->manzana;
+	}
+
+	public function get_lote()
+	{
+		return $this->lote;
+	}
+
+	public function get_meses_hasta()
+	{
+		return $this->meses_hasta;
+	}
+
+	public function get_anos_hasta()
+	{
+		return $this->anos_hasta;
 	}
 
     public function get_id_usuario()
@@ -283,6 +339,11 @@ class Filtro implements JsonSerializable
     {
         return $this->id_otra_institucion;
     }
+
+	public function get_anos_desde()
+	{
+		return $this->anos_desde;
+	}
 
     public function get_nro_legajo()
     {
@@ -302,6 +363,11 @@ class Filtro implements JsonSerializable
 	public function get_coneccion()
 	{
 		return $this->coneccion;
+	}
+
+	public function get_meses_desde()
+	{
+		return $this->meses_desde;
 	}
 
 	public function jsonSerialize() 
@@ -351,11 +417,18 @@ class Filtro implements JsonSerializable
 		$consulta = "insert into filtros (
 											id_centro_salud,
 											id_escuela,
+											manzana,
+											id_calle,
+											familia,
 											id_persona,
+											calle_numero,
+											edad_desde,
+											meses_desde,
 											nro_carpeta,
 											nro_legajo,
 											id_usuario,
 											id_tipo_usuario,
+											lote,
 											id_otra_institucion,
 											fecha,
 											titulo,
@@ -364,11 +437,18 @@ class Filtro implements JsonSerializable
 				values(
 						" . (($this->get_id_centro_salud()) ? $this->get_id_centro_salud() : "null") . ",
 						" . (($this->get_id_escuela()) ? $this->get_id_escuela() : "null") . ",
+						" . (($this->get_manzana()) ? "'" . $this->get_manzana() . "'" : "null") . ",
+						" . (($this->get_id_calle()) ? $this->get_id_calle() : "null") . ",
+						" . (($this->get_id_calle()) ? $this->get_id_calle() : "null") . ",
 						" . (($this->get_id_persona()) ? $this->get_id_persona() : "null") . ",
+						" . (($this->get_calle_numero()) ? $this->get_calle_numero() : "null") . ",
+						" . (($this->get_anos_desde()) ? $this->get_anos_desde() : "null") . ",
+						" . (($this->get_meses_desde()) ? $this->get_meses_desde() : "null") . ",
 						" . (($this->get_nro_carpeta()) ? "'" . $this->get_nro_carpeta() . "'" : "null") . ",
 						" . (($this->get_nro_legajo()) ? "'" . $this->get_nro_legajo() . "'" : "null") . ",
 						" . (($this->get_id_usuario()) ? $this->get_id_usuario() : "null") . ",
 						" . (($this->get_id_tipo_usuario()) ? $this->get_id_tipo_usuario() : "null") . ",
+						" . (($this->get_lote()) ? $this->get_lote() : "null") . ",
 						" . (($this->get_id_otra_institucion()) ? $this->get_id_otra_institucion() : "null") . ",
 						" . (($this->get_fecha()) ? "'" . $this->get_fecha() . "'" : "null") . ",
 						" . (($this->get_titulo()) ? $this->get_titulo() : "null") . ",
