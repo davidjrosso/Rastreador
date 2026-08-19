@@ -20,6 +20,13 @@
 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Conexion.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Parametria.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Motivo.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Escuela.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Calle.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/CentroSalud.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Responsable.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Categoria.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Barrio.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Filtro.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/FiltroMotivo.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/FiltroResponsable.php");
@@ -31,6 +38,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/TipoAccion.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/TipoGrupoOperacion.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Accion.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/OtraInstitucion.php");
 
 
 class PreferenciaController 
@@ -452,7 +460,7 @@ class PreferenciaController
                         $solicitud_item = new SolicitudItem(
                                     coneccion: $con,
                                     id_solicitud: $solicitud->get_id_solicitud(),
-                                    valor: $valor[array_key_first($valor)],
+                                    valor: trim($valor[array_key_first($valor)]),
                                     identificador: array_key_first($valor),
                                     estado: 1
                         );
@@ -474,7 +482,6 @@ class PreferenciaController
     public function solicitud_eliminar_preferencia_control()
     {
         $id_solicitud = $_POST["id_solicitud"];
-        $id_usuario = $_SESSION["Usuario"];
         $fecha = date(format: "Y-m-d");
         try {
             if (!isset($_SESSION["Usuario"])) {
@@ -522,5 +529,104 @@ class PreferenciaController
             echo json_encode($resp);
         }
     }
+
+    public function seleccion_preferencia_control()
+    {
+        $fecha = date(format: "Y-m-d");
+        try {
+            if (!isset($_SESSION["Usuario"])) {
+                header("Content-Type: text/html;charset=utf-8;");
+                include("../Error_Session.php");
+            } else {
+                header("Content-Type: application/json;");
+                $id_usuario = $_SESSION["Usuario"];
+                $account = new Account(account_id: $id_usuario);
+                $tipo_usuario = $account->get_id_tipo_usuario();
+                $con = new Conexion();
+                $con->OpenConexion();
+
+                $mensaje = [];
+                $id_filtro = $_POST["id_filtro"];
+
+                $filtro = new Filtro(
+                                coneccion: $con,
+                                id_filtro: $id_filtro,
+                                estado: 1
+                    );
+
+                $list_barrio = FiltroBarrio::get_list_barrio_por_id_filtro(coneccion: $con, id_filtro: $id_filtro);
+                $list_mv = FiltroMotivo::get_list_motivo_por_id_filtro(coneccion: $con, id_filtro: $id_filtro);
+                $list_ca = FiltroCategoria::get_list_categoria_por_id_filtro(coneccion: $con, id_filtro: $id_filtro);
+                $list_resp = FiltroResponsable::get_list_responsable_por_id_filtro(coneccion: $con, id_filtro: $id_filtro);
+
+                $mensaje["ID_Barrio"] = array_map(function ($e) use ($con) {
+                    $mv = new Barrio(coneccion: $con,
+                                    id_barrio: $e->get_id_barrio());
+                    $dato["id"] = $mv->get_id_barrio();
+                    $dato["text"] = $mv->get_barrio();
+                    return $dato;
+                }, $list_barrio);
+
+                $mensaje["ID_Motivo"] = array_map(function ($e) use ($con) {
+                    
+                    $mv = new Motivo(coneccion_base: $con,
+                                    id_motivo: $e->get_id_motivo());
+                    $dato["id"] = $mv->get_id_motivo();
+                    $dato["text"] = $mv->get_motivo();
+                    return $dato;
+                }, $list_mv);
+
+                $mensaje["ID_Categoria"] = array_map(function ($e) use ($con) {
+                    $ca = new Categoria(xConecction: $con,
+                                            xID_Categoria: $e->get_id_categoria());
+                    $dato["id"] = $ca->getID_Categoria();
+                    $dato["text"] = $ca->getCategoria();
+                    return $dato;
+                }, $list_ca);
+
+                $mensaje["ID_Resp"] = array_map(function ($e) use ($con) {
+                    $resp = new Responsable(coneccion_base: $con,
+                                            id_responsable: $e->get_id_responsable());
+                    $dato["id"] = $resp->get_id_responsable();
+                    $dato["text"] = $resp->get_responsable();
+                    return $dato;
+                }, $list_resp);
+
+
+                $mensaje["Edad_Desde"]["texto"] = $filtro->get_anos_desde();
+                $mensaje["Meses_Desde"]["texto"] = $filtro->get_meses_desde();
+                $mensaje["Nro_Legajo"]["text"] = $filtro->get_nro_legajo();
+                $escuela = new Escuela(coneccion_base: $con,
+                                       xID_Escuela: $filtro->get_id_escuela());
+                $mensaje["ID_Escuela"]["id"] = $escuela->getID_Escuela();
+                $mensaje["ID_Escuela"]["text"] = $escuela->getEscuela();
+                $mensaje["ID_Persona"] = $filtro->get_id_persona();
+                $calle = new Calle(id_calle: $filtro->get_id_calle());
+                $mensaje["Calle"]["id"] = $calle->get_id_calle();
+                $mensaje["Calle"]["text"] = $calle->get_calle_nombre();
+                $mensaje["numero"]["text"] = $filtro->get_calle_numero();
+                $mensaje["manzana"]["text"] = $filtro->get_manzana();
+                $mensaje["familia"]["text"] = $filtro->get_familia();
+                $centro = new CentroSalud(coneccion_base: $con, 
+                                          id_centro: $filtro->get_id_centro_salud());
+                $mensaje["ID_Centro"]["id"] = $centro->get_id_centro();
+                $mensaje["ID_Centro"]["text"] = $centro->get_centro_salud();
+
+                $mensaje["Nro_Carpeta"]["text"] = $filtro->get_nro_carpeta();
+                $mensaje["ID_OtraInstitucion"]["text"] = $filtro->get_id_otra_institucion();
+                $mensaje["lote"]["text"] = $filtro->get_lote();
+                $mensaje["Edad_Hasta"] = $filtro->get_anos_hasta();
+                $mensaje["Meses_Hasta"] = $filtro->get_meses_hasta();
+                $mensaje["resp"]["mensaje"] = "La solicitud fue realizada Correctamente";
+                $mensaje["resp"]["estado"] = 1;
+            }
+            echo json_encode($mensaje);
+        } catch (Exception $e) {
+            $resp["mensaje"] = "error" . $e->getMessage();
+            $resp["estado"] = 0;
+            echo json_encode($resp);
+        }
+    }
+
 
 }
