@@ -243,7 +243,7 @@ export function VerificarCrearFiltro(xID) {
                         $(this).parent().parent().remove();
                         if (count == 1) {
                             $("#solicitudes-nueva-preferencia").remove();
-                            $("#header-solicitudes-nueva-preferencia").remove();
+                            $("#header-solicitudes-crear-preferencia").remove();
                         }
                     } else if (requestHttp.responseJSON.mensaje_error) {
                         controlMensaje(null, requestHttp.responseJSON.mensaje_error);
@@ -284,7 +284,7 @@ export function CancelarCrearFiltro(xID) {
                         $(this).parent().parent().remove();
                         if (count == 1) {
                             $("#solicitudes-nueva-preferencia").remove();
-                            $("#header-solicitudes-nueva-preferencia").remove();
+                            $("#header-solicitudes-crear-preferencia").remove();
                         }
                     } else if (requestHttp.responseJSON.mensaje_error) {
                         controlMensaje(null, requestHttp.responseJSON.mensaje_error);

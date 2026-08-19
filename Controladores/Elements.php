@@ -2931,6 +2931,34 @@ public function getMenuSeguridadUsuario($ID){
       $count++;
     }
 
+    $consulta = "SELECT *
+                 FROM solicitudes d inner join solicitudes_items sc on (d.id_solicitud = sc.id_solicitud)
+                      inner join TipoAcciones n on (d.id_tipo_accion = n.ID_TipoAccion)
+                 WHERE d.estado = 1
+                   and sc.identificador = 'titulo'
+                   and n.Tipo = 'INSERT'
+                 ORDER BY sc.valor  ASC";
+    $obj_query = mysqli_query(
+                      $con->Conexion,
+                      $consulta
+                      ) or die("Problemas al mostrar Personas");
+    $count = 0;
+    while ($Ret = mysqli_fetch_array($obj_query)) {
+      $div .= "<a  class='list-group-item list-group-item-action' data-toggle='list' role='tab' 
+                  id='list-" . $Ret['id_solicitud'] . "-sl'
+                  href='#list" . $Ret['id_solicitud'] . "' 
+                  aria-controls='" . $Ret['id_solicitud'] . "'
+                  style='display: flex; justify-content: space-between'>
+                      <span class='col-7'>" . $Ret['valor'] . " </span>
+                  <div class='col-5' style='text-align: end;'>
+                      <div class='btn btn-outline-info'>
+                          Pendiente
+                      </div>
+                  </div>
+               </a>";
+      $count++;
+    }
+
     $div .= "</div>";
     $con->CloseConexion();
     return $div;
