@@ -2945,8 +2945,8 @@ public function getMenuSeguridadUsuario($ID){
     $count = 0;
     while ($Ret = mysqli_fetch_array($obj_query)) {
       $div .= "<a  class='list-group-item list-group-item-action' data-toggle='list' role='tab' 
-                  id='list-" . $Ret['id_solicitud'] . "-sl'
-                  href='#list" . $Ret['id_solicitud'] . "' 
+                  id='list" . $Ret['id_solicitud'] . "-list'
+                  href='#list-" . $Ret['id_solicitud'] . "-sl' 
                   aria-controls='" . $Ret['id_solicitud'] . "'
                   style='display: flex; justify-content: space-between'>
                       <span class='col-7'>" . $Ret['valor'] . " </span>
@@ -3054,6 +3054,77 @@ public function getMenuSeguridadUsuario($ID){
                           $row["categoria"] . "
                         </td>
                      </tr>";
+        }
+        $div .= "</table>";
+        $div .= "</div>";
+        $count++;
+    }
+
+    $consulta = "SELECT *
+                 FROM solicitudes s 
+                 WHERE s.estado = 1";
+    $obj_query = mysqli_query($con->Conexion,$consulta);
+    
+    while ($ret = mysqli_fetch_array($obj_query)) {
+        $div .= "<div class='tab-pane fade'
+                      id='list-" . $ret['id_solicitud'] . "-sl'
+                      role='tabpanel'
+                      aria-labelledby='list" . $ret['id_solicitud'] . "-sl'>";
+        $div .= $Table;
+
+        $consulta = "SELECT *
+                     FROM solicitudes s inner join solicitudes_items d on (s.id_solicitud = d.id_solicitud)
+                     WHERE s.estado = 1
+                       AND d.identificador <> 'titulo'";
+        $result = mysqli_query($con->Conexion, $consulta);
+        while ($row = mysqli_fetch_array($result)) {
+            if ($row["identificador"] == "ID_Motivo") {
+                $div .= "<tr>
+                            <td style='text-align: center;'>
+                              Motivo
+                            </td>
+                            <td style='align-content: center;'>" . 
+                              $row["motivo"] . "
+                            </td>
+                        </tr>";
+            } else if ($row["identificador"] == "ID_Responsable") {
+            $div .= "<tr>
+                        <td style='text-align: center;'>
+                          Responsable
+                        </td>
+                        <td style='align-content: center;'>" . 
+                          $row["valor"] . "
+                        </td>
+                     </tr>";
+            } else if ($row["identificador"] == "ID_Barrio") {
+                $div .= "<tr>
+                            <td style='text-align: center;'>
+                              Barrio
+                            </td>
+                            <td style='align-content: center;'>" . 
+                              $row["valor"] . "
+                            </td>
+                        </tr>";
+            } else if ($row["identificador"] == "ID_Categoria") {
+                $div .= "<tr>
+                            <td style='text-align: center;'>
+                              Categoria
+                            </td>
+                            <td style='align-content: center;'>" . 
+                              $row["valor"] . "
+                            </td>
+                        </tr>";
+            } else {
+                $div .= "<tr>
+                            <td style='text-align: center;'>
+                              " . $row["identificador"] . "
+                            </td>
+                            <td style='align-content: center;'>" . 
+                              $row["valor"] . "
+                            </td>
+                        </tr>";
+            }
+
         }
         $div .= "</table>";
         $div .= "</div>";
