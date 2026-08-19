@@ -17,9 +17,19 @@ export class Preferencia {
                     data-toggle='list' 
                     href='#list-` + char + `' 
                     role='tab' 
-                    aria-controls='` + char + `'>` +
+                    aria-controls='` + char + `'
+                    style='display: flex; justify-content: space-between'>
+                    <span class='col-7'>"
+                    ` +
                         val  +
-                `</a>`);
+                    `</span>
+                    <div class='col-5' style='text-align: end;'>
+                        <div class='btn btn-outline-warning'
+                            style='padding: 1px; border-radius: 43px; padding-bottom: 5px;'>
+                            Pendiente
+                        </div>
+                    </div>
+                    </a>`);
         let z = `  <div class='tab-pane fade show active'
                         id='list-` + char + `'
                         role='tabpanel'

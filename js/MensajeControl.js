@@ -237,12 +237,18 @@ export function VerificarCrearFiltro(xID) {
                 contentType: 'application/x-www-form-urlencoded',
                 data: datos,
                 success : function (data, status, requestHttp) {
+                    let count = $("#solicitudes-nueva-preferencia tbody tr").length;
                     if (requestHttp.responseJSON.mensaje) {
                         controlMensaje(requestHttp.responseJSON.mensaje, null);
+                        $(this).parent().parent().remove();
+                        if (count == 1) {
+                            $("#solicitudes-nueva-preferencia").remove();
+                            $("#header-solicitudes-nueva-preferencia").remove();
+                        }
                     } else if (requestHttp.responseJSON.mensaje_error) {
                         controlMensaje(null, requestHttp.responseJSON.mensaje_error);
                     }
-                }
+                }.bind(this)
             });
 
     }
@@ -272,12 +278,18 @@ export function CancelarCrearFiltro(xID) {
                 contentType: 'application/x-www-form-urlencoded',
                 data: datos,
                 success : function (data, status, requestHttp) {
+                    let count = $("#solicitudes-nueva-preferencia tbody tr").length;
                     if (requestHttp.responseJSON.mensaje) {
                         controlMensaje(requestHttp.responseJSON.mensaje, null);
+                        $(this).parent().parent().remove();
+                        if (count == 1) {
+                            $("#solicitudes-nueva-preferencia").remove();
+                            $("#header-solicitudes-nueva-preferencia").remove();
+                        }
                     } else if (requestHttp.responseJSON.mensaje_error) {
                         controlMensaje(null, requestHttp.responseJSON.mensaje_error);
                     }
-                }
+                }.bind(this)
             });
 
     }
@@ -318,7 +330,7 @@ export function VerificarEliminarFiltro(xID) {
                     } else if (requestHttp.responseJSON.mensaje_error) {
                         controlMensaje(null, requestHttp.responseJSON.mensaje_error);
                     }
-                }
+                }.bind(this)
             });
 
     }
@@ -359,7 +371,7 @@ export function CancelarEliminarFiltro(xID) {
                     } else if (requestHttp.responseJSON.mensaje_error) {
                         controlMensaje(null, requestHttp.responseJSON.mensaje_error);
                     }
-                }
+                }.bind(this)
             });
 
     }
@@ -375,6 +387,16 @@ $(function (e) {
     $("button[data-tarea~='confirmar-eliminar-solicitud'").on("click", function (e) {
         let idSolicitud = $(this).attr("data-id-solicitud");
         VerificarEliminarFiltro.bind(this)(idSolicitud);
+    });
+
+    $("button[data-tarea~='cancelar-nueva-solicitud'").on("click", function (e) {
+        let idSolicitud = $(this).attr("data-id-solicitud");
+        CancelarCrearFiltro.bind(this)(idSolicitud);
+    });
+
+    $("button[data-tarea~='confirmar-nueva-solicitud'").on("click", function (e) {
+        let idSolicitud = $(this).attr("data-id-solicitud");
+        VerificarCrearFiltro.bind(this)(idSolicitud);
     });
 
 });

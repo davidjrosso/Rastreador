@@ -7,7 +7,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/CentroSalud.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Motivo.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Responsable.php");
 
-class CtrGeneral{
+class CtrGeneral {
 	//Instanciando la Conexion
 
 	////////////////////////////////////////////////-MOVIMIENTOS-///////////////////////////////////////////////////
@@ -2841,10 +2841,10 @@ class CtrGeneral{
 								<td style='text-align: center;'>". $ret["usuario"] . "</td>
 								<td style='text-align: center;'>". $ret["Accion"] . "</td>
 								<td style='text-align: center;'>
-									<button class='btn btn-success' onClick='VerificarCrearFiltro(" . $ret["id_solicitud"] . ")'>
+									<button class='btn btn-success' data-tarea = 'confirmar-nueva-solicitud' data-id-solicitud = '" . $ret["id_solicitud"] . "'>
 										<i class='fa fa-check'></i>
 									</button>
-									<button class='btn btn-danger' onClick='CancelarCrearFiltro(" . $ret["id_solicitud"] . ")'>
+									<button class='btn btn-danger' data-tarea = 'cancelar-nueva-solicitud' data-id-solicitud = '" . $ret["id_solicitud"] . "'>
 										<i class='fa fa-times'></i>
 									</button>
 								</td>
@@ -3670,7 +3670,7 @@ class CtrGeneral{
 		$Con->OpenConexion();
 		$Consulta = "select S.ID, S.Fecha, S.Motivo, S.Cod_Categoria, S.Num_Motivo, U.username, S.ID_Motivo from solicitudes_eliminarmotivos S, accounts U where S.ID_Usuario = U.accountid and S.Estado = 1 order by S.Fecha";
 		$MessageError = "Problemas al intentar mostrar Solicitudes eliminar motivos";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+		$Con->ResultSet = mysqli_query($Con->Conexion, $Consulta) or die($MessageError);
 		$Regis = mysqli_num_rows($Con->ResultSet);
 		if($Regis > 0){
 			$Table = "<table class='table-responsive table-bordered'>
