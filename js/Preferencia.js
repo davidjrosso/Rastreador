@@ -19,13 +19,12 @@ export class Preferencia {
                     role='tab' 
                     aria-controls='` + char + `'
                     style='display: flex; justify-content: space-between'>
-                    <span class='col-7'>"
+                    <span class='col-7'>
                     ` +
                         val  +
                     `</span>
                     <div class='col-5' style='text-align: end;'>
-                        <div class='btn btn-outline-warning'
-                            style='padding: 1px; border-radius: 43px; padding-bottom: 5px;'>
+                        <div class='btn btn-outline-info'>
                             Pendiente
                         </div>
                     </div>
