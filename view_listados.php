@@ -1398,7 +1398,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                         ?>
                       </div>
                       <div class="col-7">
-                        <?php 
+                        <?php
                           echo $Element->CBfiltro();
                         ?>
                       </div>
@@ -1414,49 +1414,51 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
             </div>
             <!-- FIN MODAL SELECCION filtro -->
 
-              <div class="modal fade" style="top: 20%;" id="filtro-nombre-Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title col-11" style="text-align: center;">Nombre de Preferencias</h5>
-                      <button type="button" class="close col-1" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                          <textarea class="form-control" id="message-text"></textarea>
-                        </div>
-                    </div>
-                    <div class="modal-footer" style="justify-content: center;">
-                      <button type="button" class="btn btn-success" id="bn-new-filtro" data-dismiss="modal">Aceptar</button>
-                      <button type="button" class="btn btn-danger">Cancelar</button>
-                    </div>
+            <!--
+            <div class="modal fade" style="top: 20%;" id="filtro-nombre-Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title col-11" style="text-align: center;">Nombre de Preferencias</h5>
+                    <button type="button" class="close col-1" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                      <div class="form-group">
+                        <textarea class="form-control" id="message-text"></textarea>
+                      </div>
+                  </div>
+                  <div class="modal-footer" style="justify-content: center;">
+                    <button type="button" class="btn btn-success" id="bn-new-filtro" data-dismiss="modal">Aceptar</button>
+                    <button type="button" class="btn btn-danger">Cancelar</button>
                   </div>
                 </div>
               </div>
+            </div>
+            -->
 
-              <div class="modal fade" style="top: 20%;" id="filtro-nombre-dato" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title col-11" style="text-align: center;">Nombre de Preferencias</h5>
-                      <button type="button" class="close col-1" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                          <textarea class="form-control" id="text-filtro"></textarea>
-                        </div>
-                    </div>
-                    <div class="modal-footer" style="justify-content: center;">
-                      <button type="button" class="btn btn-success" id="bn-filtro-dato" data-dismiss="modal">Aceptar</button>
-                      <button type="button" class="btn btn-danger"  id="bn-cancel-dato" data-dismiss="modal">Cancelar</button>
-                    </div>
+            <div class="modal fade" style="top: 20%;" id="filtro-nombre-dato" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title col-11" style="text-align: center;">Nombre de Preferencias</h5>
+                    <button type="button" class="close col-1" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                      <div class="form-group">
+                        <textarea class="form-control" id="text-filtro"></textarea>
+                      </div>
+                  </div>
+                  <div class="modal-footer" style="justify-content: center;">
+                    <button type="button" class="btn btn-success" id="bn-filtro-dato" data-dismiss="modal">Aceptar</button>
+                    <button type="button" class="btn btn-danger"  id="bn-cancel-dato" data-dismiss="modal">Cancelar</button>
                   </div>
                 </div>
               </div>
+            </div>
 
             <!-- FIN SECCION DE MODALES -->
       </div>
