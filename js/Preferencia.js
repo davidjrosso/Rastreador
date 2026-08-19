@@ -9,8 +9,8 @@ export class Preferencia {
         if (!val) val = $("#text-filtro").prop("value");
         $("#list-tab-filtro a").removeClass("active");
         $("#list-tab-filtro a").removeClass("show");
-        $("#nav-tabContent-filtro a").removeClass("active");
-        $("#nav-tabContent-filtro a").removeClass("show");
+        $("#nav-tabContent-filtro div").removeClass("active");
+        $("#nav-tabContent-filtro div").removeClass("show");
 
         let node = $("<a class='list-group-item list-group-item-action active show' " +
                     `id='list-` + char + `-list' 
@@ -927,7 +927,6 @@ export class Preferencia {
                     htmlContainer: "text-dialog"
                 },
                 showCloseButton: true,
-                showCancelButton: true,
                 confirmButtonText: `OK`,
                 cancelButtonText: `Cancel`
             });
@@ -941,7 +940,6 @@ export class Preferencia {
                     htmlContainer: "text-dialog"
                 },
                 showCloseButton: true,
-                showCancelButton: true,
                 confirmButtonText: `OK`,
                 cancelButtonText: `Cancel`
             });
@@ -960,13 +958,12 @@ export class Preferencia {
         success : function (data, status, requestHttp) {
             swal.fire({
                 title: "",
-                html: "Se envió al administrar la preferencia para su autorización.",
+                html: "Se envió al administrador la preferencia para su autorización.",
                 icon: "success",
                 customClass: {
                     htmlContainer: "text-dialog"
                 },
                 showCloseButton: true,
-                showCancelButton: true,
                 confirmButtonText: `OK`,
                 cancelButtonText: `Cancel`
             });
@@ -980,7 +977,6 @@ export class Preferencia {
                     htmlContainer: "text-dialog"
                 },
                 showCloseButton: true,
-                showCancelButton: true,
                 confirmButtonText: `OK`,
                 cancelButtonText: `Cancel`
             });
@@ -999,13 +995,12 @@ export class Preferencia {
         success : function (data, status, requestHttp) {
             swal.fire({
                 title: "",
-                html: "Se envió al administrar la preferencia para su autorización.",
+                html: "Se envió al administrador la solicitud para su autorización.",
                 icon: "success",
                 customClass: {
                     htmlContainer: "text-dialog"
                 },
                 showCloseButton: true,
-                showCancelButton: true,
                 confirmButtonText: `OK`,
                 cancelButtonText: `Cancel`
             });
@@ -1019,7 +1014,6 @@ export class Preferencia {
                     htmlContainer: "text-dialog"
                 },
                 showCloseButton: true,
-                showCancelButton: true,
                 confirmButtonText: `OK`,
                 cancelButtonText: `Cancel`
             });
