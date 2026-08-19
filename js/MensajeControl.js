@@ -299,7 +299,7 @@ export function CancelarCrearFiltro(xID) {
 export function VerificarEliminarFiltro(xID) {
     swal.fire({
         title: "¿Está seguro?",
-        text: "¿Confirma la creación de esta filtro?",
+        text: "¿Confirma la eliminacion de esta filtro?",
         icon: "warning",
         showCloseButton: true,
         confirmButtonColor: "#e64942",
