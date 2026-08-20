@@ -1,3 +1,4 @@
+import { text } from 'mermaid/dist/rendering-util/rendering-elements/shapes/text.js';
 import swal from 'sweetalert2';
 
 export class Preferencia {
@@ -239,6 +240,7 @@ export class Preferencia {
                                 <option data-dec='Meses_Hasta'>Meses - Hasta</option>
                                 <option data-dec='ID_Barrio'>Barrio</option>
                                 <option data-dec='Calle'>Domicilio/Familia</option>
+                                <option data-dec='NumerodeCalle'>Numero</option>
                                 <option data-dec='manzana'>Manzana</option>
                                 <option data-dec='lote'>Lote</option>
                                 <option data-dec='familia'>Sub-lote</option>
@@ -399,6 +401,17 @@ export class Preferencia {
                 nodo2.children().prop("disabled", true);
                 this.#listOpciones.push(
                                           {"Calle" : value,
+                                           "text" : texto}
+                                        );
+                break;
+            case "NumerodeCalle" :
+                nodo1.prop("selectedIndex", index);
+                nodo1.prop("disabled", true);
+                nodo2.html("");
+                nodo2.children().prop("value", value);
+                nodo2.children().prop("disabled", true);
+                this.#listOpciones.push(
+                                          {"NumerodeCalle" : value,
                                            "text" : texto}
                                         );
                 break;
@@ -592,276 +605,67 @@ export class Preferencia {
     }
 
     setDatos(id, value) {
+        let selectIndex = null;
         switch (id) {
             case "ID_Persona" :
-                nodo2.append(`<input type="text" name="id-persona" id = "id-persona" class="form-control" autocomplete="off">`);
-                $("#Persona").text(value.texto);
+                $("#btn-persona").text(value.text);
+                $("#ID_Persona").prop("value", value.id);
                 break;
             case "Edad_Desde" :
-                nodo2.html("");
-                nodo1.prop("selectedIndex", index);
-                nodo1.prop("disabled", true);
-                nodo2.append(`<input type="text" name="Años - Desde" id = "Años - Desde" class="form-control" autocomplete="off">`);
-                nodo2.children().prop("value", value);
-                nodo2.children().prop("disabled", true);
-                this.#listOpciones.push(
-                                          {"Edad_Desde" : value,
-                                           "text" : texto}
-                                        );
+                $("#Edad_Desde").prop("value", value.text);
                 break;
             case "Edad_Hasta" :
-                nodo1.prop("selectedIndex", index);
-                nodo1.prop("disabled", true);
-                nodo2.html(`<input type="text" name="Años - Hasta" id = "Años - Hasta" class="form-control" autocomplete="off">`);
-                nodo2.children().prop("value", value);
-                nodo2.children().prop("disabled", true);
-                this.#listOpciones.push(
-                                          {"Edad_Hasta" : value,
-                                           "text" : texto}
-                                        );
-                break;
+                $("#Edad_Hasta").prop("value", value.text);
+                break
             case "Meses_Desde" :
-                nodo1.prop("selectedIndex", index);
-                nodo1.prop("disabled", true);
-                nodo2.html(`<input type="text" name="Meses - Desde" id = "Meses - Desde" class="form-control" autocomplete="off">`);
-                nodo2.children().prop("value", value);
-                nodo2.children().prop("disabled", true);
-                this.#listOpciones.push(
-                                          {"Meses_Desde" : value,
-                                           "text" : texto}
-                                        );
+                $("#Meses_Desde").prop("value", value.text);
                 break;
             case "Meses_Hasta" :
-                nodo1.prop("selectedIndex", index);
-                nodo1.prop("disabled", true);
-                nodo2.html(`<input type="text" name="Meses - Hasta" id = "Meses - Hasta" class="form-control" autocomplete="off">`);
-                nodo2.children().prop("value", value);
-                nodo2.children().prop("disabled", true);
-                this.#listOpciones.push(
-                                        {"Meses_Hasta" : value,
-                                         "text" : texto}
-                                        );
+                $("#Meses_Hasta").prop("value", value.text);
                 break;
             case "ID_Barrio" :
-                nodo1.prop("selectedIndex", 6);
-                nodo1.prop("disabled", true);
-                exis = this.#listOpciones.find(
-                                               (e) => e.hasOwnProperty("ID_Barrio")
-                                              );
-                op = $("#ID_Barrio").clone();
-                op.attr("id", "id-barrio-" +  num + "-" + e);
-                op.attr("name", "id-barrio-" +  num + "-" + e);
-                op.removeClass();
-                op.addClass("form-control");
-                op.prop("disabled", true);
-                if (!exis) this.#listOpciones.push({
-                                                      "ID_Barrio" : [],
-                                                      "text" : []
-                                                    }); 
-                let barrio = this.#listOpciones.find(
-                                        (e) => e.hasOwnProperty("ID_Barrio")
-                );
-
-                nodo2.html("");
-                nodo2.append(op);
-                op.prop("selectedIndex", value);
-                barrio["ID_Barrio"].push(valueOp);
-                barrio["text"].push(texto);
                 break;
             case "Calle" :
-                nodo1.prop("selectedIndex", index);
-                nodo1.prop("disabled", true);
-                nodo2.html("");
-                nodo2.children().prop("value", value);
-                nodo2.children().prop("disabled", true);
-                this.#listOpciones.push(
-                                          {"Calle" : value,
-                                           "text" : texto}
-                                        );
+                $("#Calle").prop("value", value.id);
+                $("#BotonModalDireccion_1").text(value.text);
+                break;
+            case "NumeroDeCalle" :
+                $("#NumeroDeCalle").prop("value", value.text);
                 break;
             case "manzana" :
-                nodo1.prop("selectedIndex", index);
-                nodo1.prop("disabled", true);
-                nodo2.html(`<input type="text" name="Manzana" id = "Manzana" class="form-control" autocomplete="off">`);
-                nodo2.children().prop("value", value);
-                nodo2.children().prop("disabled", true);
-                this.#listOpciones.push({
-                                           "Manzana" : value,
-                                           "text" : texto
-                                         });
+                $("#manzana").prop("value", value.text);
                 break;
             case "lote" :
-                nodo1.prop("selectedIndex", index);
-                nodo1.prop("disabled", true);
-                nodo2.html(`<input type="text" name="Lote" id = "Lote" class="form-control" autocomplete="off">`);
-                nodo2.children().prop("value", value);
-                nodo2.children().prop("disabled", true);
-                this.#listOpciones.push({
-                                           "Lote" : value,
-                                           "text" : texto
-                                         });
+                $("#lote").prop("value", value.text);
                 break;
             case "familia" :
-                nodo1.prop("selectedIndex", index);
-                nodo1.prop("disabled", true);
-                nodo2.html(`<input type="text" name="Sub-lote" id = "Sub-lote" class="form-control" autocomplete="off">`);
-                nodo2.children().prop("value", value);
-                nodo2.children().prop("disabled", true);
-                this.#listOpciones.push({
-                                           "Familia" : value,
-                                           "text" : texto
-                                         });
+                $("#familia").prop("value", value.text);
                 break;
             case "ID_Categoria" :
-                nodo1.prop("selectedIndex", index);
-                nodo1.prop("disabled", true);
-                exis = this.#listOpciones.find(
-                                               (e) => e.hasOwnProperty("ID_Categoria")
-                                              );
-                nodo2.html(`<input type="text" name="categoria" id = "categoria" class="form-control" autocomplete="off">`);
-                nodo2.children().prop("disabled", true);
-                if (!exis) this.#listOpciones.push({
-                                                      "ID_Categoria" : [],
-                                                      "text" : []
-                                                    }); 
-                let categoria = this.#listOpciones.find(
-                                        (e) => e.hasOwnProperty("ID_Categoria")
-                );
-                categoria["ID_Categoria"].push(value);
-                if (!exis) texto = $("#Categoria").text();
-                if (exis) texto = $("#Categoria" + categoria["ID_Categoria"].length).text();
-                nodo2.children().prop("value", texto);
-                categoria["text"].push(texto);
                 break;
             case "ID_Motivo" :
-                exis = this.#listOpciones.find(
-                                                   (e) => e.hasOwnProperty("ID_Motivo")
-                                                  );
-                nodo2.html("");
-                nodo2.children().prop("value", value);
-                nodo2.children().prop("disabled", true);
-                nodo2.html(`<input type="text" name="motivo" id = "motivo" class="form-control" autocomplete="off">`);
-                nodo2.children().prop("disabled", true);
-                if (!exis) this.#listOpciones.push(
-                                          {"ID_Motivo" : [],
-                                           "text" : []}
-                                             ); 
-                let motivo = this.#listOpciones.find(
-                                        (e) => e.hasOwnProperty("ID_Motivo")
-                );
-                motivo["ID_Motivo"].push(value);
-                if (!exis) texto = $("#Motivo").text();
-                if (exis) texto = $("#Motivo" + motivo["ID_Motivo"].length).text();
-                nodo2.children().prop("value", texto);
-                motivo["text"].push(texto);
                 break;
             case "ID_Centro" :
-                nodo1.prop("selectedIndex", index);
-                nodo1.prop("disabled", true);
-                op = $("#ID_Centro").clone();
-                op.attr("id", "id-centro-" +  num + "-" + e);
-                op.attr("name", "id-centro-" +  num + "-" + e);
-                op.removeClass();
-                op.addClass("form-control");
-                op.prop("disabled", true);
-                nodo2.html("");
-                nodo2.append(op);
-                op.prop("selectedIndex", value);
-                this.#listOpciones.push(
-                                          {"ID_Centro" : value,
-                                           "text" : texto}
-                                        );
+                selecIndex = $("#ID_Centro option[value=" + value.text + "]").index();
+                $("#ID_Centro").prop("selectedIndex", selecIndex);
                 break;
             case "Nro_Carpeta" :
-                nodo1.prop("selectedIndex", index);
-                nodo1.prop("disabled", true);
-                nodo2.html(`<input type="text" name="nro-carpeta" id = "nro-carpeta" class="form-control" autocomplete="off">`);
-                nodo2.children().prop("value", value);
-                nodo2.children().prop("disabled", true);
-                this.#listOpciones.push(
-                                          {"Nro_Carpeta" : value,
-                                           "text" : texto}
-                                        );
+                $("#Nro_Carpeta").prop("value", value.text);
                 break;
             case "Nro_Legajo" :
-                nodo1.prop("selectedIndex", index);
-                nodo1.prop("disabled", true);
-                nodo2.html(`<input type="text" name="nro-legajo" id = "nro-legajo" class="form-control" autocomplete="off">`);
-                nodo2.append();
-                nodo2.children().prop("value", value);
-                nodo2.children().prop("disabled", true);
-                this.#listOpciones.push(
-                                          {"Nro_Legajo" : value,
-                                           "text" : texto}
-                                        );
+                $("#Nro_Legajo").prop("value", value.text);
                 break;
             case "ID_OtraInstitucion" :
-                nodo1.prop("selectedIndex", index);
-                nodo1.prop("disabled", true);
-                op = $("#ID_OtraInstitucion").clone();
-                op.attr("id", "id-ins-" +  num + "-" + e);
-                op.attr("name", "id-ins-" +  num + "-" + e);
-                op.prop("disabled", true);
-                nodo2.html("");
-                nodo2.append(op);
-                op.prop("selectedIndex", value);
-                this.#listOpciones.push(
-                                          {"ID_OtraInstitucion" : value,
-                                           "text" : texto}
-                                        );
+                selectIndex = $("#ID_OtraInstitucion option[value=" + value.text + "]").index();
+                $("#ID_OtraInstitucion").prop("selectedIndex", selectIndex);
                 break;
             case "ID_Escuela" :
-                nodo1.prop("selectedIndex", index);
-                nodo1.prop("disabled", true);
-                op = $("#ID_Escuela").clone();
-                op.attr("id", "id-escuela-" +  num + "-" + e);
-                op.attr("name", "id-escuela-" +  num + "-" + e);
-                op.prop("disabled", true);
-                nodo2.html("");
-                nodo2.append(op);
-                op.prop("selectedIndex", value);
-                this.#listOpciones.push(
-                                          {"ID_Escuela" : value,
-                                           "text" : texto}
-                                        );
+                selectIndex = $("#ID_Escuela option[value=" + value.id + "]").index();
+                $("#ID_Escuela").prop("selectedIndex", selectIndex);
                 break;
             case "ID_Responsable" :
-                nodo1.prop("selectedIndex", index);
-                nodo1.prop("disabled", true);
-                exis = this.#listOpciones.find(
-                                                   (e) => e.hasOwnProperty("ID_Responsable")
-                                                  );
-                op = $("#ID_Responsable").clone();
-                op.attr("id", "id-responsable-" +  num + "-" + e);
-                op.attr("name", "id-responsable-" +  num + "-" + e);
-                nodo2.html("");
-                nodo2.append(op);
-                op.prop("selectedIndex", value);
-                op.prop("disabled", true);
-                if (!exis) this.#listOpciones.push(
-                                          {"ID_Responsable" : [],
-                                           "text" : []}
-                                             ); 
-                let responsable = this.#listOpciones.find(
-                                        (e) => e.hasOwnProperty("ID_Responsable")
-                );
-                responsable["ID_Responsable"].push(valueOp);
-                responsable["text"].push(texto);
                 break;
             case "inpMostrar" :
-                nodo1.prop("selectedIndex", index);
-                nodo1.prop("disabled", true);
-                op = $("#inpMostrar").clone();
-                op.attr("id", "id-mov-" +  num + "-" + e);
-                op.attr("name", "id-mov-" +  num + "-" + e);
-                op.prop("disabled", true);
-                nodo2.html("");
-                nodo2.append(op);
-                op.prop("value", value);
-                this.#listOpciones.push(
-                                          {"inpMostrar" : value,
-                                           "text" : texto}
-                                        );
                 break;
         }
     }
@@ -900,13 +704,13 @@ export class Preferencia {
         let index = 1;
         let texto = "";
         $("form input[data-pre]").each(function (ind, e) {
-            if (e.id in respuesta) return;
-            this.setDatos(e.id, respuesta.id);
+            if (!(e.id in respuesta) && !respuesta[e.id]) return;
+            this.setDatos(e.id, respuesta[e.id]);
         }.bind(this));
 
         $("form select[data-pre]").each(function (ind, e) {
-            if (e.id in respuesta) return;
-            this.setDatos(e.id, respuesta.id);
+            if (!(e.id in respuesta) && !respuesta[e.id]) return;
+            this.setDatos(e.id, respuesta[e.id]);
         }.bind(this));
     }
 
@@ -1028,10 +832,9 @@ export class Preferencia {
         method: "post",
         dataType: "json",
         contentType: "application/x-www-form-urlencoded",
-        data: "id_solicitud=" + id,
+        data: "id_filtro=" + id,
         success : function (data, status, requestHttp) {
-
-            this.setDatos(data, null);
+            this.setFormulario(data);
         }.bind(this),
         error: function (data, status, requestHttp) {
              swal.fire({

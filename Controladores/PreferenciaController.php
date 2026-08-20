@@ -593,30 +593,45 @@ class PreferenciaController
                 }, $list_resp);
 
 
-                $mensaje["Edad_Desde"]["texto"] = $filtro->get_anos_desde();
-                $mensaje["Meses_Desde"]["texto"] = $filtro->get_meses_desde();
-                $mensaje["Nro_Legajo"]["text"] = $filtro->get_nro_legajo();
-                $escuela = new Escuela(coneccion_base: $con,
-                                       xID_Escuela: $filtro->get_id_escuela());
-                $mensaje["ID_Escuela"]["id"] = $escuela->getID_Escuela();
-                $mensaje["ID_Escuela"]["text"] = $escuela->getEscuela();
-                $mensaje["ID_Persona"] = $filtro->get_id_persona();
-                $calle = new Calle(id_calle: $filtro->get_id_calle());
-                $mensaje["Calle"]["id"] = $calle->get_id_calle();
-                $mensaje["Calle"]["text"] = $calle->get_calle_nombre();
-                $mensaje["numero"]["text"] = $filtro->get_calle_numero();
-                $mensaje["manzana"]["text"] = $filtro->get_manzana();
-                $mensaje["familia"]["text"] = $filtro->get_familia();
-                $centro = new CentroSalud(coneccion_base: $con, 
-                                          id_centro: $filtro->get_id_centro_salud());
-                $mensaje["ID_Centro"]["id"] = $centro->get_id_centro();
-                $mensaje["ID_Centro"]["text"] = $centro->get_centro_salud();
+                if ($filtro->get_anos_desde()) $mensaje["Edad_Desde"]["texto"] = $filtro->get_anos_desde();
+                if ($filtro->get_meses_desde()) $mensaje["Meses_Desde"]["texto"] = $filtro->get_meses_desde();
+                if ($filtro->get_nro_legajo()) $mensaje["Nro_Legajo"]["text"] = $filtro->get_nro_legajo();
 
-                $mensaje["Nro_Carpeta"]["text"] = $filtro->get_nro_carpeta();
-                $mensaje["ID_OtraInstitucion"]["text"] = $filtro->get_id_otra_institucion();
-                $mensaje["lote"]["text"] = $filtro->get_lote();
-                $mensaje["Edad_Hasta"] = $filtro->get_anos_hasta();
-                $mensaje["Meses_Hasta"] = $filtro->get_meses_hasta();
+                if ($filtro->get_id_escuela()) {
+                    $escuela = new Escuela(coneccion_base: $con,
+                                           xID_Escuela: $filtro->get_id_escuela());
+                    $mensaje["ID_Escuela"]["id"] = $escuela->getID_Escuela();
+                    $mensaje["ID_Escuela"]["text"] = $escuela->getEscuela();
+                }
+
+                if ($filtro->get_id_persona()) {
+                    $persona = new Persona(ID_Persona: $filtro->get_id_persona());
+                    $mensaje["ID_Persona"]["id"] = $persona->getID_Persona();
+                    $mensaje["ID_Persona"]["text"] = $persona->getApellido() . ", " . $persona->getNombre();
+                }
+
+                if ($filtro->get_id_calle()) {
+                    $calle = new Calle(id_calle: $filtro->get_id_calle());
+                    $mensaje["Calle"]["id"] = $calle->get_id_calle();
+                    $mensaje["Calle"]["text"] = $calle->get_calle_nombre();
+                }
+
+                if ($filtro->get_calle_numero()) $mensaje["numero"]["text"] = $filtro->get_calle_numero();
+                if ($filtro->get_manzana()) $mensaje["manzana"]["text"] = $filtro->get_manzana();
+                if ($filtro->get_familia()) $mensaje["familia"]["text"] = $filtro->get_familia();
+
+                if ($filtro->get_id_centro_salud()) {
+                    $centro = new CentroSalud(coneccion_base: $con,
+                                            id_centro: $filtro->get_id_centro_salud());
+                    $mensaje["ID_Centro"]["id"] = $centro->get_id_centro();
+                    $mensaje["ID_Centro"]["text"] = $centro->get_centro_salud();
+                }
+
+                if ($filtro->get_nro_carpeta()) $mensaje["Nro_Carpeta"]["text"] = $filtro->get_nro_carpeta();
+                if ($filtro->get_id_otra_institucion()) $mensaje["ID_OtraInstitucion"]["text"] = $filtro->get_id_otra_institucion();
+                if ($filtro->get_lote()) $mensaje["lote"]["text"] = $filtro->get_lote();
+                if ($filtro->get_anos_hasta()) $mensaje["Edad_Hasta"] = $filtro->get_anos_hasta();
+                if ($filtro->get_meses_hasta()) $mensaje["Meses_Hasta"] = $filtro->get_meses_hasta();
                 $mensaje["resp"]["mensaje"] = "La solicitud fue realizada Correctamente";
                 $mensaje["resp"]["estado"] = 1;
             }

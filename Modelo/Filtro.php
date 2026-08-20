@@ -92,7 +92,7 @@ class Filtro implements JsonSerializable
                 $row_nro_legajo = $ret["nro_legajo"];
                 $row_id_usuario = $ret["id_usuario"];
                 $row_meses_desde = $ret["meses_desde"];
-                $row_anos_desde = $ret["anos_desde"];
+                $row_anos_desde = $ret["edad_desde"];
                 $row_familia = $ret["familia"];
                 $row_manzana = $ret["manzana"];
                 $row_id_calle = $ret["id_calle"];

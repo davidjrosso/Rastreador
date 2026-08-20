@@ -2338,7 +2338,7 @@ public function getMenuSeguridadUsuario($ID){
   public function CBRepEscuelas(){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
-    $Select = "<select class='form-control' id='ID_Escuela' name = 'ID_Escuela'>";
+    $Select = "<select class='form-control' id='ID_Escuela' data-pre='1' name = 'ID_Escuela'>";
     $Select .= "<option value = '0'>-Todos-</option>";
     $Consulta = mysqli_query($Con3->Conexion,"select * from escuelas order by Escuela")or die("Problemas al mostrar Escuelas");
     while ($Ret = mysqli_fetch_array($Consulta)) {
@@ -2993,7 +2993,7 @@ public function getMenuSeguridadUsuario($ID){
         $result = mysqli_query($con->Conexion, $consulta);
         while ($row = mysqli_fetch_array($result)) {
             $div .= "<tr>
-                        <td style='text-align: center;'>
+                        <td style='text-align: init;'>
                           Motivo
                         </td>
                         <td style='align-content: center;'>" . 
@@ -3009,7 +3009,7 @@ public function getMenuSeguridadUsuario($ID){
         $result = mysqli_query($con->Conexion, $consulta);
         while ($row = mysqli_fetch_array($result)) {
             $div .= "<tr>
-                        <td style='text-align: center;'>
+                        <td style='text-align: init;'>
                           Responsable
                         </td>
                         <td style='align-content: center;'>" . 
@@ -3024,7 +3024,7 @@ public function getMenuSeguridadUsuario($ID){
         $result = mysqli_query($con->Conexion,$consulta);
         while ($row = mysqli_fetch_array($result)) {
             $div .= "<tr>
-                        <td style='text-align: center;'>
+                        <td style='text-align: init;'>
                           Barrio
                         </td>
                         <td style='align-content: center;'>" . 
@@ -3039,7 +3039,7 @@ public function getMenuSeguridadUsuario($ID){
         $result = mysqli_query($con->Conexion,$consulta);
         while ($row = mysqli_fetch_array($result)) {
             $div .= "<tr>
-                        <td style='text-align: center;'>
+                        <td style='text-align: init;'>
                           Categoria
                         </td>
                         <td style='align-content: center;'>" . 
@@ -3054,20 +3054,20 @@ public function getMenuSeguridadUsuario($ID){
                         WHERE id_persona = " . $ret['id_persona'] . "
                           AND estado = 1";
             $result = mysqli_query($con->Conexion,$consulta);
-            $ret = mysqli_fetch_assoc($result);
+            $row_persona = mysqli_fetch_assoc($result);
             $div .= "<tr>
-                        <td style='text-align: center;'>
+                        <td style='text-align: init;'>
                           Persona
                         </td>
                         <td style='align-content: center;'>" . 
-                          $ret["apellido"] . ", " . $ret["nombre"] . "
+                          $row_persona["apellido"] . ", " . $row_persona["nombre"] . "
                         </td>
                      </tr>";
         }
 
         if(!empty($ret["nro_legajo"])) {
             $div .= "<tr>
-                        <td style='text-align: center;'>
+                        <td style='text-align: init;'>
                           Nro Legajo
                         </td>
                         <td style='align-content: center;'>" . 
@@ -3078,7 +3078,7 @@ public function getMenuSeguridadUsuario($ID){
 
         if(!empty($ret["nro_carpeta"])) {
             $div .= "<tr>
-                        <td style='text-align: center;'>
+                        <td style='text-align: init;'>
                           Nro Carpeta
                         </td>
                         <td style='align-content: center;'>" . 
@@ -3093,13 +3093,13 @@ public function getMenuSeguridadUsuario($ID){
                         WHERE id_centro = " . $ret['id_centro'] . "
                           AND estado = 1";
             $result = mysqli_query($con->Conexion,$consulta);
-            $ret = mysqli_fetch_assoc($result);
+            $row_escuela = mysqli_fetch_assoc($result);
             $div .= "<tr>
-                        <td style='text-align: center;'>
+                        <td style='text-align: init;'>
                           escuela
                         </td>
                         <td style='align-content: center;'>" . 
-                          $ret["escuela"] . "
+                          $row_escuela["escuela"] . "
                         </td>
                      </tr>";          
         }
@@ -3110,13 +3110,13 @@ public function getMenuSeguridadUsuario($ID){
                         WHERE ID_OtraInstitucion = " . $ret['id_otra_institucion'] . "
                           AND estado = 1";
             $result = mysqli_query($con->Conexion,$consulta);
-            $ret = mysqli_fetch_assoc($result);
+            $row_rev = mysqli_fetch_assoc($result);
             $div .= "<tr>
-                        <td style='text-align: center;'>
+                        <td style='text-align: init;'>
                           Otra Institucion
                         </td>
                         <td style='align-content: center;'>" . 
-                          $ret["Nombre"] . "
+                          $row_rev["Nombre"] . "
                         </td>
                      </tr>";          
         }
@@ -3127,13 +3127,13 @@ public function getMenuSeguridadUsuario($ID){
                         WHERE id_calle = " . $ret['id_calle'] . "
                           AND estado = 1";
             $result = mysqli_query($con->Conexion,$consulta);
-            $ret = mysqli_fetch_assoc($result);
+            $row_calle = mysqli_fetch_assoc($result);
             $div .= "<tr>
-                        <td style='text-align: center;'>
+                        <td style='text-align: init;'>
                           Calle
                         </td>
                         <td style='align-content: center;'>" . 
-                          $ret["calle_nombre"] . " " . $ret["calle_numero"] . "
+                          $row_calle["calle_nombre"] . " " . $row_calle["calle_numero"] . "
                         </td>
                      </tr>";
         }
