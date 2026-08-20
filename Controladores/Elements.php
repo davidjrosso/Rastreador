@@ -2894,10 +2894,7 @@ public function getMenuSeguridadUsuario($ID){
                  FROM filtros
                  WHERE estado = 1
                  ORDER BY titulo  ASC";
-    $obj_query = mysqli_query(
-                      $con->Conexion,
-                      $consulta
-                      ) or die("Problemas al mostrar Personas");
+    $obj_query = mysqli_query($con->Conexion, $consulta);;
     $count = 0;
     while ($Ret = mysqli_fetch_array($obj_query)) {
       $div .= "<a  class='list-group-item list-group-item-action' data-toggle='list' role='tab' 
@@ -2938,10 +2935,7 @@ public function getMenuSeguridadUsuario($ID){
                    and sc.identificador = 'titulo'
                    and n.Tipo = 'INSERT'
                  ORDER BY sc.valor  ASC";
-    $obj_query = mysqli_query(
-                      $con->Conexion,
-                      $consulta
-                      ) or die("Problemas al mostrar Personas");
+    $obj_query = mysqli_query($con->Conexion, $consulta);
     $count = 0;
     while ($Ret = mysqli_fetch_array($obj_query)) {
       $div .= "<a  class='list-group-item list-group-item-action' data-toggle='list' role='tab' 
@@ -3007,6 +3001,7 @@ public function getMenuSeguridadUsuario($ID){
                         </td>
                      </tr>";
         }
+
         $consulta = "SELECT * 
                      FROM filtros_responsables d inner join responsable n on (d.id_responsable = n.id_resp)
                      WHERE id_filtro = " . $ret['id_filtro'] . "
@@ -3054,12 +3049,18 @@ public function getMenuSeguridadUsuario($ID){
         }
 
         if(!empty($ret["id_persona"])) {
+            $consulta = "SELECT * 
+                        FROM persona
+                        WHERE id_persona = " . $ret['id_persona'] . "
+                          AND estado = 1";
+            $result = mysqli_query($con->Conexion,$consulta);
+            $ret = mysqli_fetch_assoc($result);
             $div .= "<tr>
                         <td style='text-align: center;'>
                           Persona
                         </td>
                         <td style='align-content: center;'>" . 
-                          $ret["id_persona"] . "
+                          $ret["apellido"] . ", " . $ret["nombre"] . "
                         </td>
                      </tr>";
         }
@@ -3087,36 +3088,54 @@ public function getMenuSeguridadUsuario($ID){
         }
 
         if(!empty($ret["id_escuela"])) {
+            $consulta = "SELECT * 
+                        FROM centros_salud
+                        WHERE id_centro = " . $ret['id_centro'] . "
+                          AND estado = 1";
+            $result = mysqli_query($con->Conexion,$consulta);
+            $ret = mysqli_fetch_assoc($result);
             $div .= "<tr>
                         <td style='text-align: center;'>
                           escuela
                         </td>
                         <td style='align-content: center;'>" . 
-                          $ret["id_escuela"] . "
+                          $ret["escuela"] . "
                         </td>
                      </tr>";          
         }
 
         if(!empty($ret["id_otra_institucion"])) {
+            $consulta = "SELECT * 
+                        FROM otras_instituciones
+                        WHERE ID_OtraInstitucion = " . $ret['id_otra_institucion'] . "
+                          AND estado = 1";
+            $result = mysqli_query($con->Conexion,$consulta);
+            $ret = mysqli_fetch_assoc($result);
             $div .= "<tr>
                         <td style='text-align: center;'>
                           Otra Institucion
                         </td>
                         <td style='align-content: center;'>" . 
-                          $ret["id_otra_institucion"] . "
+                          $ret["Nombre"] . "
                         </td>
                      </tr>";          
         }
 
-        if(!empty($ret[""])) {
+        if(!empty($ret["id_calle"]) && !empty($ret["calle_numero"])) {
+            $consulta = "SELECT * 
+                        FROM calle
+                        WHERE id_calle = " . $ret['id_calle'] . "
+                          AND estado = 1";
+            $result = mysqli_query($con->Conexion,$consulta);
+            $ret = mysqli_fetch_assoc($result);
             $div .= "<tr>
                         <td style='text-align: center;'>
-                          Responsable
+                          Calle
                         </td>
                         <td style='align-content: center;'>" . 
-                          $ret[""] . "
+                          $ret["calle_nombre"] . " " . $ret["calle_numero"] . "
                         </td>
-                     </tr>";          
+                     </tr>";
         }
 
         $div .= "</table>";
