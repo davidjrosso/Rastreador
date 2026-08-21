@@ -1,4 +1,3 @@
-import { text } from 'mermaid/dist/rendering-util/rendering-elements/shapes/text.js';
 import swal from 'sweetalert2';
 
 export class Preferencia {
