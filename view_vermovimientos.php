@@ -281,14 +281,12 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
             }
           ?>
         </div>
-        <div class="row">
-            <div class="col-10">
-              
-            </div>
+        <div class="row" style="justify-content: center;">
             <div class="col-2">       
               <button type = "button" class = "btn btn-danger" onClick = "location.href = 'view_movimientos.php'">Atras</button>
             </div>
         </div>
+        <br>
   </div>
 </div>
 </div>
