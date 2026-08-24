@@ -95,9 +95,10 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
         <p>Movimientos</p>
       </div>
       <div class="col"></div>
-    </div><br>
+    </div>
     <br>
-     <div class = "row">
+    <br>
+    <div class = "row" style="justify-content: center;">
       <div class = "col-10">
           <!-- Search -->
         <div class = "row">
