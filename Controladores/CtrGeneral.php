@@ -132,7 +132,32 @@ class CtrGeneral {
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
-			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr>
+						  <td>" . $Fecha . "</td>
+						  <td>" . $Ret["apellido"] . "</td>
+						  <td>" . $Ret["nombre"] . "</td>
+						  <td>" . $Ret["responsable"] . "</td>
+						  <td>
+						    <a href = 'view_vermovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'>
+							</a>
+						  </td>
+						  <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+							</a>";
+			}
+
+			$Table .= "</td>
+					   <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a onClick = 'Verificar(" . $Ret["id_movimiento"] . ")'>
+								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
+							</a>";
+			}
+			$Table .= "</td>
+					   </tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -207,7 +232,32 @@ class CtrGeneral {
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
-			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr>
+						  <td>" . $Fecha . "</td>
+						  <td>" . $Ret["apellido"] . "</td>
+						  <td>" . $Ret["nombre"] . "</td>
+						  <td>" . $Ret["responsable"] . "</td>
+						  <td>
+						    <a href = 'view_vermovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'>
+							</a>
+						  </td>
+						  <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+							</a>";
+			}
+
+			$Table .= "</td>
+					   <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a onClick = 'Verificar(" . $Ret["id_movimiento"] . ")'>
+								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
+							</a>";
+			}
+			$Table .= "</td>
+					   </tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -215,7 +265,7 @@ class CtrGeneral {
 		return $Table;
 	}
 
-	public function getMovimientosxFecha($Fecha,$TipoUsuario){
+	public function getMovimientosxFecha($Fecha, $TipoUsuario){
 		$Fecha = implode("-", array_reverse(explode("/",$Fecha)));
 		$Con = new Conexion();
 		$Con->OpenConexion();
@@ -283,7 +333,32 @@ class CtrGeneral {
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
-			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr>
+						  <td>" . $Fecha . "</td>
+						  <td>" . $Ret["apellido"] . "</td>
+						  <td>" . $Ret["nombre"] . "</td>
+						  <td>" . $Ret["responsable"] . "</td>
+						  <td>
+						    <a href = 'view_vermovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'>
+							</a>
+						  </td>
+						  <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+							</a>";
+			}
+
+			$Table .= "</td>
+					   <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a onClick = 'Verificar(" . $Ret["id_movimiento"] . ")'>
+								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
+							</a>";
+			}
+			$Table .= "</td>
+					   </tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -358,7 +433,32 @@ class CtrGeneral {
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
-			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr>
+						  <td>" . $Fecha . "</td>
+						  <td>" . $Ret["apellido"] . "</td>
+						  <td>" . $Ret["nombre"] . "</td>
+						  <td>" . $Ret["responsable"] . "</td>
+						  <td>
+						    <a href = 'view_vermovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'>
+							</a>
+						  </td>
+						  <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+							</a>";
+			}
+
+			$Table .= "</td>
+					   <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a onClick = 'Verificar(" . $Ret["id_movimiento"] . ")'>
+								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
+							</a>";
+			}
+			$Table .= "</td>
+					   </tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -448,20 +548,25 @@ class CtrGeneral {
 						  <td>" . $Ret["nombre"] . "</td>
 						  <td>" . $Ret["responsable"] . "</td>
 						  <td>
-						  	<a href = 'view_vermovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+						    <a href = 'view_vermovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
 								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'>
 							</a>
 						  </td>
-						  <td>
-						  	<a href = 'view_modmovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+						  <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
 								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
-							</a>
-						  </td>
-						  <td>
-						  	<a onClick = 'Verificar(" . $Ret["id_movimiento"] . ")'>
+							</a>";
+			}
+
+			$Table .= "</td>
+					   <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a onClick = 'Verificar(" . $Ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
-							</a>
-						  </td>
+							</a>";
+			}
+			$Table .= "</td>
 					   </tr>";
 		}
 		$Con->CloseConexion();
@@ -603,20 +708,25 @@ class CtrGeneral {
 						  <td>" . $Ret["nombre"] . "</td>
 						  <td>" . $Ret["responsable"] . "</td>
 						  <td>
-						  	<a href = 'view_vermovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+						    <a href = 'view_vermovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
 								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'>
 							</a>
 						  </td>
-						  <td>
-						  	<a href = 'view_modmovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+						  <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
 								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
-							</a>
-						  </td>
-						  <td>
-						  	<a onClick = 'Verificar(" . $Ret["id_movimiento"] . ")'>
+							</a>";
+			}
+
+			$Table .= "</td>
+					   <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a onClick = 'Verificar(" . $Ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
-							</a>
-						  </td>
+							</a>";
+			}
+			$Table .= "</td>
 					   </tr>";
 		}
 		$Con->CloseConexion();
@@ -703,25 +813,30 @@ class CtrGeneral {
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
 			$Table .= "<tr>
-						<td>" . $Fecha . "</td>
-						<td>" . $Ret["apellido"] . "</td>
-						<td>" . $Ret["nombre"] . "</td> 
-						<td>" . $Ret["responsable"] . "</td>
-						<td>
-							<a href = 'view_vermovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+						  <td>" . $Fecha . "</td>
+						  <td>" . $Ret["apellido"] . "</td>
+						  <td>" . $Ret["nombre"] . "</td>
+						  <td>" . $Ret["responsable"] . "</td>
+						  <td>
+						    <a href = 'view_vermovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
 								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'>
 							</a>
-						</td>
-						<td>
-							<a href = 'view_modmovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+						  </td>
+						  <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
 								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
-							</a>
-						</td>
-						<td>
-							<a onClick = 'Verificar(".$Ret["id_movimiento"].")'>
+							</a>";
+			}
+
+			$Table .= "</td>
+					   <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a onClick = 'Verificar(" . $Ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
-							</a>
-						</td>
+							</a>";
+			}
+			$Table .= "</td>
 					   </tr>";
 		}
 		$Con->CloseConexion();
@@ -800,7 +915,32 @@ class CtrGeneral {
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
-			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr>
+						  <td>" . $Fecha . "</td>
+						  <td>" . $Ret["apellido"] . "</td>
+						  <td>" . $Ret["nombre"] . "</td>
+						  <td>" . $Ret["responsable"] . "</td>
+						  <td>
+						    <a href = 'view_vermovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'>
+							</a>
+						  </td>
+						  <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+							</a>";
+			}
+
+			$Table .= "</td>
+					   <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a onClick = 'Verificar(" . $Ret["id_movimiento"] . ")'>
+								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
+							</a>";
+			}
+			$Table .= "</td>
+					   </tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -877,7 +1017,32 @@ class CtrGeneral {
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
-			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr>
+						  <td>" . $Fecha . "</td>
+						  <td>" . $Ret["apellido"] . "</td>
+						  <td>" . $Ret["nombre"] . "</td>
+						  <td>" . $Ret["responsable"] . "</td>
+						  <td>
+						    <a href = 'view_vermovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'>
+							</a>
+						  </td>
+						  <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+							</a>";
+			}
+
+			$Table .= "</td>
+					   <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a onClick = 'Verificar(" . $Ret["id_movimiento"] . ")'>
+								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
+							</a>";
+			}
+			$Table .= "</td>
+					   </tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
@@ -954,7 +1119,32 @@ class CtrGeneral {
 		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
-			$Table .= "<tr><td>".$Fecha."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["responsable"]."</td><td><a href = 'view_vermovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modmovimientos.php?ID=".$Ret["id_movimiento"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_movimiento"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+			$Table .= "<tr>
+						  <td>" . $Fecha . "</td>
+						  <td>" . $Ret["apellido"] . "</td>
+						  <td>" . $Ret["nombre"] . "</td>
+						  <td>" . $Ret["responsable"] . "</td>
+						  <td>
+						    <a href = 'view_vermovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'>
+							</a>
+						  </td>
+						  <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+							</a>";
+			}
+
+			$Table .= "</td>
+					   <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a onClick = 'Verificar(" . $Ret["id_movimiento"] . ")'>
+								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
+							</a>";
+			}
+			$Table .= "</td>
+					   </tr>";
 		}
 		$Con->CloseConexion();
 		$Table .= "</table>";
