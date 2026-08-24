@@ -130,7 +130,7 @@ $Con->CloseConexion();
           <br><br>
           <div class="row">
             <?php
-            if (isset($_REQUEST["Filtro"]) && $_REQUEST["Filtro"] != null) {
+            if (isset($_REQUEST["Filtro"])) {
               $Filtro = $_REQUEST["Filtro"];
               $ID_Filtro = $_REQUEST["ID_Filtro"];
               $DTGeneral = new CtrGeneral();
