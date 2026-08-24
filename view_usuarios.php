@@ -28,16 +28,13 @@ $Con->CloseConexion();
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-  <!--<link href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-  <!--<script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script> -->
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
+  <script src="js/Utils.js"></script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-  <!--<script type="text/javascript" src = "js/Funciones.js"></script> -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script type="text/javascript">
@@ -52,8 +49,6 @@ $Con->CloseConexion();
 			.then((willDelete) => {
 			  if (willDelete) {
 			  	window.location.href = 'Controladores/DeleteUsuario.php?ID='+xID;
-			    //alert('SI');
-			  } else {			  
 			  }
 			});
 		}
@@ -84,13 +79,13 @@ $Con->CloseConexion();
       <div class = "col"></div>
     </div>
     <br>
-     <div class = "row">
+     <div class = "row" style="justify-content: center;">
       <div class = "col-10">
            <!-- Carga -->
           <form method = "post" action = "Controladores/CtrBuscarUsuarios.php">
             <div class="form-group row">
               <label for="inputPassword" class="col-md-2 col-form-label LblForm">Buscar: </label>
-              <div class="col-md-4">
+              <div class="col-md-5">
                 <input type="text" class="form-control" name = "Search" id="inputPassword" width="100%" autocomplete="off">
               </div>
               <label for="inputPassword" class="col-md-1 col-form-label LblForm">En: </label>
