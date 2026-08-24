@@ -103,7 +103,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
           <!-- Search -->
         <div class = "row">
           <?php  
-            if (isset($_REQUEST["ID"]) && $_REQUEST["ID"] != null) {
+            if (isset($_REQUEST["ID"])) {
               $ID_Movimiento = $_REQUEST["ID"];
 
               $Con = new Conexion();
@@ -196,8 +196,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               $Table = "<table class='table'>
                           <thead>
                             <tr>
-                              <th></th>
-                              <th>Detalles del Movimiento</th>
+                              <th colspan=2 style='text-align: center;'>Detalles del Movimiento</th>
                             </tr>
                           </thead>";
 
