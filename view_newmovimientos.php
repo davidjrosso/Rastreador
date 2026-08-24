@@ -912,8 +912,6 @@ if(isset($_REQUEST["Mensaje"])){
   swal('".$_REQUEST["Mensaje"]."','','success').then((result) => {
     if (result && datosPrev) {
     sendToRepL(datosPrev);
-  } else {
-    location.href = 'view_movimientos.php';
   }});
 </script>";
 }
