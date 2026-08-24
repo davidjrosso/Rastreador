@@ -505,7 +505,7 @@ export class Preferencia {
                 nodo2.append(op);
                 op.prop("selectedIndex", value);
                 this.#listOpciones.push(
-                                          {"ID_Centro" : value,
+                                          {"ID_Centro" : valueOp,
                                            "text" : texto}
                                         );
                 break;
@@ -543,7 +543,7 @@ export class Preferencia {
                 nodo2.append(op);
                 op.prop("selectedIndex", value);
                 this.#listOpciones.push(
-                                          {"ID_OtraInstitucion" : value,
+                                          {"ID_OtraInstitucion" : valueOp,
                                            "text" : texto}
                                         );
                 break;
@@ -558,7 +558,7 @@ export class Preferencia {
                 nodo2.append(op);
                 op.prop("selectedIndex", value);
                 this.#listOpciones.push(
-                                          {"ID_Escuela" : value,
+                                          {"ID_Escuela" : valueOp,
                                            "text" : texto}
                                         );
                 break;
@@ -596,7 +596,7 @@ export class Preferencia {
                 nodo2.append(op);
                 op.prop("value", value);
                 this.#listOpciones.push(
-                                          {"inpMostrar" : value,
+                                          {"inpMostrar" : valueOp,
                                            "text" : texto}
                                         );
                 break;
@@ -604,7 +604,7 @@ export class Preferencia {
     }
 
     setDatos(id, value) {
-        let selectIndex = null;
+        let selecIndex = null;
         switch (id) {
             case "ID_Persona" :
                 $("#btn-persona").text(value.text);
@@ -645,7 +645,7 @@ export class Preferencia {
             case "ID_Motivo" :
                 break;
             case "ID_Centro" :
-                selecIndex = $("#ID_Centro option[value=" + value.text + "]").index();
+                selecIndex = $("#ID_Centro option[value=" + value.id + "]").index();
                 $("#ID_Centro").prop("selectedIndex", selecIndex);
                 break;
             case "Nro_Carpeta" :
@@ -655,12 +655,12 @@ export class Preferencia {
                 $("#Nro_Legajo").prop("value", value.text);
                 break;
             case "ID_OtraInstitucion" :
-                selectIndex = $("#ID_OtraInstitucion option[value=" + value.text + "]").index();
-                $("#ID_OtraInstitucion").prop("selectedIndex", selectIndex);
+                selecIndex = $("#ID_OtraInstitucion option[value=" + value.id + "]").index();
+                $("#ID_OtraInstitucion").prop("selectedIndex", selecIndex);
                 break;
             case "ID_Escuela" :
-                selectIndex = $("#ID_Escuela option[value=" + value.id + "]").index();
-                $("#ID_Escuela").prop("selectedIndex", selectIndex);
+                selecIndex = $("#ID_Escuela option[value=" + value.id + "]").index();
+                $("#ID_Escuela").prop("selectedIndex", selecIndex);
                 break;
             case "ID_Responsable" :
                 break;

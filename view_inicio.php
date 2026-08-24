@@ -727,7 +727,8 @@ $Con->CloseConexion();
          || $CantDelCat > 0 || $CantNot > 0 
          || $CantCrearCat > 0 || $CantCrearMot > 0
          || $CantSolUsr > 0 || $CantSolMod > 0
-         || $CantDelResp > 0
+         || $CantDelResp > 0 || $CantCrearFiltro > 0
+         || $CantEliminarFiltro > 0
       ) {
       ?>
       <div class = "row" style="justify-content: center; align-content: space-between;">

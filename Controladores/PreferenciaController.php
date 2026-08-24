@@ -265,6 +265,10 @@ class PreferenciaController
                     $key = $e->get_identificador();
                     $val = $e->get_valor();
                     $exist = false;
+                    if ( $key == "ID_Escuela") $filtro->set_id_escuela($val);
+                    if ( $key == "Calle") $filtro->set_id_calle($val);
+                    if ( $key == "calle_numero") $filtro->set_calle_numero($val);
+                    if ( $key == "ID_Centro") $filtro->set_id_centro_salud($val);
                     if ( $key == "ID_Persona") $filtro->set_id_persona($val);
                     if ( $key == "Meses_Desde") $filtro->set_meses_desde($val);
                     if ( $key == "Meses_Hasta") $filtro->set_meses_hasta($val);
@@ -275,7 +279,10 @@ class PreferenciaController
 
                     if ($key == "ID_OtraInstitucion") $filtro->set_id_otra_institucion($val);
                     if ($key == "Lote") $filtro->set_lote($val);
-                    if ($key == "Sub_Lote") $filtro->set_sub_lote($val);
+                    if ($key == "Sub_Lote") $filtro->set_familia($val);
+                    if ($key == "Anos_Hasta") $filtro->set_anos_hasta($val);
+
+                
                     if ($key == "ID_Responsable") {
                         $exist = FiltroResponsable::exist_responsable_con_filtro(
                                     coneccion: $con, 
@@ -338,7 +345,11 @@ class PreferenciaController
                             $filtro_barrio->save();
                         }
                     }
+
+                    if ($key == "Anos_Desde") $filtro->set_anos_desde($val);
+
                 }, $list);
+
                 $filtro->update();
                 $solicitud->delete();
                 $con->CloseConexion();
@@ -628,7 +639,7 @@ class PreferenciaController
                 }
 
                 if ($filtro->get_nro_carpeta()) $mensaje["Nro_Carpeta"]["text"] = $filtro->get_nro_carpeta();
-                if ($filtro->get_id_otra_institucion()) $mensaje["ID_OtraInstitucion"]["text"] = $filtro->get_id_otra_institucion();
+                if ($filtro->get_id_otra_institucion()) $mensaje["ID_OtraInstitucion"]["id"] = $filtro->get_id_otra_institucion();
                 if ($filtro->get_lote()) $mensaje["lote"]["text"] = $filtro->get_lote();
                 if ($filtro->get_anos_hasta()) $mensaje["Edad_Hasta"] = $filtro->get_anos_hasta();
                 if ($filtro->get_meses_hasta()) $mensaje["Meses_Hasta"] = $filtro->get_meses_hasta();

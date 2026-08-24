@@ -3089,8 +3089,8 @@ public function getMenuSeguridadUsuario($ID){
 
         if(!empty($ret["id_escuela"])) {
             $consulta = "SELECT * 
-                        FROM centros_salud
-                        WHERE id_centro = " . $ret['id_centro'] . "
+                        FROM escuelas
+                        WHERE id_escuela = " . $ret['id_escuela'] . "
                           AND estado = 1";
             $result = mysqli_query($con->Conexion,$consulta);
             $row_escuela = mysqli_fetch_assoc($result);
@@ -3099,7 +3099,24 @@ public function getMenuSeguridadUsuario($ID){
                           escuela
                         </td>
                         <td style='align-content: center;'>" . 
-                          $row_escuela["escuela"] . "
+                          $row_escuela["Escuela"] . "
+                        </td>
+                     </tr>";          
+        }
+
+        if(!empty($ret["id_centro_salud"])) {
+            $consulta = "SELECT * 
+                        FROM centros_salud
+                        WHERE id_centro = " . $ret['id_centro_salud'] . "
+                          AND estado = 1";
+            $result = mysqli_query($con->Conexion,$consulta);
+            $row_escuela = mysqli_fetch_assoc($result);
+            $div .= "<tr>
+                        <td style='text-align: init;'>
+                          centro de salud
+                        </td>
+                        <td style='align-content: center;'>" . 
+                          $row_escuela["centro_salud"] . "
                         </td>
                      </tr>";          
         }
@@ -3162,51 +3179,163 @@ public function getMenuSeguridadUsuario($ID){
         $result = mysqli_query($con->Conexion, $consulta);
         while ($row = mysqli_fetch_array($result)) {
             if ($row["identificador"] == "ID_Motivo") {
+                $consulta = "SELECT * 
+                            FROM motivo 
+                            WHERE id_motivo = " . $row["valor"] . "
+                              AND estado = 1";
+                $obj = mysqli_query($con->Conexion, $consulta);
+                $resp = mysqli_fetch_array($obj);
+
                 $div .= "<tr>
-                            <td style='text-align: center;'>
-                              Motivo
+                                <td style='text-align: init;'>
+                                  Motivo
+                                </td>
+                                <td style='align-content: center;'>" . 
+                                  $resp["motivo"] . "
+                                </td>
+                            </tr>";
+            } else if ($row["identificador"] == "ID_Persona") {
+                $consulta = "SELECT * 
+                            FROM persona 
+                            WHERE id_persona = " . $row["valor"] . "
+                              AND estado = 1";
+                $obj = mysqli_query($con->Conexion, $consulta);
+                $resp = mysqli_fetch_array($obj);
+
+                $div .= "<tr>
+                                <td style='text-align: init;'>
+                                  Persona
+                                </td>
+                                <td style='align-content: center;'>" . 
+                                  $resp["nombre"] . ", " . $resp["apellido"] . "
+                                </td>
+                            </tr>";
+            } else if ($row["identificador"] == "ID_Responsable") {
+                $consulta = "SELECT * 
+                            FROM responsable 
+                            WHERE id_resp = " . $row["valor"] . "
+                              AND estado = 1";
+                $obj = mysqli_query($con->Conexion, $consulta);
+                $resp = mysqli_fetch_array($obj);
+                $div .= "<tr>
+                            <td style='text-align: init;'>
+                              Responsable
                             </td>
                             <td style='align-content: center;'>" . 
-                              $row["motivo"] . "
+                              $resp["responsable"] . "
                             </td>
                         </tr>";
-            } else if ($row["identificador"] == "ID_Responsable") {
-            $div .= "<tr>
-                        <td style='text-align: center;'>
-                          Responsable
-                        </td>
-                        <td style='align-content: center;'>" . 
-                          $row["valor"] . "
-                        </td>
-                     </tr>";
             } else if ($row["identificador"] == "ID_Barrio") {
+                $consulta = "SELECT * 
+                            FROM barrios 
+                            WHERE ID_Barrio = " . $row["valor"] . "
+                              AND estado = 1";
+                $obj = mysqli_query($con->Conexion, $consulta);
+                $resp = mysqli_fetch_array($obj);
                 $div .= "<tr>
-                            <td style='text-align: center;'>
+                            <td style='text-align: init;'>
                               Barrio
                             </td>
                             <td style='align-content: center;'>" . 
-                              $row["valor"] . "
+                              $resp["Barrio"] . "
                             </td>
                         </tr>";
             } else if ($row["identificador"] == "ID_Categoria") {
+                $consulta = "SELECT * 
+                            FROM categoria 
+                            WHERE id_categoria = " . $row["valor"] . "
+                              AND estado = 1";
+                $obj = mysqli_query($con->Conexion, $consulta);
+                $resp = mysqli_fetch_array($obj);
                 $div .= "<tr>
-                            <td style='text-align: center;'>
-                              Categoria
+                            <td style='text-align: init;'>
+                              Barrio
                             </td>
                             <td style='align-content: center;'>" . 
-                              $row["valor"] . "
+                              $resp["categoria"] . "
                             </td>
                         </tr>";
-            } else {
+
+            } else if($row["identificador"] == "ID_Escuela") {
+                    $consulta = "SELECT * 
+                                FROM escuelas
+                                WHERE id_escuela = " . $row['valor'] . "
+                                  AND estado = 1";
+                    $obj = mysqli_query($con->Conexion,$consulta);
+                    $row_escuela = mysqli_fetch_assoc($obj);
+                    $div .= "<tr>
+                                <td style='text-align: init;'>
+                                  escuela
+                                </td>
+                                <td style='align-content: center;'>" . 
+                                  $row_escuela["Escuela"] . "
+                                </td>
+                            </tr>";          
+            } else if($row["identificador"] == "ID_Centro") {
+                    $consulta = "SELECT * 
+                                FROM centros_salud
+                                WHERE id_centro = " . $row['valor'] . "
+                                  AND estado = 1";
+                    $obj = mysqli_query($con->Conexion,$consulta);
+                    $row_escuela = mysqli_fetch_assoc($obj);
+                    $div .= "<tr>
+                                <td style='text-align: init;'>
+                                  centro de salud
+                                </td>
+                                <td style='align-content: center;'>" . 
+                                  $row_escuela["centro_salud"] . "
+                                </td>
+                            </tr>";          
+           } else if($row["identificador"] == "ID_OtraInstitucion") {
+                    $consulta = "SELECT * 
+                                FROM otras_instituciones
+                                WHERE ID_OtraInstitucion = " . $row['valor'] . "
+                                  AND estado = 1";
+                    $obj = mysqli_query($con->Conexion,$consulta);
+                    $row_rev = mysqli_fetch_assoc($obj);
+                    $div .= "<tr>
+                                <td style='text-align: init;'>
+                                  Otra Institucion
+                                </td>
+                                <td style='align-content: center;'>" . 
+                                  $row_rev["Nombre"] . "
+                                </td>
+                            </tr>";          
+           } else if($row["identificador"] == "Calle") {
+                    $consulta = "SELECT * 
+                                FROM calle
+                                WHERE id_calle = " . $row['valor'] . "
+                                  AND estado = 1";
+                    $obj = mysqli_query($con->Conexion,$consulta);
+                    $row_calle = mysqli_fetch_assoc($obj);
+                    $div .= "<tr>
+                                <td style='text-align: init;'>
+                                  Calle
+                                </td>
+                                <td style='align-content: center;'>" . 
+                                  $row_calle["calle_nombre"] . "
+                                </td>
+                            </tr>";
+           } else if($row["identificador"] == "calle_numero") {
+                    $div .= "<tr>
+                                <td style='text-align: init;'>
+                                  Calle Numero
+                                </td>
+                                <td style='align-content: center;'>" . 
+                                   $row['valor'] . "
+                                </td>
+                            </tr>";
+           } else {
+           
                 $div .= "<tr>
-                            <td style='text-align: center;'>
+                            <td style='text-align: init;'>
                               " . $row["identificador"] . "
                             </td>
                             <td style='align-content: center;'>" . 
                               $row["valor"] . "
                             </td>
                         </tr>";
-            }
+           }
 
         }
         $div .= "</table>";
