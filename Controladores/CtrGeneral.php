@@ -2989,6 +2989,7 @@ class CtrGeneral {
 													when 'ID_Escuela' then CONCAT('<b>Escuela</b>', ' - ', e.Escuela)
 													when 'ID_Centro' then CONCAT('<b>Centro</b>', ' - ', cs.centro_salud)
 													when 'ID_OtraInstitucion' then CONCAT('<b>Institucion</b>', ' - ', n.Nombre)
+													when 'Calle' then CONCAT('<b>Calle</b>', ' - ', cd.calle_nombre)
 													else CONCAT('<b>', identificador, '</b>', ' - ', valor)
 													end)  SEPARATOR '<br>') AS filtro
 					from solicitudes s inner join tipo_grupo_operaciones g on (g.id_tipo_grupo_operacion = s.id_tipo_grupo_operacion)
@@ -3002,6 +3003,7 @@ class CtrGeneral {
 					left join categoria c on (sc.valor = c.id_categoria and sc.identificador = 'ID_Categoria')
 					left join escuelas e on (sc.valor = e.ID_Escuela and sc.identificador = 'ID_Escuela')
 					left join centros_salud cs on (sc.valor = cs.id_centro and sc.identificador = 'ID_Centro')
+					left join calle cd on (sc.valor = cd.id_calle and sc.identificador = 'Calle')
 					left join otras_instituciones n on (sc.valor = n.ID_OtraInstitucion and sc.identificador = 'ID_OtraInstitucion')
 					where s.estado = 1
 					  and g.estado = 1
