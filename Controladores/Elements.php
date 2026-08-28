@@ -2905,7 +2905,7 @@ public function getMenuSeguridadUsuario($ID){
                       <span class='col-7' style='align-content: center;'>" . $Ret['titulo'] . " </span>
                   <div class='col-5' style='text-align: end;'>
                     <button type='button' class='btn btn-outline-success' data-sel-filtro-id='" . $Ret['id_filtro'] . "'
-                            style='padding: 1px; border-radius: 43px;'>
+                            style='padding: 1px; border-radius: 43px;' data-dismiss='modal'>
                       <svg xmlns='http://www.w3.org/2000/svg' width='26px' height='26px' viewBox='0 0 24 24'>
                           <path fill='currentColor' d='M9 16.17L5.53 12.7a.996.996 0 1 0-1.41 1.41l4.18 4.18c.39.39 1.02.39 1.41 0L20.29 7.71a.996.996 0 1 0-1.41-1.41z'/>
                       </svg>
