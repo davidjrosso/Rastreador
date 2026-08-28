@@ -2973,7 +2973,6 @@ public function getMenuSeguridadUsuario($ID){
                 <thead>
                   <tr>
                     <th style='text-align: center; align-content: center;' colspan='2'>datos</th>
-                    <th style='max-width: 27px; padding-left: 4%; text-align: center;'>
                     </th>
                   </tr>
               </thead>";
