@@ -425,8 +425,10 @@ class Filtro implements JsonSerializable
 						 meses_desde = " . (($this->get_meses_desde()) ? $this->get_meses_desde() : "null") . ",
 						 id_usuario = " . (($this->get_id_usuario()) ?  $this->get_id_usuario() : "null") . ", 
 						 fecha = " . (($this->get_fecha()) ? "'" . $this->get_fecha() . "'" : "null") . ", 
-						 id_tipo_usuario = " . (($this->get_id_tipo_usuario()) ? $this->get_id_tipo_usuario() : "null") . ", 
+						 id_tipo_usuario = " . (($this->get_id_tipo_usuario()) ? $this->get_id_tipo_usuario() : "null") . ",
+						 edad_hasta = " . (($this->get_anos_hasta()) ? $this->get_anos_hasta() : "null") . ", 
 						 id_otra_institucion = " . (($this->get_id_otra_institucion()) ? $this->get_id_otra_institucion() : "null") . ", 
+						 meses_hasta = " . (($this->get_meses_hasta()) ? $this->get_meses_hasta() : "null") . ", 
 						 titulo = " . (($this->get_titulo()) ? "'" . $this->get_titulo() . "'" : "null") . ", 
 					 	 estado = " . (($this->get_estado()) ? $this->get_estado() : "null") . "
 					 where id_filtro = " . $this->get_id_filtro();

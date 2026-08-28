@@ -2902,12 +2902,11 @@ public function getMenuSeguridadUsuario($ID){
                   href='#list" . $Ret['id_filtro'] . "' 
                   aria-controls='" . $Ret['id_filtro'] . "'
                   style='display: flex; justify-content: space-between'>
-                      <span class='col-7'>" . $Ret['titulo'] . " </span>
+                      <span class='col-7' style='align-content: center;'>" . $Ret['titulo'] . " </span>
                   <div class='col-5' style='text-align: end;'>
                     <button type='button' class='btn btn-outline-success' data-sel-filtro-id='" . $Ret['id_filtro'] . "'
                             style='padding: 1px; border-radius: 43px;'>
                       <svg xmlns='http://www.w3.org/2000/svg' width='26px' height='26px' viewBox='0 0 24 24'>
-                        <title xmlns=''>round-check</title>
                           <path fill='currentColor' d='M9 16.17L5.53 12.7a.996.996 0 1 0-1.41 1.41l4.18 4.18c.39.39 1.02.39 1.41 0L20.29 7.71a.996.996 0 1 0-1.41-1.41z'/>
                       </svg>
                     </button>
@@ -2943,7 +2942,7 @@ public function getMenuSeguridadUsuario($ID){
                   href='#list-" . $Ret['id_solicitud'] . "-sl' 
                   aria-controls='" . $Ret['id_solicitud'] . "'
                   style='display: flex; justify-content: space-between'>
-                      <span class='col-7'>" . $Ret['valor'] . " </span>
+                      <span class='col-7' style='align-content: center;'>" . $Ret['valor'] . " </span>
                   <div class='col-5' style='text-align: end;'>
                       <div class='btn btn-outline-info'>
                           Pendiente
@@ -3017,6 +3016,7 @@ public function getMenuSeguridadUsuario($ID){
                         </td>
                      </tr>";
         }
+
         $consulta = "SELECT * 
                      FROM filtros_barrios bs inner join barrios b on (bs.id_barrio = b.ID_Barrio)
                      WHERE id_filtro = " . $ret['id_filtro'] . "
@@ -3147,12 +3147,78 @@ public function getMenuSeguridadUsuario($ID){
             $row_calle = mysqli_fetch_assoc($result);
             $div .= "<tr>
                         <td style='text-align: init;'>
-                          Calle
+                          Domicilio
                         </td>
                         <td style='align-content: center;'>" . 
-                          $row_calle["calle_nombre"] . " " . $row_calle["calle_numero"] . "
+                          $row_calle["calle_nombre"] . " " . $ret["calle_numero"] . "
                         </td>
                      </tr>";
+        }
+
+        if(!empty($ret["familia"])) {
+            $div .= "<tr>
+                        <td style='text-align: init;'>
+                          Sublote
+                        </td>
+                        <td style='align-content: center;'>" . 
+                          $ret["familia"] . "
+                        </td>
+                     </tr>";          
+        }
+
+        if(!empty($ret["lote"])) {
+            $div .= "<tr>
+                        <td style='text-align: init;'>
+                          Lote
+                        </td>
+                        <td style='align-content: center;'>" . 
+                          $ret["lote"] . "
+                        </td>
+                     </tr>";          
+        }
+
+        if(!empty($ret["manzana"])) {
+            $div .= "<tr>
+                        <td style='text-align: init;'>
+                          Manzana
+                        </td>
+                        <td style='align-content: center;'>" . 
+                          $ret["manzana"] . "
+                        </td>
+                     </tr>";          
+        }
+
+        if(!empty($ret["edad_desde"])) {
+            $div .= "<tr>
+                        <td style='text-align: init;'>
+                          Edad Desde
+                        </td>
+                        <td style='align-content: center;'>" . 
+                          $ret["edad_desde"] . "
+                        </td>
+                     </tr>";
+        }
+
+        if(!empty($ret["edad_hasta"])) {
+            $div .= "<tr>
+                        <td style='text-align: init;'>
+                          Edad Hasta
+                        </td>
+                        <td style='align-content: center;'>" . 
+                          $ret["edad_hasta"] . "
+                        </td>
+                     </tr>";          
+        }
+
+        if(!empty($ret["meses_hasta"])) {
+            $div .= "<tr>
+                        <td style='text-align: init;'>
+                          Meses 
+                        </td>
+                        <td style='align-content: center;'>" . 
+                          $ret["meses_hasta"] . "
+                        </td>
+                     </tr>";          
         }
 
         $div .= "</table>";

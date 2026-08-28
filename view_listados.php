@@ -140,12 +140,10 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                   $("#meses-hasta-toast").show();
               });
 
-
               $("#close-categorias").on("click", function (e) {
                     $("#SearchCategorias").val("");
                     $("#ResultadosCategorias").html("");
               });
-
 
               $("#cerrar-categorias").on("click", function (e) {
                     $("#SearchCategorias").val("");
@@ -159,7 +157,8 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                 }
                 seleccionMultipleMotivo();
               }
-            <?php }?>
+            <?php
+            }?>
           });
 
     function buscarPersonas() {
@@ -744,7 +743,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                     <button type = "button" id="BotonModalDireccion_1" class = "btn btn-lg btn-primary btn-block form-control" style="padding-top: 4px;padding-bottom: 4px;" data-toggle="modal" data-target="#ModalCalle">Seleccione una Calle</button>
                 </div>
                 <div class="col-md-2 form-boton-widht">
-                  <input type="number" class="form-control" style="margin-top: 1px;" name = "NumeroDeCalle" id="NumeroDeCalle" placeholder="Número" min="1" autocomplete="off">
+                  <input type="number" class="form-control" style="margin-top: 1px;" name = "NumeroDeCalle" id="NumeroDeCalle" data-pre = '1' placeholder="Número" min="1" autocomplete="off">
                 </div>
               </div>
               <div class="form-group row">

@@ -226,8 +226,8 @@ export function VerificarCrearFiltro(xID) {
         showCancelButton: true,
         showConfirmButton: true
     })
-    .then((willDelete) => {
-        if (willDelete) {
+    .then((res) => {
+        if (res.isConfirmed) {
             let url = 'preferencia/nueva_preferencia_control';
             let datos = 'id_solicitud=' + xID;
             let request = $.ajax({
@@ -250,8 +250,7 @@ export function VerificarCrearFiltro(xID) {
                     }
                 }.bind(this)
             });
-
-    }
+        }
     });
 }
 
@@ -267,8 +266,8 @@ export function CancelarCrearFiltro(xID) {
         showCancelButton: true,
         showConfirmButton: true
     })
-    .then((willDelete) => {
-        if (willDelete) {
+    .then((res) => {
+        if (res.isConfirmed) {
             let url = 'preferencia/eliminar_solicitud_preferencia';
             let datos = 'id_solicitud=' + xID;
             let request = $.ajax({
@@ -291,8 +290,7 @@ export function CancelarCrearFiltro(xID) {
                     }
                 }.bind(this)
             });
-
-    }
+        }
     });
 }
 
@@ -332,7 +330,6 @@ export function VerificarEliminarFiltro(xID) {
                     }
                 }.bind(this)
             });
-
     }
     });
 }

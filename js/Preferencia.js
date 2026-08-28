@@ -238,8 +238,8 @@ export class Preferencia {
                                 <option data-dec='Meses_Desde'>Meses - Desde</option>
                                 <option data-dec='Meses_Hasta'>Meses - Hasta</option>
                                 <option data-dec='ID_Barrio'>Barrio</option>
-                                <option data-dec='Calle'>Domicilio/Familia</option>
-                                <option data-dec='NumerodeCalle'>Numero</option>
+                                <option data-dec='Calle'>Calle</option>
+                                <option data-dec='NumeroDeCalle'>Numero</option>
                                 <option data-dec='manzana'>Manzana</option>
                                 <option data-dec='lote'>Lote</option>
                                 <option data-dec='familia'>Sub-lote</option>
@@ -396,21 +396,28 @@ export class Preferencia {
                 nodo1.prop("selectedIndex", index);
                 nodo1.prop("disabled", true);
                 nodo2.html("");
-                nodo2.children().prop("value", value);
+                texto = $("#BotonModalDireccion_1").text();
+                nodo2.html(`<input type="text" name="calle_nombre" id = "calle_nombre" class="form-control" autocomplete="off">`);
+                nodo2.children().prop("value", texto);
                 nodo2.children().prop("disabled", true);
                 this.#listOpciones.push(
-                                          {"Calle" : value,
-                                           "text" : texto}
+                                        {"Calle" : value,
+                                        "text" : texto}
                                         );
                 break;
-            case "NumerodeCalle" :
+            case "NumeroDeCalle" :
                 nodo1.prop("selectedIndex", index);
                 nodo1.prop("disabled", true);
                 nodo2.html("");
-                nodo2.children().prop("value", value);
-                nodo2.children().prop("disabled", true);
+                op = $("#NumeroDeCalle").clone();
+                op.attr("id", "id-numero-calle-" +  num + "-" + e);
+                op.attr("name", "id-numero-calle-" +  num + "-" + e);
+                op.removeClass();
+                op.addClass("form-control");
+                op.prop("disabled", true);
+                nodo2.append(op);
                 this.#listOpciones.push(
-                                          {"NumerodeCalle" : value,
+                                          {"NumeroDeCalle" : value,
                                            "text" : texto}
                                         );
                 break;
