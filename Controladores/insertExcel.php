@@ -279,6 +279,13 @@ use function PHPUnit\Framework\isNull;
 			case "telefono":
 				$datos = $valor;
 				break;
+			case "centro_salud":
+				$centro_salud = ($valor) ? trim(substr($valor, 30)) : null;
+				if ($centro_salud) {
+					$datos = CentroSalud::get_id_por_nombre(coneccion: $connection,
+															centro_salud: $centro_salud);
+				}
+				break;
 			case "obra_social":
 				$datos = $valor;
 				break;
@@ -286,6 +293,36 @@ use function PHPUnit\Framework\isNull;
 				$datos = $valor;
 				break;
 			case "familia":
+				$datos = $valor;
+				break;
+			case "fecha_diagnostico" :
+				$pattern = "/(([0-9][0-9]).([0-9][0-9]).[2-9][0-9][0-9][0-9]|([0-9][0-9]).([0-9][0-9]).[0-9][0-9]|([0-9][0-9]).[0-9].[2-9][0-9][0-9][0-9]|([0-9][0-9]).[0-9].[0-9][0-9])/";
+				$is_fecha = preg_match(
+								$pattern,
+								$valor,
+								$result_array
+										);
+				$valor_dato = (!empty($valor)) ? $valor : "";
+
+				if ($is_fecha) {
+					$datos = null;
+					if (!empty($result_array[0])) {
+						$lista_fecha = explode("/", $result_array[0]);
+						$lista_fecha = array_reverse($lista_fecha);
+						$valor_fecha = implode( "-", $lista_fecha);
+						$fecha_excel = strtotime($valor_fecha);
+						$fecha_movimiento  = date(format: 'Y-m-d',timestamp: $fecha_excel);
+						$datos = $fecha_movimiento;
+					}
+				} else {
+					$observ = (!empty($valor)) ? $valor : "no hay datos"; 
+					$datos = $col_header . " : " . $observ;
+				}
+				break;
+			case "diagnostico" :
+				$datos = $valor;
+				break;
+			case "codigo_diagnostico" :
 				$datos = $valor;
 				break;
 			default :
@@ -581,7 +618,14 @@ use function PHPUnit\Framework\isNull;
 			$geo_lon = null;
 			$is_migracion = false;
 			$observacion = "";
-			$lista_motivos = (!empty($dato["motivos"])) ? $dato["motivos"] : [];
+			$lista_motivos = [];
+			if (!empty($dato["motivos"])) {
+				$lista_motivos = $dato["motivos"];
+			} else {
+				$motivos["motivo"] = $dato["diagnostico"];
+				$motivos["fecha"] = $dato["fecha_diagnostico"];
+				$lista_motivos[] = $motivos;
+			}
 			$dni = $dato["dni"];
 			if (empty($dni)) continue;
 			if (!empty($dato["nombre_apellido"])) {
@@ -592,7 +636,16 @@ use function PHPUnit\Framework\isNull;
 				$nombre = (isset($dato["nombre"])) ? $dato["nombre"]["nombre"] : null;
 				$apellido = (isset($dato["apellido"])) ? $dato["apellido"]["apellido"] : null;
 			}
-			$Fecha_Nacimiento = $dato["fecha_nacimiento"];
+			$Fecha_Nacimiento = null;
+			if (!empty($dato["fecha_nacimiento"])) $Fecha_Nacimiento = $dato["fecha_nacimiento"];
+			if (!empty($dato["centro_salud"])) {
+				$con = new Conexion();
+				$con->OpenConexion();
+				$centro_salud = new CentroSalud(id_centro: $dato["centro_salud"], 
+												coneccion_base: $con);
+				$con->CloseConexion();
+				$id_barrio_centro = null;
+			}
 			$direccion = (isset($dato["direccion"]["direccion"])) ? $dato["direccion"]["direccion"] : null;
 			$nro_calle = nro_from_domicilio($direccion);
 			$manzana = (!empty($dato["manzana"])) ? $dato["manzana"] : null;
