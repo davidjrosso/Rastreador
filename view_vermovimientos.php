@@ -169,7 +169,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                 $count_motivo++;
               }
 
-              if ($ID_Resp_2 != null) {
+              if ($ID_Resp_2) {
                 $responsable = new Responsable(
                                               coneccion_base: $Con,
                                               id_responsable: $ID_Resp_2
@@ -177,7 +177,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                 $Responsable_2 = $responsable->get_responsable();
               }
 
-              if ($ID_Resp_3 != null) {
+              if ($ID_Resp_3) {
                 $responsable = new Responsable(
                                               coneccion_base: $Con,
                                               id_responsable: $ID_Resp_3
@@ -185,7 +185,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                 $Responsable_3 = $responsable->get_responsable();
               }
 
-              if ($ID_Resp_4 != null) {
+              if ($ID_Resp_4) {
                 $responsable = new Responsable(
                                               coneccion_base: $Con,
                                               id_responsable: $ID_Resp_4

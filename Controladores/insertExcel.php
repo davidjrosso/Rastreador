@@ -193,7 +193,8 @@ use function PHPUnit\Framework\isNull;
 		}
 		return $nro_calle;
 	}
-	function col_to_number($colum_excel) 
+
+	function col_to_number($colum_excel)
 	{
 		$num_col = 0;
 		$valor = substr($colum_excel, 0, -1);
@@ -235,8 +236,28 @@ use function PHPUnit\Framework\isNull;
 				$datos = $dni;
 				break;
 			case "observacion":
-				$observ = (!empty($valor)) ? $valor : "no hay datos"; 
+				$observ = (!empty($valor)) ? $valor : "no hay datos";
 				$datos = $col_header . " : " . $observ;
+				break;
+			case "direccion_dep":
+				$dir = str_replace(".", " ", trim($valor));
+				$dir = str_replace(" s/n", " ", strtolower($dir));
+				$direccion_barrio = preg_split("~(- b| - b°|[^-] b[ °]|/)~", $dir);
+				if (count($direccion_barrio) == 1) {
+					$direccion_barrio = preg_split("~([a-zA-Z]+ [a-zA-Z]+ [0-9]+[ ]+[^dD ]|^[a-zA-Z]+ [0-9]+[ ]+[^dD ])~", $dir);
+				}
+				$direccion_dp = preg_split("~( dpto | dp | dpt )~", $dir);
+				if (count($direccion_barrio) > 1) {
+					$datos["barrio"] = $direccion_barrio[1];
+					$direccion = $direccion_barrio[0];
+				} else if (count($direccion_dp) > 1) {
+					$datos["departamento"] = $direccion_dp[1];
+					$direccion = $direccion_dp[0];
+				} else {
+					$direccion = $dir;
+				}
+				$direccion = preg_replace("/(?<!cortadero)[ ]+\([aA-zZ0-9 ]*\)/", "", $direccion);
+				$datos["direccion"] = $direccion;
 				break;
 			case "direccion":
 				$dir = str_replace(".", " ", $valor);
@@ -249,7 +270,6 @@ use function PHPUnit\Framework\isNull;
 					$is_departament = preg_match(
 						"~([0-9]+$|([0-9]+[ ]+[aA-zZ]+$)|([ ]+[aA-zZ]+[ ]+[0-9]+$))~",
 						$direccion_datos[1],
-
 						$result_array
 								);
 					if (!$is_departament) {
@@ -646,7 +666,11 @@ use function PHPUnit\Framework\isNull;
 				$con->CloseConexion();
 				$id_barrio_centro = null;
 			}
-			$direccion = (isset($dato["direccion"]["direccion"])) ? $dato["direccion"]["direccion"] : null;
+			$direccion = (isset($dato["direccion_dep"]["direccion"])) ? $dato["direccion_dep"]["direccion"] : null;
+			if (empty($direccion)) {
+				$direccion =  (empty($dato["direccion"]["direccion"]))? $dato["direccion"]["direccion"] : $direccion;
+			}
+
 			$nro_calle = nro_from_domicilio($direccion);
 			$manzana = (!empty($dato["manzana"])) ? $dato["manzana"] : null;
 			$departam = (isset($dato["departamento"])) ? $dato["departamento"] : null;
