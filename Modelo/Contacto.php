@@ -1,87 +1,74 @@
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'] . '/Modelo/Accion.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . '/Modelo/Parametria.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/Modelo/Persona.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/Modelo/Contacto.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/Modelo/TipoContacto.php');
 
 class Contacto implements JsonSerializable {
 	//DECLARACION DE VARIABLES
     private $coneccion;
     private $id_contacto;
-    private $Estado;
-	private $Mail;
-    private $id_persona;
-    private $Telefono;
-	private $Trabajo;
+    private $persona;
+    private $valor;
+    private $tipo_contacto;
+    private $estado;
 
 
 	public function __construct(
         $coneccion = null,
         $id_contacto = null,    
-        $xTelefono = null,
-		$xMail = null,
-        $id_persona = null,
-        $xEstado = null,
-		$xTrabajo = null
+        $estado = null,
+        $valor = null,
+        $persona = null,
+        $tipo_contacto = null
 	) {
         $this->coneccion = $coneccion;
-        if (!$id_contacto && $id_persona) {
-			$ConsultarPersona = "select *
-                                 from contactos
-								 where id_persona = " . $id_persona . " 
-								   and estado = 1";
-			$EjecutarConsultarPersona = mysqli_query(
+        if ($id_contacto) {
+			$consultar = "select *
+                            from contactos
+                            where id_contacto = $id_contacto 
+                            and estado = 1";
+			$ejec = mysqli_query(
 				$this->coneccion->Conexion,
-				$ConsultarPersona) or die("Problemas al consultar filtro Persona");
-			$ret = mysqli_fetch_assoc($EjecutarConsultarPersona);
+				$consultar);
+            if (!$ejec) throw new Exception("error al consultar los datos", 1);
+			$ret = mysqli_fetch_assoc($ejec);
 	
-			$id_contacto = (isset($ret["id_contacto"])) ? $ret["id_contacto"] : null;
-			$telefono = (isset($ret["telefono"])) ? $ret["telefono"] : null;
-			$mail = (isset($ret["mail"])) ? $ret["mail"] : null;
-            $query_id_persona = (isset($ret["id_persona"])) ? $ret["id_persona"] : null;
-            $estado = (isset($ret["estado"])) ? $ret["estado"] : null;
-			$trabajo = (isset($ret["trabajo"])) ? $ret["trabajo"] : null;
-			$this->id_contacto = $id_contacto;
-			$this->Telefono = ($xTelefono) ? $xTelefono : $telefono;
-			$this->Mail = ($xMail) ? $xMail : $mail;
-            $this->id_persona = (!empty($id_persona)) ? $id_persona : $query_id_persona;
-            $this->Estado = ($xEstado) ? $xEstado : $estado;
-			$this->Trabajo = ($xTrabajo) ? $xTrabajo : $trabajo;
+            if ($ret) {
+                if (isset($ret["id_persona"])) $this->persona = new Persona(ID_Persona: $ret["id_persona"]);
+                $row_valor = (isset($ret["valor"])) ? $ret["valor"] : $valor; 
+                $row_estado = (isset($ret["estado"])) ? $ret["estado"] : $estado;
+                if (isset($ret["id_tipo_contacto"])) $this->tipo_contacto = new TiposContacto(
+                                                                                        coneccion: $this->coneccion->Conexion, 
+                                                                                        id_tipo_contacto: $ret["id_tipo_contacto"]
+                                                                                        ); 
+                $this->id_contacto = $id_contacto;
+                $this->valor = $row_valor;
+                $this->estado = ($row_estado) ? $row_estado : 1;
+            }
+
 
 		} else {
-			$ConsultarPersona = "select *
-                                 from contactos
-								 where id_contacto = " . $id_contacto . " 
-								   and estado = 1";
-			$EjecutarConsultarPersona = mysqli_query(
-				$this->coneccion->Conexion,
-				$ConsultarPersona) or die("Problemas al consultar filtro Persona");
-			$ret = mysqli_fetch_assoc($EjecutarConsultarPersona);
-	
-			$id_contacto = (isset($ret["id_contacto"])) ? $ret["id_contacto"] : null;
-			$telefono = (isset($ret["telefono"])) ? $ret["telefono"] : null;
-			$mail = (isset($ret["mail"])) ? $ret["mail"] : null;
-            $query_id_persona = (isset($ret["id_persona"])) ? $ret["id_persona"] : null;
-            $estado = (isset($ret["estado"])) ? $ret["estado"] : null;
-			$trabajo = (isset($ret["trabajo"])) ? $ret["trabajo"] : null;
-			$this->id_contacto = $id_contacto;
-			$this->Telefono = ($xTelefono) ? $xTelefono : $telefono;
-			$this->Mail = ($xMail) ? $xMail : $mail;
-            $this->id_persona = (!empty($id_persona)) ? $id_persona : $query_id_persona;
-            $this->Estado = ($xEstado) ? $xEstado : $estado;
-			$this->Trabajo = ($xTrabajo) ? $xTrabajo : $trabajo;
-		}
+                if (isset($persona)) $this->persona = $persona;
+                $this->valor = (isset($valor)) ? $valor : null; 
+                $this->estado = (isset($estado)) ? $estado : null;
+                $this->id_contacto = $id_contacto;
+                if (isset($tipo_contacto)) $this->tipo_contacto = $tipo_contacto;
+        }
 	}
 
-	public static function tiene_contacto($coneccion, $id_persona)
+	public static function tiene_contacto($coneccion, $persona)
 	{
 		$has = 0;
-		$ConsRegistrosIguales = "select id_persona 
-								from contactos
-								where id_persona = $id_persona
-								  and estado = 1";
-		$MensajeErrorRegistrosIguales = "Hubo un problema al consultar los registros para validar";
+		$cons = "select id_persona 
+                 from contactos
+                 where id_persona = " .  $persona->get_id_persona() . "
+                   and estado = 1";
+		$mensaje = "Hubo un problema al consultar los registros para validar";
 		$ret = mysqli_query($coneccion->Conexion,
-			$ConsRegistrosIguales
-		);
+			                $cons
+		                    );
+        if (!$ret) throw new Exception($mensaje, 1);
 
 		$has = mysqli_num_rows($ret);
 
@@ -94,118 +81,101 @@ class Contacto implements JsonSerializable {
         $this->id_contacto = $id_contacto;
     }
 
-    public function setTelefono($xTelefono){
-    $this->Telefono = $xTelefono;
-    }
-
-    public function setMail($xMail){
-        $this->Mail = $xMail;
-    }
-
-    public function set_id_persona($id_persona)
+    public function set_persona($persona)
     {
-        $this->id_persona = $id_persona;
+        $this->persona = $persona;
+    }
+    public function set_valor($valor)
+    {
+        $this->valor = $valor;
     }
 
-    public function setEstado($xEstado){
-        $this->Estado = $xEstado;
+    public function setEstado($estado)
+    {
+        $this->estado = $estado;
     }
 
-    public function setTrabajo($xTrabajo){
-        $this->Trabajo = $xTrabajo;
+    public function set_tipo_contacto($tipo_contacto)
+    {
+        $this->tipo_contacto = $tipo_contacto;
     }
 
     //METODOS GET
-    public function get_id_contacto(){
+    public function get_id_contacto()
+    {
         return $this->id_contacto;
     }
 
-    public function getTelefono()
+    public function get_persona()
     {
-        return $this->Telefono;
+        return $this->persona;
+    }
+    public function get_valor()
+    {
+        return $this->valor;
     }
 
-    public function getMail()
+    public function get_estado()
     {
-        return $this->Mail;
+        return $this->estado;
     }
 
-    public function get_id_persona()
+    public function get_tipo_contacto()
     {
-        return $this->id_persona;
-    }
-
-    public function getEstado()
-    {
-        return $this->Estado;
-    }
-
-    public function getTrabajo()
-    {
-        return $this->Trabajo;
+        return $this->tipo_contacto;
     }
 
     public function jsonSerialize() {
         return [
-        'Telefono' => $this->Telefono,
-        'Mail' => $this->Mail,
-        'Estado' => $this->Estado,
-        'Trabajo' => $this->Trabajo,
+        'id_persona' => $this->persona->get_id_persona(),
+        'valor' => $this->get_valor(),
+        'estado' => $this->estado,
+        'id_contacto' => $this->get_id_contacto(),
+        'id_tipo_contacto' => $this->get_tipo_contacto(),
         ];
     }
 
     public function update()
     {
-        $Consulta = "update contactos
-                    set telefono = " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono() . "'" : "null") . ", 
-                        mail = " . ((!is_null($this->getMail())) ? "'" . $this->getMail() . "'" : "null") . ", 
-                        trabajo = " . ((!is_null($this->getTrabajo())) ? "'" . $this->getTrabajo() . "'" : "null") . "
+        $consulta = "update contactos
+                    set id_persona = " . ((!is_null($this->get_persona())) ? $this->get_persona()->get_id_persona() : "null") . ", 
+                        valor = " . ((!is_null($this->get_valor())) ? "'" .  $this->get_valor() . "'" : "null") . ",
+                        estado = " . ((!is_null($this->get_estado())) ? $this->get_estado() : "null") . ",
+                        id_tipo_contacto = " . ((!is_null($this->get_tipo_contacto())) ? $this->get_tipo_contacto()->get_id_tipo_contacto() : "null") . ",
                         where id_contacto = " . $this->get_id_contacto();
-                    $MensajeErrorConsultar = "No se pudo actualizar la Persona";
-                    if (!$Ret = mysqli_query($this->coneccion->Conexion, $Consulta)) {
-                        throw new Exception($MensajeErrorConsultar . $Consulta, 2);
-                    }
+        $mensaje = "No se pudo actualizar";
+        if (!$Ret = mysqli_query($this->coneccion->Conexion, $consulta)) {
+            throw new Exception($mensaje . $consulta, 2);
+        }
     }
 
     public function save(){
-        $Con = new Conexion();
-        $Con->OpenConexion();
         $consulta = "INSERT INTO contactos(
                                         id_persona,
-                                        telefono, 
-                                        mail, 
-                                        trabajo, 
-                                        estado 
+                                        valor,
+                                        estado,
+                                        id_contacto, 
+                                        id_tipo_contacto
                     )
-                    VALUES (" . $this->get_id_persona() . " ,
-                            " . ((!is_null($this->getTelefono())) ? "'" . $this->getTelefono() . "'" : "null") . ", 
-                            " . ((!is_null($this->getMail())) ? "'" . $this->getMail() . "'" : "null") . ", 
-                            " . ((!is_null($this->getTrabajo())) ? "'" . $this->getTrabajo() . "'" : "null") . ",
-                            1
+                    VALUES (" . $this->get_persona()->get_id_persona() . " ,
+                            " . ((!is_null($this->get_valor())) ? "'" . $this->get_valor() . "'" : null) . " ,
+                            " . ((!is_null($this->get_estado())) ? $this->get_estado() : null) . " ,
+                            " . ((!is_null($this->get_id_contacto())) ? $this->get_id_contacto() : "null") . ",
+                            " . ((!is_null($this->get_tipo_contacto())) ? $this->get_tipo_contacto()->get_id_tipo_contacto() : "null") . "
                     )";
-                    $MensajeErrorConsultar = "No se pudo insertar la Persona";
-                    $ret = mysqli_query($Con->Conexion, $consulta);
-                    if (!$ret) {
-                        throw new Exception($MensajeErrorConsultar . $consulta, 2);
-                    }
-                    $this->id_contacto = mysqli_insert_id($Con->Conexion);
-                    $Con->CloseConexion();
+                    $mensaje = "No se pudo insertar";
+                    $ret = mysqli_query($this->coneccion->Conexion, $consulta);
+                    if (!$ret) throw new Exception($mensaje . $consulta, 2);
+                    $this->id_contacto = mysqli_insert_id($this->coneccion->Conexion);
     }
 
 	function delete()
 	{
-		$Con = new Conexion();
-		$Con->OpenConexion();
-
 		$query = "update contactos
 				  set estado = 0
 				  where id_contacto = " . $this->get_id_contacto();
-		$MensajeErrorConsultar = "No se pudo insertar la Persona";
-		$ret = mysqli_query($Con->Conexion, $query);
-		if (!$ret) {
-		throw new Exception($MensajeErrorConsultar . $query, 2);
-		}
-		$Con->CloseConexion();
-
+		$mensaje = "No se pudo eliminar";
+		$ret = mysqli_query($this->coneccion->Conexion, $query);
+		if (!$ret) throw new Exception($mensaje , 2);
 	}
 }
