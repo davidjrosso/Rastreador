@@ -165,8 +165,13 @@ class Persona implements JsonSerializable {
 			$obra_Social = $ret["obra_social"];
 			$calle = $ret["calle"];
 			$nro = $ret["nro"];
-			$cl = new Calle(id_calle: $calle);
-			$domicilio = $cl->get_calle_nombre() . " " . $nro;
+
+			$domicilio = null;
+			$existe = Calle::existe_id_calle(id_calle: $calle, connection: $Con);
+			if ($existe) {
+				$cl = new Calle(id_calle: $calle);
+				$domicilio = $cl->get_calle_nombre() . " " . $nro;
+			}
 			$domicilio = (!empty($calle)) ? $domicilio : $ret["domicilio"];
 
 			$barrio = $ret["ID_Barrio"];

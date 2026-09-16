@@ -160,7 +160,7 @@ function seleccionMotivo(xMotivo, xID, xNumber) {
         let Motivo = document.getElementById("Motivo");
         let ID_Motivo = document.getElementById("ID_Motivo");
         Motivo.innerHTML = "";
-        Motivo.innerHTML = "<p>" + xMotivo+"</p>";
+        Motivo.innerHTML = "<p>" + xMotivo + "</p>";
         ID_Motivo.setAttribute('value' , xID);
     }
 }
@@ -220,7 +220,7 @@ function habilitarMeses(xElemento) {
     }
 }
 
-function habilitarEdad(xElemento){
+function habilitarEdad(xElemento) {
     let edadHasta = $("#Edad_Hasta");
     let valueElem = xElemento.value;
     let idInput = xElemento.id;
@@ -235,15 +235,18 @@ function habilitarEdad(xElemento){
     }
 }
 
-function buscarCalles(){
+function buscarCalles() {
     let xNombre = document.getElementById('SearchCalle').value;
     let textoBusqueda = xNombre;
     let contenidosRecibidos = null;
     let xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function(e) {
-    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        contenidosRecibidos = xmlhttp.responseText;
-        document.getElementById("ResultadosCalles").innerHTML = contenidosRecibidos;
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            contenidosRecibidos = xmlhttp.responseText;
+            document.getElementById("ResultadosCalles").innerHTML = contenidosRecibidos;
+            $("button[data-seleccion-calle]").on("click", function (e) {
+                seleccionCalle($(this).attr("data-nombre-calle"), $(this).attr("data-id-calle"));
+            });
         }
     }
     xmlhttp.open('POST', 'buscarCalle.php?valorBusqueda=' + textoBusqueda, true); // Método post y url invocada
@@ -253,7 +256,6 @@ function buscarCalles(){
 function seleccionCalle(xNombre, xID) {
     let BotonModalPersona = document.getElementById("BotonModalDireccion_1");
     let calle = document.getElementById("Calle");
-    nombreCalle = xNombre;
     BotonModalPersona.innerHTML = "";
     BotonModalPersona.innerHTML = xNombre;
     calle.setAttribute('value' , xID);
@@ -268,7 +270,7 @@ function seleccionCalle(xNombre, xID) {
     }
 }
 
-function seleccionCategoria(xCategoria, xID){
+function seleccionCategoria(xCategoria, xID) {
     let Categoria = document.getElementById("Categoria");
     let ID_Categoria = document.getElementById("ID_Categoria");
     Categoria.innerHTML = "";
@@ -343,6 +345,188 @@ $(function() {
         $("#edad-hasta-toast").show();
     });
 
+    /*
+        $("#Meses_Hasta").on("mouseenter", function () {
+          let val = $(this).val();
+          if (val) {
+            $("#meses-hasta-dato").html(toastMessage("meses"));
+            time = setTimeout(function () {
+                $("#meses-hasta-toast").show();
+            }, 1000);
+          }
+        }).on("mouseleave", function () {
+          $("#meses-hasta-toast").hide();
+          clearTimeout(time);
+        }).on("input", function () {
+          $("#meses-hasta-dato").html(toastMessage("meses"));
+          $("#meses-hasta-toast").show();
+        });
+
+
+        $("#liveToast").on("click", function (e) {
+          $(this).hide();
+          modalCargaDeMovimiento();
+        });
+
+        $("#width-display").prop("value", window.screen.availWidth);
+
+        function resetearForm() {
+        swal({
+            title: "¿Está seguro?",
+            text: "¿Seguro de querer resetear el formulario?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+            reiniciarFormulario();
+            }
+        });
+        }
+
+        function tomarElemento(xID){
+            return document.getElementById(xID);
+        }
+
+        function crearElemento(xTipo){
+            return document.createElement(xTipo);
+        }
+
+        function agregarAtributoxElemento(xElemento,xAtributo,xValue){
+            xElemento.setAttribute(xAtributo,xValue);
+        }
+
+        function agregarEtiqueta(xElemento,xEtiqueta){
+            xElemento.innerHTML = xEtiqueta;
+        }
+
+        function resetearValorElemento(xID){
+            document.getElementById(xID).value = "";
+        }
+
+        function resetearValorSelect(xID){
+            document.getElementById(xID).selectedIndex = 0;
+        }
+
+        function resetearValorDiv(xDiv){
+            xDiv.innerHTML = "";
+        }
+
+        function agregarElementoxDiv(xDiv,xElemento){
+            xDiv.appendChild(xElemento);
+        }
+
+
+
+        function reiniciarFormulario(){
+            //RESETEANDO CAMPO FECHA
+            resetearValorElemento("Fecha_Desde");        
+            resetearValorElemento("Fecha_Hasta");  
+            var fechaDesde = tomarElemento("Fecha_Desde");      
+            var fechaHasta = tomarElemento("Fecha_Hasta");
+            fechaDesde.value = "<?php echo implode("/", array_reverse(explode("-",date('Y-m-d',strtotime(date('Y-m-d')."- 1 year"))))); ?>";
+            fechaHasta.value = "<?php echo implode("/", array_reverse(explode("-",date('Y-m-d')))); ?>";
+            //RESETEANDO BOTON PERSONA
+            var btnPersona = crearElemento("button");
+            agregarAtributoxElemento(btnPersona,"type","button");
+            agregarAtributoxElemento(btnPersona,"class","btn btn-lg btn-primary btn-block");
+            agregarAtributoxElemento(btnPersona,"data-toggle","modal");
+            agregarAtributoxElemento(btnPersona,"data-target","#ModalPersona");        
+            agregarEtiqueta(btnPersona,"Seleccione una Persona");        
+            var div_btnPersona = tomarElemento("Persona");
+            resetearValorDiv(div_btnPersona);        
+            agregarElementoxDiv(div_btnPersona,btnPersona);  
+            //RESETANDO CAMPOS
+            resetearValorElemento("Edad_Desde"); 
+            resetearValorElemento("Edad_Hasta"); 
+            resetearValorElemento("Domicilio"); 
+            resetearValorElemento("manzana"); 
+            resetearValorElemento("lote"); 
+            resetearValorElemento("familia");       
+            resetearValorElemento("Nro_Carpeta"); 
+            resetearValorElemento("Nro_Legajo"); 
+            resetearValorSelect("ID_Escuela");
+            resetearValorElemento("Trabajo"); 
+            //RESETEANDO BOTON SELECCIONE UN MOTIVO 1
+            var btnMotivo_1 = crearElemento("button");
+            agregarAtributoxElemento(btnMotivo_1,"type","button");
+            agregarAtributoxElemento(btnMotivo_1,"class","btn btn-lg btn-primary btn-block");
+            agregarAtributoxElemento(btnMotivo_1,"data-toggle","modal");
+            agregarAtributoxElemento(btnMotivo_1,"data-target","#ModalMotivo");        
+            agregarEtiqueta(btnMotivo_1,"Seleccione Motivo");        
+            var div_btnMotivo_1 = tomarElemento("Motivo");
+            resetearValorDiv(div_btnMotivo_1);        
+            agregarElementoxDiv(div_btnMotivo_1,btnMotivo_1); 
+            //RESETEANDO BOTON SELECCIONE UN MOTIVO 2
+            var btnMotivo_2 = crearElemento("button");
+            agregarAtributoxElemento(btnMotivo_2,"type","button");
+            agregarAtributoxElemento(btnMotivo_2,"class","btn btn-lg btn-primary btn-block");
+            agregarAtributoxElemento(btnMotivo_2,"data-toggle","modal");
+            agregarAtributoxElemento(btnMotivo_2,"data-target","#ModalMotivo2");        
+            agregarEtiqueta(btnMotivo_2,"Seleccione Motivo");        
+            var div_btnMotivo_2 = tomarElemento("Motivo2");
+            resetearValorDiv(div_btnMotivo_2);        
+            agregarElementoxDiv(div_btnMotivo_2,btnMotivo_2);  
+            //RESETEANDO BOTON SELECCIONE UN MOTIVO 3
+            var btnMotivo_3 = crearElemento("button");
+            agregarAtributoxElemento(btnMotivo_3,"type","button");
+            agregarAtributoxElemento(btnMotivo_3,"class","btn btn-lg btn-primary btn-block");
+            agregarAtributoxElemento(btnMotivo_3,"data-toggle","modal");
+            agregarAtributoxElemento(btnMotivo_3,"data-target","#ModalMotivo3");        
+            agregarEtiqueta(btnMotivo_3,"Seleccione Motivo");        
+            var div_btnMotivo_3 = tomarElemento("Motivo3");
+            resetearValorDiv(div_btnMotivo_3);        
+            agregarElementoxDiv(div_btnMotivo_3,btnMotivo_3);      
+            //RESETEANDO BOTON SELECCIONE UNA MOTIVO 3
+            var btnCategoria = crearElemento("button");
+            agregarAtributoxElemento(btnCategoria,"type","button");
+            agregarAtributoxElemento(btnCategoria,"class","btn btn-lg btn-primary btn-block");
+            agregarAtributoxElemento(btnCategoria,"data-toggle","modal");
+            agregarAtributoxElemento(btnCategoria,"data-target","#ModalCategoria");        
+            agregarEtiqueta(btnCategoria,"Seleccione Categoría");       
+            var div_btnCategoria = tomarElemento("Categoria");
+            resetearValorDiv(div_btnCategoria);        
+            agregarElementoxDiv(div_btnCategoria,btnCategoria);              
+            //RESETEANDO CENTRO DE SALUD
+            resetearValorSelect("ID_Centro");
+            //RESETEANDO OTRAS INSTITUCIONES
+            resetearValorSelect("ID_OtraInstitucion");
+            //RESETEANDO MOSTRAR PERSONAS
+            resetearValorSelect("inpMostrar");
+        }
+
+        function habilitar_seleccion(val) {
+        // alert (val)
+        if(val!=0){      
+        
+            if(val=="todos"){
+            document.getElementById("div_manzana").hidden=false;
+            document.getElementById("div_lote").hidden=false;
+            document.getElementById("div_familia").hidden=false;            
+            }
+            else if(val=="manzana"){
+            document.getElementById("div_manzana").hidden=false;  
+            document.getElementById("div_lote").hidden=true;  
+            document.getElementById("div_familia").hidden=true;   
+            }
+            else if(val=="lote"){
+            document.getElementById("div_manzana").hidden=true;  
+                document.getElementById("div_lote").hidden=false;  
+            document.getElementById("div_familia").hidden=true;   
+            
+            }    
+            else{
+            document.getElementById("div_manzana").hidden=true;  
+            document.getElementById("div_lote").hidden=true;  
+            document.getElementById("div_familia").hidden=false;   
+            }                             
+        }
+
+        }
+
+    */
+
     $("#SearchPersonas").on("keyup", function (e) {
         buscarPersonas();
     });
@@ -405,7 +589,7 @@ $(function() {
         buscarCategorias();
     });
 
-    $("#Edad_Hasta").on("keyup", function (e) {
+    $("#Edad_Desde,  #Edad_Hasta").on("keyup", function (e) {
         habilitarMeses(e.target);
     });
 
@@ -437,7 +621,7 @@ $(function() {
         formulario.seleccionMultipleCategoria();
     });
 
-    $("#seleccionar-motivo, #seleccionar-motivo2, #seleccionar-motivo3, #seleccionar-motivo4, #seleccionar-motivo5").on("click", function (e) {
+    $("button[data-seleccion-multiple-motivos], #seleccionar-motivo, #seleccionar-motivo2, #seleccionar-motivo3, #seleccionar-motivo4, #seleccionar-motivo5").on("click", function (e) {
         formulario.seleccionMultipleMotivo();
     });
 

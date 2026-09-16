@@ -43,14 +43,14 @@ if (isset($consultaBusqueda)) {
 		//echo 'Resultados para <strong>'.$consultaBusqueda.'</strong>';
 
 		$mensaje .= '<table class="table">
-			  <thead class="thead-dark">
-			    <tr>
-			      <th scope="col">Codigo</th>
-			      <th scope="col">Nombre</th>
-			      <th scope="col">Accion</th>
-				</tr>
-			  </thead>
-			  <tbody>';
+					   <thead class="thead-dark">
+					     <tr>
+						   <th scope="col">Codigo</th>
+						   <th scope="col">Nombre</th>
+						   <th scope="col">Accion</th>
+						 </tr>
+						</thead>
+						<tbody>';
 
 		//La variable $resultado contiene el array que se genera en la consulta, así que obtenemos los datos y los mostramos en un bucle
 		while($resultados = mysqli_fetch_array($consulta)) {
@@ -67,7 +67,9 @@ if (isset($consultaBusqueda)) {
 			    <tr>
 			      <th scope="row">'.$Codigo.'</th>
 			      <td>'.$Nombre.'</td>			
-			      <td><button type = "button" class = "btn btn-outline-success" onClick="seleccionCalle(\''.$Nombre.'\','.$ID_Calle.')" data-dismiss="modal">seleccionar</button></td>
+			      <td>
+				  	<button type = "button" class = "btn btn-outline-success" data-seleccion-calle="1" data-nombre-calle=\'' . $Nombre . '\' data-id-calle=\'' . $ID_Calle . '\' data-dismiss="modal">seleccionar</button>
+				  </td>
 			    </tr>';
 		};//Fin while $resultados
 

@@ -120,12 +120,12 @@ export class FormularioReporte {
       $("#ResultadosCategorias").html("");
     }
 
-    seleccionCategoria(xCategoria, xID){
+    seleccionCategoria(xCategoria, xID) {
       let Categoria = document.getElementById("Categoria");
       let ID_Categoria = document.getElementById("ID_Categoria");
       Categoria.innerHTML = "";
-      Categoria.innerHTML = "<p>"+xCategoria+"</p>";
-      ID_Categoria.setAttribute('value',xID);
+      Categoria.innerHTML = "<p>" + xCategoria + "</p>";
+      ID_Categoria.setAttribute('value', xID);
     }
 
     agregarMotivo() {

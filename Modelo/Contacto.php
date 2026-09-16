@@ -125,7 +125,8 @@ class Contacto implements JsonSerializable {
         return $this->tipo_contacto;
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         return [
         'id_persona' => $this->persona->get_id_persona(),
         'valor' => $this->get_valor(),
@@ -149,7 +150,8 @@ class Contacto implements JsonSerializable {
         }
     }
 
-    public function save(){
+    public function save()
+    {
         $consulta = "INSERT INTO contactos(
                                         id_persona,
                                         valor,
