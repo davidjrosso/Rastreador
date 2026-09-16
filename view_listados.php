@@ -54,550 +54,15 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
   <script src="js/Utils.js"></script>
   <script src="./dist/preferencia.js"></script>
   <script src="./dist/alerta.js"></script>
+  <script src="./dist/formulariosReporte.js"></script>
   <script src="./dist/control.js"></script>
+  <?php if (!empty($id_motivo)) {?>
   <script>
-    let cantBarrios = 1;
-    let cantMotivos = 1;
-    let cantResponsable = 1;
-    let listaMotivos = new Map();
-    let listaCategorias = new Map();
-    let cantCategoria = 1;
-    let time = null;
-    let idTime = null;
-
     $(document).ready(function() {
-              var date_input=$('input[name="Fecha_Desde"]');
-              var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-              date_input.datepicker({
-                  format: 'dd/mm/yyyy',
-                  container: container,
-                  todayHighlight: true,
-                  autoclose: true,
-                  closeText: 'Cerrar',
-                  days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
-                  daysShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
-                  daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
-                  months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-                  monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
-                  today: "Hoy",
-                  monthsTitle: "Meses",
-                  clear: "Borrar",
-                  weekStart: 1,
-              });
-              date_input.on("change", (e) => $("#inicial-movimiento-check").val(""));
-              var date_input2 =$('input[name="Fecha_Hasta"]');
-              var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-              date_input2.datepicker({
-                  format: 'dd/mm/yyyy',
-                  container: container,
-                  todayHighlight: true,
-                  autoclose: true,
-                  closeText: 'Cerrar',
-                  days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
-                  daysShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
-                  daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
-                  months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-                  monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
-                  today: "Hoy",
-                  monthsTitle: "Meses",
-                  clear: "Borrar",
-                  weekStart: 1,
-              });
-              date_input2.on("change", (e) => $("#fin-movimiento-check").val(""))
-              $("#inpMostrar").on("change", function (event){
-                controlMovimiento(this);
-              });
-
-              $("#Edad_Hasta").on("mouseenter", function () {
-                  let val = $(this).val();
-                  if (val) {
-                    $("#edad-hasta-dato").html(toastMessage("años"));
-                    time = setTimeout(function () {
-                        $("#edad-hasta-toast").show();
-                    }, 1000);
-                  }
-                }).on("mouseleave", function () {
-                  $("#edad-hasta-toast").hide();
-                  clearTimeout(time);
-                }).on("input", function () {
-                  $("#edad-hasta-dato").html(toastMessage("años"));
-                  $("#edad-hasta-toast").show();
-                });
-
-                $("#Meses_Hasta").on("mouseenter", function () {
-                  let val = $(this).val();
-                  if (val) {
-                    $("#meses-hasta-dato").html(toastMessage("meses"));
-                    time = setTimeout(function () {
-                        $("#meses-hasta-toast").show();
-                    }, 1000);
-                  }
-                }).on("mouseleave", function () {
-                  $("#meses-hasta-toast").hide();
-                  clearTimeout(time);
-                }).on("input", function () {
-                  $("#meses-hasta-dato").html(toastMessage("meses"));
-                  $("#meses-hasta-toast").show();
-              });
-
-              $("#close-categorias").on("click", function (e) {
-                    $("#SearchCategorias").val("");
-                    $("#ResultadosCategorias").html("");
-              });
-
-              $("#cerrar-categorias").on("click", function (e) {
-                    $("#SearchCategorias").val("");
-                    $("#ResultadosCategorias").html("");
-              });
-
-              <?php if (!empty($id_motivo)) {?>
-              if(<?=$id_motivo?>) {
-               if (!listaMotivos.has('<?=$motivo->get_motivo()?>') && (listaMotivos.size <= 4)) {
-                  listaMotivos.set('<?=$motivo->get_motivo();?>', <?=$id_motivo;?>);
-                }
-                seleccionMultipleMotivo();
-              }
-            <?php
-            }?>
-          });
-
-    function buscarPersonas() {
-      var xNombre = document.getElementById('SearchPersonas').value;
-      var textoBusqueda = xNombre;
-      xmlhttp=new XMLHttpRequest();
-      xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-          contenidosRecibidos = xmlhttp.responseText;
-          document.getElementById("ResultadosPersonas").innerHTML=contenidosRecibidos;
-          }
-      }
-      xmlhttp.open('POST', 'buscarPersonas.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
-      xmlhttp.send();
-    }
-
-    function buscarMotivos() {
-      let xMotivo = document.getElementById('SearchMotivos1').value;
-      let bodyJson = Object.fromEntries(listaMotivos);
-      let textoBusqueda = xMotivo;
-      let vs = $("#select-motivo1")[0].value
-      xmlhttp=new XMLHttpRequest();
-      xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-          contenidosRecibidos = xmlhttp.responseText;
-          document.getElementById("ResultadosMotivos1").innerHTML=contenidosRecibidos;
-          $("div[data-id-element]").css("display", "block");
-        }
-      }
-      xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda=' + textoBusqueda + "&vs=" + vs, true);
-      xmlhttp.setRequestHeader("Content-Type", "application/json;");
-      xmlhttp.send(JSON.stringify(bodyJson));
-    }
-
-    function buscarMotivos2() {
-      let xMotivo = document.getElementById('SearchMotivos2').value;
-      let bodyJson = Object.fromEntries(listaMotivos);
-      let textoBusqueda = xMotivo;
-      xmlhttp=new XMLHttpRequest();
-      xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-          contenidosRecibidos = xmlhttp.responseText;
-          document.getElementById("ResultadosMotivos2").innerHTML=contenidosRecibidos;
-          $("div[data-id-element]").css("display", "block");
-        }
-      }
-      xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda='+textoBusqueda+'&number=2', true); // Método post y url invocada
-      xmlhttp.setRequestHeader("Content-Type", "application/json;");
-      xmlhttp.send(JSON.stringify(bodyJson));
-    }
-
-    function buscarMotivos3() {
-      let xMotivo = document.getElementById('SearchMotivos3').value;
-      let bodyJson = Object.fromEntries(listaMotivos);
-      let textoBusqueda = xMotivo;
-      xmlhttp=new XMLHttpRequest();
-      xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-          contenidosRecibidos = xmlhttp.responseText;
-          document.getElementById("ResultadosMotivos3").innerHTML=contenidosRecibidos;
-          $("div[data-id-element]").css("display", "block");
-        }
-      }
-      xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda='+textoBusqueda+'&number=3', true); // Método post y url invocada
-      xmlhttp.setRequestHeader("Content-Type", "application/json;");
-      xmlhttp.send(JSON.stringify(bodyJson));
-    }
-
-    function buscarMotivos4(motivoNumero) {
-      let xMotivo = document.getElementById('SearchMotivos' + motivoNumero).value;
-      let bodyJson = Object.fromEntries(listaMotivos);
-      let textoBusqueda = xMotivo;
-      xmlhttp=new XMLHttpRequest();
-      xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-          contenidosRecibidos = xmlhttp.responseText;
-          document.getElementById("ResultadosMotivos" + motivoNumero).innerHTML=contenidosRecibidos;
-          $("div[data-id-element]").css("display", "block");
-        }
-      }
-      xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda='+textoBusqueda+'&number=' + motivoNumero, true); // Método post y url invocada
-      xmlhttp.setRequestHeader("Content-Type", "application/json;");
-      xmlhttp.send(JSON.stringify(bodyJson));
-    }
-
-    function buscarMotivosGeneral(id_Motivo) {
-      let xMotivo = document.getElementById("SearchMotivos" + id_Motivo).value;
-      let bodyJson = Object.fromEntries(listaMotivos);
-      let textoBusqueda = xMotivo;
-      let vs = $("#select-motivo" + id_Motivo)[0].value;
-      xmlhttp=new XMLHttpRequest();
-      xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-          contenidosRecibidos = xmlhttp.responseText;
-          document.getElementById("ResultadosMotivos" + id_Motivo).innerHTML=contenidosRecibidos;
-          $("div[data-id-element]").css("display", "block");
-        }
-      }
-      xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda=' + textoBusqueda + '&number=' + id_Motivo + "&vs=" + vs, true); // Método post y url invocada
-      xmlhttp.send(JSON.stringify(bodyJson));
-    }
-
-    function buscarCategorias() {
-      var xCategoria = document.getElementById('SearchCategorias').value;
-      var textoBusqueda = xCategoria;
-      xmlhttp=new XMLHttpRequest();
-      xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-          contenidosRecibidos = xmlhttp.responseText;
-          document.getElementById("ResultadosCategorias").innerHTML=contenidosRecibidos;
-          $("div[data-id-element]").css("display", "block");
-        }
-      }
-      xmlhttp.open('POST', 'buscarCategorias.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
-      xmlhttp.send();
-    }
-    
-    function seleccionPersona(xNombre,xID) {
-      let Persona = document.getElementById("Persona");
-      let ID_Persona = document.getElementById("ID_Persona");
-      Persona.innerHTML = "<p>" + xNombre + "<button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalPersona'><i class='fa fa-cog text-secondary'></i></button></p>";
-      ID_Persona.setAttribute('value',xID);
-      /*
-      let BtnBarrios = document.getElementById("agregarBarrio");
-      BtnBarrios.setAttribute('disabled', true);      
-      let SelMostrar = document.getElementById("inpMostrar");
-      SelMostrar.setAttribute('disabled', true);
-      */
-    }
-
-    function seleccionMotivo(xMotivo,xID,xNumber) {
-      if (xNumber > 1) {
-        var Motivo = document.getElementById("Motivo"+xNumber);
-        var ID_Motivo = document.getElementById("ID_Motivo"+xNumber);
-        Motivo.innerHTML = "";
-        Motivo.innerHTML = "<p>" + xMotivo + "</p>";
-        ID_Motivo.setAttribute('value', xID);
-      } else {
-        var Motivo = document.getElementById("Motivo");
-        var ID_Motivo = document.getElementById("ID_Motivo");
-        Motivo.innerHTML = "";
-        Motivo.innerHTML = "<p>"+xMotivo+"</p>";
-        ID_Motivo.setAttribute('value',xID);
-      }
-    }
-
-    function addMultipleMotivo(xMotivo, xID, element) {
-      if (!listaMotivos.has(xMotivo) && (listaMotivos.size <= 4)) {
-        listaMotivos.set(xMotivo, xID);
-        element.innerHTML = "&#10003";
-        element.style.width = "12ch";
-      } else if (listaMotivos.has(xMotivo)){
-        listaMotivos.delete(xMotivo);
-        element.innerHTML = "seleccionar";
-      }
-    }
-
-    function addMultipleCategoria(xCategoria, xID, element) {
-      if (!listaCategorias.has(xCategoria) && (listaCategorias.size <= 7)) {
-        listaCategorias.set(xCategoria, xID);
-        element.innerHTML = "&#10003";
-        element.style.width = "12ch";
-      } else if (listaCategorias.has(xCategoria)){
-        listaCategorias.delete(xCategoria);
-        element.innerHTML = "seleccionar";
-      }
-    }
-
-    function seleccionMultipleMotivo() {
-      let motivoNumero = 1;
-      let idMotivo = null;
-      listaMotivos.forEach((value, key, map) => {
-          idMotivo = value;
-          if (motivoNumero <= 1) {
-            if (motivoNumero == 1) {
-              $("#Motivo").html("<p>" + key + "<button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
-              $("#ID_Motivo").val(idMotivo);
-            } else {
-              $("#Motivo" + motivoNumero).html("<p>" + key + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
-              $("#ID_Motivo" + motivoNumero).val(idMotivo);
-            }
-          } else {
-            agregarMotivo();
-            $("#Motivo" + motivoNumero).html("<p>" + key + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo" + motivoNumero + "'><i class='fa fa-cog text-secondary'></i></button></p>");
-            $("#ID_Motivo" + motivoNumero).val(idMotivo);
-          }
-          motivoNumero++;
-      });
-      for (let index = motivoNumero; index <= 5; index++) {
-        if (index == 1) {
-          $("#Motivo").html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo'>Seleccione Motivo</button>");
-          $("#ID_Motivo").val(null);
-        } else {
-          $("#Motivo" + index).html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalMotivo" + index + "'>Seleccione Motivo</button>");
-          $("#ID_Motivo" + index).val(null);
-        }
-        
-      }
-    }
-
-    function seleccionMultipleCategoria() {
-      let categoriaNumero = 1;
-      let idCategoria = null;
-      listaCategorias.forEach((value, key, map) => {
-          idCategoria = value;
-          if (categoriaNumero <= 1) {
-            if (categoriaNumero == 1) {
-              $("#Categoria").html("<p>" + key + "<button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalCategoria'><i class='fa fa-cog text-secondary'></i></button></p>");
-              $("#ID_Categoria").val(idCategoria);
-            } else {
-              $("#Categoria" + categoriaNumero).html("<p>" + key + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalCategoria'><i class='fa fa-cog text-secondary'></i></button></p>");
-              $("#ID_Categoria" + categoriaNumero).val(idCategoria);
-            }
-          } else {
-            agregarCategoria();
-            $("#Categoria" + categoriaNumero).html("<p>" + key + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalCategoria'><i class='fa fa-cog text-secondary'></i></button></p>");
-            $("#ID_Categoria" + categoriaNumero).val(idCategoria);
-          }
-          categoriaNumero++;
-      });
-      for (let index = categoriaNumero; index <= 8; index++) {
-        if (index == 1) {
-          $("#Categoria").html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalCategoria'>Seleccione Categoría</button>");
-          $("#ID_Categoria").val(null);
-        } else {
-          $("#Categoria" + index).html("<button class='btn btn-lg btn-primary btn-block' type='button' data-toggle='modal' data-target='#ModalCategoria'>Seleccione Categoría</button>");
-          $("#ID_Categoria" + index).val(null);
-        }
-      }
-
-      $("#SearchCategorias").val("");
-      $("#ResultadosCategorias").html("");
-    }
-
-    function seleccionCategoria(xCategoria, xID){
-      var Categoria = document.getElementById("Categoria");
-      var ID_Categoria = document.getElementById("ID_Categoria");
-      Categoria.innerHTML = "";
-      Categoria.innerHTML = "<p>"+xCategoria+"</p>";
-      ID_Categoria.setAttribute('value',xID);
-    }
-
-    function agregarBarrio() {
-      cantBarrios++;
-      var divContenedor = document.getElementById('contenedorBarrios');
-      var divBarrio = document.createElement("div");
-      divBarrio.setAttribute('class','form-group row');
-      var labelBarrio = document.createElement("label");
-      labelBarrio.setAttribute('class','col-md-2 col-form-label LblForm');
-      labelBarrio.innerText = 'Barrio ' + cantBarrios + ':';
-      var divSelectBarrio = document.createElement("div");
-      divSelectBarrio.setAttribute('class','col-md-10');
-      var select = `<?php echo $Element->CBRepBarrios(); ?>`;
-      divSelectBarrio.innerHTML = select;      
-      divBarrio.appendChild(labelBarrio);
-      divBarrio.appendChild(divSelectBarrio);
-      divContenedor.appendChild(divBarrio);
-
-    }
-
-    function agregarMotivo() {
-      if (cantMotivos <= 7) {
-        cantMotivos++;
-        var divContenedor = document.getElementById('contenedorMotivos');
-        var divMotivo = document.createElement("div");
-        divMotivo.setAttribute('class','form-group row');
-        var labelMotivo = document.createElement("label");
-        labelMotivo.setAttribute('class','col-md-2 col-form-label LblForm');
-        labelMotivo.innerText = 'Motivo '+ cantMotivos +':';
-        var divBotonMotivo = document.createElement("div");
-        divBotonMotivo.setAttribute("id", "Motivo" + cantMotivos);
-        divBotonMotivo.setAttribute('class','col-md-10');
-        var boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo" + cantMotivos + "'>Seleccione Motivo</button>";
-        divBotonMotivo.innerHTML = boton;      
-        divMotivo.appendChild(labelMotivo);
-        divMotivo.appendChild(divBotonMotivo);
-        divContenedor.appendChild(divMotivo);
-        var divInputsGenerales = document.getElementById('InputsGenerales');
-        var divInput = document.createElement("input");
-        divInput.setAttribute("id", "ID_Motivo" + cantMotivos);
-        divInput.setAttribute("name", "ID_Motivo" + cantMotivos);
-        divInput.setAttribute("type", "hidden");
-        divInput.setAttribute("data-pre", "1");
-        divInputsGenerales.appendChild(divInput);
-      }
-    }
-
-    function agregarResponsable() {
-      if (cantResponsable <= 3) {
-        cantResponsable++;
-        let divContenedor = document.getElementById('responsables');
-        let divResponsable = document.getElementById("ID_Responsable");
-        let obj = divResponsable.cloneNode(true);
-        obj.setAttribute('name', 'ID_Responsable[]');
-        let label = document.createElement("label");
-        label.setAttribute('class','col-md-2 col-form-label LblForm');
-        label.innerText = 'Responsable '+ cantResponsable +':';
-        let div = document.createElement("div");
-        div.setAttribute('class','col-md-10');
-        let divForm = document.createElement("div");
-        divForm.setAttribute('class','form-group row');
-        divForm.appendChild(label);
-        divForm.appendChild(div);
-        div.appendChild(obj);
-        divContenedor.appendChild(divForm);
-      }
-    }
-
-
-    function cambiarConfig() {
-      var ID_Config = document.getElementById('ID_Config');
-      var formatConfig = document.getElementById('formatConfig');
-      ID_Config.value = formatConfig.value;
-    }
-
-    function toastMessage(val) {
-      let edadHasta = $("#Edad_Hasta").prop("value");
-      let edadDesde = $("#Edad_Desde").prop("value");
-      let mesesDesde = $("#Meses_Desde").prop("value");
-      let mesesHasta = $("#Meses_Hasta").prop("value");
-      let dato = null;
-      if (edadHasta && val == "años") {
-        dato = edadHasta + " años y 364 días ";
-      }
-      if (mesesHasta && val == "meses") {
-        dato = mesesHasta + " meses y x dias";
-      }
-      return dato;
-    }
-
-
-    function disabledMeses(xBool) {
-      meses_desde = document.getElementById('Meses_Desde');
-      meses_hasta = document.getElementById('Meses_Hasta');
-
-      if(xBool){
-        meses_desde.setAttribute('disabled', true);
-        meses_hasta.setAttribute('disabled', true);
-        alert('Hola');
-      }else{
-        meses_desde.removeAttribute('disabled');
-        meses_hasta.removeAttribute('disabled');
-      }
-    }
-
-    function habilitarMeses(xElemento){
-      let edadHasta = $("#Edad_Hasta");
-      let mesesDesde = $("#Meses_Desde");
-      let mesesHasta = $("#Meses_Hasta");
-      let valueElem = xElemento.value;
-      let idInput = xElemento.id;
-      if (idInput == "Edad_Desde") {
-        if (valueElem === "") {
-          mesesDesde.prop("readonly", false);
-          mesesDesde.val("");
-          mesesHasta.prop("readonly", false);
-          edadHasta.prop("readonly", false);
-        } else {
-          mesesDesde.prop("readonly", true);
-          edadHasta.prop("readonly", false);
-          mesesDesde.val("0");
-        }
-      }
-    }
-
-    function habilitarEdad(xElemento){
-      let edadHasta = $("#Edad_Hasta");
-      let valueElem = xElemento.value;
-      let idInput = xElemento.id;
-      if (idInput == "Meses_Desde") {
-        if (valueElem === "") {
-          edadHasta.prop("readonly", false);
-          edadHasta.val("");
-        } else {
-          edadHasta.prop('readonly', true);
-          edadHasta.val("");
-        }
-      }
-    }
-
-    function agregarCategoria() {
-      if (cantCategoria <= 7) {
-        cantCategoria++;
-        let divContenedor = document.getElementById('contenedorCategoria');
-        let divCategoria = document.createElement("div");
-        divCategoria.setAttribute('class','form-group row');
-        let labelCategoria = document.createElement("label");
-        labelCategoria.setAttribute('class','col-md-2 col-form-label LblForm');
-        labelCategoria.innerText = 'Categoria '+ cantCategoria +':';
-        let divBotonCategoria = document.createElement("div");
-        divBotonCategoria.setAttribute("id", "Categoria" + cantCategoria);
-        divBotonCategoria.setAttribute('class','col-md-10');
-        let boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalCategoria'>Seleccione un Categoria</button>";
-        divBotonCategoria.innerHTML = boton;      
-        divCategoria.appendChild(labelCategoria);
-        divCategoria.appendChild(divBotonCategoria);
-        divContenedor.appendChild(divCategoria);
-        let divInputsGenerales = document.getElementById('InputsGenerales');
-        let divInput = document.createElement("input");
-        divInput.setAttribute("id", "ID_Categoria" + cantCategoria);
-        divInput.setAttribute("name", "ID_Categoria" + cantCategoria);
-        divInput.setAttribute("type", "hidden");
-        divInput.setAttribute("data-pre", "1");
-        divInputsGenerales.appendChild(divInput);
-      }
-    }
-
-    function buscarCalles(){
-      var xNombre = document.getElementById('SearchCalle').value;
-      var textoBusqueda = xNombre;
-      xmlhttp=new XMLHttpRequest();
-      xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-          contenidosRecibidos = xmlhttp.responseText;
-          document.getElementById("ResultadosCalles").innerHTML=contenidosRecibidos;
-          }
-      }
-      xmlhttp.open('POST', 'buscarCalle.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
-      xmlhttp.send();
-    }
-
-    function seleccionCalle(xNombre, xID) {
-      let BotonModalPersona = document.getElementById("BotonModalDireccion_1");
-      let calle = document.getElementById("Calle");
-      nombreCalle = xNombre;
-      BotonModalPersona.innerHTML = "";
-      BotonModalPersona.innerHTML = xNombre;
-      calle.setAttribute('value',xID);
-      let nro = $("#NumeroDeCalle").val();
-      if (nro && map) {
-        $("#mapa-sig").prop('disabled', false);
-        map.addPersonMapAddress(
-                                xNombre,
-                                nro,
-                                xID
-                              );
-      }
-    }
+          if(<?=$id_motivo?>) seleccionMotivoInicial('<?= $motivo->get_motivo();?>', <?= $id_motivo;?>);
+    });
   </script>
+  <?php } ?>
 </head>
 <body>
 
@@ -673,7 +138,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
               <div class="form-group row">
                     <label for="Edad_Desde" class="col-md-2 col-form-label LblForm">Desde (Años): </label>
                     <div class="col-md-10">
-                        <input type="number" name="Edad_Desde" data-pre = "1" id="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarMeses(this)" value="<?= (isset($datosNav["Edad_Desde"])) ? $datosNav["Edad_Desde"] : '' ?>">                      
+                        <input type="number" name="Edad_Desde" data-pre = "1" id="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" value="<?= (isset($datosNav["Edad_Desde"])) ? $datosNav["Edad_Desde"] : '' ?>">                      
                         <input type="hidden" name="ID_Persona" data-pre = "1" id = "ID_Persona" value = "0">
                         <script>
                           <?php
@@ -689,7 +154,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
               <div class="form-group row" style="position: relative;">
                   <label for="Edad_Hasta" class="col-md-2 col-form-label LblForm">Hasta (Años): </label>
                   <div class="col-md-10">
-                      <input type="number" name="Edad_Hasta" data-pre = "1" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarMeses(this)" value="<?= (isset($datosNav["Edad_Hasta"])) ? $datosNav["Edad_Hasta"] : '' ?>">
+                      <input type="number" name="Edad_Hasta" data-pre = "1" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" value="<?= (isset($datosNav["Edad_Hasta"])) ? $datosNav["Edad_Hasta"] : '' ?>">
                   </div>
                   <div class="position-absolute" style="z-index: 1100; width: auto; right: -20%; top: -83%" data-bs-delay="10">
                     <div id="edad-hasta-toast" class="toast hide dat-toast" style="width:auto;" role="alert" aria-live="assertive" aria-atomic="true">
@@ -702,13 +167,13 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
               <div class="form-group row">
                     <label for="Meses_Desde" class="col-md-2 col-form-label LblForm">Desde (Meses): </label>
                     <div class="col-md-10">
-                        <input type="number" name="Meses_Desde" data-pre = "1" id="Meses_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarEdad(this)" value="<?= (isset($datosNav["Meses_Desde"])) ? $datosNav["Meses_Desde"] : '' ?>">
+                        <input type="number" name="Meses_Desde" data-pre = "1" id="Meses_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" value="<?= (isset($datosNav["Meses_Desde"])) ? $datosNav["Meses_Desde"] : '' ?>">
                     </div>
               </div> 
               <div class="form-group row" style="position: relative;">
                   <label for="Meses_Hasta" class="col-md-2 col-form-label LblForm">Hasta (Meses): </label>
                   <div class="col-md-10">
-                      <input type="number" name="Meses_Hasta" data-pre = "1" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" max="11" onkeyup="habilitarEdad(this)" value="<?= (isset($datosNav["Meses_Hasta"])) ? $datosNav["Meses_Hasta"] : '' ?>">
+                      <input type="number" name="Meses_Hasta" data-pre = "1" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" max="11" value="<?= (isset($datosNav["Meses_Hasta"])) ? $datosNav["Meses_Hasta"] : '' ?>">
                   </div>
                   <div class="position-absolute" style="z-index: 1100; width: auto; right: -20%; top: -83%">
                     <div id="meses-hasta-toast" class="toast hide dat-toast" style="width:auto;" role="alert" aria-live="assertive" aria-atomic="true">
@@ -732,7 +197,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                   ?>
                 </div>
                 <div class="col-md-1 div-button-center">
-                    <button type="button" class="btn btn-primary" onClick="agregarBarrio()" id="agregarBarrioID">+</button>
+                    <button type="button" class="btn btn-primary" id="agregarBarrioID">+</button>
                 </div>
               </div>
               <div id="contenedorBarrios">              
@@ -777,7 +242,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                   <button type = "button" id="btn-categoria" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalCategoria">Seleccione Categoría</button>  
                 </div>
                 <div class="col-md-1 div-button-center">
-                    <button type="button" class="btn btn-primary" onClick="agregarCategoria()" id="agregarCategoriaID">+</button>
+                    <button type="button" class="btn btn-primary" id="agregarCategoriaID">+</button>
                 </div>
               </div>
               <div id="contenedorCategoria">              
@@ -788,7 +253,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                   <button type = "button" id="btn-motivo" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo">Seleccione Motivo</button>   
                 </div>
                   <div class="col-md-1 div-button-center">
-                    <button type="button" class="btn btn-primary" onClick="agregarMotivo()" id="agregarMotivoID">+</button>
+                    <button type="button" class="btn btn-primary" id="agregarMotivoID">+</button>
                 </div>
               </div>
               <div id="contenedorMotivos">              
@@ -858,7 +323,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                   ?>
                 </div>
                 <div class="col-md-1 div-button-center">
-                    <button type="button" class="btn btn-primary" onClick="agregarResponsable()" id="agregarResponsableID">+</button>
+                    <button type="button" class="btn btn-primary" id="agregarResponsableID">+</button>
                 </div>
               </div>
               <div id="responsables">
@@ -904,7 +369,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                         <div class="col"></div>
                         <div class="col-10">
                           <div class="input-group mb-3">
-                            <input class = "form-control" type="text" name="BuscarPersona" id = "SearchPersonas" onKeyUp="buscarPersonas()" autocomplete="off" placeholder="Ingrese el nombre, apellido, documento o legajo">
+                            <input class = "form-control" type="text" name="BuscarPersona" id = "SearchPersonas" autocomplete="off" placeholder="Ingrese el nombre, apellido, documento o legajo">
                             <div class="input-group-append">
                               <span class="input-group-text" id="basic-addon2">Buscar</span>
                             </div>	
@@ -944,7 +409,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                           <div class="col"></div>
                           <div class="col-8">
                             <div class="input-group mb-3">
-                              <input class = "form-control" type="text" name="BuscarCalle" id = "SearchCalle" onKeyUp="buscarCalles()" autocomplete="off" placeholder="Ingrese el nombre de calle">
+                              <input class = "form-control" type="text" name="BuscarCalle" id = "SearchCalle" autocomplete="off" placeholder="Ingrese el nombre de calle">
                               <div class="input-group-append">
                                 <span class="input-group-text" id="basic-addon2">Buscar</span>
                               </div>	
@@ -984,8 +449,8 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                         <div class="col"></div>
                         <div class="col-10">
                             <div class="input-group mb-3">
-                              <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos1" onKeyUp="buscarMotivosGeneral(1)" autocomplete="off">
-                              <select id="select-motivo1" name="select-motivo1" oninput="buscarMotivosGeneral(1)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                              <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos1" autocomplete="off">
+                              <select id="select-motivo1" name="select-motivo1" class="btn btn-outline-secondary dropdown-toggle input-group-text">
                                 <option value="denominacion" selected>Denominacion</option>
                                 <option value="codigo">Codigo</option>
                               </select>
@@ -1026,7 +491,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                     </form>
                   </div>
                   <div class="modal-footer" style="justify-content: center;">
-                    <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+                    <button type="button" class="btn btn-danger" id="seleccionar-motivo" data-dismiss="modal">OK</button>
                     <button id="cerrar-motivo" type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>           
                   </div>
                 </div>
@@ -1049,8 +514,8 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                         <div class="col"></div>
                         <div class="col-10">
                           <div class="input-group mb-3">
-                              <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos2" onKeyUp="buscarMotivosGeneral(2)" autocomplete="off">
-                              <select id="select-motivo2" name="select-motivo2" oninput="buscarMotivosGeneral(2)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                              <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos2" autocomplete="off">
+                              <select id="select-motivo2" name="select-motivo2" class="btn btn-outline-secondary dropdown-toggle input-group-text">
                                 <option value="denominacion" selected>Denominacion</option>
                                 <option value="codigo">Codigo</option>
                               </select>
@@ -1085,7 +550,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                     </form>
                   </div>
                   <div class="modal-footer" style="justify-content: center;">
-                    <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+                    <button type="button" class="btn btn-danger" id="seleccionar-motivo2" data-dismiss="modal">OK</button>
                     <button type="button" class="btn btn-primary" data-dismiss="modal" id="cerrar-motivo2">Cerrar</button>            
                   </div>
                 </div>
@@ -1108,8 +573,8 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                         <div class="col"></div>
                         <div class="col-10">
                           <div class="input-group mb-3">
-                              <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos3" onKeyUp="buscarMotivosGeneral(3)" autocomplete="off">
-                              <select id="select-motivo3" name="select-motivo3" oninput="buscarMotivosGeneral(3)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                              <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos3" autocomplete="off">
+                              <select id="select-motivo3" name="select-motivo3" class="btn btn-outline-secondary dropdown-toggle input-group-text">
                                 <option value="denominacion" selected>Denominacion</option>
                                 <option value="codigo">Codigo</option>
                               </select>
@@ -1144,7 +609,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                     </form>
                   </div>
                   <div class="modal-footer" style="justify-content: center;">
-                    <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+                    <button type="button" class="btn btn-danger" id="seleccionar-motivo3" data-dismiss="modal">OK</button>
                     <button type="button" id="cerrar-motivo3" class="btn btn-primary" data-dismiss="modal">Cerrar</button>             
                   </div>
                 </div>
@@ -1167,8 +632,8 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                         <div class="col"></div>
                         <div class="col-10">
                           <div class="input-group mb-3">
-                              <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos4" onKeyUp="buscarMotivosGeneral(4)" autocomplete="off">
-                              <select id="select-motivo4" name="select-motivo4" oninput="buscarMotivosGeneral(4)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                              <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos4" autocomplete="off">
+                              <select id="select-motivo4" name="select-motivo4" class="btn btn-outline-secondary dropdown-toggle input-group-text">
                                 <option value="denominacion" selected>Denominacion</option>
                                 <option value="codigo">Codigo</option>
                               </select>
@@ -1203,7 +668,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                     </form>
                   </div>
                   <div class="modal-footer" style="justify-content: center;">
-                    <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+                    <button type="button" class="btn btn-danger" id="seleccionar-motivo4" data-dismiss="modal">OK</button>
                     <button id="cerrar-motivo4" type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>          
                   </div>
                 </div>
@@ -1226,8 +691,8 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                         <div class="col"></div>
                         <div class="col-10">
                           <div class="input-group mb-3">
-                              <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos5" onKeyUp="buscarMotivosGeneral(5)" autocomplete="off">
-                              <select id="select-motivo5" name="select-motivo5" oninput="buscarMotivosGeneral(5)" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                              <input class = "form-control" type="text" name="BuscarMotivos" id = "SearchMotivos5" autocomplete="off">
+                              <select id="select-motivo5" name="select-motivo5" class="btn btn-outline-secondary dropdown-toggle input-group-text">
                                 <option value="denominacion" selected>Denominacion</option>
                                 <option value="codigo">Codigo</option>
                               </select>
@@ -1262,7 +727,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                     </form>
                   </div>
                   <div class="modal-footer" style="justify-content: center;">
-                    <button type="button" class="btn btn-danger" onclick="seleccionMultipleMotivo()" data-dismiss="modal">OK</button>
+                    <button type="button" class="btn btn-danger" id="seleccionar-motivo5" data-dismiss="modal">OK</button>
                     <button type="button" class="btn btn-primary" id="cerrar-motivo5" data-dismiss="modal">Cerrar</button>           
                   </div>
                 </div>
@@ -1285,7 +750,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                         <div class="col"></div>
                         <div class="col-10">
                           <div class="input-group mb-3">
-                            <input class = "form-control" type="text" name="BuscarCategorias" id = "SearchCategorias" onKeyUp="buscarCategorias()" autocomplete="off">
+                            <input class = "form-control" type="text" name="BuscarCategorias" id = "SearchCategorias" autocomplete="off">
                             <div class="input-group-append">
                               <span class="input-group-text" id="basic-addon2">Buscar</span>
                             </div>  
@@ -1317,7 +782,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                     </form>
                   </div>
                   <div class="modal-footer" style="justify-content: center;">
-                    <button type="button" class="btn btn-danger" onclick="seleccionMultipleCategoria()" data-dismiss="modal">OK</button>
+                    <button type="button" class="btn btn-danger" id="seleccionar-categorias" data-dismiss="modal">OK</button>
                     <button type="button" class="btn btn-primary" id="cerrar-categorias" data-dismiss="modal">Cerrar</button>
                   </div>
                 </div>
@@ -1337,7 +802,7 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
                         <label for="formatConfig">Formato: </label>
                       </div>
                       <div class="col-4">
-                        <select class="input-group mb-3" name="formatConfig" id="formatConfig" onchange="cambiarConfig()">
+                        <select class="input-group mb-3" name="formatConfig" id="formatConfig">
                           <option value="grid">Grilla</option>
                           <option value="table" selected>Tabla</option>
                         </select>

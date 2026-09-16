@@ -64,7 +64,7 @@ if (isset($consultaBusqueda)) {
 		$valores_categorias = ($lista_categoria) ? array_values(array: $lista_categoria) : [];
 
 		while($resultados = mysqli_fetch_array($consulta)) {
-			$ID_Categoria = $resultados["id_categoria"];			
+			$ID_Categoria = trim($resultados["id_categoria"]);			
 			$Categoria = $resultados['categoria'];
 			$Cod_Categoria = $resultados['cod_categoria'];
 			$mensaje .= '<tr>
@@ -72,14 +72,14 @@ if (isset($consultaBusqueda)) {
 
 			if (in_array($ID_Categoria, $valores_categorias)) {
 				$mensaje .= '<td>
-								<button type = "button" style=\'width:12ch\' class = "btn btn-outline-success" onClick="addMultipleCategoria(\'' . $Categoria . '\',' . $ID_Categoria . ', this)">
+								<button type = "button" style=\'width:12ch\' class = "btn btn-outline-success" data-categoria-select=true data-nombre-ca = \'' . $Categoria . '\' data-id-ca = "' . $ID_Categoria . '">
 									&#10003
 								</button>
 							</td>
 						</tr>';
 			} else {
 				$mensaje .= '<td>
-								<button type = "button" class = "btn btn-outline-success" onClick="addMultipleCategoria(\'' . $Categoria . '\',' . $ID_Categoria . ', this)">
+								<button type = "button" class = "btn btn-outline-success" data-categoria-select=true data-nombre-ca = \'' . $Categoria . '\' data-id-ca = "' . $ID_Categoria . '">
 									seleccionar
 								</button>
 							</td>

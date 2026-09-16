@@ -32,6 +32,9 @@ class Elements
   const PAGINA_AUDITORIA_SOLICITUD = 25;
   const PAGINA_AUDITORIA_NOTIFICACION = 26;
 
+  const HABILITAR_BOTON = true;
+  const DESHABILITAR_BOTON = false;
+
 	//Instanciando la Conexion
 	public function __construct(){
 
@@ -1835,7 +1838,8 @@ public function getMenuSeguridadUsuario($ID){
 	}
 
 //Metodos Get Agentes
-  public function CBPersonas(){
+  public function CBPersonas()
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Persona'>";
@@ -1849,7 +1853,8 @@ public function getMenuSeguridadUsuario($ID){
     return $Select;
   }
 
-  public function CBModPersonas($xID_Persona){
+  public function CBModPersonas($xID_Persona)
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Persona'>";
@@ -1867,7 +1872,8 @@ public function getMenuSeguridadUsuario($ID){
     return $Select;
   }
 
-  public function BTNModPersonas($xID_Persona){
+  public function BTNModPersonas($xID_Persona)
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     //$Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Persona'>";
@@ -1879,7 +1885,8 @@ public function getMenuSeguridadUsuario($ID){
     return $Boton;
   }
 
-  public function CBPrimeraPersona(){
+  public function CBPrimeraPersona()
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Persona_1'>";
@@ -1893,7 +1900,8 @@ public function getMenuSeguridadUsuario($ID){
     return $Select;
   }
 
-  public function CBSegundaPersona(){
+  public function CBSegundaPersona()
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Persona_2'>";
@@ -1923,7 +1931,8 @@ public function getMenuSeguridadUsuario($ID){
     return $Select;
   }
 
-  public function CBModBarrios($xID_Barrio){
+  public function CBModBarrios($xID_Barrio)
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select data-pre = '1' class='form-control' name = 'ID_Barrio' id = 'ID_Barrio' required>";
@@ -1948,7 +1957,8 @@ public function getMenuSeguridadUsuario($ID){
   }
 
 
-  public function CBResponsables(){
+  public function CBResponsables()
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $query = 'select *
@@ -1970,7 +1980,8 @@ public function getMenuSeguridadUsuario($ID){
     return $Select;
   }
 
-  public function CBModResponsables($xID_Responsable){
+  public function CBModResponsables($xID_Responsable)
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $query = 'select *
@@ -2011,7 +2022,8 @@ public function getMenuSeguridadUsuario($ID){
     return $Select;
   }
 
-  public function CBModCentros($xID_Centro){
+  public function CBModCentros($xID_Centro)
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $query = 'select *
@@ -2032,7 +2044,8 @@ public function getMenuSeguridadUsuario($ID){
     return $Select;
   }
 
-  public function CBRepModCentros($xID_Centro){
+  public function CBRepModCentros($xID_Centro)
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' data-pre = '1' id='exampleFormControlSelect1' name ='ID_CentroSalud' id ='ID_CentroSalud'>";    
@@ -2049,7 +2062,8 @@ public function getMenuSeguridadUsuario($ID){
     return $Select;
   }
 
-  public function CBOtrasInstituciones(){
+  public function CBOtrasInstituciones()
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='ID_OtraInstitucion' name = 'ID_OtraInstitucion'>";
@@ -2063,7 +2077,8 @@ public function getMenuSeguridadUsuario($ID){
     return $Select;
   }
 
-  public function CBModOtrasInstituciones($xID_OtraInstitucion){
+  public function CBModOtrasInstituciones($xID_OtraInstitucion)
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_OtraInstitucion'>";    
@@ -2081,7 +2096,8 @@ public function getMenuSeguridadUsuario($ID){
     return $Select;
   }
 
-  public function CBMotivo_1(){
+  public function CBMotivo_1()
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Motivo_1'>";
@@ -2095,7 +2111,8 @@ public function getMenuSeguridadUsuario($ID){
     return $Select;
   }
 
-  public function CBModMotivo_1($xID){
+  public function CBModMotivo_1($xID)
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Motivo_1'>";
@@ -2113,73 +2130,68 @@ public function getMenuSeguridadUsuario($ID){
     return $Select;
   }
 
-  public function BTNModMotivo_1($xID){
-    $Con3 = new Conexion();
-    $Con3->OpenConexion();
+  public function BTNModMotivo(
+                                $xID,
+                                $numero_motivo,
+                                $disable = Elements::HABILITAR_BOTON)
+  {
+    $boton_funcional = null;
+    if (!$disable) $boton_funcional = "disable";
+    $con = new Conexion();
+    $con->OpenConexion();
     $id_motivo = ((!is_null($xID)) ? $xID : 1);
-    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $id_motivo order by motivo")or die("Problemas al mostrar Personas");    
-    $Ret = mysqli_fetch_assoc($Consulta);    
-        
-    $Boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_1'>".$Ret['motivo']."</button>";
-    $Con3->CloseConexion();
-    return $Boton;
-  }
-
-  public function CBMotivo_2(){
-    $Con3 = new Conexion();
-    $Con3->OpenConexion();
-    $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Motivo_2'>";
-    $Select .= "<option selected = 'true' disabled = 'disabled'>Seleccione Motivo</option>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo > 1 order by motivo")or die("Problemas al mostrar Motivo_2");
-    while ($Ret = mysqli_fetch_array($Consulta)) {
-      $Select .= "<option value = '".$Ret['id_motivo']."'>".$Ret['motivo']."</option>";
-    }
-    $Select .= "</select>";
-    $Con3->CloseConexion();
-    return $Select;
-  }  
-
-  public function CBModMotivo_2($xID){
-    $Con3 = new Conexion();
-    $Con3->OpenConexion();
-    $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Motivo_2'>";
-    $Select .= "<option selected = 'true' disabled = 'disabled'>Seleccione Motivo</option>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo > 1 order by motivo")or die("Problemas al mostrar Motivo_2");
-    while ($Ret = mysqli_fetch_array($Consulta)) {
-      if($Ret['id_motivo'] == $xID){
-        $Select .= "<option value = '".$Ret['id_motivo']."' selected>".$Ret['motivo']."</option>";
-      }else{
-        $Select .= "<option value = '".$Ret['id_motivo']."'>".$Ret['motivo']."</option>";
-      }      
-    }
-    $Select .= "</select>";
-    $Con3->CloseConexion();
-    return $Select;
-  }
-
-  public function BTNModMotivo_2($xID){
-    $Con3 = new Conexion();
-    $Con3->OpenConexion();
-    $id_motivo = ((!is_null($xID)) ? $xID : 1);
-    $consulta = "select * 
-                 from motivo 
-                 where estado = 1 
-                   and id_motivo = $id_motivo 
-                 order by motivo";
-    $res = mysqli_query(
-                 $Con3->Conexion,
-                 $consulta
-      ) or die("Problemas al mostrar Personas");
-    $Ret = mysqli_fetch_assoc($res);
-
-    $Boton = "<button type='button' class='btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_2'>" .
-                $Ret['motivo'] . "
+    $query = "select * 
+              from motivo 
+              where estado = 1 
+                and id_motivo = $id_motivo 
+              order by motivo";
+    $consulta = mysqli_query($con->Conexion, $query);
+    if (!$consulta) throw new Exception("Problemas al mostrar Motivo", 2);
+    $ret = mysqli_fetch_assoc($consulta);
+    $boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' " . $boton_funcional . "
+                      data-toggle='modal' data-target='#ModalMotivo_" . $numero_motivo . "'>
+               " . $ret['motivo'] . "
               </button>";
-    $Con3->CloseConexion();
-    return $Boton;
+    $con->CloseConexion();
+    return $boton;
   }
 
-  public function CBMotivo_3(){
+  public function CBMotivo_2()
+  {
+    $Con3 = new Conexion();
+    $Con3->OpenConexion();
+    $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Motivo_2'>";
+    $Select .= "<option selected = 'true' disabled = 'disabled'>Seleccione Motivo</option>";
+    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo > 1 order by motivo")or die("Problemas al mostrar Motivo_2");
+    while ($Ret = mysqli_fetch_array($Consulta)) {
+      $Select .= "<option value = '".$Ret['id_motivo']."'>".$Ret['motivo']."</option>";
+    }
+    $Select .= "</select>";
+    $Con3->CloseConexion();
+    return $Select;
+  }  
+
+  public function CBModMotivo_2($xID)
+  {
+    $Con3 = new Conexion();
+    $Con3->OpenConexion();
+    $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Motivo_2'>";
+    $Select .= "<option selected = 'true' disabled = 'disabled'>Seleccione Motivo</option>";
+    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo > 1 order by motivo")or die("Problemas al mostrar Motivo_2");
+    while ($Ret = mysqli_fetch_array($Consulta)) {
+      if($Ret['id_motivo'] == $xID){
+        $Select .= "<option value = '".$Ret['id_motivo']."' selected>".$Ret['motivo']."</option>";
+      }else{
+        $Select .= "<option value = '".$Ret['id_motivo']."'>".$Ret['motivo']."</option>";
+      }      
+    }
+    $Select .= "</select>";
+    $Con3->CloseConexion();
+    return $Select;
+  }
+
+  public function CBMotivo_3()
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Motivo_3'>";
@@ -2193,7 +2205,8 @@ public function getMenuSeguridadUsuario($ID){
     return $Select;
   }  
 
-  public function CBModMotivo_3($xID){
+  public function CBModMotivo_3($xID)
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Motivo_3'>";
@@ -2211,43 +2224,8 @@ public function getMenuSeguridadUsuario($ID){
     return $Select;
   }
 
-  public function BTNModMotivo_3($xID){
-    $Con3 = new Conexion();
-    $Con3->OpenConexion();
-    $id_motivo = ((!is_null($xID)) ? $xID : 1);
-    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $id_motivo order by motivo") or die("Problemas al mostrar Personas");    
-    $Ret = mysqli_fetch_assoc($Consulta);    
-        
-    $Boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_3'>".$Ret['motivo']."</button>";
-    $Con3->CloseConexion();
-    return $Boton;
-  }
-
-  public function BTNModMotivo_4($xID){
-    $Con3 = new Conexion();
-    $Con3->OpenConexion();
-    $id_motivo = ((!is_null($xID)) ? $xID : 1);
-    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $id_motivo order by motivo") or die("Problemas al mostrar Personas");
-    $Ret = mysqli_fetch_assoc($Consulta);    
-        
-    $Boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_4'>".$Ret['motivo']."</button>";
-    $Con3->CloseConexion();
-    return $Boton;
-  }
-
-  public function BTNModMotivo_5($xID){
-    $Con3 = new Conexion();
-    $Con3->OpenConexion();
-    $id_motivo = ((!is_null($xID)) ? $xID : 1);
-    $Consulta = mysqli_query($Con3->Conexion,"select * from motivo where estado = 1 and id_motivo = $id_motivo order by motivo") or die("Problemas al mostrar Personas");
-    $Ret = mysqli_fetch_assoc($Consulta);    
-        
-    $Boton = "<button type = 'button' class = 'btn btn-lg btn-primary btn-block' data-toggle='modal' data-target='#ModalMotivo_5'>".$Ret['motivo']."</button>";
-    $Con3->CloseConexion();
-    return $Boton;
-  }
-
-  public function CBPrimerMotivo(){
+  public function CBPrimerMotivo()
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Motivo_1'>";
@@ -2262,7 +2240,8 @@ public function getMenuSeguridadUsuario($ID){
     return $Select;
   }
 
-  public function CBSegundoMotivo(){
+  public function CBSegundoMotivo()
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Motivo_2'>";
@@ -2276,7 +2255,8 @@ public function getMenuSeguridadUsuario($ID){
     return $Select;
   }
 
-  public function CBCategoria(){
+  public function CBCategoria()
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='ID_Categoria' name = 'ID_Categoria'>";
@@ -2290,7 +2270,8 @@ public function getMenuSeguridadUsuario($ID){
     return $Select;
   }
 
-  public function CBModCategoria($xID){
+  public function CBModCategoria($xID)
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Categoria'>";
@@ -2307,7 +2288,8 @@ public function getMenuSeguridadUsuario($ID){
     return $Select;
   }
 
-  public function CBRepPersonas(){
+  public function CBRepPersonas()
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='exampleFormControlSelect1' name = 'ID_Persona'>";
@@ -2321,14 +2303,19 @@ public function getMenuSeguridadUsuario($ID){
     return $Select;
   }
 
-  public function CBRepBarrios(){
+  public function CBRepBarrios()
+  {
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select data-pre = '1' class='btn btn-lg btn-primary btn-block' id='ID_Barrio' name = 'ID_Barrio[]'>";
     $Select .= "<option value ='0' selected ='true' disable='disable'>Seleccione Barrio</option>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from barrios where estado = 1 order by Barrio")or die("Problemas al mostrar Barrios");
+    $query = "select * 
+              from barrios 
+              where estado = 1 
+              order by Barrio";
+    $Consulta = mysqli_query($Con3->Conexion, $query) or die("Problemas al mostrar Barrios");
     while ($Ret = mysqli_fetch_array($Consulta)) {
-      $Select .= "<option value = '".$Ret['ID_Barrio']."'>".$Ret['Barrio']."</option>";
+      $Select .= "<option value = '" . $Ret['ID_Barrio'] . "'>" . $Ret['Barrio'] . "</option>";
     }
     $Select .= "</select>";
     $Con3->CloseConexion();

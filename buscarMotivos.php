@@ -82,14 +82,14 @@ if (isset($consultaBusqueda)) {
 
 			if (in_array($ID_Motivo, $valores_motivos)) {
 				$mensaje .= '<td>
-								<button type = "button" style=\'width:12ch\' class = "btn btn-outline-success" onClick="addMultipleMotivo(\'' . $Motivo . '\',' . $ID_Motivo . ', this)">
+								<button type = "button" style=\'width:12ch\' class = "btn btn-outline-success" data-motivo-select=true data-id-mv="' . $ID_Motivo . '" data-nombre-mv=\'' . $Motivo . '\'>
 									&#10003
 								</button>
 							</td>
 						</tr>';
 			} else {
 				$mensaje .= '<td>
-								<button type = "button" class = "btn btn-outline-success" onClick="addMultipleMotivo(\'' . $Motivo . '\',' . $ID_Motivo . ', this)">
+								<button type = "button" class = "btn btn-outline-success" data-motivo-select=true data-id-mv="' . $ID_Motivo . '" data-nombre-mv=\'' . $Motivo . '\'>
 									seleccionar
 								</button>
 							</td>
