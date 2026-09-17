@@ -1,6 +1,6 @@
-import { FormularioReporte } from "./FormularioReporte.js";
+import { Preferencia } from "./Preferencia.js";
 
-let formulario = new FormularioReporte();
+let formulario = new Preferencia();
 let time = null;
 let idTime = null;
 
@@ -325,6 +325,34 @@ $(function() {
         weekStart: 1,
     });
     date_input2.on("change", (e) => $("#fin-movimiento-check").val(""))
+
+    $("#bn-filtro-dato").on("click", function (e) {
+        formulario.datosFormulario();
+        $("#text-filtro").val("");
+        $("#save-data").toggle();
+        $("#send-admin").toggle();
+    });
+
+    $("#cancel-data").on("click", function (e) {
+        $(this).toggle();
+    });
+
+    $("#send-admin").on("click", function (e) {
+        formulario.sendRequestPreferencia();
+    });
+
+    $("button[data-mod-filtro-id]").on("click", function (e) {
+        formulario.sendRequestModificarPreferencia($(this).attr("data-mod-filtro-id"));
+    });
+
+    $("button[data-del-filtro-id]").on("click", function (e) {
+        formulario.sendRequestDelPreferencia($(this).attr("data-del-filtro-id"));
+    });
+
+    $("button[data-sel-filtro-id]").on("click", function (e) {
+        formulario.sendRequestSeleccionPreferencia($(this).attr("data-sel-filtro-id"));
+    });
+
     $("#inpMostrar").on("change", function (e) {
         controlMovimiento(this);
     });

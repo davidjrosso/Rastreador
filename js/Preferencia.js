@@ -1,8 +1,9 @@
 import swal from 'sweetalert2';
+import { FormularioReporte } from "./FormularioReporte.js";
 
-export class Preferencia {
+export class Preferencia extends FormularioReporte {
 
-    #listOpciones = [];    
+    #listOpciones = [];
 
     newFiltro(char, num) {
         let val = $("#message-text").prop("value");
@@ -302,10 +303,14 @@ export class Preferencia {
         let nodo1 = $('#e-' + num + '-' + e).parent().parent().children().eq(0).children();
         let nodo2 = $('#e-' + num + '-' + e).parent().parent().children().eq(1);
         let op = null;
-        let index = $("option[data-dec='" + id + "']")[0].index;
+        let index = null;
+        let vc = id;
+        if (id.includes("ID_Barrio")) vc = id.substring(0, 9);
+        if (id.includes("ID_Responsable")) vc = id.substring(0, 14);
+        index = $("option[data-dec='" + vc + "']")[0].index;
         let exis = false;
         let texto = "";
-        let vc = id;
+
         if (vc.search(/(ID_Categoria[0-9]|ID_Motivo[0-9])/) >= 0) vc = vc.substring(0, vc.length - 1); 
         switch (vc) {
             case "ID_Persona" :
@@ -367,7 +372,7 @@ export class Preferencia {
                                         );
                 break;
             case "ID_Barrio" :
-                nodo1.prop("selectedIndex", 6);
+                nodo1.prop("selectedIndex", index);
                 nodo1.prop("disabled", true);
                 exis = this.#listOpciones.find(
                                                (e) => e.hasOwnProperty("ID_Barrio")
@@ -389,6 +394,7 @@ export class Preferencia {
                 nodo2.html("");
                 nodo2.append(op);
                 op.prop("selectedIndex", value);
+                texto = op.children()[value].innerText;
                 barrio["ID_Barrio"].push(valueOp);
                 barrio["text"].push(texto);
                 break;
@@ -581,6 +587,8 @@ export class Preferencia {
                 nodo2.html("");
                 nodo2.append(op);
                 op.prop("selectedIndex", value);
+                op.removeClass();
+                op.addClass("form-control");
                 op.prop("disabled", true);
                 if (!exis) this.#listOpciones.push(
                                           {"ID_Responsable" : [],
@@ -618,18 +626,25 @@ export class Preferencia {
                 $("#ID_Persona").prop("value", value.id);
                 break;
             case "Edad_Desde" :
-                $("#Edad_Desde").prop("value", value.text);
+                $("#Edad_Desde").prop("value", value);
                 break;
             case "Edad_Hasta" :
-                $("#Edad_Hasta").prop("value", value.text);
+                $("#Edad_Hasta").prop("value", value);
                 break
             case "Meses_Desde" :
-                $("#Meses_Desde").prop("value", value.text);
+                $("#Meses_Desde").prop("value", value);
                 break;
             case "Meses_Hasta" :
-                $("#Meses_Hasta").prop("value", value.text);
+                $("#Meses_Hasta").prop("value", value);
                 break;
             case "ID_Barrio" :
+                let barrios = value;
+                if (barrios && barrios.length) {
+                    barrios.forEach(function (valor, indice, barrios) {
+                        if (indice) this.agregarBarrio();
+                        this.setBarrio(indice, valor.id);
+                    }.bind(this));
+                }
                 break;
             case "Calle" :
                 $("#Calle").prop("value", value.id);
@@ -648,8 +663,32 @@ export class Preferencia {
                 $("#familia").prop("value", value.text);
                 break;
             case "ID_Categoria" :
+                let nombreCategoria = null;
+                let categorias = value;
+                if (categorias && categorias.length) {
+                    categorias.forEach(function (valor, indice, categorias) {
+                        let listaCategorias = this.getListaCategorias();
+                        nombreCategoria = valor.text;
+                        if (!listaCategorias.has(valor.text)) {
+                            listaCategorias.set(nombreCategoria, valor.id);
+                        }
+                    }.bind(this));
+                    this.seleccionMultipleCategoria();
+                }
                 break;
             case "ID_Motivo" :
+                let nombreMotivo = null;
+                let listaMotivos = this.getListaMotivos();
+                let motivos = value;
+                if (motivos && motivos.length) {
+                    motivos.forEach(function (valor, indice, motivos) {
+                        nombreMotivo = valor.text;
+                        if (!listaMotivos.has(valor.text)) {
+                            listaMotivos.set(nombreMotivo, valor.id);
+                        }
+                    }.bind(this));
+                    this.seleccionMultipleMotivo();
+                }
                 break;
             case "ID_Centro" :
                 selecIndex = $("#ID_Centro option[value=" + value.id + "]").index();
@@ -670,6 +709,13 @@ export class Preferencia {
                 $("#ID_Escuela").prop("selectedIndex", selecIndex);
                 break;
             case "ID_Responsable" :
+                let responsables = value;
+                if (responsables && responsables.length) {
+                    responsables.forEach(function (valor, indice, responsables) {
+                        if (indice) this.agregarResponsable();
+                        this.setResponsable(indice, valor.id);
+                    }.bind(this));
+                }
                 break;
             case "inpMostrar" :
                 break;
@@ -860,39 +906,3 @@ export class Preferencia {
     }
 
 }
-
-let preferencia = new Preferencia();
-
-$(function (e) {
-    $("#bn-new-filtro").on("click", preferencia.newFiltro);
-
-    $("#bn-filtro-dato").on("click", function (e) {
-        preferencia.datosFormulario();
-        $("#text-filtro").val("");
-    });
-
-    $("#bn-filtro-dato").on("click", function (e) {
-        $("#save-data").toggle();
-        $("#send-admin").toggle();
-    });
-
-    $("#cancel-data").on("click", function (e) {
-        $(this).toggle();
-    });
-
-    $("#send-admin").on("click", function (e) {
-        preferencia.sendRequestPreferencia();
-    });
-
-    $("button[data-mod-filtro-id]").on("click", function (e) {
-        preferencia.sendRequestModificarPreferencia($(this).attr("data-mod-filtro-id"));
-    });
-
-    $("button[data-del-filtro-id]").on("click", function (e) {
-        preferencia.sendRequestDelPreferencia($(this).attr("data-del-filtro-id"));
-    });
-
-    $("button[data-sel-filtro-id]").on("click", function (e) {
-        preferencia.sendRequestSeleccionPreferencia($(this).attr("data-sel-filtro-id"));
-    });
-});

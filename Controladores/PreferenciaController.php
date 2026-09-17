@@ -267,22 +267,24 @@ class PreferenciaController
                     $exist = false;
                     if ( $key == "ID_Escuela") $filtro->set_id_escuela($val);
                     if ( $key == "Calle") $filtro->set_id_calle($val);
-                    if ( $key == "calle_numero") $filtro->set_calle_numero($val);
+                    if ( $key == "NumeroDeCalle") $filtro->set_calle_numero($val);
                     if ( $key == "ID_Centro") $filtro->set_id_centro_salud($val);
                     if ( $key == "ID_Persona") $filtro->set_id_persona($val);
+                    if ( $key == "Edad_Desde") $filtro->set_anos_desde($val);
+
                     if ( $key == "Meses_Desde") $filtro->set_meses_desde($val);
                     if ( $key == "Meses_Hasta") $filtro->set_meses_hasta($val);
+
                     if ( $key == "Nro_Legajo") $filtro->set_nro_legajo($val);
                     if ( $key == "Nro_Carpeta") $filtro->set_nro_carpeta($val);
                     if ( $key == "Manzana") $filtro->set_manzana($val);
                     if ( $key == "titulo") $filtro->set_titulo($val);
 
                     if ($key == "ID_OtraInstitucion") $filtro->set_id_otra_institucion($val);
+                    if ( $key == "Edad_Hasta") $filtro->set_anos_hasta($val);
                     if ($key == "Lote") $filtro->set_lote($val);
-                    if ($key == "Sub_Lote") $filtro->set_familia($val);
-                    if ($key == "Anos_Hasta") $filtro->set_anos_hasta($val);
+                    if ($key == "Familia") $filtro->set_familia($val);
 
-                
                     if ($key == "ID_Responsable") {
                         $exist = FiltroResponsable::exist_responsable_con_filtro(
                                     coneccion: $con, 
@@ -345,8 +347,6 @@ class PreferenciaController
                             $filtro_barrio->save();
                         }
                     }
-
-                    if ($key == "Anos_Desde") $filtro->set_anos_desde($val);
 
                 }, $list);
 
@@ -498,6 +498,7 @@ class PreferenciaController
             if (!isset($_SESSION["Usuario"])) {
                 header("Content-Type: text/html;charset=utf-8;");
                 include("../Error_Session.php");
+                exit();
             } else {
                 header("Content-Type: application/json;");
                 $id_usuario = $_SESSION["Usuario"];
@@ -548,6 +549,7 @@ class PreferenciaController
             if (!isset($_SESSION["Usuario"])) {
                 header("Content-Type: text/html;charset=utf-8;");
                 include("../Error_Session.php");
+                exit();
             } else {
                 header("Content-Type: application/json;");
                 $id_usuario = $_SESSION["Usuario"];
@@ -595,7 +597,7 @@ class PreferenciaController
                     return $dato;
                 }, $list_ca);
 
-                $mensaje["ID_Resp"] = array_map(function ($e) use ($con) {
+                $mensaje["ID_Responsable"] = array_map(function ($e) use ($con) {
                     $resp = new Responsable(coneccion_base: $con,
                                             id_responsable: $e->get_id_responsable());
                     $dato["id"] = $resp->get_id_responsable();
@@ -604,8 +606,8 @@ class PreferenciaController
                 }, $list_resp);
 
 
-                if ($filtro->get_anos_desde()) $mensaje["Edad_Desde"]["texto"] = $filtro->get_anos_desde();
-                if ($filtro->get_meses_desde()) $mensaje["Meses_Desde"]["texto"] = $filtro->get_meses_desde();
+                if ($filtro->get_anos_desde()) $mensaje["Edad_Desde"] = $filtro->get_anos_desde();
+                if ($filtro->get_meses_desde()) $mensaje["Meses_Desde"] = $filtro->get_meses_desde();
                 if ($filtro->get_nro_legajo()) $mensaje["Nro_Legajo"]["text"] = $filtro->get_nro_legajo();
 
                 if ($filtro->get_id_escuela()) {
@@ -627,7 +629,7 @@ class PreferenciaController
                     $mensaje["Calle"]["text"] = $calle->get_calle_nombre();
                 }
 
-                if ($filtro->get_calle_numero()) $mensaje["numero"]["text"] = $filtro->get_calle_numero();
+                if ($filtro->get_calle_numero()) $mensaje["NumeroDeCalle"]["text"] = $filtro->get_calle_numero();
                 if ($filtro->get_manzana()) $mensaje["manzana"]["text"] = $filtro->get_manzana();
                 if ($filtro->get_familia()) $mensaje["familia"]["text"] = $filtro->get_familia();
 

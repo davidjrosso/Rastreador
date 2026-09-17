@@ -1,5 +1,3 @@
-import swal from 'sweetalert2';
-
 export class FormularioReporte {
 
     #cantBarrios = 1;
@@ -14,6 +12,10 @@ export class FormularioReporte {
       return this.#listaMotivos;
     }
 
+    getListaCategorias() {
+      return this.#listaCategorias;
+    }
+
     agregarBarrio() {
       this.#cantBarrios++;
       let divContenedor = document.getElementById('contenedorBarrios');
@@ -26,10 +28,22 @@ export class FormularioReporte {
       let divSelectBarrio = document.createElement("div");
       divSelectBarrio.setAttribute('class','col-md-10');
       let select = selectBarrio.cloneNode(true);
+      let indexBarrio = this.#cantBarrios - 1;
+      if (indexBarrio) {
+        select.id = 'ID_Barrio' + indexBarrio.toString();
+      }
       divSelectBarrio.appendChild(select);
       divBarrio.appendChild(labelBarrio);
       divBarrio.appendChild(divSelectBarrio);
       divContenedor.appendChild(divBarrio);
+    }
+
+    setBarrio(numero, idBarrio) {
+      let idenBarrio = "ID_Barrio";
+      if (numero) idenBarrio = idenBarrio + numero.toString();
+      let barrio = $("#" + idenBarrio);
+      let index = barrio.find("option[value='" + idBarrio + "']")[0].index;
+      barrio.prop("selectedIndex", index);
     }
 
     addMultipleMotivo(xMotivo, xID, element) {
@@ -161,6 +175,10 @@ export class FormularioReporte {
         let divContenedor = document.getElementById('responsables');
         let divResponsable = document.getElementById("ID_Responsable");
         let obj = divResponsable.cloneNode(true);
+        let indexResponsable = this.#cantResponsable - 1;
+        if (indexResponsable) {
+          obj.id = 'ID_Responsable' + indexResponsable.toString();
+        }
         obj.setAttribute('name', 'ID_Responsable[]');
         let label = document.createElement("label");
         label.setAttribute('class','col-md-2 col-form-label LblForm');
@@ -174,6 +192,14 @@ export class FormularioReporte {
         div.appendChild(obj);
         divContenedor.appendChild(divForm);
       }
+    }
+
+    setResponsable(numero, idResponsable) {
+      let idenResponsable = "ID_Responsable";
+      if (numero) idenResponsable = idenResponsable + numero.toString();
+      let responsable = $("#" + idenResponsable);
+      let index = responsable.find("option[value='" + idResponsable + "']")[0].index;
+      responsable.prop("selectedIndex", index);
     }
 
     agregarCategoria() {
