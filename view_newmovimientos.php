@@ -179,6 +179,11 @@ if(!isset($_SESSION["Usuario"])){
             contenidosRecibidos = xmlhttp.responseText;
             document.getElementById("ResultadosMotivos" + id_Motivo).innerHTML=contenidosRecibidos;
             $("div[data-id-element]").css("display", "block");
+            $("button[data-motivo-select]").on("click", function (e) {
+                let nombreMotivo = $(this).attr("data-nombre-mv");
+                let idMotivo = $(this).attr("data-id-mv");
+                addMultipleMotivo(nombreMotivo, idMotivo, $(this).get(0));
+            });
           }
         }
         xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda=' + textoBusqueda + '&number=' + id_Motivo + "&vs=" + vs, true); // Método post y url invocada
