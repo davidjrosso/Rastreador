@@ -2136,7 +2136,7 @@ public function getMenuSeguridadUsuario($ID){
                                 $disable = Elements::HABILITAR_BOTON)
   {
     $boton_funcional = null;
-    if (!$disable) $boton_funcional = "disable";
+    if (!$disable) $boton_funcional = "disabled";
     $con = new Conexion();
     $con->OpenConexion();
     $id_motivo = ((!is_null($xID)) ? $xID : 1);
