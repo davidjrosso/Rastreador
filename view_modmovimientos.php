@@ -56,6 +56,8 @@ if(isset($_REQUEST["ID"])) {
   $fecha_creacion = $movimiento->getFecha();
 
   $fecha_expiracion = date('Y-m-d', strtotime('-7 days'));
+  $fecha_expiracion = strtotime($fecha_expiracion);
+  $fecha_creacion = strtotime($fecha_creacion);
   $es_modificable = ($fecha_expiracion <= $fecha_creacion);
 
   if ($es_modificable) $habilitar = Elements::HABILITAR_BOTON;
@@ -463,7 +465,7 @@ if(isset($_REQUEST["ID"])) {
                       }
                     ?>
                 </div>
-                <?
+                <?php
                   } else {
                 ?>
                 <div class="form-group row">
