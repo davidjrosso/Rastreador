@@ -25,7 +25,8 @@ if(!isset($_SESSION["Usuario"])){
   $ID_Persona = $_REQUEST["ID_Persona"] ?? null;
   $volver = null;
 
-  
+  $Element = new Elements();
+
   $persona = null;
   if ($ID_Persona) $persona = new Persona(ID_Persona: $ID_Persona);
 ?>
@@ -55,9 +56,9 @@ if(!isset($_SESSION["Usuario"])){
       let listaMotivos = new Map();
       let datosPrev = <?= (!empty($_SESSION["request_prev"])) ? json_encode($_SESSION["request_prev"]) : 'null';?>;
 
-       $(function (e){
+       $(function (e) {
               let date_input=$('input[name="Fecha"]'); //our date input has the name "date"
-              let container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+              let container=$('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
               date_input.datepicker({
                   format: 'dd/mm/yyyy',
                   container: container,
@@ -82,21 +83,21 @@ if(!isset($_SESSION["Usuario"])){
 
        });
 
-       function buscarPersonas(){
+       function buscarPersonas() {
         var xNombre = document.getElementById('SearchPersonas').value;
         var textoBusqueda = xNombre;
         xmlhttp=new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
-          if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             contenidosRecibidos = xmlhttp.responseText;
             document.getElementById("ResultadosPersonas").innerHTML=contenidosRecibidos;
             }
         }
-        xmlhttp.open('POST', 'buscarPersonas.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
+        xmlhttp.open('POST', 'buscarPersonas.php?valorBusqueda=' + textoBusqueda, true); // Método post y url invocada
         xmlhttp.send();
       }
 
-      function agregarMotivo(){
+      function agregarMotivo() {
         if (cantMotivos <= 4) {
           cantMotivos++;
           var divContenedor = document.getElementById('contenedorMotivos');
@@ -128,13 +129,13 @@ if(!isset($_SESSION["Usuario"])){
         var textoBusqueda = xMotivo;
         xmlhttp=new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
-          if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             contenidosRecibidos = xmlhttp.responseText;
-            document.getElementById("ResultadosMotivos_1").innerHTML=contenidosRecibidos;
+            document.getElementById("ResultadosMotivos_1").innerHTML = contenidosRecibidos;
             $("div[data-id-element]").css("display", "block");
           }
-        }
-        xmlhttp.open('POST', 'buscarMotivos_1.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
+        } 
+        xmlhttp.open('POST', 'buscarMotivos_1.php?valorBusqueda=' + textoBusqueda, true); // Método post y url invocada
         xmlhttp.send();
       }
 
@@ -143,13 +144,13 @@ if(!isset($_SESSION["Usuario"])){
         var textoBusqueda = xMotivo;
         xmlhttp=new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
-          if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             contenidosRecibidos = xmlhttp.responseText;
-            document.getElementById("ResultadosMotivos_2").innerHTML=contenidosRecibidos;
+            document.getElementById("ResultadosMotivos_2").innerHTML = contenidosRecibidos;
             $("div[data-id-element]").css("display", "block");
             }
         }
-        xmlhttp.open('POST', 'buscarMotivos_2.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
+        xmlhttp.open('POST', 'buscarMotivos_2.php?valorBusqueda=' + textoBusqueda, true); // Método post y url invocada
         xmlhttp.send();
       }
 
@@ -158,13 +159,13 @@ if(!isset($_SESSION["Usuario"])){
         var textoBusqueda = xMotivo;
         xmlhttp=new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
-          if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             contenidosRecibidos = xmlhttp.responseText;
             document.getElementById("ResultadosMotivos_3").innerHTML=contenidosRecibidos;
             $("div[data-id-element]").css("display", "block");
             }
         }
-        xmlhttp.open('POST', 'buscarMotivos_3.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
+        xmlhttp.open('POST', 'buscarMotivos_3.php?valorBusqueda=' + textoBusqueda, true); // Método post y url invocada
         xmlhttp.send();
       }
 
@@ -175,9 +176,9 @@ if(!isset($_SESSION["Usuario"])){
         let vs = $("#select-motivo" + id_Motivo)[0].value;
         xmlhttp=new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
-          if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             contenidosRecibidos = xmlhttp.responseText;
-            document.getElementById("ResultadosMotivos" + id_Motivo).innerHTML=contenidosRecibidos;
+            document.getElementById("ResultadosMotivos" + id_Motivo).innerHTML = contenidosRecibidos;
             $("div[data-id-element]").css("display", "block");
             $("button[data-motivo-select]").on("click", function (e) {
                 let nombreMotivo = $(this).attr("data-nombre-mv");
@@ -190,12 +191,12 @@ if(!isset($_SESSION["Usuario"])){
         xmlhttp.send(JSON.stringify(bodyJson));
       }
 
-      function seleccionPersona(xNombre,xID){
+      function seleccionPersona(xNombre, xID) {
         var Persona = document.getElementById("Persona");
         var ID_Persona = document.getElementById("ID_Persona");
         Persona.innerHTML = "";
-        Persona.innerHTML = "<p>"+xNombre+" <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalPersona'><i class='fa fa-cog text-secondary'></i></button></p>";
-        ID_Persona.setAttribute('value',xID);
+        Persona.innerHTML = "<p>" + xNombre + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalPersona'><i class='fa fa-cog text-secondary'></i></button></p>";
+        ID_Persona.setAttribute('value', xID);
       }
 
       function seleccionMultipleMotivo() {
@@ -231,49 +232,49 @@ if(!isset($_SESSION["Usuario"])){
       }
 
 
-      function seleccionMotivo_1(xMotivo,xID) {
+      function seleccionMotivo_1(xMotivo, xID) {
         var Motivo = document.getElementById("Motivo_1");
         var ID_Motivo = document.getElementById("ID_Motivo_1");
         Motivo.innerHTML = "";
-        Motivo.innerHTML = "<p>"+xMotivo+" <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo_1'><i class='fa fa-cog text-secondary'></i></button></p>";
-        ID_Motivo.setAttribute('value',xID);
+        Motivo.innerHTML = "<p>" + xMotivo + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo_1'><i class='fa fa-cog text-secondary'></i></button></p>";
+        ID_Motivo.setAttribute('value', xID);
       }
 
-      function seleccionMotivo_2(xMotivo,xID) {
+      function seleccionMotivo_2(xMotivo, xID) {
         var Motivo = document.getElementById("Motivo_2");
         var ID_Motivo = document.getElementById("ID_Motivo_2");
         Motivo.innerHTML = "";
-        Motivo.innerHTML = "<p>"+xMotivo+" <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo_2'><i class='fa fa-cog text-secondary'></i></button></p>";
-        ID_Motivo.setAttribute('value',xID);
+        Motivo.innerHTML = "<p>" + xMotivo + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo_2'><i class='fa fa-cog text-secondary'></i></button></p>";
+        ID_Motivo.setAttribute('value', xID);
       }
 
-      function seleccionMotivo_3(xMotivo,xID) {
+      function seleccionMotivo_3(xMotivo, xID) {
         var Motivo = document.getElementById("Motivo_3");
         var ID_Motivo = document.getElementById("ID_Motivo_3");
         Motivo.innerHTML = "";
-        Motivo.innerHTML = "<p>"+xMotivo+" <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo_3'><i class='fa fa-cog text-secondary'></i></button></p>";
-        ID_Motivo.setAttribute('value',xID);
+        Motivo.innerHTML = "<p>" + xMotivo + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo_3'><i class='fa fa-cog text-secondary'></i></button></p>";
+        ID_Motivo.setAttribute('value', xID);
       }
 
-      function seleccionMotivo(xMotivo,xID,xNumber) {
-        if(xNumber > 1){
-          var Motivo = document.getElementById("Motivo_"+xNumber);
-          var ID_Motivo = document.getElementById("ID_Motivo_"+xNumber);
+      function seleccionMotivo(xMotivo, xID, xNumber) {
+        if(xNumber > 1) {
+          var Motivo = document.getElementById("Motivo_" + xNumber);
+          var ID_Motivo = document.getElementById("ID_Motivo_" + xNumber);
           Motivo.innerHTML = "";
-          Motivo.innerHTML = "<p>"+xMotivo+"</p>";
-          ID_Motivo.setAttribute('value',xID);
+          Motivo.innerHTML = "<p>" + xMotivo + "</p>";
+          ID_Motivo.setAttribute('value', xID);
         } else{
           var Motivo = document.getElementById("Motivo");
           var ID_Motivo = document.getElementById("ID_Motivo");
           Motivo.innerHTML = "";
-          Motivo.innerHTML = "<p>"+xMotivo+"</p>";
-          ID_Motivo.setAttribute('value',xID);
+          Motivo.innerHTML = "<p>" + xMotivo + "</p>";
+          ID_Motivo.setAttribute('value', xID);
         }
     }
 
       function agregarResponsable() {        
         cantResponsables++;
-        if(cantResponsables < 5){
+        if(cantResponsables < 5) {
           var divContenedor = document.getElementById('contenedorResponsables');
           var divResponsables= document.createElement("div");
           divResponsables.setAttribute('class','form-group row');
@@ -282,7 +283,7 @@ if(!isset($_SESSION["Usuario"])){
           labelResponsables.innerText = 'Responsable '+cantResponsables+':';
           var divSelectResponsables= document.createElement("div");
           divSelectResponsables.setAttribute('class','col-md-10');
-          var select = `<?php $Element = new Elements(); echo $Element->CBResponsables(); ?>`;
+          var select = `<?php echo $Element->CBResponsables(); ?>`;
           divSelectResponsables.innerHTML = select;      
           divResponsables.appendChild(labelResponsables);
           divResponsables.appendChild(divSelectResponsables);
@@ -306,41 +307,41 @@ if(!isset($_SESSION["Usuario"])){
             });
       }
 
-      function tomarElemento(xID){
+      function tomarElemento(xID) {
         return document.getElementById(xID);
       }
 
-      function crearElemento(xTipo){
+      function crearElemento(xTipo) {
         return document.createElement(xTipo);
       }
 
-      function agregarAtributoxElemento(xElemento,xAtributo,xValue){
-          xElemento.setAttribute(xAtributo,xValue);
+      function agregarAtributoxElemento(xElemento, xAtributo, xValue) {
+          xElemento.setAttribute(xAtributo, xValue);
       }
 
-      function agregarEtiqueta(xElemento,xEtiqueta){
+      function agregarEtiqueta(xElemento, xEtiqueta) {
         xElemento.innerHTML = xEtiqueta;
       }
 
-      function resetearValorElemento(xID){
+      function resetearValorElemento(xID) {
         document.getElementById(xID).value = "";
       }
 
-      function resetearValorSelect(xID){
+      function resetearValorSelect(xID) {
         document.getElementById(xID).selectedIndex = 0;
       }
 
-      function resetearValorDiv(xDiv){
+      function resetearValorDiv(xDiv) {
         xDiv.innerHTML = "";
       }
 
-      function agregarElementoxDiv(xDiv,xElemento){
+      function agregarElementoxDiv(xDiv,xElemento) {
         xDiv.appendChild(xElemento);
       }
 
 
 
-      function reiniciarFormulario(){
+      function reiniciarFormulario() {
         //RESETEANDO CAMPO FECHA
         resetearValorElemento("datepicker");        
         //RESETEANDO BOTON PERSONA
@@ -400,7 +401,7 @@ if(!isset($_SESSION["Usuario"])){
         listaMotivos.set(xMotivo, xID);
         element.innerHTML = "&#10003";
         element.style.width = "12ch";
-      } else if (listaMotivos.has(xMotivo)){
+      } else if (listaMotivos.has(xMotivo)) {
         listaMotivos.delete(xMotivo);
         element.innerHTML = "seleccionar";
       }
@@ -410,9 +411,9 @@ if(!isset($_SESSION["Usuario"])){
       var Motivo = document.getElementById("centro-contenedor");
       var ID_Motivo = document.getElementById("id_centro_1");
       Motivo.innerHTML = "";
-      Motivo.innerHTML = "<p>"+ Centro +" <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo_3'><i class='fa fa-cog text-secondary'></i></button></p>";
+      Motivo.innerHTML = "<p>" + Centro + " <button class='btn btn-sm btn-light' type='button' data-toggle='modal' data-target='#ModalMotivo_3'><i class='fa fa-cog text-secondary'></i></button></p>";
       ID_Motivo.setAttribute('value', xID);
-    }    
+    }
 
   </script>
 </head>
@@ -424,7 +425,6 @@ if(!isset($_SESSION["Usuario"])){
 </div>
 <div class = "row margin-right-cero">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_MOVIMIENTO);
   ?>
   <div class = "col-md-9 inicio-md-2">
@@ -498,7 +498,6 @@ if(!isset($_SESSION["Usuario"])){
               <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable: </label>
               <div class = "col-md-9">
                 <?php  
-                $Element = new Elements();
                 if (!empty($_SESSION["UltResponsable"]) || !empty($_REQUEST["ID_Responsable"][0])) {
                   $xID_Responsable = $_REQUEST["ID_Responsable"][0] ?? $_SESSION["UltResponsable"];
                   echo $Element->CBModResponsables($xID_Responsable);
@@ -517,7 +516,6 @@ if(!isset($_SESSION["Usuario"])){
               <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Centro de Salud: </label>
               <div class = "col-md-10" id = "centro-contenedor">
                 <?php  
-                $Element = new Elements();
                 $xID_Centro = $_SESSION["UltCentro"] ?? ($_REQUEST["ID_Centro"] ?? null);
 
                 if ($xID_Centro ) {
@@ -532,7 +530,6 @@ if(!isset($_SESSION["Usuario"])){
               <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Otras Instituciones: </label>
               <div class = "col-md-10">
                 <?php  
-                $Element = new Elements();
                 if (isset($_REQUEST["ID_institucion"])) {
                   $xID_OtraInstitucion = $_REQUEST["ID_institucion"];
                   echo $Element->CBModOtrasInstituciones($xID_OtraInstitucion);                  
