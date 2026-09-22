@@ -1,4 +1,5 @@
 <?php
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Motivo.php");
 
 class MovimientoMotivo 
 {
@@ -43,6 +44,25 @@ class MovimientoMotivo
 			$this->id_motivo = $id_motivo;
 			$this->estado = (!empty($estado))? $estado : 1;
 }
+	}
+
+	public static function get_lista_motivos_por_movimiento($coneccion, $movimiento)
+	{
+		$list = [];
+		$consulta = "select * 
+					from movimiento_motivo
+					where id_movimiento = " . $movimiento->getID_Movimiento() . "
+					  and estado = 1";
+
+		$mensaje = "error al consultar motivos movimientos";
+		$rs = mysqli_query($coneccion->Conexion, $consulta);
+		if (!$rs) throw new Exception($mensaje, 1);
+
+		while($ret = mysqli_fetch_assoc($rs)) {
+			$list[] = new Motivo(coneccion_base: $coneccion, 
+							   	 id_motivo  : $ret["id_motivo"]);
+		}
+		return $list;
 	}
 
     public static function exist_movimiento_motivo($connection, $movimiento, $motivo)

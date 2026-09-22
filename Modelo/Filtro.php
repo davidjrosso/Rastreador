@@ -103,6 +103,10 @@ class Filtro implements JsonSerializable
                 $row_id_calle = $ret["id_calle"];
                 $row_calle_numero = $ret["calle_numero"];
 
+				$row_meses_hasta = $ret["meses_hasta"];
+				$row_anos_hasta = $ret["edad_hasta"];
+
+
                 $this->id_centro_salud = $row_id_centro_salud;
                 $this->id_persona = $row_id_persona;
                 $this->nro_legajo = $row_nro_legajo;
@@ -122,6 +126,9 @@ class Filtro implements JsonSerializable
 				$this->id_calle = $row_id_calle;
 				$this->calle_numero = $row_calle_numero;
                 $this->estado = $row_estado;
+
+				$this->meses_hasta = $row_meses_hasta;
+				$this->anos_hasta = $row_anos_hasta;
 
 			}
 		}

@@ -37,6 +37,60 @@ if(!isset($_SESSION["Usuario"])){
 $ID_Usuario = $_SESSION["Usuario"];
 $usuario = new Account(account_id: $ID_Usuario);
 $TipoUsuario = $usuario->get_id_tipo_usuario();
+$Element = new Elements();
+
+$habilitar = Elements::DESHABILITAR_BOTON;
+
+$movimiento = null;
+$es_modificable = false;
+
+
+if(isset($_REQUEST["ID"])) {
+  $ID_Movimiento = $_REQUEST["ID"];
+  $motivos = [];
+  $Con = new Conexion();
+  $Con->OpenConexion();
+
+  $movimiento = new Movimiento(coneccion_base: $Con,
+                              xID_Movimiento: $ID_Movimiento);
+  $fecha_creacion = $movimiento->getFecha();
+
+  $fecha_expiracion = date('Y-m-d', strtotime('-7 days'));
+  $es_modificable = ($fecha_expiracion <= $fecha_creacion);
+
+  if ($es_modificable) $habilitar = Elements::HABILITAR_BOTON;
+  $Fecha = implode("/", array_reverse(explode("-", $movimiento->getFecha())));
+
+  $Observaciones = $movimiento->getObservaciones();
+
+  $lista_motivo = MovimientoMotivo::get_lista_motivos_por_movimiento(
+                                                  coneccion: $Con,
+                                                  movimiento: $movimiento
+                                                );
+  $ID_Persona = $movimiento->getID_Persona();
+  $ID_Responsable[] = $movimiento->getID_Responsable();
+
+  $id_responsable = $movimiento->getID_Responsable_2();
+  if (!empty($id_responsable) && $id_responsable != 64) $ID_Responsable[] = $id_responsable;
+
+  $id_responsable = $movimiento->getID_Responsable_3();
+  if (!empty($id_responsable) && $id_responsable != 64) $ID_Responsable[] = $id_responsable;
+
+  $id_responsable = $movimiento->getID_Responsable_4();
+  if (!empty($id_responsable) && $id_responsable != 64) $ID_Responsable[] = $id_responsable;
+
+  $ID_Centro = $movimiento->getID_Centro();
+  $ID_OtraInstitucion = $movimiento->getID_OtraInstitucion();
+
+  foreach ($lista_motivo as $key => $motivo) {
+    $motivos[$motivo->get_id_motivo()] = $motivo->get_motivo();
+  }
+
+  $Con->CloseConexion();
+}
+
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -83,22 +137,27 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   weekStart: 1,
               });
               
-              $("#Motivo_1 button").attr("disabled", true);
               $("#Motivo_1 button").css("background-color", "#007bff");
-              $("#Motivo_2 button").attr("disabled", true);
               $("#Motivo_2 button").css("background-color", "#007bff");
-              $("#Motivo_3 button").attr("disabled", true);
               $("#Motivo_3 button").css("background-color", "#007bff");
-              $("#Motivo_4 button").attr("disabled", true);
               $("#Motivo_4 button").css("background-color", "#007bff");
-              $("#Motivo_5 button").attr("disabled", true);
               $("#Motivo_5 button").css("background-color", "#007bff");
               $("#Motivo_5 button").css("background-color", "#007bff");
+              <?php 
+                if (!$habilitar) {
+              ?>
               $("#btn-modal-persona-md").attr("disabled", true);
               $("#ID_Centro").attr("disabled", true);
-              disableEditor();
-
               $("select[name~='ID_Responsable[]']").attr("disabled", true);
+              disableEditor();
+              <?php
+                } else {
+              ?>
+              $("#btn-modal-persona-md").removeAttr("disabled");
+              $("#ID_Centro").removeAttr("disabled");
+              <?php
+                }
+              ?>
           });
 
           function agregarMotivo(){
@@ -148,7 +207,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
           labelResponsables.innerText = 'Responsable '+cantResponsables+':';
           var divSelectResponsables= document.createElement("div");
           divSelectResponsables.setAttribute('class','col-md-10');
-          var select = `<?php $Element = new Elements(); echo $Element->CBResponsables(); ?>`;
+          var select = `<?php echo $Element->CBResponsables(); ?>`;
           divSelectResponsables.innerHTML = select;      
           divResponsables.appendChild(labelResponsables);
           divResponsables.appendChild(divSelectResponsables);
@@ -214,7 +273,7 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
         xmlhttp.send();
       }
 
-      function buscarMotivosGeneral(id_Motivo){
+      function buscarMotivosGeneral(id_Motivo) {
         let xMotivo = document.getElementById("SearchMotivos" + id_Motivo).value;
         let bodyJson = Object.fromEntries(listaMotivos);
         let textoBusqueda = xMotivo;
@@ -224,6 +283,11 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
           if (xmlhttp.readyState==4 && xmlhttp.status==200) {
             contenidosRecibidos = xmlhttp.responseText;
             document.getElementById("ResultadosMotivos" + id_Motivo).innerHTML=contenidosRecibidos;
+            $("button[data-motivo-select]").on("click", function (e) {
+                let nombreMotivo = $(this).attr("data-nombre-mv");
+                let idMotivo = $(this).attr("data-id-mv");
+                addMultipleMotivo(nombreMotivo, idMotivo, $(this).get(0));
+            });
           }
         }
         xmlhttp.open('POST', 'buscarMotivos.php?valorBusqueda=' + textoBusqueda + '&number=' + id_Motivo + "&vs=" + vs, true); // Método post y url invocada
@@ -326,7 +390,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
 <body>
 <div class = "row margin-right-cero">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_MOVIMIENTO);
   ?>
   <div class = "col-md-9 inicio-md-2">
@@ -343,73 +406,8 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
           <!-- Search -->
         <div class = "row">
           <?php  
-            if(isset($_REQUEST["ID"])){
-              $ID_Movimiento = $_REQUEST["ID"];
-              $motivos = [];
-              $Con = new Conexion();
-              $Con->OpenConexion();
+            if(isset($_REQUEST["ID"])) {
 
-              $ConsultarDatos = "select M.id_movimiento, M.fecha, M.id_centro, P.id_persona, P.apellido, 
-                                        P.nombre, M.observaciones, R.id_resp, M.id_resp_2, M.id_resp_3, M.id_resp_4,
-                                        R.responsable, C.centro_salud, I.ID_OtraInstitucion, I.Nombre, MT.id_motivo,
-                                        MT.motivo
-                                 from movimiento M 
-                                      INNER JOIN movimiento_motivo MEMT ON (M.id_movimiento = MEMT.id_movimiento)
-                                      INNER JOIN motivo MT ON (MEMT.id_motivo = MT.id_motivo)
-                                      INNER JOIN persona P ON (M.id_persona = P.id_persona)
-                                      INNER JOIN responsable R ON (M.id_resp = R.id_resp) 
-                                      LEFT JOIN centros_salud C ON (M.id_centro = C.id_centro)
-                                      LEFT JOIN otras_instituciones I ON (M.id_otrainstitucion = I.ID_OtraInstitucion )
-                                 where M.id_movimiento = $ID_Movimiento
-                                 and MEMT.estado = 1";
-
-              $MensajeErrorDatos = "No se pudo consultar los Datos del Movimiento";
-
-              $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
-
-              $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
-              $motivos[$Ret["id_motivo"]] = $Ret["motivo"];
-              $ID_Movimiento = $Ret["id_movimiento"];
-              $id_motivo = $Ret["id_motivo"];
-              $Fecha = implode("/", array_reverse(explode("-",$Ret["fecha"])));
-              $Apellido = $Ret["apellido"];
-              $Nombre = $Ret["nombre"];
-              $Observaciones = $Ret["observaciones"];
-              $Responsable = $Ret["responsable"];
-              $ID_Persona = $Ret["id_persona"];
-              $ID_Responsable[] = $Ret["id_resp"];
-              if (!empty($Ret["id_resp_2"]) && $Ret["id_resp_2"] != 64) $ID_Responsable[] = $Ret["id_resp_2"];
-              if (!empty($Ret["id_resp_3"]) && $Ret["id_resp_3"] != 64) $ID_Responsable[] = $Ret["id_resp_3"];
-              if (!empty($Ret["id_resp_4"]) && $Ret["id_resp_4"] != 64) $ID_Responsable[] = $Ret["id_resp_4"];
-              $ID_Centro = $Ret["id_centro"];
-              $Centro_Salud = (!empty($Ret["centro_salud"])) ? $Ret["centro_salud"] : null;
-              $ID_OtraInstitucion = $Ret["ID_OtraInstitucion"];
-              $OtraInstitucion = (!empty($Ret["Nombre"])) ? $Ret["Nombre"] : null;
-
-              $DtoMovimiento = new DtoMovimiento(
-                                                xID_Movimiento: $ID_Movimiento,
-                                                xFecha: $Fecha,
-                                                xApellido: $Apellido,
-                                                xNombre: $Nombre,
-                                                xMotivo_1: $id_motivo,
-                                                xObservaciones: $Observaciones,
-                                                xResponsable: $Responsable,
-                                                xCentroSalud: $Centro_Salud,
-                                                xOtraInstitucion: $OtraInstitucion
-              );
-
-              $count_motivo = 2;
-
-              while ($Ret = mysqli_fetch_assoc($EjecutarConsultarDatos)) {
-                if ($count_motivo == 2) $DtoMovimiento->setMotivo_2($Ret["id_motivo"]);
-                if ($count_motivo == 3) $DtoMovimiento->setMotivo_3($Ret["id_motivo"]);
-                if ($count_motivo == 4) $DtoMovimiento->setMotivo_4($Ret["id_motivo"]);
-                if ($count_motivo == 5) $DtoMovimiento->setMotivo_5($Ret["id_motivo"]);
-                $motivos[$Ret["id_motivo"]] = $Ret["motivo"];
-                $count_motivo++;
-              }
-
-              $Con->CloseConexion();
               ?>
             <div class = "col-11">
             <form method = "post" onKeydown="return event.key != 'Enter';" action = "Controladores/ModificarMovimiento.php" onSubmit = "return ValidarMovimiento();">
@@ -420,83 +418,67 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                     <input type="hidden" name="ID" value = "< ?php echo $DtoMovimiento->getID_Movimiento(); ?>">
                   </div>
                 </div> -->
-                <input type="hidden" name="ID" value = "<?php echo $DtoMovimiento->getID_Movimiento(); ?>">
+                <input type="hidden" name="ID" value = "<?php echo $ID_Movimiento ?>">
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Fecha: </label>
                   <div class="col-md-10">
-                    <input type="text" disabled class="form-control" name = "Fecha" id="datepicker" placeholder="01/01/2001" width="100%" autocomplete="off" value = "<?php echo $DtoMovimiento->getFecha(); ?>">
+                    <input type="text" <?=(!$habilitar) ? "disabled" : null; ?> class="form-control" name = "Fecha" id="datepicker" placeholder="01/01/2001" width="100%" autocomplete="off" value = "<?php echo $Fecha; ?>">
                   </div>
                 </div>
                 <div class="form-group row">
                   <label for="inputPassword" class="col-md-2 col-form-label LblForm">Persona: </label>
                   <div class="col-md-10" id = "Persona">
                     <?php  
-                    $Element = new Elements();
                     echo $Element->BTNModPersonas($ID_Persona);
                     ?>
                   </div>
                 </div>
+                <?php
+                for($key = 0; $key <= 4; $key++) {
+                  $id_motivo = null;
+                  if(isset($lista_motivo[$key])) {
+                    $motivo = $lista_motivo[$key];
+                    $id_motivo = $motivo->get_id_motivo();
+                  }
+                  if ($key <= 2) {
+                ?>
                 <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 1: </label>
-                  <div class="col-md-9" id = "Motivo_1">
-                    <?php  
-                      $Element = new Elements();
-                      echo $Element->BTNModMotivo_1($DtoMovimiento->getMotivo_1());
+                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo <?= $key + 1 ?>: </label>
+                  <div class="col-md-<?= ((!$key) ? "9" : "10"); ?>" id = "Motivo_<?= $key + 1 ?>">
+                    <?php
+                      echo $Element->BTNModMotivo($id_motivo, $key + 1, $habilitar);
                     ?>
                   </div>
+                    <?php
+                      if (!$key) {
+                    ?>
                   <div class="col-md-1">
-                  <button type="button" class="btn btn-primary" disabled onClick="agregarMotivo()" id="agregarMotivoID">+</button>
-              </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 2: </label>
-                  <div class="col-md-10" id = "Motivo_2">
-                    <?php  
-                    $Element = new Elements();
-                    echo $Element->BTNModMotivo_2($DtoMovimiento->getMotivo_2());
-                    ?>
+                    <button type="button" class="btn btn-primary" onClick="agregarMotivo()" 
+                            <?php 
+                            if (!$habilitar) echo " disabled ";
+                            ?>
+                            id="agregarMotivoID">+</button>
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 3: </label>
-                  <div class="col-md-10" id = "Motivo_3">
-                    <?php  
-                    $Element = new Elements();
-                    echo $Element->BTNModMotivo_3($DtoMovimiento->getMotivo_3());
+                    <?php
+                      }
                     ?>
-                  </div>
                 </div>
-                <?php  
-                  if($DtoMovimiento->getMotivo_4() != "" && $DtoMovimiento->getMotivo_4() != 1){
+                <?
+                  } else {
                 ?>
                 <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 4: </label>
-                  <div class="col-md-10" id = "Motivo_4">
+                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo <?= $key + 1 ?>: </label>
+                  <div class="col-md-10" id = "Motivo_<?= $key + 1 ?>">
                 <?php
-                  $Element = new Elements();
-                  echo $Element->BTNModMotivo_4($DtoMovimiento->getMotivo_4());
+                  echo $Element->BTNModMotivo($id_motivo, $key + 1, $habilitar);
                 ?>
                   </div>
                 </div>
                 <?php
+                  }
                 }
                 ?>
-                <?php
-                  if($DtoMovimiento->getMotivo_5() != "" && $DtoMovimiento->getMotivo_5() != 1){
-                ?>
-                <div class="form-group row">
-                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 5: </label>
-                  <div class="col-md-10" id = "Motivo_5">
-                <?php
-                  $Element = new Elements();
-                  echo $Element->BTNModMotivo_5($DtoMovimiento->getMotivo_5());
-                ?>
-                  </div>
-                </div>
-                <?php
-                }
-                ?>
-                <div id="contenedorMotivos">              
+                <div id="contenedorMotivos">
                 </div>
                 <?php foreach($ID_Responsable as $key => $value) {?>
                 <div class="form-group row">
@@ -507,7 +489,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   <div class = "col-md-10">
                   <?php } ?>
                     <?php
-                    $Element = new Elements();
                     echo $Element->CBModResponsables($value);
                     ?>
                   </div>
@@ -524,7 +505,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Centro de Salud: </label>
                   <div class = "col-md-10">
                     <?php  
-                    $Element = new Elements();
                     echo $Element->CBModCentros($ID_Centro);
                     ?>
                   </div>
@@ -533,7 +513,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                   <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Institución: </label>
                   <div class = "col-md-10">
                     <?php  
-                    $Element = new Elements();
                     echo $Element->CBModOtrasInstituciones($ID_OtraInstitucion);
                     ?>
                   </div>
@@ -548,21 +527,21 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
                 <div class="form-group row">
                   <div style="align-content: center;" class="col row" id = "InputsGenerales">
                     <input type="hidden" name="ID_Persona" id = "ID_Persona" value = "<?php echo $ID_Persona; ?>">
-                    <input type="hidden" name="ID_Motivo_1" id = "ID_Motivo_1" value = "<?php echo $DtoMovimiento->getMotivo_1();?>">
-                    <input type="hidden" name="ID_Motivo_2" id = "ID_Motivo_2" value = "<?php echo $DtoMovimiento->getMotivo_2();?>">
-                    <input type="hidden" name="ID_Motivo_3" id = "ID_Motivo_3" value = "<?php echo $DtoMovimiento->getMotivo_3();?>">
-                    <textarea style="display: none;" id="Observaciones" class = "form-control" row = "3" name = "Observaciones" value = ""><?php echo $DtoMovimiento->getObservaciones(); ?></textarea>
+                    <input type="hidden" name="ID_Motivo_1" id = "ID_Motivo_1" value = "<?php echo (isset($lista_motivo[0]) ? $lista_motivo[0]->get_id_motivo() : 1);?>">
+                    <input type="hidden" name="ID_Motivo_2" id = "ID_Motivo_2" value = "<?php echo (isset($lista_motivo[1]) ? $lista_motivo[1]->get_id_motivo() : 1);?>">
+                    <input type="hidden" name="ID_Motivo_3" id = "ID_Motivo_3" value = "<?php echo (isset($lista_motivo[2]) ? $lista_motivo[2]->get_id_motivo() : 1);?>">
+                    <textarea style="display: none;" id="Observaciones" class = "form-control" row = "3" name = "Observaciones" value = ""><?php echo $movimiento->getObservaciones(); ?></textarea>
                     <?php
-                      if($DtoMovimiento->getMotivo_4() != "" && $DtoMovimiento->getMotivo_4() != 1){
+                      if(!empty($lista_motivo[3]) && $lista_motivo[3]->get_id_motivo() != 1) {
                     ?>
-                    <input type="hidden" name="ID_Motivo_4" id = "ID_Motivo_4" value = "<?php echo $DtoMovimiento->getMotivo_4();?>">
+                    <input type="hidden" name="ID_Motivo_4" id = "ID_Motivo_4" value = "<?= $lista_motivo[3]->get_id_motivo();?>">
                     <?php
                       }
                     ?>
                     <?php
-                      if($DtoMovimiento->getMotivo_5() != "" && $DtoMovimiento->getMotivo_5() != 1){
+                      if(!empty($lista_motivo[4]) && $lista_motivo[4]->get_id_motivo() != 1) {
                     ?>
-                    <input type="hidden" name="ID_Motivo_5" id = "ID_Motivo_5" value = "<?php echo $DtoMovimiento->getMotivo_5();?>">
+                    <input type="hidden" name="ID_Motivo_5" id = "ID_Motivo_5" value = "<?= $lista_motivo[4]->get_id_motivo();?>">
                     <?php
                       }
                     ?>

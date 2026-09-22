@@ -1,4 +1,6 @@
-<?php  
+<?php
+
+
 class Calle implements JsonSerializable {
 	// DECLARACION DE VARIABLES
 	private $id_calle;
@@ -37,7 +39,7 @@ class Calle implements JsonSerializable {
 						  order by calle_nombre ASC";
 			$ejecutar_consultar_calle = mysqli_query(
 				$Con->Conexion, 
-				$consultar) or die("Problemas al consultar filtro Calle");
+				$consultar);
 			if (!$ejecutar_consultar_calle) {
 				throw new Exception("Problemas al intentar Consultar Registros de Calle", 0);
 			}
@@ -127,7 +129,6 @@ class Calle implements JsonSerializable {
 														$connection=null
 														)
 	{
-		$calle = null;
 		if ($calle && $id_bario && $nro_calle) {
 			$consulta = "SELECT *
 						 FROM calle c INNER JOIN calles_barrios cs ON (c.id_calle = cs.id_calle)
@@ -496,6 +497,32 @@ class Calle implements JsonSerializable {
 		}
 
 		return $list;
+	}
+
+	public static function get_all_calles($coneccion)
+	{
+		$list = [];
+		$consulta = "select *
+						from calle
+						where estado = 1
+						and calle_nombre is not  null
+						order by calle_nombre asc";
+		$query = mysqli_query(
+							  $coneccion->Conexion, 
+							  $consulta
+							 );
+		if (!$query) throw new Exception("error al consultar calles ", 2);
+
+		while($row = mysqli_fetch_assoc($query)) {
+			$list[] = new self(id_calle: $row["id_calle"]);
+		}
+
+		return $list;
+	}
+
+	public static function get_calle_id_con_nombre_ml($coneccion, $nombre)
+	{
+		return true;
 	}
 
 	public static function existe_calle_con_id($calle, $id_calle, $coneccion)

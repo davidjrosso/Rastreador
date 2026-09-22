@@ -21,22 +21,119 @@
 session_start(); 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Conexion.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Elements.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Persona.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/CtrGeneral.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Movimiento.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Responsable.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Account.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/MovimientoMotivo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Categoria.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/CategoriaRol.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/DtoMovimiento.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/OtraInstitucion.php';
+
 header("Content-Type: text/html;charset=utf-8");
 
 /*     CONTROL DE USUARIOS                    */
 if(!isset($_SESSION["Usuario"])){
     header("Location: Error_Session.php");
+    exit();
 }
 
 $ID_Usuario = $_SESSION["Usuario"];
 $usuario = new Account(account_id: $ID_Usuario);
 $TipoUsuario = $usuario->get_id_tipo_usuario();
+$Element = new Elements();
+
+if (isset($_REQUEST["ID"])) {
+    $ID_Movimiento = $_REQUEST["ID"];
+
+    $Con = new Conexion();
+    $Con->OpenConexion();
+
+    $movimiento = new Movimiento(coneccion_base: $Con,
+                                  xID_Movimiento: $ID_Movimiento);
+
+    $persona = new Persona(ID_Persona: $movimiento->getID_Persona());
+
+    $responsable = new Responsable(coneccion_base: $Con, 
+                                    id_responsable: $movimiento->getID_Responsable()
+                                    );
+
+    $Centro_Salud = null;
+    if ($movimiento->getID_Centro()){
+        $centro = new CentroSalud(coneccion_base: $Con,
+                                  id_centro: $movimiento->getID_Centro());   
+        $Centro_Salud =  $centro->get_centro_salud();       
+    }
+
+    $OtraInstitucion = null;
+    if ($movimiento->getID_OtraInstitucion()) {
+        $ins = new OtraInstitucion(xConeccion: $Con,
+                                  xID_OtraInstitucion: $movimiento->getID_OtraInstitucion()
+                                  );
+        $OtraInstitucion = $ins->getNombre();
+    }
+
+    $Fecha = $Fecha_Nacimiento = implode("-", array_reverse(explode("-", $movimiento->getFecha())));
+    $Apellido = $persona->getApellido();
+    $Nombre = $persona->getNombre();
+    $Observaciones = $movimiento->getObservaciones();
+    $Responsable = $responsable->get_responsable();
+    $ID_Resp_2 = $movimiento->getID_Responsable_2();
+    $ID_Resp_3 = $movimiento->getID_Responsable_3();
+    $ID_Resp_4 = $movimiento->getID_Responsable_4();
+
+    $lista_motivo = MovimientoMotivo::get_lista_motivos_por_movimiento(
+                                                    coneccion: $Con,
+                                                    movimiento: $movimiento
+                                                  );
+    $lista_motivo_nombre = [];
+
+    foreach ($lista_motivo as $motivo) {
+        $exist = false;
+        $id_categoria = Categoria::exist_cod_categoria(connection: $Con,
+                                                       cod_categoria: $motivo->get_cod_categoria());
+        if ($id_categoria) {
+            $categoria = new Categoria(xConecction: $Con,
+                                       xID_Categoria: $id_categoria
+                                      );
+            $exist = CategoriaRol::exist_rol(connection: $Con, 
+                                            id_categoria: $categoria->getID_Categoria(),
+                                            id_tipo_usuario: $TipoUsuario
+                                            );
+        }
+
+        if ($exist) {
+            $lista_motivo_nombre[] = $motivo->get_motivo();
+        }
+    }
+
+    if ($ID_Resp_2) {
+      $responsable = new Responsable(
+                                    coneccion_base: $Con,
+                                    id_responsable: $ID_Resp_2
+                                    );
+      $Responsable_2 = $responsable->get_responsable();
+    }
+
+    if ($ID_Resp_3) {
+      $responsable = new Responsable(
+                                    coneccion_base: $Con,
+                                    id_responsable: $ID_Resp_3
+                                    );
+      $Responsable_3 = $responsable->get_responsable();
+    }
+
+    if ($ID_Resp_4) {
+      $responsable = new Responsable(
+                                    coneccion_base: $Con,
+                                    id_responsable: $ID_Resp_4
+                                    );
+      $Responsable_4 = $responsable->get_responsable();
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -54,38 +151,11 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-  <script>
-       $(document).ready(function(){
-              var date_input=$('input[name="date"]'); //our date input has the name "date"
-              var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-              date_input.datepicker({
-                  format: 'dd/mm/yyyy',
-                  container: container,
-                  todayHighlight: true,
-                  autoclose: true,
-              });
-          });
-
-       function CalcularPrecio(){
-        //var Combus = document.getElementById("Combustible").value;
-        var Litros = document.getElementById("Litros").value;
-        var Combustible = document.getElementById("Combustible");
-        var PrecioxL = Combustible.options[Combustible.selectedIndex].getAttribute("name");
-
-        var Total = parseFloat(PrecioxL) * parseFloat(Litros);
-
-        var Precio = document.getElementById("Precio");
-        Precio.setAttribute("value",parseFloat(Total).toFixed(2));
-        //Terminar esta parte cuando termine lo demas.
-       }
-
-  </script>
 
 </head>
 <body>
 <div class = "row margin-right-cero">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_MOVIMIENTO);
   ?>
   <div class = "col-md-9 inicio-md-2">
@@ -104,94 +174,6 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
         <div class = "row">
           <?php  
             if (isset($_REQUEST["ID"])) {
-              $ID_Movimiento = $_REQUEST["ID"];
-
-              $Con = new Conexion();
-              $Con->OpenConexion();
-
-              $consultaGeneral = "CREATE TEMPORARY TABLE MTPERM SELECT DISTINCT(MT.id_motivo), MT.motivo 
-                                   from motivo MT inner join categoria C on (MT.cod_categoria = C.cod_categoria) 
-                                     inner join categorias_roles CR on (CR.id_categoria = CR.id_categoria)" ;
-              $MessageError = "Problemas al crear la tabla temporaria de usuarios";
-              $Con->ResultSet = mysqli_query($Con->Conexion,$consultaGeneral
-                                            ) or die($MessageError);
-
-              $ConsultarDatos = "select M.id_movimiento, M.fecha, P.apellido,
-                                        P.nombre, M.observaciones,
-                                        R.responsable, M.id_resp_2,
-                                        M.id_resp_3, M.id_resp_4,
-                                        C.centro_salud, I.Nombre,
-                                        MT.motivo as Mot
-                                 from movimiento M 
-                                      INNER JOIN movimiento_motivo MEMT ON (M.id_movimiento = MEMT.id_movimiento)
-                                      INNER JOIN motivo MT ON (MEMT.id_motivo = MT.id_motivo)
-                                      INNER JOIN MTPERM ME ON (MT.id_motivo = ME.id_motivo)
-                                      INNER JOIN persona P ON (M.id_persona = P.id_persona)
-                                      INNER JOIN responsable R ON (M.id_resp = R.id_resp) 
-                                      LEFT JOIN centros_salud C ON (M.id_centro = C.id_centro)
-                                      LEFT JOIN otras_instituciones I ON (M.id_otrainstitucion = I.ID_OtraInstitucion )
-                                 where M.id_movimiento = $ID_Movimiento";
-              $MensajeErrorDatos = "No se pudo consultar los Datos del Movimiento";
-
-              $EjecutarConsultarDatos = mysqli_query($Con->Conexion,$ConsultarDatos) or die($MensajeErrorDatos);
-
-              $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
-
-              $Fecha = $Fecha_Nacimiento = implode("-", array_reverse(explode("-",$Ret["fecha"])));
-              $Apellido = $Ret["apellido"];
-              $Nombre = $Ret["nombre"];
-              $Observaciones = $Ret["observaciones"];
-              $Responsable = $Ret["responsable"];
-              $ID_Resp_2 = $Ret["id_resp_2"];
-              $ID_Resp_3 = $Ret["id_resp_3"];
-              $ID_Resp_4 = $Ret["id_resp_4"];
-              $Centro_Salud = (!empty($Ret["centro_salud"])) ? $Ret["centro_salud"] : null;
-              $OtraInstitucion = (!empty($Ret["Nombre"])) ? $Ret["Nombre"] : null;
-              $id_motivo = $Ret["Mot"];
-
-              $DtoMovimiento = new DtoMovimiento(
-                                                 xID_Movimiento: $ID_Movimiento,
-                                                 xFecha: $Fecha,
-                                                 xApellido: $Apellido,
-                                                 xNombre: $Nombre,
-                                                 xMotivo_1: $id_motivo ,
-                                                 xObservaciones: $Observaciones,
-                                                 xResponsable: $Responsable,
-                                                 xCentroSalud: $Centro_Salud,
-                                                 xOtraInstitucion: $OtraInstitucion
-                                                );
-              $count_motivo = 2;
-              while ($Ret = mysqli_fetch_assoc($EjecutarConsultarDatos)) {
-                if ($count_motivo == 2) $DtoMovimiento->setMotivo_2($Ret["Mot"]);
-                if ($count_motivo == 3) $DtoMovimiento->setMotivo_3($Ret["Mot"]);
-                if ($count_motivo == 4) $DtoMovimiento->setMotivo_4($Ret["Mot"]);
-                if ($count_motivo == 5) $DtoMovimiento->setMotivo_5($Ret["Mot"]);
-                $count_motivo++;
-              }
-
-              if ($ID_Resp_2) {
-                $responsable = new Responsable(
-                                              coneccion_base: $Con,
-                                              id_responsable: $ID_Resp_2
-                                              );
-                $Responsable_2 = $responsable->get_responsable();
-              }
-
-              if ($ID_Resp_3) {
-                $responsable = new Responsable(
-                                              coneccion_base: $Con,
-                                              id_responsable: $ID_Resp_3
-                                              );
-                $Responsable_3 = $responsable->get_responsable();
-              }
-
-              if ($ID_Resp_4) {
-                $responsable = new Responsable(
-                                              coneccion_base: $Con,
-                                              id_responsable: $ID_Resp_4
-                                              );
-                $Responsable_4 = $responsable->get_responsable();
-              }
 
               $Table = "<table class='table'>
                           <thead>
@@ -202,44 +184,32 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
 
               $Table .= "<tr>
                             <td>Fecha</td>
-                            <td>" . $DtoMovimiento->getFecha() . "</td>
+                            <td>" . $Fecha . "</td>
                          </tr>";
               $Table .= "<tr>
                             <td>Apellido</td>
-                            <td>" . $DtoMovimiento->getApellido() . "</td>
+                            <td>" . $Apellido . "</td>
                          </tr>";
               $Table .= "<tr>
                             <td>Nombre</td>
-                            <td>" . $DtoMovimiento->getNombre() . "</td>
+                            <td>" . $Nombre . "</td>
                           </tr>";
-              $Table .= "<tr>
-                            <td>Motivo 1</td>
-                            <td>" . $DtoMovimiento->getMotivo_1() . "</td>
-                         </tr>";
-              $Table .= "<tr>
-                            <td>Motivo 2</td>
-                            <td>" . $DtoMovimiento->getMotivo_2() . "</td>
-                         </tr>";
-              $Table .= "<tr>
-                            <td>Motivo 3</td>
-                            <td>" . $DtoMovimiento->getMotivo_3() . "</td>
-                         </tr>";
-              $Table .= "<tr>
-                            <td>Motivo 4</td>
-                            <td>" . $DtoMovimiento->getMotivo_4() . "</td>
-                         </tr>";
-              $Table .= "<tr>
-                            <td>Motivo 5</td>
-                            <td>" . $DtoMovimiento->getMotivo_5() . "</td>
-                         </tr>";
+              foreach ($lista_motivo_nombre as $key => $motivo_nombre) {
+                  $Table .= "<tr>
+                                <td>Motivo " . ($key + 1) . "</td>
+                                <td>" . $motivo_nombre . "</td>
+                            </tr>";
+              }
+
               $Table .= "<tr>
                             <td>Observaciones</td>
-                            <td>" . $DtoMovimiento->getObservaciones() . "</td>
+                            <td>" . $movimiento->getObservaciones() . "</td>
                          </tr>";
               $Table .= "<tr>
                             <td>Responsable</td>
-                            <td>" . $DtoMovimiento->getResponsable() . "</td>
+                            <td>" . $Responsable . "</td>
                          </tr>";
+
               if($ID_Resp_2 != null){
                 $Table .= "<tr>
                               <td>Responsable 2</td>
@@ -260,11 +230,11 @@ $TipoUsuario = $usuario->get_id_tipo_usuario();
               }
               $Table .= "<tr>
                             <td>Centro de Salud</td>
-                            <td>" . $DtoMovimiento->getCentroSalud() . "</td>
+                            <td>" . $Centro_Salud . "</td>
                          </tr>";
               $Table .= "<tr>
                             <td>Institucion</td>
-                            <td>" . $DtoMovimiento->getOtraInstitucion() . "</td>
+                            <td>" . $OtraInstitucion . "</td>
                          </tr>";
 
               $Table .= "</table>";
