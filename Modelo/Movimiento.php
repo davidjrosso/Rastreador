@@ -96,7 +96,7 @@ class Movimiento implements JsonSerializable
 				$this->ID_Motivo_4 = $mov_motivo_4;
 				$this->ID_Motivo_5 = $mov_motivo_5;
 				$this->Fecha = (($mov_fecha) ? $mov_fecha : null);
-				$this->Observaciones = (($mov_observaciones) ? $xObservaciones : null);
+				$this->Observaciones = (($mov_observaciones) ? $mov_observaciones : $xObservaciones);
 				$this->ID_Responsable = (($mov_id_resp) ? $mov_id_resp : null);
 				$this->ID_Responsable_2 = (($mov_id_resp_2) ? $mov_id_resp_2  : null);
 				$this->ID_Responsable_3 = (($mov_id_resp_3) ? $mov_id_resp_3 : null);
