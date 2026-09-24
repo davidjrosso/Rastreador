@@ -194,7 +194,7 @@
             xMLHTTP.send();
         }
 
-      function buscarCalles(){
+      function buscarCalles() {
         var xNombre = document.getElementById('SearchCalle').value;
         var textoBusqueda = xNombre;
         xmlhttp=new XMLHttpRequest();
@@ -202,6 +202,9 @@
           if (xmlhttp.readyState==4 && xmlhttp.status==200) {
             contenidosRecibidos = xmlhttp.responseText;
             document.getElementById("ResultadosCalles").innerHTML=contenidosRecibidos;
+            $("button[data-seleccion-calle]").on("click", function (e) {
+                seleccionCalle($(this).attr("data-nombre-calle"), $(this).attr("data-id-calle"));
+            });
             }
         }
         xmlhttp.open('POST', 'buscarCalle.php?valorBusqueda='+textoBusqueda, true); // Método post y url invocada
@@ -596,11 +599,11 @@
 <?php  
 if (isset($_REQUEST["Mensaje"])) {
   echo "<script type='text/javascript'>
-  swal('".$_REQUEST["Mensaje"]."','','success');
+  swal('" . $_REQUEST["Mensaje"] . "','','success');
 </script>";
 } else if (isset($_REQUEST["MensajeError"])) {
   echo "<script type='text/javascript'>
-  swal('".$_REQUEST["MensajeError"]."','','warning');
+  swal('" . $_REQUEST["MensajeError"] . "','','warning');
 </script>";
 }
 ?>
