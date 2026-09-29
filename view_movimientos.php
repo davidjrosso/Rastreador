@@ -172,7 +172,7 @@ $offset = 0;
             <div class="col-6">
               <button type="button" class="btn btn-outline-secondary"
                       onclick="location.href = 'view_inicio.php'">Inicio</button>
-              <button type="button" class="btn btn-danger" id="bn-carga-mv" style="position: relative;"
+              <button type="button" class="btn btn-secondary" id="bn-carga-mv" style="position: relative;"
                       data-offset="<?=$offset + $limit;?>" data-limit="<?= $limit;?>">
                 Cargar +500 movimientos <div id="circle"> </div>
               </button>
