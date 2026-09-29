@@ -1,8 +1,8 @@
 <?php 
 session_start();
-require_once 'Conexion.php';
-require_once '../Modelo/Persona.php';
-require_once '../Modelo/Calle.php';
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Controladores/Conexion.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . '/Modelo/Persona.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/Modelo/Calle.php');
 header("Content-Type: text/html;charset=utf-8");
 
 $ID_Usuario = $_SESSION["Usuario"];
@@ -23,26 +23,32 @@ $sexo = (isset($_REQUEST["opcion_f"]))? $_REQUEST["opcion_f"] : $sexo;
 $sexo = (isset($_REQUEST["opcion_m"]))? $_REQUEST["opcion_m"] : $sexo;
 $sexo = (isset($_REQUEST["opcion_x"]))? $_REQUEST["opcion_x"] : $sexo;
 
+$Fecha_Nacimiento = null;
 if (empty($_REQUEST["Fecha_Nacimiento"])) {
-	$Fecha_Nacimiento = 'null';
-} else {
-	$Fecha_Nacimiento = implode("-", array_reverse(explode("/",$_REQUEST["Fecha_Nacimiento"])));
+	$Fecha_Nacimiento = null;
+} else if (preg_match("~[0-9]~", $_REQUEST["Fecha_Nacimiento"])) {
+	$Fecha_Nacimiento = implode("-",
+								array_reverse(
+									explode("/",
+									$_REQUEST["Fecha_Nacimiento"]))
+								);
 }
 
 ///////////////////////////CALCULAR EDAD//////////////////////////////////////////////////
-if($Edad == 'null' || $Edad == ""){
-	list($ano,$mes,$dia) = explode("-",$Fecha_Nacimiento);
+
+if(!$Edad && $Fecha_Nacimiento ) {
+	list($ano,$mes,$dia) = explode("-", $Fecha_Nacimiento);
 	$ano_diferencia = date("Y") - $ano;
 	$mes_diferencia = date("m") - $mes;
 	$dia_diferencia = date("d") - $dia;
-	if($dia_diferencia < 0 || $mes_diferencia < 0){
+	if($dia_diferencia < 0 || $mes_diferencia < 0) {
 		$ano_diferencia--;
 	}
 	$Edad = $ano_diferencia;
 }
 
 
-if($Edad == 0){
+if($Edad == 0) {
 	$Fecha_Actual = new DateTime();
 	$Fecha_Nacimiento_Registrada = new DateTime($Fecha_Nacimiento);
 	$Diferencia = $Fecha_Nacimiento_Registrada->diff($Fecha_Actual);

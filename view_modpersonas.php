@@ -42,6 +42,59 @@ $TipoUsuario = $account->get_id_tipo_usuario();
 $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
 $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 
+$Element = new Elements();
+
+if (isset($_REQUEST["ID"])) {
+    $ID = $_REQUEST["ID"];
+
+    $Con = new Conexion();
+    $Con->OpenConexion();
+
+    $ConsultarDatos = "select p.*, 
+                              ST_X(p.georeferencia) as lat, 
+                              ST_Y(p.georeferencia) as lon
+                      from persona p
+                      where id_persona = $ID";
+    $MensajeErrorDatos = "No se pudo consultar los Datos de la Persona";
+
+    $EjecutarConsultarDatos = mysqli_query($Con->Conexion, $ConsultarDatos) or die($MensajeErrorDatos);
+
+    $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
+
+    $ID_Persona = $Ret["id_persona"];
+    $Apellido = $Ret["apellido"];
+    $Nombre = $Ret["nombre"];
+    $DNI = $Ret["documento"];
+    $Nro_Legajo = $Ret["nro_legajo"];
+    $Edad = $Ret["edad"];
+    $Meses = $Ret["meses"];
+    $Fecha_Nacimiento = implode("/", array_reverse(explode("-", $Ret["fecha_nac"])));
+    $Nro_Carpeta = $Ret["nro_carpeta"];
+    $Obra_Social = $Ret["obra_social"];
+    $Domicilio = $Ret["domicilio"];
+    $Barrio = $Ret["ID_Barrio"];
+    $Localidad = $Ret["localidad"];
+    $Circunscripcion = $Ret["circunscripcion"];
+    $Seccion = $Ret["seccion"];
+    $Manzana = $Ret["manzana"];
+    $Lote = $Ret["lote"];
+    $Familia = $Ret["familia"];
+    $Observaciones = $Ret["observacion"];
+    $Cambio_Domicilio = $Ret["cambio_domicilio"];
+    $Telefono = $Ret["telefono"];
+    $Mail = $Ret["mail"];
+    $Estado = $Ret["estado"];
+    $ID_Escuela = $Ret["ID_Escuela"];
+    $Trabajo = $Ret["Trabajo"];
+
+    $Persona = new Persona($ID_Persona);
+    $Con->CloseConexion();
+
+    $opcion_f = ($Persona->getSexo() == 'f') ? true : false;
+    $opcion_m = ($Persona->getSexo() == 'm') ? true : false;
+    $opcion_x = ($Persona->getSexo() == 'x') ? true : false;
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -243,7 +296,6 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 
   <div class="row margin-right-cero">
     <?php
-    $Element = new Elements();
     echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_PERSONA);
     ?>
     <div class="col-md-9 inicio-md-2 row margin-right-cero">
@@ -262,55 +314,6 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                       <div class="row" style="justify-content: center;">
                         <?php
                         if (isset($_REQUEST["ID"])) {
-                          $ID = $_REQUEST["ID"];
-
-                          $Con = new Conexion();
-                          $Con->OpenConexion();
-
-                          $ConsultarDatos = "select p.*, 
-                                                    ST_X(p.georeferencia) as lat, 
-                                                    ST_Y(p.georeferencia) as lon
-                                            from persona p
-                                            where id_persona = $ID";
-                          $MensajeErrorDatos = "No se pudo consultar los Datos de la Persona";
-
-                          $EjecutarConsultarDatos = mysqli_query($Con->Conexion, $ConsultarDatos) or die($MensajeErrorDatos);
-
-                          $Ret = mysqli_fetch_assoc($EjecutarConsultarDatos);
-
-                          $ID_Persona = $Ret["id_persona"];
-                          $Apellido = $Ret["apellido"];
-                          $Nombre = $Ret["nombre"];
-                          $DNI = $Ret["documento"];
-                          $Nro_Legajo = $Ret["nro_legajo"];
-                          $Edad = $Ret["edad"];
-                          $Meses = $Ret["meses"];
-                          $Fecha_Nacimiento = implode("/", array_reverse(explode("-", $Ret["fecha_nac"])));
-                          $Nro_Carpeta = $Ret["nro_carpeta"];
-                          $Obra_Social = $Ret["obra_social"];
-                          $Domicilio = $Ret["domicilio"];
-                          $Barrio = $Ret["ID_Barrio"];
-                          $Localidad = $Ret["localidad"];
-                          $Circunscripcion = $Ret["circunscripcion"];
-                          $Seccion = $Ret["seccion"];
-                          $Manzana = $Ret["manzana"];
-                          $Lote = $Ret["lote"];
-                          $Familia = $Ret["familia"];
-                          $Observaciones = $Ret["observacion"];
-                          $Cambio_Domicilio = $Ret["cambio_domicilio"];
-                          $Telefono = $Ret["telefono"];
-                          $Mail = $Ret["mail"];
-                          $Estado = $Ret["estado"];
-                          $ID_Escuela = $Ret["ID_Escuela"];
-                          $Trabajo = $Ret["Trabajo"];
-
-                          $Persona = new Persona($ID_Persona);
-                          $Con->CloseConexion();
-
-                          $opcion_f = ($Persona->getSexo() == 'f') ? true : false;
-                          $opcion_m = ($Persona->getSexo() == 'm') ? true : false;
-                          $opcion_x = ($Persona->getSexo() == 'x') ? true : false;
-
                           ?>
                           <div class="col-11">
                             <form id="form-persona" method="post" action="Controladores/ModificarPersona.php">
@@ -413,7 +416,6 @@ $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
                                 <label for="ID_Barrio" class="col-md-2 col-form-label LblForm">Barrio: </label>
                                 <div class="col-md-10">
                                   <?php
-                                  $Element = new Elements();
                                   echo $Element->CBModBarrios($Persona->getId_Barrio());
                                   ?>
                                 </div>
