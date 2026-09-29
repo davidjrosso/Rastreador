@@ -1,24 +1,35 @@
 <?php
 session_start();
-require_once "Controladores/Elements.php";
-require_once "Controladores/CtrGeneral.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Conexion.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Elements.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/CtrGeneral.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Account.php';
+
 header("Content-Type: text/html;charset=utf-8");
 
 /*     CONTROL DE USUARIOS                    */
 if (!isset($_SESSION["Usuario"])) {
   header("Location: Error_Session.php");
+  exit();
 }
 
 $Con = new Conexion();
 $Con->OpenConexion();
 $_SESSION["return"] = null;
+
 $ID_Usuario = $_SESSION["Usuario"];
-$ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
-$MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
-$EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion, $ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
-$Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
-$TipoUsuario = $Ret["ID_TipoUsuario"];
+$usuario = new Account(account_id: $ID_Usuario);
+$TipoUsuario = $usuario->get_id_tipo_usuario();
+$Element = new Elements();
+$DTGeneral = new CtrGeneral();
+
 $Con->CloseConexion();
+
+$num_row = 5000;
+
+$limit = 500;
+$offset = 0;
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -36,8 +47,8 @@ $Con->CloseConexion();
   <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
 
-  <script src="js/Utils.js"></script>
-  <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="js/Utils.js"></script>
   <script type="text/javascript"
     src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
@@ -45,18 +56,7 @@ $Con->CloseConexion();
     crossorigin="anonymous"></script>
   <script src="./dist/alerta.js"></script>
   <script src="./dist/control.js"></script>
-  <script>
-    $(document).ready(function () {
-      var date_input = $('input[name="date"]');
-      var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
-      date_input.datepicker({
-        format: 'dd/mm/yyyy',
-        container: container,
-        todayHighlight: true,
-        autoclose: true,
-      });
-    });
-  </script>
+  <script src="./dist/movimiento.js"></script>
 </head>
 
 <body>
@@ -68,7 +68,6 @@ $Con->CloseConexion();
 
   <div class="row margin-right-cero">
     <?php
-    $Element = new Elements();
     echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_MOVIMIENTO);
     ?>
     <div class="col-md-9 inicio-md-2">
@@ -110,15 +109,15 @@ $Con->CloseConexion();
               <label for="inputPassword" class="col-md-1 col-form-label LblForm">En: </label>
               <div class="col-md-3">
                 <select name="ID_Filtro" class="form-control">
-                  <option value="ApellidoYNombre" selected>Apellido y Nombre</option>
-                  <option value="Apellido">Apellido</option>
-                  <option value="Nombre">Nombre</option>
-                  <option value="Documento">Documento</option>
-                  <option value="Responsable">Resp.</option>
-                  <option value="Fecha">Fecha</option>
+                  <option value="<?=CtrGeneral::APELLIDO_NOMBRE;?>" selected>Apellido y Nombre</option>
+                  <option value="<?=CtrGeneral::APELLIDO;?>">Apellido</option>
+                  <option value="<?=CtrGeneral::NOMBRE;?>">Nombre</option>
+                  <option value="<?=CtrGeneral::DOCUMENTO;?>">Documento</option>
+                  <option value="<?=CtrGeneral::RESPONSABLE;?>">Resp.</option>
+                  <option value="<?=CtrGeneral::FECHA;?>">Fecha</option>
                   <!-- <option value = "ID">Id</option> -->
-                  <option value="Legajo">Nro. Legajo</option>
-                  <option value="Carpeta">Nro. Carpeta</option>
+                  <option value="<?=CtrGeneral::LEGAJO;?>">Nro. Legajo</option>
+                  <option value="<?=CtrGeneral::CARPETA;?>">Nro. Carpeta</option>
 
                 </select>
               </div>
@@ -133,48 +132,50 @@ $Con->CloseConexion();
             if (isset($_REQUEST["Filtro"])) {
               $Filtro = $_REQUEST["Filtro"];
               $ID_Filtro = $_REQUEST["ID_Filtro"];
-              $DTGeneral = new CtrGeneral();
 
               switch ($ID_Filtro) {
                 // case 'ID': echo $DTGeneral->getMovimientosxID($Filtro);break;
-                case 'Fecha':
-                  echo $DTGeneral->getMovimientosxFecha($Filtro, 1);
+                case CtrGeneral::FECHA :
+                  $DTGeneral->getMovimientosxFecha($Filtro, 1, $limit);
                   break;
-                case 'Apellido':
-                  echo $DTGeneral->getMovimientosxApellido($Filtro, 1);
+                case CtrGeneral::APELLIDO :
+                  $DTGeneral->getMovimientosxApellido($Filtro, 1, $limit);
                   break;
-                case 'ApellidoYNombre':
-                  echo $DTGeneral->getMovimientosxNombreYApellido($Filtro, 1);
+                case CtrGeneral::APELLIDO_NOMBRE :
+                  $DTGeneral->getMovimientosxNombreYApellido($Filtro, 1, $limit);
                   break;
-                case 'Documento':
-                  echo $DTGeneral->getMovimientosxDocumento($Filtro, 1);
+                case CtrGeneral::DOCUMENTO :
+                  $DTGeneral->getMovimientosxDocumento($Filtro, 1, $limit);
                   break;
-                case 'Nombre':
-                  echo $DTGeneral->getMovimientosxNombre($Filtro, 1);
+                case CtrGeneral::NOMBRE :
+                  $DTGeneral->getMovimientosxNombre($Filtro, 1, $limit);
                   break;
-                case 'Responsable':
-                  echo $DTGeneral->getMovimientosxResponsable($Filtro, 1);
+                case CtrGeneral::RESPONSABLE :
+                  $DTGeneral->getMovimientosxResponsable($Filtro, 1, $limit);
                   break;
-                case 'Legajo':
-                  echo $DTGeneral->getMovimientosxLegajo($Filtro, 1);
+                case CtrGeneral::LEGAJO :
+                  $DTGeneral->getMovimientosxLegajo($Filtro, 1, $limit);
                   break;
-                case 'Carpeta':
-                  echo $DTGeneral->getMovimientosxCarpeta($Filtro, 1);
+                case CtrGeneral::CARPETA :
+                  $DTGeneral->getMovimientosxCarpeta($Filtro, 1, $limit);
                   break;
                 default:
-                  echo $DTGeneral->getMovimientosxID($Filtro, 1);
+                  $DTGeneral->getMovimientosxID($Filtro, 1, $limit);
                   break;
               }
             } else {
-              $DTGeneral = new CtrGeneral();
-              echo $DTGeneral->getMovimientos(1);
+              $DTGeneral->getMovimientos(1, $limit);
             }
             ?>
           </div>
           <div class="row" style="justify-content: center;">
-            <div class="col-3">
+            <div class="col-6">
               <button type="button" class="btn btn-outline-secondary"
                       onclick="location.href = 'view_inicio.php'">Inicio</button>
+              <button type="button" class="btn btn-danger" id="bn-carga-mv" style="position: relative;"
+                      data-offset="<?=$offset + $limit;?>" data-limit="<?= $limit;?>">
+                Cargar +500 movimientos <div id="circle"> </div>
+              </button>
             </div>
           </div>
           <div class="row">

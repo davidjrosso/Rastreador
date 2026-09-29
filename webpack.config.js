@@ -14,6 +14,7 @@ module.exports = {
     control : './js/MensajeControl.js',
     editor: "./js/editor.js",
     reporte : './js/ReporteMovimiento.js',
+    movimiento : './js/MovimientosControl.js',
     formulariosReporte : './js/ReportesFiltros.js',
     excel : './js/excel.js',
     validarPersona: "./js/ValidarPersona.js",

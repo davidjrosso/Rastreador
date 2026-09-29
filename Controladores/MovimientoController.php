@@ -515,4 +515,34 @@ class MovimientoController
         header('Location: /movimientos?Mensaje=' . $Mensaje);
         exit();
     }
+
+    function listado_movimientos_filtro_control()
+    {
+        header('Content-Type: application/json;');
+
+        $id_usuario = $_SESSION["Usuario"];
+        $usuario = new Account(account_id: $id_usuario);
+        $tipo_usuario = $usuario->get_id_tipo_usuario();
+
+        $filtro_valor = $_REQUEST['filtro'] ?? null;
+        $offset = ($_REQUEST['offset']) ?? 0;
+        $limit = ($_REQUEST['limit']) ?? null;
+        //Filtro anti-XSS
+        $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
+        $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
+
+        $filtro_tipo = $_REQUEST['filtro_tipo'] ?? null;
+
+        $cgrl = new CtrGeneral();
+        $rows = $cgrl->get_rows_query(offset: $offset,
+                                      limit: $limit,
+                                      filtro_valor: $filtro_valor,
+                                      tipo_usuario: $tipo_usuario,
+                                      filtro_tipo: $filtro_tipo
+        );
+        $resp["lista_mv"] = $rows;
+        $resp["offset"] = $offset + $limit;
+        $resp["prox"] = (count($rows) == $limit);
+        echo json_encode($resp);
+    }
 }

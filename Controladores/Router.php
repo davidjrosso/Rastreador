@@ -82,6 +82,7 @@ try {
 	$routes[] = Route::post('eliminar_solictud_preferencia', '/preferencia/eliminar_solicitud_preferencia', [PreferenciaController::class, 'eliminar_solicitud_control']);
 	$routes[] = Route::post('preferencia_nueva_control', '/preferencia/nueva_preferencia_control', [PreferenciaController::class, 'nueva_preferencia_control']);
 
+
 	$routes[] = Route::get('personas_listado', '/personas', [PersonaController::class, 'listado_personas']);
 	$routes[] = Route::get('personas_listado_success', '/personas\?Mensaje={mensaje}', [PersonaController::class, 'listado_personas']);
 	$routes[] = Route::get('personas_listado_filtrado', '/personas\?Filtro={filtro}/ID_Filtro={id_filtro}', [PersonaController::class, 'listado_personas']);
@@ -100,6 +101,7 @@ try {
 	$routes[] = Route::post('persona_mod_control', '/modificar_persona', [PersonaController::class, 'mod_persona_control']);
 	$routes[] = Route::get('personas_unificar', '/personas/unificar', [PersonaController::class, 'unif_persona']);
 	$routes[] = Route::post('personas_unif_control', 'unificarpersonas', [PersonaController::class, 'unif_persona_control']);
+
 	$routes[] = Route::get('movimientos_listado', '/movimientos', [MovimientoController::class, 'listado_movimiento']);
 	$routes[] = Route::post('movimientos_listado_filtro', '/movimientos', [MovimientoController::class, 'listado_movimiento']);
 	$routes[] = Route::get('movimientos_listado_filtro', '/movimientos\?Filtro={filtro}/ID_Filtro={id}', [MovimientoController::class, 'listado_movimiento']);
@@ -113,6 +115,7 @@ try {
 	$routes[] = Route::post('mod_movimiento_control', '/modificar_movimiento', [MovimientoController::class, 'mod_movimiento_control']);
 	$routes[] = Route::post('ins_movimiento_control', '/insert_movimiento', [MovimientoController::class, 'new_movimiento_control']);
 	$routes[] = Route::get('del_movimiento', '/delete_movimiento\?ID={id}', [MovimientoController::class, 'del_movimiento_control']);
+	$routes[] = Route::post('listado_movimientos_filtro_control', '/listado_movimientos_filtro_control', [MovimientoController::class, 'listado_movimientos_filtro_control']);
 	$routes[] = Route::get('filtro_movimientos_grafico', '/filtrografico', [ReporteGraficoController::class, 'filtro_movimientos']);
 	$routes[] = Route::post('reporte_movimientos_grafico', '/reportegrafico', [ReporteGraficoController::class, 'reporte']);
 	$routes[] = Route::get('filtro_movimientos_listado', '/filtrolistado', [ReporteListadoController::class, 'filtro_movimientos']);
