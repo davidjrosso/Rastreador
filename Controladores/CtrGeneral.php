@@ -9,14 +9,30 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Responsable.php");
 
 class CtrGeneral {
 	//Instanciando la Conexion
+	const FECHA = 1;
+	const APELLIDO = 3;
+	const NOMBRE = 7;
+	const LEGAJO = 4;
+	const DOCUMENTO = 5;
+	const APELLIDO_NOMBRE = 6;
+	const CARPETA = 2;
+	const RESPONSABLE = 8;
+
+
 
 	////////////////////////////////////////////////-MOVIMIENTOS-///////////////////////////////////////////////////
-	public function getMovimientos($TipoUsuario){
+
+
+	public function get_rows_query($tipo_usuario, 
+								   $offset = null,
+								   $limit = null,
+								   $filtro_valor = null,
+								   $filtro_tipo = null
+	) {
 		$Con = new Conexion();
 		$Con->OpenConexion();
 
-		$consultaGeneral = "CREATE TEMPORARY TABLE GIN " ;
-		$consultaUsuario = "CREATE TEMPORARY TABLE INN ";
+		$consultaGeneral = "CREATE TEMPORARY TABLE GEN (INDEX index_motivo_tmp USING HASH (id_motivo)) " ;
 
 		$consulta = "SELECT MT.id_motivo
 					 FROM motivo MT,
@@ -26,125 +42,352 @@ class CtrGeneral {
 					   and MT.estado = 1
 					   and C.estado = 1";
 
-		$motivosVisiblesParaUsuario = $consultaUsuario . $consulta . " 
-											and CS.id_categoria = C.id_categoria
-											and CS.id_tipousuario = $TipoUsuario
-											and CS.estado = 1";
+		$consulta_check = "SELECT MT.id_motivo
+							FROM motivo MT,
+								(select cod_categoria, estado
+								from categoria
+								where id_categoria NOT IN (SELECT id_categoria
+															FROM categorias_roles CS
+															WHERE estado = 1)) C
+							WHERE C.cod_categoria = MT.cod_categoria
+							and MT.estado = 1
+							and C.estado = 1";
 
-		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
-								   and C.id_categoria NOT IN (SELECT id_categoria
-								                              FROM categorias_roles CS
-															  WHERE estado = 1)";
+		$motivosVisiblesParaUsuario = $consulta . " 
+									   and CS.id_categoria = C.id_categoria
+									   and CS.id_tipousuario = $tipo_usuario
+									   and CS.estado = 1";
 
-		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
-		$Con->ResultSet = mysqli_query(
-									   $Con->Conexion,$motivosVisiblesParaUsuario
-									   ) or die($MessageError);
+		$motivosVisiblesParaTodoUsuario = $consulta_check;
 
-		$MessageError = "Problemas al crear la tabla temporaria general";
-		$Con->ResultSet = mysqli_query(
-									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
-									   ) or die($MessageError);
+		$union = "($motivosVisiblesParaUsuario) union ($motivosVisiblesParaTodoUsuario)";
+		$consultas = $consultaGeneral . $union;
+		$check = mysqli_query($Con->Conexion, $consultas);
 
-		$Consulta = "SELECT M.id_movimiento,
-							M.fecha,
-							M.fecha_creacion,
-							UPPER(P.apellido) AS apellido,
-							P.nombre,
-							R.responsable
-							from movimiento M,
-								persona P,
-								responsable R
-							where M.id_persona = P.id_persona
-								and M.id_resp = R.id_resp
-								and ((M.motivo_1 IN (SELECT * FROM INN) 
-								   OR M.motivo_1 IN (SELECT * FROM GIN))
-								  OR (M.motivo_2 IN (SELECT * FROM INN) 
-								   OR M.motivo_2 IN (SELECT * FROM GIN))
-								  OR (M.motivo_3 IN (SELECT * FROM INN) 
-								   OR M.motivo_3 IN (SELECT * FROM GIN))
-								  OR (M.motivo_4 IN (SELECT * FROM INN) 
-								   OR M.motivo_4 IN (SELECT * FROM GIN))
-								  OR (M.motivo_5 IN (SELECT * FROM INN) 
-								   OR M.motivo_5 IN (SELECT * FROM GIN)))
+		if ($offset && $limit) {
+			$query = " limit $limit offset $offset ";
+		} else if ($limit) {
+			$query = " limit $limit ";
+		}
+
+		switch ($filtro_tipo) {
+			case self::FECHA :
+				$Consulta = "SELECT M.id_movimiento, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
+								from (select id_movimiento, fecha,
+													fecha_creacion, id_persona,
+													id_resp, estado
+											from movimiento
+											where estado = 1
+											order by fecha_creacion desc) M, 
+									persona P, 
+									responsable R,
+									movimiento_motivo MS,
+									GEN S
+								where M.id_persona = P.id_persona 
+								and M.id_resp = R.id_resp 
+								and M.fecha = '$filtro_valor'
+								and M.id_movimiento = MS.id_movimiento
+								and MS.id_motivo = S.id_motivo
 								and M.estado = 1
 								and P.estado = 1
-							order by M.fecha_creacion desc;";
-		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
-		/*$Consulta =  "select M.id_movimiento, 
-									M.fecha, 
-									M.fecha_creacion, 
-									P.apellido, 
-									P.nombre, 
-									R.responsable
-									from movimiento M, 
-										persona P, 
-										responsable R
-									where M.id_persona = P.id_persona 
-										and M.id_resp = R.id_resp
-										and (M.motivo_1 IN  (SELECT MT.id_motivo
-																FROM motivo MT,
-																		categoria  C,
-																		categorias_roles CS
-																WHERE CS.id_categoria = C.id_categoria
-																	and C.cod_categoria = MT.cod_categoria
-																and CS.id_tipousuario = $TipoUsuario
-																	and CS.estado = 1) 
-											AND M.motivo_2 IN  (SELECT MT.id_motivo
-																FROM motivo MT,
-																		categoria  C,
-																		categorias_roles CS
-																WHERE CS.id_categoria = C.id_categoria
-																	and C.cod_categoria = MT.cod_categoria
-																and CS.id_tipousuario = $TipoUsuario
-																	and CS.estado = 1)
-											AND M.motivo_3 IN  (SELECT MT.id_motivo
-																FROM motivo MT,
-																		categoria  C,
-																		categorias_roles CS
-																WHERE CS.id_categoria = C.id_categoria
-																	and C.cod_categoria = MT.cod_categoria
-																and CS.id_tipousuario = $TipoUsuario
-																	and CS.estado = 1)
-											AND M.motivo_4 IN  (SELECT MT.id_motivo
-																FROM motivo MT,
-																		categoria  C,
-																		categorias_roles CS
-																WHERE CS.id_categoria = C.id_categoria
-																	and C.cod_categoria = MT.cod_categoria
-																and CS.id_tipousuario = $TipoUsuario
-																	and CS.estado = 1)
-											AND M.motivo_5 IN  (SELECT MT.id_motivo
-																FROM motivo MT,
-																		categoria  C,
-																		categorias_roles CS
-																WHERE CS.id_categoria = C.id_categoria
-																	and C.cod_categoria = MT.cod_categoria
-																and CS.id_tipousuario = $TipoUsuario
-																	and CS.estado = 1))
-										and M.estado = 1 
-										and P.estado = 1  
-									order by M.fecha_creacion desc";*/
+							group by M.id_movimiento
+							order by M.fecha_creacion desc
+							$query";
+				break;
+			case self::DOCUMENTO :
+				$consulta = "SELECT M.id_movimiento, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
+							from (select id_movimiento, fecha,
+												fecha_creacion, id_persona, id_resp_4,
+												id_resp, id_resp_2, id_resp_3, estado
+										from movimiento
+										where estado = 1
+										order by fecha_creacion desc) M,
+								persona P,
+								responsable R,
+								movimiento_motivo MS,
+								GEN S
+							where M.id_persona = P.id_persona 
+							and M.id_resp = R.id_resp 
+							and P.documento like '%$filtro_valor%'
+							and MS.id_movimiento = M.id_movimiento
+							and MS.id_motivo = S.id_motivo
+							and M.estado = 1 
+							and P.estado = 1
+							group by M.id_movimiento
+							order by M.fecha_creacion desc
+							$query";
+				break;
+			case self::APELLIDO :
+				$consulta = "SELECT M.id_movimiento, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
+								from (select id_movimiento, fecha,
+													fecha_creacion, id_persona,
+													id_resp, estado
+											from movimiento
+											where estado = 1
+											order by fecha_creacion desc) M, 
+									persona P, 
+									responsable R,
+									movimiento_motivo MS,
+									GEN S
+								where M.id_persona = P.id_persona 
+								and M.id_resp = R.id_resp 
+								and P.apellido like '%$filtro_valor%'
+								and MS.id_movimiento = M.id_movimiento
+								and MS.id_motivo = S.id_motivo
+								and M.estado = 1 
+								and P.estado = 1
+							group by M.id_movimiento
+							order by M.fecha_creacion desc
+							$query";
+				break;
+			case self::NOMBRE :
+				$consulta = "SELECT M.id_movimiento, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
+							from (select id_movimiento, fecha,
+												fecha_creacion, id_persona,
+												id_resp, estado
+										from movimiento
+										where estado = 1
+										order by fecha_creacion desc) M, 
+								persona P, 
+								responsable R,
+								movimiento_motivo MS,
+								GEN S
+							where M.id_persona = P.id_persona 
+								and M.id_resp = R.id_resp 
+								and P.nombre like '%$filtro_valor%'
+								and MS.id_movimiento = M.id_movimiento
+								and MS.id_motivo = S.id_motivo
+								and M.estado = 1 
+								and P.estado = 1
+							group by M.id_movimiento
+							order by M.fecha_creacion desc
+							$query";
+				break;
+			case self::APELLIDO_NOMBRE :
+				$caracater = str_contains($filtro_valor, ",");
+				$query_filter = "";
 
-		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
-		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
+				if ($caracater) {
+					$consulta = preg_replace("~[ ]+~", " ", $filtro_valor);
+					$elements = array_map("trim", explode(",", $consulta));
+					$apellidos = false;
+					$nombres = false;
+					if ($elements[0]) $apellidos = preg_split("~[ ]+~", $elements[0]);
+					if ($elements[1]) $nombres = preg_split("~[ ]+~", $elements[1]);
+
+					$cant_apellido = ($apellidos) ? count($apellidos) : 0;
+					$cant_nombres = ($nombres) ? count($nombres) : 0;
+					$query_apellido = "(";
+
+					if (!$apellidos) $apellidos = [];
+
+					foreach ($apellidos as $key => $value) {
+						$query_apellido .= "(TRIM(P.apellido) REGEXP '^$value')";
+						if ($key < $cant_apellido - 1) $query_apellido .= " or ";
+					}
+					$query_apellido .= ")";
+
+					$query_nombre = "(";
+
+					if (!$nombres) $nombres = [];
+
+					foreach ($nombres as $key => $value) {
+						$query_nombre .= "(TRIM(P.nombre) REGEXP '^$value')";
+						if ($key < $cant_nombres - 1) $query_nombre .= " or ";
+					}
+					$query_nombre .= ")";
+
+					if (!$cant_apellido) $query_apellido = "";
+
+					$query_filter .= $query_apellido;
+					if ($cant_nombres > 0) {
+						if ($cant_apellido) $query_filter .= " and ";
+						$query_filter .= $query_nombre; 
+					}
+
+					if ($cant_apellido || $cant_nombres) {
+						$query_filter = " and " . $query_filter;
+					}
+
+					if (!$cant_apellido && !$cant_nombres) $query_filter = "";
+
+				} else {
+					$query_filter = " and ((TRIM(P.apellido) REGEXP '^$filtro_valor' or TRIM(P.apellido) REGEXP '[ ]+$filtro_valor') 
+											or (TRIM(P.nombre) REGEXP '^$filtro_valor' or TRIM(P.nombre) REGEXP '[ ]+$filtro_valor'))";
+				}
+				$consulta = "SELECT M.id_movimiento, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
+							from (select id_movimiento, fecha,
+												fecha_creacion, id_persona,
+												id_resp, estado
+										from movimiento
+										where estado = 1
+										order by fecha_creacion desc) M, 
+								persona P, 
+								responsable R,
+								movimiento_motivo MS,
+								GEN S
+							where M.id_persona = P.id_persona 
+								and M.id_resp = R.id_resp 
+								$query_filter
+								and MS.id_movimiento = M.id_movimiento
+								and MS.id_motivo = S.id_motivo
+								and M.estado = 1 
+								and P.estado = 1
+							group by M.id_movimiento
+							order by M.fecha_creacion desc
+							$query";
+				break;
+			case self::LEGAJO :
+				$consulta = "SELECT M.id_movimiento, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
+							from (select id_movimiento, fecha,
+										fecha_creacion, id_persona, id_resp_4,
+										id_resp, id_resp_2, id_resp_3, estado
+								from movimiento
+								where estado = 1
+								order by fecha_creacion desc) M, 
+								persona P, 
+								responsable R,
+								movimiento_motivo MS,
+								GEN S
+							where M.id_persona = P.id_persona 
+							and M.id_resp = R.id_resp
+							and P.nro_legajo = '$filtro_valor'
+							and MS.id_movimiento = M.id_movimiento
+							and MS.id_motivo = S.id_motivo
+							and M.estado = 1 
+							and P.estado = 1
+							group by M.id_movimiento
+							order by M.fecha_creacion desc
+							$query";
+				break;
+			case self::CARPETA :
+				$consulta = "SELECT M.id_movimiento, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
+							from (select id_movimiento, fecha,
+										fecha_creacion, id_persona,
+										id_resp_4, id_resp, id_resp_2, 
+										id_resp_3, estado
+								from movimiento
+								where estado = 1
+								order by fecha_creacion desc) M, 
+								persona P, 
+								responsable R,
+								movimiento_motivo MS,
+								GEN S
+							where M.id_persona = P.id_persona 
+							and (M.id_resp = R.id_resp 
+								or M.id_resp_2 = R.id_resp 
+								or M.id_resp_3 = R.id_resp 
+								or M.id_resp_4 = R.id_resp) 
+							and MS.id_movimiento = M.id_movimiento
+							and MS.id_motivo = S.id_motivo
+							and P.nro_carpeta = '$filtro_valor'
+							and M.estado = 1 
+							and P.estado = 1
+							group by M.id_movimiento
+							order by M.fecha_creacion desc
+							$query";
+				break;
+			case self::RESPONSABLE :
+				$consulta = "SELECT M.id_movimiento, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
+							from (select id_movimiento, fecha,
+												fecha_creacion, id_persona, id_resp_4,
+												id_resp, id_resp_2, id_resp_3, estado
+										from movimiento
+										where estado = 1
+										order by fecha_creacion desc) M, 
+								persona P, 
+								responsable R,
+								movimiento_motivo MS,
+								GEN S
+							where M.id_persona = P.id_persona
+							and (M.id_resp = R.id_resp 
+								or M.id_resp_2 = R.id_resp 
+								or M.id_resp_3 = R.id_resp 
+								or M.id_resp_4 = R.id_resp) 
+							and R.responsable like '%$filtro_valor%'
+							and MS.id_movimiento = M.id_movimiento
+							and MS.id_motivo = S.id_motivo
+							and M.estado = 1 
+							and P.estado = 1
+							group by M.id_movimiento
+							order by M.fecha_creacion desc
+							$query";
+				break;
+			default :
+				$consulta = "SELECT M.id_movimiento,
+									M.fecha_creacion,
+									UPPER(P.apellido) AS apellido,
+									P.nombre,
+									R.responsable
+									from (select id_movimiento, fecha,
+												fecha_creacion, id_persona,
+												id_resp, estado
+										from movimiento
+										where estado = 1
+										order by fecha_creacion desc) M,
+										persona P,
+										responsable R,
+										(select id_movimiento, id_motivo 
+										from movimiento_motivo 
+										where estado = 1 
+										group by id_movimiento) MS,
+										GEN S
+									where M.id_persona = P.id_persona
+										and M.id_resp = R.id_resp
+										and M.id_movimiento = MS.id_movimiento
+										and MS.id_motivo = S.id_motivo
+										and M.estado = 1
+										and P.estado = 1
+									order by M.fecha_creacion desc
+									$query";
+		}
+		$mensaje = "Problemas al intentar mostrar Movimientos";
+
+		$obj = mysqli_query($Con->Conexion, $consulta);
+		if (!$obj) throw new Exception($mensaje . $consulta, 1);
+		$rows = mysqli_fetch_all($obj, MYSQLI_ASSOC);
+		return $rows;
+	}
+
+
+	public function getMovimientos($TipoUsuario, $limit)
+	{
+		$Con = new Conexion();
+		$Con->OpenConexion();
+
+		$rows = self::get_rows_query(tipo_usuario: $TipoUsuario,
+									 limit: $limit
+									);
+
+		$message = "Problemas al intentar mostrar Movimientos";
+		$Table = "<table class='table' id='tabla-mov'>
+					<thead>
+						<tr>
+							<th style='width:15%'>Fecha Carga</th>
+							<th>Apellido</th>
+							<th>Nombre</th>
+							<th>Resp.</th>
+							<th colspan='3'></th>
+						</tr>
+					</thead>
+					<tbody>";
+
+		foreach ($rows as $ret) {
+
+			$Fecha = implode("/", array_reverse(explode("-", $ret["fecha_creacion"])));
 			$Table .= "<tr>
 						  <td>" . $Fecha . "</td>
-						  <td>" . $Ret["apellido"] . "</td>
-						  <td>" . $Ret["nombre"] . "</td>
-						  <td>" . $Ret["responsable"] . "</td>
+						  <td>" . $ret["apellido"] . "</td>
+						  <td>" . $ret["nombre"] . "</td>
+						  <td>" . $ret["responsable"] . "</td>
 						  <td>
-						    <a href = 'view_vermovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+						    <a href = 'view_vermovimientos.php?ID=" . $ret["id_movimiento"] . "'>
 								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'>
 							</a>
 						  </td>
 						  <td>";
 			if ($TipoUsuario == 1) {
-				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $ret["id_movimiento"] . "'>
 								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
 							</a>";
 			}
@@ -152,7 +395,7 @@ class CtrGeneral {
 			$Table .= "</td>
 					   <td>";
 			if ($TipoUsuario == 1) {
-				$Table .= 	"<a onClick = 'Verificar(" . $Ret["id_movimiento"] . ")'>
+				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
 			}
@@ -160,12 +403,14 @@ class CtrGeneral {
 					   </tr>";
 		}
 		$Con->CloseConexion();
-		$Table .= "</table>";
+		$Table .= "</tbody>
+				</table>";
 
-		return $Table;
+		echo $Table;
 	}
 
-	public function getMovimientosxID($ID, $TipoUsuario){
+	public function getMovimientosxID($ID, $TipoUsuario, $limit)
+	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 		$consultaGeneral = "CREATE TEMPORARY TABLE GIN " ;
@@ -228,308 +473,7 @@ class CtrGeneral {
 					 group by M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable
 					 order by M.fecha_creacion desc";
 		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
-		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
-			$Table .= "<tr>
-						  <td>" . $Fecha . "</td>
-						  <td>" . $Ret["apellido"] . "</td>
-						  <td>" . $Ret["nombre"] . "</td>
-						  <td>" . $Ret["responsable"] . "</td>
-						  <td>
-						    <a href = 'view_vermovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
-								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'>
-							</a>
-						  </td>
-						  <td>";
-			if ($TipoUsuario == 1) {
-				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
-								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
-							</a>";
-			}
-
-			$Table .= "</td>
-					   <td>";
-			if ($TipoUsuario == 1) {
-				$Table .= 	"<a onClick = 'Verificar(" . $Ret["id_movimiento"] . ")'>
-								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
-							</a>";
-			}
-			$Table .= "</td>
-					   </tr>";
-		}
-		$Con->CloseConexion();
-		$Table .= "</table>";
-
-		return $Table;
-	}
-
-	public function getMovimientosxFecha($Fecha, $TipoUsuario){
-		$Fecha = implode("-", array_reverse(explode("/",$Fecha)));
-		$Con = new Conexion();
-		$Con->OpenConexion();
-		$consultaGeneral = "CREATE TEMPORARY TABLE GIN " ;
-		$consultaUsuario = "CREATE TEMPORARY TABLE INN ";
-
-		$consulta = "SELECT MT.id_motivo
-					 FROM motivo MT,
-					 	  categoria  C,
-						  categorias_roles CS
-					 WHERE C.cod_categoria = MT.cod_categoria
-					   and MT.estado = 1
-					   and C.estado = 1";
-
-		$motivosVisiblesParaUsuario = $consultaUsuario . $consulta . " 
-											and CS.id_categoria = C.id_categoria
-											and CS.id_tipousuario = $TipoUsuario
-											and CS.estado = 1";
-
-		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
-								   and C.id_categoria NOT IN (SELECT id_categoria
-								                              FROM categorias_roles CS
-															  WHERE estado = 1)";
-
-		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
-		$Con->ResultSet = mysqli_query(
-									   $Con->Conexion,$motivosVisiblesParaUsuario
-									   ) or die($MessageError);
-
-		$MessageError = "Problemas al crear la tabla temporaria general";
-		$Con->ResultSet = mysqli_query(
-									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
-									   ) or die($MessageError);
-
-		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
-					 from movimiento M, 
-					 	  persona P, 
-						  responsable R,
-						  categoria C,
-						  categorias_roles CS,
-						  motivo MT
-					 where M.id_persona = P.id_persona 
-					   and M.id_resp = R.id_resp 
-					   and M.fecha = '$Fecha'
-					   and CS.id_categoria = C.id_categoria
-					   and C.cod_categoria = MT.cod_categoria
-								and ((M.motivo_1 IN (SELECT * FROM INN) 
-								   OR M.motivo_1 IN (SELECT * FROM GIN))
-								  OR (M.motivo_2 IN (SELECT * FROM INN) 
-								   OR M.motivo_2 IN (SELECT * FROM GIN))
-								  OR (M.motivo_3 IN (SELECT * FROM INN) 
-								   OR M.motivo_3 IN (SELECT * FROM GIN))
-								  OR (M.motivo_4 IN (SELECT * FROM INN) 
-								   OR M.motivo_4 IN (SELECT * FROM GIN))
-								  OR (M.motivo_5 IN (SELECT * FROM INN) 
-								   OR M.motivo_5 IN (SELECT * FROM GIN)))
-					   and CS.id_tipousuario = $TipoUsuario
-					   and M.estado = 1
-					   and P.estado = 1
-					   and CS.estado = 1 
-					group by M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable
-					order M.fecha_creacion desc";
-		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
-		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
-			$Table .= "<tr>
-						  <td>" . $Fecha . "</td>
-						  <td>" . $Ret["apellido"] . "</td>
-						  <td>" . $Ret["nombre"] . "</td>
-						  <td>" . $Ret["responsable"] . "</td>
-						  <td>
-						    <a href = 'view_vermovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
-								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'>
-							</a>
-						  </td>
-						  <td>";
-			if ($TipoUsuario == 1) {
-				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
-								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
-							</a>";
-			}
-
-			$Table .= "</td>
-					   <td>";
-			if ($TipoUsuario == 1) {
-				$Table .= 	"<a onClick = 'Verificar(" . $Ret["id_movimiento"] . ")'>
-								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
-							</a>";
-			}
-			$Table .= "</td>
-					   </tr>";
-		}
-		$Con->CloseConexion();
-		$Table .= "</table>";
-
-		return $Table;
-	}
-
-	public function getMovimientosxApellido($Apellido, $TipoUsuario){
-		$Con = new Conexion();
-		$Con->OpenConexion();
-		$consultaGeneral = "CREATE TEMPORARY TABLE GIN " ;
-		$consultaUsuario = "CREATE TEMPORARY TABLE INN ";
-
-		$consulta = "SELECT MT.id_motivo
-					 FROM motivo MT,
-					 	  categoria  C,
-						  categorias_roles CS
-					 WHERE C.cod_categoria = MT.cod_categoria
-					   and MT.estado = 1
-					   and C.estado = 1";
-
-		$motivosVisiblesParaUsuario = $consultaUsuario . $consulta . " 
-											and CS.id_categoria = C.id_categoria
-											and CS.id_tipousuario = $TipoUsuario
-											and CS.estado = 1";
-
-		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
-								   and C.id_categoria NOT IN (SELECT id_categoria
-								                              FROM categorias_roles CS
-															  WHERE estado = 1)";
-
-		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
-		$Con->ResultSet = mysqli_query(
-									   $Con->Conexion,$motivosVisiblesParaUsuario
-									   ) or die($MessageError);
-
-		$MessageError = "Problemas al crear la tabla temporaria general";
-		$Con->ResultSet = mysqli_query(
-									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
-									   ) or die($MessageError);
-
-		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
-					 from movimiento M, 
-					 	  persona P, 
-						  responsable R,
-						  categoria C,
-						  categorias_roles CS,
-						  motivo MT
-					 where M.id_persona = P.id_persona 
-					   and M.id_resp = R.id_resp 
-					   and P.apellido like '%$Apellido%'
-					   and CS.id_categoria = C.id_categoria
-					   and C.cod_categoria = MT.cod_categoria
-								and ((M.motivo_1 IN (SELECT * FROM INN) 
-								   OR M.motivo_1 IN (SELECT * FROM GIN))
-								  OR (M.motivo_2 IN (SELECT * FROM INN) 
-								   OR M.motivo_2 IN (SELECT * FROM GIN))
-								  OR (M.motivo_3 IN (SELECT * FROM INN) 
-								   OR M.motivo_3 IN (SELECT * FROM GIN))
-								  OR (M.motivo_4 IN (SELECT * FROM INN) 
-								   OR M.motivo_4 IN (SELECT * FROM GIN))
-								  OR (M.motivo_5 IN (SELECT * FROM INN) 
-								   OR M.motivo_5 IN (SELECT * FROM GIN)))
-					   and CS.id_tipousuario = $TipoUsuario
-					   and M.estado = 1 
-					   and P.estado = 1
-					   and CS.estado = 1
-					group by M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable 
-					order by M.fecha_creacion desc";
-		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
-		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
-			$Table .= "<tr>
-						  <td>" . $Fecha . "</td>
-						  <td>" . $Ret["apellido"] . "</td>
-						  <td>" . $Ret["nombre"] . "</td>
-						  <td>" . $Ret["responsable"] . "</td>
-						  <td>
-						    <a href = 'view_vermovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
-								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'>
-							</a>
-						  </td>
-						  <td>";
-			if ($TipoUsuario == 1) {
-				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
-								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
-							</a>";
-			}
-
-			$Table .= "</td>
-					   <td>";
-			if ($TipoUsuario == 1) {
-				$Table .= 	"<a onClick = 'Verificar(" . $Ret["id_movimiento"] . ")'>
-								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
-							</a>";
-			}
-			$Table .= "</td>
-					   </tr>";
-		}
-		$Con->CloseConexion();
-		$Table .= "</table>";
-
-		return $Table;
-	}
-
-	public function getMovimientosxNombre($Nombre, $TipoUsuario){
-		$Con = new Conexion();
-		$Con->OpenConexion();
-		$consultaGeneral = "CREATE TEMPORARY TABLE GIN " ;
-		$consultaUsuario = "CREATE TEMPORARY TABLE INN ";
-
-		$consulta = "SELECT MT.id_motivo
-					 FROM motivo MT,
-					 	  categoria  C,
-						  categorias_roles CS
-					 WHERE C.cod_categoria = MT.cod_categoria
-					   and MT.estado = 1
-					   and C.estado = 1";
-
-		$motivosVisiblesParaUsuario = $consultaUsuario . $consulta . " 
-											and CS.id_categoria = C.id_categoria
-											and CS.id_tipousuario = $TipoUsuario
-											and CS.estado = 1";
-
-		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
-								   and C.id_categoria NOT IN (SELECT id_categoria
-								                              FROM categorias_roles CS
-															  WHERE estado = 1)";
-
-		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
-		$Con->ResultSet = mysqli_query(
-									   $Con->Conexion,$motivosVisiblesParaUsuario
-									   ) or die($MessageError);
-
-		$MessageError = "Problemas al crear la tabla temporaria general";
-		$Con->ResultSet = mysqli_query(
-									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
-									   ) or die($MessageError);
-
-		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
-					 from movimiento M, 
-						  persona P, 
-						  responsable R,
-						  categoria C,
-						  categorias_roles CS,
-						  motivo MT
-					  where M.id_persona = P.id_persona 
-						and M.id_resp = R.id_resp 
-						and P.nombre like '%$Nombre%'
-					    and CS.id_categoria = C.id_categoria
-						and C.cod_categoria = MT.cod_categoria
-								and ((M.motivo_1 IN (SELECT * FROM INN) 
-								   OR M.motivo_1 IN (SELECT * FROM GIN))
-								  OR (M.motivo_2 IN (SELECT * FROM INN) 
-								   OR M.motivo_2 IN (SELECT * FROM GIN))
-								  OR (M.motivo_3 IN (SELECT * FROM INN) 
-								   OR M.motivo_3 IN (SELECT * FROM GIN))
-								  OR (M.motivo_4 IN (SELECT * FROM INN) 
-								   OR M.motivo_4 IN (SELECT * FROM GIN))
-								  OR (M.motivo_5 IN (SELECT * FROM INN) 
-								   OR M.motivo_5 IN (SELECT * FROM GIN)))
-					    and CS.id_tipousuario = $TipoUsuario
-						and M.estado = 1 
-						and P.estado = 1
-					   and CS.estado = 1 
-					  group by M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable
-					  order by M.fecha_creacion desc";
-		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'>
+		$Table = "<table class='table' id='tabla-mov'>
 					<thead>
 						<tr>
 							<th style='width:15%'>Fecha Carga</th>
@@ -538,8 +482,9 @@ class CtrGeneral {
 							<th>Resp.</th>
 							<th colspan='3'></th>
 						</tr>
-					</thead>";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
+					</thead>
+					<tbody>";
+		$Con->ResultSet = mysqli_query($Con->Conexion, $Consulta);
 		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
 			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
 			$Table .= "<tr>
@@ -570,126 +515,82 @@ class CtrGeneral {
 					   </tr>";
 		}
 		$Con->CloseConexion();
-		$Table .= "</table>";
+		$Table .= "</tbody>
+				</table>";
 
-		return $Table;
+		echo $Table;
 	}
 
-	public function getMovimientosxNombreYApellido($NombreYApellido, $TipoUsuario){
+	public function getMovimientosxFecha($Fecha, $TipoUsuario, $limit)
+	{
+		$fecha_formato = implode("-", array_reverse(explode("/", $Fecha)));
 		$Con = new Conexion();
 		$Con->OpenConexion();
-		$consultaGeneral = "CREATE TEMPORARY TABLE GIN " ;
-		$consultaUsuario = "CREATE TEMPORARY TABLE INN ";
-		$caracater = str_contains($NombreYApellido, ",");
-		$query_filter = "";
 
-		if ($caracater) {
-			$consulta = preg_replace("~[ ]+~", " ", $NombreYApellido);
-			$elements = array_map("trim", explode(",", $consulta));
-			$apellidos = false;
-			$nombres = false;
-			if ($elements[0]) $apellidos = preg_split("~[ ]+~", $elements[0]);
-			if ($elements[1]) $nombres = preg_split("~[ ]+~", $elements[1]);
+		$rows = self::get_rows_query(tipo_usuario: $TipoUsuario,
+									 limit: $limit,
+									 filtro_valor: $fecha_formato,
+									 filtro_tipo: self::FECHA
+									);
 
-			$cant_apellido = ($apellidos) ? count($apellidos) : 0;
-			$cant_nombres = ($nombres) ? count($nombres) : 0;
-			$query_apellido = "(";
+		$Table = "<table class='table' id='tabla-mov' data-id-filtro='" . self::FECHA ."' data-filtro='" . $fecha_formato . "'>
+					<thead>
+						<tr>
+							<th style='width:15%'>Fecha Carga</th>
+							<th>Apellido</th>
+							<th>Nombre</th>
+							<th>Resp.</th>
+							<th colspan='3'>
+							</th>
+						</tr>
+					</thead>";
 
-			if (!$apellidos) $apellidos = [];
-
-			foreach ($apellidos as $key => $value) {
-				$query_apellido .= "(TRIM(P.apellido) REGEXP '^$value')";
-				if ($key < $cant_apellido - 1) $query_apellido .= " or ";
-			}
-			$query_apellido .= ")";
-
-			$query_nombre = "(";
-
-			if (!$nombres) $nombres = [];
-
-			foreach ($nombres as $key => $value) {
-				$query_nombre .= "(TRIM(P.nombre) REGEXP '^$value')";
-				if ($key < $cant_nombres - 1) $query_nombre .= " or ";
-			}
-			$query_nombre .= ")";
-
-			if (!$cant_apellido) $query_apellido = "";
-
-			$query_filter .= $query_apellido;
-			if ($cant_nombres > 0) {
-				if ($cant_apellido) $query_filter .= " and ";
-				$query_filter .= $query_nombre; 
+		foreach ($rows as $ret) {
+			$fecha_creacion = implode("/", array_reverse(explode("-", $ret["fecha_creacion"])));
+			$Table .= "<tr>
+						  <td>" . $fecha_creacion . "</td>
+						  <td>" . $ret["apellido"] . "</td>
+						  <td>" . $ret["nombre"] . "</td>
+						  <td>" . $ret["responsable"] . "</td>
+						  <td>
+						    <a href = 'view_vermovimientos.php?ID=" . $ret["id_movimiento"] . "'>
+								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'>
+							</a>
+						  </td>
+						  <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $ret["id_movimiento"] . "'>
+								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+							</a>";
 			}
 
-			if ($cant_apellido || $cant_nombres) {
-				$query_filter = " and " . $query_filter;
+			$Table .= "</td>
+					   <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
+								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
+							</a>";
 			}
-
-			if (!$cant_apellido && !$cant_nombres) $query_filter = "";
-
-		} else {
-			$query_filter = " and ((TRIM(P.apellido) REGEXP '^$NombreYApellido' or TRIM(P.apellido) REGEXP '[ ]+$NombreYApellido') 
-								  	 or (TRIM(P.nombre) REGEXP '^$NombreYApellido' or TRIM(P.nombre) REGEXP '[ ]+$NombreYApellido'))";
+			$Table .= "</td>
+					   </tr>";
 		}
+		$Con->CloseConexion();
+		$Table .= "</tbody>
+				</table>";
 
-		$consulta = "SELECT MT.id_motivo
-					 FROM motivo MT,
-					 	  categoria  C,
-						  categorias_roles CS
-					 WHERE C.cod_categoria = MT.cod_categoria
-					   and MT.estado = 1
-					   and C.estado = 1";
+		echo $Table;
+	}
 
-		$motivosVisiblesParaUsuario = $consultaUsuario . $consulta . " 
-											and CS.id_categoria = C.id_categoria
-											and CS.id_tipousuario = $TipoUsuario
-											and CS.estado = 1";
+	public function getMovimientosxApellido($apellido, $tipo_usuario, $limit)
+	{
 
-		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
-								   and C.id_categoria NOT IN (SELECT id_categoria
-								                              FROM categorias_roles CS
-															  WHERE estado = 1)";
+		$rows = self::get_rows_query(tipo_usuario: $tipo_usuario,
+									 limit: $limit,
+									 filtro_valor: $apellido,
+									 filtro_tipo: self::APELLIDO
+									);
 
-		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
-		$Con->ResultSet = mysqli_query(
-									   $Con->Conexion,$motivosVisiblesParaUsuario
-									   ) or die($MessageError);
-
-		$MessageError = "Problemas al crear la tabla temporaria general";
-		$Con->ResultSet = mysqli_query(
-									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
-									   ) or die($MessageError);
-
-		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
-					 from movimiento M, 
-						  persona P, 
-						  responsable R,
-						  categoria C,
-						  categorias_roles CS,
-						  motivo MT
-					  where M.id_persona = P.id_persona 
-						and M.id_resp = R.id_resp 
-						$query_filter
-					    and CS.id_categoria = C.id_categoria
-						and C.cod_categoria = MT.cod_categoria
-						and ((M.motivo_1 IN (SELECT * FROM INN) 
-							OR M.motivo_1 IN (SELECT * FROM GIN))
-							OR (M.motivo_2 IN (SELECT * FROM INN) 
-							OR M.motivo_2 IN (SELECT * FROM GIN))
-							OR (M.motivo_3 IN (SELECT * FROM INN) 
-							OR M.motivo_3 IN (SELECT * FROM GIN))
-							OR (M.motivo_4 IN (SELECT * FROM INN) 
-							OR M.motivo_4 IN (SELECT * FROM GIN))
-							OR (M.motivo_5 IN (SELECT * FROM INN) 
-							OR M.motivo_5 IN (SELECT * FROM GIN)))
-					    and CS.id_tipousuario = $TipoUsuario
-						and M.estado = 1 
-						and P.estado = 1
-					   and CS.estado = 1 
-					  group by M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable
-					  order by M.fecha_creacion desc";
-		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'>
+		$Table = "<table class='table' id='tabla-mov' data-id-filtro='" . self::APELLIDO . "' data-filtro='" . $apellido . "'>
 					<thead>
 						<tr>
 							<th style='width:15%'>Fecha Carga</th>
@@ -698,23 +599,24 @@ class CtrGeneral {
 							<th>Resp.</th>
 							<th colspan='3'></th>
 						</tr>
-					</thead>";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
-		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
+					</thead>
+					<tbody>";
+
+		foreach ($rows as $ret) {
+			$Fecha = implode("/", array_reverse(explode("-", $ret["fecha_creacion"])));
 			$Table .= "<tr>
 						  <td>" . $Fecha . "</td>
-						  <td>" . $Ret["apellido"] . "</td>
-						  <td>" . $Ret["nombre"] . "</td>
-						  <td>" . $Ret["responsable"] . "</td>
+						  <td>" . $ret["apellido"] . "</td>
+						  <td>" . $ret["nombre"] . "</td>
+						  <td>" . $ret["responsable"] . "</td>
 						  <td>
-						    <a href = 'view_vermovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+						    <a href = 'view_vermovimientos.php?ID=" . $ret["id_movimiento"] . "'>
 								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'>
 							</a>
 						  </td>
 						  <td>";
 			if ($TipoUsuario == 1) {
-				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $ret["id_movimiento"] . "'>
 								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
 							</a>";
 			}
@@ -722,84 +624,142 @@ class CtrGeneral {
 			$Table .= "</td>
 					   <td>";
 			if ($TipoUsuario == 1) {
-				$Table .= 	"<a onClick = 'Verificar(" . $Ret["id_movimiento"] . ")'>
+				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
 			}
 			$Table .= "</td>
 					   </tr>";
 		}
-		$Con->CloseConexion();
-		$Table .= "</table>";
+		$Table .= "</tbody>
+				</table>";
 
-		return $Table;
+		echo $Table;
+	}
+
+	public function getMovimientosxNombre($nombre, $tipo_usuario, $limit)
+	{
+
+		$rows = self::get_rows_query(tipo_usuario: $tipo_usuario,
+									 limit: $limit,
+									 filtro_valor: $nombre,
+									 filtro_tipo: self::NOMBRE
+									);
+
+		$Table = "<table class='table' id='tabla-mov' data-id-filtro='" . self::NOMBRE . "' data-filtro='" . $nombre . "'>
+					<thead>
+						<tr>
+							<th style='width:15%'>Fecha Carga</th>
+							<th>Apellido</th>
+							<th>Nombre</th>
+							<th>Resp.</th>
+							<th colspan='3'></th>
+						</tr>
+					</thead>
+					<tbody>";
+
+		foreach ($rows as $ret) {
+			$Fecha = implode("/", array_reverse(explode("-", $ret["fecha_creacion"])));
+			$Table .= "<tr>
+						  <td>" . $Fecha . "</td>
+						  <td>" . $ret["apellido"] . "</td>
+						  <td>" . $ret["nombre"] . "</td>
+						  <td>" . $ret["responsable"] . "</td>
+						  <td>
+						    <a href = 'view_vermovimientos.php?ID=" . $ret["id_movimiento"] . "'>
+								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'>
+							</a>
+						  </td>
+						  <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $ret["id_movimiento"] . "'>
+								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+							</a>";
+			}
+
+			$Table .= "</td>
+					   <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
+								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
+							</a>";
+			}
+			$Table .= "</td>
+					   </tr>";
+		}
+		$Table .= "</tbody>
+				</table>";
+
+		echo $Table;
+	}
+
+	public function getMovimientosxNombreYApellido($nombre_apellido, $tipo_usuario, $limit)
+	{
+
+		$rows = self::get_rows_query(tipo_usuario: $tipo_usuario,
+									 limit: $limit,
+									 filtro_valor: $nombre_apellido,
+									 filtro_tipo: self::APELLIDO_NOMBRE
+									);
+
+		$Table = "<table class='table' id='tabla-mov' data-id-filtro='" . self::APELLIDO_NOMBRE . "' data-filtro='" . $nombre_apellido . "'>
+					<thead>
+						<tr>
+							<th style='width:15%'>Fecha Carga</th>
+							<th>Apellido</th>
+							<th>Nombre</th>
+							<th>Resp.</th>
+							<th colspan='3'></th>
+						</tr>
+					</thead>
+					<tbody>";
+
+		foreach ($rows as $ret) {
+			$Fecha = implode("/", array_reverse(explode("-", $ret["fecha_creacion"])));
+			$Table .= "<tr>
+						  <td>" . $Fecha . "</td>
+						  <td>" . $ret["apellido"] . "</td>
+						  <td>" . $ret["nombre"] . "</td>
+						  <td>" . $ret["responsable"] . "</td>
+						  <td>
+						    <a href = 'view_vermovimientos.php?ID=" . $ret["id_movimiento"] . "'>
+								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'>
+							</a>
+						  </td>
+						  <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $ret["id_movimiento"] . "'>
+								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+							</a>";
+			}
+
+			$Table .= "</td>
+					   <td>";
+			if ($TipoUsuario == 1) {
+				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
+								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
+							</a>";
+			}
+			$Table .= "</td>
+					   </tr>";
+		}
+		$Table .= "</tbody>
+				</table>";
+
+		echo $Table;
 	}
 
 
-	public function getMovimientosxDocumento($Documento, $TipoUsuario){
-		$Con = new Conexion();
-		$Con->OpenConexion();
-		$consultaGeneral = "CREATE TEMPORARY TABLE GIN " ;
-		$consultaUsuario = "CREATE TEMPORARY TABLE INN ";
+	public function getMovimientosxDocumento($documento, $tipo_usuario, $limit)
+	{
 
-		$consulta = "SELECT MT.id_motivo
-					 FROM motivo MT,
-					 	  categoria  C,
-						  categorias_roles CS
-					 WHERE C.cod_categoria = MT.cod_categoria
-					   and MT.estado = 1
-					   and C.estado = 1";
+		$rows = self::get_rows_query(tipo_usuario: $tipo_usuario,
+									 limit: $limit,
+									 filtro_valor: $documento,
+									 filtro_tipo: self::DOCUMENTO
+									);
 
-		$motivosVisiblesParaUsuario = $consultaUsuario . $consulta . " 
-											and CS.id_categoria = C.id_categoria
-											and CS.id_tipousuario = $TipoUsuario
-											and CS.estado = 1";
-
-		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
-								   and C.id_categoria NOT IN (SELECT id_categoria
-								                              FROM categorias_roles CS
-															  WHERE estado = 1)";
-
-		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
-		$Con->ResultSet = mysqli_query(
-									   $Con->Conexion,$motivosVisiblesParaUsuario
-									   ) or die($MessageError);
-
-		$MessageError = "Problemas al crear la tabla temporaria general";
-		$Con->ResultSet = mysqli_query(
-									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
-									   ) or die($MessageError);
-
-		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
-					 from movimiento M,
-					 	  persona P,
-						  responsable R,
-						  categoria C,
-						  categorias_roles CS,
-						  motivo MT
-					 where M.id_persona = P.id_persona 
-					   and M.id_resp = R.id_resp 
-					   and P.documento like '%$Documento%'
-					   and CS.id_categoria = C.id_categoria
-					   and C.cod_categoria = MT.cod_categoria
-					   and ((M.motivo_1 IN (SELECT * FROM INN)
-							OR M.motivo_1 IN (SELECT * FROM GIN))
-							OR (M.motivo_2 IN (SELECT * FROM INN)
-							OR M.motivo_2 IN (SELECT * FROM GIN))
-							OR (M.motivo_3 IN (SELECT * FROM INN)
-							OR M.motivo_3 IN (SELECT * FROM GIN))
-							OR (M.motivo_4 IN (SELECT * FROM INN)
-							OR M.motivo_4 IN (SELECT * FROM GIN))
-							OR (M.motivo_5 IN (SELECT * FROM INN)
-							OR M.motivo_5 IN (SELECT * FROM GIN)))
-					   and CS.id_tipousuario = $TipoUsuario
-					   and M.estado = 1 
-					   and P.estado = 1
-					   and CS.estado = 1
-					 group by M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable
-					 order by M.fecha_creacion desc";
-		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'>
+		$Table = "<table class='table' id='tabla-mov' data-id-filtro='" . self::DOCUMENTO . "' data-filtro='" . $documento . "'>
 					<thead>
 					  <tr>
 					  	<th style='width:15%'>Fecha Carga</th>
@@ -808,23 +768,24 @@ class CtrGeneral {
 						<th>Resp.</th>
 						<th colspan='3'></th>
 					  </tr>
-					</thead>";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
-		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
+					</thead>
+					<tbody>";
+
+		foreach ($rows as $ret) {
+			$Fecha = implode("/", array_reverse(explode("-", $ret["fecha_creacion"])));
 			$Table .= "<tr>
 						  <td>" . $Fecha . "</td>
-						  <td>" . $Ret["apellido"] . "</td>
-						  <td>" . $Ret["nombre"] . "</td>
-						  <td>" . $Ret["responsable"] . "</td>
+						  <td>" . $ret["apellido"] . "</td>
+						  <td>" . $ret["nombre"] . "</td>
+						  <td>" . $ret["responsable"] . "</td>
 						  <td>
-						    <a href = 'view_vermovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+						    <a href = 'view_vermovimientos.php?ID=" . $ret["id_movimiento"] . "'>
 								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'>
 							</a>
 						  </td>
 						  <td>";
 			if ($TipoUsuario == 1) {
-				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $ret["id_movimiento"] . "'>
 								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
 							</a>";
 			}
@@ -832,102 +793,56 @@ class CtrGeneral {
 			$Table .= "</td>
 					   <td>";
 			if ($TipoUsuario == 1) {
-				$Table .= 	"<a onClick = 'Verificar(" . $Ret["id_movimiento"] . ")'>
+				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
 			}
 			$Table .= "</td>
 					   </tr>";
 		}
-		$Con->CloseConexion();
-		$Table .= "</table>";
 
-		return $Table;
+		$Table .= "</tbody>
+				</table>";
+
+		echo $Table;
 	}
 
-	public function getMovimientosxResponsable($Responsable, $TipoUsuario){
-		$Con = new Conexion();
-		$Con->OpenConexion();
-		$consultaGeneral = "CREATE TEMPORARY TABLE GIN " ;
-		$consultaUsuario = "CREATE TEMPORARY TABLE INN ";
+	public function getMovimientosxResponsable($responsable, $tipo_usuario, $limit)
+	{
 
-		$consulta = "SELECT MT.id_motivo
-					 FROM motivo MT,
-					 	  categoria  C,
-						  categorias_roles CS
-					 WHERE C.cod_categoria = MT.cod_categoria
-					   and MT.estado = 1
-					   and C.estado = 1";
+		$rows = self::get_rows_query(tipo_usuario: $tipo_usuario,
+									 limit: $limit,
+									 filtro_valor: $responsable,
+									 filtro_tipo: self::RESPONSABLE
+									);
 
-		$motivosVisiblesParaUsuario = $consultaUsuario . $consulta . " 
-											and CS.id_categoria = C.id_categoria
-											and CS.id_tipousuario = $TipoUsuario
-											and CS.estado = 1";
+		$Table = "<table class='table' id='tabla-mov'data-id-filtro='" . self::RESPONSABLE . "' data-filtro='" . $responsable . "'>
+					<thead>
+						<tr>
+							<th style='width:15%'>Fecha Carga</th>
+							<th>Apellido</th>
+							<th>Nombre</th>
+							<th>Resp.</th>
+							<th colspan='3'></th>
+						</tr>
+					</thead>
+					<tbody>";
 
-		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
-								   and C.id_categoria NOT IN (SELECT id_categoria
-								                              FROM categorias_roles CS
-															  WHERE estado = 1)";
-
-		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
-		$Con->ResultSet = mysqli_query(
-									   $Con->Conexion,$motivosVisiblesParaUsuario
-									   ) or die($MessageError);
-
-		$MessageError = "Problemas al crear la tabla temporaria general";
-		$Con->ResultSet = mysqli_query(
-									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
-									   ) or die($MessageError);
-
-		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
-					 from movimiento M, 
-					 	  persona P, 
-						  responsable R,
-						  categoria C,
-						  categorias_roles CS,
-						  motivo MT
-					 where M.id_persona = P.id_persona
-					   and (M.id_resp = R.id_resp 
-					   	 or M.id_resp_2 = R.id_resp 
-						 or M.id_resp_3 = R.id_resp 
-						 or M.id_resp_4 = R.id_resp) 
-					   and R.responsable like '%$Responsable%'
-					   and CS.id_categoria = C.id_categoria
-					   and C.cod_categoria = MT.cod_categoria
-								and ((M.motivo_1 IN (SELECT * FROM INN) 
-								   OR M.motivo_1 IN (SELECT * FROM GIN))
-								  OR (M.motivo_2 IN (SELECT * FROM INN) 
-								   OR M.motivo_2 IN (SELECT * FROM GIN))
-								  OR (M.motivo_3 IN (SELECT * FROM INN) 
-								   OR M.motivo_3 IN (SELECT * FROM GIN))
-								  OR (M.motivo_4 IN (SELECT * FROM INN) 
-								   OR M.motivo_4 IN (SELECT * FROM GIN))
-								  OR (M.motivo_5 IN (SELECT * FROM INN) 
-								   OR M.motivo_5 IN (SELECT * FROM GIN)))
-					   and CS.id_tipousuario = $TipoUsuario
-					   and M.estado = 1 
-					   and P.estado = 1
-					   and CS.estado = 1
-					 group by M.id_movimiento, M.fecha, M.fecha_creacion,P.apellido, P.nombre, R.responsable
-					 order by M.fecha_creacion desc";
-		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
-		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
+		foreach ($rows as $ret) {
+			$Fecha = implode("/", array_reverse(explode("-", $ret["fecha_creacion"])));
 			$Table .= "<tr>
 						  <td>" . $Fecha . "</td>
-						  <td>" . $Ret["apellido"] . "</td>
-						  <td>" . $Ret["nombre"] . "</td>
-						  <td>" . $Ret["responsable"] . "</td>
+						  <td>" . $ret["apellido"] . "</td>
+						  <td>" . $ret["nombre"] . "</td>
+						  <td>" . $ret["responsable"] . "</td>
 						  <td>
-						    <a href = 'view_vermovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+						    <a href = 'view_vermovimientos.php?ID=" . $ret["id_movimiento"] . "'>
 								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'>
 							</a>
 						  </td>
 						  <td>";
 			if ($TipoUsuario == 1) {
-				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $ret["id_movimiento"] . "'>
 								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
 							</a>";
 			}
@@ -935,101 +850,55 @@ class CtrGeneral {
 			$Table .= "</td>
 					   <td>";
 			if ($TipoUsuario == 1) {
-				$Table .= 	"<a onClick = 'Verificar(" . $Ret["id_movimiento"] . ")'>
+				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
 			}
 			$Table .= "</td>
 					   </tr>";
 		}
-		$Con->CloseConexion();
-		$Table .= "</table>";
+		$Table .= "</tbody>
+				</table>";
 
-		return $Table;
+		echo $Table;
 	}
 
-	public function getMovimientosxLegajo($Legajo, $TipoUsuario){
-		$Con = new Conexion();
-		$Con->OpenConexion();
-		$consultaGeneral = "CREATE TEMPORARY TABLE GIN " ;
-		$consultaUsuario = "CREATE TEMPORARY TABLE INN ";
+	public function getMovimientosxLegajo($legajo, $tipo_usuario, $limit)
+	{
 
-		$consulta = "SELECT MT.id_motivo
-					 FROM motivo MT,
-					 	  categoria  C,
-						  categorias_roles CS
-					 WHERE C.cod_categoria = MT.cod_categoria
-					   and MT.estado = 1
-					   and C.estado = 1";
+		$rows = self::get_rows_query(tipo_usuario: $tipo_usuario,
+									 limit: $limit,
+									 filtro_valor: $legajo,
+									 filtro_tipo: self::LEGAJO
+									);
 
-		$motivosVisiblesParaUsuario = $consultaUsuario . $consulta . " 
-											and CS.id_categoria = C.id_categoria
-											and CS.id_tipousuario = $TipoUsuario
-											and CS.estado = 1";
+		$Table = "<table class='table' id='tabla-mov' data-id-filtro='" . self::LEGAJO . "' data-filtro='" . $legajo . "'>
+					<thead>
+						<tr>
+							<th style='width:15%'>Fecha Carga</th>
+							<th>Apellido</th>
+							<th>Nombre</th>
+							<th>Resp.</th>
+							<th colspan='3'></th>
+						</tr>
+					</thead>
+					<tbody>";
 
-		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
-								   and C.id_categoria NOT IN (SELECT id_categoria
-								                              FROM categorias_roles CS
-															  WHERE estado = 1)";
-
-		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
-		$Con->ResultSet = mysqli_query(
-									   $Con->Conexion,$motivosVisiblesParaUsuario
-									   ) or die($MessageError);
-
-		$MessageError = "Problemas al crear la tabla temporaria general";
-		$Con->ResultSet = mysqli_query(
-									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
-									   ) or die($MessageError);
-
-		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
-					 from movimiento M, 
-					 	  persona P, 
-						  responsable R,
-						  categoria C,
-						  categorias_roles CS,
-						  motivo MT
-					 where M.id_persona = P.id_persona 
-					   and (M.id_resp = R.id_resp 
-						 or M.id_resp_2 = R.id_resp 
-						 or M.id_resp_3 = R.id_resp 
-						 or M.id_resp_4 = R.id_resp) 
-					   and P.nro_legajo = '$Legajo'
-					   and CS.id_categoria = C.id_categoria
-					   and C.cod_categoria = MT.cod_categoria
-								and ((M.motivo_1 IN (SELECT * FROM INN) 
-								   OR M.motivo_1 IN (SELECT * FROM GIN))
-								  OR (M.motivo_2 IN (SELECT * FROM INN) 
-								   OR M.motivo_2 IN (SELECT * FROM GIN))
-								  OR (M.motivo_3 IN (SELECT * FROM INN) 
-								   OR M.motivo_3 IN (SELECT * FROM GIN))
-								  OR (M.motivo_4 IN (SELECT * FROM INN) 
-								   OR M.motivo_4 IN (SELECT * FROM GIN))
-								  OR (M.motivo_5 IN (SELECT * FROM INN) 
-								   OR M.motivo_5 IN (SELECT * FROM GIN)))
-					   and CS.id_tipousuario = $TipoUsuario
-					   and M.estado = 1 
-					   and P.estado = 1
-					   and CS.estado = 1  
-					 order by M.fecha_creacion desc";
-		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
-		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
+		foreach ($rows as $ret) {
+			$Fecha = implode("/", array_reverse(explode("-", $ret["fecha_creacion"])));
 			$Table .= "<tr>
 						  <td>" . $Fecha . "</td>
-						  <td>" . $Ret["apellido"] . "</td>
-						  <td>" . $Ret["nombre"] . "</td>
-						  <td>" . $Ret["responsable"] . "</td>
+						  <td>" . $ret["apellido"] . "</td>
+						  <td>" . $ret["nombre"] . "</td>
+						  <td>" . $ret["responsable"] . "</td>
 						  <td>
-						    <a href = 'view_vermovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+						    <a href = 'view_vermovimientos.php?ID=" . $ret["id_movimiento"] . "'>
 								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'>
 							</a>
 						  </td>
 						  <td>";
 			if ($TipoUsuario == 1) {
-				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $ret["id_movimiento"] . "'>
 								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
 							</a>";
 			}
@@ -1037,101 +906,57 @@ class CtrGeneral {
 			$Table .= "</td>
 					   <td>";
 			if ($TipoUsuario == 1) {
-				$Table .= 	"<a onClick = 'Verificar(" . $Ret["id_movimiento"] . ")'>
+				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
 			}
 			$Table .= "</td>
 					   </tr>";
 		}
-		$Con->CloseConexion();
-		$Table .= "</table>";
 
-		return $Table;
+		$Table .= "</tbody>
+				</table>";
+
+		echo $Table;
 	}
 
-	public function getMovimientosxCarpeta($Carpeta, $TipoUsuario){
-		$Con = new Conexion();
-		$Con->OpenConexion();
-		$consultaGeneral = "CREATE TEMPORARY TABLE GIN " ;
-		$consultaUsuario = "CREATE TEMPORARY TABLE INN ";
+	public function getMovimientosxCarpeta($carpeta, $tipo_usuario, $limit)
+	{
 
-		$consulta = "SELECT MT.id_motivo
-					 FROM motivo MT,
-					 	  categoria  C,
-						  categorias_roles CS
-					 WHERE C.cod_categoria = MT.cod_categoria
-					   and MT.estado = 1
-					   and C.estado = 1";
+		$rows = self::get_rows_query(tipo_usuario: $tipo_usuario,
+									 limit: $limit,
+									 filtro_valor: $carpeta,
+									 filtro_tipo: self::CARPETA
+									);
 
-		$motivosVisiblesParaUsuario = $consultaUsuario . $consulta . " 
-											and CS.id_categoria = C.id_categoria
-											and CS.id_tipousuario = $TipoUsuario
-											and CS.estado = 1";
+		$Table = "<table class='table' id='tabla-mov' data-id-filtro='" . self::CARPETA . "' data-filtro='" . $carpeta . "'>
+					<thead>
+						<tr>
+							<th style='width:15%'>Fecha Carga</th>
+							<th>Apellido</th>
+							<th>Nombre</th>
+							<th>Resp.</th>
+							<th colspan='3'></th>
+						</tr>
+					</thead>
+					<tbody>";
 
-		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
-								   and C.id_categoria NOT IN (SELECT id_categoria
-								                              FROM categorias_roles CS
-															  WHERE estado = 1)";
+		foreach ($rows as $ret) {
 
-		$MessageError = "Problemas al crear la tabla temporaria de usuarios";
-		$Con->ResultSet = mysqli_query(
-									   $Con->Conexion,$motivosVisiblesParaUsuario
-									   ) or die($MessageError);
-
-		$MessageError = "Problemas al crear la tabla temporaria general";
-		$Con->ResultSet = mysqli_query(
-									   $Con->Conexion,$motivosVisiblesParaTodoUsuario
-									   ) or die($MessageError);
-
-		$Consulta = "SELECT M.id_movimiento, M.fecha, M.fecha_creacion, UPPER(P.apellido) AS apellido, P.nombre, R.responsable 
-					 from movimiento M, 
-					 	  persona P, 
-						  responsable R,
-						  categoria C,
-						  categorias_roles CS,
-						  motivo MT,
-					 where M.id_persona = P.id_persona 
-					   and (M.id_resp = R.id_resp 
-					   	 or M.id_resp_2 = R.id_resp 
-						 or M.id_resp_3 = R.id_resp 
-						 or M.id_resp_4 = R.id_resp) 
-					   and P.nro_carpeta = '$Carpeta'
-					   and CS.id_categoria = C.id_categoria
-					   and C.cod_categoria = MT.cod_categoria
-								and ((M.motivo_1 IN (SELECT * FROM INN) 
-								   OR M.motivo_1 IN (SELECT * FROM GIN))
-								  OR (M.motivo_2 IN (SELECT * FROM INN) 
-								   OR M.motivo_2 IN (SELECT * FROM GIN))
-								  OR (M.motivo_3 IN (SELECT * FROM INN) 
-								   OR M.motivo_3 IN (SELECT * FROM GIN))
-								  OR (M.motivo_4 IN (SELECT * FROM INN) 
-								   OR M.motivo_4 IN (SELECT * FROM GIN))
-								  OR (M.motivo_5 IN (SELECT * FROM INN) 
-								   OR M.motivo_5 IN (SELECT * FROM GIN)))
-					   and CS.id_tipousuario = $TipoUsuario
-					   and M.estado = 1 
-					   and P.estado = 1
-					   and CS.estado = 1  
-					 order by M.fecha_creacion desc";
-		$MessageError = "Problemas al intentar mostrar Movimientos";
-		$Table = "<table class='table'><thead><tr><th style='width:15%'>Fecha Carga</th><th>Apellido</th><th>Nombre</th><th>Resp.</th><th colspan='3'></th></tr></thead>";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
-		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Fecha = implode("/", array_reverse(explode("-",$Ret["fecha_creacion"])));
+			$Fecha = implode("/", array_reverse(explode("-", $ret["fecha_creacion"])));
 			$Table .= "<tr>
 						  <td>" . $Fecha . "</td>
-						  <td>" . $Ret["apellido"] . "</td>
-						  <td>" . $Ret["nombre"] . "</td>
-						  <td>" . $Ret["responsable"] . "</td>
+						  <td>" . $ret["apellido"] . "</td>
+						  <td>" . $ret["nombre"] . "</td>
+						  <td>" . $ret["responsable"] . "</td>
 						  <td>
-						    <a href = 'view_vermovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+						    <a href = 'view_vermovimientos.php?ID=" . $ret["id_movimiento"] . "'>
 								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'>
 							</a>
 						  </td>
 						  <td>";
 			if ($TipoUsuario == 1) {
-				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
+				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $ret["id_movimiento"] . "'>
 								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
 							</a>";
 			}
@@ -1139,17 +964,18 @@ class CtrGeneral {
 			$Table .= "</td>
 					   <td>";
 			if ($TipoUsuario == 1) {
-				$Table .= 	"<a onClick = 'Verificar(" . $Ret["id_movimiento"] . ")'>
+				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
 			}
 			$Table .= "</td>
 					   </tr>";
 		}
-		$Con->CloseConexion();
-		$Table .= "</table>";
 
-		return $Table;
+		$Table .= "</tbody>
+				</table>";
+
+		echo $Table;
 	}
 
 
