@@ -161,6 +161,8 @@ $Persona = new Persona(
 					   xGeoreferencia: $georeferencia_point
 );
 
+$Persona->setFecha_Nacimiento($Fecha_Nacimiento);
+
 $Fecha = date("Y-m-d");
 $ID_TipoAccion = 2;
 try {
