@@ -7,7 +7,7 @@ $(function (e) {
         let offset = $(this).attr("data-offset");
         let limit = $(this).attr("data-limit");
         $("#circle").addClass("loader");
-        $(this).css("background-color", "#e8a0a7");
+        $(this).css("background-color", "#b2b9c0");
         let req = "offset=" + offset + "&limit=" + limit +
                    "&filtro_tipo=" + filtroId +
                    "&filtro=" + valor;
@@ -57,9 +57,9 @@ function listaMovimientos(e) {
     $("#circle").removeClass("loader");
     if (e.prox) {
         $(this).attr("data-offset", e.offset);
-        $(this).css("background-color", "#dc3545");
+        $(this).css("background-color", "#6c757d");
     } else {
-        $(this).removeClass("btn-danger");
+        $(this).removeClass("btn-secondary");
         $(this).addClass("btn-info");
         $(this).text("carga completa");
     }
