@@ -379,9 +379,9 @@ class Account implements JsonSerializable
 		$control_expiracion = 1;
 		if(!empty($this->expired_date)){
 			$fecha_actual = DateTime::createFromFormat(format: 'Y-m-d', datetime: date('Y-m-d'));
-			$diferencia = $fecha_actual->diff($this->expired_date, true);
-			$año = $diferencia->y;
-			$control_expiracion = ($año >= 1) ? 0 : 1;
+			$diferencia = $fecha_actual->diff($this->expired_date);
+			$invert = $diferencia->invert;
+			$control_expiracion = ($invert == 0);
 		}
 		return $control_expiracion;
 	}
