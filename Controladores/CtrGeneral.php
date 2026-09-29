@@ -394,11 +394,13 @@ class CtrGeneral {
 
 			$Table .= "</td>
 					   <td>";
+			/*
 			if ($TipoUsuario == 1) {
 				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
 			}
+			*/
 			$Table .= "</td>
 					   </tr>";
 		}
@@ -506,11 +508,13 @@ class CtrGeneral {
 
 			$Table .= "</td>
 					   <td>";
+			/*
 			if ($TipoUsuario == 1) {
-				$Table .= 	"<a onClick = 'Verificar(" . $Ret["id_movimiento"] . ")'>
+				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
 			}
+			*/
 			$Table .= "</td>
 					   </tr>";
 		}
@@ -566,11 +570,13 @@ class CtrGeneral {
 
 			$Table .= "</td>
 					   <td>";
+			/*
 			if ($TipoUsuario == 1) {
 				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
 			}
+			*/
 			$Table .= "</td>
 					   </tr>";
 		}
@@ -623,11 +629,13 @@ class CtrGeneral {
 
 			$Table .= "</td>
 					   <td>";
+			/*
 			if ($TipoUsuario == 1) {
 				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
 			}
+			*/
 			$Table .= "</td>
 					   </tr>";
 		}
@@ -679,11 +687,13 @@ class CtrGeneral {
 
 			$Table .= "</td>
 					   <td>";
+			/*
 			if ($TipoUsuario == 1) {
 				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
 			}
+			*/
 			$Table .= "</td>
 					   </tr>";
 		}
@@ -735,11 +745,13 @@ class CtrGeneral {
 
 			$Table .= "</td>
 					   <td>";
+			/*
 			if ($TipoUsuario == 1) {
 				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
 			}
+			*/
 			$Table .= "</td>
 					   </tr>";
 		}
@@ -792,11 +804,13 @@ class CtrGeneral {
 
 			$Table .= "</td>
 					   <td>";
+			/*
 			if ($TipoUsuario == 1) {
 				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
 			}
+			*/
 			$Table .= "</td>
 					   </tr>";
 		}
@@ -849,11 +863,13 @@ class CtrGeneral {
 
 			$Table .= "</td>
 					   <td>";
+			/*
 			if ($TipoUsuario == 1) {
 				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
 			}
+			*/
 			$Table .= "</td>
 					   </tr>";
 		}
@@ -905,11 +921,13 @@ class CtrGeneral {
 
 			$Table .= "</td>
 					   <td>";
+			/*
 			if ($TipoUsuario == 1) {
 				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
 			}
+			*/
 			$Table .= "</td>
 					   </tr>";
 		}
@@ -963,11 +981,13 @@ class CtrGeneral {
 
 			$Table .= "</td>
 					   <td>";
+			/*
 			if ($TipoUsuario == 1) {
 				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
 			}
+			*/
 			$Table .= "</td>
 					   </tr>";
 		}
