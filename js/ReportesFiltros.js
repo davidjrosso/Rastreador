@@ -279,9 +279,7 @@ function seleccionCategoria(xCategoria, xID) {
 }
 
 export function seleccionMotivoInicial(descripcionMotivo, idMotivo) {
-    if (!listaMotivos.has(descripcionMotivo) && (listaMotivos.size <= 4)) {
-        listaMotivos.set(descripcionMotivo, idMotivo);
-    }
+    formulario.addMotivo(descripcionMotivo, idMotivo);
     formulario.seleccionMultipleMotivo();
 }
 
@@ -678,4 +676,7 @@ $(function() {
         $("#SearchCategorias").val("");
         $("#ResultadosCategorias").html("");
     });
+    let motivoId = $("body").attr("data-id-motivo");
+    let motivo = $("body").attr("data-motivo");
+    if(motivoId) seleccionMotivoInicial(motivo, motivoId);
 });

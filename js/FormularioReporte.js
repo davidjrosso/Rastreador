@@ -16,6 +16,23 @@ export class FormularioReporte {
       return this.#listaCategorias;
     }
 
+    addMotivo(xMotivo, xID) {
+      if (!this.#listaMotivos.has(xMotivo) && (this.#listaMotivos.size <= 4)) {
+        this.#listaMotivos.set(xMotivo, xID);
+      }
+    }
+
+    addMultipleMotivo(xMotivo, xID, element) {
+      if (!this.#listaMotivos.has(xMotivo) && (this.#listaMotivos.size <= 4)) {
+        this.#listaMotivos.set(xMotivo, xID);
+        element.innerHTML = "&#10003";
+        element.style.width = "12ch";
+      } else if (this.#listaMotivos.has(xMotivo)) {
+        this.#listaMotivos.delete(xMotivo);
+        element.innerHTML = "seleccionar";
+      }
+    }
+
     agregarBarrio() {
       this.#cantBarrios++;
       let divContenedor = document.getElementById('contenedorBarrios');

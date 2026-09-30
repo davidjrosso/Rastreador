@@ -24,8 +24,16 @@ $Element = new Elements();
 
 $id_motivo = !empty($_REQUEST["id_motivo"]) ? $_REQUEST["id_motivo"] : null;
 $_SESSION["redirect_motivo"] = isset($id_motivo);
-if (!$id_motivo) $_SESSION["retorno"] = [];
+
 $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
+
+$data_str = null;
+if (!$id_motivo) {
+  $_SESSION["retorno"] = [];
+} else {
+  $data_str = "data-id-motivo='" . $id_motivo . "' data-motivo='" . $motivo->get_motivo() . "'";  
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -56,15 +64,8 @@ $motivo = new Motivo(coneccion_base: $Con, id_motivo: $id_motivo);
   <script src="./dist/alerta.js"></script>
   <script src="./dist/formulariosReporte.js"></script>
   <script src="./dist/control.js"></script>
-  <?php if (!empty($id_motivo)) {?>
-  <script>
-    $(document).ready(function() {
-          if(<?=$id_motivo?>) seleccionMotivoInicial('<?= $motivo->get_motivo();?>', <?= $id_motivo;?>);
-    });
-  </script>
-  <?php } ?>
 </head>
-<body>
+<body <?=$data_str?>>
 
 <div class='col-md-2' id='expandir' style='padding-left: 6px; position: fixed; z-index: 1000' hidden>
   <a id='abrir' class='btn btn-secondary btn-sm' href='javascript:void(0)' onclick='mostrar()'>
