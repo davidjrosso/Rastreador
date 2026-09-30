@@ -814,7 +814,7 @@ export class Preferencia extends FormularioReporte {
         success : function (data, status, requestHttp) {
             swal.fire({
                 title: "",
-                html: "Se envió al administrador la preferencia para su autorización.",
+                html: "Se envió al administrador la preferencia para su eliminación.",
                 icon: "success",
                 customClass: {
                     htmlContainer: "text-dialog"
