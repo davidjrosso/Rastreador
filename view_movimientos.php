@@ -19,7 +19,7 @@ $_SESSION["return"] = null;
 
 $ID_Usuario = $_SESSION["Usuario"];
 $usuario = new Account(account_id: $ID_Usuario);
-$TipoUsuario = $usuario->get_id_tipo_usuario();
+$tipo_usuario = $usuario->get_id_tipo_usuario();
 $Element = new Elements();
 $DTGeneral = new CtrGeneral();
 
@@ -68,7 +68,7 @@ $offset = 0;
 
   <div class="row margin-right-cero">
     <?php
-    echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_MOVIMIENTO);
+    echo $Element->menuDeNavegacion($tipo_usuario, $ID_Usuario, $Element::PAGINA_MOVIMIENTO);
     ?>
     <div class="col-md-9 inicio-md-2">
       <div class="row">
@@ -136,31 +136,31 @@ $offset = 0;
               switch ($ID_Filtro) {
                 // case 'ID': echo $DTGeneral->getMovimientosxID($Filtro);break;
                 case CtrGeneral::FECHA :
-                  $DTGeneral->getMovimientosxFecha($Filtro, 1, $limit);
+                  $DTGeneral->getMovimientosxFecha($Filtro, $tipo_usuario, $limit);
                   break;
                 case CtrGeneral::APELLIDO :
-                  $DTGeneral->getMovimientosxApellido($Filtro, 1, $limit);
+                  $DTGeneral->getMovimientosxApellido($Filtro, $tipo_usuario, $limit);
                   break;
                 case CtrGeneral::APELLIDO_NOMBRE :
-                  $DTGeneral->getMovimientosxNombreYApellido($Filtro, 1, $limit);
+                  $DTGeneral->getMovimientosxNombreYApellido($Filtro, $tipo_usuario, $limit);
                   break;
                 case CtrGeneral::DOCUMENTO :
-                  $DTGeneral->getMovimientosxDocumento($Filtro, 1, $limit);
+                  $DTGeneral->getMovimientosxDocumento($Filtro, $tipo_usuario, $limit);
                   break;
                 case CtrGeneral::NOMBRE :
-                  $DTGeneral->getMovimientosxNombre($Filtro, 1, $limit);
+                  $DTGeneral->getMovimientosxNombre($Filtro, $tipo_usuario, $limit);
                   break;
                 case CtrGeneral::RESPONSABLE :
-                  $DTGeneral->getMovimientosxResponsable($Filtro, 1, $limit);
+                  $DTGeneral->getMovimientosxResponsable($Filtro, $tipo_usuario, $limit);
                   break;
                 case CtrGeneral::LEGAJO :
-                  $DTGeneral->getMovimientosxLegajo($Filtro, 1, $limit);
+                  $DTGeneral->getMovimientosxLegajo($Filtro, $tipo_usuario, $limit);
                   break;
                 case CtrGeneral::CARPETA :
-                  $DTGeneral->getMovimientosxCarpeta($Filtro, 1, $limit);
+                  $DTGeneral->getMovimientosxCarpeta($Filtro, $tipo_usuario, $limit);
                   break;
                 default:
-                  $DTGeneral->getMovimientosxID($Filtro, 1, $limit);
+                  $DTGeneral->getMovimientosxID($Filtro, $tipo_usuario, $limit);
                   break;
               }
             } else {
