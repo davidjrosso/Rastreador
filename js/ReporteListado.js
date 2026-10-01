@@ -4,7 +4,7 @@ $(function (e) {
         enviarAHistoriClinicaDePersona(id);
     });
     $("td[data-hc-persona]").on("mouseover", function (e) {
-        let mensaje = $(`<div class="position-absolute item" style="z-index: 1100; width: max-content; left: 77%; top: -30%;">
+        let mensaje = $(`<div class="position-absolute item" style="z-index: 1100; width: max-content; left: 30px; top: -36px;">
                           <div class="toast dat-toast show" style="width:auto;" 
                                role="alert" aria-live="assertive" aria-atomic="true">
                             <div class="toast-body">
@@ -20,7 +20,7 @@ $(function (e) {
     });
 
     $("td[data-hc-familia]").on("mouseover", function (e) {
-        let mensaje = $(`<div class="position-absolute item" style="z-index: 1100; width: max-content; left: 77%; top: -30%;">
+        let mensaje = $(`<div class="position-absolute item" style="z-index: 1100; width: max-content; left: 30px; top: -36px;">
                           <div class="toast dat-toast show" style="width:auto;" 
                                role="alert" aria-live="assertive" aria-atomic="true">
                             <div class="toast-body">
@@ -36,7 +36,7 @@ $(function (e) {
     });
 
     $("td[data-filtro]").on("mouseover", function (e) {
-        let mensaje = $(`<div class="position-absolute item" style="z-index: 1100; width: max-content; left: 77%; top: -30%;">
+        let mensaje = $(`<div class="position-absolute item" style="z-index: 1100; width: max-content; left: 30px; top: -36px;">
                           <div class="toast dat-toast show" style="width:auto;" 
                                role="alert" aria-live="assertive" aria-atomic="true">
                             <div class="toast-body">
