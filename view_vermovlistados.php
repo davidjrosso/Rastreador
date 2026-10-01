@@ -39,55 +39,58 @@ if(!isset($_SESSION["Usuario"])){
 $ID_Usuario = $_SESSION["Usuario"];
 $usuario = new Account(account_id: $ID_Usuario);
 $TipoUsuario = $usuario->get_id_tipo_usuario();
+$Element = new Elements();
 
 $http_referer = (!empty($_SERVER["HTTP_REFERER"])) ? $_SERVER["HTTP_REFERER"] : null;
 
-$redirect = preg_match("~view_listados~", $http_referer);
-$redirect_per = preg_match("~view_vermovlistado~", $http_referer);
-$redirect_newper = preg_match("~view_newm~", $http_referer);
+$redirect_formulario = preg_match("~view_listados~", $http_referer);
+$redirect_per_or_familia = preg_match("~view_vermovlistado~", $http_referer);
+$redirect_new_per = preg_match("~view_newm~", $http_referer);
 
 $_SESSION["reporte_listado"] = true;
 $_SESSION["reporte_grafico"] = false;
 $ID_Config = (isset($_REQUEST["ID_Config"])) ? $_REQUEST["ID_Config"] : "table";
-$filtro_persona = $_REQUEST["familia-check"] ?? null;
-$filtro_div = $_REQUEST["div-check"] ?? null;
+$filtro_familia_historia_clinica = $_REQUEST["familia-historia-clinica"] ?? null;
+$filtro_persona_historia_clinica = $_REQUEST["persona-historia-clinica"] ?? null;
 $filtro_id_motivo = !empty($_SESSION["redirect_motivo"]);
+
 $ID_Persona = $_REQUEST["ID_Persona"];
 $ID_CentroSalud = $_REQUEST["ID_CentroSalud"] ?? null;
 $movimiento_inicial = (!empty($_REQUEST["inicial-movimiento-check"])) ? true : false;
 
-if (($redirect && !$filtro_id_motivo) || $redirect_per 
-    || $redirect_newper) {
+if (($redirect_formulario && !$filtro_id_motivo) || $redirect_per_or_familia 
+    || $redirect_new_per) {
   $_SESSION["redirect_motivo"] = null;
 }
 
 $movimiento_fin = (!empty($_REQUEST["fin-movimiento-check"])) ? true : false;
 
-if ($redirect && !$filtro_id_motivo) {
+if ($redirect_formulario && !$filtro_id_motivo) {
   $_SESSION["request_prev"] = $_REQUEST;
   $redireccion = (count($_SESSION["retorno"]) == 0);
   $_SESSION["redirect_motivo"] = null;
-} else if ($redirect && $filtro_id_motivo) {
+} else if ($redirect_formulario && $filtro_id_motivo) {
   $_SESSION["retorno"][] = $_SESSION["request_prev"];
   $_SESSION["request_prev"] = $_REQUEST;
   $redireccion = (count($_SESSION["retorno"]) == 0);
   $_SESSION["redirect_motivo"] = null;
-} else if ($filtro_persona && $redirect_per) {
+} else if ($filtro_familia_historia_clinica && $redirect_per_or_familia) {
   $_SESSION["retorno"][] = $_SESSION["request_prev"];
   $_SESSION["request_prev"] = $_REQUEST;
   $redireccion = (count($_SESSION["retorno"]) == 0);
-} else if ($redirect_per && $filtro_div) {
+} else if ($filtro_persona_historia_clinica && $redirect_per_or_familia) {
   $_SESSION["retorno"][] = $_SESSION["request_prev"];
   $_SESSION["request_prev"] = $_REQUEST;
   $redireccion = (count($_SESSION["retorno"]) == 0);
-} else if ($redirect_newper) {
+} else if ($redirect_new_per) {
   $redireccion = (count($_SESSION["retorno"]) == 0);
 } else {
+  $_SESSION["request_prev"] = end($_SESSION["retorno"]);
   $element = array_pop($_SESSION["retorno"]);
   $redireccion = (count($_SESSION["retorno"]) == 0);
 }
 
-$ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
+$ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
 
 ?>
 <!DOCTYPE html>
@@ -116,6 +119,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
   <link rel="stylesheet" href="https://jsuites.net/v5/jsuites.css" type="text/css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons" />
   <script src="/dist/excel.js"></script>
+  <script src="./js/ReporteListado.js"></script>
 
   <script>
       let fechaDesde = null;
@@ -231,25 +235,6 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
               excel = new Excel();
       });
 
-      function CalcularPrecio(){
-        //var Combus = document.getElementById("Combustible").value;
-        var Litros = document.getElementById("Litros").value;
-        var Combustible = document.getElementById("Combustible");
-        var PrecioxL = Combustible.options[Combustible.selectedIndex].getAttribute("name");
-
-        var Total = parseFloat(PrecioxL) * parseFloat(Litros);
-
-        var Precio = document.getElementById("Precio");
-        Precio.setAttribute("value",parseFloat(Total).toFixed(2));
-        //Terminar esta parte cuando termine lo demas.
-      }
-
-      function toggleZoom(porcentaje) {
-        let Tabla = document.getElementById("tabla-movimiento-general");
-        Tabla.style.zoom = porcentaje + "%";
-      }
-
-
       function listConfigResultados() {
         let list = [];
         if (!document.getElementById('chkFecha').checked) list.push('Fecha');
@@ -314,8 +299,8 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
 
         for (const key in datos) {
             if (Object.prototype.hasOwnProperty.call(datos, key)) {
-                if (key == "familia-check") continue;
-                if (key == "div-check") continue;
+                if (key == "familia-historia-clinica") continue;
+                if (key == "persona-historia-clinica") continue;
                 if (datos[key] instanceof Array) {
                   datos[key].forEach(function (e) {
                       const input = document.createElement('input');
@@ -409,7 +394,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
           }
           const input = document.createElement('input');
           input.type = 'checkbox';
-          input.name = "familia-check";
+          input.name = "familia-historia-clinica";
           input.value = "true";
           input.checked = true;
           form.appendChild(input);
@@ -428,7 +413,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
           for (const key in datos) {
               if (Object.prototype.hasOwnProperty.call(datos, key)) {
 
-                  if (key == "familia-check") continue;
+                  if (key == "familia-historia-clinica") continue;
                   if (datos[key] instanceof Array) {
                     datos[key].forEach(function (e) {
                         const input = document.createElement('input');
@@ -436,7 +421,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
                         input.name = key + "[]";
                         input.value = e;
                         form.appendChild(input);
-                    })
+                    });
                   } else {
                     const input = document.createElement('input');
                     input.type = 'hidden';
@@ -452,7 +437,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
           }
           const input = document.createElement('input');
           input.type = 'checkbox';
-          input.name = "div-check";
+          input.name = "persona-historia-clinica";
           input.value = "true";
           input.checked = true;
           form.appendChild(input);
@@ -513,7 +498,6 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
 </div>
 <div class = "row menu-col-2 margin-right-cero" style="overflow: hidden;">
   <?php
-    $Element = new Elements();
     echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_REPORTE_LISTADO);
   ?>
   <div id="ContenidoTabla" class = "col-md-10" style="max-height: 100vh; overflow-y: scroll; max-width: 100%; flex-grow: 1;">
@@ -595,25 +579,25 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
         $motivosTodoUsuario = mysqli_query(
                           $Con->Conexion,$motivosVisiblesParaTodoUsuario
                           ) or die($MessageError);
-      	if(!isset($_REQUEST["Anio"])){
-              $Fecha_Inicio = implode("-", array_reverse(explode("/",$_REQUEST["Fecha_Desde"])));
+      	if(!isset($_REQUEST["Anio"])) {
+              $Fecha_Inicio = implode("-", array_reverse(explode("/", $_REQUEST["Fecha_Desde"])));
               $Fecha_Fin = implode("-", array_reverse(explode("/",$_REQUEST["Fecha_Hasta"])));
 
-              $Edad_Desde = $_REQUEST["Edad_Desde"];
-              $Edad_Hasta = $_REQUEST["Edad_Hasta"];
-              $Meses_Desde = $_REQUEST["Meses_Desde"];
-              $Meses_Hasta = $_REQUEST["Meses_Hasta"];
+              $Edad_Desde = ($_REQUEST["Edad_Desde"]) ?? null;
+              $Edad_Hasta = ($_REQUEST["Edad_Hasta"]) ?? null;
+              $Meses_Desde = ($_REQUEST["Meses_Desde"]) ?? null;
+              $Meses_Hasta = ($_REQUEST["Meses_Hasta"]) ?? null;
               $calle = (isset($_REQUEST["Calle"])) ? $_REQUEST["Calle"] : null;
               $nro = (isset($_REQUEST["NumeroDeCalle"])) ? $_REQUEST["NumeroDeCalle"] : null;
-              $Manzana = $_REQUEST["Manzana"];
-              $Lote = $_REQUEST["Lote"];
-              $Familia = $_REQUEST["Familia"];
-              $Barrio = $_REQUEST["ID_Barrio"];
+              $Manzana = ($_REQUEST["Manzana"]) ?? null;
+              $Lote = ($_REQUEST["Lote"]) ?? null;
+              $Familia = ($_REQUEST["Familia"]) ?? null;
+              $Barrio = ($_REQUEST["ID_Barrio"]) ?? [0];
 
-              $Nro_Carpeta = $_REQUEST["Nro_Carpeta"];
-              $Nro_Legajo = $_REQUEST["Nro_Legajo"];
+              $Nro_Carpeta = ($_REQUEST["Nro_Carpeta"]) ?? null;
+              $Nro_Legajo = ($_REQUEST["Nro_Legajo"]) ?? null;
               
-              $ID_Motivo = $_REQUEST["ID_Motivo"];
+              $ID_Motivo = ($_REQUEST["ID_Motivo"]) ?? 0;
               $MotivosOpciones = [
                 "ID_Motivo" => $ID_Motivo
               ];
@@ -634,13 +618,13 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
                 $ID_Motivo4 = $_REQUEST["ID_Motivo4"];
                 $MotivosOpciones["ID_Motivo4"] = $ID_Motivo4;
               } else {
-                $ID_Motivo4 = 1;
+                $ID_Motivo4 = 0;
               }
               if (isset($_REQUEST["ID_Motivo5"])) {
                 $ID_Motivo5 = $_REQUEST["ID_Motivo5"];
                 $MotivosOpciones["ID_Motivo5"] = $ID_Motivo5;
               } else {
-                $ID_Motivo5 = 1;
+                $ID_Motivo5 = 0;
               }
 
               $ID_Categoria = (isset($_REQUEST["ID_Categoria"])) ? $_REQUEST["ID_Categoria"] : null;
@@ -690,14 +674,9 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
                 $ID_Categoria8 = 0;
               }
 
-              $ID_Escuela = $_REQUEST["ID_Escuela"];
-              if (isset($_REQUEST["Trabajo"])) {
-                $Trabajo = $_REQUEST["Trabajo"];
-              } else {
-                $Trabajo = null;
-              }
-              $Mostrar = $_REQUEST["Mostrar"];
-              $ID_OtraInstitucion = $_REQUEST["ID_OtraInstitucion"];
+              $ID_Escuela = ($_REQUEST["ID_Escuela"]) ?? 0;
+              $Trabajo = $_REQUEST["Trabajo"] ?? null;
+              $Mostrar = ($_REQUEST["Mostrar"]) ?? null;
               $ID_Responsable = [];
 
               if (isset($_REQUEST["ID_Responsable"])) {
@@ -938,13 +917,13 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
             }
             
             // if(count($Barrio) > 1){
-            if(count((Array)$Barrio) > 1){
+            if(count((Array)$Barrio) > 1) {
               $filtroBarrios = 'Barrios:';
               foreach($Barrio as $key => $valueBarrio){
                 if($key == array_key_first($Barrio)){
                   $persona_query .= " and (";
                 }
-                if($valueBarrio > 0){
+                if($valueBarrio > 0) {
                   if($key === count($Barrio) - 1){
                     $persona_query .= " ID_Barrio = $valueBarrio )";
                   }else{
@@ -1067,7 +1046,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
               $motivo_query = "motivo";
             }
             if($ID_Persona > 0) {
-             if (Persona::is_exist($Con, $ID_Persona) && $filtro_persona) {
+             if (Persona::is_exist($Con, $ID_Persona) && $filtro_familia_historia_clinica) {
                $persona = new Persona(ID_Persona: $ID_Persona);
                if ($persona->getId_Calle() && $persona->getNro()) {
                   
@@ -2090,7 +2069,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
                     $TableMovPrint .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td>";
                     $json_row["Fecha"] = $DtoMovimiento->getFecha();
                     $TableMov .= "<td style = 'width: auto;' onclick='sendToPersonaListado(" . $id_persona . ")'><div class='tdIcon' style='background: #212529; border-radius:50%; border-color:#37f337; border-width:6px;width:17px; height:17px; margin-top: 9%;border-style: ridge;'></td>";
-                    $TableMov .= "<td style = 'width: auto;' onclick='sendToRepListado(" . $id_persona . ")'><div class='tdIcon' style='background: #212529; border-radius:50%; border-color:yellow; border-width:6px;width:17px; height:17px; margin-top: 9%;border-style: ridge;'></td>";
+                    $TableMov .= "<td style = 'width: auto;' onclick='enviarAHistoriClinicaDePersona(" . $id_persona . ")'><div class='tdIcon' style='background: #212529; border-radius:50%; border-color:yellow; border-width:6px;width:17px; height:17px; margin-top: 9%;border-style: ridge;'></td>";
                     $TableMov .= "<td class='trPersona' style = 'width: auto;'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $id_persona . "\",\"Ventana" . $id_persona . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" . $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "</a></td>";
                     $TableMovPrint .= "<td class='trPersona' style = 'width: auto;'>".
                                           $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "
@@ -2485,7 +2464,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? null);
                   $TableMovPrint .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td></tr>";
                   $json_row["Fecha"] = $DtoMovimiento->getFecha();
                   $TableMov .= "<td style = 'width: auto;' onclick='sendToPersonaListado(" . $id_persona . ")'><div class='tdIcon' style='background: #212529; border-radius:50%; border-color:#37f337; border-width:6px;width:17px; height:17px; margin-top: 9%; border-style: ridge;'></div></td>";
-                  $TableMov .= "<td style = 'width: auto;' onclick='sendToRepListado(" . $id_persona . ")'><div class='tdIcon' style='background: #212529; border-radius:50%; border-color:yellow; border-width:6px;width:17px; height:17px; margin-top: 9%; border-style: ridge;'></div></td>";
+                  $TableMov .= "<td style = 'width: auto;' onclick='enviarAHistoriClinicaDePersona(" . $id_persona . ")'><div class='tdIcon' style='background: #212529; border-radius:50%; border-color:yellow; border-width:6px;width:17px; height:17px; margin-top: 9%; border-style: ridge;'></div></td>";
                   $TableMov .= "<td class='trPersona' style = 'width: auto;'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $RetTodos["id_persona"]."\",\"Ventana" . $RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" . $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "</a></td></tr>";
                   $TableMovPrint .= "<td class='trPersona' style = 'width: auto;'>".
                                       $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "
