@@ -221,7 +221,7 @@ class PreferenciaController
                                           );
                 $solicitud->delete();
                 $con->CloseConexion();
-                $ret["mensaje"] = "La solicitud fue borrada Correctamente";
+                $ret["mensaje"] = "La solicitud fué eliminada correctamente";
                 $ret["estado"] = 1;
             }
             echo json_encode($ret);
