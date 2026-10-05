@@ -25,7 +25,7 @@ export class Preferencia extends FormularioReporte {
                         val  +
                     `</span>
                     <div class='col-5' style='text-align: end;'>
-                        <div class='btn btn-outline-info'>
+                        <div class='btn btn-outline-info' style='color: #fff; background-color: #17a2b8; border-color: #17a2b8;'>
                             Pendiente
                         </div>
                     </div>

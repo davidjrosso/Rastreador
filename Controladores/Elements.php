@@ -2931,7 +2931,7 @@ public function getMenuSeguridadUsuario($ID){
                   style='display: flex; justify-content: space-between'>
                       <span class='col-7' style='align-content: center;'>" . $Ret['valor'] . " </span>
                   <div class='col-5' style='text-align: end;'>
-                      <div class='btn btn-outline-info'>
+                      <div class='btn btn-outline-info' style='color: #fff; background-color: #17a2b8; border-color: #17a2b8;'>
                           Pendiente
                       </div>
                   </div>
