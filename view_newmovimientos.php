@@ -29,6 +29,8 @@ if(!isset($_SESSION["Usuario"])){
 
   $persona = null;
   if ($ID_Persona) $persona = new Persona(ID_Persona: $ID_Persona);
+
+  $observaciones_medicina = "Peso: <br> Talla: <br> PERC. IMC : <br> T.A. :<br> HTA :<br> DBT: <br> HBA1C GLICOSILADA : <br> TEST FINDRISK:";
 ?>
 <!DOCTYPE html>
 <html>
@@ -560,7 +562,7 @@ if(!isset($_SESSION["Usuario"])){
                 <input type="hidden" name="ID_Motivo_3" id = "ID_Motivo_3" value = "0">
                 <textarea style="display: none" class = "form-control" row = "3" name = "observacion-general" id="observacion-general"></textarea>
                     <textarea style="display: none;" id="observacion-medicina" class = "form-control" row = "3" name = "observacion-medicina" value = "">
-                      <?php if ($observaciones_medico) echo $observaciones_medico->get_observacion(); ?>
+                      <?php echo $observaciones_medicina; ?>
                     </textarea>
                 <div style="margin: auto;">
                   <button type="submit" class="btn btn-outline-success">Guardar</button> 

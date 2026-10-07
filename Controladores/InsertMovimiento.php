@@ -3,6 +3,9 @@ session_start();
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Conexion.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Movimiento.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/MovimientoMotivo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/MovimientoObservacion.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/TipoObservacion.php';
+
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Accion.php';
 
 /*
@@ -51,6 +54,9 @@ $ID_Centro = (isset($_REQUEST["ID_Centro"])) ? $_REQUEST["ID_Centro"]:0;
 $ID_OtraInstitucion = (isset($_REQUEST["ID_OtraInstitucion"])) ? $_REQUEST["ID_OtraInstitucion"]:0;
 $Estado = 1;
 
+$Con = new Conexion();
+$Con->OpenConexion();
+
 $id_tipo_observacion = TipoObservacion::exist_tipo_observacion_con_descripcion(
 																coneccion: $Con,
 																descripcion: "observacion_medicina"
@@ -96,8 +102,6 @@ $Fecha_Accion = date("Y-m-d");
 $ID_TipoAccion = 1;
 
 try {
-	$Con = new Conexion();
-	$Con->OpenConexion();
 	$movimiento = new Movimiento(
 					coneccion_base: $Con,
 							xFecha: $Fecha,
@@ -206,17 +210,22 @@ try {
 	}
 
 	if ($id_tipo_observacion && $observacion_medicina) {
+		$tipo_observacion = new TipoObservacion(
+									coneccion: $Con,
+									id_tipo_observacion: $id_tipo_observacion
+									);
 		$observacion_medicina = new MovimientoObservacion(
 											coneccion: $Con,
 											movimiento: $movimiento,
 											observacion: $observacion_medicina,
+											tipo_observacion: $tipo_observacion,
 											estado: 1
 											);
 		$observacion_medicina->save();
 	}
 
 
-	$detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Movimiento. Datos: Fecha: $Fecha_Accion - Persona: $ID_Persona - Motivo 1: $ID_Motivo_1 - Motivo 2: $ID_Motivo_2 - Motivo 3: $ID_Motivo_3 - Observaciones: $Observaciones - Responsable: $ID_Responsable - Centro Salud: $ID_Centro - Otra Institución: $ID_OtraInstitucion";
+	$detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Movimiento. Datos: Fecha: $Fecha_Accion - Persona: $ID_Persona - Motivo 1: $ID_Motivo_1 - Motivo 2: $ID_Motivo_2 - Motivo 3: $ID_Motivo_3 - Observacion general: $observacion_general - Observacion medicina : $observacion_medicina - Responsable: $ID_Responsable - Centro Salud: $ID_Centro - Otra Institución: $ID_OtraInstitucion";
 
 	$accion = new Accion(
 		xaccountid: $ID_Usuario,

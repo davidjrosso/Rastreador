@@ -27,6 +27,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Responsable.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Account.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/MovimientoMotivo.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/DtoMovimiento.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/MovimientoObservacion.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/TipoObservacion.php';
 header("Content-Type: text/html;charset=utf-8");
 
 /*     CONTROL DE USUARIOS                    */
@@ -53,18 +55,13 @@ if(isset($_REQUEST["ID"])) {
 
   $movimiento = new Movimiento(coneccion_base: $Con,
                               xID_Movimiento: $ID_Movimiento);
-  $fecha_creacion = $movimiento->getFecha();
 
-  $fecha_expiracion = date('Y-m-d', strtotime('-7 days'));
-  $fecha_expiracion = strtotime($fecha_expiracion);
-  $fecha_creacion = strtotime($fecha_creacion);
-  $es_modificable = ($fecha_expiracion <= $fecha_creacion);
-
-  if ($es_modificable) $habilitar = Elements::HABILITAR_BOTON;
   $Fecha = implode("/", array_reverse(explode("-", $movimiento->getFecha())));
 
   $observaciones_general = $movimiento->getObservaciones();
   $observaciones_medico = null;
+
+  $observacion_deafult = "Peso: <br> Talla: <br> PERC. IMC : <br> T.A. :<br> HTA :<br> DBT: <br> HBA1C GLICOSILADA : <br> TEST FINDRISK:";
 
   $id_tipo_observacion =  TipoObservacion::exist_tipo_observacion_con_descripcion(
                                               coneccion: $Con, 
@@ -559,8 +556,8 @@ if(isset($_REQUEST["ID"])) {
                     <textarea style="display: none;" id="observacion-general" class = "form-control" row = "3" name = "observacion_general" value = "">
                       <?php echo $movimiento->getObservaciones(); ?>
                     </textarea>
-                    <textarea style="display: none;" id="observacion-medicina" class = "form-control" row = "3" name = "observacion-medicina" value = "">
-                      <?php if ($observaciones_medico) echo $observaciones_medico->get_observacion(); ?>
+                    <textarea style="display: none;" id="observacion-medicina" class = "form-control" row = "3" name = "observacion-medicina" value = "<?=($observaciones_medico) ? $observaciones_medico->get_observacion() : $observacion_deafult;?>">
+                      <?=($observaciones_medico) ? $observaciones_medico->get_observacion() : $observacion_deafult;?>
                     </textarea>
                     <?php
                       if(!empty($lista_motivo[3]) && $lista_motivo[3]->get_id_motivo() != 1) {
