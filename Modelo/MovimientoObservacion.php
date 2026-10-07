@@ -45,7 +45,7 @@ class MovimientoObservacion
 													  xID_Movimiento : $result["id_movimiento"]);
                 $this->tipo_observacion = new TipoObservacion(coneccion: $this->coneccion,
 															  id_tipo_observacion: $result["id_tipo_observacion"]);
-				$this->observacion = $result["observacion"];
+				$this->observacion = $result["observaciones"];
 				$this->estado = (!empty($result["estado"]))? $result["estado"] : 1;
 			}
 		}  else {
@@ -167,13 +167,15 @@ class MovimientoObservacion
 	{
 		$consulta = "insert into movimientos_observaciones(
 												   id_movimiento, 
-												   observacion,
-                                                   id_tipo_obseravacion,
+												   observaciones,
+                                                   id_tipo_observacion,
 												   estado
                                                    ) 
-									values(" . $this->movimiento->getID_Movimiento() . "," 
-											 . $this->observacion . ","
-                                             . $this->tipo_observacion->get_id_tipo_observacion() . "
+									values(" . $this->movimiento->getID_Movimiento() . ",'" 
+											 . mysqli_real_escape_string(
+														$this->coneccion->Conexion,
+														$this->observacion) . "',"
+                                             . $this->tipo_observacion->get_id_tipo_observacion() . ",
 										       1)";
 		if (!$RetAccion = mysqli_query($this->coneccion->Conexion, $consulta)) {
 			throw new Exception("Error al intentar insertar el movimiento observacion. Consulta: ". $consulta, 3);
