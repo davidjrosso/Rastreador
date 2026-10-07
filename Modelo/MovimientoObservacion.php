@@ -1,22 +1,24 @@
 <?php
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Movimiento.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/TipoObservacion.php");
+
 
 class MovimientoObservacion 
 {
 	// DECLARACION DE VARIABLES
     private $coneccion;
 	private $id_movimiento_observacion;
-	private $id_movimiento;
+	private $movimiento;
 	private $observacion;
-    private $id_tipo_observacion;
+    private $tipo_observacion;
 	private $estado;
 
 	public function __construct(
         $coneccion = null,
         $id_movimiento_observacion = null,
-		$id_movimiento = null,
+		$movimiento = null,
 		$observacion = null,
-        $id_tipo_observacion = null,
+        $tipo_observacion = null,
 		$estado = null
 	) {
 		$this->coneccion = $coneccion;
@@ -32,19 +34,23 @@ class MovimientoObservacion
 							  );
 			if (mysqli_num_rows($rs) < 1) {
                 $this->$id_movimiento_observacion = $id_movimiento_observacion;
-				$this->id_movimiento = $id_movimiento;
+				$this->movimiento = $movimiento;
 				$this->observacion = $observacion;
+				$this->tipo_observacion = $tipo_observacion;
 				$this->estado = (!empty($estado))? $estado : 1;
 			} else {
 				$result = mysqli_fetch_assoc($rs);
 				$this->id_movimiento_observacion = $result["id_movimiento_observacion"];
-				$this->id_movimiento = $result["id_movimiento"];
-                $this->id_tipo_observacion = $result["id_tipo_observacion"];
+				$this->movimiento = new Movimiento(coneccion_base : $this->coneccion,
+													  xID_Movimiento : $result["id_movimiento"]);
+                $this->tipo_observacion = new TipoObservacion(coneccion: $this->coneccion,
+															  id_tipo_observacion: $result["id_tipo_observacion"]);
 				$this->observacion = $result["observacion"];
 				$this->estado = (!empty($result["estado"]))? $result["estado"] : 1;
 			}
 		}  else {
-			$this->id_movimiento = $id_movimiento;
+			$this->movimiento = $movimiento;
+			$this->tipo_observacion = $tipo_observacion;
 			$this->observacion = $observacion;
 			$this->estado = (!empty($estado))? $estado : 1;
 }
@@ -81,7 +87,27 @@ class MovimientoObservacion
         if (!$rs) throw new Exception($mensaje, 1);
 
 		$ret_query = mysqli_fetch_assoc($rs);
-		$exist = ((!empty($ret_query["id_movimiento"])) ? $ret_query["id_movimiento"] : 0);
+		$exist = ((!empty($ret_query["id_movimiento_observacion"])) ? $ret_query["id_movimiento_observacion"] : 0);
+        return ($exist);
+	}
+
+    public static function exist_movimiento_observacion_con_tipo($coneccion, 
+																 $movimiento,
+																 $tipo_observacion
+																 )
+	{
+		$consulta = "select * 
+					from movimientos_observaciones
+					where id_movimiento = " .  $movimiento->getID_Movimiento() . "
+					  and id_tipo_observacion = " . $tipo_observacion->get_id_tipo_observacion() . "
+					  and estado = 1";
+		$rs = mysqli_query($coneccion->Conexion, $consulta);
+
+        $mensaje = "error al consultar observaciones movimientos";
+        if (!$rs) throw new Exception($mensaje, 1);
+
+		$ret_query = mysqli_fetch_assoc($rs);
+		$exist = ((!empty($ret_query["id_movimiento_observacion"])) ? $ret_query["id_movimiento_observacion"] : 0);
         return ($exist);
 	}
 
@@ -93,12 +119,17 @@ class MovimientoObservacion
 
 	public function set_id_movimiento($id_movimiento)
 	{
-		$this->id_movimiento = $id_movimiento;
+		$this->movimiento = $id_movimiento;
 	}
 
 	public function set_observacion($observacion)
 	{
 		$this->observacion = $observacion;
+	}
+
+	public function set_tipo_observacion($tipo_observacion)
+	{
+		$this->tipo_observacion = $tipo_observacion;
 	}
 
 	public function set_estado($estado)
@@ -122,6 +153,11 @@ class MovimientoObservacion
 		return $this->observacion;
 	}
 
+	public function get_tipo_observacion()
+	{
+		return $this->tipo_observacion;
+	}
+
 	public function get_estado()
 	{
 		return $this->estado;
@@ -135,9 +171,9 @@ class MovimientoObservacion
                                                    id_tipo_obseravacion,
 												   estado
                                                    ) 
-									values(" . $this->id_movimiento . "," 
+									values(" . $this->movimiento->getID_Movimiento() . "," 
 											 . $this->observacion . ","
-                                             . $this->id_tipo_observacion . "
+                                             . $this->tipo_observacion->get_id_tipo_observacion() . "
 										       1)";
 		if (!$RetAccion = mysqli_query($this->coneccion->Conexion, $consulta)) {
 			throw new Exception("Error al intentar insertar el movimiento observacion. Consulta: ". $consulta, 3);
@@ -149,8 +185,8 @@ class MovimientoObservacion
 	{
 		$consulta = "update movimientos_observaciones
                             set estado = " . $this->estado . ",
-								id_tipo_observacion = " . $this->id_tipo_observacion . ",
-								id_movimiento = " . $this->id_movimiento . ",
+								id_tipo_observacion = " . $this->tipo_observacion->get_id_tipo_observacion() . ",
+								id_movimiento = " . $this->movimiento->getID_Movimiento() . ",
 								observacion = " . $this->observacion . "
                             where id_movimiento_observacion = " . $this->id_movimiento_observacion;
 		if (!$RetAccion = mysqli_query($this->coneccion->Conexion, $consulta)) {

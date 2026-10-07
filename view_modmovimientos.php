@@ -63,7 +63,25 @@ if(isset($_REQUEST["ID"])) {
   if ($es_modificable) $habilitar = Elements::HABILITAR_BOTON;
   $Fecha = implode("/", array_reverse(explode("-", $movimiento->getFecha())));
 
-  $Observaciones = $movimiento->getObservaciones();
+  $observaciones_general = $movimiento->getObservaciones();
+  $observaciones_medico = null;
+
+  $id_tipo_observacion =  TipoObservacion::exist_tipo_observacion_con_descripcion(
+                                              coneccion: $Con, 
+                                              descripcion: "observacion_medicina");
+  if ($id_tipo_observacion) {
+    $tipo_observacion = new TipoObservacion(coneccion: $Con, 
+                                            id_tipo_observacion: $id_tipo_observacion);
+    $id_observaciones_medico = MovimientoObservacion::exist_movimiento_observacion_con_tipo(
+                                                          coneccion: $Con,
+                                                          movimiento: $movimiento,
+                                                          tipo_observacion: $tipo_observacion
+                                                          );
+    if ($id_observaciones_medico) $observaciones_medico = new MovimientoObservacion(
+                                          coneccion: $Con,
+                                          id_movimiento_observacion: $id_observaciones_medico
+                                          );
+  }
 
   $lista_motivo = MovimientoMotivo::get_lista_motivos_por_movimiento(
                                                   coneccion: $Con,
@@ -525,6 +543,12 @@ if(isset($_REQUEST["ID"])) {
                     <div id="element-ct" class="col"></div>
                   </div>
                 </div>
+                <div class="form-group row">
+                  <label for="inputPassword" class="col-md-2 col-form-label LblForm">Otras Observaciones: </label>
+                  <div class="col-md-10">
+                    <div id="element-ct-2" class="col"></div>
+                  </div>
+                </div>
                 <br>
                 <div class="form-group row">
                   <div style="align-content: center;" class="col row" id = "InputsGenerales">
@@ -532,7 +556,12 @@ if(isset($_REQUEST["ID"])) {
                     <input type="hidden" name="ID_Motivo_1" id = "ID_Motivo_1" value = "<?php echo (isset($lista_motivo[0]) ? $lista_motivo[0]->get_id_motivo() : 1);?>">
                     <input type="hidden" name="ID_Motivo_2" id = "ID_Motivo_2" value = "<?php echo (isset($lista_motivo[1]) ? $lista_motivo[1]->get_id_motivo() : 1);?>">
                     <input type="hidden" name="ID_Motivo_3" id = "ID_Motivo_3" value = "<?php echo (isset($lista_motivo[2]) ? $lista_motivo[2]->get_id_motivo() : 1);?>">
-                    <textarea style="display: none;" id="Observaciones" class = "form-control" row = "3" name = "Observaciones" value = ""><?php echo $movimiento->getObservaciones(); ?></textarea>
+                    <textarea style="display: none;" id="observacion-general" class = "form-control" row = "3" name = "observacion_general" value = "">
+                      <?php echo $movimiento->getObservaciones(); ?>
+                    </textarea>
+                    <textarea style="display: none;" id="observacion-medicina" class = "form-control" row = "3" name = "observacion-medicina" value = "">
+                      <?php if ($observaciones_medico) echo $observaciones_medico->get_observacion(); ?>
+                    </textarea>
                     <?php
                       if(!empty($lista_motivo[3]) && $lista_motivo[3]->get_id_motivo() != 1) {
                     ?>

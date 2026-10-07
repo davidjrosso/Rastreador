@@ -40,11 +40,10 @@ class TipoObservacion
 			$this->id_tipo_observacion = $id_tipo_observacion;
 			$this->descripcion = $descripcion;
 			$this->estado = (!empty($estado))? $estado : 1;
-}
+		}
 	}
 
-
-    public static function exist_tipo_observacion($coneccion, $id_tipo_observacion)
+    public static function exist_tipo_observacion_con_id($coneccion, $id_tipo_observacion)
 	{
 		$consulta = "select * 
 					from tipos_observaciones
@@ -59,6 +58,23 @@ class TipoObservacion
 		$exist = ((!empty($ret_query["id_tipo_observacion"])) ? $ret_query["id_tipo_observacion"] : 0);
         return ($exist);
 	}
+
+    public static function exist_tipo_observacion_con_descripcion($coneccion, $descripcion)
+	{
+		$consulta = "select * 
+					from tipos_observaciones
+					where lower(descripcion) like lower('%" .  $descripcion . "%')
+					  and estado = 1";
+		$rs = mysqli_query($coneccion->Conexion, $consulta);
+
+        $mensaje = "error al consultar tipos observaciones";
+        if (!$rs) throw new Exception($mensaje, 1);
+
+		$ret_query = mysqli_fetch_assoc($rs);
+		$exist = ((!empty($ret_query["id_tipo_observacion"])) ? $ret_query["id_tipo_observacion"] : 0);
+        return ($exist);
+	}
+
 
 	// METODOS SET
 	public function set_id_tipo_observacion($id_tipo_observacion)

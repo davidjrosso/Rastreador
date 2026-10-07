@@ -547,12 +547,21 @@ if(!isset($_SESSION["Usuario"])){
               </div>
             </div>
             <div class="form-group row">
+              <label for="inputPassword" class="col-md-2 col-form-label LblForm">Otras Observaciones: </label>
+              <div class="col-md-10">
+                <div id="element-ct-2" class="col"></div>
+              </div>
+            </div>
+            <div class="form-group row">
               <div class="col-md-12 row" style="justify-content: center;" id = "InputsGenerales">
                 <input type="hidden" name="ID_Persona" id = "ID_Persona" value = "<?php echo ($ID_Persona) ? $ID_Persona : "0"?>">
                 <input type="hidden" name="ID_Motivo_1" id = "ID_Motivo_1" value = "0">
                 <input type="hidden" name="ID_Motivo_2" id = "ID_Motivo_2" value = "0">
                 <input type="hidden" name="ID_Motivo_3" id = "ID_Motivo_3" value = "0">
-                <textarea style="display: none" class = "form-control" row = "3" name = "Observaciones" id="Observaciones"></textarea>
+                <textarea style="display: none" class = "form-control" row = "3" name = "observacion-general" id="observacion-general"></textarea>
+                    <textarea style="display: none;" id="observacion-medicina" class = "form-control" row = "3" name = "observacion-medicina" value = "">
+                      <?php if ($observaciones_medico) echo $observaciones_medico->get_observacion(); ?>
+                    </textarea>
                 <div style="margin: auto;">
                   <button type="submit" class="btn btn-outline-success">Guardar</button> 
                   <button type="button" class="btn btn-outline-secondary" onClick="resetearForm()">Cancelar</button>

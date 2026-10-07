@@ -44,11 +44,17 @@ $ID_Motivo_2 = $_REQUEST["ID_Motivo_2"];
 $ID_Motivo_3 = $_REQUEST["ID_Motivo_3"];
 $ID_Motivo_4 = (isset($_REQUEST["ID_Motivo_4"])) ? $_REQUEST["ID_Motivo_4"]:0;
 $ID_Motivo_5 = (isset($_REQUEST["ID_Motivo_5"])) ? $_REQUEST["ID_Motivo_5"]:0;
-$Observaciones = $_REQUEST["Observaciones"];
+$observacion_general = $_REQUEST["observacion-general"];
+$observacion_medicina = $_REQUEST["observacion-medicina"];
 $ID_Responsable = $Arr_ID_Responsable[0];
 $ID_Centro = (isset($_REQUEST["ID_Centro"])) ? $_REQUEST["ID_Centro"]:0;
 $ID_OtraInstitucion = (isset($_REQUEST["ID_OtraInstitucion"])) ? $_REQUEST["ID_OtraInstitucion"]:0;
 $Estado = 1;
+
+$id_tipo_observacion = TipoObservacion::exist_tipo_observacion_con_descripcion(
+																coneccion: $Con,
+																descripcion: "observacion_medicina"
+																);
 
 if($ID_Motivo_1 == 0){
 	$ID_Motivo_1 = 1;
@@ -102,7 +108,7 @@ try {
 					xID_Motivo_3: $ID_Motivo_3,
 					xID_Motivo_4: $ID_Motivo_4,
 					xID_Motivo_5: $ID_Motivo_5,
-					xObservaciones: $Observaciones,
+					xObservaciones: $observacion_general,
 				xID_Responsable: $ID_Responsable,
 				xID_Responsable_2: $ID_Responsable_2,
 				xID_Responsable_3: $ID_Responsable_3,
@@ -198,6 +204,17 @@ try {
 			$movimiento_motivo->save();
 		}
 	}
+
+	if ($id_tipo_observacion && $observacion_medicina) {
+		$observacion_medicina = new MovimientoObservacion(
+											coneccion: $Con,
+											movimiento: $movimiento,
+											observacion: $observacion_medicina,
+											estado: 1
+											);
+		$observacion_medicina->save();
+	}
+
 
 	$detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Movimiento. Datos: Fecha: $Fecha_Accion - Persona: $ID_Persona - Motivo 1: $ID_Motivo_1 - Motivo 2: $ID_Motivo_2 - Motivo 3: $ID_Motivo_3 - Observaciones: $Observaciones - Responsable: $ID_Responsable - Centro Salud: $ID_Centro - Otra Institución: $ID_OtraInstitucion";
 

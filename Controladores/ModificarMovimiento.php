@@ -21,6 +21,8 @@ session_start();
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Conexion.php';
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Movimiento.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/MovimientoMotivo.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/MovimientoObservacion.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/TipoObservacion.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Persona.php");
 
 $Arr_ID_Responsable = $_REQUEST["ID_Responsable"];
@@ -37,7 +39,8 @@ $ID_Motivo_3 = (!empty($_REQUEST["ID_Motivo_3"]) ? $_REQUEST["ID_Motivo_3"] : nu
 $ID_Motivo_4 = (!empty($_REQUEST["ID_Motivo_4"]) ? $_REQUEST["ID_Motivo_4"] : null);
 $ID_Motivo_5 = (!empty($_REQUEST["ID_Motivo_5"]) ? $_REQUEST["ID_Motivo_5"] : null);
 $lista_motivos = array($ID_Motivo_1);
-$Observaciones = $_REQUEST["Observaciones"];
+$observaciones_general = $_REQUEST["observacion-general"];
+$observacion_medicina = $_REQUEST["observacion-medicina"];
 $ID_Responsable = $Arr_ID_Responsable[0];
 $ID_Centro = $_REQUEST["ID_Centro"];
 $ID_OtraInstitucion = $_REQUEST["ID_OtraInstitucion"];
@@ -101,7 +104,7 @@ if (Movimiento::is_exist($con, $ID_Movimiento)) {
 		xID_Motivo_3: $ID_Motivo_3,
 		xID_Motivo_4: $ID_Motivo_4,
 		xID_Motivo_5: $ID_Motivo_5,
-		xObservaciones: $Observaciones,
+		xObservaciones: $observaciones_general,
 		xID_Responsable: $ID_Responsable,
 		xID_Responsable_2: $ID_Responsable_2,
 		xID_Responsable_3: $ID_Responsable_3,
@@ -112,6 +115,37 @@ if (Movimiento::is_exist($con, $ID_Movimiento)) {
 	);
 	$movimiento->setID_Movimiento($ID_Movimiento);
 	$movimiento->udpate();
+
+	$id_tipo_observacion = TipoObservacion::exist_tipo_observacion_con_descripcion(
+																	coneccion: $Con,
+																	descripcion: "observacion_medicina"
+																	);
+
+  if ($id_tipo_observacion) {
+    $tipo_observacion = new TipoObservacion(coneccion: $Con, 
+                                            id_tipo_observacion: $id_tipo_observacion);
+    $id_observacion_medicina = MovimientoObservacion::exist_movimiento_observacion_con_tipo(
+                                                          coneccion: $Con,
+                                                          movimiento: $movimiento,
+                                                          tipo_observacion: $tipo_observacion
+                                                          );
+    if ($id_observacion_medicina) {
+		$observacion_medicina = new MovimientoObservacion(
+                                          coneccion: $Con,
+                                          id_movimiento_observacion: $id_observacion_medicina
+                                          );
+		$observaciones_medico->set_observacion($observacion_medicina);
+		$observaciones_medico->update();
+	} else {
+		$observacion_medicina = new MovimientoObservacion(
+                                          coneccion: $Con,
+                                          movimiento: $movimiento,
+										  observacion: $observacion_medicina,
+										  estado: 1
+                                          );
+		$observacion_medicina->save();
+	}
+  }
 
 	$consulta = "SELECT * 
 				 FROM movimiento_motivo
