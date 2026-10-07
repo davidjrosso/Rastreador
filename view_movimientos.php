@@ -27,7 +27,7 @@ $Con->CloseConexion();
 
 $num_row = 5000;
 
-$limit = 500;
+$limit = 250;
 $offset = 0;
 
 ?>
