@@ -456,7 +456,7 @@ try {
                         <p id='InformacionDeCiudad'>
                             Municipialidad de Rio Tercero <br>
                             Secertaría de Salud y Desarrollo Social<br>
-                            Progama Rastreador <br>
+                            Carpeta Familiar Digital<br>
                         </p>";
             $tabla_detalle_persona = "";
             if ($det_persona) {
