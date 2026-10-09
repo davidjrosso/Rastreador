@@ -13,6 +13,7 @@ class DtoMovimiento {
 	private $id_persona;
 
 	private $Observaciones;
+	private $observacion_medicina;
 	private $Responsable;
 	private $CentroSalud;
 	private $OtraInstitucion;
@@ -28,10 +29,11 @@ class DtoMovimiento {
 								$xMotivo_4=null,
 								$xMotivo_5=null,
 								$xObservaciones=null,
+								$observacion_medicina=null,
 								$xResponsable=null,
 								$xCentroSalud=null,
 								$xOtraInstitucion=null
-	){
+	) {
 		$this->ID_Movimiento = $xID_Movimiento;
 		$this->Fecha = $xFecha;
 		$this->Apellido = $xApellido;
@@ -42,118 +44,157 @@ class DtoMovimiento {
 		$this->Motivo_4 = (!empty($xMotivo_4)) ? $xMotivo_4 : null;
 		$this->Motivo_5 = (!empty($xMotivo_5)) ? $xMotivo_5 : null;
 		$this->Observaciones = $xObservaciones;
+		$this->observacion_medicina = $observacion_medicina;
 		$this->Responsable = $xResponsable;
 		$this->CentroSalud = $xCentroSalud;
 		$this->OtraInstitucion = $xOtraInstitucion;
 	}
 
 	// METODOS SET
-	public function setID_Movimiento($xID_Movimiento){
+	public function setID_Movimiento($xID_Movimiento)
+	{
 		$this->ID_Movimiento = $xID_Movimiento;
 	}
 
-	public function setFecha($xFecha){
+	public function setFecha($xFecha)
+	{
 		$this->Fecha = $xFecha;
 	}
 
-	public function setApellido($xApellido){
+	public function setApellido($xApellido)
+	{
 		$this->Apellido = $xApellido;
 	}
 
-	public function setNombre($xNombre){
+	public function setNombre($xNombre)
+	{
 		$this->Nombre = $xNombre;
 	}
 
-	public function setMotivo_1($xMotivo_1){
+	public function setMotivo_1($xMotivo_1)
+	{
 		$this->Motivo_1 = $xMotivo_1;
 	}
 
-	public function setMotivo_2($xMotivo_2){
+	public function setMotivo_2($xMotivo_2)
+	{
 		$this->Motivo_2 = $xMotivo_2;
 	}
 
-	public function setMotivo_3($xMotivo_3){
+	public function setMotivo_3($xMotivo_3)
+	{
 		$this->Motivo_3 = $xMotivo_3;
 	}
 
-	public function setMotivo_4($xMotivo_4){
+	public function setMotivo_4($xMotivo_4)
+	{
 		$this->Motivo_4 = $xMotivo_4;
 	}
-	public function setMotivo_5($xMotivo_5){
+	public function setMotivo_5($xMotivo_5)
+	{
 		$this->Motivo_5 = $xMotivo_5;
 	}
-	public function setObservaciones($xObservaciones){
-		$this->Observaciones = $xObservaciones;
+	public function setObservaciones($xObservacion)
+	{
+		$this->Observaciones = $xObservacion;
 	}
 
-	public function setResponsable($xResponsable){
+	public function set_observaciones_medicina($observacion_medicina)
+	{
+		$this->observacion_medicina = $observacion_medicina;
+	}
+
+	public function setResponsable($xResponsable)
+	{
 		$this->Responsable = $xResponsable;
 	}
 
-	public function setCentroSalud($xCentroSalud){
+	public function setCentroSalud($xCentroSalud)
+	{
 		$this->CentroSalud = $xCentroSalud;
 	}
 
-	public function setOtraInstitucion($xOtraInstitucion){
+	public function setOtraInstitucion($xOtraInstitucion)
+	{
 		$this->OtraInstitucion = $xOtraInstitucion;
 	}
 
-	public function setId_Persona($id_persona){
+	public function setId_Persona($id_persona)
+	{
 		$this->id_persona = $id_persona;
 	}
 	//METODOS GET
-	public function getID_Movimiento(){
+	public function getID_Movimiento()
+	{
 		return $this->ID_Movimiento;
 	}
 
-	public function getFecha(){
+	public function getFecha()
+	{
 		return $this->Fecha;
 	}
 
-	public function getApellido(){
+	public function getApellido()
+	{
 		return $this->Apellido;
 	}
 
-	public function getNombre(){
+	public function getNombre()
+	{
 		return $this->Nombre;
 	}
 
-	public function getMotivo_1(){
+	public function getMotivo_1()
+	{
 		return $this->Motivo_1;
 	}
 
-	public function getMotivo_2(){
+	public function getMotivo_2()
+	{
 		return $this->Motivo_2;
 	}
 
-	public function getMotivo_3(){
+	public function getMotivo_3()
+	{
 		return $this->Motivo_3;
 	}
 
-	public function getMotivo_4(){
+	public function getMotivo_4()
+	{
 		return $this->Motivo_4;
 	}
 
-	public function getMotivo_5(){
+	public function getMotivo_5()
+	{
 		return $this->Motivo_5;
 	}
 
-	public function getObservaciones(){
+	public function getObservaciones()
+	{
 		return $this->Observaciones;
 	}
 
-	public function getResponsable(){
+	public function get_observacion_medicina()
+	{
+		return $this->observacion_medicina;
+	}
+
+	public function getResponsable()
+	{
 		return $this->Responsable;
 	}
 
-	public function getCentroSalud(){
+	public function getCentroSalud()
+	{
 		return $this->CentroSalud;
 	}
 
-	public function getOtraInstitucion(){
+	public function getOtraInstitucion()
+	{
 		return $this->OtraInstitucion;
 	}
-	public function getId_Persona(){
+	public function getId_Persona()
+	{
 		return $this->id_persona;
 	}
 }

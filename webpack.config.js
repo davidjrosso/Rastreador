@@ -17,6 +17,7 @@ module.exports = {
     movimiento : './js/MovimientosControl.js',
     formulariosReporte : './js/ReportesFiltros.js',
     excel : './js/excel.js',
+    personasListado: "./js/PersonaListado.js",
     validarPersona: "./js/ValidarPersona.js",
     preferencia: "./js/Preferencia.js"
   },
