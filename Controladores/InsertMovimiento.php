@@ -5,6 +5,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Movimiento.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/MovimientoMotivo.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/MovimientoObservacion.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/TipoObservacion.php';
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/MovimientoResponsable.php");
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/Accion.php';
 
@@ -32,26 +33,21 @@ $ID_Usuario = $_SESSION["Usuario"];
 if(empty($_REQUEST["Fecha"])){
 	$Fecha =  date("Y-m-d");
 }else{
-	$Fecha = implode("-", array_reverse(explode("/",$_REQUEST["Fecha"])));
+	$Fecha = implode("-", array_reverse(explode("/", $_REQUEST["Fecha"])));
 }
 
 $Arr_ID_Responsable = $_REQUEST["ID_Responsable"];
 
+$ID_Responsable_1 = (!empty($Arr_ID_Responsable[0])) ? $Arr_ID_Responsable[0] : 64;
 $ID_Responsable_2 = (isset($Arr_ID_Responsable[1])) ? $Arr_ID_Responsable[1] : 64;
 $ID_Responsable_3 = (isset($Arr_ID_Responsable[2])) ? $Arr_ID_Responsable[2] : 64;
 $ID_Responsable_4 = (isset($Arr_ID_Responsable[3])) ? $Arr_ID_Responsable[3] : 64;
 
-$ID_Persona = $_REQUEST["ID_Persona"];
-$ID_Motivo_1 = $_REQUEST["ID_Motivo_1"];
-$ID_Motivo_2 = $_REQUEST["ID_Motivo_2"];
-$ID_Motivo_3 = $_REQUEST["ID_Motivo_3"];
-$ID_Motivo_4 = (isset($_REQUEST["ID_Motivo_4"])) ? $_REQUEST["ID_Motivo_4"]:0;
-$ID_Motivo_5 = (isset($_REQUEST["ID_Motivo_5"])) ? $_REQUEST["ID_Motivo_5"]:0;
 $observacion_general = $_REQUEST["observacion-general"];
 $observacion_medicina = $_REQUEST["observacion-medicina"];
-$ID_Responsable = $Arr_ID_Responsable[0];
-$ID_Centro = (isset($_REQUEST["ID_Centro"])) ? $_REQUEST["ID_Centro"]:0;
-$ID_OtraInstitucion = (isset($_REQUEST["ID_OtraInstitucion"])) ? $_REQUEST["ID_OtraInstitucion"]:0;
+
+$ID_Centro = (!empty($_REQUEST["ID_Centro"])) ? $_REQUEST["ID_Centro"] : 7;
+$ID_OtraInstitucion = (!empty($_REQUEST["ID_OtraInstitucion"])) ? $_REQUEST["ID_OtraInstitucion"] : 1;
 $Estado = 1;
 
 $Con = new Conexion();
@@ -62,41 +58,16 @@ $id_tipo_observacion = TipoObservacion::exist_tipo_observacion_con_descripcion(
 																descripcion: "observacion_medicina"
 																);
 
-if($ID_Motivo_1 == 0){
-	$ID_Motivo_1 = 1;
-}
-if($ID_Motivo_2 == 0){
-	$ID_Motivo_2 = 1;
-}
-if($ID_Motivo_3 == 0){
-	$ID_Motivo_3 = 1;
-}
+$ID_Motivo[] = (!empty($_REQUEST["ID_Motivo_1"])) ? $_REQUEST["ID_Motivo_1"] : 1;
+$ID_Motivo[] = (!empty($_REQUEST["ID_Motivo_2"])) ? $_REQUEST["ID_Motivo_2"] : 1;
+$ID_Motivo[] = (!empty($_REQUEST["ID_Motivo_3"])) ? $_REQUEST["ID_Motivo_3"] : 1;
+$ID_Motivo[] = (!empty($_REQUEST["ID_Motivo_4"])) ? $_REQUEST["ID_Motivo_4"] : 1;
+$ID_Motivo[] = (!empty($_REQUEST["ID_Motivo_5"])) ? $_REQUEST["ID_Motivo_5"] : 1;
 
-if($ID_Motivo_4 == 0){
-	$ID_Motivo_4 = 1;
-}
-if($ID_Motivo_5 == 0){
-	$ID_Motivo_5 = 1;
-}
+if ($ID_Responsable_1 != 64) $_SESSION["UltResponsable"] = $ID_Responsable_1;
+if($ID_Centro != 7) $_SESSION["UltCentro"] = $ID_Centro;
 
-
-if (empty($ID_Responsable)) {
-	$ID_Responsable = 64;
-} else {
-	$_SESSION["UltResponsable"] = $ID_Responsable;
-}
-
-if(empty($ID_Centro)){
-	$ID_Centro = 7;
-}else{
-	$_SESSION["UltCentro"] = $ID_Centro;
-}
-
-if(empty($ID_OtraInstitucion)){
-	$ID_OtraInstitucion = 1;
-}else{
-	$_SESSION["UltOtraInstitucion"] = $ID_OtraInstitucion;
-}
+if($ID_OtraInstitucion > 1) $_SESSION["UltOtraInstitucion"] = $ID_OtraInstitucion;
 
 $Fecha_Accion = date("Y-m-d");
 $ID_TipoAccion = 1;
@@ -107,13 +78,13 @@ try {
 							xFecha: $Fecha,
 					Fecha_Creacion: $Fecha_Accion,
 					xID_Persona: $ID_Persona,
-					xID_Motivo_1: $ID_Motivo_1,
-					xID_Motivo_2: $ID_Motivo_2,
-					xID_Motivo_3: $ID_Motivo_3,
-					xID_Motivo_4: $ID_Motivo_4,
-					xID_Motivo_5: $ID_Motivo_5,
+					xID_Motivo_1: $ID_Motivo[1],
+					xID_Motivo_2: $ID_Motivo[2],
+					xID_Motivo_3: $ID_Motivo[3],
+					xID_Motivo_4: $ID_Motivo[4],
+					xID_Motivo_5: $ID_Motivo[5],
 					xObservaciones: $observacion_general,
-				xID_Responsable: $ID_Responsable,
+				xID_Responsable: $ID_Responsable_1,
 				xID_Responsable_2: $ID_Responsable_2,
 				xID_Responsable_3: $ID_Responsable_3,
 				xID_Responsable_4: $ID_Responsable_4,
@@ -124,89 +95,42 @@ try {
 	$movimiento->save();
 	$id_movimiento = $movimiento->getID_Movimiento();
 
-	if ($ID_Motivo_1 > 1) {
-		$motivo = MovimientoMotivo::exist_movimiento_motivo(
+
+
+	foreach ($Arr_ID_Responsable as $id_res) {
+		$res = MovimientoResponsable::exist_movimiento_responsable(
 			connection: $Con,
 			movimiento: $id_movimiento,
-			motivo: $ID_Motivo_1
+			id_responsable: $id_res
 		);
-		if (!$motivo) {
-			$movimiento_motivo = new MovimientoMotivo(
-														connection: $Con,
-													id_movimiento: $id_movimiento,
-														id_motivo: $ID_Motivo_1,
-															estado: 1
-			);
-			$movimiento_motivo->save();
+		if (!$res && $id_res != 64) {
+			$mov = new MovimientoResponsable(
+												connection: $Con,
+												id_movimiento: $id_movimiento,
+												id_responsable: $id_res
+												);
+			$mov->save();
 		}
+
 	}
 
-	if ($ID_Motivo_2 > 1) {
+	foreach($ID_Motivo as $id) {
 		$motivo = MovimientoMotivo::exist_movimiento_motivo(
 			connection: $Con,
 			movimiento: $id_movimiento,
-			motivo: $ID_Motivo_2
+			motivo: $id
 		);
-		if (!$motivo) {
+		$mensaje_motivo .= "- $id";
+		if (!$motivo && $id > 1) {
 			$movimiento_motivo = new MovimientoMotivo(
 														connection: $Con,
 													id_movimiento: $id_movimiento,
-														id_motivo: $ID_Motivo_2,
+														id_motivo: $id,
 															estado: 1
 			);
 			$movimiento_motivo->save();
 		}
-	}
-
-	if ($ID_Motivo_3 > 1) {
-		$motivo = MovimientoMotivo::exist_movimiento_motivo(
-			connection: $Con,
-			movimiento: $id_movimiento,
-			motivo: $ID_Motivo_3
-		);
-		if (!$motivo) {
-			$movimiento_motivo = new MovimientoMotivo(
-														connection: $Con,
-													id_movimiento: $id_movimiento,
-														id_motivo: $ID_Motivo_3,
-															estado: 1
-			);
-			$movimiento_motivo->save();
-		}
-	}
-
-	if ($ID_Motivo_4 > 1) {
-		$motivo = MovimientoMotivo::exist_movimiento_motivo(
-			connection: $Con,
-			movimiento: $id_movimiento,
-			motivo: $ID_Motivo_4
-		);
-		if (!$motivo) {
-			$movimiento_motivo = new MovimientoMotivo(
-														connection: $Con,
-													id_movimiento: $id_movimiento,
-														id_motivo: $ID_Motivo_4,
-															estado: 1
-			);
-			$movimiento_motivo->save();
-		}
-	}
-
-	if ($ID_Motivo_5 > 1) {
-		$motivo = MovimientoMotivo::exist_movimiento_motivo(
-			connection: $Con,
-			movimiento: $id_movimiento,
-			motivo: $ID_Motivo_5
-		);
-		if (!$motivo) {
-			$movimiento_motivo = new MovimientoMotivo(
-														connection: $Con,
-													id_movimiento: $id_movimiento,
-														id_motivo: $ID_Motivo_5,
-															estado: 1
-			);
-			$movimiento_motivo->save();
-		}
+			
 	}
 
 	if ($id_tipo_observacion && $observacion_medicina) {
@@ -236,7 +160,7 @@ try {
 	$accion->save();
 
 } catch (Exception $e) {
-	echo "Error: ".$e->getMessage();
+	echo "Error: " . $e->getMessage();
 }
 
 $Con->CloseConexion();

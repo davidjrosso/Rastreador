@@ -91,6 +91,9 @@ export class RerpoteMovimiento {
             if (item["Observaciones"]) {
                 obj[index]["Observaciones"] = item["Observaciones"].replaceAll(/<figure.*(?!<figure).*<\/figure>/g, "");
             }
+            if (item["Observacion Medicina"]) {
+                obj[index]["Observacion Medicina"] = item["Observacion Medicina"].replaceAll(/<figure.*(?!<figure).*<\/figure>/g, "");
+            }
             return obj;
         }, {});
         lista["header_movimientos_general"] = this.listaHeaderTotal;
