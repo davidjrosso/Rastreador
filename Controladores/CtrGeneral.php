@@ -17,6 +17,8 @@ class CtrGeneral {
 	const APELLIDO_NOMBRE = 6;
 	const CARPETA = 2;
 	const RESPONSABLE = 8;
+	const ID_PERSONA = 9;
+	const DOMICILIO = 10;
 
 
 
@@ -1189,9 +1191,195 @@ class CtrGeneral {
 
 	////////////////////////////////////////////////-PERSONAS-///////////////////////////////////////////////////
 
-	public function getPersonas(){
-		$Con = new Conexion();
-		$Con->OpenConexion();
+
+	public function get_rows_personas($tipo_usuario, 
+								   $offset = null,
+								   $limit = null,
+								   $filtro_valor = null,
+								   $filtro_tipo = null
+	) {
+		$con = new Conexion();
+		$con->OpenConexion();
+
+		if ($offset && $limit) {
+			$query = " limit $limit offset $offset ";
+		} else if ($limit) {
+			$query = " limit $limit ";
+		}
+
+		switch ($filtro_tipo) {
+			case self::ID_PERSONA :
+				$consulta = "select id_persona, 
+									UPPER(apellido) as apellido, 
+									CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
+									documento, 
+									IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
+							from persona
+							where id_persona = $filtro_valor 
+							and estado = 1 
+							order by apellido, nombre
+							order by M.fecha_creacion desc
+							$query";
+				break;
+			case self::DOCUMENTO :
+				$busc_dni = trim(str_replace(array('.'), '', $filtro_valor));
+				$consulta = "select id_persona, 
+							UPPER(apellido) as apellido, 
+							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
+							documento, 
+							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
+					 from persona 
+					 where documento like '%$busc_dni%' 
+					   and estado = 1 
+					 order by apellido, nombre
+							$query";
+				break;
+			case self::APELLIDO :
+				$consulta = "SELECT id_persona, 
+										UPPER(apellido) as apellido, 
+										CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
+										documento, 
+										IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
+								FROM persona
+								WHERE (TRIM(apellido) REGEXP '^$filtro_valor' or TRIM(apellido) REGEXP '[ ]+$filtro_valor')
+								  AND estado = 1 
+								ORDER BY apellido, nombre
+								$query";
+				break;
+			case self::NOMBRE :
+				$consulta = "SELECT id_persona, 
+									UPPER(apellido) as apellido, 
+									CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
+									documento, 
+									IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
+							FROM persona
+							WHERE (TRIM(nombre) REGEXP '^$filtro_valor' or TRIM(nombre) REGEXP '[ ]+$filtro_valor')
+							AND estado = 1 
+							ORDER BY apellido, nombre
+							$query";
+				break;
+			case self::APELLIDO_NOMBRE :				
+				$caracater = str_contains($filtro_valor, ",");		
+				$query_filter = "";
+
+				if ($caracater) {
+					$consulta = preg_replace("~[ ]+~", " ", $filtro_valor);
+					$elements = array_map("trim", explode(",", $consulta));
+					$apellidos = false;
+					$nombres = false;
+					if ($elements[0]) $apellidos = preg_split("~[ ]+~", $elements[0]);
+					if ($elements[1]) $nombres = preg_split("~[ ]+~", $elements[1]);
+
+					$cant_apellido = ($apellidos) ? count($apellidos) : 0;
+					$cant_nombres = ($nombres) ? count($nombres) : 0;
+					$query_apellido = "(";
+
+					if (!$apellidos) $apellidos = [];
+
+					foreach ($apellidos as $key => $value) {
+						$query_apellido .= "(TRIM(apellido) REGEXP '^$value')";
+						if ($key < $cant_apellido - 1) $query_apellido .= " or ";
+					}
+					$query_apellido .= ")";
+
+					$query_nombre = "(";
+
+					if (!$nombres) $nombres = [];
+
+					foreach ($nombres as $key => $value) {
+						$query_nombre .= "(TRIM(nombre) REGEXP '^$value')";
+						if ($key < $cant_nombres - 1) $query_nombre .= " or ";
+					}
+					$query_nombre .= ")";
+
+					if (!$cant_apellido) $query_apellido = "";
+
+					$query_filter .= $query_apellido;
+					if ($cant_nombres > 0) {
+						if ($cant_apellido) $query_filter .= " and ";
+						$query_filter .= $query_nombre; 
+					}
+
+					if ($cant_apellido || $cant_nombres) {
+						$query_filter = " and " . $query_filter;
+					}
+
+					if (!$cant_apellido && !$cant_nombres) $query_filter = "";
+
+				} else {
+					$query_filter = " and ((TRIM(apellido) REGEXP '^$filtro_valor' or TRIM(apellido) REGEXP '[ ]+$filtro_valor') 
+											or (TRIM(nombre) REGEXP '^$filtro_valor' or TRIM(nombre) REGEXP '[ ]+$filtro_valor'))";
+				}
+
+				$consulta = "select id_persona, 
+									UPPER(apellido) as apellido, 
+									CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
+									documento, 
+									IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
+							from persona
+							where estado = 1 
+							order by apellido, nombre
+							$query";
+				break;
+			case self::LEGAJO :
+				$consulta = "SELECT id_persona, 
+							UPPER(apellido) as apellido, 
+							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
+							documento, 
+							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
+					 FROM persona 
+					 WHERE nro_legajo like '%$filtro_valor%' 
+					   AND estado = 1 
+					 ORDER BY apellido, nombre
+					 $query";
+				break;
+			case self::CARPETA :
+				$consulta = "SELECT id_persona, 
+									UPPER(apellido) as apellido, 
+									CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
+									documento,
+									IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
+							FROM persona 
+							WHERE nro_carpeta = '$filtro_valor' 
+							AND estado = 1 
+							ORDER BY apellido, nombre
+							$query";
+				break;
+			case self::DOMICILIO :
+				$consulta = "select id_persona, 
+									UPPER(apellido) as apellido, 
+									CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
+									documento, 
+									IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo,domicilio 
+							FROM persona 
+							WHERE domicilio LIKE '%$filtro_valor%' 
+							AND estado = 1 
+							ORDER BY apellido, nombre
+							$query";
+				break;
+			default :
+				$consulta = "select id_persona, 
+								UPPER(apellido) as apellido, 
+								CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
+								documento, 
+								IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
+								from persona 
+								where estado = 1 
+								order by apellido, nombre
+								$query";
+		}
+		$mensaje = "Problemas al intentar mostrar Movimientos";
+
+		$obj = mysqli_query($con->Conexion, $consulta);
+		if (!$obj) throw new Exception($mensaje , 1);
+		$rows = mysqli_fetch_all($obj, MYSQLI_ASSOC);
+		return $rows;
+	}
+
+	public function getPersonas($limit)
+	{
+		$con = new Conexion();
+		$con->OpenConexion();
 		$Consulta = "select id_persona, 
 					 UPPER(apellido) as apellido, 
 					 CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
@@ -1199,25 +1387,56 @@ class CtrGeneral {
 					 IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
 					 from persona 
 					 where estado = 1 
-					 order by apellido, nombre";
-		$MessageError = "Problemas al intentar mostrar Personas";
-		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
-		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["documento"]."</td><td>".$Ret["nro_legajo"]."</td><td><a href = 'view_verpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_persona"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+					 order by apellido, nombre
+					 limit $limit";
+		$message = "Problemas al intentar mostrar Personas";
+		$table = "<table id='tabla-personas' class='table'>
+					<thead>
+						<tr>
+							<th>Apellido</th>
+							<th>Nombre</th>
+							<th>Documento</th>
+							<th>Nro. Legajo</th>
+							<th colspan='3'></th>
+						</tr>
+					</thead>";
+		$con->ResultSet = mysqli_query($con->Conexion, $Consulta);
+		if (!$con->ResultSet) throw new Exception($message, 1);
+
+		while ($Ret = mysqli_fetch_array($con->ResultSet)) {
+			$table .= "<tr>
+						<td>" . $Ret["apellido"] . "</td>
+						<td>" . $Ret["nombre"] . "</td>
+						<td>" . $Ret["documento"] . "</td>
+						<td>" . $Ret["nro_legajo"] . "</td>
+						<td>
+							<a href = 'view_verpersonas.php?ID=" . $Ret["id_persona"] . "'>
+								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a>
+						</td>
+						<td>
+							<a href = 'view_modpersonas.php?ID=" . $Ret["id_persona"] . "'>
+								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+							</a>
+						</td>
+						<td>
+							<a onClick = 'Verificar(" . $Ret["id_persona"] . ")'>
+								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a>
+							</td>
+						</tr>";
 		}
-		$Con->CloseConexion();
-		$Table .= "</table>";
+		$con->CloseConexion();
+		$table .= "</table>";
 
 		// $Table .= $Consulta;
 
-		return $Table;
+		return $table;
 	}
 
-	public function getPersonasxID($ID){
-		$Con = new Conexion();
-		$Con->OpenConexion();
-		$Consulta = "select id_persona, 
+	public function getPersonasxID($ID, $limit)
+	{
+		$con = new Conexion();
+		$con->OpenConexion();
+		$consulta = "select id_persona, 
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
@@ -1225,76 +1444,165 @@ class CtrGeneral {
 					 from persona
 					 where id_persona = $ID 
 					   and estado = 1 
-					 order by apellido, nombre";
-		$MessageError = "Problemas al intentar mostrar Personas por ID";
-		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
-		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["documento"]."</td><td>".$Ret["nro_legajo"]."</td><td><a href = 'view_verpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_persona"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
-		}
-		$Con->CloseConexion();
-		$Table .= "</table>";
+					 order by apellido, nombre
+					 limit $limit";
+		$message = "Problemas al intentar mostrar Personas por ID";
+		$table = "<table id='tabla-personas' class='table'>
+					<thead>
+						<tr>
+							<th>Apellido</th>
+							<th>Nombre</th>
+							<th>Documento</th>
+							<th>Nro. Legajo</th>
+							<th colspan='3'></th>
+						</tr>
+					</thead>";
+		$con->ResultSet = mysqli_query($con->Conexion, $consulta);
+		if (!$con->ResultSet) throw new Exception($message, 1);
 
-		return $Table;
+		while ($Ret = mysqli_fetch_array($con->ResultSet)) {
+			$table .= "<tr>
+						<td>" . $Ret["apellido"] . "</td>
+						<td>" . $Ret["nombre"] . "</td>
+						<td>" . $Ret["documento"] . "</td>
+						<td>" . $Ret["nro_legajo"] . "</td>
+						<td>
+							<a href = 'view_verpersonas.php?ID=" . $Ret["id_persona"] . "'>
+								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a>
+						</td>
+						<td>
+							<a href = 'view_modpersonas.php?ID=" . $Ret["id_persona"] . "'>
+								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+							</a>
+						</td>
+						<td>
+							<a onClick = 'Verificar(" . $Ret["id_persona"] . ")'>
+								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a>
+							</td>
+						</tr>";
+		}
+		$con->CloseConexion();
+		$table .= "</table>";
+
+		return $table;
 	}
 
-	public function getPersonasxApellido($Apellido){
-		$Con = new Conexion();
-		$Con->OpenConexion();
-		$Consulta = "select id_persona, 
+	public function getPersonasxApellido($apellido, $limit)
+	{
+		$con = new Conexion();
+		$con->OpenConexion();
+		$consulta = "select id_persona, 
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
 							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
 					 from persona
-					 where (TRIM(apellido) REGEXP '^$Apellido' or TRIM(apellido) REGEXP '[ ]+$Apellido')
+					 where (TRIM(apellido) REGEXP '^$apellido' or TRIM(apellido) REGEXP '[ ]+$apellido')
 					   and estado = 1 
-					 order by apellido, nombre";
-		$MessageError = "Problemas al intentar mostrar Personas por Apellido";
-		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
-		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["documento"]."</td><td>".$Ret["nro_legajo"]."</td><td><a href = 'view_verpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_persona"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+					 order by apellido, nombre
+					 limit $limit";
+		$message = "Problemas al intentar mostrar Personas por ID";
+		$table = "<table id='tabla-personas' class='table' data-id-filtro='" . self::APELLIDO . "' data-filtro='" . $apellido . "'>
+					<thead>
+						<tr>
+							<th>Apellido</th>
+							<th>Nombre</th>
+							<th>Documento</th>
+							<th>Nro. Legajo</th>
+							<th colspan='3'></th>
+						</tr>
+					</thead>";
+		$con->ResultSet = mysqli_query($con->Conexion, $consulta);
+		while ($Ret = mysqli_fetch_array($con->ResultSet)) {
+			$table .= "<tr>
+						<td>" . $Ret["apellido"] . "</td>
+						<td>" . $Ret["nombre"] . "</td>
+						<td>" . $Ret["documento"] . "</td>
+						<td>" . $Ret["nro_legajo"] . "</td>
+						<td>
+							<a href = 'view_verpersonas.php?ID=" . $Ret["id_persona"] . "'>
+								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a>
+						</td>
+						<td>
+							<a href = 'view_modpersonas.php?ID=" . $Ret["id_persona"] . "'>
+								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+							</a>
+						</td>
+						<td>
+							<a onClick = 'Verificar(" . $Ret["id_persona"] . ")'>
+								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a>
+							</td>
+						</tr>";
 		}
-		$Con->CloseConexion();
-		$Table .= "</table>";
+		$con->CloseConexion();
+		$table .= "</table>";
 
-		return $Table;
+		return $table;
 	}
 
-	public function getPersonasxNombre($Nombre){
-		$Con = new Conexion();
-		$Con->OpenConexion();
-		$Consulta = "select id_persona, 
+	public function getPersonasxNombre($nombre, $limit)
+	{
+		$con = new Conexion();
+		$con->OpenConexion();
+		$consulta = "select id_persona, 
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
 							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
 					 from persona
-					 where (TRIM(nombre) REGEXP '^$Nombre' or TRIM(nombre) REGEXP '[ ]+$Nombre')
+					 where (TRIM(nombre) REGEXP '^$nombre' or TRIM(nombre) REGEXP '[ ]+$nombre')
 					   and estado = 1 
-					 order by apellido, nombre";
-		$MessageError = "Problemas al intentar mostrar Personas por Nombre";
-		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
-		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["documento"]."</td><td>".$Ret["nro_legajo"]."</td><td><a href = 'view_verpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_persona"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
-		}
-		$Con->CloseConexion();
-		$Table .= "</table>";
+					 order by apellido, nombre
+					 limit $limit";
+		$message = "Problemas al intentar mostrar Personas por ID";
+		$table = "<table id='tabla-personas' class='table' data-id-filtro='" . self::NOMBRE . "' data-filtro='" . $nombre . "'>
+					<thead>
+						<tr>
+							<th>Apellido</th>
+							<th>Nombre</th>
+							<th>Documento</th>
+							<th>Nro. Legajo</th>
+							<th colspan='3'></th>
+						</tr>
+					</thead>";
+		$con->ResultSet = mysqli_query($con->Conexion, $consulta);
+		if (!$con->ResultSet) throw new Exception($message, 1);
 
-		return $Table;
+		while ($Ret = mysqli_fetch_array($con->ResultSet)) {
+			$table .= "<tr>
+						<td>" . $Ret["apellido"] . "</td>
+						<td>" . $Ret["nombre"] . "</td>
+						<td>" . $Ret["documento"] . "</td>
+						<td>" . $Ret["nro_legajo"] . "</td>
+						<td>
+							<a href = 'view_verpersonas.php?ID=" . $Ret["id_persona"] . "'>
+								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a>
+						</td>
+						<td>
+							<a href = 'view_modpersonas.php?ID=" . $Ret["id_persona"] . "'>
+								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+							</a>
+						</td>
+						<td>
+							<a onClick = 'Verificar(" . $Ret["id_persona"] . ")'>
+								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a>
+							</td>
+						</tr>";
+		}
+		$con->CloseConexion();
+		$table .= "</table>";
 	}
 
-	public function getPersonasxApellidoYNombre($ApellidoYNombre){
-		$Con = new Conexion();
-		$Con->OpenConexion();
+	public function getPersonasxApellidoYNombre($apellido_nombre, $limit)
+	{
+		$con = new Conexion();
+		$con->OpenConexion();
 
-		$caracater = str_contains($ApellidoYNombre, ",");		
+		$caracater = str_contains($apellido_nombre, ",");		
 		$query_filter = "";
 
 		if ($caracater) {
-			$consulta = preg_replace("~[ ]+~", " ", $ApellidoYNombre);
+			$consulta = preg_replace("~[ ]+~", " ", $apellido_nombre);
 			$elements = array_map("trim", explode(",", $consulta));
 			$apellidos = false;
 			$nombres = false;
@@ -1338,22 +1646,23 @@ class CtrGeneral {
 			if (!$cant_apellido && !$cant_nombres) $query_filter = "";
 
 		} else {
-			$query_filter = " and ((TRIM(apellido) REGEXP '^$ApellidoYNombre' or TRIM(apellido) REGEXP '[ ]+$ApellidoYNombre') 
-								  	 or (TRIM(nombre) REGEXP '^$ApellidoYNombre' or TRIM(nombre) REGEXP '[ ]+$ApellidoYNombre'))";
+			$query_filter = " and ((TRIM(apellido) REGEXP '^$apellido_nombre' or TRIM(apellido) REGEXP '[ ]+$apellido_nombre') 
+								  	 or (TRIM(nombre) REGEXP '^$apellido_nombre' or TRIM(nombre) REGEXP '[ ]+$apellido_nombre'))";
 		}
 
 
-		$Consulta = "select id_persona, 
+		$consulta = "select id_persona, 
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
 							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
 					 from persona
-					 where estado = 1 
-						$query_filter
-					 order by apellido, nombre";
-		$MessageError = "Problemas al intentar mostrar Personas por Apellido";
-		$Table = "<table class='table'>
+					 where estado = 1
+					 	$query_filter
+					 order by apellido, nombre
+					 limit $limit";
+		$message = "Problemas al intentar mostrar Personas por ID";
+		$table = "<table id='tabla-personas' class='table' data-id-filtro='" . self::APELLIDO_NOMBRE . "' data-filtro='" . $apellido_nombre . "'>
 					<thead>
 						<tr>
 							<th>Apellido</th>
@@ -1363,129 +1672,255 @@ class CtrGeneral {
 							<th colspan='3'></th>
 						</tr>
 					</thead>";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
-		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr>
-							<td>" . $Ret["apellido"] . "</td>
-							<td>" . $Ret["nombre"] . "</td>
-							<td>" . $Ret["documento"] . "</td>
-							<td>" . $Ret["nro_legajo"] . "</td>
-							<td>
-								<a href = 'view_verpersonas.php?ID=" . $Ret["id_persona"] . "'>
-									<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a>
-							</td>
-							<td>
-								<a href = 'view_modpersonas.php?ID=" . $Ret["id_persona"] . "'>
-									<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a>
-							</td>
-							<td>
-								<a onClick = 'Verificar(" . $Ret["id_persona"] . ")'>
-									<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
-								</a>
-							</td>
-					   </tr>";
-		}
-		$Con->CloseConexion();
-		$Table .= "</table>";
+		$con->ResultSet = mysqli_query($con->Conexion, $consulta);
+		if (!$con->ResultSet) throw new Exception($message, 1);
 
-		return $Table;
+		while ($Ret = mysqli_fetch_array($con->ResultSet)) {
+			$table .= "<tr>
+						<td>" . $Ret["apellido"] . "</td>
+						<td>" . $Ret["nombre"] . "</td>
+						<td>" . $Ret["documento"] . "</td>
+						<td>" . $Ret["nro_legajo"] . "</td>
+						<td>
+							<a href = 'view_verpersonas.php?ID=" . $Ret["id_persona"] . "'>
+								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a>
+						</td>
+						<td>
+							<a href = 'view_modpersonas.php?ID=" . $Ret["id_persona"] . "'>
+								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+							</a>
+						</td>
+						<td>
+							<a onClick = 'Verificar(" . $Ret["id_persona"] . ")'>
+								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a>
+							</td>
+						</tr>";
+		}
+		$con->CloseConexion();
+		$table .= "</table>";
+
+		return $table;
 	}
 
 
-	public function getPersonasxDNI($DNI){
-		$buscDNI = trim(str_replace(array('.'),'',$DNI));
-		$Con = new Conexion();
-		$Con->OpenConexion();
-		$Consulta = "select id_persona, 
+	public function getPersonasxDNI($dni, $limit)
+	{
+		$busc_dni = trim(str_replace(array('.'), '', $dni));
+		$con = new Conexion();
+		$con->OpenConexion();
+		$consulta = "select id_persona, 
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
 							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
 					 from persona 
-					 where documento like '%$buscDNI%' 
+					 where documento like '%$busc_dni%' 
 					   and estado = 1 
-					 order by apellido, nombre";
-		$MessageError = "Problemas al intentar mostrar Personas por Documento";
-		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
-		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["documento"]."</td><td>".$Ret["nro_legajo"]."</td><td><a href = 'view_verpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_persona"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
-		}
-		$Con->CloseConexion();
-		$Table .= "</table>";
+					 order by apellido, nombre
+					 limit $limit";
+		$message = "Problemas al intentar mostrar Personas por ID";
+		$table = "<table id='tabla-personas' class='table' data-id-filtro='" . self::DOCUMENTO . "' data-filtro='" . $dni . "'>
+					<thead>
+						<tr>
+							<th>Apellido</th>
+							<th>Nombre</th>
+							<th>Documento</th>
+							<th>Nro. Legajo</th>
+							<th colspan='3'></th>
+						</tr>
+					</thead>";
+		$con->ResultSet = mysqli_query($con->Conexion, $consulta);
+		if (!$con->ResultSet) throw new Exception($message, 1);
 
-		return $Table;
+		while ($Ret = mysqli_fetch_array($con->ResultSet)) {
+			$table .= "<tr>
+						<td>" . $Ret["apellido"] . "</td>
+						<td>" . $Ret["nombre"] . "</td>
+						<td>" . $Ret["documento"] . "</td>
+						<td>" . $Ret["nro_legajo"] . "</td>
+						<td>
+							<a href = 'view_verpersonas.php?ID=" . $Ret["id_persona"] . "'>
+								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a>
+						</td>
+						<td>
+							<a href = 'view_modpersonas.php?ID=" . $Ret["id_persona"] . "'>
+								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+							</a>
+						</td>
+						<td>
+							<a onClick = 'Verificar(" . $Ret["id_persona"] . ")'>
+								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a>
+							</td>
+						</tr>";
+		}
+		$con->CloseConexion();
+		$table .= "</table>";
+
+		return $table;
 	}
 
-	public function getPersonasxLegajo($Legajo){
-		$Con = new Conexion();
-		$Con->OpenConexion();
-		$Consulta = "select id_persona, 
+	public function getPersonasxLegajo($legajo, $limit)
+	{
+		$con = new Conexion();
+		$con->OpenConexion();
+		$consulta = "select id_persona, 
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
 							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
 					 from persona 
-					 where nro_legajo like '%$Legajo%' 
+					 where nro_legajo like '%$legajo%' 
 					   and estado = 1 
-					 order by apellido, nombre";
-		$MessageError = "Problemas al intentar mostrar Personas por Legajo";
-		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th></th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
-		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["documento"]."</td><td>".$Ret["nro_legajo"]."</td><td><a href = 'view_verpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_persona"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
-		}
-		$Con->CloseConexion();
-		$Table .= "</table>";
+					 order by apellido, nombre
+					 limit $limit";
+		$message = "Problemas al intentar mostrar Personas por ID";
+		$table = "<table id='tabla-personas' class='table' data-id-filtro='" . self::LEGAJO . "' data-filtro='" . $legajo . "'>
+					<thead>
+						<tr>
+							<th>Apellido</th>
+							<th>Nombre</th>
+							<th>Documento</th>
+							<th>Nro. Legajo</th>
+							<th colspan='3'></th>
+						</tr>
+					</thead>";
+		$con->ResultSet = mysqli_query($con->Conexion, $consulta);
+		if (!$con->ResultSet) throw new Exception($message, 1);
 
-		return $Table;
+		while ($Ret = mysqli_fetch_array($con->ResultSet)) {
+			$table .= "<tr>
+						<td>" . $Ret["apellido"] . "</td>
+						<td>" . $Ret["nombre"] . "</td>
+						<td>" . $Ret["documento"] . "</td>
+						<td>" . $Ret["nro_legajo"] . "</td>
+						<td>
+							<a href = 'view_verpersonas.php?ID=" . $Ret["id_persona"] . "'>
+								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a>
+						</td>
+						<td>
+							<a href = 'view_modpersonas.php?ID=" . $Ret["id_persona"] . "'>
+								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+							</a>
+						</td>
+						<td>
+							<a onClick = 'Verificar(" . $Ret["id_persona"] . ")'>
+								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a>
+							</td>
+						</tr>";
+		}
+		$con->CloseConexion();
+		$table .= "</table>";
+
+		return $table;
 	}
 
-	public function getPersonasxCarpeta($Carpeta){
-		$Con = new Conexion();
-		$Con->OpenConexion();
-		$Consulta = "select id_persona, 
+	public function getPersonasxCarpeta($carpeta, $limit)
+	{
+		$con = new Conexion();
+		$con->OpenConexion();
+		$consulta = "select id_persona, 
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre,
 							documento,
 							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo 
 					 from persona 
-					 where nro_carpeta = '$Carpeta' 
-					   and estado = 1 order by apellido, nombre";
-		$MessageError = "Problemas al intentar mostrar Personas por Carpeta";
-		$Table = "<table class='table'><thead><tr><th>Apellido</th><th>Nombre</th><th>Documento</th></th><th>Nro. Legajo</th><th colspan='3'></th></tr></thead>";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
-		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["documento"]."</td><td>".$Ret["nro_legajo"]."</td><td><a href = 'view_verpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_persona"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
-		}
-		$Con->CloseConexion();
-		$Table .= "</table>";
+					 where nro_carpeta = '$carpeta' 
+					   and estado = 1 order by apellido, nombre
+					   limit $limit";
+		$message = "Problemas al intentar mostrar Personas por ID";
+		$table = "<table id='tabla-personas' class='table' data-id-filtro='" . self::CARPETA . "' data-filtro='" . $carpeta . "'>
+					<thead>
+						<tr>
+							<th>Apellido</th>
+							<th>Nombre</th>
+							<th>Documento</th>
+							<th>Nro. Legajo</th>
+							<th colspan='3'></th>
+						</tr>
+					</thead>";
+		$con->ResultSet = mysqli_query($con->Conexion, $consulta);
+		if (!$con->ResultSet) throw new Exception($message, 1);
 
-		return $Table;
+		while ($Ret = mysqli_fetch_array($con->ResultSet)) {
+			$table .= "<tr>
+						<td>" . $Ret["apellido"] . "</td>
+						<td>" . $Ret["nombre"] . "</td>
+						<td>" . $Ret["documento"] . "</td>
+						<td>" . $Ret["nro_legajo"] . "</td>
+						<td>
+							<a href = 'view_verpersonas.php?ID=" . $Ret["id_persona"] . "'>
+								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a>
+						</td>
+						<td>
+							<a href = 'view_modpersonas.php?ID=" . $Ret["id_persona"] . "'>
+								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+							</a>
+						</td>
+						<td>
+							<a onClick = 'Verificar(" . $Ret["id_persona"] . ")'>
+								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a>
+							</td>
+						</tr>";
+		}
+		$con->CloseConexion();
+		$table .= "</table>";
+
+		return $table;
 	}
 	
 
-	public function getPersonasxDomicilio($Domicilio){
-		$Con = new Conexion();
-		$Con->OpenConexion();
-		$Consulta = "select id_persona, 
+	public function getPersonasxDomicilio($domicilio, $limit)
+	{
+		$con = new Conexion();
+		$con->OpenConexion();
+		$consulta = "select id_persona, 
 					 		UPPER(apellido) as apellido, 
 					 		CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 					 		documento, 
 					 		IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo,domicilio 
 					 FROM persona 
-					 WHERE domicilio LIKE '%$Domicilio%' 
+					 WHERE domicilio LIKE '%$domicilio%' 
 					   AND estado = 1 
-					 ORDER BY apellido, nombre";
-		$MessageError = "Problemas al intentar mostrar Personas por Domicilio";
-		$Table = "<table class='table'><thead><tr><th>Id</th><th>Apellido</th><th>Nombre</th><th>Documento</th></th><th>Nro. Legajo</th></tr></thead>";
-		$Con->ResultSet = mysqli_query($Con->Conexion,$Consulta) or die($MessageError);
-		while ($Ret = mysqli_fetch_array($Con->ResultSet)) {
-			$Table .= "<tr><td>".$Ret["id_persona"]."</td><td>".$Ret["apellido"]."</td><td>".$Ret["nombre"]."</td><td>".$Ret["documento"]."</td><td>".$Ret["nro_legajo"]."</td><td><a href = 'view_verpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a></td><td><a href = 'view_modpersonas.php?ID=".$Ret["id_persona"]."'><img src='./images/icons/ModDatos.png' class = 'IconosAcciones'></a></td><td><a onClick = 'Verificar(".$Ret["id_persona"].")'><img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a></td></tr>";
+					 ORDER BY apellido, nombre
+					 limit $limit";
+		$message = "Problemas al intentar mostrar Personas por ID";
+		$table = "<table id='tabla-personas' class='table' data-id-filtro='" . self::DOMICILIO . "' data-filtro='" . $domicilio . "'>
+					<thead>
+						<tr>
+							<th>Apellido</th>
+							<th>Nombre</th>
+							<th>Documento</th>
+							<th>Nro. Legajo</th>
+							<th colspan='3'></th>
+						</tr>
+					</thead>";
+		$con->ResultSet = mysqli_query($con->Conexion, $consulta);
+		if (!$con->ResultSet) throw new Exception($message, 1);
+
+		while ($Ret = mysqli_fetch_array($con->ResultSet)) {
+			$table .= "<tr>
+						<td>" . $Ret["apellido"] . "</td>
+						<td>" . $Ret["nombre"] . "</td>
+						<td>" . $Ret["documento"] . "</td>
+						<td>" . $Ret["nro_legajo"] . "</td>
+						<td>
+							<a href = 'view_verpersonas.php?ID=" . $Ret["id_persona"] . "'>
+								<img src='./images/icons/VerDatos.png' class = 'IconosAcciones'></a>
+						</td>
+						<td>
+							<a href = 'view_modpersonas.php?ID=" . $Ret["id_persona"] . "'>
+								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
+							</a>
+						</td>
+						<td>
+							<a onClick = 'Verificar(" . $Ret["id_persona"] . ")'>
+								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'></a>
+							</td>
+						</tr>";
 		}
-		$Con->CloseConexion();
-		$Table .= "</table>";
-		return $Table;
+		$con->CloseConexion();
+		$table .= "</table>";
+		return $table;
 	}
 		
 	////////////////////////////////////////////////-MOTIVOS-///////////////////////////////////////////////////
