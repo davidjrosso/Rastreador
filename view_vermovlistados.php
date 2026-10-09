@@ -1459,7 +1459,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                                 <th rowspan=2 class='trBarrio'>Barrio</th>
                                 <th rowspan=2 class='trLocalidad'>Localidad</th>
                                 <th rowspan=2 class='trObservaciones' data-toggle='modal' data-target='#mdal_ct'>Observaciones</th>
-                                <th rowspan=2 class='trObservacionesMedicina' data-toggle='modal' data-target='#mdal_ct'>Observaciones Medicina</th>
+                                <th rowspan=2 class='trObservacionesMedicina' data-toggle='modal' data-target='#mdal_ct'>Otras Observaciones</th>
                                 <th rowspan=2 class='trResponsable'>Responsable</th>
                                 <th rowspan=2 class='trCentrosSalud'>Centro de salud</th>
                                 <th rowspan=2 class='trOtrasInstituciones'>Otras Instituciones</th>
@@ -1549,7 +1549,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                 $TableMov .= $MotivosTh;
 
                 $TableMov .= "  <th rowspan=2 class='trObservaciones' data-toggle='modal' data-target='#mdal_ct'>Observaciones</th>
-                                <th rowspan=2 class='trObservacionesMedicina' data-toggle='modal' data-target='#mdal_ct'>Observaciones Medicina</th>
+                                <th rowspan=2 class='trObservacionesMedicina' data-toggle='modal' data-target='#mdal_ct'>Otras Observaciones</th>
                                 <th rowspan='2' class='trResponsable'>Responsable</th>
                                 <th rowspan='2' class='trDNI'>DNI</th>
                                 <th rowspan='2' class='trFechaNac'>Fecha Nac.</th>
@@ -1562,7 +1562,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                                 <th rowspan='2' class='trOtrasInstituciones'>Otras Instituciones</th>
                               </tr>";
                 $header_movimientos_general[] = "Observaciones";
-                $header_movimientos_general[] = "Observaciones Medicina";
+                $header_movimientos_general[] = "Otras Observaciones";
                 $header_movimientos_general[] = "DNI";
                 $header_movimientos_general[] = "Fecha Nac";
                 //$header_movimientos_general[] = "Edad";
@@ -2441,7 +2441,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
           <li><input type="checkbox" id="chkBarrio" checked> Barrio </li>
           <li><input type="checkbox" id="chkLocalidad"> Localidad </li>
           <li><input type="checkbox" id="chkObservaciones" checked> Observaciones</li>
-          <li><input type="checkbox" id="chkObservacionMedicina" checked> Observaciones Medicina</li>
+          <li><input type="checkbox" id="chkObservacionMedicina" checked> Otras Observaciones</li>
           <li><input type="checkbox" id="chkResponsable" checked> Responsable</li>
           <li><input type="checkbox" id="chkCentrosSalud"> Centro de salud </li>
           <li><input type="checkbox" id="chkOtrasInstituciones"> Otras instituciones</li>
