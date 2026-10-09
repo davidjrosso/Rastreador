@@ -35,6 +35,7 @@ if(empty($_REQUEST["Fecha"])){
 }else{
 	$Fecha = implode("-", array_reverse(explode("/", $_REQUEST["Fecha"])));
 }
+$ID_Persona = $_REQUEST["ID_Persona"];
 
 $Arr_ID_Responsable = $_REQUEST["ID_Responsable"];
 
@@ -78,11 +79,11 @@ try {
 							xFecha: $Fecha,
 					Fecha_Creacion: $Fecha_Accion,
 					xID_Persona: $ID_Persona,
-					xID_Motivo_1: $ID_Motivo[1],
-					xID_Motivo_2: $ID_Motivo[2],
-					xID_Motivo_3: $ID_Motivo[3],
-					xID_Motivo_4: $ID_Motivo[4],
-					xID_Motivo_5: $ID_Motivo[5],
+					xID_Motivo_1: $ID_Motivo[0],
+					xID_Motivo_2: $ID_Motivo[1],
+					xID_Motivo_3: $ID_Motivo[2],
+					xID_Motivo_4: $ID_Motivo[3],
+					xID_Motivo_5: $ID_Motivo[4],
 					xObservaciones: $observacion_general,
 				xID_Responsable: $ID_Responsable_1,
 				xID_Responsable_2: $ID_Responsable_2,
@@ -114,6 +115,7 @@ try {
 
 	}
 
+	$mensaje_motivo = "";
 	foreach($ID_Motivo as $id) {
 		$motivo = MovimientoMotivo::exist_movimiento_motivo(
 			connection: $Con,
@@ -149,7 +151,7 @@ try {
 	}
 
 
-	$detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Movimiento. Datos: Fecha: $Fecha_Accion - Persona: $ID_Persona - Motivo 1: $ID_Motivo_1 - Motivo 2: $ID_Motivo_2 - Motivo 3: $ID_Motivo_3 - Observacion general: $observacion_general - Observacion medicina : $observacion_medicina - Responsable: $ID_Responsable - Centro Salud: $ID_Centro - Otra Institución: $ID_OtraInstitucion";
+	$detalles = "El usuario con ID: $ID_Usuario ha registrado un nuevo Movimiento. Datos: Fecha: $Fecha_Accion - Persona: $ID_Persona - Motivo 1:" .  $ID_Motivo[0] . " - Motivo 2:" .  $ID_Motivo[1] . " - Motivo 3:" .  $ID_Motivo[2] . " - Responsable:" . $ID_Responsable_1 . " - Centro Salud: $ID_Centro - Otra Institución: $ID_OtraInstitucion";
 
 	$accion = new Accion(
 		xaccountid: $ID_Usuario,
