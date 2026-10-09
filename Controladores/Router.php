@@ -98,6 +98,7 @@ try {
 	$routes[] = Route::get('crear_persona_error', '/persona/nueva\?MensajeError={mensaje}', [PersonaController::class, 'crear_persona']);
 	$routes[] = Route::post('crear_persona_control', '/insertar_persona', [PersonaController::class, 'crear_persona_control']);
 	$routes[] = Route::get('personas_eliminar', 'delete_persona\?ID={id}', [PersonaController::class, 'delete_persona']);
+	$routes[] = Route::post('listado_personas_filtro_control', '/listado_personas_filtro_control', [PersonaController::class, 'listado_personas_filtro_control']);
 	$routes[] = Route::post('persona_mod_control', '/modificar_persona', [PersonaController::class, 'mod_persona_control']);
 	$routes[] = Route::get('personas_unificar', '/personas/unificar', [PersonaController::class, 'unif_persona']);
 	$routes[] = Route::post('personas_unif_control', 'unificarpersonas', [PersonaController::class, 'unif_persona_control']);
