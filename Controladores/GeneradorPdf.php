@@ -348,7 +348,8 @@ try {
                         continue;
                     }
 
-                    if ($header_mov_general[$h] == "Observaciones") {
+                    if ($header_mov_general[$h] == "Observaciones"
+                        || $header_mov_general[$h] == "Otras Observaciones") {
                         $sd = $array_filas[$i][$header_mov_general[$h]];
                         $mr = preg_replace('~data-list-item-id=\\"[aA-zZ0-9]*\\"~', "", $sd);
                         $row .= $array_filas[$i][$header_mov_general[$h]];
