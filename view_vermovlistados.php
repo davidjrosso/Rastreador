@@ -1953,7 +1953,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                     $TableMov .= "<td class='trObservaciones' style = 'width: auto;' data-toggle='modal' data-target='#mdal_ct' data-id-mv = '". $DtoMovimiento->getID_Movimiento() . "'>
                                     <div style='max-height: 9em; overflow: hidden' >" . $DtoMovimiento->get_observacion_medicina() . "</div>
                                   </td>";
-                    $json_row["Observacion Medicina"] = $DtoMovimiento->get_observacion_medicina();
+                    $json_row["Otras Observaciones"] = $DtoMovimiento->get_observacion_medicina();
                     $TableMov .= "<td class='trResponsable' style = 'width: auto;'>" . implode("-", $responsables) . "</td>";
                     $json_row["Responsable"] = $DtoMovimiento->getResponsable();
                     $TableMov .= "<td class='trDNI' style = 'width: auto;'>" . $DNI."</td>";
@@ -2303,7 +2303,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                   $TableMov .= "<td class='trObservacionesMedicina' style = 'width: auto;'  data-toggle='modal' data-target='#mdal_ct'>
                                   " . $DtoMovimiento->get_observacion_medicina() . "
                                 </td>";
-                  $json_row["Observacion medicina"] = $DtoMovimiento->get_observacion_medicina();
+                  $json_row["Otras Observaciones"] = $DtoMovimiento->get_observacion_medicina();
                   $TableMov .= "<td class='trResponsable' style = 'width: auto;'>" . implode("-", $responsables) . "</td>";
 
                   $json_row["Responsable"] = $DtoMovimiento->getResponsable();
