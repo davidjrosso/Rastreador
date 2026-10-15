@@ -2327,7 +2327,10 @@ public function getMenuSeguridadUsuario($ID){
     $Con3->OpenConexion();
     $Select = "<select class='form-control' id='ID_Escuela' data-pre='1' name = 'ID_Escuela'>";
     $Select .= "<option value = '0'>-Todos-</option>";
-    $Consulta = mysqli_query($Con3->Conexion,"select * from escuelas order by Escuela")or die("Problemas al mostrar Escuelas");
+    $query = "select * 
+              from escuelas 
+              order by Escuela";
+    $Consulta = mysqli_query($Con3->Conexion, $query) or die("Problemas al mostrar Escuelas");
     while ($Ret = mysqli_fetch_array($Consulta)) {
       if($Ret["ID_Nivel"] != null || $Ret["ID_Nivel"] != ""){
         $ID_Nivel = $Ret["ID_Nivel"];

@@ -152,7 +152,7 @@ $movimiento_fin = (!empty($_REQUEST["fin-movimiento-check"])) ? true : false;
       NavegacionConTeclado(e);
     });
 
-    $(document).on("ready", function (e) {
+    $(function (e) {
       excel = new Excel();
       tablaBody = $("#tablaMovimientos tbody");
       tablaHead = $("#tablaMovimientos thead");
@@ -542,13 +542,9 @@ $movimiento_fin = (!empty($_REQUEST["fin-movimiento-check"])) ? true : false;
           }
         }
       } else {
-          let columnaActual = columnaIndice;
-          if (value <= columnaIndice && columnaIndice < valInputRangePrev) {
+        let columnaActual = columnaIndice;
+        if (value <= columnaIndice && columnaIndice < valInputRangePrev) {
               let columnaActual = columnaIndice;
-
-              //headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
-              //columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
-              //divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
               headABorrar = tablaHeadRow.find('> *:nth-child(' + columnaActual + ')');
               columnaABorrar = tablaBodyRows.find('> *:nth-child(' + columnaActual + ')');
               divABorrar = columnaABorrar.find('div div');
@@ -587,14 +583,11 @@ $movimiento_fin = (!empty($_REQUEST["fin-movimiento-check"])) ? true : false;
               $("#BarraDeNavHTabla").attr("value", columnaIndice);
               valInputRangePrev = value;
 
-          } else if (value <= columnaIndice &&  valInputRangePrev <= columnaIndice) {
+        } else if (value <= columnaIndice &&  valInputRangePrev <= columnaIndice) {
               if (value < columnaIndice 
                   && valInputRangePrev == columnaIndice 
                   && valInputRangePrev != nroColumnaInicial
                 ) {
-                //headABorrar = $('thead tr > *:nth-child(' + columnaActual + ')');
-                //columnaABorrar = $('tbody tr > *:nth-child(' + columnaActual + ')');
-                //divABorrar = $('tbody tr > *:nth-child(' + columnaActual + ') div div');
                 headABorrar = tablaHeadRow.find('> *:nth-child(' + columnaActual + ')');
                 columnaABorrar = tablaBodyRows.find('> *:nth-child(' + columnaActual + ')');
                 divABorrar = columnaABorrar.find('div div');
@@ -607,7 +600,7 @@ $movimiento_fin = (!empty($_REQUEST["fin-movimiento-check"])) ? true : false;
                 headABorrar.css("margin-left", "0px");
               }
               columnaIndice--;
-              let columnaActual = columnaIndice;
+              columnaActual = columnaIndice;
               let margin = Math.abs(value - columnaActual);
               let width = 190;
               let updateMarginLeft = "-" + margin * width + "px";

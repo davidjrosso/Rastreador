@@ -355,6 +355,8 @@ $(function() {
         controlMovimiento(this);
     });
 
+    $("#width-display").prop("value", window.screen.availWidth);
+
     $("#Edad_Hasta").on("mouseenter", function (e) {
         let val = $(this).val();
         if (val) {
@@ -393,8 +395,6 @@ $(function() {
           $(this).hide();
           modalCargaDeMovimiento();
         });
-
-        $("#width-display").prop("value", window.screen.availWidth);
 
         function resetearForm() {
         swal({
