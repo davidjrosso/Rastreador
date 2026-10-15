@@ -3,6 +3,7 @@ session_start();
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/Elements.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Controladores/CtrGeneral.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Persona.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Account.php");
 
 header("Content-Type: text/html;charset=utf-8");
 
@@ -12,20 +13,22 @@ if(!isset($_SESSION["Usuario"])){
     exit();
 }
 
-  $Con = new Conexion();
-  $Con->OpenConexion();
-  $ID_Usuario = $_SESSION["Usuario"];
-  $ConsultarTipoUsuario = "select ID_TipoUsuario from accounts where accountid = $ID_Usuario";
-  $MensajeErrorConsultarTipoUsuario = "No se pudo consultar el Tipo de Usuario";
-  $EjecutarConsultarTipoUsuario = mysqli_query($Con->Conexion,$ConsultarTipoUsuario) or die($MensajeErrorConsultarTipoUsuario);
-  $Ret = mysqli_fetch_assoc($EjecutarConsultarTipoUsuario);
-  $TipoUsuario = $Ret["ID_TipoUsuario"];
-  $Con->CloseConexion();
+
+  $id_usuario = $_SESSION["Usuario"];
+  $account = new Account(account_id: $id_usuario);
+  $tipo_usuario = $account->get_id_tipo_usuario();
 
   $ID_Persona = $_REQUEST["ID_Persona"] ?? null;
   $volver = null;
 
   $Element = new Elements();
+
+  $http_referer = (!empty($_SERVER["HTTP_REFERER"])) ? $_SERVER["HTTP_REFERER"] : null;
+  $origen_view_movimientos = preg_match("~view_movimientos~", $http_referer);
+
+  $redireccion = !empty($_SESSION["origen_pag_view_movimientos"]);
+
+  $_SESSION["origen_pag_view_movimientos"] = $origen_view_movimientos;
 
   $persona = null;
   if ($ID_Persona) $persona = new Persona(ID_Persona: $ID_Persona);
@@ -427,7 +430,7 @@ if(!isset($_SESSION["Usuario"])){
 </div>
 <div class = "row margin-right-cero">
 <?php
-  echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_MOVIMIENTO);
+  echo $Element->menuDeNavegacion($tipo_usuario, $id_usuario, $Element::PAGINA_MOVIMIENTO);
   ?>
   <div class = "col-md-9 inicio-md-2">
     <div class="row">
@@ -923,7 +926,7 @@ if(!isset($_SESSION["Usuario"])){
 if(isset($_REQUEST["Mensaje"])){
   echo "<script type='text/javascript'>
   swal('".$_REQUEST["Mensaje"]."','','success').then((result) => {
-    if (result && datosPrev) {
+    if (result && datosPrev && !" . (($redireccion) ? "true" : "false") . ") {
     sendToRepL(datosPrev);
   }});
 </script>";
