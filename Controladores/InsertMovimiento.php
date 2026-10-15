@@ -37,6 +37,14 @@ if(empty($_REQUEST["Fecha"])){
 }
 $ID_Persona = $_REQUEST["ID_Persona"];
 
+$origen_view_movimientos = !empty($_SESSION["origen_pag_view_movimientos"]);
+
+if (!$origen_view_movimientos) {
+	if (isset($_SESSION["request_prev"]) && isset($_SESSION["request_prev"]["ID_Persona"])) {
+		$_SESSION["request_prev"]["ID_Persona"] = $ID_Persona;
+	}
+}
+
 $Arr_ID_Responsable = $_REQUEST["ID_Responsable"];
 
 $ID_Responsable_1 = (!empty($Arr_ID_Responsable[0])) ? $Arr_ID_Responsable[0] : 64;
