@@ -136,7 +136,7 @@ $Element = new Elements();
                               <input type="number" name="Edad_Desde" id="Edad_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0">
                               <input type="hidden" name="ID_Persona" id="ID_Persona" value="0">
                           </div>
-                          <div class="position-absolute" style="z-index: 1100; width: auto; right: -20%; top: -83%">
+                          <div class="position-absolute" style="z-index: 1100; width: auto; right: -4%; top: -83%">
                             <div id="edad-desde-toast" class="toast hide dat-toast" style="width:auto;" role="alert" aria-live="assertive" aria-atomic="true">
                               <div class="toast-body">
                                 <span id="edad-desde-dato">0</span>
@@ -149,7 +149,7 @@ $Element = new Elements();
                           <div class="col-md-10">
                               <input type="number" name="Edad_Hasta" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0">
                           </div>  
-                          <div class="position-absolute" style="z-index: 1100; width: auto; right: -20%; top: -83%" data-bs-delay="10">
+                          <div class="position-absolute" style="z-index: 1100; width: auto; right: -4%; top: -83%" data-bs-delay="10">
                             <div id="edad-hasta-toast" class="toast hide dat-toast" style="width:auto;" role="alert" aria-live="assertive" aria-atomic="true">
                               <div class="toast-body">
                                 <span id="edad-hasta-dato">0</span>
@@ -162,7 +162,7 @@ $Element = new Elements();
                           <div class="col-md-10">
                               <input type="number" name="Meses_Desde" id="Meses_Desde" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" onkeyup="habilitarEdad(this)">
                           </div>
-                          <div class="position-absolute" style="z-index: 1100; width: auto; right: -20%; top: -83%">
+                          <div class="position-absolute" style="z-index: 1100; width: auto; right: -4%; top: -83%">
                             <div id="meses-desde-toast" class="toast hide dat-toast" style="width:auto;" role="alert" aria-live="assertive" aria-atomic="true">
                               <div class="toast-body">
                                 <span id="meses-desde-dato">0</span>
@@ -175,7 +175,7 @@ $Element = new Elements();
                           <div class="col-md-10">
                               <input type="number" name="Meses_Hasta" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" max="11">
                           </div>
-                          <div class="position-absolute" style="z-index: 1100; width: auto; right: -20%; top: -83%">
+                          <div class="position-absolute" style="z-index: 1100; width: auto; right: -4%; top: -83%">
                             <div id="meses-hasta-toast" class="toast hide dat-toast" style="width:auto;" role="alert" aria-live="assertive" aria-atomic="true">
                               <div class="toast-body">
                                 <span id="meses-hasta-dato">0</span>

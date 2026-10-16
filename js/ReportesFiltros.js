@@ -374,23 +374,6 @@ $(function() {
     });
 
     /*
-        $("#Meses_Hasta").on("mouseenter", function () {
-          let val = $(this).val();
-          if (val) {
-            $("#meses-hasta-dato").html(toastMessage("meses"));
-            time = setTimeout(function () {
-                $("#meses-hasta-toast").show();
-            }, 1000);
-          }
-        }).on("mouseleave", function () {
-          $("#meses-hasta-toast").hide();
-          clearTimeout(time);
-        }).on("input", function () {
-          $("#meses-hasta-dato").html(toastMessage("meses"));
-          $("#meses-hasta-toast").show();
-        });
-
-
         $("#liveToast").on("click", function (e) {
           $(this).hide();
           modalCargaDeMovimiento();
