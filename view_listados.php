@@ -157,7 +157,7 @@ if (!$id_motivo) {
                   <div class="col-md-10">
                       <input type="number" name="Edad_Hasta" data-pre = "1" id="Edad_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" value="<?= (isset($datosNav["Edad_Hasta"])) ? $datosNav["Edad_Hasta"] : '' ?>">
                   </div>
-                  <div class="position-absolute" style="z-index: 1100; width: auto; right: -20%; top: -83%" data-bs-delay="10">
+                  <div class="position-absolute" style="z-index: 1100; width: auto; right: -4%; top: -83%" data-bs-delay="10">
                     <div id="edad-hasta-toast" class="toast hide dat-toast" style="width:auto;" role="alert" aria-live="assertive" aria-atomic="true">
                       <div class="toast-body">
                         <span id="edad-hasta-dato">0</span>
@@ -176,7 +176,7 @@ if (!$id_motivo) {
                   <div class="col-md-10">
                       <input type="number" name="Meses_Hasta" data-pre = "1" id="Meses_Hasta" class="form-control" autocomplete="off" placeholder="Sólo Números" min="0" max="11" value="<?= (isset($datosNav["Meses_Hasta"])) ? $datosNav["Meses_Hasta"] : '' ?>">
                   </div>
-                  <div class="position-absolute" style="z-index: 1100; width: auto; right: -20%; top: -83%">
+                  <div class="position-absolute" style="z-index: 1100; width: auto; right: -4%; top: -83%">
                     <div id="meses-hasta-toast" class="toast hide dat-toast" style="width:auto;" role="alert" aria-live="assertive" aria-atomic="true">
                       <div class="toast-body">
                         <span id="meses-hasta-dato">0</span>
