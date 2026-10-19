@@ -1,4 +1,7 @@
 <?php
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Movimiento.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Responsable.php");
+
 
 class MovimientoResponsable
 {
@@ -77,6 +80,26 @@ class MovimientoResponsable
 		$ret_query = mysqli_fetch_assoc($rs);
 		$exist = ((!empty($ret_query["id_movimiento"])) ? $ret_query["id_movimiento"] : 0);
         return ($exist);
+	}
+
+    public static function get_lista_responsables_por_id_movimiento($coneccion, $movimiento)
+	{
+		$list = [];
+		$consulta = "select * 
+					from movimientos_responsables
+					where id_movimiento = " . $movimiento->getID_Movimiento() . "
+					  and estado = 1";
+		$rs = mysqli_query($coneccion->Conexion, $consulta);
+
+		$mensaje = "Problemas al consultar los movimientos responsables.";
+		if (!$rs) throw new Exception($mensaje, 1);
+
+		while ($ret = mysqli_fetch_assoc($rs)) {
+			$list[] = new Responsable(coneccion_base: $coneccion->Conexion,
+									 id_responsable: $ret["id_responsable"]);
+		}
+
+        return ($list);
 	}
 
 	// METODOS SET

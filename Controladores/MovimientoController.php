@@ -30,7 +30,6 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Movimiento.php");
 require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Motivo.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/MovimientoMotivo.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/MovimientoResponsable.php");
-
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Modelo/DtoMovimiento.php';
 
 
@@ -349,8 +348,8 @@ class MovimientoController
             $detalle_not = 'Se elimino el movimiento vinculado a : ' . $Apellido . ', ' . $Nombre . (($Fecha == null)?'':' fecha: '. $Fecha);
             $expira = date("Y-m-d", strtotime($Fecha . " + 15 days"));
 
-            $rev = new Notificacion(coneccion_base: $Con, detalle: $detalle_not , fecha: $expira);
-            $rev->save();
+            $notificacion = new Notificacion(coneccion_base: $Con, detalle: $detalle_not , fecha: $expira);
+            $notificacion->save();
 
             $Con->CloseConexion();
             $Mensaje = "El movimiento se elimino Correctamente";
@@ -417,18 +416,16 @@ class MovimientoController
             $movimiento->setID_Movimiento($ID_Movimiento);
             $movimiento->udpate();
 
-            $consulta = "SELECT * 
-                        FROM movimientos_motivos
-                        WHERE id_movimiento = $ID_Movimiento
-                        AND estado = 1";
-            $rs = mysqli_query($con->Conexion,$consulta) or die("Problemas al consultar las acciones.");
-
-            while ($ret = mysqli_fetch_assoc($rs)) {
-                if (!in_array($ret["id_motivo"], $lista_motivos)) {
+            $motivos = MovimientoMotivo::get_lista_motivos_por_movimiento(
+                                                coneccion: $con,
+                                                movimiento: $movimiento
+            );
+            foreach ($motivos as $motivo) {
+                if (!in_array($motivo->get_id_motivo(), $lista_motivos)) {
                     $movimiento_motivo = new MovimientoMotivo(
-                                                            connection: $con,
-                                                            id_movimiento: $ID_Movimiento,
-                                                            id_motivo: $ret["id_motivo"]
+                                            connection: $con,
+                                            id_movimiento: $ID_Movimiento,
+                                            id_motivo: $motivo->get_id_motivo()
                     );
                     $movimiento_motivo->delete();
                 }
@@ -450,18 +447,17 @@ class MovimientoController
                 }
             }
 
-            $consulta = "SELECT * 
-                        FROM movimientos_responsables
-                        WHERE id_movimiento = $ID_Movimiento
-                        AND estado = 1";
-            $rs = mysqli_query($con->Conexion,$consulta) or die("Problemas al consultar las acciones.");
+            $responsables = MovimientoResponsable::get_lista_responsables_por_id_movimiento(
+                coneccion: $con,
+                movimiento: $movimiento
+            );
 
-            while ($ret = mysqli_fetch_assoc($rs)) {
-                if (!in_array($ret["id_responsable"], $lista_res)) {
+            foreach ($responsables as $responsable) {
+                if (!in_array($responsable->get_id_responsable(), $lista_res)) {
                     $mov = new MovimientoResponsable(
                                                      connection: $con,
                                                      id_movimiento: $ID_Movimiento,
-                                                     id_responsable: $ret["id_responsable"]
+                                                     id_responsable: $responsable->get_id_responsable()
                                                      );
                    $mov->delete();
                 }
@@ -503,11 +499,16 @@ class MovimientoController
         $dni = $persona->getDNI();
 
         // CREANDO NOTIFICACION PARA EL USUARIO
-        $detalle_not = 'Se modifico el movimiento vinculado a : '. $apellido . ', '. $nombre . ' fecha: '. $fecha_previa;
+        $detalle_not = 'Se modifico el movimiento vinculado a : '. $apellido . ', '. $nombre . ' fecha: '. $fecha_previa . ' dni: ' . $dni;
         $expira = date("Y-m-d", strtotime($fecha_accion . " + 15 days"));
 
-        $rev = new Notificacion(coneccion_base: $con, detalle: $detalle_not , fecha: $expira);
-        $rev->save();
+        $notificacion = new Notificacion(coneccion_base: $con, 
+                                         detalle: $detalle_not, 
+                                         expira: $expira,
+                                         fecha: $Fecha,
+                                         estado: 1
+                                        );
+        $notificacion->save();
         
         $con->CloseConexion();
 

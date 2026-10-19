@@ -21,6 +21,7 @@ session_start();
 require_once $_SERVER['DOCUMENT_ROOT'] . '/Controladores/Conexion.php';
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Movimiento.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/MovimientoMotivo.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Notificacion.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/MovimientoObservacion.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/TipoObservacion.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/Modelo/Persona.php");
@@ -41,13 +42,20 @@ $ID_Motivo_5 = (!empty($_REQUEST["ID_Motivo_5"]) ? $_REQUEST["ID_Motivo_5"] : nu
 $lista_motivos = array($ID_Motivo_1);
 $observaciones_general = $_REQUEST["observacion-general"];
 $observacion_medicina = $_REQUEST["observacion-medicina"];
-$ID_Responsable = $Arr_ID_Responsable[0];
 $ID_Centro = $_REQUEST["ID_Centro"];
 $ID_OtraInstitucion = $_REQUEST["ID_OtraInstitucion"];
 $Estado = 1;
-$ID_Responsable_2 = (isset($Arr_ID_Responsable[1])) ? $Arr_ID_Responsable[1] : 'null';
-$ID_Responsable_3 = (isset($Arr_ID_Responsable[2])) ? $Arr_ID_Responsable[2] : 'null';
-$ID_Responsable_4 = (isset($Arr_ID_Responsable[3])) ? $Arr_ID_Responsable[3] : 'null';
+
+$lista_res = [];
+if (!empty($Arr_ID_Responsable[1])) $lista_res[] = $Arr_ID_Responsable[1];
+if (!empty($Arr_ID_Responsable[2])) $lista_res[] = $Arr_ID_Responsable[2];
+if (!empty($Arr_ID_Responsable[3])) $lista_res[] = $Arr_ID_Responsable[3];
+if (!empty($Arr_ID_Responsable[0])) $lista_res[] = $Arr_ID_Responsable[0];
+
+$ID_Responsable = $lista_res[0] ?? null;
+$ID_Responsable_2 = $lista_res[1] ?? null;
+$ID_Responsable_3 = $lista_res[2] ?? null;
+$ID_Responsable_4 = $lista_res[3] ?? null;
 
 if($ID_Motivo_2 == null){
 	$ID_Motivo_2 = 1; 
@@ -68,10 +76,6 @@ if($ID_Motivo_5 == null){
 	$ID_Motivo_5 = 1;
 } else {
 	$lista_motivos[] = $ID_Motivo_5;
-}
-
-if(empty($ID_Responsable[0])){
-	$ID_Responsable = 'null';
 }
 
 if(empty($ID_Centro)){
@@ -121,44 +125,43 @@ if (Movimiento::is_exist($con, $ID_Movimiento)) {
 																	descripcion: "observacion_medicina"
 																	);
 
-  if ($id_tipo_observacion) {
-    $tipo_observacion = new TipoObservacion(coneccion: $Con, 
-                                            id_tipo_observacion: $id_tipo_observacion);
-    $id_observacion_medicina = MovimientoObservacion::exist_movimiento_observacion_con_tipo(
-                                                          coneccion: $Con,
-                                                          movimiento: $movimiento,
-                                                          tipo_observacion: $tipo_observacion
-                                                          );
-    if ($id_observacion_medicina) {
-		$observacion_medicina = new MovimientoObservacion(
-                                          coneccion: $Con,
-                                          id_movimiento_observacion: $id_observacion_medicina
-                                          );
-		$observaciones_medico->set_observacion($observacion_medicina);
-		$observaciones_medico->update();
-	} else {
-		$observacion_medicina = new MovimientoObservacion(
-                                          coneccion: $Con,
-                                          movimiento: $movimiento,
-										  observacion: $observacion_medicina,
-										  estado: 1
-                                          );
-		$observacion_medicina->save();
+	if ($id_tipo_observacion) {
+		$tipo_observacion = new TipoObservacion(coneccion: $Con, 
+												id_tipo_observacion: $id_tipo_observacion);
+		$id_observacion_medicina = MovimientoObservacion::exist_movimiento_observacion_con_tipo(
+															coneccion: $Con,
+															movimiento: $movimiento,
+															tipo_observacion: $tipo_observacion
+															);
+		if ($id_observacion_medicina) {
+			$observacion_medicina = new MovimientoObservacion(
+											coneccion: $Con,
+											id_movimiento_observacion: $id_observacion_medicina
+											);
+			$observaciones_medico->set_observacion($observacion_medicina);
+			$observaciones_medico->update();
+		} else {
+			$observacion_medicina = new MovimientoObservacion(
+											coneccion: $Con,
+											movimiento: $movimiento,
+											observacion: $observacion_medicina,
+											estado: 1
+											);
+			$observacion_medicina->save();
+		}
 	}
-  }
 
-	$consulta = "SELECT * 
-				 FROM movimiento_motivo
-				 WHERE id_movimiento = $ID_Movimiento
-				   AND estado = 1";
-	$rs = mysqli_query($con->Conexion,$consulta) or die("Problemas al consultar las acciones.");
+	$motivos = MovimientoMotivo::get_lista_motivos_por_movimiento(
+										coneccion: $con,
+										movimiento: $movimiento
+	);
 
-	while ($ret = mysqli_fetch_assoc($rs)) {
-		if (!in_array($ret["id_motivo"], $lista_motivos)) {
+	foreach ($motivos as $motivo) {
+		if (!in_array($motivo->get_id_motivo(), $lista_motivos)) {
 			$movimiento_motivo = new MovimientoMotivo(
-													connection: $con,
-													id_movimiento: $ID_Movimiento,
-													id_motivo: $ret["id_motivo"]
+									connection: $con,
+									id_movimiento: $ID_Movimiento,
+									id_motivo: $motivo->get_id_motivo()
 			);
 			$movimiento_motivo->delete();
 		}
@@ -180,6 +183,39 @@ if (Movimiento::is_exist($con, $ID_Movimiento)) {
 		}
 	}
 	
+	$responsables = MovimientoResponsable::get_lista_responsables_por_id_movimiento(
+		coneccion: $con,
+		movimiento: $movimiento
+	);
+
+	foreach ($responsables as $responsable) {
+		if (!in_array($responsable->get_id_responsable(), $lista_res)) {
+			$mov = new MovimientoResponsable(
+											connection: $con,
+											id_movimiento: $ID_Movimiento,
+											id_responsable: $responsable->get_id_responsable()
+											);
+			$mov->delete();
+		}
+	}
+
+	foreach ($lista_res as $value) {
+		$exist = MovimientoResponsable::exist_movimiento_responsable(
+			connection: $con,
+			movimiento: $ID_Movimiento,
+			id_responsable: $value
+		);
+		if (!$exist) {
+			$mov = new MovimientoResponsable(
+											connection: $con,
+											id_movimiento: $ID_Movimiento,
+											id_responsable: $value
+											);
+
+			$mov->save();
+		}
+	}
+
 	$fecha_accion = date("Y-m-d");
 	$ID_TipoAccion = 2;
 	$detalles = "El usuario con ID: $ID_Usuario ha modificado un Movimiento. Datos: id_movimiento: " . $movimiento->getID_Movimiento();
@@ -197,14 +233,16 @@ $apellido = $persona->getApellido();
 $nombre = $persona->getNombre();
 $dni = $persona->getDNI();
 
-// CREANDO NOTIFICACION PARA EL USUARIO
-$detalle_not = 'Se modifico el movimiento vinculado a : '. $apellido . ', '. $nombre . ' fecha: '. $fecha_previa;
+$detalle_not = 'Se modifico el movimiento vinculado a : '. $apellido . ', '. $nombre . ' fecha: '. $fecha_previa . ' dni: ' . $dni;
 $expira = date("Y-m-d", strtotime($fecha_accion . " + 15 days"));
 
-$consulta_not = "insert into notificaciones(Detalle, Fecha, Expira, Estado) values('$detalle_not','$Fecha', '$expira',1)";
-if(!$RetNot = mysqli_query($con->Conexion,$consulta_not)){
-	throw new Exception("Error al intentar registrar Notificacion. Consulta: " . $ConsultaNot, 3);
-}
+$notificacion = new Notificacion(coneccion_base: $con, 
+								 detalle: $detalle_not, 
+								 expira: $expira,
+								 fecha: $Fecha,
+								 estado: 1
+								);
+$notificacion->save();
 
 $con->CloseConexion();
 
