@@ -8,7 +8,7 @@ $(function (e) {
                           <div class="toast dat-toast show" style="width:auto;" 
                                role="alert" aria-live="assertive" aria-atomic="true">
                             <div class="toast-body">
-                                <span id="meses-hasta-dato">Historia Clinica Persona</span>
+                                <span id="meses-hasta-dato">Persona</span>
                             </div>
                           </div>
                         </div>`);
@@ -24,7 +24,7 @@ $(function (e) {
                           <div class="toast dat-toast show" style="width:auto;" 
                                role="alert" aria-live="assertive" aria-atomic="true">
                             <div class="toast-body">
-                                <span>Historia Clinica Familiar</span>
+                                <span>Familia</span>
                             </div>
                           </div>
                         </div>`);
@@ -40,7 +40,7 @@ $(function (e) {
                           <div class="toast dat-toast show" style="width:auto;" 
                                role="alert" aria-live="assertive" aria-atomic="true">
                             <div class="toast-body">
-                                <span>Filtrado motivo</span>
+                                <span>Motivo</span>
                             </div>
                           </div>
                         </div>`);
