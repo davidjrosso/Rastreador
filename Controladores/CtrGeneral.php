@@ -352,12 +352,12 @@ class CtrGeneral {
 	}
 
 
-	public function getMovimientos($TipoUsuario, $limit)
+	public function getMovimientos($tipo_usuario, $limit)
 	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
 
-		$rows = self::get_rows_query(tipo_usuario: $TipoUsuario,
+		$rows = self::get_rows_query(tipo_usuario: $tipo_usuario,
 									 limit: $limit
 									);
 
@@ -388,7 +388,7 @@ class CtrGeneral {
 							</a>
 						  </td>
 						  <td>";
-			if ($TipoUsuario == 1) {
+			if ($tipo_usuario == 1) {
 				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $ret["id_movimiento"] . "'>
 								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
 							</a>";
@@ -397,7 +397,7 @@ class CtrGeneral {
 			$Table .= "</td>
 					   <td>";
 
-			if ($TipoUsuario == 1) {
+			if ($tipo_usuario == 1) {
 				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
@@ -413,7 +413,7 @@ class CtrGeneral {
 		echo $Table;
 	}
 
-	public function getMovimientosxID($ID, $TipoUsuario, $limit)
+	public function getMovimientosxID($ID, $tipo_usuario, $limit)
 	{
 		$Con = new Conexion();
 		$Con->OpenConexion();
@@ -430,7 +430,7 @@ class CtrGeneral {
 
 		$motivosVisiblesParaUsuario = $consultaUsuario . $consulta . " 
 											and CS.id_categoria = C.id_categoria
-											and CS.id_tipousuario = $TipoUsuario
+											and CS.id_tipousuario = $tipo_usuario
 											and CS.estado = 1";
 
 		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
@@ -470,7 +470,7 @@ class CtrGeneral {
 								   OR M.motivo_4 IN (SELECT * FROM GIN))
 								  OR (M.motivo_5 IN (SELECT * FROM INN) 
 								   OR M.motivo_5 IN (SELECT * FROM GIN)))
-					   and CS.id_tipousuario = $TipoUsuario
+					   and CS.id_tipousuario = $tipo_usuario
 					   and M.estado = 1 
 					   and P.estado = 1
 					   and CS.estado = 1 
@@ -502,7 +502,7 @@ class CtrGeneral {
 							</a>
 						  </td>
 						  <td>";
-			if ($TipoUsuario == 1) {
+			if ($tipo_usuario == 1) {
 				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $Ret["id_movimiento"] . "'>
 								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
 							</a>";
@@ -511,7 +511,7 @@ class CtrGeneral {
 			$Table .= "</td>
 					   <td>";
 
-			if ($TipoUsuario == 1) {
+			if ($tipo_usuario == 1) {
 				$Table .= 	"<a onClick = 'Verificar(" . $Ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
@@ -527,13 +527,13 @@ class CtrGeneral {
 		echo $Table;
 	}
 
-	public function getMovimientosxFecha($Fecha, $TipoUsuario, $limit)
+	public function getMovimientosxFecha($Fecha, $tipo_usuario, $limit)
 	{
 		$fecha_formato = implode("-", array_reverse(explode("/", $Fecha)));
 		$Con = new Conexion();
 		$Con->OpenConexion();
 
-		$rows = self::get_rows_query(tipo_usuario: $TipoUsuario,
+		$rows = self::get_rows_query(tipo_usuario: $tipo_usuario,
 									 limit: $limit,
 									 filtro_valor: $fecha_formato,
 									 filtro_tipo: self::FECHA
@@ -564,7 +564,7 @@ class CtrGeneral {
 							</a>
 						  </td>
 						  <td>";
-			if ($TipoUsuario == 1) {
+			if ($tipo_usuario == 1) {
 				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $ret["id_movimiento"] . "'>
 								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
 							</a>";
@@ -573,7 +573,7 @@ class CtrGeneral {
 			$Table .= "</td>
 					   <td>";
 	
-			if ($TipoUsuario == 1) {
+			if ($tipo_usuario == 1) {
 				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
@@ -623,7 +623,7 @@ class CtrGeneral {
 							</a>
 						  </td>
 						  <td>";
-			if ($TipoUsuario == 1) {
+			if ($tipo_usuario == 1) {
 				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $ret["id_movimiento"] . "'>
 								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
 							</a>";
@@ -632,7 +632,7 @@ class CtrGeneral {
 			$Table .= "</td>
 					   <td>";
 
-			if ($TipoUsuario == 1) {
+			if ($tipo_usuario == 1) {
 				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
@@ -681,7 +681,7 @@ class CtrGeneral {
 							</a>
 						  </td>
 						  <td>";
-			if ($TipoUsuario == 1) {
+			if ($tipo_usuario == 1) {
 				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $ret["id_movimiento"] . "'>
 								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
 							</a>";
@@ -690,7 +690,7 @@ class CtrGeneral {
 			$Table .= "</td>
 					   <td>";
 
-			if ($TipoUsuario == 1) {
+			if ($tipo_usuario == 1) {
 				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
@@ -739,7 +739,7 @@ class CtrGeneral {
 							</a>
 						  </td>
 						  <td>";
-			if ($TipoUsuario == 1) {
+			if ($tipo_usuario == 1) {
 				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $ret["id_movimiento"] . "'>
 								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
 							</a>";
@@ -748,7 +748,7 @@ class CtrGeneral {
 			$Table .= "</td>
 					   <td>";
 
-			if ($TipoUsuario == 1) {
+			if ($tipo_usuario == 1) {
 				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
@@ -798,7 +798,7 @@ class CtrGeneral {
 							</a>
 						  </td>
 						  <td>";
-			if ($TipoUsuario == 1) {
+			if ($tipo_usuario == 1) {
 				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $ret["id_movimiento"] . "'>
 								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
 							</a>";
@@ -807,7 +807,7 @@ class CtrGeneral {
 			$Table .= "</td>
 					   <td>";
 
-			if ($TipoUsuario == 1) {
+			if ($tipo_usuario == 1) {
 				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
@@ -857,7 +857,7 @@ class CtrGeneral {
 							</a>
 						  </td>
 						  <td>";
-			if ($TipoUsuario == 1) {
+			if ($tipo_usuario == 1) {
 				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $ret["id_movimiento"] . "'>
 								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
 							</a>";
@@ -866,7 +866,7 @@ class CtrGeneral {
 			$Table .= "</td>
 					   <td>";
 
-			if ($TipoUsuario == 1) {
+			if ($tipo_usuario == 1) {
 				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
@@ -915,7 +915,7 @@ class CtrGeneral {
 							</a>
 						  </td>
 						  <td>";
-			if ($TipoUsuario == 1) {
+			if ($tipo_usuario == 1) {
 				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $ret["id_movimiento"] . "'>
 								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
 							</a>";
@@ -924,7 +924,7 @@ class CtrGeneral {
 			$Table .= "</td>
 					   <td>";
 
-			if ($TipoUsuario == 1) {
+			if ($tipo_usuario == 1) {
 				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
@@ -975,7 +975,7 @@ class CtrGeneral {
 							</a>
 						  </td>
 						  <td>";
-			if ($TipoUsuario == 1) {
+			if ($tipo_usuario == 1) {
 				$Table .= 	"<a href = 'view_modmovimientos.php?ID=" . $ret["id_movimiento"] . "'>
 								<img src='./images/icons/ModDatos.png' class = 'IconosAcciones'>
 							</a>";
@@ -984,7 +984,7 @@ class CtrGeneral {
 			$Table .= "</td>
 					   <td>";
 
-			if ($TipoUsuario == 1) {
+			if ($tipo_usuario == 1) {
 				$Table .= 	"<a onClick = 'Verificar(" . $ret["id_movimiento"] . ")'>
 								<img src='./images/icons/DelDatos.png' class = 'IconosAcciones'>
 							</a>";
@@ -1038,7 +1038,7 @@ class CtrGeneral {
 	}
 
 /*
-	public function get_acciones_fecha($Fecha,$TipoUsuario){
+	public function get_acciones_fecha($Fecha,$tipo_usuario){
 		$Fecha = implode("-", array_reverse(explode("/",$Fecha)));
 		$Con = new Conexion();
 		$Con->OpenConexion();
@@ -1055,7 +1055,7 @@ class CtrGeneral {
 
 		$motivosVisiblesParaUsuario = $consultaUsuario . $consulta . " 
 											and CS.id_categoria = C.id_categoria
-											and CS.id_tipousuario = $TipoUsuario
+											and CS.id_tipousuario = $tipo_usuario
 											and CS.estado = 1";
 
 		$motivosVisiblesParaTodoUsuario = $consultaGeneral . $consulta . "
@@ -1094,7 +1094,7 @@ class CtrGeneral {
 								   OR M.motivo_4 IN (SELECT * FROM GIN))
 								  OR (M.motivo_5 IN (SELECT * FROM INN) 
 								   OR M.motivo_5 IN (SELECT * FROM GIN)))
-					   and CS.id_tipousuario = $TipoUsuario
+					   and CS.id_tipousuario = $tipo_usuario
 					   and M.estado = 1
 					   and P.estado = 1
 					   and CS.estado = 1 

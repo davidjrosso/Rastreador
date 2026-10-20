@@ -254,6 +254,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
         if (!document.getElementById('chkLocalidad').checked) list.push('Localidad');
 
         if (!document.getElementById('chkObservaciones').checked) list.push('Observaciones');
+        if (!document.getElementById('chkObservacionMedicina').checked) list.push('Otras Observaciones');
         if (!document.getElementById('chkResponsable').checked) list.push('Responsable');
         if (!document.getElementById('chkCentrosSalud').checked) list.push('Centro Salud');
         if (!document.getElementById('chkOtrasInstituciones').checked) list.push('Otra Institucion');
@@ -1950,7 +1951,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                                     <div style='max-height: 9em; overflow: hidden' >" . $DtoMovimiento->getObservaciones() . "</div>
                                   </td>";
                     $json_row["Observaciones"] = $DtoMovimiento->getObservaciones();
-                    $TableMov .= "<td class='trObservaciones' style = 'width: auto;' data-toggle='modal' data-target='#mdal_ct' data-id-mv = '". $DtoMovimiento->getID_Movimiento() . "'>
+                    $TableMov .= "<td class='trObservacionesMedicina' style = 'width: auto;' data-toggle='modal' data-target='#mdal_ct' data-id-mv = '". $DtoMovimiento->getID_Movimiento() . "'>
                                     <div style='max-height: 9em; overflow: hidden' >" . $DtoMovimiento->get_observacion_medicina() . "</div>
                                   </td>";
                     $json_row["Otras Observaciones"] = $DtoMovimiento->get_observacion_medicina();
@@ -2268,6 +2269,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                   $classAReemplazar[] = "~class='trCentrosSalud'~";
                   $classAReemplazar[] = "~class='trResponsable'~";
                   $classAReemplazar[] = "~class='trObservaciones'~";
+                  $classAReemplazar[] = "~class='trObservacionesMedicina'~";
                   echo $TableMov;
                 } else {
                   $TableMov .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td></tr>";
@@ -2441,7 +2443,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
           <li><input type="checkbox" id="chkBarrio" checked> Barrio </li>
           <li><input type="checkbox" id="chkLocalidad"> Localidad </li>
           <li><input type="checkbox" id="chkObservaciones" checked> Observaciones</li>
-          <li><input type="checkbox" id="chkObservacionMedicina" checked> Otras Observaciones</li>
+          <li><input type="checkbox" id="chkObservacionMedicina" checked>Otras Observaciones</li>
           <li><input type="checkbox" id="chkResponsable" checked> Responsable</li>
           <li><input type="checkbox" id="chkCentrosSalud"> Centro de salud </li>
           <li><input type="checkbox" id="chkOtrasInstituciones"> Otras instituciones</li>
