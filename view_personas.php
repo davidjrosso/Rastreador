@@ -112,14 +112,14 @@ $offset = 0;
               <label for="inputPassword" class="col-md-1 col-form-label LblForm">En: </label>
               <div class="col-md-3">
                 <select name = "ID_Filtro" class = "form-control">                    
-                    <option value = "<?=CtrGeneral::APELLIDO_NOMBRE?>ApellidoYNombre">Apellido y Nombre</option>
-                    <option value = "<?=CtrGeneral::APELLIDO?>">Apellido</option>
-                    <option value = "<?=CtrGeneral::NOMBRE?>">Nombre</option>
-                    <option value = "<?=CtrGeneral::DOCUMENTO?>" selected>Documento</option>
+                    <option value = "<?=CtrGeneral::APELLIDO_NOMBRE;?>">Apellido y Nombre</option>
+                    <option value = "<?=CtrGeneral::APELLIDO;?>">Apellido</option>
+                    <option value = "<?=CtrGeneral::NOMBRE;?>">Nombre</option>
+                    <option value = "<?=CtrGeneral::DOCUMENTO;?>" selected>Documento</option>
                     <!-- <option value = "ID">Id</option> -->
-                    <option value = "<?=CtrGeneral::LEGAJO?>">Nro. Legajo</option>
-                    <option value = "<?=CtrGeneral::CARPETA?>">Nro. Carpeta</option>
-                    <option value = "<?=CtrGeneral::DOMICILIO?>">Domicilio</option>
+                    <option value = "<?=CtrGeneral::LEGAJO;?>">Nro. Legajo</option>
+                    <option value = "<?=CtrGeneral::CARPETA;?>">Nro. Carpeta</option>
+                    <option value = "<?=CtrGeneral::DOMICILIO;?>">Domicilio</option>
                 </select>
               </div>
               <div class = "col-md-1">
@@ -162,7 +162,7 @@ $offset = 0;
                     echo $DTGeneral->getPersonasxDomicilio($Filtro, $limit);
                     break;
                 default:
-                    echo $DTGeneral->getPersonasxID($Filtro, $limit);
+                    echo $DTGeneral->getPersonas($limit);
                     break;
               }
             }else{
