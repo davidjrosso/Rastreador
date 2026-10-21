@@ -1616,7 +1616,7 @@ class CtrGeneral {
 			if (!$apellidos) $apellidos = [];
 
 			foreach ($apellidos as $key => $value) {
-				$query_apellido .= "(TRIM(apellido) REGEXP '^$value')";
+				$query_apellido .= "(TRIM(apellido) REGEXP '$value')";
 				if ($key < $cant_apellido - 1) $query_apellido .= " or ";
 			}
 			$query_apellido .= ")";
@@ -1626,7 +1626,7 @@ class CtrGeneral {
 			if (!$nombres) $nombres = [];
 
 			foreach ($nombres as $key => $value) {
-				$query_nombre .= "(TRIM(nombre) REGEXP '^$value')";
+				$query_nombre .= "(TRIM(nombre) REGEXP '$value')";
 				if ($key < $cant_nombres - 1) $query_nombre .= " or ";
 			}
 			$query_nombre .= ")";
