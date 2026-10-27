@@ -296,8 +296,7 @@ class BarrioController
             $usuario = new Account(account_id: $ID_Usuario);
             $TipoUsuario = $usuario->get_id_tipo_usuario();
             $Element = new Elements();
-
-            include("./Views/view_unifbarrios.php");
+            include("../Views/view_unifbarrios.php");
         }
         exit();
     }

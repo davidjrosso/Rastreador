@@ -11,12 +11,9 @@
       exit();
   }
 
-  $Con = new Conexion();
-  $Con->OpenConexion();
   $id_usuario = $_SESSION["Usuario"];
   $account = new Account(account_id: $id_usuario);
   $tipo_usuario = $account->get_id_tipo_usuario();
-  $Con->CloseConexion();
 ?>
 <!DOCTYPE html>
 <html>

@@ -485,8 +485,8 @@ public function getMenuGeneralUsuario($ID)
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
-                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                <li class="collapsed" onClick = "location.href = \'/barrio/unificar\'">
+                  <a href="/barrio/unificar"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
                   <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
@@ -517,8 +517,8 @@ public function getMenuGeneralUsuario($ID)
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
-                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                <li class="collapsed" onClick = "location.href = \'/barrio/unificar\'">
+                  <a href="/barrio/unificar"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
                   <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
@@ -549,8 +549,8 @@ public function getMenuGeneralUsuario($ID)
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
-                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                <li class="collapsed" onClick = "location.href = \'/barrio/unificar\'">
+                  <a href="/barrio/unificar"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
                   <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
@@ -581,8 +581,8 @@ public function getMenuGeneralUsuario($ID)
                 <li class="collapsed active" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
-                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                <li class="collapsed" onClick = "location.href = \'/barrio/unificar\'">
+                  <a href="/barrio/unificar"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
                   <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
@@ -613,8 +613,8 @@ public function getMenuGeneralUsuario($ID)
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed active" onClick = "location.href = \'view_unifbarrios.php\'">
-                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                <li class="collapsed active" onClick = "location.href = \'/barrio/unificar\'">
+                  <a href="/barrio/unificar"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
                   <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
@@ -645,8 +645,8 @@ public function getMenuGeneralUsuario($ID)
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
-                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                <li class="collapsed" onClick = "location.href = \'/barrio/unificar\'">
+                  <a href="/barrio/unificar"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
                 <li class="collapsed active" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
                   <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
@@ -677,8 +677,8 @@ public function getMenuGeneralUsuario($ID)
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
-                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                <li class="collapsed" onClick = "location.href = \'/barrio/unificar\'">
+                  <a href="/barrio/unificar"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
                   <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
@@ -710,8 +710,8 @@ public function getMenuGeneralUsuario($ID)
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
-                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                <li class="collapsed" onClick = "location.href = \'/barrio/unificar\'">
+                  <a href="/barrio/unificar"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
                   <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
@@ -743,8 +743,8 @@ public function getMenuGeneralUsuario($ID)
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
-                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                <li class="collapsed" onClick = "location.href = \'/barrio/unificar\'">
+                  <a href="/barrio/unificar"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
                   <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
@@ -776,8 +776,8 @@ public function getMenuGeneralUsuario($ID)
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
-                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                <li class="collapsed" onClick = "location.href = \'/barrio/unificar\'">
+                  <a href="/barrio/unificar"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
                   <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
@@ -1083,8 +1083,8 @@ public function getMenuSeguridad($ID){
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
-                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                <li class="collapsed" onClick = "location.href = \'/barrio/unificar\'">
+                  <a href="/barrio/unificar"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
                   <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
@@ -1116,8 +1116,8 @@ public function getMenuSeguridad($ID){
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
-                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                <li class="collapsed" onClick = "location.href = \'/barrio/unificar\'">
+                  <a href="/barrio/unificar"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
                   <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
@@ -1149,8 +1149,8 @@ public function getMenuSeguridad($ID){
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
-                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                <li class="collapsed" onClick = "location.href = \'/barrio/unificar\'">
+                  <a href="/barrio/unificar"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
                   <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
@@ -1182,8 +1182,8 @@ public function getMenuSeguridad($ID){
                 <li class="collapsed active" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
-                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                <li class="collapsed" onClick = "location.href = \'/barrio/unificar\'">
+                  <a href="/barrio/unificar"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
                   <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
@@ -1215,8 +1215,8 @@ public function getMenuSeguridad($ID){
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed active" onClick = "location.href = \'view_unifbarrios.php\'">
-                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                <li class="collapsed active" onClick = "location.href = \'/barrio/unificar\'">
+                  <a href="/barrio/unificar"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
                   <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
@@ -1247,8 +1247,8 @@ public function getMenuSeguridad($ID){
                             <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                               <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                             </li>
-                            <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
-                              <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                            <li class="collapsed" onClick = "location.href = \'/barrio/unificar\'">
+                              <a href="/barrio/unificar"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                             </li>
                             <li class="collapsed active" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
                               <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
@@ -1281,8 +1281,8 @@ public function getMenuSeguridad($ID){
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
-                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                <li class="collapsed" onClick = "location.href = \'/barrio/unificar\'">
+                  <a href="/barrio/unificar"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
                   <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
@@ -1315,8 +1315,8 @@ public function getMenuSeguridad($ID){
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
-                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                <li class="collapsed" onClick = "location.href = \'/barrio/unificar\'">
+                  <a href="/barrio/unificar"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
                   <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
@@ -1349,8 +1349,8 @@ public function getMenuSeguridad($ID){
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
-                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                <li class="collapsed" onClick = "location.href = \'/barrio/unificar\'">
+                  <a href="/barrio/unificar"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
                   <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
@@ -1383,8 +1383,8 @@ public function getMenuSeguridad($ID){
                 <li class="collapsed" onClick = "location.href = \'view_unifescuelas.php\'">
                   <a href="view_unifescuelas.php"><i class="fa fa-file-text fa-lg"></i> Escuelas</a>
                 </li>
-                <li class="collapsed" onClick = "location.href = \'view_unifbarrios.php\'">
-                  <a href="view_unifbarrios.php"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
+                <li class="collapsed" onClick = "location.href = \'/barrio/unificar\'">
+                  <a href="/barrio/unificar"><i class="fa fa-file-text fa-lg"></i> Barrios</a>
                 </li>
                 <li class="collapsed" onClick = "location.href = \'view_unifotrasinstituciones.php\'">
                   <a href="view_unifotrasinstituciones.php"><i class="fa fa-file-text fa-lg"></i> Otras Instituciones</a>
