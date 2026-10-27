@@ -375,6 +375,32 @@ export function CancelarEliminarFiltro(xID) {
     });
 }
 
+export function VerificarUnificacionPersona() {
+    let ID_Persona_1 = document.getElementById("ID_Persona_1");
+    let ID_Persona_2 = document.getElementById("ID_Persona_2");
+    let Form_1= document.getElementById("form_1");
+    let Bandera = ValidarUnifPersonas();
+    if (Bandera == false){
+        return Bandera;
+    }
+
+    swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer unificar estas personas?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((result) => {
+        if (result) {
+            Form_1.submit();
+            return true;
+        } else {
+            return false;
+        }
+    });
+}
+
 $(function (e) {
     $("button[data-tarea~='cancelar-eliminar-solicitud'").on("click", function (e) {
         let idSolicitud = $(this).attr("data-id-solicitud");
@@ -396,4 +422,8 @@ $(function (e) {
         VerificarCrearFiltro.bind(this)(idSolicitud);
     });
 
+    $("#confirm-unificacion").on("click", function (e) {
+        VerificarUnificacionPersona();
+    });
+    
 });

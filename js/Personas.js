@@ -5,7 +5,7 @@ $(function (e) {
     });
     $("#SearchPersonas_2").on("click", function (e) {
         buscarPersonas(2);
-    })
+    });
 })
 
 function buscarPersonas(id){
@@ -42,10 +42,9 @@ function buscarPersonas(id){
     xmlhttp.send(url);
 }
 
-function seleccionPersona(xNombre, idPersona, idElement){
-    var Persona = document.getElementById("Persona_" + idElement);
-    var ID_Persona = document.getElementById("ID_Persona_" + idElement);
-    Persona.innerHTML = "";
-    Persona.innerHTML = "<p>" + xNombre + "</p>";
-    ID_Persona.setAttribute('value', idPersona);
+function seleccionPersona(xNombre, idPersona, idElement) {
+    let Persona = (idElement) ? $("#Persona_" + idElement) : $("#Persona");
+    let ID_Persona = (idElement) ? $("#ID_Persona_" + idElement) : $("#ID_Persona");
+    Persona.html("<p>" + xNombre + "</p>");
+    ID_Persona.prop('value', idPersona);
 }

@@ -1544,14 +1544,28 @@ class CtrGeneral {
 	{
 		$con = new Conexion();
 		$con->OpenConexion();
+
+		$lista_nombres = [];
+		if ($nombre) $lista_nombres = preg_split("~[ ]+~", trim($nombre));
+		$cant_nombres = count($lista_nombres);
+
+		$query_nombre = "";
+
+		foreach ($lista_nombres as $key => $value) {
+			$query_nombre .= "(TRIM(nombre) REGEXP '$value')";
+			if ($key < $cant_nombres - 1) $query_nombre .= " or ";
+		}
+
+		if ($cant_nombres) $query_nombre .= ") and ";
+
 		$consulta = "select id_persona, 
 							UPPER(apellido) as apellido, 
 							CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
 							documento, 
 							IF(nro_legajo = 'null', '', nro_legajo) as nro_legajo
 					 from persona
-					 where (TRIM(nombre) REGEXP '^$nombre' or TRIM(nombre) REGEXP '[ ]+$nombre')
-					   and estado = 1 
+					 where $query_nombre 
+					 	estado = 1 
 					 order by apellido, nombre
 					 limit $limit";
 		$message = "Problemas al intentar mostrar Personas por ID";
