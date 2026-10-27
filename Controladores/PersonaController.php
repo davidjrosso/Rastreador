@@ -49,6 +49,98 @@ class PersonaController
         header("Location: ../personas?Filtro=" . $Filtro . "&ID_Filtro=" . $ID_Filtro);
     }
 
+    public function buscar_personas_prev()
+    {
+        header('Content-Type: text/html; charset=utf-8');
+
+        $consultaBusqueda = $_REQUEST['valorBusqueda'];
+        $id = (!empty($_REQUEST['ID'])) ? $_REQUEST['ID'] : null;
+
+        //Filtro anti-XSS
+        $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
+        $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
+        $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consultaBusqueda);
+
+        //Variable vacía (para evitar los E_NOTICE)
+        $mensaje = "";
+
+        if (isset($consultaBusqueda)) {
+
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            if(is_numeric($consultaBusqueda)){
+                $consulta = mysqli_query(
+                                $Con->Conexion, 
+                                "SELECT id_persona, UPPER(apellido) AS apellido, 
+                                                CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
+                                                documento, nro_carpeta, domicilio
+                                        FROM persona 
+                                        WHERE documento like '%$consultaBusqueda%' and estado = 1 
+                                        order by apellido, nombre"
+                                        );
+            }else{
+                $consulta = mysqli_query(
+                                $Con->Conexion, 
+                                "SELECT id_persona, UPPER(apellido) AS apellido, 
+                                                CONCAT(UPPER(SUBSTRING(nombre,1,1)),LOWER(SUBSTRING(nombre,2))) as nombre, 
+                                                documento, nro_carpeta, domicilio
+                                        FROM persona 
+                                        WHERE (apellido LIKE '%$consultaBusqueda%' or nombre LIKE '%$consultaBusqueda%') and estado = 1 
+                                        order by apellido, nombre");
+            }
+
+            $filas = mysqli_num_rows($consulta);
+
+            if ($filas === 0) {
+                $mensaje = "<p>No hay ningún registro con ese nombre o documento</p>";
+            } else {
+
+                $mensaje .= '<table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">DNI</th>
+                        <th scope="col">Nro Carpeta</th>
+                        <th scope="col">Domicilio</th>
+                        <th scope="col">Accion</th>
+                        </tr>
+                    </thead>
+                    <tbody>';
+
+                while($resultados = mysqli_fetch_array($consulta)) {
+                    $ID_Persona = $resultados["id_persona"];
+                    $Nombre = $resultados['apellido'].", ".$resultados['nombre'];
+                    $DNI = $resultados['documento'];
+                    $Nro_Carpeta = $resultados['nro_carpeta'];
+                    $Domicilio = $resultados['domicilio'];			
+
+                    $mensaje .= '
+                        <tr>
+                        <th scope="row">' . $Nombre . '</th>
+                        <td>' . $DNI . '</td>
+                        <td>' . $Nro_Carpeta . '</td>
+                        <td>' . $Domicilio . '</td>
+                        <td>
+                            <button type = "button" class = "btn btn-outline-success" 
+                                    data-nombre = \'' . $Nombre . '\' data-id-persona = "' . $ID_Persona . '" data-dismiss="modal">
+                                seleccionar
+                            </button>
+                        </td>
+                        </tr>';
+
+                }
+
+                $mensaje .= '</tbody>
+                    </table>';
+
+            }
+            $Con->CloseConexion();
+
+        }
+        echo $mensaje;
+    }
+
     public function buscar_personas()
     {
         header('Content-Type: text/html; charset=utf-8');
@@ -148,13 +240,13 @@ class PersonaController
                         <td>' . $Domicilio . '</td>
                         <td>
                             <button type = "button" class = "btn btn-outline-success" 
-                                    onClick="seleccionPersona(' . (($id) ? $id : 'null') . ',\'' . $Nombre . '\',' . $ID_Persona . ')" 
+                                    data-nombre = \'' . $Nombre . '\' data-id-persona = "' . $ID_Persona . '" data-dismiss="modal">
                                     data-dismiss="modal">
                                 seleccionar
                             </button>
                         </td>
                         </tr>';
-                        //   <td>'.$Nro_Legajo.'</td>
+                        //   <td>' . $Nro_Legajo.'</td>
                 };
 
                 $mensaje .= '</tbody>
@@ -910,7 +1002,7 @@ class PersonaController
     {
         header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("./Views/Error_Session.php");
+            include("../Views/Error_Session.php");
         } else {
             $Con = new Conexion();
             $Con->OpenConexion();
@@ -921,7 +1013,7 @@ class PersonaController
 
             $Element = new Elements();
 
-            include("./Views/view_unifpersonas.php");
+            include("../Views/view_unifpersonas.php");
         }
         exit();
     }
