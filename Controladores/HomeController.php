@@ -40,7 +40,7 @@ class HomeController
     {
         header("Content-Type: text/html;charset=utf-8");
         if (!isset($_SESSION["Usuario"])) {
-            include("./Views/Error_Session.php");
+            include("../Views/Error_Session.php");
 
         } else {
             $con = new Conexion();
@@ -77,7 +77,7 @@ class HomeController
             $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
             $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 
-            include("./Views/view_inicio.php");
+            include("../Views/view_inicio.php");
         }
         exit();
     }
@@ -85,7 +85,7 @@ class HomeController
     public function error_session() 
     {
         if (isset($_SESSION["Usuario"])) {
-            include("./Views/view_inicio.php");
+            include("../Views/view_inicio.php");
         }
     }
 
@@ -102,7 +102,7 @@ class HomeController
             $mensaje_error = (isset($_REQUEST["MensajeError"])) ? $_REQUEST["MensajeError"] : "";
             $mensaje_success = (isset($_REQUEST["Mensaje"])) ? $_REQUEST["Mensaje"] : "";
 
-            include("./Views/view_login.php");
+            include("../Views/view_login.php");
         }
         exit();
     }
@@ -156,7 +156,7 @@ class HomeController
                 }
             }
         } catch (Exception $e) {
-            echo "Error: ".$e->getMessage();
+            echo "Error: " . $e->getMessage();
         }
         
     }

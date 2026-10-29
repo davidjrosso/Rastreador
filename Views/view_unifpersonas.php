@@ -99,7 +99,7 @@
                   <div class="col"></div>
                   <div class="col-8">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarPersona" id = "SearchPersonas_1" onKeyUp="buscarPersonas(1)" autocomplete="off" placeholder="Ingrese el nombre, apellido o documento de la persona">
+                      <input class = "form-control" type="text" name="BuscarPersona" id = "SearchPersonas_1" autocomplete="off" placeholder="Ingrese el nombre, apellido o documento de la persona">
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
@@ -139,7 +139,7 @@
                   <div class="col"></div>
                   <div class="col-8">
                     <div class="input-group mb-3">
-                      <input class = "form-control" type="text" name="BuscarPersona" id = "SearchPersonas_2" onKeyUp="buscarPersonas(2)" autocomplete="off" placeholder="Ingrese el nombre, apellido o documento de la persona">
+                      <input class = "form-control" type="text" name="BuscarPersona" id = "SearchPersonas_2" autocomplete="off" placeholder="Ingrese el nombre, apellido o documento de la persona">
                       <div class="input-group-append">
                         <span class="input-group-text" id="basic-addon2">Buscar</span>
                       </div>  
