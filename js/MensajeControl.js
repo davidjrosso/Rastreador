@@ -401,6 +401,25 @@ export function VerificarUnificacionPersona() {
     });
 }
 
+export function VerificarUnificacionDireccion() {
+    let Form_1= document.getElementById("form_1");
+    swal.fire({
+        title: "¿Está seguro?",
+        text: "¿Seguro de querer unificar estas direcciones?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((result) => {
+        if (result) {
+            Form_1.submit();
+            return true;
+        } else {
+            return false;
+        }
+    });
+}
+
 $(function (e) {
     $("button[data-tarea~='cancelar-eliminar-solicitud'").on("click", function (e) {
         let idSolicitud = $(this).attr("data-id-solicitud");
@@ -424,6 +443,10 @@ $(function (e) {
 
     $("#confirm-unificacion").on("click", function (e) {
         VerificarUnificacionPersona();
+    });
+
+    $("#confirm-unificacion-direccion").on("click", function (e) {
+        VerificarUnificacionDireccion();
     });
     
 });
