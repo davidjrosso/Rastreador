@@ -251,7 +251,7 @@ if (!$id_motivo) {
               <div class="form-group row">
                 <label for="btn-motivo" class="col-md-2 col-form-label LblForm">Motivo 1: </label>
                 <div class="col-md-9" id = "Motivo">
-                  <button type = "button" id="btn-motivo" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo">Seleccione Motivo</button>   
+                  <button type = "button" id="btn-motivo" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo1">Seleccione Motivo</button>   
                 </div>
                   <div class="col-md-1 div-button-center">
                     <button type="button" class="btn btn-primary" id="agregarMotivoID">+</button>
@@ -271,6 +271,25 @@ if (!$id_motivo) {
                   }
                   ?>
                 </div>
+              </div>
+              <div class="form-group row">
+                <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable: </label>
+                <div class="col-md-9">
+                  <?php  
+
+                  if(isset($datosNav["ID_Responsable"])){
+                    echo $Element->CBRepModResponsables($datosNav["ID_Responsable"]);
+                  }else{
+                    echo $Element->CBRepResponsable();
+                  }
+                  ?>
+                </div>
+                <div class="col-md-1 div-button-center">
+                    <button type="button" class="btn btn-primary" id="agregarResponsableID">+</button>
+                </div>
+              </div>
+              <div id="responsables">
+
               </div>
               <div class="form-group row">
                 <label for="Nro_Carpeta" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
@@ -311,25 +330,7 @@ if (!$id_motivo) {
                   ?>
                 </div>
               </div>
-              <div class="form-group row">
-                <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable: </label>
-                <div class="col-md-9">
-                  <?php  
 
-                  if(isset($datosNav["ID_Responsable"])){
-                    echo $Element->CBRepModResponsables($datosNav["ID_Responsable"]);
-                  }else{
-                    echo $Element->CBRepResponsable();
-                  }
-                  ?>
-                </div>
-                <div class="col-md-1 div-button-center">
-                    <button type="button" class="btn btn-primary" id="agregarResponsableID">+</button>
-                </div>
-              </div>
-              <div id="responsables">
-
-              </div>
               <div class="form-group row">
                 <label for="inpMostrar" class="col-md-2 col-form-label LblForm">Mostrar Personas: </label>
                 <div class="col-md-10">
@@ -435,7 +436,7 @@ if (!$id_motivo) {
             </div>
             <!-- Modal de Carga de Calle-->
             <!-- Modal SELECCION MOTIVO -->
-            <div class="modal fade bd-example-modal-lg" id="ModalMotivo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal fade bd-example-modal-lg" id="ModalMotivo1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -752,10 +753,14 @@ if (!$id_motivo) {
                         <div class="col-10">
                           <div class="input-group mb-3">
                             <input class = "form-control" type="text" name="BuscarCategorias" id = "SearchCategorias" autocomplete="off">
+                            <select id="select-categoria" name="select-categoria" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                              <option value="<?=Elements::DENOMINACION;?>" selected>Denominacion</option>
+                              <option value="<?=Elements::CODIGO;?>">Codigo</option>
+                            </select>
                             <div class="input-group-append">
                               <span class="input-group-text" id="basic-addon2">Buscar</span>
                             </div>  
-                          </div>                    
+                          </div>            
                         </div>
                         <div class="col"></div>
                       </div>

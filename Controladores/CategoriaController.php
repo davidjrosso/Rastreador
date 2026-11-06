@@ -36,6 +36,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/Modelo/Solicitud_EliminarCategoria.ph
 class CategoriaController 
 {
 
+    const DENOMINACION = 2;
+    const CODIGO = 1;
     public function listado_categorias($mensaje = null)
     {
         header("Content-Type: text/html;charset=utf-8");
@@ -768,7 +770,11 @@ class CategoriaController
     public function buscar_categoria_lista()
     {
         $consultaBusqueda = $_REQUEST['valorBusqueda'];
-        $id = $_REQUEST['ID'];
+        $tipo = $_REQUEST['tipo'];
+        $json_string = file_get_contents('php://input');
+        $lista_categoria = json_decode($json_string, true);
+
+
         //Filtro anti-XSS
         $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
         $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
@@ -776,21 +782,24 @@ class CategoriaController
 
         $mensaje = "";
 
-        if (isset($consultaBusqueda)) {
+        if ($tipo) {
 
             $Con = new Conexion();
             $Con->OpenConexion();
 
-            $query = "SELECT * 
-                    FROM categoria 
-                    WHERE categoria LIKE '%$consultaBusqueda%' 
-                        and estado = 1";
+            if ($tipo == self::DENOMINACION) {
+                $lista = Categoria::get_categorias_con_denominacion(
+                                                                    coneccion: $Con,
+                                                                    denominacion: $consultaBusqueda
+                                                                   );
+            } else if ($tipo == self::CODIGO) {
+                $lista = Categoria::get_categorias_con_codigo(
+                                                              coneccion: $Con,
+                                                              codigo: $consultaBusqueda
+                                                             );
+            }
 
-            $consulta = mysqli_query($Con->Conexion, $query);
-
-            $filas = mysqli_num_rows($consulta);
-
-            if ($filas === 0) {
+            if (count($lista) === 0) {
                 $mensaje = "<p>No hay ningún registro con ese dato</p>";
             } else {
                 $mensaje .= '<table class="table">
@@ -803,28 +812,41 @@ class CategoriaController
                     </thead>
                     <tbody>';
 
-                while($resultados = mysqli_fetch_array($consulta)) {
-                    $ID_Categoria = $resultados["id_categoria"];			
-                    $Categoria = $resultados['categoria'];
-                    $Cod_Categoria = $resultados['cod_categoria'];
+		        $valores_categorias = ($lista_categoria) ? array_values(array: $lista_categoria) : [];
+
+                foreach($lista as $categorias) {
+                    $ID_Categoria = $categorias->getID_Categoria();			
+                    $Categoria = $categorias->getCategoria();
+                    $Cod_Categoria = $categorias->getCod_Categoria();
                     $mensaje .= '<tr>
-                                    <th scope="row">' . $Categoria . '</th>
-                                    <td>' . $Cod_Categoria . '</td>';
-                    $mensaje .= '<td>
-                                    <button type = "button" class = "btn btn-outline-success" onClick="seleccionCategoria(' . $id . ', \'' . $Categoria . '\',' . $ID_Categoria . ')" data-dismiss="modal">
-                                        seleccionar
-                                    </button>
-                                </td>
-                            </tr>';
+                                    <th scope="row">' . $Categoria . '</th>';
+
+                    if (in_array($ID_Categoria, $valores_categorias)) {
+                        $mensaje .= '<td>
+                                        <button type = "button" style=\'width:12ch\' class = "btn btn-outline-success" data-categoria-select=true data-nombre-ca = \'' . $Categoria . '\' data-id-ca = "' . $ID_Categoria . '">
+                                            &#10003
+                                        </button>
+                                    </td>
+                                </tr>';
+                    } else {
+                        $mensaje .= '<td>
+                                        <button type = "button" class = "btn btn-outline-success" data-categoria-select=true data-nombre-ca = \'' . $Categoria . '\' data-id-ca = "' . $ID_Categoria . '">
+                                            seleccionar
+                                        </button>
+                                    </td>
+                                </tr>';
+                    }
                 };
 
                 $mensaje .= '</tbody>
                     </table>';
 
-            };
+            }
             $Con->CloseConexion();
 
-        };
+        } else {
+            $mensaje = "<p>Hubo un error en la consulta</p>";
+        }
 
         echo $mensaje;
     } 

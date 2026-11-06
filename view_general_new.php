@@ -278,6 +278,19 @@ $Element = new Elements();
                           </div>
                         </div>
                         <div class="form-group row">
+                          <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable: </label>
+                          <div class="col-md-9">
+                            <?php  
+                            echo $Element->CBRepResponsable();
+                            ?>
+                          </div>
+                          <div class="col-md-1 div-button-center">
+                              <button type="button" class="btn btn-primary" style="align-self:center" onClick="agregarResponsable()" id="agregarResponsableID">+</button>
+                          </div>
+                        </div>
+                        <div id="responsables">              
+                        </div>
+                        <div class="form-group row">
                           <label for="Nro_Carpeta" class="col-md-2 col-form-label LblForm">Nro. Carpeta: </label>
                           <div class="col-md-10">
                             <input type="text" class="form-control" name = "Nro_Carpeta" id="Nro_Carpeta" autocomplete="off">
@@ -304,20 +317,6 @@ $Element = new Elements();
                             echo $Element->CBRepEscuelas();
                             ?>
                           </div>
-                        </div>
-
-                        <div class="form-group row">
-                          <label for="exampleFormControlSelect1" class="col-md-2 col-form-label LblForm">Responsable: </label>
-                          <div class="col-md-9">
-                            <?php  
-                            echo $Element->CBRepResponsable();
-                            ?>
-                          </div>
-                          <div class="col-md-1 div-button-center">
-                              <button type="button" class="btn btn-primary" style="align-self:center" onClick="agregarResponsable()" id="agregarResponsableID">+</button>
-                          </div>
-                        </div>
-                        <div id="responsables">              
                         </div>
                         <div class="form-group row">
                           <label for="inpMostrar" class="col-md-2 col-form-label LblForm">Mostrar Personas: </label>
@@ -770,13 +769,17 @@ $Element = new Elements();
                               <form>
                                 <div class="row">
                                   <div class="col"></div>
-                                  <div class="col-8">
+                                  <div class="col-10">
                                     <div class="input-group mb-3">
-                                      <input class = "form-control" type="text" name="BuscarCategorias" id="SearchCategorias" autocomplete="off">
+                                      <input class = "form-control" type="text" name="BuscarCategorias" id = "SearchCategorias" autocomplete="off">
+                                      <select id="select-categoria" name="select-categoria" class="btn btn-outline-secondary dropdown-toggle input-group-text">
+                                        <option value="<?=Elements::DENOMINACION?>" selected>Denominacion</option>
+                                        <option value="<?=Elements::CODIGO?>">Codigo</option>
+                                      </select>
                                       <div class="input-group-append">
                                         <span class="input-group-text" id="basic-addon2">Buscar</span>
-                                      </div>  
-                                    </div>                    
+                                      </div>
+                                    </div>           
                                   </div>
                                   <div class="col"></div>
                                 </div>

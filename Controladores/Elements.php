@@ -34,6 +34,9 @@ class Elements
 
   const HABILITAR_BOTON = true;
   const DESHABILITAR_BOTON = false;
+  
+  const DENOMINACION = 2;
+  const CODIGO = 1;
 
 	//Instanciando la Conexion
 	public function __construct(){

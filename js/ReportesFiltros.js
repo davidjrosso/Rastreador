@@ -120,6 +120,7 @@ function buscarCategorias() {
     let textoBusqueda = xCategoria;
     let xmlhttp = new XMLHttpRequest();
     let contenidosRecibidos = null;
+    let tipo = $("#select-categoria")[0].value;
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             contenidosRecibidos = xmlhttp.responseText;
@@ -132,8 +133,9 @@ function buscarCategorias() {
             });
         }
     }
-    xmlhttp.open('POST', 'buscarCategorias.php?valorBusqueda=' + textoBusqueda, true); // Método post y url invocada
-    xmlhttp.send();
+    xmlhttp.open('POST', 'buscar_categoria_lista', true);
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
+    xmlhttp.send('valorBusqueda=' + textoBusqueda + '&tipo=' + tipo);
 }
 
 export function seleccionPersona(xNombre, xID) {
@@ -553,6 +555,7 @@ $(function() {
         let bodyJson = Object.fromEntries(formulario.getListaMotivos());
         buscarMotivosGeneral(1, bodyJson);
     });
+    
 
     $("#SearchMotivos2").on("keyup", function (e) {
         let bodyJson = Object.fromEntries(formulario.getListaMotivos());

@@ -94,6 +94,48 @@ class Categoria {
     }
 
 
+	public static function get_categorias_con_denominacion($coneccion, $denominacion)
+	{
+		$lista = [];
+		$query = "SELECT * 
+				  FROM categoria 
+				  WHERE categoria LIKE '%$denominacion%' 
+					and estado = 1";
+
+		$consulta = mysqli_query($coneccion->Conexion, $query);
+
+		if (!$consulta) throw new Exception("error al consultar las categotias", 1);
+
+		while($datos = mysqli_fetch_array($consulta)) {
+			$lista[] = new Categoria(
+				xConecction: $coneccion,
+				xID_Categoria: $datos["id_categoria"]
+			);
+		}
+		return $lista;
+	}
+
+	public static function get_categorias_con_codigo($coneccion, $codigo)
+	{
+		$lista = [];
+		$query = "SELECT * 
+				  FROM categoria 
+				  WHERE cod_categoria LIKE '%$codigo%' 
+					and estado = 1";
+
+		$consulta = mysqli_query($coneccion->Conexion, $query);
+
+		if (!$consulta) throw new Exception("error al consultar las categotias", 1);
+
+		while($datos = mysqli_fetch_array($consulta)) {
+			$lista[] = new Categoria(
+				xConecction: $coneccion,
+				xID_Categoria: $datos["id_categoria"]
+			);
+		}
+		return $lista;
+	}
+
 	//METODOS SET
 	public function setID_Categoria($xID_Categoria)
 	{
