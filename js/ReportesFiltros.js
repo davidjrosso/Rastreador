@@ -117,10 +117,15 @@ function buscarMotivosGeneral(id_Motivo, bodyJson) {
 
 function buscarCategorias() {
     let xCategoria = document.getElementById('SearchCategorias').value;
-    let textoBusqueda = xCategoria;
+    let tipo = $("#select-categoria")[0].value;
+    let bodyJson = {
+        "valorBusqueda" : xCategoria,
+        "tipo" : tipo
+    };
+    bodyJson["listaCategorias"] = Object.fromEntries(formulario.getListaCategorias());
     let xmlhttp = new XMLHttpRequest();
     let contenidosRecibidos = null;
-    let tipo = $("#select-categoria")[0].value;
+
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
             contenidosRecibidos = xmlhttp.responseText;
@@ -134,8 +139,8 @@ function buscarCategorias() {
         }
     }
     xmlhttp.open('POST', 'buscar_categoria_lista', true);
-    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
-    xmlhttp.send('valorBusqueda=' + textoBusqueda + '&tipo=' + tipo);
+    xmlhttp.setRequestHeader("Content-Type", "application/json;");
+    xmlhttp.send(JSON.stringify(bodyJson));
 }
 
 export function seleccionPersona(xNombre, xID) {

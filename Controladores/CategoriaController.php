@@ -769,16 +769,17 @@ class CategoriaController
 
     public function buscar_categoria_lista()
     {
-        $consultaBusqueda = $_REQUEST['valorBusqueda'];
-        $tipo = $_REQUEST['tipo'];
-        $json_string = file_get_contents('php://input');
-        $lista_categoria = json_decode($json_string, true);
 
+        $json_string = file_get_contents('php://input');
+        $request = json_decode($json_string, true);
+        $consulta_busqueda = $request["valorBusqueda"]; 
+        $lista_categoria = $request["listaCategorias"];
+        $tipo = $request["tipo"];
 
         //Filtro anti-XSS
         $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
         $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
-        $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consultaBusqueda);
+        $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consulta_busqueda);
 
         $mensaje = "";
 
@@ -806,7 +807,6 @@ class CategoriaController
                     <thead class="thead-dark">
                         <tr>
                         <th scope="col">Categoría</th>
-                        <th scope="col">Cod_Categoria</th>	
                         <th scope="col">Acción</th>	
                         </tr>
                     </thead>
