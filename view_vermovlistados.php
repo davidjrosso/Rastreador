@@ -1783,16 +1783,16 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                     $TableMov = "<table class='table table-dark'>";                
                     $TableMov .= "<tr class='trFecha'><td style = 'width: 30%;'>Fecha</td><td style = 'width: 70%;'>" . $DtoMovimiento->getFecha() . "</td></tr>";
                     $json_row["fechas"] = $DtoMovimiento->getFecha();
-                    $TableMov .= "<tr>
+                    $TableMov .= `<tr>
                                     <td style = 'width: 30%;'>
                                       Persona
                                     </td>
                                     <td style = 'width: 70%;'>
-                                      <a href = 'javascript:window.open(\"view_modpersonas.php?ID=" .  $id_persona ."\",\"Ventana" . $id_persona ."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>".
-                                        $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "
+                                      <a href = "javascript:window.open('view_modpersonas.php?ID=` .  $id_persona . `','Ventana` . $id_persona .`', 'width=800,height=500,scrollbars=no,top=150,left=250,resizable=no')" target='_top' rel='noopener noreferrer'>` .
+                                        $DtoMovimiento->getApellido() . `, ` . $DtoMovimiento->getNombre() . `
                                       </a>
                                     </td>
-                                  </tr>";
+                                  </tr>`;
                     $json_row["Persona"] = $DtoMovimiento->getApellido() . " " . $DtoMovimiento->getNombre();
 
                     if (count(array_filter($MotivosOpciones)) == 1) {
@@ -1892,8 +1892,8 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                                       <div class='tdIcon' style='background: #212529; border-radius:50%; border-color:yellow; border-width:6px;width:17px; height:17px; margin-top: 9%;border-style: ridge;'>
                                       </div>    
                                   </td>";
-                    $TableMov .= "<td class='trPersona' style = 'width: auto;>
-                                    <a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $id_persona . "\",\"Ventana" . $id_persona . "\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" . $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "
+                    $TableMov .= "<td class='trPersona' style = 'width: auto;'>
+                                    <a href=\"javascript:window.open('view_modpersonas.php?ID=" . $id_persona . "','Ventana" . $id_persona . "','width=800,height=500,scrollbars=no,top=150,left=250,resizable=no')\" target='_top' rel='noopener noreferrer'>" . $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "
                                     </a>
                                   </td>";
                     $json_row["Persona"] = $DtoMovimiento->getApellido() . " " . $DtoMovimiento->getNombre();
@@ -2272,29 +2272,37 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                   $classAReemplazar[] = "~class='trObservacionesMedicina'~";
                   echo $TableMov;
                 } else {
-                  $TableMov .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td></tr>";
+                  $TableMov .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td>
+                                </td>";
                   $json_row["Fecha"] = $DtoMovimiento->getFecha();
-                  $TableMov .= "<td style = 'width: auto; position:relative' data-hc-familia='" . $id_persona . "' onclick='sendToPersonaListado(" . $id_persona . ")'><div class='tdIcon' style='background: #212529; border-radius:50%; border-color:#37f337; border-width:6px;width:17px; height:17px; margin-top: 9%; border-style: ridge;'></div></td>";
-                  $TableMov .= "<td style = 'width: auto; position:relative' data-hc-persona='" . $id_persona . "' onclick='enviarAHistoriClinicaDePersona(" . $id_persona . ")'><div class='tdIcon' style='background: #212529; border-radius:50%; border-color:yellow; border-width:6px;width:17px; height:17px; margin-top: 9%; border-style: ridge;'></div></td>";
-                  $TableMov .= "<td class='trPersona' style = 'width: auto;'><a href = 'javascript:window.open(\"view_modpersonas.php?ID=" . $RetTodos["id_persona"]."\",\"Ventana" . $RetTodos["id_persona"]."\",\"width=800,height=500,scrollbars=no,top=150,left=250,resizable=no\")' target='_top' rel='noopener noreferrer'>" . $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "</a></td></tr>";
+                  $TableMov .= "<td style = 'width: auto; position:relative' data-hc-familia='" . $id_persona . "' onclick='sendToPersonaListado(" . $id_persona . ")'>
+                                  <div class='tdIcon' style='background: #212529; border-radius:50%; border-color:#37f337; border-width:6px;width:17px; height:17px; margin-top: 9%; border-style: ridge;'>
+                                  </div>
+                                </td>";
+                  $TableMov .= "<td style = 'width: auto; position:relative' data-hc-persona='" . $id_persona . "' onclick='enviarAHistoriClinicaDePersona(" . $id_persona . ")'>
+                                  <div class='tdIcon' style='background: #212529; border-radius:50%; border-color:yellow; border-width:6px;width:17px; height:17px; margin-top: 9%; border-style: ridge;'>
+                                  </div>
+                                </td>";
+                  $TableMov .= `<td class='trPersona' style = 'width: auto;'>
+                                  <a href = "javascript:window.open('view_modpersonas.php?ID=` . $RetTodos["id_persona"] . `,'Ventana` . $RetTodos["id_persona"] . `', 'width=800,height=500,scrollbars=no,top=150,left=250,resizable=no')" target='_top' rel='noopener noreferrer'>` . $DtoMovimiento->getApellido() . `, ` . $DtoMovimiento->getNombre() . `
+                                  </a>
+                                </td>`;
                   $json_row["Persona"] = $DtoMovimiento->getApellido() . " " . $DtoMovimiento->getNombre();
-                  $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td></tr>";
+                  $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_1() . "</td>";
                   $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                   $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
                   $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . 
                                   "<a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $DtoMovimiento->getID_Movimiento() . "\",\"Ventana" . $DtoMovimiento->getID_Movimiento() . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>" .
                                     $DtoMovimiento->getMotivo_2() . 
                                   "</a>
-                                </td>
-                              </tr>";
+                                </td>";
                   $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
                   $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 2"])) ? strlen($json_row["Motivo 2"]) : $json_row["height"];
                   $TableMov .= "<td class='trMotivos' style = 'width: auto;'>" . 
                                   "<a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $DtoMovimiento->getID_Movimiento() . "\",\"Ventana" . $DtoMovimiento->getID_Movimiento() . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>" .
                                       $DtoMovimiento->getMotivo_3() . 
                                   "</a>
-                                </td>
-                              </tr>";
+                                </td>";
                   $json_row["Motivo 3"] = $DtoMovimiento->getMotivo_3();
                   $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 3"])) ? strlen($json_row["Motivo 3"]) : $json_row["height"];
                   $TableMov .= "<td class='trObservaciones' style = 'width: auto;'  data-toggle='modal' data-target='#mdal_ct'>
