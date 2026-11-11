@@ -2204,7 +2204,8 @@ $movimiento_fin = (!empty($_REQUEST["fin-movimiento-check"])) ? true : false;
             } else {
 
               $header_general = []; 
-              $Table = "<table class='table table-fixeder table-bordered table-sm' cellspacing='0' id='tablaMovimientos' style='page-break-after:always;'>
+              $Table = "<table class='table table-fixeder table-bordered table-sm' cellspacing='0'
+                               id='tablaMovimientos' style='page-break-after:always; border-width: 0px;'>
                              <thead id='header-tabla' class='thead-dark' style='transform-origin : 0 0; transform : scale(0.6);'>
                               <tr align='center' valign='middle'>
                                 <th id='Contenido-Titulo-1'>Barrio</th>
