@@ -277,7 +277,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                                           null,
                                           listConfigResult
                                         );
-          reporte.sendRequestOne();
+          reporte.enviarRequestListado();
         } else if (objectJsonTabla["movimientos_persona"] !== undefined) {
           reporte = new RerpoteMovimiento(
                                           objectJsonTabla["movimientos_persona"],
@@ -287,7 +287,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                                           null,
                                           listConfigResult
                                         );
-          reporte.sendRequestOne();
+          reporte.enviarRequestListado();
         }
       }
 

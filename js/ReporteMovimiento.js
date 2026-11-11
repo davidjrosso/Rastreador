@@ -50,7 +50,7 @@ export class RerpoteMovimiento {
         });
     }
 
-    sendRequestOne() {
+    enviarRequestListado() {
         let request = new XMLHttpRequest();
         let lista = {};
         let animacion = `<div class='icon-printer'>
@@ -103,6 +103,58 @@ export class RerpoteMovimiento {
         lista["fecha_desde"] = fechaDesde;
         lista["fecha_hasta"] = fechaHasta;
         lista["fitros"] = filtroSeleccionados;
+        lista["cant"] = this.listaDeMovimientos.length;
+        request.send(JSON.stringify(lista));
+        this.timer = setInterval(this.dialogOnProgress.bind(this), 3100);
+    }
+
+    enviarRequestGrafico() {
+        let request = new XMLHttpRequest();
+        let lista = {};
+        let animacion = `<div class='icon-printer'>
+                            <img class='icon-printer' src="/images/icons/impresora.gif" alt="an illustration of a gear" />
+                        </div>
+                        <progress id="bar-progress" max="100" value="0">70%</progress>`;
+        let timer = null;
+        swal.fire({
+            title: "planilla para imprimir",
+            html: animacion,
+            text: "Los movimientos estan siendo incluidos en la impresion",
+            icon: "warning",
+            showConfirmButton: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $("#liveToast").show();
+                $("#liveToast").on("click", this.modalImpresionDeMovimiento);
+            }
+        });
+
+        request.open("POST", "generar_pdf_grafico", true);
+        request.setRequestHeader("x-request-id", this.idRequestField);
+        request.onreadystatechange = async function(element) {
+            if (request.readyState == 4 && request.status == 200) {
+                let response = element.currentTarget.response;
+                let arrBuffer = this.base64ToArrayBuffer(response);
+                this.listaDePdf[0] = arrBuffer;
+                this.documentoPdf = await this.mergePdfs();
+                let blob = new Blob([this.documentoPdf], {type: "application/pdf"});
+                let url1 = window.URL.createObjectURL(blob);
+                this.impresionMovimientos(url1);
+                window.open(url1);
+                clearInterval(this.timer);
+            }
+        }.bind(this);
+        lista = this.listaDeMovimientos.reduce((obj, item, index) => {
+            obj[index] = item;
+            if (item["Observaciones"]) {
+                obj[index]["Observaciones"] = item["Observaciones"].replaceAll(/<figure.*(?!<figure).*<\/figure>/g, "");
+            }
+            if (item["Observacion Medicina"]) {
+                obj[index]["Observacion Medicina"] = item["Observacion Medicina"].replaceAll(/<figure.*(?!<figure).*<\/figure>/g, "");
+            }
+            return obj;
+        }, {});
+        lista["header_movimientos_general"] = this.listaHeaderTotal;
         lista["cant"] = this.listaDeMovimientos.length;
         request.send(JSON.stringify(lista));
         this.timer = setInterval(this.dialogOnProgress.bind(this), 3100);
