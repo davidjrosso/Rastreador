@@ -1788,7 +1788,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                                       Persona
                                     </td>
                                     <td style = 'width: 70%;'>
-                                      <a href = "javascript:window.open('view_modpersonas.php?ID=` .  $id_persona . `','Ventana` . $id_persona .`', 'width=800,height=500,scrollbars=no,top=150,left=250,resizable=no')" target='_top' rel='noopener noreferrer'>` .
+                                      <a style='text-decoration: none;' href = "javascript:window.open('view_modpersonas.php?ID=` .  $id_persona . `','Ventana` . $id_persona .`', 'width=800,height=500,scrollbars=no,top=150,left=250,resizable=no')" target='_top' rel='noopener noreferrer'>` .
                                         $DtoMovimiento->getApellido() . `, ` . $DtoMovimiento->getNombre() . `
                                       </a>
                                     </td>
@@ -1893,7 +1893,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                                       </div>    
                                   </td>";
                     $TableMov .= "<td class='trPersona' style = 'width: auto;'>
-                                    <a href=\"javascript:window.open('view_modpersonas.php?ID=" . $id_persona . "','Ventana" . $id_persona . "','width=800,height=500,scrollbars=no,top=150,left=250,resizable=no')\" target='_top' rel='noopener noreferrer'>" . $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "
+                                    <a style='text-decoration: none;' href=\"javascript:window.open('view_modpersonas.php?ID=" . $id_persona . "','Ventana" . $id_persona . "','width=800,height=500,scrollbars=no,top=150,left=250,resizable=no')\" target='_top' rel='noopener noreferrer'>" . $DtoMovimiento->getApellido() . ", " . $DtoMovimiento->getNombre() . "
                                     </a>
                                   </td>";
                     $json_row["Persona"] = $DtoMovimiento->getApellido() . " " . $DtoMovimiento->getNombre();
@@ -2284,7 +2284,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                                   </div>
                                 </td>";
                   $TableMov .= `<td class='trPersona' style = 'width: auto;'>
-                                  <a href = "javascript:window.open('view_modpersonas.php?ID=` . $RetTodos["id_persona"] . `,'Ventana` . $RetTodos["id_persona"] . `', 'width=800,height=500,scrollbars=no,top=150,left=250,resizable=no')" target='_top' rel='noopener noreferrer'>` . $DtoMovimiento->getApellido() . `, ` . $DtoMovimiento->getNombre() . `
+                                  <a style='text-decoration: none;' href = "javascript:window.open('view_modpersonas.php?ID=` . $RetTodos["id_persona"] . `,'Ventana` . $RetTodos["id_persona"] . `', 'width=800,height=500,scrollbars=no,top=150,left=250,resizable=no')" target='_top' rel='noopener noreferrer'>` . $DtoMovimiento->getApellido() . `, ` . $DtoMovimiento->getNombre() . `
                                   </a>
                                 </td>`;
                   $json_row["Persona"] = $DtoMovimiento->getApellido() . " " . $DtoMovimiento->getNombre();
