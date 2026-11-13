@@ -65,7 +65,7 @@ try {
 	mysqli_report(MYSQLI_REPORT_ERROR);
 
 	$routes[] = Route::get('home', '/', [HomeController::class, 'inicio']);
-	$routes[] = Route::get('home_url', '/home', [HomeController::class, 'index']);
+	$routes[] = Route::get('home_url', '/home', [HomeController::class, 'inicio']);
 	$routes[] = Route::get('home_succes', '/home\?Mensaje={mensaje}', [HomeController::class, 'index']);
 	$routes[] = Route::get('home_error', '/home\?MensajeError={mensaje}', [HomeController::class, 'index']);
 	$routes[] = Route::get('login', '/login', [HomeController::class, 'login']);
@@ -120,6 +120,7 @@ try {
 	$routes[] = Route::get('filtro_movimientos_grafico', '/filtrografico', [ReporteGraficoController::class, 'filtro_movimientos']);
 	$routes[] = Route::post('reporte_movimientos_grafico', '/reportegrafico', [ReporteGraficoController::class, 'reporte']);
 	$routes[] = Route::get('filtro_movimientos_listado', '/filtrolistado', [ReporteListadoController::class, 'filtro_movimientos']);
+	$routes[] = Route::post('reporte_pdf_grafico', '/generar_pdf_grafico', [ReporteGraficoController::class, 'generar_pdf']);
 	$routes[] = Route::post('reporte_movimientos_listado', '/reportelistado', [ReporteListadoController::class, 'reporte']);
 	$routes[] = Route::post('buscar_movimientos', '/buscar_movimientos', [MovimientoController::class, 'buscar_movimientos']);
 	$routes[] = Route::get('listado_categorias', '/categorias', [CategoriaController::class, 'listado_categorias']);

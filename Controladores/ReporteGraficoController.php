@@ -107,6 +107,8 @@ class ReporteGraficoController
             $row = "";
             $row_head = "";
 
+            $fecha_desde = $array_filas["fechaDesde"];
+            $fecha_hasta = $array_filas["fechaHasta"];
             $header_mov_general = (isset($array_filas["header_movimientos_general"])) ? $array_filas["header_movimientos_general"] : $array_filas["head_movimientos_persona"];
             $count = (isset($array_filas["cant"])) ? $array_filas["cant"] : 0;
             $flag = (!empty($array_filas["last"])) ? $array_filas["last"] : null;
@@ -116,14 +118,29 @@ class ReporteGraficoController
                 $page_height = 650;
             }
 
+            $meses_header = array_filter($header_mov_general, function ($e) {
+                return preg_match("~[0-9]+/[0-9]+~", $e); 
+            });
+
+            $max_diag_por_meses = array_combine($meses_header, 
+                                                array_fill(0, count($meses_header), 0)
+                                                );
+            foreach ($array_filas as $ind => $value) {
+                foreach ($meses_header as $key => $value) {
+                    $fecha = preg_replace("~([0-9]+)/([0-9][0-9])~", "$1/20$2", $value);
+                    if (!isset($array_filas[$ind][$fecha])) continue;
+                    $cant_diag = count($array_filas[$ind][$fecha]);
+                    if ($max_diag_por_meses[$value] < $cant_diag) $max_diag_por_meses[$value] = $cant_diag;
+                }
+            }
             $height = 45;
             $cell_height = round($page_height/$count, 2);
             if ($height < $cell_height) {
                 $cell_height = $height;
             }
 
-
-            for ($i = 0; $i < count($array_filas); $i++) {
+            /*
+            for ($i = 0; $i < $count; $i++) {
                 $row .= "<tr>
                             <td style='width: 60px'>" . 
                                 (isset(($array_filas[$i]["barrio"])) ? $array_filas[$i]["barrio"] : "" ) . "
@@ -137,26 +154,126 @@ class ReporteGraficoController
                             <td style='width: 60px'>" . 
                                 (isset(($array_filas[$i]["fechanac"])) ? $array_filas[$i]["fechanac"] : "" ) . "
                             </td>";
-                /*for ($h = 0; $h < count($mesesHeader); $h++) {
-                    if (isset($array_filas[$i][$mesesHeader[$h]])) {
-                        $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
-                                bloqueMotivos($array_filas[$i][$mesesHeader[$h]]) . "
-                                </td>";
-                    } else {
-                        $row .=  "<td></td>";
-                    }
-                }*/
 
-                foreach ($array_filas[$i] as $key => $value) {
-                    if (preg_match("~[0-9][0-9]/[0-9][0-9][0-9][0-9]~", $key)) {
+                foreach ($meses_header as $key => $value) {
+                    $fecha = preg_replace("~([0-9]+)/([0-9][0-9])~", "$1/20$2", $value);
+                    if (isset($array_filas[$i][$fecha])) {
                         $row .= "<td style=\"font-family: 'DejaVu Sans'; font-size: 7px;\">" . 
-                                    bloqueMotivos($array_filas[$i][$key]) . "
+                                    $this->bloqueMotivos($array_filas[$i][$fecha]) . "
                                  </td>";
                     } else {
-                        $row .= "<td></td>";
+                        $row .= "<td> </td>";
                     }
                 }
+                $row .= "</tr>";
             }
+
+            */
+
+            $row_1 = "";
+            $row_2 = "";
+            for ($i = 0; $i < $count; $i++) {
+                $row_1 .= "<tr>
+                            <td rowspan='2' style='width: 60px'>" . 
+                                (isset(($array_filas[$i]["barrio"])) ? $array_filas[$i]["barrio"] : "" ) . "
+                            </td>
+                            <td rowspan='2' style='width: 60px'>" . 
+                                (isset(($array_filas[$i]["domicilio"])) ? $array_filas[$i]["domicilio"] : "" ) . "
+                            </td>
+                            <td rowspan='2' style='width: 60px'>" . 
+                                (isset(($array_filas[$i]["persona"])) ? $array_filas[$i]["persona"] : "" ) . "
+                            </td>
+                            <td rowspan='2' style='width: 60px'>" . 
+                                (isset(($array_filas[$i]["fechanac"])) ? $array_filas[$i]["fechanac"] : "" ) . "
+                            </td>";
+
+                $row_2 .= "<tr>";
+
+                foreach ($meses_header as $key => $value) {
+                    $fecha = preg_replace("~([0-9]+)/([0-9][0-9])~", "$1/20$2", $value);
+
+                    $col_can = ($max_diag_por_meses[$value]) ? $max_diag_por_meses[$value] : 1;
+                    $cant_diag_fila = ($col_can > 6) ? 6 : $col_can;
+
+                    if (isset($array_filas[$i][$fecha])) {
+
+                        $array_diag = $array_filas[$i][$fecha];
+                        $cant_diag_mes_persona = count($array_diag);
+
+                        if ($cant_diag_mes_persona > $cant_diag_fila) {
+
+                            $sub_array_diag = array_slice($array_diag, 0, $cant_diag_fila);
+                            array_walk($sub_array_diag, function ($valor, $indice, $last_inidice) use (&$row_1) {
+                                $border = "border-right: 0px; border-left: 0px;";
+                                if ($indice == $last_inidice) $border = "border-left: 0px;";
+                                if ($indice == 0 && $indice != $last_inidice) $border = "border-right: 0px;";
+                                $row_1 .= "<td style='border-top: 0px; border-bottom: 0px; $border'>
+                                                <div style='color: " . $valor[2] . "'>" . 
+                                                    $valor[0] . "
+                                                </div>" . 
+                                                $valor[1]  . "
+                                            </td>";
+                            }, $cant_diag_fila - 1);
+
+                            $sub_diag = array_slice($array_diag, $cant_diag_fila);
+
+                            array_walk($sub_diag, function ($valor, $indice, $last_inidice) use (&$row_2) {
+                                $border = "border-right: 0px; border-left: 0px;";
+                                if ($indice == $last_inidice) $border = "border-left: 0px; border-color: ";
+                                if ($indice == 0 && $indice != $last_inidice) $border = "border-right: 0px; border-left: 0px";
+                                $row_2 .= "<td style='border-top: 0px; $border'>
+                                                <div style='color: " . $valor[2] . "'>" . 
+                                                    $valor[0] . "
+                                                </div>" . 
+                                                $valor[1]  . "
+                                            </td>";
+                            }, $cant_diag_fila - 1);
+
+                            for ($j = count($sub_diag); $j < $cant_diag_fila; $j++) {
+                                $border = "border-right: 0px; border-left: 0px;";
+                                if ($j == $cant_diag_fila - 1) $border = "border-left: 0px;";
+                                if ($j == 0 && $j != ($cant_diag_fila - 1)) $border = "border-right: 0px;";
+                                $row_2 .= "<td style='$border border-top: 0px;'></td>";    
+                            }
+                        } else {
+                            array_walk($array_diag, function ($valor, $indice, $last_inidice) use (&$row_1) {
+                                $border = "border-right: 0px; border-left: 0px;";
+                                if ($indice == $last_inidice) $border = "border-left: 0px;";
+                                if ($indice == 0  && $indice != $last_inidice) $border = "border-right: 0px;";
+                                $row_1 .= "<td style='border-top: 0px; border-bottom: 0px; $border'>
+                                                <div style='color: " . $valor[2] . "'>" . 
+                                                    $valor[0] . "
+                                                </div>" . 
+                                                $valor[1]  . "
+                                            </td>";
+                            }, $cant_diag_fila - 1);
+
+                            for ($j = count($array_diag); $j < $cant_diag_fila; $j++) {
+                                $border = "border-right: 0px; border-left: 0px;";
+                                if ($j == $cant_diag_fila - 1) $border = "border-right: 0px;";
+                                if ($j == 0 && $j != ($cant_diag_fila - 1)) $border = "border-left: 0px;";
+                                $row_1 .= "<td style='$border border-top: 0px;'></td>";
+                            }
+
+                            for ($j = 0; $j < $cant_diag_fila; $j++) {
+                                $border = "border-right: 0px; border-left: 0px;";
+                                if ($j == $cant_diag_fila - 1) $border = "border-left: 0px;";
+                                if ($j == 0 && $j != ($cant_diag_fila - 1)) $border = "border-right: 0px;";
+                                $row_2 .= "<td style='$border border-top: 0px;'></td>";    
+                            }
+                        }
+
+                    } else {
+                        $row_1 .= "<td style='border-bottom: 0px;'> </td>";
+                        $row_2 .= "<td style='border-top: 0px;'> </td>";
+                    }
+                }
+                $row_1 .= "</tr>";
+                $row_2 .= "</tr>";
+
+                $row .= $row_1 . $row_2;
+            }
+
             $table = "<html>
                         <head>
                             <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
@@ -180,12 +297,19 @@ class ReporteGraficoController
                                     font-size: 12px;
                                 }
 
+                                table, th, td {
+                                    border: 1px solid;
+                                }
+
                                 tr td {
+                                    border-width: 1px;
+                                    border-color: #8b8787;
                                     text-align: center;
                                     font-size: 12px;
                                 }
 
                                 table thead tr th {
+                                    border-width: 1px;
                                     background-color: #ccc;
                                 }
 
@@ -217,39 +341,29 @@ class ReporteGraficoController
                                     margin-top: 2rem;
                                     margin-bottom: 200px;
                                 }
-
-                                table, th, td {
-                                    border: 0.5px solid;
-                                }
                             </style>
                         </head> 
-                        <body>".
-
-                        "<table class='table--border-colapsed'>
+                        <body>";
+            $table .= "<table class='table--border-colapsed'>
                         <thead>
                             <tr>
                                 <th>Barrio</th>
                                 <th>Direc.</th>
                                 <th>Persona</th>
-                                <th>Fecha Nac.</th>
-                                <th>" . $mesesHeader[0]  . "</th>
-                                <th>" . $mesesHeader[1] . "</th>
-                                <th>" . $mesesHeader[2] . "</th>
-                                <th>" . $mesesHeader[3] . "</th>
-                                <th>" . $mesesHeader[4] . "</th>
-                                <th>" . $mesesHeader[5] . "</th>
-                                <th>" . $mesesHeader[6] . "</th>
-                                <th>" . $mesesHeader[7] . "</th>
-                                <th>" . $mesesHeader[8] . "</th>
-                                <th>" . $mesesHeader[9] . "</th>
-                                <th>" . $mesesHeader[10] . "</th>
-                                <th>" . $mesesHeader[11] . "</th>
-                                <th>" . $mesesHeader[12] . "</th>
-                            </tr>
+                                <th>Fecha Nac.</th>";
+            $head_table = "";
+            foreach ($meses_header as $key => $value) {
+                $colspan = ($max_diag_por_meses[$value]) ? $max_diag_por_meses[$value] : 1;
+                $colspan = ($colspan > 6) ? 6 : $colspan;
+                $head_table .= "<th colspan='" . $colspan . "'>" . $value  . "</th>";
+            }
+            $table .= $head_table;
+            $table .= "</tr>
                         </thead>
                         <tbody>". 
                             $row."
                         </tbody>
+                      </table>
                     </body>
                 </html>";
 
@@ -274,29 +388,86 @@ class ReporteGraficoController
 
     }
 
+    function concatMotivo($elemento)
+    {
+        $td_table = "<td style='border-top: 0px; border-right: 0px; border-bottom: 0px'> 
+                        <div style='color: " . $elemento[2] . "'>" . 
+                            $elemento[0] . "
+                        </div>" . 
+                        $elemento[1]  . "
+                    </td>";
+        return $td_table;
+    }
+
+    function bloqueMotivos($array_motivos, $max_diag_por_meses)
+    {   $bloque = "";
+        if (count($array_motivos) > 5) {
+            $bloque .= array_reduce(array_slice($array_motivos, 0, 5), [$this, "concatMotivo"], "");
+            $bloque .= array_reduce(array_slice($array_motivos, 6), [$this, "concatMotivo"], "");
+        } else {
+            $bloque .= array_reduce($array_motivos, [$this, "concatMotivo"], $bloque);
+        }
+        return $bloque;
+    }
+
+    /*
     function concatMotivo($acumulado, $elemento)
     {
-        $acumulado .= "<div style='display:inline-block; width: 15px'> 
-                        <span style='color: ".$elemento[2] . "'>" . 
+        $acumulado .= "<td> 
+                        <span style='color: " . $elemento[2] . "'>" . 
                             $elemento[0] . "
                         </span>" . 
                         $elemento[1]  . "
-                    </div>";
+                    </td>";
         return $acumulado;
     }
 
     function bloqueMotivos($array_motivos)
-    {   $bloque = "<div>";
+    {   $bloque = "<table>
+                     <thead>
+                     <th></th>
+                     </thead>
+                     <tbody>";
         if (count($array_motivos) > 5) {
-        $bloque .= array_reduce(array_slice($array_motivos, 0, 5), "concatMotivo", $bloque);
-        $bloque .= "<div>";
-        $bloque .= array_reduce(array_slice($array_motivos, 6), "concatMotivo", $bloque);
-        $bloque .= "</div></div>";
+        $bloque .= "<row>";
+        $bloque .= array_reduce(array_slice($array_motivos, 0, 5), [$this, "concatMotivo"], $bloque);
+        $bloque .= "</row>";
+        $bloque .= "<row>";
+        $bloque .= array_reduce(array_slice($array_motivos, 6), [$this, "concatMotivo"], $bloque);
+        $bloque .= "</row>";
         } else {
-            $bloque .= array_reduce($array_motivos, "concatMotivo", $bloque);
-            $bloque .= "<div>";
+            $bloque .= "<row>";
+            $bloque .= array_reduce($array_motivos, [$this, "concatMotivo"], $bloque);
+            $bloque .= "</row>";
+        }
+        $bloque .= "</tbody>
+                 </table>";
+        return $bloque;
+    }
+
+    */
+    /*
+    function concatMotivo($acumulado, $elemento)
+    {
+        $acumulado .= "<span style='float: right;'> 
+                        <div style='color: " . $elemento[2] . "'>" . 
+                            $elemento[0] . "
+                        </div>" . 
+                        $elemento[1]  . "
+                    </span>";
+        return $acumulado;
+    }
+
+    function bloqueMotivos($array_motivos)
+    {   $bloque = "";
+        if (count($array_motivos) > 5) {
+        $bloque .= array_reduce(array_slice($array_motivos, 0, 5), [$this, "concatMotivo"], $bloque);
+        $bloque .= array_reduce(array_slice($array_motivos, 6), [$this, "concatMotivo"], $bloque);
+        } else {
+            $bloque .= array_reduce($array_motivos, [$this, "concatMotivo"], $bloque);
         }
         return $bloque;
     }
+        */
 
 }
