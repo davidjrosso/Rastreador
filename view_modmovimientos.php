@@ -234,7 +234,7 @@ if(isset($_REQUEST["ID"])) {
       }
 
 
-       function buscarPersonas(){
+       function buscarPersonas() {
         var xNombre = document.getElementById('SearchPersonas').value;
         var textoBusqueda = xNombre;
         xmlhttp=new XMLHttpRequest();
@@ -405,7 +405,7 @@ if(isset($_REQUEST["ID"])) {
 
 </head>
 <body>
-<div class = "row margin-right-cero">
+<div class = "row margin-right-cero" id="movimiento-mod">
 <?php
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_MOVIMIENTO);
   ?>
@@ -861,6 +861,26 @@ if(isset($_REQUEST["ID"])) {
         </div>
       </div>
       <!-- FIN MODAL SELECCION MOTIVO -->
+      <!-- Modal de Imagen-->
+      <div class="modal fade bd-example-modal-lg" id="ModalImagen" tabindex="-1" role="dialog" 
+           aria-labelledby="Imagen" aria-hidden="true" style="z-index: 2000000; background: rgb(0 0 0 / 67%);">
+          <div class="modal-dialog modal-dialog-centered modal-lg" role="document" style="min-width: 90%;">
+            <div class="modal-content">
+              <div class="modal-header" style="max-height: 20px;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="padding: 4px;">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div id="body-imagen" class="modal-body">
+
+              </div>
+              <div class="modal-footer" style="margin: auto;">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>			        
+              </div>
+            </div>
+        </div>
+      </div>
+      <!-- Modal de Imagen-->
       <!-- FIN SECCION DE MODALES -->
   </div>
 </div>

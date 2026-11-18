@@ -214,6 +214,20 @@ let editorMedicina = ClassicEditor.create({
             });          
         });
 
+        $("img").on("click", function (e) {
+            if ($('#ModalImagen img').length == 0) {
+              let img = e.target.cloneNode();
+              img.id = "imagen-clone";
+              $("#body-imagen").append(img);
+
+              $("#imagen-clone").css("width", "100%");
+              $("#imagen-clone").attr("width", null);
+              $("#imagen-clone").attr("height", null);
+            }
+            $('#ModalImagen').modal('show');
+            $('#movimiento-mod').css("display", "flex");
+        });
+
     });
 
     editorMedicina.then(function (v) {
