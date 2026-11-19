@@ -35,7 +35,6 @@ if(!isset($_SESSION["Usuario"])){
     exit();
 }
 
-
 $ID_Usuario = $_SESSION["Usuario"];
 $usuario = new Account(account_id: $ID_Usuario);
 $TipoUsuario = $usuario->get_id_tipo_usuario();
@@ -118,7 +117,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
   <link rel="stylesheet" href="https://bossanova.uk/jspreadsheet/v5/jspreadsheet.css" type="text/css" />
   <link rel="stylesheet" href="https://jsuites.net/v5/jsuites.css" type="text/css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons" />
-  <script src="/dist/excel.js"></script>
+  <script src="./dist/excelReporte.js"></script>
   <script src="./js/ReporteListado.js"></script>
 
   <script>
@@ -127,7 +126,6 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
       let filtroSeleccionados = null;
       let listaOrden = new Map();
       let fullscreen = false;
-      let excel = null;
       let intervalo = null;
       let datosPersona = <?php echo (($_SESSION["request_prev"]) ? json_encode($_SESSION["request_prev"]) : 'null'); ?>;
       $(document).ready(function(){
@@ -177,34 +175,8 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                 clearInterval(intervalo);
               });
 
-              $("#excel").on("click", function (e) {
-                if (excel) {
-                  excel.delete();
-                }
-                excel = new Excel();
-                excel.init();
-              });
-
               $("#rep_grafico").on("click", function (e) {
                 sendToRepGrafico();
-              });
-
-              $("#excel_descarga").on("click", function (e) {
-                let vic = null;
-                let listConfigResult = listConfigResultados();
-                for (let index = 2; index < 5; index++) {
-                  objectJsonTabla["header_movimientos_general"].splice(objectJsonTabla["header_movimientos_general"].indexOf("Responsable" + index), 1);
-                }
-
-                vic = excel.excel_download(objectJsonTabla, listConfigResult);
-                vic.then(function (result) {
-                  let url = null;
-                  let blob = new Blob([result], {
-                      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                    });
-                  url = URL.createObjectURL(blob);
-                  let w = window.open(url);
-                })
               });
 
               $("#btn-new-persona").on("click", function (e) {
@@ -232,7 +204,6 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                 sendToRepGrillaLista();
               })
               configResultados();
-              excel = new Excel();
       });
 
       function listConfigResultados() {
@@ -262,7 +233,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
         return list;
       }
       function enviarImprimirPdf() {
-        //configColumnasTabla();
+
         let listConfigResult = listConfigResultados();
         let reporte = null;
         if (objectJsonTabla["movimientos_general"] !== undefined) {
