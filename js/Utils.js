@@ -40,7 +40,7 @@ $(function (e) {
     });
 
     $("#btn-new-persona").on("click", function (e) {
-        if (Window.datosPersona) sendToNewMovimiento(Window.datosPersona);
+        if (window.datosPersona) sendToNewMovimiento(Window.datosPersona);
     });
 });
 
