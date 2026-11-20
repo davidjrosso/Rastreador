@@ -83,17 +83,14 @@ class Motivo implements JsonSerializable
 
     public static function get_id_by_name($coneccion, $motivo)
 	{
+		$exp_reg = preg_replace("~[ ]+~", "%", trim($motivo));
         $consulta = "select * 
 					 from motivo 
-					 where motivo like '%$motivo%' 
+					 where lower(motivo) like lower('%$exp_reg%')
 					   and estado = 1";
-		$mensaje_error = "Hubo un problema al consultar los registros";
-		$ret = mysqli_query(
-					$coneccion->Conexion,
-					$consulta
-		) or die(
-			$mensaje_error
-		);
+		$mensaje = "Hubo un problema al consultar los registros";
+		$ret = mysqli_query($coneccion->Conexion, $consulta);
+		if(!$ret) throw new Exception($mensaje, 2);
 		$row = mysqli_fetch_assoc($ret);
         $id_motivo = (!empty($row["id_motivo"])) ? $row["id_motivo"] : 1;
 		return $id_motivo;
@@ -114,6 +111,31 @@ class Motivo implements JsonSerializable
 		);
 		$row = mysqli_fetch_assoc($ret);
         $id_motivo = (!empty($row["id_motivo"])) ? $row["id_motivo"] : 1;
+		return $id_motivo;
+    }
+
+    public static function get_id_con_codigo_punto($coneccion, $codigo)
+	{
+		$codigo_punto = $codigo;
+		if(strlen($codigo) == 4) {
+			$codigo_punto = substr($codigo, 0, 3) . "." . substr($codigo, 3, 1);
+		}
+		if(strlen($codigo) == 3) {
+			$codigo_punto = $codigo . ".X" ;
+		}
+        $consulta = "select * 
+					 from motivo 
+					 where lower(codigo) = lower('$codigo_punto') 
+					   and estado = 1";
+		$mensaje = "Hubo un problema al consultar los registros";
+		$ret = mysqli_query(
+					$coneccion->Conexion,
+					$consulta
+		);
+		if (!$ret) throw new Exception($mensaje, 1);
+
+		$row = mysqli_fetch_assoc($ret);
+        $id_motivo = (!empty($row["id_motivo"])) ? $row["id_motivo"] : 0;
 		return $id_motivo;
     }
 

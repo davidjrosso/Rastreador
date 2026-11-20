@@ -2908,6 +2908,8 @@ $movimiento_fin = (!empty($_REQUEST["fin-movimiento-check"])) ? true : false;
     nroColumnaInicial = columnaIndice;
 
     var objectJsonTabla = <?php echo json_encode(value: array_values($jsonTable), flags: true); ?>;
+    objectJsonTabla.fechaDesde = "<?= $Fecha_Inicio;?>";
+    objectJsonTabla.fechaHasta = "<?= $Fecha_Fin;?>";
     var objectJsonAnimacion = <?php echo json_encode(value: array_values($lista_animacion), flags: true); ?>;
     let headerMeses = <?= ((!$header_meses) ? "null" : json_encode(value: $header_meses));?>;
     let headerGeneral = <?= ((!$header_general) ? "null" : json_encode(value: $header_general));?>;
@@ -3020,6 +3022,9 @@ $movimiento_fin = (!empty($_REQUEST["fin-movimiento-check"])) ? true : false;
                                         null,
                                         []
                                       );
+      reporte.setFechaDesde(objectJsonTabla.fechaDesde);
+      reporte.setFechaHasta(objectJsonTabla.fechaHasta);
+
       reporte.enviarRequestGrafico();
     }
 

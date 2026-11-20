@@ -7,7 +7,7 @@ use Dompdf\Dompdf;
 $from_reporte_listado = (preg_match("~view_vermovlistados~", $_SERVER["HTTP_REFERER"])) ? true : false;
 $from_reporte_grafico = (preg_match("~view_rep_general_new~", $_SERVER["HTTP_REFERER"])) ? true : false;
 $nro_paquete = getallheaders()["x-request-id"];
-ini_set('pcre.backtrack_limit', 5000000);
+ini_set('pcre.backtrack_limit', 9000000);
 ini_set('memory_limit', '-1');
 ini_set( 'max_execution_time', '120');
 

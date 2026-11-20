@@ -2383,7 +2383,7 @@ public function getMenuSeguridadUsuario($ID){
     $Con3 = new Conexion();
     $Con3->OpenConexion();
     $Select = "<select class='btn btn-lg btn-primary btn-block'  name = 'ID_Responsable[]' data-pre = '1' id='ID_Responsable'>";
-    $Select .= "<option value = '0'>-Todos-</option>";
+    $Select .= "<option value = '0'>Seleccione Responsable</option>";
     $query = "SELECT * 
               FROM responsable 
               WHERE estado = 1 
@@ -2453,7 +2453,7 @@ public function getMenuSeguridadUsuario($ID){
     $Consulta = mysqli_query($Con3->Conexion, $query) or die("Problemas al mostrar Responsables");
     while ($Ret = mysqli_fetch_array($Consulta)) {      
       if($Ret['id_resp'] == $xID_Responsable){
-        $Select .= "<option value = '".$Ret['id_resp']."' selected>".$Ret['responsable']."</option>";
+        $Select .= "<option value = '".$Ret['id_resp']."' selected>" . $Ret['responsable'] . "</option>";
       }else{
         $Select .= "<option value = '".$Ret['id_resp']."'>".$Ret['responsable']."</option>";
       }   

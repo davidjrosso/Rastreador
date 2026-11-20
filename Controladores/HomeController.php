@@ -33,7 +33,8 @@ class HomeController
     public function inicio()
     {
         header("Content-Type: text/html;charset=utf-8");
-        include("../index.php");
+        //include("../index.php");
+        include("../view_inicio.php");
     }
 
     public function index()
