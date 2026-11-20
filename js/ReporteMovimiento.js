@@ -16,6 +16,8 @@ export class RerpoteMovimiento {
     nroPaginaGeneradas = 0;
     countList = 0;
     indexList = 0;
+    fechaDesde = null;
+    fechaHasta = null;
     documentoPdf = PDFDocument.create();
     progress = 0;
     timer;
@@ -156,6 +158,8 @@ export class RerpoteMovimiento {
         }, {});
         lista["header_movimientos_general"] = this.listaHeaderTotal;
         lista["cant"] = this.listaDeMovimientos.length;
+        lista["fechaDesde"] = this.fechaDesde;
+        lista["fechaHasta"] = this.fechaHasta;
         request.send(JSON.stringify(lista));
         this.timer = setInterval(this.dialogOnProgress.bind(this), 3100);
     }
@@ -482,4 +486,12 @@ export class RerpoteMovimiento {
         $("#bar-progress-modal").val(parseInt(this.progress * 100));
     }
 
+    setFechaDesde(fechaDesde) {
+        this.fechaDesde = fechaDesde;        
+    }
+
+    setFechaHasta(fechaHasta) {
+        this.fechaHasta = fechaHasta;        
+    }
+    
 }

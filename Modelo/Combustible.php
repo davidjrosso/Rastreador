@@ -4,27 +4,33 @@ class Combustible{
 	private $TipoCombustible;
 	private $PrecioxLitro;
 
-public function setIDCombustible($_xID){
+public function setIDCombustible($_xID)
+{
 	$this->IDCombustible = $_xID;
 }
 
-public function setTipoCombustible($_xTipoCombustible){
+public function setTipoCombustible($_xTipoCombustible)
+{
 	$this->TipoCombustible = $_xTipoCombustible;
 }
 
-public function setPrecioxLitro($_xPrecioxLitro){
+public function setPrecioxLitro($_xPrecioxLitro)
+{
 	$this->PrecioxLitro = $_xPrecioxLitro;
 }
 
-public function getIDCombustible(){
+public function getIDCombustible()
+{
 	return $this->IDCombustible;
 }
 
-public function getTipoCombustible(){
+public function getTipoCombustible()
+{
 	return $this->TipoCombustible;
 }
 
-public function getPrecioxLitro(){
+public function getPrecioxLitro()
+{
 	return $this->PrecioxLitro;
 }
 
