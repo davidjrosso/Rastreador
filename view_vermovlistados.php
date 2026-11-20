@@ -90,6 +90,7 @@ if ($redirect_formulario && !$filtro_id_motivo) {
 }
 
 $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
+$Con = new Conexion();
 
 ?>
 <!DOCTYPE html>
@@ -110,7 +111,6 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
   <script src="js/Utils.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-  <script src="dist/reporte.js"></script>
   <script src="https://jsuites.net/v5/jsuites.js"></script>
   <link rel="./node_modules/jspreadsheet-ce/dist/jspreadsheet.css">
   <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/48.1.1/ckeditor5.css" />
@@ -118,25 +118,18 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
   <link rel="stylesheet" href="https://jsuites.net/v5/jsuites.css" type="text/css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons" />
   <script src="./dist/excelReporte.js"></script>
-  <script src="./js/ReporteListado.js"></script>
+  <script src="./dist/ReporteListado.js"></script>
 
   <script>
       let fechaDesde = null;
       let fechaHasta = null;
       let filtroSeleccionados = null;
-      let listaOrden = new Map();
       let fullscreen = false;
       let intervalo = null;
       let datosPersona = <?php echo (($_SESSION["request_prev"]) ? json_encode($_SESSION["request_prev"]) : 'null'); ?>;
-      $(document).ready(function(){
-              var date_input=$('input[name="date"]');
-              var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-              date_input.datepicker({
-                  format: 'dd/mm/yyyy',
-                  container: container,
-                  todayHighlight: true,
-                  autoclose: true,
-              });
+      window.datosRetorno = <?php echo (!empty(end($_SESSION["retorno"])))? json_encode(end($_SESSION["retorno"])) : "{}" ;?>;
+      window.datos = <?php echo (!empty($_REQUEST)) ? json_encode($_REQUEST) : "{}";?>;
+      $(document).ready(function() {
               nroFilasTabla = $("#tabla-movimiento-general tbody > tr").length - 2;
               nroFilasTabla = (nroFilasTabla) ? $("#tabla-movimiento tbody > tr").length - 2 : 0;
               nroColumnasTabla = $("thead > tr > th").length - 2;
@@ -175,10 +168,6 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                 clearInterval(intervalo);
               });
 
-              $("#rep_grafico").on("click", function (e) {
-                sendToRepGrafico();
-              });
-
               $("#btn-new-persona").on("click", function (e) {
                 if (datosPersona) sendToNewMovimiento(datosPersona);
               });
@@ -199,267 +188,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                     fullscreen = false;
                   }
               });
-
-              $("#grilla_tabla").on("click", function (e) {
-                sendToRepGrillaLista();
-              })
-              configResultados();
       });
-
-      function listConfigResultados() {
-        let list = [];
-        if (!document.getElementById('chkFecha').checked) list.push('Fecha');
-        if (!document.getElementById('chkMotivos').checked) {
-          list.push('Motivo 1');
-          list.push('Motivo 2');
-          list.push('Motivo 3');
-        }
-        if (!document.getElementById('chkPersona').checked) list.push('Persona');
-        if (!document.getElementById('chkDNI').checked) list.push('DNI');
-        if (!document.getElementById('chkFechaNac').checked) list.push('Fecha Nac');
-        if (!document.getElementById('chkEdad').checked) list.push('Años');
-        if (!document.getElementById('chkMeses').checked) list.push('Meses');
-        if (!document.getElementById('chkObraSocial').checked) list.push('Obra Social');
-        if (!document.getElementById('chkDomicilio').checked) list.push('Domicilio');
-        if (!document.getElementById('chkBarrio').checked) list.push('Barrio');
-        if (!document.getElementById('chkLocalidad').checked) list.push('Localidad');
-
-        if (!document.getElementById('chkObservaciones').checked) list.push('Observaciones');
-        if (!document.getElementById('chkObservacionMedicina').checked) list.push('Otras Observaciones');
-        if (!document.getElementById('chkResponsable').checked) list.push('Responsable');
-        if (!document.getElementById('chkCentrosSalud').checked) list.push('Centro Salud');
-        if (!document.getElementById('chkOtrasInstituciones').checked) list.push('Otra Institucion');
-
-        return list;
-      }
-      function enviarImprimirPdf() {
-
-        let listConfigResult = listConfigResultados();
-        let reporte = null;
-        if (objectJsonTabla["movimientos_general"] !== undefined) {
-          for (let index = 4; index > objectJsonTabla["cant_resp"]; index--) {
-            objectJsonTabla["header_movimientos_general"].splice(objectJsonTabla["header_movimientos_general"].indexOf("Responsable" + index), 1);
-          }
-          reporte = new RerpoteMovimiento(
-                                          objectJsonTabla["movimientos_general"],
-                                          objectJsonTabla["header_movimientos_general"],
-                                          objectJsonTabla["head_movimientos_persona"],
-                                          null,
-                                          null,
-                                          listConfigResult
-                                        );
-          reporte.enviarRequestListado();
-        } else if (objectJsonTabla["movimientos_persona"] !== undefined) {
-          reporte = new RerpoteMovimiento(
-                                          objectJsonTabla["movimientos_persona"],
-                                          objectJsonTabla["header_movimientos_general"],
-                                          objectJsonTabla["head_movimientos_persona"],
-                                          objectJsonTabla["det_persona"],
-                                          null,
-                                          listConfigResult
-                                        );
-          reporte.enviarRequestListado();
-        }
-      }
-
-    function sendToRepL() {
-        const form = document.createElement('form');
-        let datos = <?php echo (!empty(end($_SESSION["retorno"])))? json_encode(end($_SESSION["retorno"])) : "{}" ;?>;
-        form.method = 'POST';
-        form.action = "/view_vermovlistados.php";
-        form.style.display = 'none';
-
-        for (const key in datos) {
-            if (Object.prototype.hasOwnProperty.call(datos, key)) {
-                if (key == "familia-historia-clinica") continue;
-                if (key == "persona-historia-clinica") continue;
-                if (datos[key] instanceof Array) {
-                  datos[key].forEach(function (e) {
-                      const input = document.createElement('input');
-                      input.type = 'hidden';
-                      input.name = key + "[]";
-                      input.value = e;
-                      form.appendChild(input);
-                  })
-                } else {
-                  const input = document.createElement('input');
-                  input.type = 'hidden';
-                  input.name = key;
-                  input.value = datos[key];
-                  form.appendChild(input);
-                }
-            }
-        }
-
-        document.body.appendChild(form);
-        form.submit(); // Submit the form to initiate the navigation
-    }    
-
-
-      function sendToRepGrafico() {
-          const form = document.createElement('form');
-          let datos = <?php echo json_encode($_REQUEST)?>;
-          form.method = 'POST';
-          form.action = "/view_rep_general_new.php";
-          form.style.display = 'none';
-
-          for (const key in datos) {
-              if (Object.prototype.hasOwnProperty.call(datos, key)) {
-                  if (datos[key] instanceof Array) {
-                    datos[key].forEach(function (e) {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = key + "[]";
-                        input.value = e;
-                        form.appendChild(input);
-                    })
-                  } else {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = key;
-                    input.value = datos[key];
-                    form.appendChild(input);
-                  }
-              }
-          }
-
-          const input = document.createElement('input');
-          input.type = 'hidden';
-          input.name = "width-display";
-          input.value = window.screen.availWidth;
-          form.appendChild(input);
-
-          
-          document.body.appendChild(form);
-          form.submit(); 
-      }
-
-      function sendToPersonaListado(idPersona) {
-          const form = document.createElement('form');
-          let datos = <?php echo json_encode($_REQUEST)?>;
-          form.method = 'POST';
-          form.action = "/view_vermovlistados.php";
-          form.style.display = 'none';
-
-          for (const key in datos) {
-              if (Object.prototype.hasOwnProperty.call(datos, key)) {
-                  if (datos[key] instanceof Array) {
-                    datos[key].forEach(function (e) {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = key + "[]";
-                        input.value = e;
-                        form.appendChild(input);
-                    });
-                  } else {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = key;
-                    if (key == "ID_Persona") {
-                      input.value = idPersona;
-                    } else {
-                      input.value = datos[key];
-                    }
-                    form.appendChild(input);
-                  }
-              }
-          }
-          const input = document.createElement('input');
-          input.type = 'checkbox';
-          input.name = "familia-historia-clinica";
-          input.value = "true";
-          input.checked = true;
-          form.appendChild(input);
-          document.body.appendChild(form);
-          form.submit(); 
-      }
-
-
-      function sendToRepListado(idPersona) {
-          const form = document.createElement('form');
-          let datos = <?php echo json_encode($_REQUEST)?>;
-          form.method = 'POST';
-          form.action = "/view_vermovlistados.php";
-          form.style.display = 'none';
-
-          for (const key in datos) {
-              if (Object.prototype.hasOwnProperty.call(datos, key)) {
-
-                  if (key == "familia-historia-clinica") continue;
-                  if (datos[key] instanceof Array) {
-                    datos[key].forEach(function (e) {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = key + "[]";
-                        input.value = e;
-                        form.appendChild(input);
-                    });
-                  } else {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = key;
-                    if (key == "ID_Persona") {
-                      input.value = idPersona;
-                    } else {
-                      input.value = datos[key];
-                    }
-                    form.appendChild(input);
-                  }
-              }
-          }
-          const input = document.createElement('input');
-          input.type = 'checkbox';
-          input.name = "persona-historia-clinica";
-          input.value = "true";
-          input.checked = true;
-          form.appendChild(input);
-          document.body.appendChild(form);
-          form.submit();
-      }
-
-      function sendToRepGrillaLista() {
-          const form = document.createElement('form');
-          let datos = <?php echo json_encode($_REQUEST)?>;
-          form.method = 'POST';
-          form.action = "/view_vermovlistados.php";
-          form.style.display = 'none';
-
-          for (const key in datos) {
-              if (Object.prototype.hasOwnProperty.call(datos, key)) {
-                  if (datos[key] instanceof Array) {
-                    datos[key].forEach(function (e) {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = key + "[]";
-                        input.value = e;
-                        form.appendChild(input);
-                    })
-                  } else {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = key;
-                    if (key == "ID_Config") {
-                      if (datos[key] == "table") {
-                        input.value = "grid";
-                      } else {
-                        input.value = "table";
-                      }
-                    } else {
-                      input.value = datos[key];
-                    }
-                    form.appendChild(input);
-                  }
-              }
-          }
-
-          document.body.appendChild(form);
-          form.submit(); 
-      }      
-
-      function sendToCheck(id) {
-        window.location.href = "view_listados.php?id_motivo=" + id;
-      }
-
   </script>  
 </head>
 <body>
@@ -509,7 +238,6 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
         </div>
         <div class="col-md-4">
         <?php
-        $Con = new Conexion();
         $Con->OpenConexion();
 
         $consultaGeneralPermisos = "CREATE TEMPORARY TABLE GIN
@@ -1121,7 +849,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                     data-target="#configModal">
                 Columnas
             </button>
-            <button type = "button" class = "btn btn-danger" onClick = "<?php echo ($redireccion) ? "location.href = 'view_listados.php'" : "sendToRepL()" ;?>">
+            <button type = "button" class = "btn btn-danger" <?php echo ($redireccion) ? "data-send-to-list='true'" : "data-send-to-rep-l='true'";?>>
                 Atrás
             </button>
             <button id="grilla_tabla" type = "button" class = "btn btn-secondary">
@@ -1396,22 +1124,13 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
               $Rows = mysqli_num_rows($TomarMovimientosPersona);
 
               $responsables = [];
-              if($Rows == 0){
+              if($Rows == 0) {
                 echo "<div class = 'col'></div>";
                 echo "<div class = 'col-6'>";
                 echo "<p class = 'TextoSinResultados'>No se encontraron Resultados</p><center><button class = 'btn btn-danger' onClick = 'location.href= \"view_movpersonas.php\"'>Atras</button></center>";
                 echo "</div>";
                 echo "<div class = 'col'></div>";
               }
-
-              /*while($RetMovimientos = mysqli_fetch_assoc($TomarMovimientosPersona)){
-                $RetMovimientos['tipo'] = "CM";
-                $tomarRetTodos[] = $RetMovimientos;
-              }*/
-
-              /*foreach ($tomarRetTodos as $clave => $reg) {
-                $regdomicilio[$clave] = $reg['domicilio'];
-              }*/
 
               //array_multisort($regdomicilio, SORT_ASC, $tomarRetTodos);
 
@@ -1661,11 +1380,9 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                     $Observaciones = $RetTodos["observaciones"];
                     $observacion_medicina = $RetTodos["observacion_medicina"];
                     $Responsable = $RetTodos["responsable"];
-                      //solucionar el error!
-                      //  variables inventadas solo para que arme la tabla
 
-                    $CentroSalud = $RetTodos["centro_salud"]; //centro_salud
-                    $OtraInstitucion = $RetTodos["NombreInst"]; //otraInstitucion
+                    $CentroSalud = $RetTodos["centro_salud"];
+                    $OtraInstitucion = $RetTodos["NombreInst"];
                     $DtoMovimiento = new DtoMovimiento(xID_Movimiento: $ID_Movimiento,
                                                        xFecha: $Fecha,
                                                        xApellido: $Apellido,
@@ -1855,11 +1572,11 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                     $TableMov .= "<tr>";
                     $TableMov .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td>";
                     $json_row["Fecha"] = $DtoMovimiento->getFecha();
-                    $TableMov .= "<td style = 'width: auto; position:relative;' data-hc-familia='" . $id_persona . "' onclick='sendToPersonaListado(" . $id_persona . ")'>
+                    $TableMov .= "<td style = 'width: auto; position:relative;' data-hc-familia='" . $id_persona . "' data-send-pers-list='" . $id_persona . "'>
                                       <div class='tdIcon' style='background: #212529; border-radius:50%; border-color:#37f337; border-width:6px;width:17px; height:17px; margin-top: 9%;border-style: ridge;'>
                                       </div>
                                   </td>";
-                    $TableMov .= "<td style = 'width: auto; position:relative;' data-hc-persona='" . $id_persona . "' onclick='enviarAHistoriClinicaDePersona(" . $id_persona . ")'>
+                    $TableMov .= "<td style = 'width: auto; position:relative;' data-hc-persona='" . $id_persona . "' data-send-hc-list='" . $id_persona . "'>
                                       <div class='tdIcon' style='background: #212529; border-radius:50%; border-color:yellow; border-width:6px;width:17px; height:17px; margin-top: 9%;border-style: ridge;'>
                                       </div>    
                                   </td>";
@@ -1870,7 +1587,10 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                     $json_row["Persona"] = $DtoMovimiento->getApellido() . " " . $DtoMovimiento->getNombre();
 
                     if (count(array_filter($MotivosOpciones)) == 1) {
-                      $TableMov .= "<td style = 'width: auto; position:relative;' data-filtro='" . $id_persona . "' " .  (($ID_Motivo_1 && $DtoMovimiento->getMotivo_1()) ? "onclick='sendToCheck(\"" . $ID_Motivo_1 . "\")'><div class='tdIcon' style='background: #212529; border-radius:50%; border-color:#abe6f2; border-width:6px;width:17px; height:17px; margin-top: 9%;border-style: ridge;'></td>" : "></td>") . "
+                      $TableMov .= "<td style = 'width: auto; position:relative;' data-filtro='" . $id_persona . "' " .  (($ID_Motivo_1 && $DtoMovimiento->getMotivo_1()) ? "data-id-motivo= '" . $ID_Motivo_1 . "'>
+                                        <div class='tdIcon' style='background: #212529; border-radius:50%; border-color:#abe6f2; border-width:6px;width:17px; height:17px; margin-top: 9%;border-style: ridge;'>
+                                        </div>" : ">") . "
+                                    </td>
                                     <td class='trMotivos' style = 'width: auto;'>" . 
                                         "<a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $DtoMovimiento->getID_Movimiento() . "\",\"Ventana" . $DtoMovimiento->getID_Movimiento() . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>" .
                                           $DtoMovimiento->getMotivo_1() . 
@@ -1879,7 +1599,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                       $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                       $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
                     } elseif (count(array_filter($MotivosOpciones)) == 2) {
-                      $TableMov .= "<td style = 'width: auto; position:relative;' data-filtro='" . $id_persona . "'" . (($ID_Motivo_1 && $DtoMovimiento->getMotivo_1()) ? "onclick='sendToCheck(\"" . $ID_Motivo_1 . "\")'><div class='tdIcon' style='background: #212529; border-radius:50%; border-color:#abe6f2; border-width:6px;width:17px; height:17px; margin-top: 9%;border-style: ridge;'></td>" : "></td>") . "
+                      $TableMov .= "<td style = 'width: auto; position:relative;' data-filtro='" . $id_persona . "'" . (($ID_Motivo_1 && $DtoMovimiento->getMotivo_1()) ? "data-id-motivo= '" . $ID_Motivo_1 . "'><div class='tdIcon' style='background: #212529; border-radius:50%; border-color:#abe6f2; border-width:6px;width:17px; height:17px; margin-top: 9%;border-style: ridge;'></td>" : "></td>") . "
                                     <td class='trMotivos' style = 'width: auto;'>" . 
                                       "<a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $DtoMovimiento->getID_Movimiento() . "\",\"Ventana" . $DtoMovimiento->getID_Movimiento() . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>" .
                                         $DtoMovimiento->getMotivo_1() . 
@@ -1887,12 +1607,12 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                                     </td>";
                       $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                       $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
-                      $TableMov .= "<td style = 'width: auto;'" . (($ID_Motivo_2 && $DtoMovimiento->getMotivo_2()) ? "onclick='sendToCheck(\"" . $ID_Motivo_2 . "\")'><div class='tdIcon' style='background: #212529; border-radius:50%; border-color:#abe6f2; border-width:6px;width:17px; height:17px; margin-top: 9%;border-style: ridge;'></td>" : "></td>") . "
+                      $TableMov .= "<td style = 'width: auto;'" . (($ID_Motivo_2 && $DtoMovimiento->getMotivo_2()) ? "data-id-motivo= '" . $ID_Motivo_2 . "'><div class='tdIcon' style='background: #212529; border-radius:50%; border-color:#abe6f2; border-width:6px;width:17px; height:17px; margin-top: 9%;border-style: ridge;'></td>" : "></td>") . "
                                     <td class='trMotivos' style = 'width: auto;'>" . $DtoMovimiento->getMotivo_2() . "</td>";
                       $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
                       $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 2"])) ? strlen($json_row["Motivo 2"]) : $json_row["height"];
                     } else {
-                    $TableMov .= "<td style = 'width: auto; position:relative;' data-filtro='" . $id_persona . "'" . (($ID_Motivo_1 && $DtoMovimiento->getMotivo_1()) ? "onclick='sendToCheck(\"" . $ID_Motivo_1 . "\")'><div class='tdIcon' style='background: #212529; border-radius:50%; border-color:#abe6f2; border-width:6px;width:17px; height:17px; margin-top: 9%;border-style: ridge;'></td>" : "></td>") . "
+                    $TableMov .= "<td style = 'width: auto; position:relative;' data-filtro='" . $id_persona . "'" . (($ID_Motivo_1 && $DtoMovimiento->getMotivo_1()) ? "data-id-motivo= '" . $ID_Motivo_1 . "'><div class='tdIcon' style='background: #212529; border-radius:50%; border-color:#abe6f2; border-width:6px;width:17px; height:17px; margin-top: 9%;border-style: ridge;'></td>" : "></td>") . "
                                     <td class='trMotivos' style = 'width: auto;'>" . 
                                       "<a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $DtoMovimiento->getID_Movimiento() . "\",\"Ventana" . $DtoMovimiento->getID_Movimiento() . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>" .
                                         $DtoMovimiento->getMotivo_1() . 
@@ -1900,7 +1620,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                                     </td>";
                       $json_row["Motivo 1"] = $DtoMovimiento->getMotivo_1();
                       $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 1"])) ? strlen($json_row["Motivo 1"]) : $json_row["height"];
-                      $TableMov .= "<td style = 'width: auto; position:relative;' data-filtro='" . $id_persona . "' " . (($ID_Motivo_2 && $DtoMovimiento->getMotivo_2()) ? "onclick='sendToCheck(\"" . $ID_Motivo_2 . "\")'><div class='tdIcon' style='background: #212529; border-radius:50%; border-color:#abe6f2; border-width:6px;width:17px; height:17px; margin-top: 9%;border-style: ridge;'></td>" : "></td>") . "
+                      $TableMov .= "<td style = 'width: auto; position:relative;' data-filtro='" . $id_persona . "' " . (($ID_Motivo_2 && $DtoMovimiento->getMotivo_2()) ? "data-id-motivo= '" . $ID_Motivo_2 . "'><div class='tdIcon' style='background: #212529; border-radius:50%; border-color:#abe6f2; border-width:6px;width:17px; height:17px; margin-top: 9%;border-style: ridge;'></td>" : "></td>") . "
                                     <td class='trMotivos' style = 'width: auto;'>" . 
                                       "<a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $DtoMovimiento->getID_Movimiento() . "\",\"Ventana" . $DtoMovimiento->getID_Movimiento() . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>" .
                                         $DtoMovimiento->getMotivo_2() . 
@@ -1908,7 +1628,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                                     </td>";
                       $json_row["Motivo 2"] = $DtoMovimiento->getMotivo_2();
                       $json_row["height"] = ($json_row["height"] < strlen($json_row["Motivo 2"])) ? strlen($json_row["Motivo 2"]) : $json_row["height"];
-                      $TableMov .= "<td style = 'width: auto; position:relative;' data-filtro='" . $id_persona . "' " . (($ID_Motivo_3 && $DtoMovimiento->getMotivo_3()) ? "onclick='sendToCheck(\"" . $ID_Motivo_3 . "\")'><div class='tdIcon' style='background: #212529; border-radius:50%; border-color:#abe6f2; border-width:6px;width:17px; height:17px; margin-top: 9%;border-style: ridge;'></td>" : "></td>") . "
+                      $TableMov .= "<td style = 'width: auto; position:relative;' data-filtro='" . $id_persona . "' " . (($ID_Motivo_3 && $DtoMovimiento->getMotivo_3()) ? "data-id-motivo= '" . $ID_Motivo_3 . "'><div class='tdIcon' style='background: #212529; border-radius:50%; border-color:#abe6f2; border-width:6px;width:17px; height:17px; margin-top: 9%;border-style: ridge;'></td>" : "></td>") . "
                                     <td class='trMotivos' style = 'width: auto;'>" . 
                                         "<a style='text-decoration: none;' href = 'javascript:window.open(\"view_modmovimientos.php?ID=" . $DtoMovimiento->getID_Movimiento() . "\",\"Ventana" . $DtoMovimiento->getID_Movimiento() . "\",\"width=1100,height=500,scrollbars=no,top=150,left=250,resizable=no\")'>" .
                                           $DtoMovimiento->getMotivo_3() . 
@@ -2017,11 +1737,9 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                   $Observaciones = $RetTodos["observaciones"];
                   $observacion_medicina = $RetTodos["observacion_medicina"];
                   $Responsable = $RetTodos["responsable"];
-                    //solucionar el error!
-                    //  variables inventadas solo para que arme la tabla
 
-                  $CentroSalud = $RetTodos["centro_salud"]; //centro_salud
-                  $OtraInstitucion = $RetTodos["NombreInst"]; //otraInstitucion
+                  $CentroSalud = $RetTodos["centro_salud"];
+                  $OtraInstitucion = $RetTodos["NombreInst"];
                   $DtoMovimiento = new DtoMovimiento(xID_Movimiento: $ID_Movimiento,
                                                      xFecha: $Fecha,
                                                      xApellido: $Apellido,
@@ -2111,10 +1829,8 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                 $Observaciones = $RetMovimientos["observaciones"];
                 $observacion_medicina = $RetTodos["observacion_medicina"];
                 $Responsable = $RetMovimientos["responsable"];
-                //solucionar el error!
-                //  variables inventadas solo para que arme la tabla
                 
-                $CentroSalud=$RetMovimientos["nombre"]; //centro_salud
+                $CentroSalud=$RetMovimientos["nombre"];
                 $OtraInstitucion=$RetMovimientos["nombre"];
                 $DtoMovimiento = new DtoMovimiento(
                                                    xID_Movimiento: $ID_Movimiento,
@@ -2246,11 +1962,11 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                   $TableMov .= "<td class='trFecha' style = 'width: auto;'>" . $DtoMovimiento->getFecha() . "</td>
                                 </td>";
                   $json_row["Fecha"] = $DtoMovimiento->getFecha();
-                  $TableMov .= "<td style = 'width: auto; position:relative' data-hc-familia='" . $id_persona . "' onclick='sendToPersonaListado(" . $id_persona . ")'>
+                  $TableMov .= "<td style = 'width: auto; position:relative' data-hc-familia='" . $id_persona . "'>
                                   <div class='tdIcon' style='background: #212529; border-radius:50%; border-color:#37f337; border-width:6px;width:17px; height:17px; margin-top: 9%; border-style: ridge;'>
                                   </div>
                                 </td>";
-                  $TableMov .= "<td style = 'width: auto; position:relative' data-hc-persona='" . $id_persona . "' onclick='enviarAHistoriClinicaDePersona(" . $id_persona . ")'>
+                  $TableMov .= "<td style = 'width: auto; position:relative' data-hc-persona='" . $id_persona . "'>
                                   <div class='tdIcon' style='background: #212529; border-radius:50%; border-color:yellow; border-width:6px;width:17px; height:17px; margin-top: 9%; border-style: ridge;'>
                                   </div>
                                 </td>";
@@ -2378,8 +2094,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
               }
 
               $Con->CloseConexion();
-              // $Mensaje = "No se pudo consultar los Datos porque no se pudo obtener el ID de la Persona";
-              // echo $Mensaje;
+
             } else {
                 echo "<div class = 'col'></div>";
                 echo "<div class = 'col-6'>";
@@ -2387,12 +2102,6 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
                 echo "</div>";
                 echo "<div class = 'col'></div>";
             }
-
-            // ACA PONER
-            
-            //$_SESSION["datosNav"] = $filtrosSeleccionados;
-
-            //unset($_SESSION["datosNav"]);
           ?>
         </div>
   </div>
@@ -2430,7 +2139,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
       </div>
       <div class="modal-footer modal-footer-flex-center">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" onClick="configResultados()" data-dismiss="modal">Aceptar</button>
+        <button type="button" id="btn-config-modal" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
       </div>
     </div>
   </div>
@@ -2743,7 +2452,7 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
       </div>
       <div class="modal-footer modal-footer-flex-center">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" onClick="ordenResultados()" data-dismiss="modal">Aceptar</button>
+        <button type="button" id="btn-orden-modal" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
       </div>
     </div>
   </div>
@@ -2789,423 +2498,8 @@ $ID_OtraInstitucion = ($_REQUEST["ID_OtraInstitucion"] ?? 0);
         // <input type="checkbox" id="chkDomicilio"> Domicilio 
         // <input type="checkbox" id="chkBarrio"> Barrio 
         // <input type="checkbox" id="chkLocalidad"> Localidad 
-  objectJsonTabla = <?php echo (!empty($jsonTable)) ? json_encode($jsonTable) : "{}";?>;
   fechaDesde = "<?php echo $Fecha_Inicio ?? null;?>";
-  fechaHasta = "<?php echo $Fecha_Fin;?>";
-  filtroSeleccionados = <?php echo json_encode($filtros); ?>;
-  cantFiltros = <?php echo count($filtros); ?>;
-
-  $("#enviar_imprimir").on("click", enviarImprimirPdf);
-
-  function characterAscii(elem) {
-        let caracter = null;
-        switch (elem) {
-          case "á":
-            caracter = "a";
-            break;
-          case "é":
-            caracter = "e";
-            break;
-          case "í":
-            caracter = "i";
-            break;
-          case "ó":
-            caracter = "o";
-            break;
-          case "ú":
-            caracter = "u";
-            break;
-          case "ñ":
-            caracter = "n";
-            break;
-          default:
-            caracter = '';
-            break;
-        }
-        return caracter;
-      }
-  
-  function orderOption(idOption, orden) {
-    if (listaOrden.has(idOption)) listaOrden.delete(idOption);
-    if (orden != 0) listaOrden.set(idOption, orden);
-
-    if (orden == 0) {
-      $("#boton-asc-" + idOption).hide();
-      $("#boton-desc-" + idOption).hide();
-      $("#boton-disable-" + idOption).show();
-    } else if (orden == -1) {
-      $("#boton-asc-" + idOption).show();
-      $("#boton-desc-" + idOption).hide();
-      $("#boton-disable-" + idOption).hide();
-    } else {
-      $("#boton-asc-" + idOption).hide();
-      $("#boton-desc-" + idOption).show();
-      $("#boton-disable-" + idOption).hide();
-    }
-  }
-
-  function orderOptionCheck(idOption) {
-    if (listaOrden.has(idOption)) {
-      listaOrden.delete(idOption);
-    } else {
-       listaOrden.set(idOption, -1);
-    }
-
-    if (idOption >= 1 && listaOrden.has(0)) {
-      listaOrden.delete(0);
-      listaOrden.set(0, 1);
-    }
-  }
-
-  function lessThan(a, b, indice) {
-    let ret_valor = false;
-    let elementA = null;
-    let elementB = null;
-
-    if ((indice >= 7 && indice <= 8) 
-        || indice == 5) {
-      elementA = parseInt(a.trim());
-      elementB = parseInt(b.trim());
-      if (isNaN(elementA) && !isNaN(elementB)) {
-        ret_valor = true;  
-      } else if (!isNaN(elementA) && isNaN(elementB)) {
-        ret_valor = false;
-      } else if (isNaN(elementA) && isNaN(elementB)) {
-        ret_valor = (a < b);
-      } else {
-        ret_valor = (elementA < elementB);
-      }
-
-    } else if (indice == 0 || indice == 6) {
-      elementA = a.split("-");
-      elementB = b.split("-");
-      elementB.reverse();
-      elementA.reverse();
-      elementA = elementA.join("-");
-      elementB = elementB.join("-");
-      ret_valor = (Date.parse(elementA) < Date.parse(elementB));
-    } else {
-      elementA = a.trim().toLowerCase();
-      elementB = b.trim().toLowerCase();
-      elementA = elementA.replace(/[áéíóúñ]/, characterAscii);
-      elementB = elementB.replace(/[áéíóúñ]/, characterAscii);
-      ret_valor = (elementA < elementB);
-    }
-    return ret_valor;
-  }
-
-  function moreThan(a, b, indice) {
-    let ret_valor = false;
-    let elementA = null;
-    let elementB = null;
-
-    if ((indice >= 7 && indice <= 8) 
-        || indice == 5) {
-      elementA = parseInt(a.trim());
-      elementB = parseInt(b.trim());
-      if (isNaN(elementA) && !isNaN(elementB)) {
-        ret_valor = false;  
-      } else if (!isNaN(elementA) && isNaN(elementB)) {
-        ret_valor = true;
-      } else if (isNaN(elementA) && isNaN(elementB)) {
-        ret_valor = (a > b);
-      } else {
-        ret_valor = (elementA > elementB);
-      }
-
-    } else if (indice == 0 || indice == 6) {
-      elementA = a.split("-");
-      elementB = b.split("-");
-      elementB.reverse();
-      elementA.reverse();
-      elementA = elementA.join("-");
-      elementB = elementB.join("-");
-
-      ret_valor = (Date.parse(elementA) > Date.parse(elementB));
-    } else {
-      elementA = a.trim().toLowerCase();
-      elementB = b.trim().toLowerCase();
-      elementA = elementA.replace(/[áéíóúñ]/, characterAscii);
-      elementB = elementB.replace(/[áéíóúñ]/, characterAscii);
-      ret_valor = (elementA > elementB);
-    }
-    return ret_valor;
-  }
-
-  function orderListOption(elementoA, elementoB, listInd, listVal) {
-      let listaFilas = [].concat(listInd);
-      let listaValores = [].concat(listVal);
-      let result = 0;
-      let elem = null;
-      if (listInd.length > 0) {
-        let listaIndices = (listInd) ? listInd.slice(1) : [];
-        let lista = (listVal) ? listVal.slice(1) : [];
-        let indice = (listaFilas) ? listaFilas.shift() : null;
-        let orden = (listaValores) ? listaValores.shift() : null;
-        let nodeInnerA = elementoA.children[indice];
-        let nodeInnerB = elementoB.children[indice];
-        nodeInnerA = (nodeInnerA) ? nodeInnerA.outerText : null;
-        nodeInnerB = (nodeInnerB) ? nodeInnerB.outerText : null;
-
-        if (moreThan(nodeInnerA, nodeInnerA, indice)) {
-          result = (-1) * orden;
-        } else if (lessThan(nodeInnerA, nodeInnerB, indice)) {
-          result = 1 * orden;
-        } else {
-          result = orderListOption(elementoA, elementoB, listaIndices, lista);
-        }
-      }
-      return result;
-  }
-
-  function ordenResultados() {
-    let filasTabla = $("#tabla-movimiento-general tbody > tr");
-    filasTabla = jQuery.unique(filasTabla);
-    let filas = filasTabla.get();
-    $("#tabla-movimiento-general tbody").empty();
-
-    let listElement = Array.from(listaOrden.keys());
-    let listValues = Array.from(listaOrden.values());
-    filas.sort(function (elementoA, elementoB) {
-        let listaFilas = [].concat(listElement);
-        let listaAsign = [].concat(listValues);
-        let result = 0;
-        let listaIndices = (listElement) ? listElement.slice(1) : [];
-        let listaVal = (listValues) ? listValues.slice(1) : [];
-        let indice = (listaFilas) ? listaFilas.shift() : null;
-        let orden = (listaAsign) ? listaAsign.shift() : null;
-        let nodeInnerA = elementoA.children[indice];
-        let nodeInnerB = elementoB.children[indice];
-        nodeInnerA = (nodeInnerA) ? nodeInnerA.outerText : null;
-        nodeInnerB = (nodeInnerB) ? nodeInnerB.outerText : null;
-        if (listaOrden) {
-          if (moreThan(nodeInnerA, nodeInnerB, indice)) {
-            result = (-1) * orden;
-          } else if (lessThan(nodeInnerA, nodeInnerB, indice)) {
-            result = 1 * orden;
-          } else {
-            result = orderListOption(elementoA, elementoB, listaIndices, listaVal);
-          }
-        }
-        return result;
-    });
-    
-    $("#tabla-movimiento-general tbody").append(filas);
-
-  }
-
-  function configResultados() {
-    let chkFecha = document.getElementById('chkFecha').checked;
-    let chkMotivos = document.getElementById('chkMotivos').checked;
-    let chkPersona = document.getElementById('chkPersona').checked;
-    let chkDNI = document.getElementById('chkDNI').checked;
-    let chkFechaNac = document.getElementById('chkFechaNac').checked;
-    let chkEdad = document.getElementById('chkEdad').checked;
-    let chkMeses = document.getElementById('chkMeses').checked;
-    let chkObraSocial = document.getElementById('chkObraSocial').checked;
-    let chkDomicilio = document.getElementById('chkDomicilio').checked;
-    let chkBarrio = document.getElementById('chkBarrio').checked;
-    let chkLocalidad= document.getElementById('chkLocalidad').checked;
-
-    let chkObservaciones= document.getElementById('chkObservaciones').checked;
-    let chkObservacionMedicina= document.getElementById('chkObservacionMedicina').checked;
-    let chkResponsable= document.getElementById('chkResponsable').checked;
-    let chkCentrosSalud= document.getElementById('chkCentrosSalud').checked;
-    let chkOtrasInstituciones = document.getElementById('chkOtrasInstituciones').checked;
-
-    let trFecha = document.getElementsByClassName('trFecha');
-    let trMotivos= document.getElementsByClassName('trMotivos');
-    let trPersona = document.getElementsByClassName('trPersona');
-    let trDNI= document.getElementsByClassName('trDNI');
-    let trFechaNac= document.getElementsByClassName('trFechaNac');
-    let trEdad = document.getElementsByClassName('trEdad');
-    let trMeses = document.getElementsByClassName('trMeses');
-    let trObraSocial = document.getElementsByClassName('trObraSocial');
-    let trDomicilio = document.getElementsByClassName('trDomicilio');
-    let trBarrio = document.getElementsByClassName('trBarrio');
-    let trLocalidad = document.getElementsByClassName('trLocalidad');
-
-    let trObservaciones= document.getElementsByClassName('trObservaciones');
-    let trObservacionMedicina= document.getElementsByClassName('trObservacionesMedicina');
-    let trResponsable= document.getElementsByClassName('trResponsable');
-    let trCentrosSalud= document.getElementsByClassName('trCentrosSalud');
-    let trOtrasInstituciones = document.getElementsByClassName('trOtrasInstituciones');
-    excel = null;
-
-    if(!chkFecha){
-      for (let i = 0; i < trFecha.length; i++) {        
-        trFecha[i].setAttribute('hidden', true);        
-      }
-    }else{
-      for (let i = 0; i < trFecha.length; i++) {        
-        trFecha[i].removeAttribute('hidden');        
-      }
-    }
-
-    if(!chkMotivos){
-      for (let i = 0; i < trMotivos.length; i++) {        
-        trMotivos[i].setAttribute('hidden', true);        
-      }
-    }else{
-      for (let i = 0; i < trMotivos.length; i++) {        
-        trMotivos[i].removeAttribute('hidden');        
-      }
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if(!chkPersona){
-      for (let i = 0; i < trPersona.length; i++) {        
-        trPersona[i].setAttribute('hidden', true);        
-      }
-    }else{
-      for (let i = 0; i < trPersona.length; i++) {        
-        trPersona[i].removeAttribute('hidden');        
-      }
-    }
-
-    if(!chkDNI){
-      for (let i = 0; i < trDNI.length; i++) {        
-        trDNI[i].setAttribute('hidden', true);        
-      }
-    }else{
-      for (let i = 0; i < trDNI.length; i++) {        
-        trDNI[i].removeAttribute('hidden');        
-      }
-    }
-
-    if(!chkFechaNac){
-      for (let i = 0; i < trFechaNac.length; i++) {        
-        trFechaNac[i].setAttribute('hidden', true);        
-      }
-    }else{
-      for (let i = 0; i < trFechaNac.length; i++) {        
-        trFechaNac[i].removeAttribute('hidden');        
-      }
-    }
-
-    if(!chkEdad){
-      for (let i = 0; i < trEdad.length; i++) {        
-        trEdad[i].setAttribute('hidden', true);        
-      }
-    }else{
-      for (let i = 0; i < trEdad.length; i++) {        
-        trEdad[i].removeAttribute('hidden');        
-      }
-    }
-
-    if(!chkMeses){
-      for (let i = 0; i < trMeses.length; i++) {        
-        trMeses[i].setAttribute('hidden', true);        
-      }
-    }else{
-      for (let i = 0; i < trMeses.length; i++) {        
-        trMeses[i].removeAttribute('hidden');        
-      }
-    }
-
-    if(!chkObraSocial){
-      for (let i = 0; i < trObraSocial.length; i++) {        
-        trObraSocial[i].setAttribute('hidden', true);        
-      }
-    }else{
-      for (let i = 0; i < trObraSocial.length; i++) {        
-        trObraSocial[i].removeAttribute('hidden');        
-      }
-    }
-
-    if(!chkDomicilio){
-      for (let i = 0; i < trDomicilio.length; i++) {        
-        trDomicilio[i].setAttribute('hidden', true);        
-      }
-    }else{
-      for (let i = 0; i < trDomicilio.length; i++) {        
-        trDomicilio[i].removeAttribute('hidden');        
-      }
-    }
-
-    if(!chkBarrio){
-      for (let i = 0; i < trBarrio.length; i++) {        
-        trBarrio[i].setAttribute('hidden', true);        
-      }
-    }else{
-      for (let i = 0; i < trBarrio.length; i++) {        
-        trBarrio[i].removeAttribute('hidden');        
-      }
-    }
-
-    if(!chkLocalidad){
-      for (let i = 0; i < trLocalidad.length; i++) {        
-        trLocalidad[i].setAttribute('hidden', true);        
-      }
-    }else{
-      for (let i = 0; i < trLocalidad.length; i++) {        
-        trLocalidad[i].removeAttribute('hidden');        
-      }
-    }
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    if(!chkObservaciones){
-      for (let i = 0; i < trObservaciones.length; i++) {        
-        trObservaciones[i].setAttribute('hidden', true);        
-      }
-    } else {  
-      for (let i = 0; i < trObservaciones.length; i++) {        
-        trObservaciones[i].removeAttribute('hidden');        
-      }
-    }
-
-    if(!chkObservacionMedicina){
-      for (let i = 0; i < trObservacionMedicina.length; i++) {        
-        trObservacionMedicina[i].setAttribute('hidden', true);        
-      }
-    } else {  
-      for (let i = 0; i < trObservacionMedicina.length; i++) {        
-        trObservacionMedicina[i].removeAttribute('hidden');        
-      }
-    }
-
-    if(!chkResponsable){
-      for (let i = 0; i < trResponsable.length; i++) {        
-        trResponsable[i].setAttribute('hidden', true);        
-      }
-    }else{
-      for (let i = 0; i < trResponsable.length; i++) {        
-        trResponsable[i].removeAttribute('hidden');        
-      }
-    }
-
-    if(!chkCentrosSalud){
-      for (let i = 0; i < trCentrosSalud.length; i++) {        
-        trCentrosSalud[i].setAttribute('hidden', true);        
-      }
-    }else{
-      for (let i = 0; i < trCentrosSalud.length; i++) {        
-        trCentrosSalud[i].removeAttribute('hidden');        
-      }
-    }
-
-    if(!chkOtrasInstituciones){
-      for (let i = 0; i < trOtrasInstituciones.length; i++) {        
-        trOtrasInstituciones[i].setAttribute('hidden', true);        
-      }
-    }else{
-      for (let i = 0; i < trOtrasInstituciones.length; i++) {        
-        trOtrasInstituciones[i].removeAttribute('hidden');        
-      }
-    }
-  }
-
 </script>
-<?php
-?>
-<!-- <script>
-    function guardarFiltrosSeleccionados() {
-      window.localStorage.clear();      
-      window.localStorage.setItem("filtrosSeleccionados", < ?php echo implode($filtrosSeleccionados); ?>);
-
-      location.href = 'view_listados.php';
-    }
-</script> -->
 </body>
 <script src="./dist/editor.js"></script>
 </html>
