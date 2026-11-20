@@ -38,6 +38,10 @@ $(function (e) {
     $("button[data-dismiss]").on("click", function (e) {
       $("div[data-id-element]").css("display", "none");
     });
+
+    $("#btn-new-persona").on("click", function (e) {
+        if (Window.datosPersona) sendToNewMovimiento(Window.datosPersona);
+    });
 });
 
 function mostrar() {

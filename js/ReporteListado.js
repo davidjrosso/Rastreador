@@ -1,6 +1,7 @@
 import {RerpoteMovimiento} from "./ReporteMovimiento.js";
 
 let listaOrden = new Map();
+let intervalo = null;
 
 $(function (e) {
     $("td[data-hc-persona]").on("click", function (e) {
@@ -40,6 +41,10 @@ $(function (e) {
         $(".item").remove();
     });
 
+    $("data-order-option").on("click", function (e) {
+        orderOptionCheck($(this).attr("data-order-option"));
+    })
+
     $("td[data-filtro]").on("mouseover", function (e) {
         let mensaje = $(`<div class="position-absolute item" style="z-index: 1100; width: max-content; left: -12px; top: -36px;">
                           <div class="toast dat-toast show" style="width:auto;" 
@@ -61,6 +66,54 @@ $(function (e) {
     $("#btn-orden-modal").on("click", function (e) {
         ordenResultados();
     });
+
+    $("#input-zoom").on("input", function (e) {
+        toggleZoom($('#input-zoom').prop("value"));
+    });
+
+    $("#zoomIncrementar").on("mousedown", function (e) {
+        intervalo = setInterval(function () {
+        let value = null;
+        $('#input-zoom')[0].stepUp();
+        value = $('#input-zoom').prop("value");
+        toggleZoom(value);
+    }, 37);
+    });
+
+    $("#zoomIncrementar").on("mouseup", function (e) {
+        clearInterval(intervalo);
+    });
+
+    $("#zoomDecrementar").on("mousedown", function (e) {
+        intervalo = setInterval(function () {
+            let value = null;
+            $('#input-zoom')[0].stepDown();
+            value = $('#input-zoom').prop("value");
+            toggleZoom(value);
+        }, 37);
+    });
+
+    $("#zoomDecrementar").on("mouseup", function (e) {
+        clearInterval(intervalo);
+    });
+
+    $("#boton-fullscreen").on("click", function (e) {
+        if (!Window.fullscreen) {
+            $("#excel-modal div[class='modal-content']")[0].requestFullscreen();
+            Window.fullscreen = true;
+        } else {
+            Window.document.exitFullscreen();
+            Window.fullscreen = false;
+        }
+    });
+
+    $("button[class='close']").on("click", function (e) {
+        if (Window.fullscreen) {
+        Window.document.exitFullscreen();
+        Window.fullscreen = false;
+        }
+    });
+
 })
 
 function enviarAHistoriClinicaDePersona(idPersona) {

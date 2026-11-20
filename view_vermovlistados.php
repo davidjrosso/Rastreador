@@ -119,77 +119,14 @@ $Con = new Conexion();
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons" />
   <script src="./dist/excelReporte.js"></script>
   <script src="./dist/ReporteListado.js"></script>
+  <script src="./dist/navegacion.js"></script>
 
   <script>
-      let fechaDesde = null;
-      let fechaHasta = null;
-      let filtroSeleccionados = null;
-      let fullscreen = false;
-      let intervalo = null;
-      let datosPersona = <?php echo (($_SESSION["request_prev"]) ? json_encode($_SESSION["request_prev"]) : 'null'); ?>;
+      window.fullscreen = false;
+      window.datosPersona = <?php echo (($_SESSION["request_prev"]) ? json_encode($_SESSION["request_prev"]) : 'null'); ?>;
       window.datosRetorno = <?php echo (!empty(end($_SESSION["retorno"])))? json_encode(end($_SESSION["retorno"])) : "{}" ;?>;
       window.datos = <?php echo (!empty($_REQUEST)) ? json_encode($_REQUEST) : "{}";?>;
-      $(document).ready(function() {
-              nroFilasTabla = $("#tabla-movimiento-general tbody > tr").length - 2;
-              nroFilasTabla = (nroFilasTabla) ? $("#tabla-movimiento tbody > tr").length - 2 : 0;
-              nroColumnasTabla = $("thead > tr > th").length - 2;
-              let nroPag = (nroFilasTabla + 2) / 16;
-              let floorPag = Math.floor((nroFilasTabla + 2) / 16);
-              nroPaginaPdf = 0;
-              thTable = $("thead > tr > th");
-
-              $("#input-zoom").on("input", function (e) {
-                toggleZoom($('#input-zoom').prop("value"));
-              });
-
-              $("#zoomIncrementar").on("mousedown", function (e) {
-                intervalo = setInterval(function () {
-                  let value = null;
-                  $('#input-zoom')[0].stepUp();
-                  value = $('#input-zoom').prop("value");
-                  toggleZoom(value);
-                }, 37);
-              });
-
-              $("#zoomIncrementar").on("mouseup", function (e) {
-                clearInterval(intervalo);
-              });
-
-              $("#zoomDecrementar").on("mousedown", function (e) {
-                intervalo = setInterval(function () {
-                  let value = null;
-                  $('#input-zoom')[0].stepDown();
-                  value = $('#input-zoom').prop("value");
-                  toggleZoom(value);
-                }, 37);
-              });
-
-              $("#zoomDecrementar").on("mouseup", function (e) {
-                clearInterval(intervalo);
-              });
-
-              $("#btn-new-persona").on("click", function (e) {
-                if (datosPersona) sendToNewMovimiento(datosPersona);
-              });
-
-              $("#boton-fullscreen").on("click", function (e) {
-                if (!fullscreen) {
-                  $("#excel-modal div[class='modal-content']")[0].requestFullscreen();
-                  fullscreen = true;
-                } else {
-                  document.exitFullscreen();
-                  fullscreen = false;
-                }
-              });
-
-              $("button[class='close']").on("click", function (e) {
-                  if (fullscreen) {
-                    document.exitFullscreen();
-                    fullscreen = false;
-                  }
-              });
-      });
-  </script>  
+  </script>
 </head>
 <body>
 <div class="col-md-2" id="expandir" style="padding-left: 6px; position: fixed; z-index: 1000" hidden>
@@ -2179,43 +2116,43 @@ $Con = new Conexion();
         <ul type=none>
           <li>
             <input type="checkbox" id="boton-0" data-name="fecha" class="form-check-input"
-                    onclick="orderOptionCheck(0)">
+                    data-order-option="0">
             <label class="form-check-label" for="boton-0"></label>
               Fecha
           </li>
           <li>
             <input type="checkbox" id="boton-12" data-name="fecha" class="form-check-input"
-                    onclick="orderOptionCheck(12)">
+                    data-order-option="12">
             <label class="form-check-label" for="boton-12"></label>
               Barrio
           </li>
           <li>
             <input type="checkbox" id="boton-15" class="form-check-input"
-                    onclick="orderOptionCheck(15)">
+                    data-order-option="15">
             <label class="form-check-label" for="boton-15"></label>
               Centro de Salud
           </li>
           <li>
             <input type="checkbox" id="boton-8" class="form-check-input"
-                    onclick="orderOptionCheck(8)">
+                    data-order-option="8">
             <label class="form-check-label" for="boton-8"></label>
               Años
           </li>
           <li>
             <input type="checkbox" id="boton-9" class="form-check-input"
-                    onclick="orderOptionCheck(9)">
+                    data-order-option="9">
             <label class="form-check-label" for="boton-9"></label>
               Meses
           </li>
           <li>
             <input type="checkbox" id="boton-6" class="form-check-input"
-                    onclick="orderOptionCheck(6)">
+                    data-order-option="6">
             <label class="form-check-label" for="boton-6"></label>
               DNI
           </li>
           <li>
             <input type="checkbox" id="boton-2" class="form-check-input"
-                    onclick="orderOptionCheck(2)">
+                    data-order-option="2">
             <label class="form-check-label" for="boton-2"></label>
               Alfabetico
           </li>
@@ -2487,19 +2424,6 @@ $Con = new Conexion();
   </div>
 </div>
 <!-- FIN TOAST PROGRESO IMPRESION -->
-
-<script>
-        // <input type="checkbox" id="chkPersona"> Persona 
-        // <input type="checkbox" id="chkDNI"> DNI 
-        // <input type="checkbox" id="chkFechaNac"> Fecha Nac. 
-        // <input type="checkbox" id="chkEdad"> Edad 
-        // <input type="checkbox" id="chkMeses"> Meses 
-        // <input type="checkbox" id="chkObraSocial"> Obra Social 
-        // <input type="checkbox" id="chkDomicilio"> Domicilio 
-        // <input type="checkbox" id="chkBarrio"> Barrio 
-        // <input type="checkbox" id="chkLocalidad"> Localidad 
-  fechaDesde = "<?php echo $Fecha_Inicio ?? null;?>";
-</script>
 </body>
 <script src="./dist/editor.js"></script>
 </html>

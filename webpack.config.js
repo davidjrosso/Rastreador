@@ -14,13 +14,15 @@ module.exports = {
     control : './js/MensajeControl.js',
     editor: "./js/editor.js",
     reporte : './js/ReporteMovimiento.js',
+    ReporteListado : './js/ReporteListado.js',
     movimiento : './js/MovimientosControl.js',
     formulariosReporte : './js/ReportesFiltros.js',
     excel : './js/excel.js',
     excelReporte : './js/excel-reporte.js',
     personasListado: "./js/PersonaListado.js",
     validarPersona: "./js/ValidarPersona.js",
-    preferencia: "./js/Preferencia.js"
+    preferencia: "./js/Preferencia.js",
+    navegacion: "./js/ReporteNavegacion.js"
   },
   output: {
     libraryTarget: 'umd',
