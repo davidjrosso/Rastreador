@@ -2424,6 +2424,9 @@ $Con = new Conexion();
   </div>
 </div>
 <!-- FIN TOAST PROGRESO IMPRESION -->
+ <script>
+  window.objectJsonTabla = <?php echo (!empty($jsonTable)) ? json_encode($jsonTable) : "{}";?>;
+ </script>
 </body>
 <script src="./dist/editor.js"></script>
 </html>
