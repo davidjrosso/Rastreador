@@ -630,4 +630,34 @@ class MotivoController
         }        
     }
 
+    public function lista_motivos_detalle()
+    {
+        header('content-type: application/json');
+        $motivos_detalles = [];
+
+        $json_string = file_get_contents('php://input');
+        $lista_motivo = json_decode($json_string, true);
+
+        try	 {
+            $con = new Conexion();
+            $con->OpenConexion();
+
+            foreach ($lista_motivo as $id_motivo) {
+                $motivo = new Motivo(
+                                     coneccion_base: $con,
+                                     id_motivo: $id_motivo
+                                    );
+                $row["motivo"] = $motivo->get_motivo();
+                $row["codigo"] = $motivo->get_codigo();
+                $motivos_detalles[] = $row;
+            }
+            $res["motivos"] = $motivos_detalles;
+            $res["estado"] = true;
+            $con->CloseConexion();
+            echo json_encode($res);
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+
 }

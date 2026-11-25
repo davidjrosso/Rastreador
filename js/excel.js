@@ -10,6 +10,7 @@ export class Excel {
     #spreadsheet = null;
     #chart = null;
     #cellSelection = [];
+    
     constructor() {
         this.#zoom = 100;
     }
@@ -314,7 +315,7 @@ export class Excel {
                                     } else {
                                         data.set(val.x, []);
                                     }
-                                })
+                                });
 
                                 itemsArr.push({
                                     title: 'Insertar grafico Personalizado',
@@ -682,18 +683,58 @@ export class Excel {
             $("#height").on("input", function(e) {
                             this.#chart.resize(this.#chart.width, $("#height").prop("value"));
                             this.#chart.height = $("#height").prop("value");
-                            this.#chart.render()
+                            this.#chart.render();
                         }.bind(this));
         }
     }
 
+    getMotivos(objectJsonTabla, listConfig) {
+        const list = $("td[data-id-motivo]").map(function (ind, element) {
+            return element.getAttribute("data-id-motivo");
+        });
+
+        let url = 'motivos/lista_motivos_detalle';
+        let datos = JSON.stringify(Array.from(new Set(list)));
+        let request = $.ajax({
+            type:"POST",
+            url : url,
+            async: true,
+            contentType: 'application/json',
+            dataType: 'json',
+            data: datos,
+            success : function (data, status, requestHttp) {
+                if (requestHttp.responseJSON.motivos) {
+                    let excelFlujo = this.excel_download(
+                        objectJsonTabla,
+                        listConfig,
+                        requestHttp.responseJSON.motivos
+                    );
+                    excelFlujo.then(function (result) {
+                        let url = null;
+                        let blob = new Blob([result], {
+                            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                        });
+                        url = URL.createObjectURL(blob);
+                        let w = window.open(url);
+                    });
+                }
+            }.bind(this)});
+
+    }
+
     async excel_download(
                          objectJsonTabla,
-                         listConfig
+                         listConfig,
+                         codigosMotivos
                         ) {
 
-        const vic = new ExcelJS.Workbook();
-        let worksheet = vic.addWorksheet('rastreador', {properties:{tabColor: {argb: 'FFC0000'}}})
+        const workBook = new ExcelJS.Workbook();
+        let nombreSheetDatos = 'rastreador';
+        let worksheet = workBook.addWorksheet(nombreSheetDatos, 
+                                                {properties:{
+                                                   tabColor: {
+                                                      argb: 'FFC0000'}
+                                                 }});
         let tableCount = $("table").length;
         let values = [];
         let value = null;
@@ -767,9 +808,181 @@ export class Excel {
         });
 
         worksheet.columns = values;
-        const buffer = await vic.xlsx.writeBuffer();
-        return buffer;
 
+        worksheet = workBook.addWorksheet('CIE-10');
+
+        let criterios = [
+            {codigo: 'A00 - B99', regex: '[aAbB][0-9][0-9]\\.[0-9X]'},
+            {codigo: 'C00 - D48', regex: '[cCdD]([0-4][0-9]|4[0-8])\\.[0-9X]'},
+            {codigo: 'D50 - D89', regex: '[dD][5-7][0-9]\\.[0-9X]'},
+            {codigo: 'E00 - E89', regex: '[eE][0-8][0-9]\\.[0-9X]'},
+            {codigo: 'F00 - F99', regex: '[fF][0-9][0-9]\\.[0-9X]'},
+            {codigo: 'G00 - G99', regex: '[gG][0-9][0-9]\\.[0-9X]'},
+            {codigo: 'H00 - H59', regex: '[hH][0-5][0-9]\\.[0-9X]'},
+            {codigo: 'H60 - H95', regex: '[hH]([6-8][0-9]|9[0-5])\\.[0-9X]'},
+            {codigo: 'I00 - I99', regex: '[iI][0-9][0-9]\\.[0-9X]'},
+            {codigo: 'J00 - J99', regex: '[jJ][0-9][0-9]\\.[0-9X]'},
+            {codigo: 'K00 - K93', regex: '[kK]([0-8][0-9]|9[0-3])\\.[0-9X]'},
+            {codigo: 'L00 - L99', regex: '[lL][0-9][0-9]\\.[0-9X]'},
+            {codigo: 'M00 - M99', regex: '[mM][0-9][0-9]\\.[0-9X]'},
+            {codigo: 'N00 - N99', regex: '[nN][0-9][0-9]\\.[0-9X]'},
+            {codigo: 'O00 - O99', regex: '[oO][0-9][0-9]\\.[0-9X]'},
+            {codigo: 'P00 - P96', regex: '[pP]([0-8][0-9]|9[0-6])\\.[0-9X]'},
+            {codigo: 'Q00 - Q99', regex: '[qQ][0-9][0-9]\\.[0-9X]'},
+            {codigo: 'R00 - R99', regex: '[rR][0-9][0-9]\\.[0-9X]'},
+            {codigo: 'S00 - T98', regex: '[sStT]([0-8][0-9]|9[0-8]\\.[0-9X]'},
+            {codigo: 'V01 - Y98', regex: '[vVyY][0-9][0-9]\\.[0-9X]'},
+            {codigo: 'Z00 - Z99', regex: '[zZ][0-9][0-9]\\.[0-9X]'},
+            {codigo: 'U00 - U99', regex: '[uU][0-9][0-9]\\.[0-9X]'}
+        ];
+
+        let filasTabla = criterios.map((item) => {
+            let formulaRegex = "IFERROR(COUNTIF(" + nombreSheetDatos + "!D2:D50000, \"" + item.regex + "\"), 0)";
+            let subElement = "IFERROR(OFFSET(INDIRECT(ADDRESS(ROW(), COLUMN())),  0, 1)/C24, 0)";
+            let elemento = [
+                    item.codigo,
+                    {formula: subElement},
+                    {formula: formulaRegex}
+            ];
+            return elemento;
+        });
+
+        worksheet.addTable({
+            name: 'TablaResumenCIE10',
+            ref: 'A1',
+            headerRow: true,
+            totalsRow: true,
+            style: {
+            theme: 'TableStyleMedium2',
+            showRowStripes: true,
+            },
+            columns: [
+            { name: 'Capitulos', totalsRowLabel: 'Total General:', filterButton: true },
+            { name: 'Frecuencia', totalsRowFunction: 'sum', filterButton: false },
+            { name: 'Cantidad', totalsRowFunction: 'sum', filterButton: true }
+            ],
+            rows: filasTabla,
+        });
+
+        worksheet.getColumn(1).width = 20;
+        worksheet.getColumn(2).width = 32;
+        worksheet.getColumn(3).width = 22;
+        worksheet.getColumn(3).numFmt = '#,##0';
+        worksheet.getColumn(4).width = 33;
+
+        let estilosCSS = {
+            encabezado: {
+                font: { name: 'Arial', size: 11, bold: true, color: { argb: 'FFFFFFFF' } },
+                fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF188038' } },
+                alignment: { vertical: 'middle', horizontal: 'center' },
+                border: {
+                top: { style: 'thin', color: { argb: 'FF137333' } },
+                bottom: { style: 'medium', color: { argb: 'FF137333' } }
+                }
+        },
+        celdaBase: {
+            font: { name: 'Arial', size: 10, color: { argb: 'FF202124' } },
+            border: {
+                bottom: { style: 'thin', color: { argb: 'FFDADCE0' } },
+                right: { style: 'thin', color: { argb: 'FFDADCE0' } },
+            },
+            alignment: { vertical: 'middle', horizontal: 'center' }
+        }
+        };
+
+        let headerRow = worksheet.getRow(1);
+        headerRow.height = 26;
+        headerRow.eachCell((cell) => this.aplicarClase(cell, estilosCSS.encabezado));
+
+        filasTabla = criterios.map((item) => {
+            let formulaRegex = "IFERROR(COUNTIFS(" + nombreSheetDatos + "!D2:D50000, \"" + item.regex + "\"), 0)";
+            let subElement = "IFERROR(OFFSET(INDIRECT(ADDRESS(ROW(), COLUMN())),  0, 1)/C24, 0)";
+            let elemento = [
+                    "Monte Grande",
+                    item.codigo,
+                    {formula: subElement},
+                    {formula: formulaRegex}
+            ];
+            return elemento;
+        });
+
+        worksheet.addTable({
+            name: 'BCIE10',
+            ref: 'A27',
+            headerRow: true,
+            totalsRow: true,
+            style: {
+            theme: 'TableStyleMedium2',
+            showRowStripes: true,
+            },
+            columns: [
+            { name: 'Barrio', totalsRowLabel: 'Total General:', filterButton: true},
+            { name: 'Capitulos', filterButton: true},
+            { name: 'Frecuencia', totalsRowFunction: 'sum', filterButton: false},
+            { name: 'Cantidad', totalsRowFunction: 'sum', filterButton: true}
+            ],
+            rows: filasTabla,
+        });
+
+        headerRow = worksheet.getRow(27);
+        headerRow.height = 26;
+        headerRow.eachCell((cell) => this.aplicarClase(cell, estilosCSS.encabezado));
+
+
+        let listaFiltr = codigosMotivos.filter(function (e) {
+            const regex = /[aA-zZ][0-9][0-9]\.[0-9X]/;
+            return  regex.test(e.codigo);
+        });
+
+        let lista = listaFiltr.map(function (e) {
+            let regexC = "IFERROR(COUNTIF(" + nombreSheetDatos + "!C2:C50000, \"" + e.motivo + "\"), 0)";
+            let regexB = "IFERROR(COUNTIFS(" + nombreSheetDatos + "!C2:C50000, \"" + e.motivo + "\"," + nombreSheetDatos + "!N2:N50000, \"Monte Grande\"), 0)";
+            let element = [e.codigo,
+                           e.motivo,
+                           {formula: regexC},
+                           {formula: regexB}
+                        ]
+            return element;
+        });
+
+        worksheet.addTable({
+            name: 'CIE10',
+            ref: 'A52',
+            headerRow: true,
+            totalsRow: true,
+            style: {
+            theme: 'TableStyleMedium2',
+            showRowStripes: true,
+            },
+            columns: [
+            { name: 'Codigos', filterButton: true },
+            { name: 'Denominacion', filterButton: false },
+            { name: 'Cantidad Total', totalsRowFunction: 'sum', filterButton: false },
+            { name: 'Cant Monte Grande', totalsRowFunction: 'sum', filterButton: false }
+            ],
+            rows: lista,
+        });
+
+        headerRow = worksheet.getRow(52);
+        headerRow.height = 26;
+        headerRow.eachCell((cell) => this.aplicarClase(cell, estilosCSS.encabezado));
+
+        worksheet.eachRow((row, number) => {
+            let check = number == 1 || number == 27 || number == 52;
+            if (check) return;
+            row.height = 22;
+
+            row.eachCell((cell) => {
+                this.aplicarClase(cell, estilosCSS.celdaBase);
+            });
+        });
+
+        const buffer = await workBook.xlsx.writeBuffer();
+        return buffer;
+    }
+
+    aplicarClase(celda, ...clases) {
+        Object.assign(celda, ...clases);
     }
 
     addChartLine(object, data) {

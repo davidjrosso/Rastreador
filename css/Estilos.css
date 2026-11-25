@@ -1285,3 +1285,10 @@ input[type="radio"] {
   animation: l3 1s infinite linear;
 }
 @keyframes l3 {to{transform: rotate(1turn)}}
+
+
+.button-navegacion {
+  text-decoration: none;
+  color: #007bff !important;
+  cursor: pointer !important;
+}

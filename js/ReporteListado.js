@@ -41,8 +41,16 @@ $(function (e) {
         $(".item").remove();
     });
 
-    $("data-order-option").on("click", function (e) {
+    $("input[data-order-option]").on("click", function (e) {
         orderOptionCheck($(this).attr("data-order-option"));
+    })
+
+    $("a[data-id-movimiento-mod]").on("click", function (e) {
+        window.open("view_modmovimientos.php?ID=" + $(this).attr("data-id-movimiento-mod"), "Ventana" + $(this).attr("data-id-movimiento-mod") + ", width=1100, height=500, scrollbars=no, top=150, left=250, resizable=no");
+    })
+
+    $("a[data-id-persona-mod]").on("click", function (e) {
+        window.open('view_modpersonas.php?ID=' + $(this).attr("data-id-persona-mod"),'Ventana' + $(this).attr("data-id-persona-mod") + ', width=800,height=500,scrollbars=no,top=150,left=250,resizable=no');
     })
 
     $("td[data-filtro]").on("mouseover", function (e) {
@@ -98,19 +106,19 @@ $(function (e) {
     });
 
     $("#boton-fullscreen").on("click", function (e) {
-        if (!Window.fullscreen) {
+        if (!window.fullscreen) {
             $("#excel-modal div[class='modal-content']")[0].requestFullscreen();
-            Window.fullscreen = true;
+            window.fullscreen = true;
         } else {
-            Window.document.exitFullscreen();
-            Window.fullscreen = false;
+            window.document.exitFullscreen();
+            window.fullscreen = false;
         }
     });
 
     $("button[class='close']").on("click", function (e) {
-        if (Window.fullscreen) {
-        Window.document.exitFullscreen();
-        Window.fullscreen = false;
+        if (window.fullscreen) {
+        window.document.exitFullscreen();
+        window.fullscreen = false;
         }
     });
 
