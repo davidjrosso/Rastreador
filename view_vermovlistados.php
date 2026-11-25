@@ -2435,7 +2435,11 @@ $Con = new Conexion();
 </div>
 <!-- FIN TOAST PROGRESO IMPRESION -->
  <script>
+    window.filtroSeleccionados = <?php echo json_encode($filtros); ?>;
     window.objectJsonTabla = <?php echo (!empty($jsonTable)) ? json_encode($jsonTable) : "{}";?>;
+    window.fechaDesde = "<?php echo $Fecha_Inicio;?>";
+    window.fechaHasta = "<?php echo $Fecha_Fin;?>";
+    window.cantFiltros = <?php echo count($filtros); ?>;
  </script>
 </body>
 <script src="./dist/editor.js"></script>

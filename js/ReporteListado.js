@@ -228,6 +228,8 @@ export function enviarImprimirPdf() {
                                         listConfigResult
                                     );
         reporte.setFiltros(window.filtroSeleccionados);
+        reporte.setFechaDesde(window.fechaDesde);
+        reporte.setFechaHasta(window.fechaHasta);
         reporte.enviarRequestListado();
     } else if (objectJsonTabla["movimientos_persona"] !== undefined) {
         reporte = new RerpoteMovimiento(
@@ -239,6 +241,8 @@ export function enviarImprimirPdf() {
                                         listConfigResult
                                     );
         reporte.setFiltros(window.filtroSeleccionados);
+        reporte.setFechaDesde(window.fechaDesde);
+        reporte.setFechaHasta(window.fechaHasta);
         reporte.enviarRequestListado();
     }
 }
