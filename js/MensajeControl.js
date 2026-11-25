@@ -420,6 +420,41 @@ export function VerificarUnificacionDireccion() {
     });
 }
 
+function buscarCategoria(id) {
+    let textoBusqueda = document.getElementById('SearchCategoria_' + id).value;
+    let xmlhttp = new XMLHttpRequest();
+    let contenidosRecibidos = null;
+    xmlhttp.onreadystatechange = function() {
+    if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+        contenidosRecibidos = xmlhttp.responseText;
+        document.getElementById("ResultadosCategoria_" + id).innerHTML=contenidosRecibidos;
+        $("button[data-id-categ]").on("click", function (e) {
+            seleccionCategoriaUnificacion(
+                                $(this).attr("data-denominacion-categ"),  
+                                $(this).attr("data-id-categ"),
+                                $(this).attr("data-num-categ")
+                            );
+        });
+    }
+    }
+    if (textoBusqueda) {
+        xmlhttp.open('POST', 'buscar_categorias_lista_unif?valorBusqueda=' + textoBusqueda + "&ID=" + id, true);
+        xmlhttp.send();
+    }
+}
+
+function seleccionCategoriaUnificacion(xCategoria, xID, numCat) {
+    let categoria = $("#categoria_" + numCat);
+    if (numCat == 1) {
+        $("#ID_Categoria_unif").val(xID);
+    } else if (numCat == 2) {
+        $("#ID_Categoria_del").val(xID);
+    }
+    categoria.html("");
+    categoria.html(xCategoria);
+}
+
+
 $(function (e) {
     $("button[data-tarea~='cancelar-eliminar-solicitud'").on("click", function (e) {
         let idSolicitud = $(this).attr("data-id-solicitud");
@@ -439,6 +474,10 @@ $(function (e) {
     $("button[data-tarea~='confirmar-nueva-solicitud'").on("click", function (e) {
         let idSolicitud = $(this).attr("data-id-solicitud");
         VerificarCrearFiltro.bind(this)(idSolicitud);
+    });
+
+    $("input[data-modal-categ]").on("click change", function (e) {
+        buscarCategoria($(this).attr("data-modal-categ"));
     });
 
     $("#confirm-unificacion").on("click", function (e) {

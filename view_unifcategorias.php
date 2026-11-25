@@ -41,6 +41,8 @@ $account = new Account(account_id: $ID_Usuario);
 $TipoUsuario = $account->get_id_tipo_usuario();
 $Con->CloseConexion();
 
+$Element = new Elements();
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -64,51 +66,10 @@ $Con->CloseConexion();
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script src="js/ValidarUnifPersonas.js"></script>
   <script src="./dist/control.js"></script>
-  <script>
-
-        $(function (e) {
-            $("input[data-modal-categ]").on("click", function (e) {
-                buscarCategoria($(this).attr("data-modal-categ"));
-            });
-        });
-
-       function buscarCategoria(id){
-          let textoBusqueda = document.getElementById('SearchCategoria_' + id).value;
-          xmlhttp=new XMLHttpRequest();
-          xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-              contenidosRecibidos = xmlhttp.responseText;
-              document.getElementById("ResultadosCategoria_" + id).innerHTML=contenidosRecibidos;
-              $("button[data-id-categ]").on("click", function (e) {
-                  seleccionCategoria(
-                                      $(this).attr("data-denominacion-categ"),  
-                                      $(this).attr("data-id-categ"),
-                                      $(this).attr("data-num-categ")
-                                    );
-              });
-              }
-          }
-          xmlhttp.open('POST', 'buscar_categorias_lista_unif?valorBusqueda=' + textoBusqueda + "&ID=" + id, true);
-          xmlhttp.send();
-        }
-
-        function seleccionCategoria(xCategoria, xID, numCat) {
-          let categoria = $("#categoria_" + numCat);
-          if (numCat == 1) {
-            $("#ID_Categoria_unif").val(xID);
-          } else if (numCat == 2) {
-            $("#ID_Categoria_del").val(xID);
-          }
-          categoria.html("");
-          categoria.html(xCategoria);
-        }
-  </script>
-
 </head>
 <body>
 <div class = "row margin-right-cero">
 <?php
-  $Element = new Elements();
   echo $Element->menuDeNavegacion($TipoUsuario, $ID_Usuario, $Element::PAGINA_UNIFICACION_CATEGORIA);
   ?>
   <div class = "col-md-9 inicio-md-2">
@@ -153,8 +114,8 @@ $Con->CloseConexion();
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">Selección de Categoria</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <h5 class="modal-title" style="margin: auto" id="exampleModalLongTitle">Selección de Categoria</h5>
+                  <button type="button" style="margin: 0px; padding: 1px;" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
@@ -193,8 +154,8 @@ $Con->CloseConexion();
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">Selección de Categoria</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <h5 class="modal-title" id="exampleModalLongTitle" style="margin: auto">Selección de Categoria</h5>
+                  <button type="button" style="margin: 0px; padding: 1px;" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>

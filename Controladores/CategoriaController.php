@@ -973,13 +973,13 @@ class CategoriaController
 
                 foreach($lista as $categoria) {
                     $id_categoria = $categoria->getID_Categoria();			
-                    $categoria = $categoria->getCategoria();
+                    $denominacion = $categoria->getCategoria();
                     $cod_categoria = $categoria->getCod_Categoria();
                     $mensaje .= '<tr>
-                                    <th scope="row">' . $categoria . '</th>
+                                    <th scope="row">' . $denominacion . '</th>
                                     <td>' . $cod_categoria . '</td>';
                     $mensaje .= '<td>
-                                    <button type = "button" class = "btn btn-outline-success" data-num-categ=\'' . $num_categoria . '\' data-denominacion-categ=\'' . $categoria . '\' data-id-categ=\'' . $id_categoria . '\')" data-dismiss="modal">
+                                    <button type = "button" class = "btn btn-outline-success" data-num-categ=\'' . $num_categoria . '\' data-denominacion-categ=\'' . $denominacion . '\' data-id-categ=\'' . $id_categoria . '\')" data-dismiss="modal">
                                         seleccionar
                                     </button>
                                 </td>
