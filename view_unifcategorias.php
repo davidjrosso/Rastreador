@@ -57,52 +57,48 @@ $Con->CloseConexion();
   <link rel="stylesheet" type="text/css" href="css/Estilos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
-  <script src="js/Utils.js"></script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  <script src="js/Utils.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script src="js/ValidarUnifPersonas.js"></script>
   <script src="./dist/control.js"></script>
   <script>
-       function buscarCategoria_1(){
-          var xBarrio = document.getElementById('SearchCategoria_1').value;
-          var textoBusqueda = xBarrio;
+
+        $(function (e) {
+            $("input[data-modal-categ]").on("click", function (e) {
+                buscarCategoria($(this).attr("data-modal-categ"));
+            });
+        });
+
+       function buscarCategoria(id){
+          let textoBusqueda = document.getElementById('SearchCategoria_' + id).value;
           xmlhttp=new XMLHttpRequest();
           xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState==4 && xmlhttp.status==200) {
               contenidosRecibidos = xmlhttp.responseText;
-              document.getElementById("ResultadosCategoria_1").innerHTML=contenidosRecibidos;
+              document.getElementById("ResultadosCategoria_" + id).innerHTML=contenidosRecibidos;
+              $("button[data-id-categ]").on("click", function (e) {
+                  seleccionCategoria(
+                                      $(this).attr("data-denominacion-categ"),  
+                                      $(this).attr("data-id-categ"),
+                                      $(this).attr("data-num-categ")
+                                    );
+              });
               }
           }
-          xmlhttp.open('POST', 'buscarCategoria_2.php?valorBusqueda=' + textoBusqueda, true); // Método post y url invocada
+          xmlhttp.open('POST', 'buscar_categorias_lista_unif?valorBusqueda=' + textoBusqueda + "&ID=" + id, true);
           xmlhttp.send();
         }
 
-        function buscarCategoria_2(){
-          var xBarrio = document.getElementById('SearchCategoria_2').value;
-          var textoBusqueda = xBarrio;
-          xmlhttp=new XMLHttpRequest();
-          xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-              contenidosRecibidos = xmlhttp.responseText;
-              document.getElementById("ResultadosCategoria_2").innerHTML=contenidosRecibidos;
-              }
+        function seleccionCategoria(xCategoria, xID, numCat) {
+          let categoria = $("#categoria_" + numCat);
+          if (numCat == 1) {
+            $("#ID_Categoria_unif").val(xID);
+          } else if (numCat == 2) {
+            $("#ID_Categoria_del").val(xID);
           }
-          xmlhttp.open('POST', 'buscarCategoria_3.php?valorBusqueda=' + textoBusqueda, true); // Método post y url invocada
-          xmlhttp.send();
-        }
-
-        function seleccionCategoria_1(xCategoria, xID){
-          let categoria = $("#categoria_1");
-          $("#ID_Categoria_unif").val(xID);
-          categoria.html("");
-          categoria.html(xCategoria);
-        }
-
-        function seleccionCategoria_2(xCategoria, xID){
-          let categoria = $("#categoria_2");
-          $("#ID_Categoria_del").val(xID);
           categoria.html("");
           categoria.html(xCategoria);
         }
@@ -168,7 +164,7 @@ $Con->CloseConexion();
                       <div class="col"></div>
                       <div class="col-8">
                         <div class="input-group mb-3">
-                          <input class = "form-control" type="text" name="BuscarCategoria" id = "SearchCategoria_1" onKeyUp="buscarCategoria_1()" autocomplete="off">
+                          <input class = "form-control" type="text" name="BuscarCategoria" id = "SearchCategoria_1" data-modal-categ="1" autocomplete="off">
                           <div class="input-group-append">
                             <span class="input-group-text" id="basic-addon2">Buscar</span>
                           </div>  
@@ -208,7 +204,7 @@ $Con->CloseConexion();
                       <div class="col"></div>
                       <div class="col-8">
                         <div class="input-group mb-3">
-                          <input class = "form-control" type="text" name="BuscarCategoria" id="SearchCategoria_2" onKeyUp="buscarCategoria_2()" autocomplete="off">
+                          <input class = "form-control" type="text" name="BuscarCategoria" id="SearchCategoria_2" data-modal-categ="2" autocomplete="off">
                           <div class="input-group-append">
                             <span class="input-group-text" id="basic-addon2">Buscar</span>
                           </div>  

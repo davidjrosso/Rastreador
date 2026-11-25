@@ -102,12 +102,16 @@ export class RerpoteMovimiento {
         lista["head_movimientos_persona"] = this.listaHeaderPers;
         lista["head_det_persona"] = this.detHeaderPers;
         lista["det_persona"] = this.detPersona;
-        lista["fecha_desde"] = fechaDesde;
-        lista["fecha_hasta"] = fechaHasta;
-        lista["fitros"] = filtroSeleccionados;
+        lista["fecha_desde"] = this.fechaDesde;
+        lista["fecha_hasta"] = this.fechaHasta;
+        lista["fitros"] = this.filtroSeleccionados;
         lista["cant"] = this.listaDeMovimientos.length;
         request.send(JSON.stringify(lista));
         this.timer = setInterval(this.dialogOnProgress.bind(this), 3100);
+    }
+
+    setFiltros(filtros) {
+        this.filtroSeleccionados = filtros;
     }
 
     enviarRequestGrafico() {
@@ -258,32 +262,6 @@ export class RerpoteMovimiento {
               }.bind(this);
             request.send(JSON.stringify(this.rowsRequest));
 
-           /*
-            let request = $.ajax({
-                url : "Controladores/GeneradorPdf.php",
-                method : "POST",
-                data : JSON.stringify(this.rowsRequest),
-                headers: {
-                    "x-request-id" : this.idRequestField
-                },
-                success : async function(data) {
-                    let response = element.currentTarget.response;
-                    let arrBuffer = this.base64ToArrayBuffer(response);
-                    let requestIdRequest = this.getResponseHeader("x-request-id");
-                    this.listaDePdf[requestIdRequest] = arrBuffer;
-                    this.listaDeRequest.splice(requestIdRequest, 1);
-                    this.nroPaginaPdf--;
-                    if (this.listaDeRequest.length === 0 || this.nroPaginaPdf == 0) {
-                        this.nroPaginaGeneradas = 0;
-                        documentoPdf = await mergePdfs();
-                        this.listaDePdf = new Array();
-                        let blob = new Blob([documentoPdf], { type: "application/pdf" });
-                        let url1 = window.URL.createObjectURL(blob);
-                        window.open(url1);
-                    }
-                  }.bind(this)
-              });
-              */
             this.listaDeRequest[this.idRequestField] = request;
             this.nroPaginaPdf++;
             this.rowsRequest = {};
@@ -327,32 +305,6 @@ export class RerpoteMovimiento {
               }.bind(this);
             request.send(JSON.stringify(this.rowsRequest));
             
-            /*
-            let request = $.ajax({
-                url : "Controladores/GeneradorPdf.php",
-                method : "POST",
-                data : JSON.stringify(this.rowsRequest),
-                headers: {
-                    "x-request-id" : this.idRequestField
-                },
-                success : async function(data) {
-                    let response = element.currentTarget.response;
-                    let arrBuffer = this.base64ToArrayBuffer(response);
-                    let requestIdRequest = this.getResponseHeader("x-request-id");
-                    this.listaDePdf[requestIdRequest] = arrBuffer;
-                    this.listaDeRequest.splice(requestIdRequest, 1);
-                    this.nroPaginaPdf--;
-                    if (this.listaDeRequest.length === 0 || this.nroPaginaPdf == 0) {
-                        this.nroPaginaGeneradas = 0;
-                        documentoPdf = await mergePdfs();
-                        this.listaDePdf = new Array();
-                        let blob = new Blob([documentoPdf], { type: "application/pdf" });
-                        let url1 = window.URL.createObjectURL(blob);
-                        window.open(url1);
-                    }
-                  }.bind(this)
-              });
-              */
             this.listaDeRequest[this.idRequestField] = request;
             this.nroPaginaPdf++;
             this.rowsRequest = {};

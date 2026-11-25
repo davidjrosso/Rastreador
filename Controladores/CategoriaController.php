@@ -932,6 +932,71 @@ class CategoriaController
         echo $mensaje;
     }
 
+    public function buscar_categorias_lista_unif()
+    {
+        header('Content-Type: text/html; charset=utf-8');
+
+        $consulta_busqueda = $_REQUEST['valorBusqueda'];
+        $num_categoria = $_REQUEST['ID'];
+
+        //Filtro anti-XSS
+        $caracteres_malos = array("<", ">", "\"", "'", "/", "<", ">", "'", "/");
+        $caracteres_buenos = array("& lt;", "& gt;", "& quot;", "& #x27;", "& #x2F;", "& #060;", "& #062;", "& #039;", "& #047;");
+        $consultaBusqueda = str_replace($caracteres_malos, $caracteres_buenos, $consulta_busqueda);
+
+        $mensaje = "";
+
+        if (isset($consultaBusqueda)) {
+
+            $Con = new Conexion();
+            $Con->OpenConexion();
+
+            $lista = Categoria::get_categorias_con_denominacion(
+                                                                coneccion: $Con,
+                                                                denominacion: $consulta_busqueda
+                                                                );
+
+            $filas = count($lista);
+
+            if ($filas === 0) {
+                $mensaje = "<p>No hay ningún registro con ese dato</p>";
+            } else {
+                $mensaje .= '<table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        <th scope="col">Categoría</th>
+                        <th scope="col">Cod_Categoria</th>	
+                        <th scope="col">Acción</th>	
+                        </tr>
+                    </thead>
+                    <tbody>';
+
+                foreach($lista as $categoria) {
+                    $id_categoria = $categoria->getID_Categoria();			
+                    $categoria = $categoria->getCategoria();
+                    $cod_categoria = $categoria->getCod_Categoria();
+                    $mensaje .= '<tr>
+                                    <th scope="row">' . $categoria . '</th>
+                                    <td>' . $cod_categoria . '</td>';
+                    $mensaje .= '<td>
+                                    <button type = "button" class = "btn btn-outline-success" data-num-categ=\'' . $num_categoria . '\' data-denominacion-categ=\'' . $categoria . '\' data-id-categ=\'' . $id_categoria . '\')" data-dismiss="modal">
+                                        seleccionar
+                                    </button>
+                                </td>
+                            </tr>';
+                };
+
+                $mensaje .= '</tbody>
+                    </table>';
+
+            };
+            $Con->CloseConexion();
+
+        };
+
+        echo $mensaje;
+    }
+
     public function buscar_categorias_filtrado()
     {
         $Filtro = $_REQUEST["Search"];

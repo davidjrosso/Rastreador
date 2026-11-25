@@ -227,6 +227,7 @@ export function enviarImprimirPdf() {
                                         null,
                                         listConfigResult
                                     );
+        reporte.setFiltros(window.filtroSeleccionados);
         reporte.enviarRequestListado();
     } else if (objectJsonTabla["movimientos_persona"] !== undefined) {
         reporte = new RerpoteMovimiento(
@@ -237,6 +238,7 @@ export function enviarImprimirPdf() {
                                         null,
                                         listConfigResult
                                     );
+        reporte.setFiltros(window.filtroSeleccionados);
         reporte.enviarRequestListado();
     }
 }

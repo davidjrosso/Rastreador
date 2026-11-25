@@ -82,7 +82,6 @@ try {
 	$routes[] = Route::post('eliminar_solictud_preferencia', '/preferencia/eliminar_solicitud_preferencia', [PreferenciaController::class, 'eliminar_solicitud_control']);
 	$routes[] = Route::post('preferencia_nueva_control', '/preferencia/nueva_preferencia_control', [PreferenciaController::class, 'nueva_preferencia_control']);
 
-
 	$routes[] = Route::get('personas_listado', '/personas', [PersonaController::class, 'listado_personas']);
 	$routes[] = Route::get('personas_listado_success', '/personas\?Mensaje={mensaje}', [PersonaController::class, 'listado_personas']);
 	$routes[] = Route::get('personas_listado_filtrado', '/personas\?Filtro={filtro}/ID_Filtro={id_filtro}', [PersonaController::class, 'listado_personas']);
@@ -143,12 +142,15 @@ try {
 	$routes[] = Route::post('sol_unif_control', 'pedirunificarcategoria', [CategoriaController::class, 'sol_unif_control']);
 	$routes[] = Route::get('del_md_peticion_control', 'deletepeticionmodificarcategoria\?ID={id}', [SolicitudController::class, 'del_mod_categoria']);
 	$routes[] = Route::post('buscar_categorias_desc', 'buscar_categorias_desc', [CategoriaController::class, 'buscar_categorias_desc']);
+	$routes[] = Route::post('buscar_categorias_lsita_unif', 'buscar_categorias_lista_unif\?valorBusqueda={valor}/ID={id}', [CategoriaController::class, 'buscar_categorias_lista_unif']);
 	$routes[] = Route::post('buscar_categorias_filtrado', 'buscar_categorias_filtrado', [CategoriaController::class, 'buscar_categorias_filtrado']);
 	$routes[] = Route::get('motivos_listado', '/motivos', [MotivoController::class, 'listado_motivos']);
 	$routes[] = Route::post('motivos_listado_filtr', '/motivos', [MotivoController::class, 'listado_motivos']);
 	$routes[] = Route::get('motivos_listado_filtrado', '/motivos\?Search={ma}/ID_Filtro={id}', [MotivoController::class, 'listado_motivos']);
 	$routes[] = Route::get('motivos_listado_success', '/motivos\?Mensaje={mensaje}', [MotivoController::class, 'listado_motivos']);
 	$routes[] = Route::get('motivos_listado_error', '/motivos\?MensajeError={mensaje}', [MotivoController::class, 'listado_motivos']);
+	$routes[] = Route::post('motivos_listado_detalles', '/motivos/lista_motivos_detalle', [MotivoController::class, 'lista_motivos_detalle']);
+
 	$routes[] = Route::post('buscar_motivos_control', '/buscar_motivos', [MotivoController::class, 'buscar_motivos']);
 	$routes[] = Route::get('mod_motivo', '/motivo/editar\?ID={id}', [MotivoController::class, 'mod_motivo']);
 	$routes[] = Route::get('new_motivos_error', '/motivo/nuevo\?Mensaje={mensaje}', [MotivoController::class, 'new_motivos']);
