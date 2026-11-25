@@ -153,6 +153,9 @@ class ReporteGraficoController
                             </td>
                             <td rowspan='2' style='width: 60px'>" . 
                                 (isset(($array_filas[$i]["fechanac"])) ? $array_filas[$i]["fechanac"] : "" ) . "
+                            </td>
+                            <td rowspan='2' style='width: 30px'>" . 
+                                (isset(($array_filas[$i]["edad"])) ? $array_filas[$i]["edad"] : "" ) . "
                             </td>";
 
                 $row_2 = "<tr>";
@@ -329,7 +332,8 @@ class ReporteGraficoController
                                 <th>Barrio</th>
                                 <th>Direc.</th>
                                 <th>Persona</th>
-                                <th>Fecha Nac.</th>";
+                                <th>Fecha Nac.</th>
+                                <th>Edad</th>";
             $head_table = "";
             foreach ($meses_header as $key => $value) {
                 $colspan = ($max_diag_por_meses[$value]) ? $max_diag_por_meses[$value] : 1;
