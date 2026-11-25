@@ -260,7 +260,7 @@ $Element = new Elements();
                         <div class="form-group row">
                           <label for="inputPassword" class="col-md-2 col-form-label LblForm">Motivo 1: </label>
                           <div class="col-md-9" id = "Motivo">
-                            <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo">Seleccione Motivo</button>   
+                            <button type = "button" class = "btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#ModalMotivo1">Seleccione Motivo</button>   
                           </div>
                           <div class="col-md-1 div-button-center">
                               <button type="button" class="btn btn-primary" onClick="agregarMotivo()" id="agregarMotivoID">+</button>
@@ -461,7 +461,7 @@ $Element = new Elements();
                       </div>
                       <!-- Modal de Carga de Calle-->
                       <!-- Modal SELECCION MOTIVO -->
-                      <div class="modal fade bd-example-modal-lg" id="ModalMotivo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                      <div class="modal fade bd-example-modal-lg" id="ModalMotivo1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                           <div class="modal-content">
                             <div class="modal-header">
