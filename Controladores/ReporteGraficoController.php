@@ -141,18 +141,31 @@ class ReporteGraficoController
 
             for ($i = 0; $i < $count; $i++) {
 
+                $fecha_nac = "";
+                if (!empty($array_filas[$i]["fechanac"])) {
+                    $list = preg_split("~[-]+~", $array_filas[$i]["fechanac"]);
+                    $fecha_nac .= $list[0] . "-" . $list[1] . "<br>" . $list[2];
+                }
+
+                $domicilio = "";
+                if (!empty($array_filas[$i]["domicilio"])) {
+                    $list = preg_split("~[ ]+~", ucwords(strtolower($array_filas[$i]["domicilio"])));
+                    $domicilio .= implode("<br>",  $list);
+                    if (count($list) == 3) $domicilio = implode("<br>",  $list);
+                    if (count($list) == 4) $domicilio = $list[0] . " " . $list[1] . "<br>" . $list[2] . "<br>" . $list[3] . "<br>";
+                }
                 $row_1 = "<tr>
                             <td rowspan='2' style='width: 60px'>" . 
                                 (isset(($array_filas[$i]["barrio"])) ? $array_filas[$i]["barrio"] : "" ) . "
                             </td>
                             <td rowspan='2' style='width: 60px'>" . 
-                                (isset(($array_filas[$i]["domicilio"])) ? $array_filas[$i]["domicilio"] : "" ) . "
+                                $domicilio . "
                             </td>
                             <td rowspan='2' style='width: 60px'>" . 
                                 (isset(($array_filas[$i]["persona"])) ? $array_filas[$i]["persona"] : "" ) . "
                             </td>
-                            <td rowspan='2' style='width: 60px'>" . 
-                                (isset(($array_filas[$i]["fechanac"])) ? $array_filas[$i]["fechanac"] : "" ) . "
+                            <td rowspan='2' style='width: 50px'>" . 
+                                $fecha_nac . "
                             </td>
                             <td rowspan='2' style='width: 30px'>" . 
                                 (isset(($array_filas[$i]["edad"])) ? $array_filas[$i]["edad"] : "" ) . "
