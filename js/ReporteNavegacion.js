@@ -1,17 +1,20 @@
 $(function (e) {
-    $("data-id-motivo").on("click", function (e) {
+    $("td[data-id-motivo]").on("click", function (e) {
         sendToCheck($(this).attr("data-id-motivo"));
     });
-    $("data-send-pers-list").on("click", function (e) {
+
+    $("td[data-send-pers-list]").on("click", function (e) {
         sendToPersonaListado(
                              $(this).attr("data-send-pers-list"),
                              Window.datos   
                             );
     });
-    $("data-send-to-rep-l").on("click", function (e) {
+
+    $("button[data-send-to-rep-l]").on("click", function (e) {
         sendToRepL(Window.datosRetorno);
     });
-    $("data-send-to-list").on("click", function (e) {
+
+    $("button[data-send-to-list]").on("click", function (e) {
         window.location.href = 'view_listados.php';
     });
 
