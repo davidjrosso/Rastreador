@@ -813,7 +813,7 @@ export class Excel {
 
         worksheet.columns = values;
 
-        worksheet = workBook.addWorksheet('CIE-10',
+        worksheet = workBook.addWorksheet('CIE10',
                                           {properties:{
                                                    tabColor: {
                                                       argb: 'FFC0000'}
@@ -844,9 +844,15 @@ export class Excel {
             {codigo: 'U00 - U99', regex: '[uU][0-9][0-9]\\.[0-9X]'}
         ];
 
+        let longTablaCapCIE10ConMargen = criterios.length + 4;
+        let longTablaBarriosCapCIE10ConMargen = criterios.length + 4;
+
+        let filaIncialCIE10 = longTablaCapCIE10ConMargen + longTablaBarriosCapCIE10ConMargen + 2;
+        let filaSubTotCapCIE10 = criterios.length + 2;
+
         let filasTabla = criterios.map((item) => {
-            let formulaRegex = "IFERROR(COUNTIF(" + nombreSheetDatos + "!D2:D50000, \"" + item.regex + "\"), 0)";
-            let subElement = "IFERROR(OFFSET(INDIRECT(ADDRESS(ROW(), COLUMN())),  0, 1)/C24, 0)";
+            let formulaRegex = "IFERROR(SUMIFS(CIE10!C" + filaIncialCIE10 + ":C50000, CIE10!A" + filaIncialCIE10 + ":A50000, \"" + item.regex + "\"), 0)";
+            let subElement = "IFERROR(OFFSET(INDIRECT(ADDRESS(ROW(), COLUMN())),  0, 1)/C" + filaSubTotCapCIE10 + ", 0)";
             let elemento = [
                     item.codigo,
                     {formula: subElement},
@@ -866,7 +872,7 @@ export class Excel {
             },
             columns: [
             { name: 'Capitulos', totalsRowLabel: 'Total General:', filterButton: true },
-            { name: 'Frecuencia', totalsRowFunction: 'sum', filterButton: false },
+            { name: 'Frecuencia', numFmt: '#,##0.00', totalsRowFunction: 'sum', filterButton: false },
             { name: 'Cantidad', totalsRowFunction: 'sum', filterButton: true }
             ],
             rows: filasTabla,
@@ -903,9 +909,11 @@ export class Excel {
         headerRow.height = 26;
         headerRow.eachCell((cell) => this.aplicarClase(cell, estilosCSS.encabezado));
 
+        let filaSubTotBarrioCapCIE10 = longTablaCapCIE10ConMargen + criterios.length + 2;
+
         filasTabla = criterios.map((item) => {
-            let formulaRegex = "IFERROR(COUNTIFS(" + nombreSheetDatos + "!D2:D50000, \"" + item.regex + "\"), 0)";
-            let subElement = "IFERROR(OFFSET(INDIRECT(ADDRESS(ROW(), COLUMN())),  0, 1)/C24, 0)";
+            let formulaRegex = "IFERROR(SUMIFS(CIE10!D" + filaIncialCIE10 + ":D50000, CIE10!A" + filaIncialCIE10 + ":A50000, \"" + item.regex + "\"), 0)";
+            let subElement = "IFERROR(OFFSET(INDIRECT(ADDRESS(ROW(), COLUMN())),  0, 1)/D" + filaSubTotBarrioCapCIE10 + ", 0)";
             let elemento = [
                     "Monte Grande",
                     item.codigo,
@@ -916,8 +924,8 @@ export class Excel {
         });
 
         worksheet.addTable({
-            name: 'BCIE10',
-            ref: 'A27',
+            name: 'BarrioCapCIE10',
+            ref: 'A' + (longTablaCapCIE10ConMargen + 1),
             headerRow: true,
             totalsRow: true,
             style: {
@@ -933,7 +941,7 @@ export class Excel {
             rows: filasTabla,
         });
 
-        headerRow = worksheet.getRow(27);
+        headerRow = worksheet.getRow(longTablaCapCIE10ConMargen + 1);
         headerRow.height = 26;
         headerRow.eachCell((cell) => this.aplicarClase(cell, estilosCSS.encabezado));
 
@@ -944,19 +952,26 @@ export class Excel {
         });
 
         let lista = listaFiltr.map(function (e) {
-            let regexC = "IFERROR(COUNTIF(" + nombreSheetDatos + "!C2:C50000, \"" + e.motivo + "\"), 0)";
-            let regexB = "IFERROR(COUNTIFS(" + nombreSheetDatos + "!C2:C50000, \"" + e.motivo + "\"," + nombreSheetDatos + "!N2:N50000, \"Monte Grande\"), 0)";
-            let element = [e.codigo,
-                           e.motivo,
-                           {formula: regexC},
-                           {formula: regexB}
-                        ]
+            let motivos = "SUM(COUNTIF(" + nombreSheetDatos + "!C2:C50000, \"" + e.motivo + "\"),";
+            motivos += ", COUNTIF(" + nombreSheetDatos + "!D2:D50000, \"" + e.motivo + "\")";
+            motivos += ",COUNTIF(" + nombreSheetDatos + "!E2:E50000, \"" + e.motivo + "\"))";
+
+            let regexC = "IFERROR(" + motivos + ", 0)";
+            let motivoBarrio = "SUM(COUNTIFS(" + nombreSheetDatos + "!C2:C50000, \"" + e.motivo + "\"," + nombreSheetDatos + "!N2:N50000, \"Monte Grande\")";
+            motivoBarrio += ",COUNTIFS(" + nombreSheetDatos + "!D2:D50000, \"" + e.motivo + "\"," + nombreSheetDatos + "!N2:N50000, \"Monte Grande\")";
+            motivoBarrio += ",COUNTIFS(" + nombreSheetDatos + "!E2:E50000, \"" + e.motivo + "\"," + nombreSheetDatos + "!N2:N50000, \"Monte Grande\"))";
+            let regexB = "IFERROR(" + motivoBarrio + ", 0)";
+            let element = [ e.codigo,
+                            e.motivo,
+                            {formula: regexC},
+                            {formula: regexB}
+                          ];
             return element;
         });
 
         worksheet.addTable({
-            name: 'CIE10',
-            ref: 'A52',
+            name: 'CIE10Tab',
+            ref: 'A' + (longTablaCapCIE10ConMargen + longTablaBarriosCapCIE10ConMargen + 1),
             headerRow: true,
             totalsRow: true,
             style: {
@@ -972,12 +987,14 @@ export class Excel {
             rows: lista,
         });
 
-        headerRow = worksheet.getRow(52);
+        headerRow = worksheet.getRow(longTablaCapCIE10ConMargen + longTablaBarriosCapCIE10ConMargen + 1);
         headerRow.height = 26;
         headerRow.eachCell((cell) => this.aplicarClase(cell, estilosCSS.encabezado));
 
         worksheet.eachRow((row, number) => {
-            let check = number == 1 || number == 27 || number == 52;
+            let check = number == 1 ||
+                        number == (longTablaCapCIE10ConMargen + 1) ||
+                        number == (longTablaCapCIE10ConMargen + longTablaBarriosCapCIE10ConMargen + 1);
             if (check) return;
             row.height = 22;
 
@@ -1016,14 +1033,17 @@ export class Excel {
 
         let listaMotivos = codigosMotivos.filter(function (e) {
             const regex = /[aA-zZ][0-9][0-9]\.[0-9X]/;
-            return  !regex.test(e.codigo);
+            return  !regex.test(e.codigo) && e.color && e.ID_Forma;
         });
 
         let categorias = new Map();
         const rev = new DOMParser();
         let listaCategorias = listaMotivos.map((item) => {
             let doc = rev.parseFromString(item.forma, "text/html");
-            categorias.set(item.cod_categoria, {color: item.color, icono: doc.documentElement.textContent});
+            categorias.set(item.cod_categoria, 
+                           {color: item.color,
+                            icono: doc.documentElement.textContent}
+                           );
             return item.cod_categoria
         });
 

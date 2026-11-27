@@ -1,6 +1,8 @@
 <?php  
-class Categoria {
-//DECLARACION DE VARIABLES
+require_once($_SERVER['DOCUMENT_ROOT'] . '/Modelo/FormaCategoria.php');
+
+class Categoria 
+{
 	private $ID_Categoria;
 	private $Cod_Categoria;
 	private $Categoria;
@@ -11,7 +13,6 @@ class Categoria {
 	private $Conecction;
 	private $Estado;	
 
-	//METODO CONSTRUCTOR
 	public function __construct(
 		$xID_Categoria=null,
 		$xCod_Categoria=null,
@@ -235,6 +236,16 @@ class Categoria {
 	{
 		return $this->Estado;
 	}
+
+	public function getForma()
+	{
+		$forma_categoria = new FormaCategoria(
+								coneccion: $this->Conecction,
+								id_forma_categoria: $this->ID_Forma
+								);
+		return $forma_categoria;
+	}
+
 	public function delete()
 	{
 		$consulta = "update categoria
