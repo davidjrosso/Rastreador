@@ -643,14 +643,21 @@ class MotivoController
             $con->OpenConexion();
 
             foreach ($lista_motivo as $id_motivo) {
+                $categoria = Categoria::get_categoria_con_cod_categoria(
+                                                coneccion: $con,
+                                                codigo: $row["cod_categoria"]);
                 $motivo = new Motivo(
                                      coneccion_base: $con,
                                      id_motivo: $id_motivo
                                     );
                 $row["motivo"] = $motivo->get_motivo();
                 $row["codigo"] = $motivo->get_codigo();
+                $row["cod_categoria"] = $motivo->get_cod_categoria();
+                $row["categoria"] = null;
+                if ($categoria) $row["categoria"] = $categoria->getCategoria();
                 $motivos_detalles[] = $row;
             }
+    
             $res["motivos"] = $motivos_detalles;
             $res["estado"] = true;
             $con->CloseConexion();

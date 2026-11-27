@@ -104,7 +104,7 @@ class Categoria {
 
 		$consulta = mysqli_query($coneccion->Conexion, $query);
 
-		if (!$consulta) throw new Exception("error al consultar las categotias", 1);
+		if (!$consulta) throw new Exception("error al consultar las categorias", 1);
 
 		while($datos = mysqli_fetch_array($consulta)) {
 			$lista[] = new Categoria(
@@ -125,7 +125,7 @@ class Categoria {
 
 		$consulta = mysqli_query($coneccion->Conexion, $query);
 
-		if (!$consulta) throw new Exception("error al consultar las categotias", 1);
+		if (!$consulta) throw new Exception("error al consultar las categorias", 1);
 
 		while($datos = mysqli_fetch_array($consulta)) {
 			$lista[] = new Categoria(
@@ -135,6 +135,29 @@ class Categoria {
 		}
 		return $lista;
 	}
+
+	public static function get_categoria_con_cod_categoria($coneccion, $codigo)
+	{
+		$categoria = null;
+
+		$query = "SELECT * 
+				  FROM categoria 
+				  WHERE cod_categoria = '$codigo' 
+					and estado = 1";
+
+		$consulta = mysqli_query($coneccion->Conexion, $query);
+
+		if (!$consulta) throw new Exception("error al consultar las categorias", 1);
+
+		$datos = mysqli_fetch_array($consulta);
+		if ($datos) {
+			$categoria = new self(xID_Categoria: $datos["id_categoria"],
+										  xConecction: $coneccion);
+		}
+
+		return $categoria;
+	}
+
 
 	//METODOS SET
 	public function setID_Categoria($xID_Categoria)
