@@ -654,7 +654,11 @@ class MotivoController
                 $row["codigo"] = $motivo->get_codigo();
                 $row["cod_categoria"] = $motivo->get_cod_categoria();
                 $row["categoria"] = null;
+                $row["color"] = null;
+                $row["ID_Forma"] = null;
                 if ($categoria) $row["categoria"] = $categoria->getCategoria();
+                if ($categoria) $row["color"] = $categoria->getColor();
+                if ($categoria) $row["forma"] = $categoria->getForma()->get_forma_categoria();
                 $motivos_detalles[] = $row;
             }
     
