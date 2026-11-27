@@ -733,7 +733,7 @@ export class Excel {
         let worksheet = workBook.addWorksheet(nombreSheetDatos, 
                                                 {properties:{
                                                    tabColor: {
-                                                      argb: 'FFC0000'}
+                                                      argb: '00bfff'}
                                                  }});
         let tableCount = $("table").length;
         let values = [];
@@ -756,8 +756,12 @@ export class Excel {
                     delete velem["Responsable4"];
                 }
             });
-            const doc = parser.parseFromString(velem["Observaciones"], 'text/html');
-            velem["Observaciones"] = doc.body.textContent || "";
+            const ObsGrl = parser.parseFromString(velem["Observaciones"], 'text/html');
+            const textObsGral = ObsGrl.body.textContent;
+            const ObsMed = parser.parseFromString(velem["Otras Observaciones"], 'text/html');
+            const textObsMed = ObsMed.body.textContent;
+            velem["Observaciones"] = (textObsGral === "null") ? "" : textObsGral;
+            velem["Otras Observaciones"] = (textObsMed === "null") ? "" : textObsMed;
             delete velem["cant_resp"];
             delete velem["height"];
             return velem;
@@ -809,7 +813,11 @@ export class Excel {
 
         worksheet.columns = values;
 
-        worksheet = workBook.addWorksheet('CIE-10');
+        worksheet = workBook.addWorksheet('CIE-10',
+                                          {properties:{
+                                                   tabColor: {
+                                                      argb: 'FFC0000'}
+                                          }});
 
         let criterios = [
             {codigo: 'A00 - B99', regex: '[aAbB][0-9][0-9]\\.[0-9X]'},
@@ -869,6 +877,7 @@ export class Excel {
         worksheet.getColumn(3).width = 22;
         worksheet.getColumn(3).numFmt = '#,##0';
         worksheet.getColumn(4).width = 33;
+        worksheet.getColumn(5).width = 33;
 
         let estilosCSS = {
             encabezado: {
@@ -881,13 +890,13 @@ export class Excel {
                 }
         },
         celdaBase: {
-            font: { name: 'Arial', size: 10, color: { argb: 'FF202124' } },
-            border: {
-                bottom: { style: 'thin', color: { argb: 'FFDADCE0' } },
-                right: { style: 'thin', color: { argb: 'FFDADCE0' } },
-            },
-            alignment: { vertical: 'middle', horizontal: 'center' }
-        }
+                font: { name: 'Arial', size: 10, color: { argb: 'FF202124' } },
+                border: {
+                    bottom: { style: 'thin', color: { argb: 'FFDADCE0' } },
+                    right: { style: 'thin', color: { argb: 'FFDADCE0' } },
+                },
+                alignment: { vertical: 'middle', horizontal: 'center' }
+            }
         };
 
         let headerRow = worksheet.getRow(1);
@@ -912,14 +921,14 @@ export class Excel {
             headerRow: true,
             totalsRow: true,
             style: {
-            theme: 'TableStyleMedium2',
-            showRowStripes: true,
+                theme: 'TableStyleMedium2',
+                showRowStripes: true,
             },
             columns: [
-            { name: 'Barrio', totalsRowLabel: 'Total General:', filterButton: true},
-            { name: 'Capitulos', filterButton: true},
-            { name: 'Frecuencia', totalsRowFunction: 'sum', filterButton: false},
-            { name: 'Cantidad', totalsRowFunction: 'sum', filterButton: true}
+                { name: 'Barrio', totalsRowLabel: 'Total General:', filterButton: true},
+                { name: 'Capitulos', filterButton: true},
+                { name: 'Frecuencia', numFmt: '#,##0.00', totalsRowFunction: 'sum', filterButton: false},
+                { name: 'Cantidad', numFmt: '#,##0', totalsRowFunction: 'sum', filterButton: true}
             ],
             rows: filasTabla,
         });
@@ -951,14 +960,14 @@ export class Excel {
             headerRow: true,
             totalsRow: true,
             style: {
-            theme: 'TableStyleMedium2',
-            showRowStripes: true,
+                theme: 'TableStyleMedium2',
+                showRowStripes: true
             },
             columns: [
-            { name: 'Codigos', filterButton: true },
-            { name: 'Denominacion', filterButton: false },
-            { name: 'Cantidad Total', totalsRowFunction: 'sum', filterButton: false },
-            { name: 'Cant Monte Grande', totalsRowFunction: 'sum', filterButton: false }
+                { name: 'Codigos', filterButton: true },
+                { name: 'Denominacion', filterButton: false },
+                { name: 'Cantidad Total', totalsRowFunction: 'sum', filterButton: false },
+                { name: 'Cant Monte Grande', totalsRowFunction: 'sum', filterButton: false }
             ],
             rows: lista,
         });
@@ -976,6 +985,237 @@ export class Excel {
                 this.aplicarClase(cell, estilosCSS.celdaBase);
             });
         });
+
+        worksheet = workBook.addWorksheet('OTROSMOTIVOS',
+                                          {properties:{
+                                                   tabColor: {
+                                                      argb: '003fff'}
+                                          }}
+        );
+
+        estilosCSS = {
+            encabezado: {
+                font: { name: 'Arial', size: 11, bold: true, color: { argb: 'FFFFFFFF' } },
+                fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: '0e0d47' } },
+                alignment: { vertical: 'middle', horizontal: 'center' },
+                border: {
+                top: { style: 'thin', color: { argb: '0e0d47' } },
+                bottom: { style: 'medium', color: { argb: '0e0d47' } }
+                }
+        },
+        celdaBase: {
+                font: { name: 'Arial', size: 10, color: { argb: 'FF202124' } },
+                fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'f0fcff' } },
+                border: {
+                    bottom: { style: 'thin', color: { argb: 'FFDADCE0' } },
+                    right: { style: 'thin', color: { argb: 'FFDADCE0' } },
+                },
+                alignment: { vertical: 'middle', horizontal: 'center' }
+            }
+        };
+
+        let listaMotivos = codigosMotivos.filter(function (e) {
+            const regex = /[aA-zZ][0-9][0-9]\.[0-9X]/;
+            return  !regex.test(e.codigo);
+        });
+
+        let categorias = new Map();
+        const rev = new DOMParser();
+        let listaCategorias = listaMotivos.map((item) => {
+            let doc = rev.parseFromString(item.forma, "text/html");
+            categorias.set(item.cod_categoria, {color: item.color, icono: doc.documentElement.textContent});
+            return item.cod_categoria
+        });
+
+        let setCategorias = new Set(listaCategorias);
+        listaCategorias = Array.from(setCategorias);
+
+        let longTablaCategConMargen = listaCategorias.length + 4;
+        let longTablaBarriosCategConMargen = listaCategorias.length + 4;
+        let longTablaMotivosCategSinMargen = listaMotivos.length + 1;
+
+        let filaIncial = longTablaCategConMargen + longTablaBarriosCategConMargen + 2;
+        let filaSubTot = listaCategorias.length + 2;
+        
+        filasTabla = listaCategorias.map((categoria) => {
+            let formulaRegex = "IFERROR(SUMIFS(OTROSMOTIVOS!D" + filaIncial + ":D50000, OTROSMOTIVOS!A" + filaIncial + ":A50000, \"" + categoria + "\"), 0)";
+            let subElement = "IFERROR(ROUND(OFFSET(INDIRECT(ADDRESS(ROW(), COLUMN())),  0, 1)/D" + filaSubTot  + ", 2), 0)";
+
+            let elemento = [
+                    categoria,
+                    {richText: [
+                        { text: ' ' + categorias.get(categoria).icono +  '', font: { color: { argb: '' + categorias.get(categoria).color.slice(1) + '' }, bold: true } }
+                    ]},
+                    {formula: subElement},
+                    {formula: formulaRegex}
+            ];
+            return elemento;
+        });
+
+
+        worksheet.addTable({
+            name: 'TablaCategorias',
+            ref: 'A1',
+            headerRow: true,
+            totalsRow: true,
+            style: {
+                theme: 'TableStyleMedium2',
+                showRowStripes: true,
+            },
+            columns: [
+                { name: 'Categorias', totalsRowLabel: 'Total General:', filterButton: true },
+                { name: ',', filterButton: false},
+                { name: 'Frecuencia', numFmt: '#,##0.00', totalsRowFunction: 'sum', filterButton: false },
+                { name: 'Cantidad', numFmt: '#,##0', totalsRowFunction: 'sum', filterButton: true }
+            ],
+            rows: filasTabla
+        });
+
+        worksheet.getColumn(1).width = 20;
+        worksheet.getColumn(2).width = 32;
+        worksheet.getColumn(3).width = 22;
+        worksheet.getColumn(4).width = 33;
+        worksheet.getColumn(5).width = 33;
+
+        headerRow = worksheet.getRow(1);
+        headerRow.height = 26;
+        headerRow.eachCell((cell) => this.aplicarClase(cell, estilosCSS.encabezado));
+
+        worksheet.mergeCells("A1", "B1");
+
+        filasTabla = listaCategorias.map((categoria) => {
+            let formulaRegex = "IFERROR(SUMIFS(OTROSMOTIVOS!E" + filaIncial + ":E50000, OTROSMOTIVOS!A" + filaIncial + ":A50000, \"" + categoria + "\"), 0)";
+            let subElement = "IFERROR(ROUND(OFFSET(INDIRECT(ADDRESS(ROW(), COLUMN())),  0, 1)/E" + (longTablaCategConMargen + longTablaBarriosCategConMargen + longTablaMotivosCategSinMargen + 1)  + ", 2), 0)";
+            let elemento = [
+                    "Monte Grande",
+                    categoria,
+                    {formula: subElement},
+                    {formula: formulaRegex}
+            ];
+            return elemento;
+        });
+
+        worksheet.addTable({
+            name: 'BarriosCategoria',
+            ref: 'A' + (longTablaCategConMargen + 1),
+            headerRow: true,
+            totalsRow: true,
+            style: {
+                theme: 'TableStyleMedium2',
+                showRowStripes: true,
+            },
+            columns: [
+                { name: 'Barrio', totalsRowLabel: 'Total General:'},
+                { name: 'Categorias'},
+                { name: 'Frecuencia', numFmt: '#,##0.00', totalsRowFunction: 'sum'},
+                { name: 'Cantidad', numFmt: '#,##0', totalsRowFunction: 'sum'}
+            ],
+            rows: filasTabla,
+        });
+
+        headerRow = worksheet.getRow((longTablaCategConMargen + 1));
+        headerRow.height = 26;
+        headerRow.eachCell((cell) => this.aplicarClase(cell, estilosCSS.encabezado));
+
+        lista = listaMotivos.map(function (e) {
+            let motivos = "SUM(COUNTIF(" + nombreSheetDatos + "!C2:C50000, \"" + e.motivo + "\"),";
+            motivos += ", COUNTIF(" + nombreSheetDatos + "!D2:D50000, \"" + e.motivo + "\")";
+            motivos += ",COUNTIF(" + nombreSheetDatos + "!E2:E50000, \"" + e.motivo + "\"))";
+
+            let regexC = "IFERROR(" + motivos + ", 0)";
+            let motivoBarrio = "SUM(COUNTIFS(" + nombreSheetDatos + "!C2:C50000, \"" + e.motivo + "\"," + nombreSheetDatos + "!N2:N50000, \"Monte Grande\")";
+            motivoBarrio += ",COUNTIFS(" + nombreSheetDatos + "!D2:D50000, \"" + e.motivo + "\"," + nombreSheetDatos + "!N2:N50000, \"Monte Grande\")";
+            motivoBarrio += ",COUNTIFS(" + nombreSheetDatos + "!E2:E50000, \"" + e.motivo + "\"," + nombreSheetDatos + "!N2:N50000, \"Monte Grande\"))";
+            let regexB = "IFERROR(" + motivoBarrio + ", 0)";
+            let element = [e.cod_categoria,
+                           e.motivo,
+                           e.codigo,
+                           {formula: regexC},
+                           {formula: regexB}
+                        ]
+            return element;
+        });
+
+        worksheet.addTable({
+            name: 'MotivosCategoria',
+            ref: 'A' + (longTablaCategConMargen + longTablaBarriosCategConMargen + 1),
+            headerRow: true,
+            totalsRow: true,
+            style: {
+            theme: 'TableStyleMedium2',
+            showRowStripes: true,
+            },
+            columns: [
+                { name: 'Codigo Categoria', filterButton: false},
+                { name: 'Denominacion', filterButton: false },
+                { name: 'Codigos Motivo', filterButton: false },
+                { name: 'Cantidad Total', numFmt: '#,##0', totalsRowFunction: 'sum'},
+                { name: 'Cant Monte Grande', numFmt: '#,##0', totalsRowFunction: 'sum'}
+            ],
+            rows: lista,
+        });
+
+        headerRow = worksheet.getRow(longTablaCategConMargen + longTablaBarriosCategConMargen + 1);
+        headerRow.height = 26;
+        headerRow.eachCell((cell) => this.aplicarClase(cell, estilosCSS.encabezado));
+
+        worksheet.eachRow((row, number) => {
+            let check = number == 1 ||
+                        number == (longTablaCategConMargen + 1) ||
+                        number == (longTablaCategConMargen + longTablaBarriosCategConMargen + 1);
+            if (check) return;
+            row.height = 22;
+
+            row.eachCell((cell) => {
+                this.aplicarClase(cell, estilosCSS.celdaBase);
+            });
+        });
+
+        let rango = new Array(longTablaCategConMargen - 2);
+        for (let i of rango.keys()) {
+            if (i <= 1) continue;
+            const cell = worksheet.getCell("A" + i);
+            const valor = categorias.get(cell.value);
+            cell.fill = {
+                          type: 'pattern',
+                          pattern: 'solid',
+                          fgColor: { argb: valor.color.slice(1) }
+                        };
+        };
+
+        rango = new Array(longTablaBarriosCategConMargen - 2);
+        for (let i of rango.keys()) {
+            if (i <= 1) continue;
+            const cell = worksheet.getCell("B" + (i + longTablaCategConMargen));
+            const valor = categorias.get(cell.value);
+            if (valor) {
+                cell.fill = {
+                              type: 'pattern',
+                              pattern: 'solid',
+                              fgColor: { argb: valor.color.slice(1) }
+                            };
+            }
+        }; 
+
+        rango = new Array(longTablaMotivosCategSinMargen + 1);
+        for (let i of rango.keys()) {
+            if (i <= 1) continue;
+            let cell = worksheet.getCell("A" + (i + longTablaCategConMargen + longTablaBarriosCategConMargen));
+            const valor = categorias.get(cell.value);
+            if (valor) {
+                cell.fill = {
+                              type: 'pattern',
+                              pattern: 'solid',
+                              fgColor: { argb: valor.color.slice(1) }
+                            };
+                cell = worksheet.getCell("C" + (i + longTablaCategConMargen + longTablaBarriosCategConMargen));
+                cell.fill = {
+                              type: 'pattern',
+                              pattern: 'solid',
+                              fgColor: { argb: valor.color.slice(1) }
+                            };
+            }
+        }; 
 
         const buffer = await workBook.xlsx.writeBuffer();
         return buffer;
