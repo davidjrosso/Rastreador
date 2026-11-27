@@ -22,7 +22,7 @@ class FormaCategoria
 								 from formas_categorias 
 								 where ID_Forma = $id_forma_categoria"; 
 			$ejecutar_consultar = mysqli_query(
-				$this->coneccion_base->Conexion, 
+				$this->coneccion->Conexion, 
 				$consultar_usuario) or die("Problemas al consultar filtro formas_categorias");
 			$ret = mysqli_fetch_assoc($ejecutar_consultar);
 			if (!is_null($ret)) {
